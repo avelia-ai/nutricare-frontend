@@ -708,8 +708,7 @@
   }
 
   // ── VIEWS ──
-  function showView(view, btn) document.getElementById('healthView').style.display = view === 'health' ? 'block' : 'none';
-if (view === 'health') loadHealthDashboard();{
+  function showView(view, btn) {
     document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
     if (btn) btn.classList.add('active');
     document.getElementById('chatView').style.display = view === 'chat' ? 'flex' : 'none';
@@ -717,9 +716,11 @@ if (view === 'health') loadHealthDashboard();{
     document.getElementById('profileView').style.display = view === 'profile' ? 'block' : 'none';
     document.getElementById('pricingView').style.display = view === 'pricing' ? 'block' : 'none';
     document.getElementById('proView').style.display = view === 'pro' ? 'block' : 'none';
-if (view === 'pro') loadProfessionals();
-document.getElementById('protocolsView').style.display = view === 'protocols' ? 'block' : 'none';
-if (view === 'protocols') loadProtocols();
+    if (view === 'pro') loadProfessionals();
+    document.getElementById('protocolsView').style.display = view === 'protocols' ? 'block' : 'none';
+    if (view === 'protocols') loadProtocols();
+    document.getElementById('healthView').style.display = view === 'health' ? 'block' : 'none';
+    if (view === 'health') loadHealthDashboard();
   }
 async function loadHealthDashboard() {
   try {
