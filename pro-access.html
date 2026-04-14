@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NutriCare AI — Accès Professionnel</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;600&family=DM+Sans:wght@300;400;500&family=DM+Mono&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --blue: #021A35; --blue-mid: #0C447C; --blue-light: #378ADD;
+    --blue-pale: #E6F1FB; --gold: #C9A84C; --gold-light: #E8D4A0;
+    --white: #FFFFFF; --soft: #85B7EB; --border: #B5D4F4;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family:'DM Sans',sans-serif; background:var(--blue-pale); color:var(--blue); min-height:100vh; }
+
+  header { background:var(--blue); padding:16px 40px; display:flex; align-items:center; gap:12px; }
+  .header-logo { font-family:'Cormorant Garamond',serif; font-size:1.4rem; color:white; display:flex; align-items:center; gap:8px; }
+  .logo-dot { width:6px; height:6px; border-radius:50%; background:var(--gold); }
+  .pro-badge { background:rgba(201,168,76,0.15); border:1px solid rgba(201,168,76,0.4); color:var(--gold); font-size:0.72rem; font-weight:600; letter-spacing:1px; text-transform:uppercase; padding:4px 14px; border-radius:100px; margin-left:auto; }
+
+  .container { max-width:900px; margin:0 auto; padding:40px 24px; }
+
+  /* Code access */
+  .code-section { background:white; border-radius:16px; padding:32px; border:1px solid var(--border); margin-bottom:28px; text-align:center; }
+  .code-title { font-family:'Cormorant Garamond',serif; font-size:1.8rem; font-weight:400; margin-bottom:8px; color:var(--blue); }
+  .code-sub { font-size:0.88rem; color:var(--soft); margin-bottom:24px; }
+  .code-input-row { display:flex; gap:10px; max-width:400px; margin:0 auto; }
+  .code-input { flex:1; padding:12px 16px; border:2px solid var(--border); border-radius:10px; font-size:1rem; font-family:'DM Mono',monospace; text-transform:uppercase; letter-spacing:3px; outline:none; text-align:center; transition:border-color .2s; }
+  .code-input:focus { border-color:var(--blue-light); }
+  .btn-access { background:var(--blue); color:white; padding:12px 24px; border:none; border-radius:10px; font-size:0.9rem; font-weight:500; cursor:pointer; font-family:'DM Sans',sans-serif; transition:background .2s; white-space:nowrap; }
+  .btn-access:hover { background:var(--blue-light); }
+
+  /* Patient data */
+  .patient-section { display:none; }
+  .patient-header { background:var(--blue); border-radius:16px; padding:28px; margin-bottom:20px; display:flex; align-items:center; gap:20px; }
+  .patient-avatar { width:56px; height:56px; border-radius:50%; background:linear-gradient(135deg,var(--blue-light),var(--blue-mid)); display:flex; align-items:center; justify-content:center; font-size:1.2rem; font-weight:700; color:white; flex-shrink:0; }
+  .patient-name { font-family:'Cormorant Garamond',serif; font-size:1.6rem; color:white; }
+  .patient-plan { font-size:0.78rem; color:var(--gold); margin-top:4px; }
+  .patient-since { font-size:0.78rem; color:rgba(255,255,255,0.4); margin-top:2px; }
+
+  .data-grid { display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:20px; }
+  .data-card { background:white; border-radius:14px; padding:22px; border:1px solid var(--border); }
+  .data-card-title { font-size:0.72rem; font-weight:600; text-transform:uppercase; letter-spacing:1.5px; color:var(--soft); margin-bottom:14px; }
+  .data-item { display:flex; justify-content:space-between; align-items:center; padding:8px 0; border-bottom:1px solid var(--blue-pale); font-size:0.85rem; }
+  .data-item:last-child { border-bottom:none; }
+  .data-label { color:var(--blue-mid); }
+  .data-value { font-weight:500; color:var(--blue); }
+  .tag { display:inline-block; background:var(--blue-pale); color:var(--blue-light); padding:3px 10px; border-radius:100px; font-size:0.72rem; font-weight:500; margin:2px; }
+
+  .comment-section { background:white; border-radius:14px; padding:22px; border:1px solid var(--border); }
+  .comment-title { font-size:0.72rem; font-weight:600; text-transform:uppercase; letter-spacing:1.5px; color:var(--soft); margin-bottom:14px; }
+  .comment-textarea { width:100%; padding:12px 14px; border:1.5px solid var(--border); border-radius:10px; font-size:0.88rem; font-family:'DM Sans',sans-serif; outline:none; resize:vertical; min-height:100px; transition:border-color .2s; }
+  .comment-textarea:focus { border-color:var(--blue-light); }
+  .btn-comment { background:var(--blue); color:white; padding:11px 28px; border:none; border-radius:100px; font-size:0.88rem; font-weight:500; cursor:pointer; font-family:'DM Sans',sans-serif; margin-top:10px; transition:background .2s; }
+  .btn-comment:hover { background:var(--blue-light); }
+  .comment-success { color:#28C840; font-size:0.82rem; margin-top:8px; display:none; }
+
+  .error-msg { background:#FEE; border:1px solid #FCC; border-radius:8px; padding:10px 14px; font-size:0.82rem; color:#C55; display:none; margin-top:10px; }
+  .error-msg.show { display:block; }
+
+  @media (max-width:640px) { .data-grid { grid-template-columns:1fr; } }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-logo"><div class="logo-dot"></div> NutriCare AI</div>
+  <div class="pro-badge">⚕️ Espace Professionnel</div>
+</header>
+
+<div class="container">
+
+  <!-- Accès par code -->
+  <div class="code-section" id="codeSection">
+    <div class="code-title">Accès Professionnel de Santé</div>
+    <div class="code-sub">Entrez le code partagé par votre patient ou utilisez le lien reçu par email</div>
+    <div class="code-input-row">
+      <input type="text" class="code-input" id="codeInput" placeholder="ABC123" maxlength="6" oninput="this.value=this.value.toUpperCase()">
+      <button class="btn-access" onclick="accessByCode()">Accéder →</button>
+    </div>
+    <div class="error-msg" id="codeError">Code invalide ou expiré. Vérifiez avec votre patient.</div>
+  </div>
+
+  <!-- Données patient -->
+  <div class="patient-section" id="patientSection">
+    <div class="patient-header">
+      <div class="patient-avatar" id="patientAvatar">?</div>
+      <div>
+        <div class="patient-name" id="patientName">Chargement...</div>
+        <div class="patient-plan" id="patientPlan"></div>
+        <div class="patient-since" id="patientSince"></div>
+      </div>
+    </div>
+
+    <div class="data-grid">
+      <!-- Profil santé -->
+      <div class="data-card">
+        <div class="data-card-title">Profil de Santé</div>
+        <div class="data-item"><span class="data-label">Pathologies</span><span class="data-value" id="patientPathologies">—</span></div>
+        <div class="data-item"><span class="data-label">Allergies</span><span class="data-value" id="patientAllergies">—</span></div>
+        <div class="data-item"><span class="data-label">Médicaments</span><span class="data-value" id="patientMedications">—</span></div>
+        <div class="data-item"><span class="data-label">Budget</span><span class="data-value" id="patientBudget">—</span></div>
+        <div class="data-item"><span class="data-label">Contraintes</span><span class="data-value" id="patientCultural">—</span></div>
+      </div>
+
+      <!-- Dernières conversations -->
+      <div class="data-card">
+        <div class="data-card-title">Dernières interactions IA</div>
+        <div id="patientConversations"><p style="font-size:0.82rem;color:var(--soft)">Aucune conversation disponible</p></div>
+      </div>
+    </div>
+
+    <!-- Commentaire professionnel -->
+    <div class="comment-section">
+      <div class="comment-title">⚕️ Laisser un commentaire / Valider le plan</div>
+      <textarea class="comment-textarea" id="commentText" placeholder="Écrivez votre commentaire, recommandation ou validation du plan nutritionnel..."></textarea>
+      <br>
+      <button class="btn-comment" onclick="submitComment()">Envoyer le commentaire →</button>
+      <div class="comment-success" id="commentSuccess">✓ Commentaire envoyé avec succès !</div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  const BACKEND_URL = 'https://nutricare-backend-production.up.railway.app';
+  let currentToken = null;
+
+  // Accès automatique via URL token
+  window.onload = () => {
+    const params = new URLSearchParams(window.location.search);
+    const token = params.get('token');
+    if (token) loadByToken(token);
+  };
+
+  async function accessByCode() {
+    const code = document.getElementById('codeInput').value.trim();
+    if (code.length < 6) return;
+    try {
+      const res = await fetch(`${BACKEND_URL}/api/professionals/access/code/${code}`);
+      const data = await res.json();
+      if (!res.ok) { showCodeError(data.error); return; }
+      currentToken = data.token;
+      displayPatient(data.profile);
+    } catch {
+      showCodeError('Erreur de connexion. Réessayez.');
+    }
+  }
+
+  async function loadByToken(token) {
+    currentToken = token;
+    try {
+      const res = await fetch(`${BACKEND_URL}/api/professionals/access/${token}`);
+      const data = await res.json();
+      if (!res.ok) { showCodeError(data.error); return; }
+      displayPatient(data.profile, data.conversations);
+    } catch {
+      showCodeError('Lien invalide ou expiré.');
+    }
+  }
+
+  function displayPatient(profile, conversations) {
+    document.getElementById('codeSection').style.display = 'none';
+    document.getElementById('patientSection').style.display = 'block';
+
+    const name = profile.full_name || profile.email?.split('@')[0] || 'Patient';
+    const initials = name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2);
+    const planLabels = { free: '🌱 Plan Gratuit', standard: '⭐ Plan Standard', premium: '💎 Plan Premium' };
+
+    document.getElementById('patientAvatar').textContent = initials;
+    document.getElementById('patientName').textContent = name;
+    document.getElementById('patientPlan').textContent = planLabels[profile.plan] || 'Plan Gratuit';
+    document.getElementById('patientSince').textContent = 'Membre depuis ' + new Date(profile.created_at).toLocaleDateString('fr-FR', { month: 'long', year: 'numeric' });
+
+    document.getElementById('patientPathologies').textContent = profile.pathologies?.join(', ') || '—';
+    document.getElementById('patientAllergies').textContent = profile.allergies?.join(', ') || '—';
+    document.getElementById('patientMedications').textContent = profile.medications?.join(', ') || '—';
+    document.getElementById('patientBudget').textContent = profile.budget_alimentaire || '—';
+    document.getElementById('patientCultural').textContent = profile.cultural_constraints || '—';
+
+    if (conversations?.length) {
+      const html = conversations.slice(0, 3).map(c => `
+        <div style="padding:8px 0;border-bottom:1px solid var(--blue-pale);font-size:0.82rem">
+          <div style="color:var(--soft);font-size:0.72rem;margin-bottom:4px">${new Date(c.updated_at).toLocaleDateString('fr-FR')}</div>
+          <div style="color:var(--blue)">${c.messages?.length || 0} messages échangés</div>
+        </div>`).join('');
+      document.getElementById('patientConversations').innerHTML = html;
+    }
+  }
+
+  async function submitComment() {
+    const comment = document.getElementById('commentText').value.trim();
+    if (!comment || !currentToken) return;
+    try {
+      const res = await fetch(`${BACKEND_URL}/api/professionals/comment/${currentToken}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ comment })
+      });
+      if (res.ok) {
+        document.getElementById('commentText').value = '';
+        const success = document.getElementById('commentSuccess');
+        success.style.display = 'block';
+        setTimeout(() => success.style.display = 'none', 4000);
+      }
+    } catch { alert('Erreur lors de l\'envoi.'); }
+  }
+
+  function showCodeError(msg) {
+    const el = document.getElementById('codeError');
+    el.textContent = msg;
+    el.classList.add('show');
+  }
+</script>
+</body>
+</html>
