@@ -280,6 +280,7 @@
     <button class="nav-item" onclick="showView('pro', this)">🧑‍⚕️ Mon professionnel</button>
     <button class="nav-item" onclick="showView('health', this)">📊 Suivi santé</button>
     <button class="nav-item" onclick="showView('menus', this)">🥗 Mes menus</button>
+    <button class="nav-item" onclick="showView('analysis', this)">📸 Analyse repas</button>
     <button class="nav-item" onclick="showView('protocols', this)">🧬 Protocoles</button>
     <div class="sidebar-user">
       <div class="sidebar-avatar" id="sidebarAvatar">?</div>
@@ -471,6 +472,89 @@
    <!-- PROTOCOLS VIEW -->
     <!-- HEALTH DASHBOARD VIEW -->
      <!-- MENUS VIEW -->
+      <!-- ANALYSIS VIEW -->
+<div id="analysisView" style="display:none;padding:32px;overflow-y:auto;background:#F0F6FF">
+  <div style="font-family:'Cormorant Garamond',serif;font-size:2rem;font-weight:400;margin-bottom:6px;color:#021A35">Analyse photo de repas</div>
+  <div style="font-size:0.85rem;color:#85B7EB;margin-bottom:28px">Photographiez votre repas pour une analyse nutritionnelle instantanée</div>
+
+  <div id="analysisPlanRequired" style="display:none;background:white;border-radius:14px;padding:28px;border:1px solid #B5D4F4;text-align:center;margin-bottom:24px">
+    <div style="font-size:1.4rem;margin-bottom:8px">📸</div>
+    <div style="font-size:1rem;font-weight:600;color:#021A35;margin-bottom:8px">Fonctionnalité Standard & Premium</div>
+    <div style="font-size:0.85rem;color:#85B7EB;margin-bottom:18px">Passez à un plan payant pour analyser vos repas en photo.</div>
+    <button onclick="showView('pricing')" style="background:#021A35;color:white;padding:10px 24px;border:none;border-radius:100px;font-size:0.88rem;cursor:pointer;font-family:'DM Sans',sans-serif">Voir les abonnements →</button>
+  </div>
+
+  <div id="analysisContent" style="display:none">
+    <!-- Zone upload photo -->
+    <div style="background:white;border-radius:16px;padding:28px;border:1px solid #B5D4F4;margin-bottom:24px;text-align:center">
+      <div id="analysisDropzone" onclick="document.getElementById('analysisFileInput').click()" style="border:2px dashed #B5D4F4;border-radius:12px;padding:40px;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='#378ADD'" onmouseout="this.style.borderColor='#B5D4F4'">
+        <div style="font-size:3rem;margin-bottom:12px">📸</div>
+        <div style="font-size:1rem;font-weight:600;color:#021A35;margin-bottom:6px">Prenez ou importez une photo</div>
+        <div style="font-size:0.82rem;color:#85B7EB">Cliquez ici ou glissez une photo de votre repas</div>
+      </div>
+      <input type="file" id="analysisFileInput" accept="image/*" capture="environment" style="display:none" onchange="previewAndAnalyze(event)">
+      <img id="analysisPreview" style="display:none;max-width:300px;max-height:300px;border-radius:12px;margin-top:16px;object-fit:cover">
+    </div>
+
+    <!-- Résultat analyse -->
+    <div id="analysisResult" style="display:none">
+      <div style="background:white;border-radius:16px;border:1px solid #B5D4F4;overflow:hidden;margin-bottom:20px">
+        <div style="background:#021A35;padding:18px 24px;display:flex;align-items:center;justify-content:space-between">
+          <div style="font-family:'Cormorant Garamond',serif;font-size:1.3rem;color:white" id="analysisRepasNom">Analyse en cours...</div>
+          <div style="display:flex;gap:12px">
+            <div style="text-align:center">
+              <div style="font-family:'DM Mono',monospace;font-size:1.4rem;font-weight:700;color:#C9A84C" id="analysisScoreSante">—</div>
+              <div style="font-size:0.65rem;color:#85B7EB;text-transform:uppercase;letter-spacing:1px">Score santé</div>
+            </div>
+            <div style="text-align:center">
+              <div style="font-family:'DM Mono',monospace;font-size:1.4rem;font-weight:700;color:#28C840" id="analysisScorePatho">—</div>
+              <div style="font-size:0.65rem;color:#85B7EB;text-transform:uppercase;letter-spacing:1px">Score patho</div>
+            </div>
+            <div style="text-align:center">
+              <div style="font-family:'DM Mono',monospace;font-size:1.4rem;font-weight:700;color:white" id="analysisCalories">—</div>
+              <div style="font-size:0.65rem;color:#85B7EB;text-transform:uppercase;letter-spacing:1px">Calories</div>
+            </div>
+          </div>
+        </div>
+        <div style="padding:24px;display:grid;grid-template-columns:1fr 1fr;gap:20px">
+          <div>
+            <div style="font-size:0.72rem;font-weight:600;text-transform:uppercase;letter-spacing:1.5px;color:#85B7EB;margin-bottom:12px">🥗 ALIMENTS IDENTIFIÉS</div>
+            <div id="analysisAliments"></div>
+            <div style="margin-top:16px">
+              <div style="font-size:0.72rem;font-weight:600;text-transform:uppercase;letter-spacing:1.5px;color:#85B7EB;margin-bottom:12px">📊 MACRONUTRIMENTS</div>
+              <div id="analysisMacros"></div>
+            </div>
+          </div>
+          <div>
+            <div style="font-size:0.72rem;font-weight:600;text-transform:uppercase;letter-spacing:1.5px;color:#28C840;margin-bottom:12px">✅ POINTS POSITIFS</div>
+            <div id="analysisPositifs" style="margin-bottom:16px"></div>
+            <div style="font-size:0.72rem;font-weight:600;text-transform:uppercase;letter-spacing:1.5px;color:#C9A84C;margin-bottom:12px">💡 À AMÉLIORER</div>
+            <div id="analysisAmeliorer"></div>
+          </div>
+        </div>
+        <div style="padding:16px 24px;background:#E6F1FB;border-top:1px solid #B5D4F4">
+          <div style="font-size:0.85rem;color:#021A35" id="analysisConseil"></div>
+        </div>
+        <div id="analysisAlerteZone" style="display:none;padding:16px 24px;background:#FEE;border-top:1px solid #FCC">
+          <div style="font-size:0.85rem;color:#C55" id="analysisAlerteMsg"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Loading -->
+    <div id="analysisLoading" style="display:none;text-align:center;padding:48px">
+      <div style="font-size:2rem;margin-bottom:16px">🔍</div>
+      <div style="font-size:1rem;color:#021A35;font-weight:500;margin-bottom:8px">Analyse en cours...</div>
+      <div style="font-size:0.85rem;color:#85B7EB">Claude analyse votre repas selon votre profil</div>
+    </div>
+
+    <!-- Historique -->
+    <div style="background:white;border-radius:16px;padding:24px;border:1px solid #B5D4F4">
+      <div style="font-size:0.72rem;font-weight:600;text-transform:uppercase;letter-spacing:1.5px;color:#85B7EB;margin-bottom:16px">📋 HISTORIQUE DES ANALYSES</div>
+      <div id="analysisHistory"><p style="font-size:0.85rem;color:#85B7EB">Aucune analyse effectuée.</p></div>
+    </div>
+  </div>
+</div>
 <div id="menusView" style="display:none;padding:32px;overflow-y:auto;background:#F0F6FF">
   <div style="font-family:'Cormorant Garamond',serif;font-size:2rem;font-weight:400;margin-bottom:6px;color:#021A35">Mes menus de la semaine</div>
   <div style="font-size:0.85rem;color:#85B7EB;margin-bottom:28px">Menus personnalisés selon votre pathologie et vos préférences</div>
@@ -804,7 +888,91 @@ function toggleMobileMenu() {
     if (view === 'health') loadHealthDashboard();
     document.getElementById('menusView').style.display = view === 'menus' ? 'block' : 'none';
 if (view === 'menus') loadMenus();
+document.getElementById('analysisView').style.display = view === 'analysis' ? 'block' : 'none';
+if (view === 'analysis') loadAnalysis();
   }
+  async function loadAnalysis() {
+  const plan = document.getElementById('sidebarPlan').textContent;
+  const isPaid = plan.includes('Standard') || plan.includes('Premium');
+  document.getElementById('analysisPlanRequired').style.display = isPaid ? 'none' : 'block';
+  document.getElementById('analysisContent').style.display = isPaid ? 'block' : 'none';
+  if (!isPaid) return;
+  loadAnalysisHistory();
+}
+
+async function previewAndAnalyze(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = async (e) => {
+    const base64 = e.target.result.split(',')[1];
+    const mediaType = file.type;
+    document.getElementById('analysisPreview').src = e.target.result;
+    document.getElementById('analysisPreview').style.display = 'block';
+    document.getElementById('analysisLoading').style.display = 'block';
+    document.getElementById('analysisResult').style.display = 'none';
+    try {
+      const res = await fetch(`${BACKEND_URL}/api/analysis/photo`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${authToken}` },
+        body: JSON.stringify({ image_base64: base64, media_type: mediaType })
+      });
+      const data = await res.json();
+      if (res.ok) renderAnalysis(data);
+      else alert(data.error || 'Erreur analyse');
+    } catch(e) { alert('Erreur de connexion'); }
+    finally { document.getElementById('analysisLoading').style.display = 'none'; }
+  };
+  reader.readAsDataURL(file);
+}
+
+function renderAnalysis(a) {
+  document.getElementById('analysisResult').style.display = 'block';
+  document.getElementById('analysisRepasNom').textContent = a.repas_identifie || 'Repas analysé';
+  document.getElementById('analysisScoreSante').textContent = `${a.score_sante}/10`;
+  document.getElementById('analysisScorePatho').textContent = `${a.score_pathologie}/10`;
+  document.getElementById('analysisCalories').textContent = `${a.calories_estimees} kcal`;
+  document.getElementById('analysisAliments').innerHTML = (a.aliments || []).map(i => `<div style="font-size:0.82rem;padding:3px 0;border-bottom:1px solid #E6F1FB;color:#021A35">• ${i}</div>`).join('');
+  const m = a.macronutriments || {};
+  document.getElementById('analysisMacros').innerHTML = `
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+      ${[['Protéines', m.proteines_g, 'g'], ['Glucides', m.glucides_g, 'g'], ['Lipides', m.lipides_g, 'g'], ['Fibres', m.fibres_g, 'g']].map(([label, val, unit]) => `
+      <div style="background:#F0F6FF;border-radius:8px;padding:10px;text-align:center">
+        <div style="font-family:'DM Mono',monospace;font-size:1.1rem;font-weight:700;color:#021A35">${val || 0}${unit}</div>
+        <div style="font-size:0.7rem;color:#85B7EB">${label}</div>
+      </div>`).join('')}
+    </div>`;
+  document.getElementById('analysisPositifs').innerHTML = (a.points_positifs || []).map(p => `<div style="font-size:0.82rem;padding:4px 0;color:#021A35">✅ ${p}</div>`).join('');
+  document.getElementById('analysisAmeliorer').innerHTML = (a.points_amelioration || []).map(p => `<div style="font-size:0.82rem;padding:4px 0;color:#021A35">💡 ${p}</div>`).join('');
+  document.getElementById('analysisConseil').textContent = '🤖 ' + (a.conseil_personnalise || '');
+  if (a.alerte_allergie) {
+    document.getElementById('analysisAlerteZone').style.display = 'block';
+    document.getElementById('analysisAlerteMsg').textContent = '⚠️ ' + a.alerte_message;
+  }
+  loadAnalysisHistory();
+}
+
+async function loadAnalysisHistory() {
+  try {
+    const res = await fetch(`${BACKEND_URL}/api/analysis/history`, {
+      headers: { 'Authorization': `Bearer ${authToken}` }
+    });
+    const history = await res.json();
+    const el = document.getElementById('analysisHistory');
+    if (!history.length) { el.innerHTML = '<p style="font-size:0.85rem;color:#85B7EB">Aucune analyse effectuée.</p>'; return; }
+    el.innerHTML = history.map(h => `
+      <div style="padding:10px 0;border-bottom:1px solid #E6F1FB;display:flex;justify-content:space-between;align-items:center">
+        <div>
+          <div style="font-size:0.85rem;font-weight:600;color:#021A35">${h.analysis_data?.repas_identifie || 'Repas'}</div>
+          <div style="font-size:0.75rem;color:#85B7EB">${new Date(h.analyzed_at).toLocaleDateString('fr-FR', { day:'numeric', month:'short', hour:'2-digit', minute:'2-digit' })}</div>
+        </div>
+        <div style="display:flex;gap:12px;font-size:0.82rem">
+          <span style="color:#C9A84C">⭐ ${h.analysis_data?.score_sante}/10</span>
+          <span style="color:#85B7EB">${h.analysis_data?.calories_estimees} kcal</span>
+        </div>
+      </div>`).join('');
+  } catch(e) { console.error(e); }
+}
   async function loadMenus() {
   const plan = document.getElementById('sidebarPlan').textContent;
   const isPaid = plan.includes('Standard') || plan.includes('Premium');
