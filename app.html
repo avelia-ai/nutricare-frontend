@@ -256,6 +256,7 @@
     <button class="nav-item" onclick="showView('pricing', this)">💎 Abonnements</button>
     <button class="nav-item" onclick="showView('pro', this)">🧑‍⚕️ Mon professionnel</button>
     <button class="nav-item" onclick="showView('health', this)">📊 Suivi santé</button>
+    <button class="nav-item" onclick="showView('menus', this)">🥗 Mes menus</button>
     <button class="nav-item" onclick="showView('protocols', this)">🧬 Protocoles</button>
     <div class="sidebar-user">
       <div class="sidebar-avatar" id="sidebarAvatar">?</div>
@@ -442,6 +443,49 @@
   <!-- PROFESSIONALS VIEW -->
    <!-- PROTOCOLS VIEW -->
     <!-- HEALTH DASHBOARD VIEW -->
+     <!-- MENUS VIEW -->
+<div id="menusView" style="display:none;padding:32px;overflow-y:auto;background:#F0F6FF">
+  <div style="font-family:'Cormorant Garamond',serif;font-size:2rem;font-weight:400;margin-bottom:6px;color:#021A35">Mes menus de la semaine</div>
+  <div style="font-size:0.85rem;color:#85B7EB;margin-bottom:28px">Menus personnalisés selon votre pathologie et vos préférences</div>
+
+  <!-- Plan requis -->
+  <div id="menusPlanRequired" style="display:none;background:white;border-radius:14px;padding:28px;border:1px solid #B5D4F4;text-align:center;margin-bottom:24px">
+    <div style="font-size:1.4rem;margin-bottom:8px">⭐</div>
+    <div style="font-size:1rem;font-weight:600;color:#021A35;margin-bottom:8px">Fonctionnalité Standard & Premium</div>
+    <div style="font-size:0.85rem;color:#85B7EB;margin-bottom:18px">Passez à un plan payant pour accéder aux menus hebdomadaires personnalisés.</div>
+    <button onclick="showView('pricing')" style="background:#021A35;color:white;padding:10px 24px;border:none;border-radius:100px;font-size:0.88rem;cursor:pointer;font-family:'DM Sans',sans-serif">Voir les abonnements →</button>
+  </div>
+
+  <!-- Contenu menus -->
+  <div id="menusContent" style="display:none">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:24px">
+      <div style="font-size:0.85rem;color:#85B7EB" id="menusWeekLabel">Semaine en cours</div>
+      <button onclick="generateMenu()" id="generateMenuBtn" style="background:#021A35;color:white;padding:10px 24px;border:none;border-radius:100px;font-size:0.88rem;cursor:pointer;font-family:'DM Sans',sans-serif;display:flex;align-items:center;gap:8px">
+        ✨ Générer mon menu IA
+      </button>
+    </div>
+
+    <!-- Loading -->
+    <div id="menusLoading" style="display:none;text-align:center;padding:48px">
+      <div style="font-size:2rem;margin-bottom:16px">🤖</div>
+      <div style="font-size:1rem;color:#021A35;font-weight:500;margin-bottom:8px">NutriCare AI génère votre menu...</div>
+      <div style="font-size:0.85rem;color:#85B7EB">Adaptation à vos pathologies et préférences en cours</div>
+    </div>
+
+    <!-- Menu semaine -->
+    <div id="menusDays" style="display:flex;flex-direction:column;gap:16px"></div>
+
+    <!-- Liste de courses -->
+    <div id="menusShoppingList" style="display:none;background:white;border-radius:16px;padding:24px;border:1px solid #B5D4F4;margin-top:24px">
+      <div style="font-size:0.72rem;font-weight:600;text-transform:uppercase;letter-spacing:1.5px;color:#85B7EB;margin-bottom:16px;display:flex;justify-content:space-between;align-items:center">
+        🛒 LISTE DE COURSES
+        <button onclick="copyShoppingList()" style="background:#E6F1FB;color:#021A35;border:none;border-radius:100px;padding:5px 14px;font-size:0.75rem;cursor:pointer;font-family:'DM Sans',sans-serif">📋 Copier</button>
+      </div>
+      <div id="shoppingListContent" style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px"></div>
+      <div style="margin-top:16px;padding:14px;background:#E6F1FB;border-radius:10px;font-size:0.85rem;color:#021A35" id="menusConseils"></div>
+    </div>
+  </div>
+</div>
 <div id="healthView" style="display:none;padding:32px;overflow-y:auto;background:#F0F6FF">
   <div style="font-family:'Cormorant Garamond',serif;font-size:2rem;font-weight:400;margin-bottom:6px;color:#021A35">Mon suivi santé</div>
   <div style="font-size:0.85rem;color:#85B7EB;margin-bottom:28px">Saisissez vos indicateurs quotidiens</div>
@@ -721,7 +765,93 @@
     if (view === 'protocols') loadProtocols();
     document.getElementById('healthView').style.display = view === 'health' ? 'block' : 'none';
     if (view === 'health') loadHealthDashboard();
+    document.getElementById('menusView').style.display = view === 'menus' ? 'block' : 'none';
+if (view === 'menus') loadMenus();
   }
+  async function loadMenus() {
+  const plan = document.getElementById('sidebarPlan').textContent;
+  const isPaid = plan.includes('Standard') || plan.includes('Premium');
+  document.getElementById('menusPlanRequired').style.display = isPaid ? 'none' : 'block';
+  document.getElementById('menusContent').style.display = isPaid ? 'block' : 'none';
+  if (!isPaid) return;
+
+  try {
+    const res = await fetch(`${BACKEND_URL}/api/menus/current`, {
+      headers: { 'Authorization': `Bearer ${authToken}` }
+    });
+    const menu = await res.json();
+    if (menu) renderMenu(menu);
+  } catch(e) { console.error(e); }
+}
+
+async function generateMenu() {
+  const btn = document.getElementById('generateMenuBtn');
+  btn.disabled = true;
+  btn.textContent = '⏳ Génération en cours...';
+  document.getElementById('menusLoading').style.display = 'block';
+  document.getElementById('menusDays').innerHTML = '';
+  document.getElementById('menusShoppingList').style.display = 'none';
+
+  try {
+    const res = await fetch(`${BACKEND_URL}/api/menus/generate`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${authToken}` }
+    });
+    const menu = await res.json();
+    if (res.ok) renderMenu(menu);
+    else alert(menu.error || 'Erreur lors de la génération');
+  } catch(e) {
+    alert('Erreur de connexion');
+  } finally {
+    btn.disabled = false;
+    btn.textContent = '✨ Régénérer mon menu IA';
+    document.getElementById('menusLoading').style.display = 'none';
+  }
+}
+
+function renderMenu(menu) {
+  const repasIcons = { petit_dejeuner: '🍳', dejeuner: '🥗', collation: '🍎', diner: '🥘' };
+  const repasLabels = { petit_dejeuner: 'Petit-déjeuner', dejeuner: 'Déjeuner', collation: 'Collation', diner: 'Dîner' };
+
+  document.getElementById('menusDays').innerHTML = menu.semaine.map(jour => `
+    <div style="background:white;border-radius:14px;border:1px solid #B5D4F4;overflow:hidden">
+      <div style="background:#021A35;padding:14px 20px">
+        <div style="font-family:'Cormorant Garamond',serif;font-size:1.2rem;color:white">${jour.jour}</div>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:0">
+        ${['petit_dejeuner','dejeuner','collation','diner'].map(repas => `
+        <div style="padding:16px;border-right:1px solid #E6F1FB;border-top:1px solid #E6F1FB">
+          <div style="font-size:1.2rem;margin-bottom:6px">${repasIcons[repas]}</div>
+          <div style="font-size:0.72rem;font-weight:600;text-transform:uppercase;letter-spacing:1px;color:#85B7EB;margin-bottom:6px">${repasLabels[repas]}</div>
+          <div style="font-size:0.85rem;font-weight:600;color:#021A35;margin-bottom:6px">${jour[repas]?.nom || '—'}</div>
+          <div style="font-size:0.75rem;color:#85B7EB">${jour[repas]?.calories || 0} kcal · ${jour[repas]?.prep_minutes || 0} min</div>
+          <div style="margin-top:8px">${(jour[repas]?.ingredients || []).slice(0,3).map(i => `<div style="font-size:0.72rem;color:#378ADD;padding:1px 0">• ${i}</div>`).join('')}</div>
+        </div>`).join('')}
+      </div>
+    </div>`).join('');
+
+  if (menu.liste_courses) {
+    document.getElementById('menusShoppingList').style.display = 'block';
+    const categories = { fruits_legumes: '🥦 Fruits & Légumes', proteines: '🥩 Protéines', feculents: '🌾 Féculents', produits_laitiers: '🧀 Produits laitiers', epicerie: '🏪 Épicerie', autres: '📦 Autres' };
+    document.getElementById('shoppingListContent').innerHTML = Object.entries(categories).map(([key, label]) => {
+      const items = menu.liste_courses[key] || [];
+      if (!items.length) return '';
+      return `<div>
+        <div style="font-size:0.75rem;font-weight:600;color:#021A35;margin-bottom:8px">${label}</div>
+        ${items.map(i => `<div style="font-size:0.82rem;color:#378ADD;padding:3px 0;border-bottom:1px solid #E6F1FB">• ${i}</div>`).join('')}
+      </div>`;
+    }).join('');
+    if (menu.conseils_semaine) {
+      document.getElementById('menusConseils').textContent = '💡 ' + menu.conseils_semaine;
+    }
+  }
+}
+
+function copyShoppingList() {
+  const items = document.querySelectorAll('#shoppingListContent div[style*="color:#378ADD"]');
+  const text = Array.from(items).map(i => i.textContent).join('\n');
+  navigator.clipboard.writeText(text).then(() => alert('Liste de courses copiée ! ✅'));
+}
 async function loadHealthDashboard() {
   try {
     const [todayRes, logsRes] = await Promise.all([
