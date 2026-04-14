@@ -193,6 +193,7 @@
     .dashboard-grid { grid-template-columns: 1fr; }
   }
 </style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
 </head>
 <body>
 
@@ -254,6 +255,7 @@
     <div class="nav-label">Abonnement</div>
     <button class="nav-item" onclick="showView('pricing', this)">💎 Abonnements</button>
     <button class="nav-item" onclick="showView('pro', this)">🧑‍⚕️ Mon professionnel</button>
+    <button class="nav-item" onclick="showView('health', this)">📊 Suivi santé</button>
     <button class="nav-item" onclick="showView('protocols', this)">🧬 Protocoles</button>
     <div class="sidebar-user">
       <div class="sidebar-avatar" id="sidebarAvatar">?</div>
@@ -439,6 +441,63 @@
   </div>
   <!-- PROFESSIONALS VIEW -->
    <!-- PROTOCOLS VIEW -->
+    <!-- HEALTH DASHBOARD VIEW -->
+<div id="healthView" style="display:none;padding:32px;overflow-y:auto;background:#F0F6FF">
+  <div style="font-family:'Cormorant Garamond',serif;font-size:2rem;font-weight:400;margin-bottom:6px;color:#021A35">Mon suivi santé</div>
+  <div style="font-size:0.85rem;color:#85B7EB;margin-bottom:28px">Saisissez vos indicateurs quotidiens</div>
+
+  <!-- Formulaire saisie -->
+  <div style="background:white;border-radius:16px;padding:24px;border:1px solid #B5D4F4;margin-bottom:24px">
+    <div style="font-size:0.72rem;font-weight:600;text-transform:uppercase;letter-spacing:1.5px;color:#85B7EB;margin-bottom:18px">SAISIE DU JOUR</div>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:16px">
+      <div>
+        <label style="font-size:0.75rem;color:#85B7EB;display:block;margin-bottom:4px">🩸 Glycémie (mmol/L)</label>
+        <input type="number" id="hGlycemia" step="0.1" placeholder="ex: 5.4" style="width:100%;padding:10px;border:1.5px solid #B5D4F4;border-radius:8px;font-size:0.88rem;font-family:'DM Sans',sans-serif;outline:none">
+      </div>
+      <div>
+        <label style="font-size:0.75rem;color:#85B7EB;display:block;margin-bottom:4px">⚖️ Poids (kg)</label>
+        <input type="number" id="hWeight" step="0.1" placeholder="ex: 68.5" style="width:100%;padding:10px;border:1.5px solid #B5D4F4;border-radius:8px;font-size:0.88rem;font-family:'DM Sans',sans-serif;outline:none">
+      </div>
+      <div>
+        <label style="font-size:0.75rem;color:#85B7EB;display:block;margin-bottom:4px">⚡ Énergie (1-10)</label>
+        <input type="number" id="hEnergy" min="1" max="10" placeholder="ex: 7" style="width:100%;padding:10px;border:1.5px solid #B5D4F4;border-radius:8px;font-size:0.88rem;font-family:'DM Sans',sans-serif;outline:none">
+      </div>
+      <div>
+        <label style="font-size:0.75rem;color:#85B7EB;display:block;margin-bottom:4px">💤 Sommeil (heures)</label>
+        <input type="number" id="hSleep" step="0.5" placeholder="ex: 7.5" style="width:100%;padding:10px;border:1.5px solid #B5D4F4;border-radius:8px;font-size:0.88rem;font-family:'DM Sans',sans-serif;outline:none">
+      </div>
+      <div>
+        <label style="font-size:0.75rem;color:#85B7EB;display:block;margin-bottom:4px">🫀 Tension (sys/dia)</label>
+        <div style="display:flex;gap:6px">
+          <input type="number" id="hBpSys" placeholder="120" style="width:50%;padding:10px;border:1.5px solid #B5D4F4;border-radius:8px;font-size:0.88rem;font-family:'DM Sans',sans-serif;outline:none">
+          <input type="number" id="hBpDia" placeholder="80" style="width:50%;padding:10px;border:1.5px solid #B5D4F4;border-radius:8px;font-size:0.88rem;font-family:'DM Sans',sans-serif;outline:none">
+        </div>
+      </div>
+      <div>
+        <label style="font-size:0.75rem;color:#85B7EB;display:block;margin-bottom:4px">💧 Hydratation (L)</label>
+        <input type="number" id="hHydration" step="0.1" placeholder="ex: 1.8" style="width:100%;padding:10px;border:1.5px solid #B5D4F4;border-radius:8px;font-size:0.88rem;font-family:'DM Sans',sans-serif;outline:none">
+      </div>
+    </div>
+    <div style="margin-bottom:14px">
+      <label style="font-size:0.75rem;color:#85B7EB;display:block;margin-bottom:4px">📝 Notes du jour</label>
+      <textarea id="hNotes" placeholder="Comment vous sentez-vous aujourd'hui ?" style="width:100%;padding:10px;border:1.5px solid #B5D4F4;border-radius:8px;font-size:0.88rem;font-family:'DM Sans',sans-serif;outline:none;resize:none;height:70px"></textarea>
+    </div>
+    <button onclick="saveHealthLog()" style="background:#021A35;color:white;padding:11px 28px;border:none;border-radius:100px;font-size:0.88rem;font-weight:500;cursor:pointer;font-family:'DM Sans',sans-serif">Enregistrer →</button>
+    <span id="healthSaveMsg" style="font-size:0.78rem;color:#28C840;margin-left:12px;display:none">✓ Enregistré !</span>
+  </div>
+
+  <!-- Graphiques et historique -->
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px">
+    <div style="background:white;border-radius:16px;padding:22px;border:1px solid #B5D4F4">
+      <div style="font-size:0.72rem;font-weight:600;text-transform:uppercase;letter-spacing:1.5px;color:#85B7EB;margin-bottom:16px">📈 ÉVOLUTION — 30 JOURS</div>
+      <canvas id="healthChart" height="200"></canvas>
+    </div>
+    <div style="background:white;border-radius:16px;padding:22px;border:1px solid #B5D4F4">
+      <div style="font-size:0.72rem;font-weight:600;text-transform:uppercase;letter-spacing:1.5px;color:#85B7EB;margin-bottom:16px">📋 HISTORIQUE RÉCENT</div>
+      <div id="healthHistory"></div>
+    </div>
+  </div>
+</div>
 <div id="protocolsView" style="display:none;padding:32px;overflow-y:auto;background:#F0F6FF">
   <div style="font-family:'Cormorant Garamond',serif;font-size:2rem;font-weight:400;margin-bottom:6px;color:#021A35">Mes protocoles nutritionnels</div>
   <div style="font-size:0.85rem;color:#85B7EB;margin-bottom:32px">Protocoles adaptés à vos pathologies</div>
@@ -649,7 +708,8 @@
   }
 
   // ── VIEWS ──
-  function showView(view, btn) {
+  function showView(view, btn) document.getElementById('healthView').style.display = view === 'health' ? 'block' : 'none';
+if (view === 'health') loadHealthDashboard();{
     document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
     if (btn) btn.classList.add('active');
     document.getElementById('chatView').style.display = view === 'chat' ? 'flex' : 'none';
@@ -661,7 +721,88 @@ if (view === 'pro') loadProfessionals();
 document.getElementById('protocolsView').style.display = view === 'protocols' ? 'block' : 'none';
 if (view === 'protocols') loadProtocols();
   }
+async function loadHealthDashboard() {
+  try {
+    const [todayRes, logsRes] = await Promise.all([
+      fetch(`${BACKEND_URL}/api/health/today`, { headers: { 'Authorization': `Bearer ${authToken}` } }),
+      fetch(`${BACKEND_URL}/api/health/logs?days=30`, { headers: { 'Authorization': `Bearer ${authToken}` } })
+    ]);
+    const today = await todayRes.json();
+    const logs = await logsRes.json();
+    if (today.glycemia) document.getElementById('hGlycemia').value = today.glycemia;
+    if (today.weight) document.getElementById('hWeight').value = today.weight;
+    if (today.energy_level) document.getElementById('hEnergy').value = today.energy_level;
+    if (today.sleep_hours) document.getElementById('hSleep').value = today.sleep_hours;
+    if (today.blood_pressure_sys) document.getElementById('hBpSys').value = today.blood_pressure_sys;
+    if (today.blood_pressure_dia) document.getElementById('hBpDia').value = today.blood_pressure_dia;
+    if (today.hydration_liters) document.getElementById('hHydration').value = today.hydration_liters;
+    if (today.notes) document.getElementById('hNotes').value = today.notes;
+    renderHealthChart(logs);
+    renderHealthHistory(logs);
+  } catch(e) { console.error(e); }
+}
 
+async function saveHealthLog() {
+  const data = {
+    glycemia: parseFloat(document.getElementById('hGlycemia').value) || null,
+    weight: parseFloat(document.getElementById('hWeight').value) || null,
+    energy_level: parseInt(document.getElementById('hEnergy').value) || null,
+    sleep_hours: parseFloat(document.getElementById('hSleep').value) || null,
+    blood_pressure_sys: parseInt(document.getElementById('hBpSys').value) || null,
+    blood_pressure_dia: parseInt(document.getElementById('hBpDia').value) || null,
+    hydration_liters: parseFloat(document.getElementById('hHydration').value) || null,
+    notes: document.getElementById('hNotes').value || null
+  };
+  try {
+    const res = await fetch(`${BACKEND_URL}/api/health/log`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${authToken}` },
+      body: JSON.stringify(data)
+    });
+    if (res.ok) {
+      const msg = document.getElementById('healthSaveMsg');
+      msg.style.display = 'inline';
+      setTimeout(() => msg.style.display = 'none', 3000);
+      loadHealthDashboard();
+    }
+  } catch(e) { console.error(e); }
+}
+
+function renderHealthChart(logs) {
+  const canvas = document.getElementById('healthChart');
+  if (!canvas || !logs.length) return;
+  const existing = Chart.getChart(canvas);
+  if (existing) existing.destroy();
+  const labels = logs.map(l => new Date(l.date).toLocaleDateString('fr-FR', { day:'numeric', month:'short' }));
+  new Chart(canvas, {
+    type: 'line',
+    data: {
+      labels,
+      datasets: [
+        { label: 'Poids (kg)', data: logs.map(l => l.weight), borderColor: '#378ADD', backgroundColor: 'rgba(55,138,221,0.1)', tension: 0.4, fill: true },
+        { label: 'Énergie (/10)', data: logs.map(l => l.energy_level), borderColor: '#C9A84C', backgroundColor: 'rgba(201,168,76,0.1)', tension: 0.4, fill: false }
+      ]
+    },
+    options: { responsive: true, plugins: { legend: { position: 'bottom' } }, scales: { y: { beginAtZero: false } } }
+  });
+}
+
+function renderHealthHistory(logs) {
+  const el = document.getElementById('healthHistory');
+  if (!logs.length) { el.innerHTML = '<p style="font-size:0.82rem;color:#85B7EB">Aucune donnée enregistrée.</p>'; return; }
+  el.innerHTML = [...logs].reverse().slice(0, 7).map(l => `
+    <div style="padding:10px 0;border-bottom:1px solid #E6F1FB;font-size:0.82rem">
+      <div style="font-weight:600;color:#021A35;margin-bottom:4px">${new Date(l.date).toLocaleDateString('fr-FR', { weekday:'short', day:'numeric', month:'short' })}</div>
+      <div style="display:flex;gap:12px;flex-wrap:wrap;color:#85B7EB">
+        ${l.weight ? `⚖️ ${l.weight}kg` : ''}
+        ${l.glycemia ? `🩸 ${l.glycemia}mmol/L` : ''}
+        ${l.energy_level ? `⚡ ${l.energy_level}/10` : ''}
+        ${l.sleep_hours ? `💤 ${l.sleep_hours}h` : ''}
+        ${l.hydration_liters ? `💧 ${l.hydration_liters}L` : ''}
+      </div>
+      ${l.notes ? `<div style="color:#021A35;margin-top:4px;font-style:italic">"${l.notes}"</div>` : ''}
+    </div>`).join('');
+}
 async function loadProtocols() {
   const profile = JSON.parse(localStorage.getItem('nutricare_user') || '{}');
   const pathologies = document.getElementById('profilePathologies')?.value?.split(',').map(s => s.trim()).filter(Boolean) || [];
