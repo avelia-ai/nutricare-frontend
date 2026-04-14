@@ -331,9 +331,21 @@
       <a href="app.html" class="btn-primary-lg">Commencer gratuitement →</a>
       <a href="#fonctionnalites" class="btn-outline-lg">Découvrir l'application</a>
     </div>
-    <div style="margin-top:48px;width:100%;max-width:900px">
-  <iframe src="hero-banner.html" style="width:100%;height:340px;border:none;border-radius:16px;" scrolling="no"></iframe>
+    <div style="margin-top:48px;width:100vw;position:relative;left:50%;transform:translateX(-50%);">
+  <iframe src="hero-banner.html" id="heroBanner" style="width:100%;height:380px;border:none;" scrolling="no"></iframe>
 </div>
+<script>
+  function resizeBanner() {
+    const iframe = document.getElementById('heroBanner');
+    if (window.innerWidth < 768) {
+      iframe.style.height = '520px';
+    } else {
+      iframe.style.height = '380px';
+    }
+  }
+  resizeBanner();
+  window.addEventListener('resize', resizeBanner);
+</script>
     <div class="hero-metrics">
       <div class="metric"><div class="metric-num">50+</div><div class="metric-label">Pathologies suivies</div></div>
       <div class="metric"><div class="metric-num">97%</div><div class="metric-label">Satisfaction</div></div>
