@@ -254,6 +254,7 @@
     <div class="nav-label">Abonnement</div>
     <button class="nav-item" onclick="showView('pricing', this)">💎 Abonnements</button>
     <button class="nav-item" onclick="showView('pro', this)">🧑‍⚕️ Mon professionnel</button>
+    <button class="nav-item" onclick="showView('protocols', this)">🧬 Protocoles</button>
     <div class="sidebar-user">
       <div class="sidebar-avatar" id="sidebarAvatar">?</div>
       <div class="sidebar-user-info">
@@ -437,6 +438,12 @@
 
   </div>
   <!-- PROFESSIONALS VIEW -->
+   <!-- PROTOCOLS VIEW -->
+<div id="protocolsView" style="display:none;padding:32px;overflow-y:auto;background:#F0F6FF">
+  <div style="font-family:'Cormorant Garamond',serif;font-size:2rem;font-weight:400;margin-bottom:6px;color:#021A35">Mes protocoles nutritionnels</div>
+  <div style="font-size:0.85rem;color:#85B7EB;margin-bottom:32px">Protocoles adaptés à vos pathologies</div>
+  <div id="protocolsList" style="display:flex;flex-direction:column;gap:20px"></div>
+</div>
 <div id="proView" style="display:none;padding:32px;overflow-y:auto;background:#F0F6FF">
   <div style="font-family:'Cormorant Garamond',serif;font-size:2rem;font-weight:400;margin-bottom:6px;color:#021A35">Mes professionnels de santé</div>
   <div style="font-size:0.85rem;color:#85B7EB;margin-bottom:32px">Partagez vos données avec votre médecin ou nutritionniste</div>
@@ -651,8 +658,73 @@
     document.getElementById('pricingView').style.display = view === 'pricing' ? 'block' : 'none';
     document.getElementById('proView').style.display = view === 'pro' ? 'block' : 'none';
 if (view === 'pro') loadProfessionals();
+document.getElementById('protocolsView').style.display = view === 'protocols' ? 'block' : 'none';
+if (view === 'protocols') loadProtocols();
   }
 
+async function loadProtocols() {
+  const profile = JSON.parse(localStorage.getItem('nutricare_user') || '{}');
+  const pathologies = document.getElementById('profilePathologies')?.value?.split(',').map(s => s.trim()).filter(Boolean) || [];
+
+  if (!pathologies.length) {
+    document.getElementById('protocolsList').innerHTML = `
+      <div style="background:white;border-radius:14px;padding:28px;border:1px solid #B5D4F4;text-align:center">
+        <div style="font-size:1.4rem;margin-bottom:8px">🧬</div>
+        <div style="font-size:1rem;font-weight:600;color:#021A35;margin-bottom:8px">Aucune pathologie renseignée</div>
+        <div style="font-size:0.85rem;color:#85B7EB;margin-bottom:18px">Ajoutez vos pathologies dans votre profil pour accéder aux protocoles personnalisés.</div>
+        <button onclick="showView('profile')" style="background:#021A35;color:white;padding:10px 24px;border:none;border-radius:100px;font-size:0.88rem;cursor:pointer;font-family:'DM Sans',sans-serif">Compléter mon profil →</button>
+      </div>`;
+    return;
+  }
+
+  try {
+    const res = await fetch(`${BACKEND_URL}/api/protocols/match`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${authToken}` },
+      body: JSON.stringify({ pathologies })
+    });
+    const protocols = await res.json();
+
+    if (!protocols.length) {
+      document.getElementById('protocolsList').innerHTML = '<p style="color:#85B7EB">Aucun protocole trouvé pour vos pathologies. Essayez de reformuler dans votre profil.</p>';
+      return;
+    }
+
+    document.getElementById('protocolsList').innerHTML = protocols.map(p => `
+      <div style="background:white;border-radius:16px;border:1px solid #B5D4F4;overflow:hidden">
+        <div style="background:#021A35;padding:20px 24px;display:flex;align-items:center;gap:14px">
+          <div style="font-size:2rem">${p.icon}</div>
+          <div>
+            <div style="font-family:'Cormorant Garamond',serif;font-size:1.4rem;color:white">${p.name}</div>
+            <div style="font-size:0.82rem;color:#85B7EB;margin-top:2px">${p.description}</div>
+          </div>
+        </div>
+        <div style="padding:24px;display:grid;grid-template-columns:1fr 1fr;gap:20px">
+          <div>
+            <div style="font-size:0.72rem;font-weight:600;text-transform:uppercase;letter-spacing:1.5px;color:#85B7EB;margin-bottom:12px">✅ Aliments à favoriser</div>
+            ${p.nutrition.aliments_favoriser.map(a => `<div style="padding:5px 0;border-bottom:1px solid #E6F1FB;font-size:0.82rem;color:#021A35">🟢 ${a}</div>`).join('')}
+          </div>
+          <div>
+            <div style="font-size:0.72rem;font-weight:600;text-transform:uppercase;letter-spacing:1.5px;color:#85B7EB;margin-bottom:12px">❌ Aliments à éviter</div>
+            ${p.nutrition.aliments_eviter.map(a => `<div style="padding:5px 0;border-bottom:1px solid #E6F1FB;font-size:0.82rem;color:#021A35">🔴 ${a}</div>`).join('')}
+          </div>
+          <div>
+            <div style="font-size:0.72rem;font-weight:600;text-transform:uppercase;letter-spacing:1.5px;color:#85B7EB;margin-bottom:12px">💊 Compléments suggérés</div>
+            ${p.complements.map(c => `<div style="padding:8px;background:#F0F6FF;border-radius:8px;margin-bottom:6px;font-size:0.82rem"><strong style="color:#021A35">${c.nom}</strong> — ${c.dosage}<div style="font-size:0.75rem;color:#85B7EB;margin-top:2px">${c.note}</div></div>`).join('')}
+          </div>
+          <div>
+            <div style="font-size:0.72rem;font-weight:600;text-transform:uppercase;letter-spacing:1.5px;color:#85B7EB;margin-bottom:12px">🏃 Habitudes recommandées</div>
+            ${p.habitudes.map(h => `<div style="padding:5px 0;border-bottom:1px solid #E6F1FB;font-size:0.82rem;color:#021A35">→ ${h}</div>`).join('')}
+          </div>
+        </div>
+        <div style="padding:12px 24px;background:#FFF3E0;border-top:1px solid #FFB74D">
+          <div style="font-size:0.78rem;color:#E65100">⚕️ ${p.avertissement}</div>
+        </div>
+      </div>`).join('');
+  } catch(e) {
+    console.error(e);
+  }
+}
   async function loadProfessionals() {
   const plan = document.getElementById('sidebarPlan').textContent;
   const isPaid = plan.includes('Standard') || plan.includes('Premium');
