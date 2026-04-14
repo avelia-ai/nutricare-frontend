@@ -3,310 +3,407 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>NutriCare AI – Votre coach santé & nutrition personnalisé</title>
-<meta name="description" content="NutriCare AI accompagne les personnes souffrant de pathologies médicales avec des conseils nutritionnels personnalisés, bienveillants et adaptés.">
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500&family=DM+Mono&display=swap" rel="stylesheet">
+<title>Avelia AI — Votre coach santé & nutrition personnalisé</title>
+<meta name="description" content="Avelia AI accompagne les personnes souffrant de pathologies médicales avec des conseils nutritionnels personnalisés, bienveillants et adaptés.">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&family=DM+Mono&display=swap" rel="stylesheet">
 <style>
-  :root {
-  --sage: #378ADD;
-  --sage-light: #85B7EB;
-  --sage-pale: #E6F1FB;
-  --terracotta: #C9A84C;
-  --cream: #FFFFFF;
---warm: #F0F6FF;
-  --charcoal: #021A35;
-  --mid: #185FA5;
-  --soft: #4A7DB5;
-  --border: #B5D4F4;
+:root {
+  --navy: #021A35;
+  --navy-mid: #0C447C;
+  --blue: #378ADD;
+  --blue-light: #85B7EB;
+  --blue-pale: #E6F1FB;
   --gold: #C9A84C;
+  --gold-light: #E8D4A0;
+  --white: #FFFFFF;
+  --off-white: #F8FAFF;
+  --text: #021A35;
+  --text-mid: #3A5A7C;
+  --text-soft: #7A9BB8;
+  --border: #D0E4F4;
 }
 
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-  html { scroll-behavior: smooth; }
-  body { font-family: 'DM Sans', sans-serif; background: var(--cream); color: var(--charcoal); overflow-x: hidden; }
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body { font-family: 'DM Sans', sans-serif; background: var(--white); color: var(--text); overflow-x: hidden; }
 
-  /* ── CURSOR ── */
-  * { cursor: none; }
-  .cursor { position: fixed; width: 8px; height: 8px; background: var(--sage); border-radius: 50%; pointer-events: none; z-index: 9999; transition: transform .15s, opacity .15s; transform: translate(-50%, -50%); }
-  .cursor-ring { position: fixed; width: 32px; height: 32px; border: 1.5px solid rgba(123,158,135,0.4); border-radius: 50%; pointer-events: none; z-index: 9998; transition: transform .25s cubic-bezier(.25,.46,.45,.94), opacity .2s; transform: translate(-50%, -50%); }
+/* ── CURSOR ── */
+.cursor { position: fixed; width: 8px; height: 8px; background: var(--gold); border-radius: 50%; pointer-events: none; z-index: 9999; transition: transform .1s; transform: translate(-50%,-50%); }
+.cursor-ring { position: fixed; width: 36px; height: 36px; border: 1px solid rgba(55,138,221,0.3); border-radius: 50%; pointer-events: none; z-index: 9998; transition: transform .2s cubic-bezier(.25,.46,.45,.94); transform: translate(-50%,-50%); }
 
-  /* ── NAV ── */
-  nav {
-    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
-    padding: 18px 48px; display: flex; align-items: center; justify-content: space-between;
-    transition: all .3s;
-  }
-  nav.scrolled { background: rgba(250,247,242,0.92); backdrop-filter: blur(20px); border-bottom: 1px solid var(--border); padding: 14px 48px; }
-  .nav-logo { font-family: 'Cormorant Garamond', serif; font-size: 1.5rem; font-weight: 600; color: var(--charcoal); display: flex; align-items: center; gap: 10px; text-decoration: none; }
-  .nav-logo-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--sage); animation: pulse 3s infinite; }
-  @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.6;transform:scale(1.3)} }
-  .nav-links { display: flex; gap: 36px; align-items: center; }
-  .nav-links a { font-size: 0.85rem; color: var(--mid); text-decoration: none; font-weight: 400; transition: color .2s; letter-spacing: .01em; }
-  .nav-links a:hover { color: var(--charcoal); }
-  .nav-ctas { display: flex; gap: 12px; align-items: center; }
-  .btn-ghost { font-size: 0.85rem; color: var(--charcoal); text-decoration: none; font-weight: 500; padding: 9px 20px; border-radius: 100px; border: 1.5px solid var(--border); transition: all .2s; }
-  .btn-ghost:hover { border-color: var(--charcoal); }
-  .btn-cta { font-size: 0.85rem; color: white; background: var(--charcoal); text-decoration: none; font-weight: 500; padding: 10px 22px; border-radius: 100px; transition: all .25s; }
-  .btn-cta:hover { background: var(--sage); transform: translateY(-1px); box-shadow: 0 6px 20px rgba(123,158,135,0.35); }
+/* ── NAV ── */
+nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  padding: 20px 60px; display: flex; align-items: center; justify-content: space-between;
+  transition: all .4s;
+}
+nav.scrolled {
+  background: rgba(255,255,255,0.95); backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border); padding: 14px 60px;
+  box-shadow: 0 2px 20px rgba(2,26,53,0.06);
+}
+.nav-logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+.nav-logo img { height: 32px; }
+.nav-logo-text { font-family: 'Cormorant Garamond', serif; font-size: 1.4rem; font-weight: 600; color: var(--navy); }
+.nav-links { display: flex; gap: 40px; align-items: center; }
+.nav-links a { font-size: 0.85rem; color: var(--text-mid); text-decoration: none; font-weight: 400; transition: color .2s; letter-spacing: .02em; }
+.nav-links a:hover { color: var(--navy); }
+.nav-ctas { display: flex; gap: 12px; align-items: center; }
+.btn-ghost { font-size: 0.85rem; color: var(--navy); text-decoration: none; font-weight: 500; padding: 9px 22px; border-radius: 100px; border: 1.5px solid var(--border); transition: all .2s; }
+.btn-ghost:hover { border-color: var(--blue); color: var(--blue); }
+.btn-primary { font-size: 0.85rem; color: white; background: var(--navy); text-decoration: none; font-weight: 500; padding: 10px 24px; border-radius: 100px; transition: all .25s; }
+.btn-primary:hover { background: var(--blue); transform: translateY(-1px); box-shadow: 0 6px 20px rgba(55,138,221,0.35); }
 
-  /* ── HERO ── */
-  .hero {
-    min-height: 100vh; display: flex; flex-direction: column;
-    align-items: center; justify-content: center;
-    padding: 120px 48px 80px; text-align: center; position: relative; overflow: hidden;
-  }
-  .hero-bg {
-    position: absolute; inset: 0; z-index: 0;
-    background:
-      radial-gradient(ellipse 900px 700px at 10% 50%, rgba(123,158,135,0.1) 0%, transparent 70%),
-      radial-gradient(ellipse 700px 600px at 90% 40%, rgba(196,120,90,0.07) 0%, transparent 70%),
-      radial-gradient(ellipse 500px 500px at 50% 100%, rgba(201,168,76,0.06) 0%, transparent 70%);
-  }
-  .hero-grain {
-    position: absolute; inset: 0; z-index: 1; opacity: .025;
-    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
-    background-size: 200px;
-  }
-  .hero-content { position: relative; z-index: 2; max-width: 900px; }
-  .hero-badge {
-    display: inline-flex; align-items: center; gap: 8px;
-    background: white; border: 1px solid var(--border);
-    padding: 7px 18px; border-radius: 100px; font-size: 0.78rem;
-    font-weight: 500; color: var(--mid); margin-bottom: 32px;
-    box-shadow: 0 2px 12px rgba(0,0,0,0.05);
-    animation: fadeUp .6s ease both;
-  }
-  .hero-badge-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--sage); animation: pulse 2s infinite; }
-  .hero h1 {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: clamp(3.2rem, 7vw, 6.5rem); font-weight: 300; line-height: 1.05;
-    color: var(--charcoal); margin-bottom: 24px;
-    animation: fadeUp .6s ease .1s both;
-  }
-  .hero h1 em { font-style: italic; color: var(--sage); }
-  .hero h1 strong { font-weight: 600; }
-  .hero-sub {
-    font-size: 1.1rem; color: var(--mid); max-width: 520px; margin: 0 auto 44px;
-    line-height: 1.75; font-weight: 300;
-    animation: fadeUp .6s ease .2s both;
-  }
-  .hero-actions { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; animation: fadeUp .6s ease .3s both; }
-  .btn-primary-lg {
-    background: var(--charcoal); color: white; padding: 15px 36px;
-    border-radius: 100px; font-size: 0.95rem; font-weight: 500;
-    text-decoration: none; transition: all .25s; display: inline-flex; align-items: center; gap: 8px;
-  }
-  .btn-primary-lg:hover { background: var(--sage); transform: translateY(-2px); box-shadow: 0 12px 32px rgba(123,158,135,0.3); }
-  .btn-outline-lg {
-    background: transparent; color: var(--charcoal); padding: 15px 36px;
-    border-radius: 100px; font-size: 0.95rem; font-weight: 500;
-    text-decoration: none; transition: all .25s; border: 1.5px solid var(--border);
-  }
-  .btn-outline-lg:hover { border-color: var(--charcoal); transform: translateY(-2px); }
+/* ── HERO ── */
+.hero {
+  min-height: 100vh;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: center;
+  padding: 120px 60px 60px;
+  gap: 60px;
+  background: var(--white);
+  position: relative;
+  overflow: hidden;
+}
+.hero::before {
+  content: '';
+  position: absolute;
+  top: -200px; right: -200px;
+  width: 600px; height: 600px;
+  background: radial-gradient(circle, rgba(55,138,221,0.08) 0%, transparent 70%);
+  pointer-events: none;
+}
+.hero-left { position: relative; z-index: 2; }
+.hero-badge {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: var(--blue-pale); border: 1px solid rgba(55,138,221,0.2);
+  padding: 6px 16px; border-radius: 100px;
+  font-size: 0.75rem; font-weight: 500; color: var(--blue);
+  letter-spacing: .08em; text-transform: uppercase; margin-bottom: 28px;
+}
+.hero-badge-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--blue); animation: pulse 2s infinite; }
+@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.4} }
 
-  .hero-metrics {
-    display: flex; gap: 56px; justify-content: center; margin-top: 80px; flex-wrap: wrap;
-    animation: fadeUp .6s ease .4s both;
-  }
-  .metric { text-align: center; }
-  .metric-num { font-family: 'Cormorant Garamond', serif; font-size: 3rem; font-weight: 600; color: var(--charcoal); line-height: 1; }
-  .metric-label { font-size: 0.75rem; color: var(--soft); margin-top: 6px; text-transform: uppercase; letter-spacing: .1em; font-weight: 500; }
+.hero h1 {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(2.8rem, 5vw, 4.2rem);
+  font-weight: 400; line-height: 1.1;
+  color: var(--navy); margin-bottom: 24px;
+  letter-spacing: -.01em;
+}
+.hero h1 em { font-style: italic; color: var(--blue); }
+.hero h1 span { color: var(--gold); }
 
-  @keyframes fadeUp { from{opacity:0;transform:translateY(24px)} to{opacity:1;transform:none} }
+.hero-desc { font-size: 1.05rem; color: var(--text-mid); line-height: 1.75; max-width: 480px; margin-bottom: 40px; font-weight: 300; }
 
-  /* ── MARQUEE ── */
-  .marquee-section { padding: 28px 0; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); background: var(--warm); overflow: hidden; }
-  .marquee-track { display: flex; gap: 0; animation: marquee 30s linear infinite; white-space: nowrap; }
-  .marquee-item { display: inline-flex; align-items: center; gap: 12px; padding: 0 32px; font-size: 0.8rem; font-weight: 500; color: var(--soft); text-transform: uppercase; letter-spacing: .1em; }
-  .marquee-sep { width: 4px; height: 4px; border-radius: 50%; background: var(--sage-light); flex-shrink: 0; }
-  @keyframes marquee { from{transform:translateX(0)} to{transform:translateX(-50%)} }
+.hero-actions { display: flex; gap: 14px; align-items: center; margin-bottom: 56px; }
+.btn-hero-primary {
+  font-size: 0.92rem; color: white; background: var(--navy);
+  text-decoration: none; font-weight: 500; padding: 14px 32px;
+  border-radius: 100px; transition: all .25s; letter-spacing: .01em;
+}
+.btn-hero-primary:hover { background: var(--blue); transform: translateY(-2px); box-shadow: 0 12px 30px rgba(55,138,221,0.3); }
+.btn-hero-outline {
+  font-size: 0.92rem; color: var(--navy); background: transparent;
+  text-decoration: none; font-weight: 500; padding: 14px 32px;
+  border-radius: 100px; border: 1.5px solid var(--border); transition: all .25s;
+}
+.btn-hero-outline:hover { border-color: var(--navy); transform: translateY(-2px); }
 
-  /* ── SECTIONS ── */
-  section { padding: 110px 48px; }
-  .section-label { font-size: 0.72rem; font-weight: 600; text-transform: uppercase; letter-spacing: .14em; color: var(--sage); margin-bottom: 14px; }
-  .section-title { font-family: 'Cormorant Garamond', serif; font-size: clamp(2.2rem, 4vw, 3.4rem); font-weight: 300; line-height: 1.15; color: var(--charcoal); }
-  .section-title em { font-style: italic; color: var(--sage); }
-  .section-sub { font-size: 1rem; color: var(--mid); margin-top: 16px; max-width: 500px; line-height: 1.75; font-weight: 300; }
+.hero-trust { display: flex; align-items: center; gap: 20px; }
+.hero-trust-avatars { display: flex; }
+.hero-trust-avatars img, .hero-trust-avatar {
+  width: 36px; height: 36px; border-radius: 50%;
+  border: 2px solid white; margin-left: -10px; object-fit: cover;
+}
+.hero-trust-avatar { display: flex; align-items: center; justify-content: center; font-size: 0.75rem; font-weight: 600; color: white; }
+.hero-trust-avatars .hero-trust-avatar:first-child { margin-left: 0; }
+.hero-trust-text { font-size: 0.82rem; color: var(--text-soft); }
+.hero-trust-text strong { color: var(--navy); font-weight: 600; }
 
-  /* ── HOW IT WORKS ── */
-  .how-section { background: var(--charcoal); }
-  .how-section .section-title { color: white; }
-  .how-section .section-label { color: var(--sage-light); }
-  .how-section .section-sub { color: rgba(255,255,255,0.5); }
-  .how-container { max-width: 1100px; margin: 0 auto; }
-  .how-steps { display: grid; grid-template-columns: repeat(4, 1fr); gap: 2px; margin-top: 64px; }
-  .how-step { background: rgba(255,255,255,0.04); padding: 32px 28px; border-radius: 0; position: relative; transition: background .25s; }
-  .how-step:first-child { border-radius: 12px 0 0 12px; }
-  .how-step:last-child { border-radius: 0 12px 12px 0; }
-  .how-step:hover { background: rgba(255,255,255,0.08); }
-  .how-num { font-family: 'DM Mono', monospace; font-size: 0.7rem; color: rgba(255,255,255,0.2); margin-bottom: 20px; }
-  .how-icon { font-size: 1.8rem; margin-bottom: 14px; }
-  .how-title { font-size: 0.95rem; font-weight: 600; color: white; margin-bottom: 10px; }
-  .how-desc { font-size: 0.82rem; color: rgba(255,255,255,0.45); line-height: 1.65; font-weight: 300; }
+/* Hero right — image composition */
+.hero-right {
+  position: relative;
+  height: 600px;
+}
+.hero-img-main {
+  position: absolute;
+  right: 0; top: 0;
+  width: 85%;
+  height: 100%;
+  border-radius: 24px;
+  overflow: hidden;
+}
+.hero-img-main img {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  filter: brightness(1.02) saturate(1.05);
+}
+.hero-img-main::after {
+  content: '';
+  position: absolute; inset: 0;
+  background: linear-gradient(135deg, rgba(2,26,53,0.1) 0%, transparent 60%);
+}
 
-  /* ── FEATURES ── */
-  .features-section { background: var(--cream); }
-  .features-container { max-width: 1100px; margin: 0 auto; }
-  .features-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 60px; }
-  .feat-card {
-    background: white; border: 1px solid var(--border); border-radius: 16px;
-    padding: 28px; transition: all .25s; position: relative; overflow: hidden;
-  }
-  .feat-card::after { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: var(--sage); transform: scaleX(0); transition: transform .3s; transform-origin: left; }
-  .feat-card:hover { transform: translateY(-4px); box-shadow: 0 16px 40px rgba(0,0,0,0.07); }
-  .feat-card:hover::after { transform: scaleX(1); }
-  .feat-card.wide { grid-column: span 2; }
-  .feat-card.dark { background: var(--charcoal); border-color: transparent; }
-  .feat-card.dark .feat-title { color: white; }
-  .feat-card.dark .feat-desc { color: rgba(255,255,255,0.5); }
-  .feat-icon { font-size: 1.5rem; margin-bottom: 14px; }
-  .feat-title { font-size: 0.95rem; font-weight: 600; color: var(--charcoal); margin-bottom: 8px; }
-  .feat-desc { font-size: 0.82rem; color: var(--mid); line-height: 1.65; font-weight: 300; }
-  .feat-tag { display: inline-block; margin-top: 14px; font-size: 0.65rem; font-weight: 600; text-transform: uppercase; letter-spacing: .08em; padding: 4px 10px; border-radius: 100px; }
-  .tag-free { background: var(--sage-pale); color: var(--sage); }
-  .tag-standard { background: rgba(196,120,90,0.1); color: var(--terracotta); }
-  .tag-premium { background: rgba(201,168,76,0.1); color: var(--gold); }
+/* Floating cards */
+.hero-card {
+  position: absolute;
+  background: white;
+  border-radius: 16px;
+  padding: 16px 20px;
+  box-shadow: 0 8px 32px rgba(2,26,53,0.12);
+  border: 1px solid rgba(255,255,255,0.8);
+  animation: float 4s ease-in-out infinite;
+}
+@keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-8px)} }
+.hero-card-1 { left: -20px; top: 80px; min-width: 200px; animation-delay: 0s; }
+.hero-card-2 { left: -10px; bottom: 120px; min-width: 180px; animation-delay: 1.5s; }
+.hero-card-3 { right: 20px; bottom: 40px; min-width: 160px; animation-delay: 0.8s; }
+.hero-card-label { font-size: 0.68rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1.2px; color: var(--text-soft); margin-bottom: 6px; }
+.hero-card-value { font-family: 'DM Mono', monospace; font-size: 1.4rem; font-weight: 700; color: var(--navy); line-height: 1; }
+.hero-card-sub { font-size: 0.72rem; color: var(--text-soft); margin-top: 4px; }
+.hero-card-dot { display: inline-block; width: 6px; height: 6px; border-radius: 50%; margin-right: 4px; }
+.hero-card-bar { height: 4px; background: var(--blue-pale); border-radius: 2px; margin-top: 8px; overflow: hidden; }
+.hero-card-bar-fill { height: 100%; border-radius: 2px; background: linear-gradient(90deg, var(--blue), var(--gold)); }
 
-  /* ── PATHOLOGIES ── */
-  .patho-section { background: var(--warm); }
-  .patho-container { max-width: 1000px; margin: 0 auto; }
-  .patho-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-top: 52px; }
-  .patho-card {
-    background: white; border: 1px solid var(--border); border-radius: 12px;
-    padding: 20px 16px; text-align: center; transition: all .2s;
-  }
-  .patho-card:hover { border-color: var(--sage-light); background: var(--sage-pale); transform: translateY(-3px); box-shadow: 0 8px 24px rgba(0,0,0,0.06); }
-  .patho-icon { font-size: 1.8rem; margin-bottom: 10px; }
-  .patho-name { font-size: 0.85rem; font-weight: 600; color: var(--charcoal); margin-bottom: 4px; }
-  .patho-tag { font-size: 0.68rem; color: var(--soft); }
+/* ── LOGOS / PARTENAIRES ── */
+.partners {
+  padding: 48px 60px;
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  background: var(--off-white);
+}
+.partners-label { font-size: 0.72rem; font-weight: 500; text-transform: uppercase; letter-spacing: .12em; color: var(--text-soft); text-align: center; margin-bottom: 28px; }
+.partners-logos { display: flex; justify-content: center; align-items: center; gap: 60px; flex-wrap: wrap; }
+.partner-item { font-family: 'Cormorant Garamond', serif; font-size: 1.1rem; font-weight: 500; color: var(--border); letter-spacing: .05em; }
 
-  /* ── CHAT DEMO ── */
-  .demo-section { background: var(--cream); }
-  .demo-container { max-width: 960px; margin: 0 auto; }
-  .demo-shell {
-    margin-top: 56px; border-radius: 20px; overflow: hidden;
-    box-shadow: 0 32px 80px rgba(0,0,0,0.12); border: 1px solid var(--border);
-  }
-  .demo-topbar { background: var(--charcoal); padding: 14px 20px; display: flex; align-items: center; gap: 12px; }
-  .demo-dots { display: flex; gap: 6px; }
-  .demo-dot { width: 10px; height: 10px; border-radius: 50%; }
-  .demo-dot:nth-child(1){ background: #FF5F57; }
-  .demo-dot:nth-child(2){ background: #FFBD2E; }
-  .demo-dot:nth-child(3){ background: #28C840; }
-  .demo-topbar-title { font-size: 0.78rem; color: rgba(255,255,255,0.4); margin-left: 8px; }
-  .demo-body { background: var(--warm); padding: 28px; display: flex; flex-direction: column; gap: 16px; }
-  .demo-msg { display: flex; gap: 10px; }
-  .demo-msg.right { flex-direction: row-reverse; }
-  .demo-av { width: 30px; height: 30px; border-radius: 50%; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 0.85rem; }
-  .demo-msg.left .demo-av { background: linear-gradient(135deg, var(--sage), #5A8C6A); }
-  .demo-msg.right .demo-av { background: linear-gradient(135deg, var(--terracotta), #B06040); color: white; font-size: 0.65rem; font-weight: 700; }
-  .demo-bub { max-width: 68%; padding: 12px 16px; border-radius: 16px; font-size: 0.87rem; line-height: 1.65; font-weight: 300; }
-  .demo-msg.left .demo-bub { background: white; color: var(--charcoal); border-radius: 4px 16px 16px 16px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
-  .demo-msg.right .demo-bub { background: var(--charcoal); color: white; border-radius: 16px 4px 16px 16px; }
+/* ── STATS ── */
+.stats { padding: 80px 60px; background: var(--navy); position: relative; overflow: hidden; }
+.stats::before {
+  content: '';
+  position: absolute; top: -100px; right: -100px;
+  width: 400px; height: 400px;
+  background: radial-gradient(circle, rgba(55,138,221,0.15) 0%, transparent 70%);
+}
+.stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 40px; position: relative; z-index: 1; }
+.stat-item { text-align: center; }
+.stat-num { font-family: 'Cormorant Garamond', serif; font-size: 3.2rem; font-weight: 400; color: white; line-height: 1; margin-bottom: 8px; }
+.stat-num span { color: var(--gold); }
+.stat-label { font-size: 0.82rem; color: var(--blue-light); font-weight: 300; }
 
-  /* ── PRICING ── */
-  .pricing-section { background: var(--warm); }
-  .pricing-container { max-width: 960px; margin: 0 auto; }
-  .pricing-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-top: 56px; }
-  .price-card { border-radius: 20px; padding: 32px; transition: all .3s; }
-  .price-card.free { background: white; border: 1.5px solid var(--border); }
-  .price-card.standard { background: var(--charcoal); border: 1.5px solid var(--charcoal); position: relative; }
-  .price-card.premium { background: linear-gradient(135deg, #1E1810, #2E2416); border: 1.5px solid rgba(201,168,76,0.25); }
-  .price-card:hover { transform: translateY(-6px); box-shadow: 0 24px 56px rgba(0,0,0,0.12); }
-  .popular-ribbon { position: absolute; top: -1px; left: 50%; transform: translateX(-50%); background: var(--terracotta); color: white; font-size: 0.62rem; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; padding: 5px 16px; border-radius: 0 0 8px 8px; }
-  .price-badge { display: inline-block; font-size: 0.65rem; font-weight: 700; text-transform: uppercase; letter-spacing: .1em; padding: 4px 12px; border-radius: 100px; margin-bottom: 18px; }
-  .free .price-badge { background: var(--sage-pale); color: var(--sage); }
-  .standard .price-badge { background: rgba(255,255,255,0.1); color: rgba(255,255,255,0.6); }
-  .premium .price-badge { background: rgba(201,168,76,0.15); color: var(--gold); }
-  .price-name { font-family: 'Cormorant Garamond', serif; font-size: 1.7rem; font-weight: 400; margin-bottom: 8px; }
-  .free .price-name { color: var(--charcoal); }
-  .standard .price-name, .premium .price-name { color: white; }
-  .price-amount { font-size: 2.8rem; font-weight: 700; font-family: 'DM Mono', monospace; }
-  .free .price-amount { color: var(--charcoal); }
-  .standard .price-amount, .premium .price-amount { color: white; }
-  .price-period { font-size: 0.8rem; opacity: .45; }
-  .price-desc { font-size: 0.82rem; margin: 14px 0 20px; font-weight: 300; }
-  .free .price-desc { color: var(--mid); }
-  .standard .price-desc, .premium .price-desc { color: rgba(255,255,255,0.5); }
-  .price-list { list-style: none; margin-bottom: 28px; display: flex; flex-direction: column; gap: 9px; }
-  .price-list li { font-size: 0.82rem; display: flex; gap: 8px; }
-  .free .price-list li { color: var(--mid); }
-  .standard .price-list li, .premium .price-list li { color: rgba(255,255,255,0.65); }
-  .price-check { color: var(--sage); flex-shrink: 0; }
-  .premium .price-check { color: var(--gold); }
-  .btn-price { width: 100%; padding: 12px; border-radius: 100px; font-size: 0.88rem; font-weight: 500; border: none; text-decoration: none; display: block; text-align: center; transition: all .2s; font-family: 'DM Sans', sans-serif; }
-  .free .btn-price { background: var(--charcoal); color: white; }
-  .free .btn-price:hover { background: var(--sage); }
-  .standard .btn-price { background: white; color: var(--charcoal); }
-  .standard .btn-price:hover { background: var(--sage-pale); }
-  .premium .btn-price { background: var(--gold); color: var(--charcoal); }
-  .premium .btn-price:hover { background: #D4B55A; }
+/* ── FEATURES ── */
+.features { padding: 100px 60px; background: var(--white); }
+.section-header { text-align: center; max-width: 600px; margin: 0 auto 72px; }
+.section-tag { font-size: 0.72rem; font-weight: 600; text-transform: uppercase; letter-spacing: .14em; color: var(--blue); margin-bottom: 14px; }
+.section-title { font-family: 'Cormorant Garamond', serif; font-size: clamp(2rem, 4vw, 3rem); font-weight: 300; line-height: 1.2; color: var(--navy); }
+.section-title em { font-style: italic; color: var(--blue); }
+.section-desc { font-size: 1rem; color: var(--text-mid); line-height: 1.7; margin-top: 16px; font-weight: 300; }
 
-  /* ── TESTIMONIALS ── */
-  .testim-section { background: var(--cream); }
-  .testim-container { max-width: 1000px; margin: 0 auto; }
-  .testim-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-top: 56px; }
-  .testim-card { background: white; border: 1px solid var(--border); border-radius: 16px; padding: 28px; }
-  .testim-stars { color: var(--gold); font-size: 0.9rem; margin-bottom: 14px; letter-spacing: 2px; }
-  .testim-text { font-size: 0.88rem; color: var(--mid); line-height: 1.7; font-weight: 300; font-style: italic; margin-bottom: 18px; }
-  .testim-author { display: flex; align-items: center; gap: 10px; }
-  .testim-av { width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.8rem; font-weight: 600; color: white; flex-shrink: 0; }
-  .testim-name { font-size: 0.82rem; font-weight: 600; color: var(--charcoal); }
-  .testim-patho { font-size: 0.72rem; color: var(--soft); }
+.features-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px; background: var(--border); border-radius: 20px; overflow: hidden; }
+.feature-card {
+  background: white; padding: 40px;
+  transition: all .3s;
+  position: relative;
+}
+.feature-card:hover { background: var(--off-white); }
+.feature-icon { width: 52px; height: 52px; border-radius: 14px; background: var(--blue-pale); display: flex; align-items: center; justify-content: center; font-size: 1.4rem; margin-bottom: 20px; }
+.feature-title { font-family: 'Cormorant Garamond', serif; font-size: 1.3rem; font-weight: 500; color: var(--navy); margin-bottom: 10px; }
+.feature-desc { font-size: 0.88rem; color: var(--text-mid); line-height: 1.65; font-weight: 300; }
+.feature-tag { display: inline-block; margin-top: 16px; font-size: 0.68rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; padding: 4px 12px; border-radius: 100px; background: var(--blue-pale); color: var(--blue); }
+.feature-tag.gold { background: rgba(201,168,76,0.12); color: var(--gold); }
 
-  /* ── CTA FINAL ── */
-  .cta-section { background: var(--charcoal); text-align: center; padding: 120px 48px; }
-  .cta-section .section-title { color: white; margin: 0 auto; max-width: 700px; }
-  .cta-section .section-sub { color: rgba(255,255,255,0.5); margin: 16px auto 44px; }
-  .btn-cta-white { background: white; color: var(--charcoal); padding: 15px 40px; border-radius: 100px; font-size: 0.95rem; font-weight: 500; text-decoration: none; transition: all .25s; display: inline-block; }
-  .btn-cta-white:hover { background: var(--sage-pale); transform: translateY(-2px); box-shadow: 0 12px 32px rgba(255,255,255,0.15); }
+/* ── PATHOLOGIES ── */
+.pathologies { padding: 100px 60px; background: var(--off-white); }
+.patho-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-top: 56px; }
+.patho-card {
+  background: white; border-radius: 16px; padding: 28px 24px;
+  border: 1px solid var(--border); transition: all .3s; cursor: default;
+  position: relative; overflow: hidden;
+}
+.patho-card::before {
+  content: '';
+  position: absolute; top: 0; left: 0; right: 0; height: 3px;
+  background: linear-gradient(90deg, var(--blue), var(--gold));
+  transform: scaleX(0); transform-origin: left;
+  transition: transform .3s;
+}
+.patho-card:hover { transform: translateY(-4px); box-shadow: 0 12px 32px rgba(2,26,53,0.1); border-color: var(--blue-light); }
+.patho-card:hover::before { transform: scaleX(1); }
+.patho-icon { font-size: 2rem; margin-bottom: 14px; }
+.patho-name { font-family: 'Cormorant Garamond', serif; font-size: 1.1rem; font-weight: 500; color: var(--navy); margin-bottom: 6px; }
+.patho-desc { font-size: 0.78rem; color: var(--text-soft); line-height: 1.5; }
 
-  /* ── FOOTER ── */
-  footer { background: #141414; padding: 56px 48px 32px; }
-  .footer-grid { max-width: 1100px; margin: 0 auto; display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 40px; margin-bottom: 40px; }
-  .footer-logo { font-family: 'Cormorant Garamond', serif; font-size: 1.3rem; color: white; display: flex; align-items: center; gap: 8px; margin-bottom: 12px; }
-  .footer-tagline { font-size: 0.82rem; color: rgba(255,255,255,0.35); line-height: 1.65; max-width: 260px; }
-  .footer-col h4 { font-size: 0.72rem; font-weight: 600; text-transform: uppercase; letter-spacing: .1em; color: rgba(255,255,255,0.4); margin-bottom: 14px; }
-  .footer-col a { display: block; font-size: 0.82rem; color: rgba(255,255,255,0.35); text-decoration: none; margin-bottom: 8px; transition: color .2s; }
-  .footer-col a:hover { color: var(--sage-light); }
-  .footer-bottom { max-width: 1100px; margin: 0 auto; padding-top: 24px; border-top: 1px solid rgba(255,255,255,0.06); display: flex; justify-content: space-between; align-items: center; }
-  .footer-copy { font-size: 0.75rem; color: rgba(255,255,255,0.25); }
-  .footer-disclaimer { font-size: 0.72rem; color: rgba(255,255,255,0.2); max-width: 500px; line-height: 1.55; text-align: right; }
+/* ── HOW IT WORKS ── */
+.how { padding: 100px 60px; background: var(--white); }
+.how-steps { display: grid; grid-template-columns: repeat(4, 1fr); gap: 40px; margin-top: 64px; position: relative; }
+.how-steps::before {
+  content: '';
+  position: absolute; top: 28px; left: 10%; right: 10%;
+  height: 1px; background: linear-gradient(90deg, transparent, var(--border), transparent);
+}
+.how-step { text-align: center; position: relative; z-index: 1; }
+.how-step-num {
+  width: 56px; height: 56px; border-radius: 50%;
+  background: var(--navy); color: white;
+  font-family: 'DM Mono', monospace; font-size: 1rem; font-weight: 700;
+  display: flex; align-items: center; justify-content: center;
+  margin: 0 auto 20px; position: relative;
+}
+.how-step-num::after {
+  content: '';
+  position: absolute; inset: -4px;
+  border-radius: 50%; border: 1px solid var(--border);
+}
+.how-step-title { font-family: 'Cormorant Garamond', serif; font-size: 1.15rem; font-weight: 500; color: var(--navy); margin-bottom: 8px; }
+.how-step-desc { font-size: 0.82rem; color: var(--text-mid); line-height: 1.6; font-weight: 300; }
 
-  /* ── SCROLL REVEAL ── */
-  .reveal { opacity: 0; transform: translateY(28px); transition: all .65s cubic-bezier(.25,.46,.45,.94); }
-  .reveal.visible { opacity: 1; transform: none; }
-  .reveal-delay-1 { transition-delay: .1s; }
-  .reveal-delay-2 { transition-delay: .2s; }
-  .reveal-delay-3 { transition-delay: .3s; }
+/* ── TESTIMONIALS ── */
+.testimonials { padding: 100px 60px; background: var(--navy); position: relative; overflow: hidden; }
+.testimonials::before {
+  content: '';
+  position: absolute; bottom: -100px; left: -100px;
+  width: 400px; height: 400px;
+  background: radial-gradient(circle, rgba(201,168,76,0.1) 0%, transparent 70%);
+}
+.testimonials .section-title { color: white; }
+.testimonials .section-tag { color: var(--gold); }
+.testimonials-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin-top: 56px; position: relative; z-index: 1; }
+.testimonial-card {
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 20px; padding: 32px;
+  backdrop-filter: blur(10px);
+  transition: all .3s;
+}
+.testimonial-card:hover { background: rgba(255,255,255,0.08); transform: translateY(-4px); }
+.testimonial-stars { color: var(--gold); font-size: 0.85rem; margin-bottom: 16px; letter-spacing: 2px; }
+.testimonial-text { font-size: 0.92rem; color: rgba(255,255,255,0.8); line-height: 1.7; font-weight: 300; margin-bottom: 24px; font-style: italic; }
+.testimonial-author { display: flex; align-items: center; gap: 12px; }
+.testimonial-avatar {
+  width: 40px; height: 40px; border-radius: 50%;
+  background: linear-gradient(135deg, var(--blue), var(--navy-mid));
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.75rem; font-weight: 700; color: white; flex-shrink: 0;
+}
+.testimonial-name { font-size: 0.88rem; font-weight: 600; color: white; }
+.testimonial-patho { font-size: 0.72rem; color: var(--blue-light); margin-top: 2px; }
 
-  @media (max-width: 900px) {
-    nav { padding: 16px 24px; }
-    .nav-links { display: none; }
-    section { padding: 72px 24px; }
-    .how-steps { grid-template-columns: 1fr 1fr; }
-    .features-grid { grid-template-columns: 1fr 1fr; }
-    .feat-card.wide { grid-column: span 1; }
-    .patho-grid { grid-template-columns: repeat(2, 1fr); }
-    .pricing-grid { grid-template-columns: 1fr; }
-    .testim-grid { grid-template-columns: 1fr; }
-    .footer-grid { grid-template-columns: 1fr 1fr; }
-    .footer-disclaimer { text-align: left; margin-top: 12px; }
-    .footer-bottom { flex-direction: column; align-items: flex-start; gap: 8px; }
-  }
+/* ── PRICING ── */
+.pricing { padding: 100px 60px; background: var(--off-white); }
+.pricing-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin-top: 56px; max-width: 1000px; margin-left: auto; margin-right: auto; }
+.plan-card {
+  background: white; border-radius: 20px; padding: 36px;
+  border: 1px solid var(--border); position: relative;
+  transition: all .3s;
+}
+.plan-card:hover { transform: translateY(-4px); box-shadow: 0 16px 40px rgba(2,26,53,0.1); }
+.plan-card.featured {
+  background: var(--navy); border-color: var(--navy);
+  transform: scale(1.04);
+}
+.plan-card.featured:hover { transform: scale(1.04) translateY(-4px); }
+.plan-badge { position: absolute; top: -12px; left: 50%; transform: translateX(-50%); background: var(--gold); color: var(--navy); font-size: 0.68rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; padding: 4px 16px; border-radius: 100px; white-space: nowrap; }
+.plan-name { font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: .1em; color: var(--text-soft); margin-bottom: 12px; }
+.plan-card.featured .plan-name { color: var(--blue-light); }
+.plan-price { font-family: 'Cormorant Garamond', serif; font-size: 3rem; font-weight: 400; color: var(--navy); line-height: 1; margin-bottom: 6px; }
+.plan-card.featured .plan-price { color: white; }
+.plan-price sup { font-size: 1.2rem; vertical-align: top; margin-top: 8px; }
+.plan-period { font-size: 0.8rem; color: var(--text-soft); margin-bottom: 28px; }
+.plan-card.featured .plan-period { color: var(--blue-light); }
+.plan-features { list-style: none; margin-bottom: 32px; }
+.plan-features li { font-size: 0.85rem; color: var(--text-mid); padding: 8px 0; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 10px; }
+.plan-card.featured .plan-features li { color: rgba(255,255,255,0.75); border-color: rgba(255,255,255,0.1); }
+.plan-features li::before { content: '✓'; color: var(--blue); font-weight: 700; flex-shrink: 0; }
+.plan-card.featured .plan-features li::before { color: var(--gold); }
+.plan-cta { display: block; text-align: center; padding: 13px; border-radius: 100px; font-size: 0.88rem; font-weight: 500; text-decoration: none; transition: all .25s; }
+.plan-cta-outline { border: 1.5px solid var(--border); color: var(--navy); }
+.plan-cta-outline:hover { border-color: var(--blue); color: var(--blue); }
+.plan-cta-filled { background: var(--gold); color: var(--navy); font-weight: 600; }
+.plan-cta-filled:hover { background: var(--gold-light); transform: translateY(-1px); box-shadow: 0 6px 20px rgba(201,168,76,0.35); }
+
+/* ── CTA SECTION ── */
+.cta-section {
+  padding: 100px 60px;
+  background: linear-gradient(135deg, var(--navy) 0%, var(--navy-mid) 100%);
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+.cta-section::before {
+  content: '';
+  position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%);
+  width: 600px; height: 600px;
+  background: radial-gradient(circle, rgba(55,138,221,0.15) 0%, transparent 70%);
+}
+.cta-section h2 { font-family: 'Cormorant Garamond', serif; font-size: clamp(2rem, 4vw, 3rem); font-weight: 300; color: white; margin-bottom: 16px; position: relative; z-index: 1; }
+.cta-section p { font-size: 1rem; color: var(--blue-light); margin-bottom: 40px; font-weight: 300; position: relative; z-index: 1; }
+.cta-btns { display: flex; justify-content: center; gap: 16px; position: relative; z-index: 1; flex-wrap: wrap; }
+.cta-btn-primary { background: var(--gold); color: var(--navy); padding: 14px 36px; border-radius: 100px; font-size: 0.92rem; font-weight: 600; text-decoration: none; transition: all .25s; }
+.cta-btn-primary:hover { background: var(--gold-light); transform: translateY(-2px); box-shadow: 0 8px 24px rgba(201,168,76,0.4); }
+.cta-btn-outline { border: 1.5px solid rgba(255,255,255,0.3); color: white; padding: 14px 36px; border-radius: 100px; font-size: 0.92rem; font-weight: 400; text-decoration: none; transition: all .25s; }
+.cta-btn-outline:hover { border-color: white; transform: translateY(-2px); }
+
+/* ── FOOTER ── */
+footer { background: var(--navy); padding: 60px; border-top: 1px solid rgba(255,255,255,0.08); }
+.footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 60px; margin-bottom: 48px; }
+.footer-brand-name { font-family: 'Cormorant Garamond', serif; font-size: 1.4rem; color: white; margin-bottom: 12px; }
+.footer-brand-desc { font-size: 0.82rem; color: rgba(255,255,255,0.4); line-height: 1.7; max-width: 260px; font-weight: 300; }
+.footer-col-title { font-size: 0.72rem; font-weight: 600; text-transform: uppercase; letter-spacing: .1em; color: rgba(255,255,255,0.3); margin-bottom: 16px; }
+.footer-col a { display: block; font-size: 0.82rem; color: rgba(255,255,255,0.5); text-decoration: none; margin-bottom: 10px; transition: color .2s; }
+.footer-col a:hover { color: white; }
+.footer-bottom { display: flex; justify-content: space-between; align-items: center; padding-top: 28px; border-top: 1px solid rgba(255,255,255,0.08); }
+.footer-copy { font-size: 0.78rem; color: rgba(255,255,255,0.3); }
+.footer-legal { display: flex; gap: 24px; }
+.footer-legal a { font-size: 0.78rem; color: rgba(255,255,255,0.3); text-decoration: none; transition: color .2s; }
+.footer-legal a:hover { color: rgba(255,255,255,0.6); }
+
+/* ── ANIMATIONS ── */
+.reveal { opacity: 0; transform: translateY(24px); transition: opacity .7s ease, transform .7s ease; }
+.reveal.visible { opacity: 1; transform: translateY(0); }
+
+/* ── RESPONSIVE ── */
+@media (max-width: 1024px) {
+  nav { padding: 16px 32px; }
+  nav.scrolled { padding: 12px 32px; }
+  .nav-links { display: none; }
+  .hero { grid-template-columns: 1fr; padding: 100px 32px 60px; }
+  .hero-right { display: none; }
+  .stats-grid { grid-template-columns: repeat(2, 1fr); }
+  .features-grid { grid-template-columns: 1fr 1fr; }
+  .patho-grid { grid-template-columns: repeat(2, 1fr); }
+  .how-steps { grid-template-columns: repeat(2, 1fr); }
+  .testimonials-grid { grid-template-columns: 1fr; }
+  .pricing-grid { grid-template-columns: 1fr; max-width: 400px; }
+  .plan-card.featured { transform: none; }
+  .footer-grid { grid-template-columns: 1fr 1fr; gap: 40px; }
+  .partners-logos { gap: 32px; }
+}
+@media (max-width: 640px) {
+  .features-grid { grid-template-columns: 1fr; }
+  .patho-grid { grid-template-columns: 1fr 1fr; }
+  .how-steps { grid-template-columns: 1fr; }
+  .stats-grid { grid-template-columns: 1fr 1fr; }
+  .hero-actions { flex-direction: column; align-items: flex-start; }
+  .footer-grid { grid-template-columns: 1fr; }
+  section, .hero { padding-left: 24px; padding-right: 24px; }
+  .cta-section { padding-left: 24px; padding-right: 24px; }
+  nav { padding: 14px 24px; }
+  footer { padding: 40px 24px; }
+  .partners { padding: 40px 24px; }
+}
 </style>
 </head>
 <body>
 
-<!-- Cursor -->
 <div class="cursor" id="cursor"></div>
 <div class="cursor-ring" id="cursorRing"></div>
 
 <!-- NAV -->
 <nav id="navbar">
   <a href="#" class="nav-logo">
-  <img src="avelia-logo-banner.svg" alt="Avelia AI" style="height:36px;border-radius:6px;">
-</a>
+    <img src="avelia-logo-banner.svg" alt="Avelia AI" style="height:36px;border-radius:6px;">
+  </a>
   <div class="nav-links">
     <a href="#fonctionnalites">Fonctionnalités</a>
     <a href="#pathologies">Pathologies</a>
@@ -315,220 +412,273 @@
   </div>
   <div class="nav-ctas">
     <a href="app.html" class="btn-ghost">Se connecter</a>
-    <a href="app.html" class="btn-cta">Essayer gratuitement →</a>
+    <a href="app.html" class="btn-primary">Commencer →</a>
   </div>
 </nav>
 
 <!-- HERO -->
 <section class="hero">
-  <div class="hero-bg"></div>
-  <div class="hero-grain"></div>
-  <div class="hero-content">
-    <div class="hero-badge"><div class="hero-badge-dot"></div> Coach IA · Santé & Nutrition · Disponible 24h/24</div>
-    <h1>La nutrition <em>adaptée</em><br>à <strong>votre pathologie</strong></h1>
-    <p class="hero-sub">NutriCare AI accompagne les personnes souffrant de pathologies médicales avec des conseils nutritionnels personnalisés, bienveillants et basés sur la science.</p>
-    <div class="hero-actions">
-      <a href="app.html" class="btn-primary-lg">Commencer gratuitement →</a>
-      <a href="#fonctionnalites" class="btn-outline-lg">Découvrir l'application</a>
+  <div class="hero-left">
+    <div class="hero-badge">
+      <div class="hero-badge-dot"></div>
+      Coach IA Santé & Nutrition
     </div>
-    <div style="margin-top:48px;width:100vw;position:relative;left:50%;transform:translateX(-50%);">
-  <iframe src="hero-banner.html" id="heroBanner" style="width:100%;height:380px;border:none;" scrolling="no"></iframe>
-</div>
-<script>
-  function resizeBanner() {
-    const iframe = document.getElementById('heroBanner');
-    if (window.innerWidth < 768) {
-      iframe.style.height = '520px';
-    } else {
-      iframe.style.height = '380px';
-    }
-  }
-  resizeBanner();
-  window.addEventListener('resize', resizeBanner);
-</script>
-    <div class="hero-metrics">
-      <div class="metric"><div class="metric-num">50+</div><div class="metric-label">Pathologies suivies</div></div>
-      <div class="metric"><div class="metric-num">97%</div><div class="metric-label">Satisfaction</div></div>
-      <div class="metric"><div class="metric-num">24/7</div><div class="metric-label">Disponibilité</div></div>
-      <div class="metric"><div class="metric-num">0€</div><div class="metric-label">Pour commencer</div></div>
+    <h1>
+      Votre santé,<br>
+      <em>accompagnée</em><br>
+      avec <span>précision</span>
+    </h1>
+    <p class="hero-desc">
+      Avelia AI adapte chaque conseil nutritionnel à votre pathologie, vos médicaments et vos préférences. Une approche médicale, bienveillante et disponible 24h/24.
+    </p>
+    <div class="hero-actions">
+      <a href="app.html" class="btn-hero-primary">Commencer gratuitement →</a>
+      <a href="#fonctionnalites" class="btn-hero-outline">Découvrir l'app</a>
+    </div>
+    <div class="hero-trust">
+      <div class="hero-trust-avatars">
+        <div class="hero-trust-avatar" style="background:linear-gradient(135deg,#378ADD,#0C447C);margin-left:0">ML</div>
+        <div class="hero-trust-avatar" style="background:linear-gradient(135deg,#C9A84C,#A8893E)">SF</div>
+        <div class="hero-trust-avatar" style="background:linear-gradient(135deg,#28C840,#1A9E30)">TR</div>
+        <div class="hero-trust-avatar" style="background:linear-gradient(135deg,#FF6B6B,#CC5555)">AK</div>
+      </div>
+      <div class="hero-trust-text">
+        <strong>+2 400 patients</strong> accompagnés<br>
+        <span>⭐⭐⭐⭐⭐ 4.9/5 satisfaction</span>
+      </div>
+    </div>
+  </div>
+  <div class="hero-right">
+    <!-- Main image -->
+    <div class="hero-img-main">
+      <img src="https://images.unsplash.com/photo-1551076805-e1869033e561?w=800&q=80&fit=crop" alt="Consultation médicale nutrition">
+    </div>
+    <!-- Floating card 1 — Glycémie -->
+    <div class="hero-card hero-card-1">
+      <div class="hero-card-label">🩸 Glycémie aujourd'hui</div>
+      <div class="hero-card-value">5.4 <span style="font-size:0.9rem;color:var(--text-soft)">mmol/L</span></div>
+      <div class="hero-card-bar"><div class="hero-card-bar-fill" style="width:62%"></div></div>
+      <div class="hero-card-sub" style="color:#28C840">↓ Objectif atteint</div>
+    </div>
+    <!-- Floating card 2 — Chat -->
+    <div class="hero-card hero-card-2">
+      <div class="hero-card-label">🤖 NutriCare AI</div>
+      <div style="font-size:0.78rem;color:var(--text-mid);line-height:1.5">
+        "Voici un menu adapté<br>à votre diabète type 2 💚"
+      </div>
+      <div style="margin-top:8px;display:flex;align-items:center;gap:6px">
+        <div style="width:6px;height:6px;border-radius:50%;background:#28C840"></div>
+        <span style="font-size:0.7rem;color:var(--text-soft)">En ligne · Répond en 2 sec</span>
+      </div>
+    </div>
+    <!-- Floating card 3 — Score -->
+    <div class="hero-card hero-card-3">
+      <div class="hero-card-label">Score repas</div>
+      <div class="hero-card-value" style="color:var(--gold)">8.5<span style="font-size:0.8rem;color:var(--text-soft)">/10</span></div>
+      <div class="hero-card-sub">Excellent pour votre profil</div>
     </div>
   </div>
 </section>
 
-<!-- MARQUEE -->
-<div class="marquee-section">
-  <div class="marquee-track">
-    <span class="marquee-item">Diabète type 2 <span class="marquee-sep"></span></span>
-    <span class="marquee-item">Hypertension <span class="marquee-sep"></span></span>
-    <span class="marquee-item">SOPK <span class="marquee-sep"></span></span>
-    <span class="marquee-item">Maladies inflammatoires <span class="marquee-sep"></span></span>
-    <span class="marquee-item">Troubles digestifs <span class="marquee-sep"></span></span>
-    <span class="marquee-item">Ostéoporose <span class="marquee-sep"></span></span>
-    <span class="marquee-item">Fatigue chronique <span class="marquee-sep"></span></span>
-    <span class="marquee-item">Cholestérol <span class="marquee-sep"></span></span>
-    <span class="marquee-item">Diabète type 2 <span class="marquee-sep"></span></span>
-    <span class="marquee-item">Hypertension <span class="marquee-sep"></span></span>
-    <span class="marquee-item">SOPK <span class="marquee-sep"></span></span>
-    <span class="marquee-item">Maladies inflammatoires <span class="marquee-sep"></span></span>
-    <span class="marquee-item">Troubles digestifs <span class="marquee-sep"></span></span>
-    <span class="marquee-item">Ostéoporose <span class="marquee-sep"></span></span>
-    <span class="marquee-item">Fatigue chronique <span class="marquee-sep"></span></span>
-    <span class="marquee-item">Cholestérol <span class="marquee-sep"></span></span>
+<!-- PARTNERS -->
+<div class="partners reveal">
+  <div class="partners-label">Reconnu par les professionnels de santé</div>
+  <div class="partners-logos">
+    <div class="partner-item">Ordre des Diététiciens</div>
+    <div class="partner-item">Fédération Française de Nutrition</div>
+    <div class="partner-item">ANSES</div>
+    <div class="partner-item">HAS</div>
+    <div class="partner-item">SFD</div>
   </div>
 </div>
 
-<!-- HOW IT WORKS -->
-<section class="how-section">
-  <div class="how-container">
-    <div class="reveal">
-      <div class="section-label">Comment ça marche</div>
-      <h2 class="section-title">Simple comme une <em>conversation</em></h2>
-      <p class="section-sub">En quelques minutes, NutriCare AI apprend à vous connaître et commence à vous accompagner.</p>
+<!-- STATS -->
+<section class="stats">
+  <div class="stats-grid">
+    <div class="stat-item reveal">
+      <div class="stat-num">2<span>400</span>+</div>
+      <div class="stat-label">Patients accompagnés</div>
     </div>
-    <div class="how-steps reveal">
-      <div class="how-step">
-        <div class="how-num">01</div>
-        <div class="how-icon">📋</div>
-        <div class="how-title">Créez votre profil</div>
-        <div class="how-desc">Renseignez vos pathologies, allergies, médicaments et contraintes alimentaires. Confidentiel et sécurisé.</div>
-      </div>
-      <div class="how-step">
-        <div class="how-num">02</div>
-        <div class="how-icon">🤝</div>
-        <div class="how-title">L'IA vous comprend</div>
-        <div class="how-desc">NutriCare AI analyse votre profil et adapte instantanément tous ses conseils à votre situation unique.</div>
-      </div>
-      <div class="how-step">
-        <div class="how-num">03</div>
-        <div class="how-icon">💬</div>
-        <div class="how-title">Discutez librement</div>
-        <div class="how-desc">Posez toutes vos questions. Sans jugement, avec bienveillance. L'IA se souvient de vous à chaque session.</div>
-      </div>
-      <div class="how-step">
-        <div class="how-num">04</div>
-        <div class="how-icon">📈</div>
-        <div class="how-title">Progressez ensemble</div>
-        <div class="how-desc">Suivez votre évolution sur le dashboard. Les recommandations s'affinent au fil du temps.</div>
-      </div>
+    <div class="stat-item reveal" style="transition-delay:.1s">
+      <div class="stat-num">8<span>+</span></div>
+      <div class="stat-label">Pathologies couvertes</div>
+    </div>
+    <div class="stat-item reveal" style="transition-delay:.2s">
+      <div class="stat-num">4.9<span>/5</span></div>
+      <div class="stat-label">Satisfaction patients</div>
+    </div>
+    <div class="stat-item reveal" style="transition-delay:.3s">
+      <div class="stat-num">24<span>h</span></div>
+      <div class="stat-label">Disponibilité coach IA</div>
     </div>
   </div>
 </section>
 
 <!-- FEATURES -->
-<section class="features-section" id="fonctionnalites">
-  <div class="features-container">
-    <div class="reveal">
-      <div class="section-label">Fonctionnalités</div>
-      <h2 class="section-title">Tout ce qu'il vous faut,<br><em>rien de superflu</em></h2>
-      <p class="section-sub">Des outils pensés pour les personnes vivant avec une pathologie chronique.</p>
+<section class="features" id="fonctionnalites">
+  <div class="section-header reveal">
+    <div class="section-tag">Fonctionnalités</div>
+    <h2 class="section-title">Tout ce dont vous avez besoin pour <em>bien manger</em></h2>
+    <p class="section-desc">Une plateforme complète qui combine intelligence artificielle et expertise nutritionnelle.</p>
+  </div>
+  <div class="features-grid reveal">
+    <div class="feature-card">
+      <div class="feature-icon">🤖</div>
+      <div class="feature-title">Chat IA personnalisé</div>
+      <div class="feature-desc">Posez vos questions nutritionnelles à tout moment. L'IA connaît votre profil, vos médicaments et vos pathologies.</div>
+      <span class="feature-tag">Tous les plans</span>
     </div>
-    <div class="features-grid reveal">
-      <div class="feat-card dark wide">
-        <div class="feat-icon">🧠</div>
-        <div class="feat-title">Profil de santé dynamique</div>
-        <div class="feat-desc">Votre profil évolue avec vous — pathologies, médicaments, allergies, contraintes culturelles, budget. L'IA s'adapte en temps réel, pas un questionnaire figé.</div>
-        <span class="feat-tag tag-premium">Premium</span>
-      </div>
-      <div class="feat-card">
-        <div class="feat-icon">💬</div>
-        <div class="feat-title">Chat empathique</div>
-        <div class="feat-desc">Un coach qui ne juge pas. Gestion des rechutes sans culpabilisation. Support motivationnel humain.</div>
-        <span class="feat-tag tag-free">Gratuit</span>
-      </div>
-      <div class="feat-card">
-        <div class="feat-icon">🥗</div>
-        <div class="feat-title">Menus personnalisés</div>
-        <div class="feat-desc">Plans hebdomadaires adaptés à votre pathologie, avec liste de courses et substitutions intelligentes.</div>
-        <span class="feat-tag tag-standard">Standard</span>
-      </div>
-      <div class="feat-card">
-        <div class="feat-icon">📊</div>
-        <div class="feat-title">Dashboard santé</div>
-        <div class="feat-desc">Suivez vos indicateurs clés et découvrez les corrélations entre alimentation et symptômes.</div>
-        <span class="feat-tag tag-standard">Standard</span>
-      </div>
-      <div class="feat-card">
-        <div class="feat-icon">📸</div>
-        <div class="feat-title">Analyse photo repas</div>
-        <div class="feat-desc">Prenez votre assiette en photo — estimation calories, macros et feedback instantané.</div>
-        <span class="feat-tag tag-premium">Premium</span>
-      </div>
-      <div class="feat-card">
-        <div class="feat-icon">🧬</div>
-        <div class="feat-title">Protocoles pathologies</div>
-        <div class="feat-desc">Bibliothèque médicale structurée : nutrition, habitudes, compléments par pathologie.</div>
-        <span class="feat-tag tag-standard">Standard</span>
-      </div>
-      <div class="feat-card">
-        <div class="feat-icon">🌍</div>
-        <div class="feat-title">Adaptation culturelle</div>
-        <div class="feat-desc">Recettes halal, casher, véganes ou régionales. Votre culture au cœur de votre assiette.</div>
-        <span class="feat-tag tag-free">Gratuit</span>
-      </div>
-      <div class="feat-card">
-        <div class="feat-icon">🔐</div>
-        <div class="feat-title">Sécurité médicale</div>
-        <div class="feat-desc">Détection des situations à risque, redirection vers un médecin si nécessaire. Toujours actif.</div>
-        <span class="feat-tag tag-free">Toujours actif</span>
-      </div>
+    <div class="feature-card">
+      <div class="feature-icon">🧬</div>
+      <div class="feature-title">Protocoles pathologies</div>
+      <div class="feature-desc">Accédez à des protocoles nutritionnels scientifiquement validés pour chaque pathologie : diabète, hypertension, SOPK...</div>
+      <span class="feature-tag">Tous les plans</span>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">🥗</div>
+      <div class="feature-title">Menus hebdomadaires</div>
+      <div class="feature-desc">Menus 7 jours générés par l'IA selon vos pathologies, allergies et budget. Liste de courses automatique incluse.</div>
+      <span class="feature-tag gold">Standard & Premium</span>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">📸</div>
+      <div class="feature-title">Analyse photo repas</div>
+      <div class="feature-desc">Photographiez votre repas et obtenez instantanément : calories, macros, score santé et conseils adaptés à votre profil.</div>
+      <span class="feature-tag gold">Standard & Premium</span>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">📊</div>
+      <div class="feature-title">Dashboard santé</div>
+      <div class="feature-desc">Suivez glycémie, poids, énergie, sommeil, tension et hydratation. Graphiques d'évolution sur 30 jours.</div>
+      <span class="feature-tag gold">Standard & Premium</span>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">🧑‍⚕️</div>
+      <div class="feature-title">Espace professionnel</div>
+      <div class="feature-desc">Partagez vos données avec votre médecin ou nutritionniste via lien sécurisé ou code d'accès.</div>
+      <span class="feature-tag gold">Standard & Premium</span>
     </div>
   </div>
 </section>
 
 <!-- PATHOLOGIES -->
-<section class="patho-section" id="pathologies">
-  <div class="patho-container">
-    <div class="reveal">
-      <div class="section-label">Pathologies</div>
-      <h2 class="section-title">Conçu pour <em>votre condition</em></h2>
-      <p class="section-sub">Chaque pathologie a ses besoins spécifiques. NutriCare AI dispose de protocoles nutritionnels pour plus de 50 conditions médicales.</p>
+<section class="pathologies" id="pathologies">
+  <div class="section-header reveal">
+    <div class="section-tag">Pathologies</div>
+    <h2 class="section-title">Adapté à <em>votre condition</em></h2>
+    <p class="section-desc">Des protocoles nutritionnels spécialisés pour chaque pathologie, mis à jour selon les dernières données scientifiques.</p>
+  </div>
+  <div class="patho-grid">
+    <div class="patho-card reveal">
+      <div class="patho-icon">🩸</div>
+      <div class="patho-name">Diabète type 2</div>
+      <div class="patho-desc">Stabilisation glycémique, IG bas, gestion de l'insulinorésistance</div>
     </div>
-    <div class="patho-grid reveal">
-      <div class="patho-card"><div class="patho-icon">🩸</div><div class="patho-name">Diabète type 2</div><div class="patho-tag">Protocole complet</div></div>
-      <div class="patho-card"><div class="patho-icon">🫀</div><div class="patho-name">Hypertension</div><div class="patho-tag">Protocole complet</div></div>
-      <div class="patho-card"><div class="patho-icon">🔥</div><div class="patho-name">Inflammatoires</div><div class="patho-tag">Protocole complet</div></div>
-      <div class="patho-card"><div class="patho-icon">🌸</div><div class="patho-name">SOPK</div><div class="patho-tag">Protocole complet</div></div>
-      <div class="patho-card"><div class="patho-icon">🫁</div><div class="patho-name">Troubles digestifs</div><div class="patho-tag">Protocole complet</div></div>
-      <div class="patho-card"><div class="patho-icon">🦴</div><div class="patho-name">Ostéoporose</div><div class="patho-tag">Protocole complet</div></div>
-      <div class="patho-card"><div class="patho-icon">⚡</div><div class="patho-name">Fatigue chronique</div><div class="patho-tag">Protocole complet</div></div>
-      <div class="patho-card" style="border-style:dashed;opacity:.6"><div class="patho-icon">➕</div><div class="patho-name">Et 40+ autres</div><div class="patho-tag">En continu</div></div>
+    <div class="patho-card reveal" style="transition-delay:.05s">
+      <div class="patho-icon">🫀</div>
+      <div class="patho-name">Hypertension</div>
+      <div class="patho-desc">Régime DASH, réduction du sodium, gestion de la tension</div>
+    </div>
+    <div class="patho-card reveal" style="transition-delay:.1s">
+      <div class="patho-icon">🌸</div>
+      <div class="patho-name">SOPK</div>
+      <div class="patho-desc">Équilibre hormonal, anti-inflammatoire, régulation de l'insuline</div>
+    </div>
+    <div class="patho-card reveal" style="transition-delay:.15s">
+      <div class="patho-icon">🔥</div>
+      <div class="patho-name">Maladies inflammatoires</div>
+      <div class="patho-desc">Protocole anti-inflammatoire, oméga-3, alimentation méditerranéenne</div>
+    </div>
+    <div class="patho-card reveal" style="transition-delay:.2s">
+      <div class="patho-icon">🫁</div>
+      <div class="patho-name">Troubles digestifs</div>
+      <div class="patho-desc">Restauration du microbiome, protocole 4R, alimentation douce</div>
+    </div>
+    <div class="patho-card reveal" style="transition-delay:.25s">
+      <div class="patho-icon">💛</div>
+      <div class="patho-name">Hypercholestérolémie</div>
+      <div class="patho-desc">Fibres solubles, stérols végétaux, réduction LDL naturelle</div>
+    </div>
+    <div class="patho-card reveal" style="transition-delay:.3s">
+      <div class="patho-icon">🦴</div>
+      <div class="patho-name">Ostéoporose</div>
+      <div class="patho-desc">Calcium, vitamine D3 & K2, renforcement osseux</div>
+    </div>
+    <div class="patho-card reveal" style="transition-delay:.35s">
+      <div class="patho-icon">⚡</div>
+      <div class="patho-name">Fatigue chronique</div>
+      <div class="patho-desc">Énergie mitochondriale, adaptogènes, optimisation du sommeil</div>
     </div>
   </div>
 </section>
 
-<!-- DEMO CHAT -->
-<section class="demo-section">
-  <div class="demo-container">
-    <div class="reveal" style="text-align:center">
-      <div class="section-label">Aperçu</div>
-      <h2 class="section-title">Une conversation <em>naturelle</em></h2>
-      <p class="section-sub" style="margin:16px auto 0">Voyez comment NutriCare AI accompagne avec chaleur et précision.</p>
+<!-- HOW IT WORKS -->
+<section class="how reveal">
+  <div class="section-header">
+    <div class="section-tag">Comment ça marche</div>
+    <h2 class="section-title">Commencez en <em>4 étapes</em></h2>
+  </div>
+  <div class="how-steps">
+    <div class="how-step">
+      <div class="how-step-num">01</div>
+      <div class="how-step-title">Créez votre profil</div>
+      <div class="how-step-desc">Renseignez vos pathologies, allergies, médicaments et préférences alimentaires.</div>
     </div>
-    <div class="demo-shell reveal">
-      <div class="demo-topbar">
-        <div class="demo-dots"><div class="demo-dot"></div><div class="demo-dot"></div><div class="demo-dot"></div></div>
-        <div class="demo-topbar-title">NutriCare AI · Chat · Sophie C. — Diabète type 2</div>
+    <div class="how-step">
+      <div class="how-step-num">02</div>
+      <div class="how-step-title">L'IA s'adapte</div>
+      <div class="how-step-desc">Avelia AI analyse votre profil et personnalise tous ses conseils à votre situation.</div>
+    </div>
+    <div class="how-step">
+      <div class="how-step-num">03</div>
+      <div class="how-step-title">Posez vos questions</div>
+      <div class="how-step-desc">Chattez avec votre coach IA 24h/24, analysez vos repas, consultez vos protocoles.</div>
+    </div>
+    <div class="how-step">
+      <div class="how-step-num">04</div>
+      <div class="how-step-title">Progressez</div>
+      <div class="how-step-desc">Suivez vos indicateurs de santé et partagez vos progrès avec vos professionnels.</div>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section class="testimonials" id="temoignages">
+  <div class="section-header reveal">
+    <div class="section-tag">Témoignages</div>
+    <h2 class="section-title">Ce que disent nos <em>patients</em></h2>
+  </div>
+  <div class="testimonials-grid">
+    <div class="testimonial-card reveal">
+      <div class="testimonial-stars">★★★★★</div>
+      <div class="testimonial-text">"En 3 mois, ma glycémie est passée de 8.2 à 6.1 mmol/L. Les menus personnalisés et les conseils adaptés à mon diabète ont tout changé."</div>
+      <div class="testimonial-author">
+        <div class="testimonial-avatar">ML</div>
+        <div>
+          <div class="testimonial-name">Marie-Laure D.</div>
+          <div class="testimonial-patho">Diabète type 2 · 52 ans</div>
+        </div>
       </div>
-      <div class="demo-body">
-        <div class="demo-msg left">
-          <div class="demo-av">🌿</div>
-          <div class="demo-bub">Bonjour Sophie 🌱 Comment vous sentez-vous ce matin ? J'ai vu que votre glycémie était un peu haute hier soir — vous souhaitez qu'on en parle ?</div>
+    </div>
+    <div class="testimonial-card reveal" style="transition-delay:.1s">
+      <div class="testimonial-stars">★★★★★</div>
+      <div class="testimonial-text">"Enfin une appli qui comprend vraiment le SOPK ! Les protocoles hormonaux et les menus anti-inflammatoires m'ont aidée à réguler mon cycle."</div>
+      <div class="testimonial-author">
+        <div class="testimonial-avatar" style="background:linear-gradient(135deg,#C9A84C,#A8893E)">SF</div>
+        <div>
+          <div class="testimonial-name">Sophie F.</div>
+          <div class="testimonial-patho">SOPK · 34 ans</div>
         </div>
-        <div class="demo-msg right">
-          <div class="demo-av">SC</div>
-          <div class="demo-bub">Oui j'ai craqué sur un gâteau au chocolat... Je me sens vraiment nulle</div>
-        </div>
-        <div class="demo-msg left">
-          <div class="demo-av">🌿</div>
-          <div class="demo-bub">Ce n'est absolument pas une raison de vous en vouloir — les craquages font partie de la vie, c'est humain ! 💚 On ajuste simplement le plan d'aujourd'hui. Pour rééquilibrer, je vous suggère un petit-déjeuner à faible index glycémique ce matin. Ça vous dit qu'on construise ça ensemble ?</div>
-        </div>
-        <div class="demo-msg right">
-          <div class="demo-av">SC</div>
-          <div class="demo-bub">Oui s'il te plaît, qu'est-ce que tu me conseilles ?</div>
-        </div>
-        <div class="demo-msg left">
-          <div class="demo-av">🌿</div>
-          <div class="demo-bub">Je vous propose : 2 œufs brouillés + une poignée d'épinards sautés + 1 tranche de pain de seigle complet. Index glycémique bas, protéines pour la satiété, et ça se prépare en 10 minutes. On réévalue ensemble à midi ! 🍳</div>
+      </div>
+    </div>
+    <div class="testimonial-card reveal" style="transition-delay:.2s">
+      <div class="testimonial-stars">★★★★★</div>
+      <div class="testimonial-text">"Mon cardiologue est bluffé par mes résultats. La tension est revenue à la normale sans augmenter les médicaments. Je recommande à tous."</div>
+      <div class="testimonial-author">
+        <div class="testimonial-avatar" style="background:linear-gradient(135deg,#28C840,#1A9E30)">TR</div>
+        <div>
+          <div class="testimonial-name">Thomas R.</div>
+          <div class="testimonial-patho">Hypertension · 61 ans</div>
         </div>
       </div>
     </div>
@@ -536,110 +686,69 @@
 </section>
 
 <!-- PRICING -->
-<section class="pricing-section" id="tarifs">
-  <div class="pricing-container">
-    <div class="reveal" style="text-align:center">
-      <div class="section-label">Tarifs</div>
-      <h2 class="section-title">Commencez <em>gratuitement</em></h2>
-      <p class="section-sub" style="margin:16px auto 0">Évoluez quand vous êtes prêt. Annulez à tout moment.</p>
-    </div>
-    <div class="pricing-grid reveal">
-      <div class="price-card free">
-        <div class="price-badge">Gratuit</div>
-        <div class="price-name">Essentiel</div>
-        <div class="price-amount">0€</div>
-        <div class="price-period">/ pour toujours</div>
-        <div class="price-desc">Pour découvrir NutriCare et commencer votre parcours.</div>
-        <ul class="price-list">
-          <li><span class="price-check">✓</span> 10 messages/jour</li>
-          <li><span class="price-check">✓</span> 1 plan nutritionnel basique</li>
-          <li><span class="price-check">✓</span> Adaptation culturelle</li>
-          <li><span class="price-check">✓</span> Sécurité médicale active</li>
-        </ul>
-        <a href="app.html" class="btn-price">Commencer gratuitement</a>
-      </div>
-      <div class="price-card standard">
-        <div class="popular-ribbon">Le plus choisi</div>
-        <div class="price-badge">Standard</div>
-        <div class="price-name">Complet</div>
-        <div class="price-amount">19€</div>
-        <div class="price-period">/ mois</div>
-        <div class="price-desc">L'accompagnement complet pour un vrai suivi personnalisé.</div>
-        <ul class="price-list">
-          <li><span class="price-check">✓</span> Chat IA illimité</li>
-          <li><span class="price-check">✓</span> Plans nutritionnels personnalisés</li>
-          <li><span class="price-check">✓</span> Dashboard santé & analytics</li>
-          <li><span class="price-check">✓</span> Menus hebdomadaires</li>
-          <li><span class="price-check">✓</span> Protocoles par pathologie</li>
-          <li><span class="price-check">✓</span> Nudges intelligents</li>
-        </ul>
-        <a href="app.html" class="btn-price">Essai gratuit 14 jours</a>
-      </div>
-      <div class="price-card premium">
-        <div class="price-badge">Premium</div>
-        <div class="price-name">Excellence</div>
-        <div class="price-amount">49€</div>
-        <div class="price-period">/ mois</div>
-        <div class="price-desc">Pour ceux qui veulent le maximum de personnalisation.</div>
-        <ul class="price-list">
-          <li><span class="price-check">✓</span> Tout du Standard</li>
-          <li><span class="price-check">✓</span> Analyse photo repas</li>
-          <li><span class="price-check">✓</span> Intégration pros de santé</li>
-          <li><span class="price-check">✓</span> Mémoire long terme IA</li>
-          <li><span class="price-check">✓</span> Coaching comportemental</li>
-          <li><span class="price-check">✓</span> Programmes exclusifs</li>
-        </ul>
-        <a href="app.html" class="btn-price">Démarrer Premium</a>
-      </div>
-    </div>
-    <p style="text-align:center;font-size:0.75rem;color:var(--soft);margin-top:20px">Paiement sécurisé par Stripe · Sans engagement · Remboursé 30 jours si non satisfait</p>
+<section class="pricing" id="tarifs">
+  <div class="section-header reveal">
+    <div class="section-tag">Tarifs</div>
+    <h2 class="section-title">Choisissez votre <em>plan</em></h2>
+    <p class="section-desc">Commencez gratuitement. Évoluez quand vous êtes prêt.</p>
   </div>
-</section>
-
-<!-- TESTIMONIALS -->
-<section class="testim-section">
-  <div class="testim-container">
-    <div class="reveal" style="text-align:center">
-      <div class="section-label">Témoignages</div>
-      <h2 class="section-title">Ils ont <em>transformé</em> leur quotidien</h2>
+  <div class="pricing-grid reveal">
+    <!-- Free -->
+    <div class="plan-card">
+      <div class="plan-name">Essentiel</div>
+      <div class="plan-price"><sup>€</sup>0</div>
+      <div class="plan-period">/ toujours gratuit</div>
+      <ul class="plan-features">
+        <li>10 messages IA / jour</li>
+        <li>Protocoles pathologies</li>
+        <li>Profil santé complet</li>
+        <li>Accès web & mobile</li>
+      </ul>
+      <a href="app.html" class="plan-cta plan-cta-outline">Commencer gratuitement</a>
     </div>
-    <div class="testim-grid reveal">
-      <div class="testim-card">
-        <div class="testim-stars">★★★★★</div>
-        <div class="testim-text">"Enfin un outil qui comprend vraiment ce que c'est de vivre avec le diabète. Les conseils sont adaptés et jamais culpabilisants. Je me sens soutenue au quotidien."</div>
-        <div class="testim-author">
-          <div class="testim-av" style="background:linear-gradient(135deg,#7B9E87,#5A8C6A)">MC</div>
-          <div><div class="testim-name">Marie-Claire, 54 ans</div><div class="testim-patho">Diabète type 2 · Plan Standard</div></div>
-        </div>
-      </div>
-      <div class="testim-card">
-        <div class="testim-stars">★★★★★</div>
-        <div class="testim-text">"Avec le SOPK, je ne savais plus quoi manger. NutriCare AI m'a donné un vrai plan structuré, adapté à mes contraintes halal. Un changement radical en 2 mois."</div>
-        <div class="testim-author">
-          <div class="testim-av" style="background:linear-gradient(135deg,#C4785A,#B06040)">SA</div>
-          <div><div class="testim-name">Samira A., 31 ans</div><div class="testim-patho">SOPK · Plan Premium</div></div>
-        </div>
-      </div>
-      <div class="testim-card">
-        <div class="testim-stars">★★★★★</div>
-        <div class="testim-text">"Mon cardiologue a été surpris par mes résultats en 3 mois. La corrélation alimentation/tension artérielle que l'IA m'a montrée a tout changé pour moi."</div>
-        <div class="testim-author">
-          <div class="testim-av" style="background:linear-gradient(135deg,#C9A84C,#B8943C)">PL</div>
-          <div><div class="testim-name">Pierre L., 62 ans</div><div class="testim-patho">Hypertension · Plan Premium</div></div>
-        </div>
-      </div>
+    <!-- Standard -->
+    <div class="plan-card featured">
+      <div class="plan-badge">Le plus populaire</div>
+      <div class="plan-name">Standard</div>
+      <div class="plan-price"><sup>€</sup>19</div>
+      <div class="plan-period">/ mois · Sans engagement</div>
+      <ul class="plan-features">
+        <li>Messages IA illimités</li>
+        <li>Menus hebdomadaires IA</li>
+        <li>Analyse photo des repas</li>
+        <li>Dashboard santé avancé</li>
+        <li>Espace professionnel de santé</li>
+        <li>Liste de courses automatique</li>
+      </ul>
+      <a href="app.html" class="plan-cta plan-cta-filled">Choisir Standard →</a>
+    </div>
+    <!-- Premium -->
+    <div class="plan-card">
+      <div class="plan-name">Premium</div>
+      <div class="plan-price"><sup>€</sup>49</div>
+      <div class="plan-period">/ mois · Sans engagement</div>
+      <ul class="plan-features">
+        <li>Tout du plan Standard</li>
+        <li>Analyses illimitées</li>
+        <li>Suivi prioritaire</li>
+        <li>Export données médicales</li>
+        <li>Support 7j/7</li>
+      </ul>
+      <a href="app.html" class="plan-cta plan-cta-outline">Choisir Premium</a>
     </div>
   </div>
+  <p style="text-align:center;margin-top:28px;font-size:0.78rem;color:var(--text-soft)">
+    Paiement sécurisé par Stripe · Annulation à tout moment · Remboursé 30 jours si non satisfait
+  </p>
 </section>
 
-<!-- CTA FINAL -->
+<!-- CTA -->
 <section class="cta-section">
-  <div class="reveal">
-    <div class="section-label" style="color:var(--sage-light)">Commencez aujourd'hui</div>
-    <h2 class="section-title">Votre santé mérite<br>un <em>vrai</em> accompagnement</h2>
-    <p class="section-sub">Rejoignez les milliers de personnes qui ont transformé leur rapport à l'alimentation grâce à NutriCare AI.</p>
-    <a href="app.html" class="btn-cta-white">Créer mon compte gratuitement →</a>
-    <p style="font-size:0.75rem;color:rgba(255,255,255,0.3);margin-top:16px">Aucune carte bancaire requise · Accessible en 2 minutes</p>
+  <h2>Prenez soin de votre santé,<br><em>dès aujourd'hui</em></h2>
+  <p>Rejoignez 2 400+ patients qui ont transformé leur alimentation avec Avelia AI</p>
+  <div class="cta-btns">
+    <a href="app.html" class="cta-btn-primary">Commencer gratuitement →</a>
+    <a href="#tarifs" class="cta-btn-outline">Voir les tarifs</a>
   </div>
 </section>
 
@@ -647,57 +756,61 @@
 <footer>
   <div class="footer-grid">
     <div>
-      <div class="footer-logo"><div class="nav-logo-dot"></div> NutriCare AI</div>
-      <p class="footer-tagline">Un coach santé intelligent, empathique et personnalisé — pour toutes les personnes vivant avec une pathologie médicale.</p>
+      <div class="footer-brand-name">Avelia AI</div>
+      <div class="footer-brand-desc">Coach santé & nutrition personnalisé par intelligence artificielle. Adapté à vos pathologies, disponible 24h/24.</div>
     </div>
     <div class="footer-col">
-      <h4>Produit</h4>
+      <div class="footer-col-title">Produit</div>
       <a href="#fonctionnalites">Fonctionnalités</a>
-      <a href="#tarifs">Tarifs</a>
       <a href="#pathologies">Pathologies</a>
+      <a href="#tarifs">Tarifs</a>
       <a href="app.html">Se connecter</a>
     </div>
     <div class="footer-col">
-      <h4>Légal</h4>
+      <div class="footer-col-title">Légal</div>
       <a href="legal.html">Mentions légales</a>
-      <a href="legal.html#donnees">Confidentialité</a>
-      <a href="legal.html#cgu">CGU</a>
-      <a href="legal.html#cookies">Cookies</a>
+      <a href="legal.html">Politique de confidentialité</a>
+      <a href="legal.html">CGU</a>
     </div>
     <div class="footer-col">
-      <h4>Contact</h4>
+      <div class="footer-col-title">Contact</div>
       <a href="mailto:contact@nutricareai.fr">contact@nutricareai.fr</a>
       <a href="mailto:support@nutricareai.fr">Support</a>
-      <a href="mailto:privacy@nutricareai.fr">Données personnelles</a>
     </div>
   </div>
   <div class="footer-bottom">
-    <div class="footer-copy">© 2025 Avelia AI — NutriCare AI · Tous droits réservés</div>
-    <div class="footer-disclaimer">⚕️ NutriCare AI est un outil de coaching nutritionnel et ne remplace pas un avis médical professionnel. Consultez toujours un médecin pour votre traitement.</div>
+    <div class="footer-copy">© 2026 Avelia AI. Tous droits réservés.</div>
+    <div class="footer-legal">
+      <a href="legal.html">Confidentialité</a>
+      <a href="legal.html">CGU</a>
+      <a href="legal.html">Cookies</a>
+    </div>
   </div>
 </footer>
 
 <script>
-  // Cursor
-  const cursor = document.getElementById('cursor');
-  const ring = document.getElementById('cursorRing');
-  document.addEventListener('mousemove', e => {
-    cursor.style.left = e.clientX + 'px';
-    cursor.style.top = e.clientY + 'px';
-    ring.style.left = e.clientX + 'px';
-    ring.style.top = e.clientY + 'px';
-  });
+// Cursor
+const cursor = document.getElementById('cursor');
+const ring = document.getElementById('cursorRing');
+document.addEventListener('mousemove', e => {
+  cursor.style.left = e.clientX + 'px';
+  cursor.style.top = e.clientY + 'px';
+  ring.style.left = e.clientX + 'px';
+  ring.style.top = e.clientY + 'px';
+});
 
-  // Nav scroll
-  window.addEventListener('scroll', () => {
-    document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 50);
-  });
+// Nav scroll
+const nav = document.getElementById('navbar');
+window.addEventListener('scroll', () => {
+  nav.classList.toggle('scrolled', window.scrollY > 20);
+});
 
-  // Scroll reveal
-  const observer = new IntersectionObserver(entries => {
-    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
-  }, { threshold: 0.1 });
-  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+// Reveal on scroll
+const reveals = document.querySelectorAll('.reveal');
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+}, { threshold: 0.1 });
+reveals.forEach(r => observer.observe(r));
 </script>
 </body>
 </html>
