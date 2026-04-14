@@ -473,43 +473,6 @@
     </div>
   </div>
 </div>
-</div><!-- PROFESSIONALS VIEW -->
-<div id="proView" style="display:none;padding:32px;overflow-y:auto;background:#F0F6FF">
-  <div style="font-family:'Cormorant Garamond',serif;font-size:2rem;font-weight:400;margin-bottom:6px;color:#021A35">Mes professionnels de santé</div>
-  <div style="font-size:0.85rem;color:#85B7EB;margin-bottom:32px">Partagez vos données avec votre médecin ou nutritionniste</div>
-
-  <!-- Plan requis -->
-  <div id="proPlanRequired" style="display:none;background:white;border-radius:14px;padding:28px;border:1px solid #B5D4F4;text-align:center;margin-bottom:24px">
-    <div style="font-size:1.4rem;margin-bottom:8px">⭐</div>
-    <div style="font-size:1rem;font-weight:600;color:#021A35;margin-bottom:8px">Fonctionnalité Standard et Premium</div>
-    <div style="font-size:0.85rem;color:#85B7EB;margin-bottom:18px">Passez à un plan payant pour partager vos données avec vos professionnels de santé.</div>
-    <button onclick="showView('pricing')" style="background:#021A35;color:white;padding:10px 24px;border:none;border-radius:100px;font-size:0.88rem;cursor:pointer;font-family:'DM Sans',sans-serif">Voir les abonnements →</button>
-  </div>
-
-  <!-- Contenu pro -->
-  <div id="proContent" style="display:none">
-    <!-- Ajouter un professionnel -->
-    <div style="background:white;border-radius:14px;padding:24px;border:1px solid #B5D4F4;margin-bottom:20px">
-      <div style="font-size:0.72rem;font-weight:600;text-transform:uppercase;letter-spacing:1.5px;color:#85B7EB;margin-bottom:16px">AJOUTER UN PROFESSIONNEL</div>
-      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:14px">
-        <input type="text" id="proName" placeholder="Nom du professionnel *" style="padding:10px 12px;border:1.5px solid #B5D4F4;border-radius:8px;font-size:0.85rem;font-family:'DM Sans',sans-serif;outline:none">
-        <input type="text" id="proSpecialty" placeholder="Spécialité (ex: nutritionniste)" style="padding:10px 12px;border:1.5px solid #B5D4F4;border-radius:8px;font-size:0.85rem;font-family:'DM Sans',sans-serif;outline:none">
-        <input type="email" id="proEmail" placeholder="Email (optionnel)" style="padding:10px 12px;border:1.5px solid #B5D4F4;border-radius:8px;font-size:0.85rem;font-family:'DM Sans',sans-serif;outline:none">
-      </div>
-      <button onclick="addProfessional()" style="background:#021A35;color:white;padding:10px 24px;border:none;border-radius:100px;font-size:0.88rem;cursor:pointer;font-family:'DM Sans',sans-serif">Ajouter →</button>
-      <div id="proAddError" style="font-size:0.78rem;color:#C55;margin-top:8px;display:none"></div>
-    </div>
-
-    <!-- Liste des professionnels -->
-    <div id="proList" style="display:flex;flex-direction:column;gap:14px"></div>
-
-    <!-- Commentaires reçus -->
-    <div style="background:white;border-radius:14px;padding:24px;border:1px solid #B5D4F4;margin-top:20px">
-      <div style="font-size:0.72rem;font-weight:600;text-transform:uppercase;letter-spacing:1.5px;color:#85B7EB;margin-bottom:16px">COMMENTAIRES DE VOS PROFESSIONNELS</div>
-      <div id="proComments"><p style="font-size:0.85rem;color:#85B7EB">Aucun commentaire reçu pour le moment.</p></div>
-    </div>
-  </div>
-</div>
 
 <script>
   // ── CONFIG ──
@@ -686,7 +649,107 @@
     document.getElementById('dashboardView').style.display = view === 'dashboard' ? 'block' : 'none';
     document.getElementById('profileView').style.display = view === 'profile' ? 'block' : 'none';
     document.getElementById('pricingView').style.display = view === 'pricing' ? 'block' : 'none';
+    document.getElementById('proView').style.display = view === 'pro' ? 'block' : 'none';
+if (view === 'pro') loadProfessionals();
   }
+
+  async function loadProfessionals() {
+  const plan = document.getElementById('sidebarPlan').textContent;
+  const isPaid = plan.includes('Standard') || plan.includes('Premium');
+  document.getElementById('proPlanRequired').style.display = isPaid ? 'none' : 'block';
+  document.getElementById('proContent').style.display = isPaid ? 'block' : 'none';
+  if (!isPaid) return;
+
+  try {
+    const res = await fetch(`${BACKEND_URL}/api/professionals`, {
+      headers: { 'Authorization': `Bearer ${authToken}` }
+    });
+    const pros = await res.json();
+    renderProfessionals(pros);
+
+    const commRes = await fetch(`${BACKEND_URL}/api/professionals/comments`, {
+      headers: { 'Authorization': `Bearer ${authToken}` }
+    });
+    const comments = await commRes.json();
+    renderComments(comments);
+  } catch(e) { console.error(e); }
+}
+
+function renderProfessionals(pros) {
+  const list = document.getElementById('proList');
+  if (!pros.length) {
+    list.innerHTML = '<p style="font-size:0.85rem;color:#85B7EB">Aucun professionnel ajouté.</p>';
+    return;
+  }
+  list.innerHTML = pros.map(p => {
+    const link = p.sharing_links?.[0];
+    const shareUrl = `${window.location.origin}/pro-access.html?token=${link?.token}`;
+    return `
+    <div style="background:white;border-radius:14px;padding:22px;border:1px solid #B5D4F4;display:flex;align-items:center;gap:16px">
+      <div style="width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,#378ADD,#0C447C);display:flex;align-items:center;justify-content:center;color:white;font-weight:700;font-size:0.9rem;flex-shrink:0">
+        ${p.name.split(' ').map(n=>n[0]).join('').toUpperCase().slice(0,2)}
+      </div>
+      <div style="flex:1">
+        <div style="font-weight:600;color:#021A35;font-size:0.95rem">${p.name}</div>
+        <div style="font-size:0.78rem;color:#85B7EB">${p.specialty || 'Professionnel de santé'}</div>
+        ${p.email ? `<div style="font-size:0.75rem;color:#85B7EB">${p.email}</div>` : ''}
+      </div>
+      ${link ? `
+      <div style="background:#F0F6FF;border-radius:10px;padding:12px 16px;font-size:0.82rem">
+        <div style="color:#85B7EB;font-size:0.7rem;margin-bottom:4px">CODE D'ACCÈS</div>
+        <div style="font-family:'DM Mono',monospace;font-size:1.1rem;font-weight:700;color:#021A35;letter-spacing:3px">${link.code}</div>
+        <div style="margin-top:8px;display:flex;gap:8px">
+          <button onclick="navigator.clipboard.writeText('${shareUrl}').then(()=>alert('Lien copié !'))" style="background:#021A35;color:white;border:none;border-radius:100px;padding:5px 12px;font-size:0.72rem;cursor:pointer">📋 Copier le lien</button>
+          <button onclick="navigator.clipboard.writeText('${link.code}').then(()=>alert('Code copié !'))" style="background:#378ADD;color:white;border:none;border-radius:100px;padding:5px 12px;font-size:0.72rem;cursor:pointer">🔑 Copier le code</button>
+        </div>
+      </div>` : ''}
+      <button onclick="deleteProfessional('${p.id}')" style="background:none;border:1px solid #FCC;color:#C55;border-radius:8px;padding:6px 12px;font-size:0.78rem;cursor:pointer">Supprimer</button>
+    </div>`;
+  }).join('');
+}
+
+function renderComments(comments) {
+  const el = document.getElementById('proComments');
+  if (!comments.length) return;
+  el.innerHTML = comments.map(c => `
+    <div style="padding:12px 0;border-bottom:1px solid #E6F1FB">
+      <div style="font-size:0.72rem;color:#85B7EB;margin-bottom:4px">
+        ${c.sharing_links?.professionals?.name || 'Professionnel'} · ${new Date(c.created_at).toLocaleDateString('fr-FR')}
+      </div>
+      <div style="font-size:0.88rem;color:#021A35">${c.comment}</div>
+    </div>`).join('');
+}
+
+async function addProfessional() {
+  const name = document.getElementById('proName').value.trim();
+  const specialty = document.getElementById('proSpecialty').value.trim();
+  const email = document.getElementById('proEmail').value.trim();
+  if (!name) { document.getElementById('proAddError').textContent = 'Le nom est requis'; document.getElementById('proAddError').style.display = 'block'; return; }
+
+  try {
+    const res = await fetch(`${BACKEND_URL}/api/professionals`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${authToken}` },
+      body: JSON.stringify({ name, specialty, email })
+    });
+    if (res.ok) {
+      document.getElementById('proName').value = '';
+      document.getElementById('proSpecialty').value = '';
+      document.getElementById('proEmail').value = '';
+      document.getElementById('proAddError').style.display = 'none';
+      loadProfessionals();
+    }
+  } catch(e) { console.error(e); }
+}
+
+async function deleteProfessional(id) {
+  if (!confirm('Supprimer ce professionnel ?')) return;
+  await fetch(`${BACKEND_URL}/api/professionals/${id}`, {
+    method: 'DELETE',
+    headers: { 'Authorization': `Bearer ${authToken}` }
+  });
+  loadProfessionals();
+}
 
   // ── CHAT ──
   function addMessage(role, text) {
