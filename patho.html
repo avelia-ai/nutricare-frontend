@@ -362,8 +362,12 @@
     document.getElementById('modalOverlay').classList.remove('show');
   }
 
-  // Lancer le chargement
-  loadPathoData();
+  const authToken = localStorage.getItem('nutricare_token');
+  if (!authToken) {
+    window.location.href = 'app.html?redirect=' + encodeURIComponent(window.location.href);
+  } else {
+    loadPathoData();
+  }
 </script>
 </body>
 </html>
