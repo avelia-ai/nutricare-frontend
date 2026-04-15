@@ -856,7 +856,7 @@ function toggleMobileMenu() {
       const res = await fetch(`${BACKEND_URL}/api/profile`, {
         headers: { 'Authorization': `Bearer ${authToken}` }
       });
-      if (!res.ok) { logout(); return; }
+      if (!res.ok) { console.warn('Profil non chargé', res.status); return; }
       const profile = await res.json();
 
       const name = profile.full_name || currentUser?.email?.split('@')[0] || 'Utilisateur';
