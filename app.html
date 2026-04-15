@@ -794,6 +794,17 @@ if (params.get('view')) localStorage.setItem('redirect_view', params.get('view')
       localStorage.setItem('nutricare_token', authToken);
       localStorage.setItem('nutricare_user', JSON.stringify(currentUser));
       showApp();
+
+// Rediriger vers la vue demandée après connexion
+const params = new URLSearchParams(window.location.search);
+const view = params.get('view');
+const pathologie = params.get('p');
+if (view) {
+  setTimeout(() => {
+    showView(view);
+    if (pathologie) window.selectedPathologie = pathologie;
+  }, 600);
+}
     } catch (err) {
       showAuthError('Erreur de connexion au serveur. Réessayez.');
     }
