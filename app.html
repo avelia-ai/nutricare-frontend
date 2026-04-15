@@ -297,6 +297,7 @@
     <button class="nav-item" onclick="showView('protocols', this)">🧬 Protocoles</button>
     <button class="nav-item" onclick="showView('gamification', this)">🏆 Ma progression</button>
     <button class="nav-item" onclick="showView('programs', this)">🎯 Programmes</button>
+    <button class="nav-item" onclick="showView('ordonnance', this)">📋 Scan ordonnance</button>
     <div class="sidebar-user">
       <div class="sidebar-avatar" id="sidebarAvatar">?</div>
       <div class="sidebar-user-info">
@@ -685,6 +686,51 @@
   <div style="font-size:0.85rem;color:#85B7EB;margin-bottom:32px">Protocoles adaptés à vos pathologies</div>
   <div id="protocolsList" style="display:flex;flex-direction:column;gap:20px"></div>
 </div>
+<div id="ordonnanceView" style="display:none;padding:32px;overflow-y:auto;background:var(--cream)">
+  <div style="font-family:'Cormorant Garamond',serif;font-size:2rem;font-weight:400;margin-bottom:6px;color:var(--charcoal)">Scan ordonnance 📋</div>
+  <div style="font-size:0.85rem;color:rgba(0,0,0,0.5);margin-bottom:28px">Photographiez votre ordonnance pour extraire automatiquement vos médicaments</div>
+
+  <div id="ordoFree" style="display:none;background:white;border-radius:16px;padding:40px;text-align:center;border:1px solid var(--border)">
+    <div style="font-size:2rem;margin-bottom:12px">💎</div>
+    <div style="font-family:'Cormorant Garamond',serif;font-size:1.4rem;margin-bottom:8px">Fonctionnalité Premium</div>
+    <div style="font-size:0.88rem;color:rgba(0,0,0,0.5);margin-bottom:20px">Passez au plan Premium pour scanner vos ordonnances.</div>
+    <button onclick="showView('pricing')" style="background:var(--charcoal);color:white;border:none;border-radius:10px;padding:12px 28px;font-family:'DM Sans',sans-serif;cursor:pointer">Voir les abonnements →</button>
+  </div>
+
+  <div id="ordoContent" style="display:none;max-width:700px">
+    <div style="background:white;border-radius:16px;padding:28px;border:1px solid var(--border);margin-bottom:20px">
+      <div style="font-family:'Cormorant Garamond',serif;font-size:1.2rem;margin-bottom:16px">📸 Importer une ordonnance</div>
+      <div id="ordoDropzone" onclick="document.getElementById('ordoInput').click()" style="border:2px dashed rgba(0,0,0,0.15);border-radius:12px;padding:40px;text-align:center;cursor:pointer;transition:border .2s">
+        <div style="font-size:2.5rem;margin-bottom:12px">📋</div>
+        <div style="font-size:0.9rem;color:rgba(0,0,0,0.5)">Cliquez ou glissez une photo de votre ordonnance</div>
+        <div style="font-size:0.78rem;color:rgba(0,0,0,0.3);margin-top:6px">JPG, PNG — Max 5MB</div>
+      </div>
+      <input type="file" id="ordoInput" accept="image/*" style="display:none" onchange="scanOrdonnance(this)"/>
+      <div id="ordoPreview" style="display:none;margin-top:16px;text-align:center">
+        <img id="ordoImg" style="max-height:200px;border-radius:8px;border:1px solid var(--border)"/>
+      </div>
+    </div>
+
+    <div id="ordoLoading" style="display:none;background:white;border-radius:16px;padding:32px;text-align:center;border:1px solid var(--border);margin-bottom:20px">
+      <div style="width:36px;height:36px;border:3px solid var(--sage-pale);border-top-color:var(--sage);border-radius:50%;animation:spin 0.8s linear infinite;margin:0 auto 16px"></div>
+      <div style="font-size:0.9rem;color:rgba(0,0,0,0.5)">Claude analyse votre ordonnance...</div>
+    </div>
+
+    <div id="ordoResult" style="display:none;background:white;border-radius:16px;padding:28px;border:1px solid var(--border)">
+      <div style="font-family:'Cormorant Garamond',serif;font-size:1.2rem;margin-bottom:16px">✅ Ordonnance analysée</div>
+      <div id="ordoInfos" style="margin-bottom:16px;padding:12px;background:var(--sage-pale);border-radius:8px;font-size:0.82rem;color:rgba(0,0,0,0.6)"></div>
+      <div style="font-weight:500;font-size:0.88rem;margin-bottom:12px">Médicaments détectés :</div>
+      <div id="ordoMeds" style="display:flex;flex-direction:column;gap:10px"></div>
+      <div style="margin-top:16px;padding:12px;background:#EFF7F1;border-radius:8px;font-size:0.82rem;color:#3A6B40">
+        ✓ Médicaments ajoutés à votre profil. Les interactions alimentaires ont été mises à jour.
+      </div>
+      <button onclick="showView('profile')" style="margin-top:12px;background:var(--charcoal);color:white;border:none;border-radius:10px;padding:10px 20px;font-family:'DM Sans',sans-serif;cursor:pointer;font-size:0.85rem">Voir mon profil →</button>
+    </div>
+
+    <div id="ordoError" style="display:none;background:#FEE;border:1px solid #FCC;border-radius:12px;padding:16px;font-size:0.85rem;color:#C55;margin-bottom:20px"></div>
+  </div>
+</div>
+
 <div id="programsView" style="display:none;padding:32px;overflow-y:auto;background:var(--cream)">
   <div style="font-family:'Cormorant Garamond',serif;font-size:2rem;font-weight:400;margin-bottom:6px;color:var(--charcoal)">Programmes de coaching 🎯</div>
   <div style="font-size:0.85rem;color:rgba(0,0,0,0.5);margin-bottom:28px">Transformez votre santé avec un accompagnement intensif personnalisé</div>
@@ -1025,6 +1071,68 @@ function toggleMobileMenu() {
     }
   }
 
+  function initOrdonnance() {
+    const plan = currentUser?.plan || 'free';
+    const profile = JSON.parse(localStorage.getItem('nutricare_user') || '{}');
+    const userPlan = profile?.plan || 'free';
+    if (userPlan !== 'premium') {
+      document.getElementById('ordoFree').style.display = 'block';
+      document.getElementById('ordoContent').style.display = 'none';
+    } else {
+      document.getElementById('ordoFree').style.display = 'none';
+      document.getElementById('ordoContent').style.display = 'block';
+    }
+  }
+
+  async function scanOrdonnance(input) {
+    const file = input.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = async (e) => {
+      const base64 = e.target.result.split(',')[1];
+      const mediaType = file.type;
+      document.getElementById('ordoPreview').style.display = 'block';
+      document.getElementById('ordoImg').src = e.target.result;
+      document.getElementById('ordoLoading').style.display = 'block';
+      document.getElementById('ordoResult').style.display = 'none';
+      document.getElementById('ordoError').style.display = 'none';
+      try {
+        const res = await fetch(`${BACKEND_URL}/api/ordonnance/scan`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${authToken}` },
+          body: JSON.stringify({ image: base64, mediaType })
+        });
+        const data = await res.json();
+        document.getElementById('ordoLoading').style.display = 'none';
+        if (!res.ok || !data.valide) {
+          document.getElementById('ordoError').style.display = 'block';
+          document.getElementById('ordoError').textContent = data.message || data.error || 'Document non reconnu comme ordonnance.';
+          return;
+        }
+        document.getElementById('ordoResult').style.display = 'block';
+        let infos = '';
+        if (data.prescripteur) infos += 'Prescripteur : ' + data.prescripteur + ' · ';
+        if (data.date) infos += 'Date : ' + data.date + ' · ';
+        if (data.indications) infos += 'Indication : ' + data.indications;
+        document.getElementById('ordoInfos').textContent = infos || 'Informations extraites avec succès';
+        document.getElementById('ordoMeds').innerHTML = (data.medicaments || []).map(m => `
+          <div style="background:var(--cream);border-radius:10px;padding:12px 16px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px">
+            <div>
+              <div style="font-weight:500;font-size:0.88rem">${m.nom}</div>
+              <div style="font-size:0.78rem;color:rgba(0,0,0,0.5)">${m.dosage || ''} ${m.frequence ? '· ' + m.frequence : ''} ${m.duree ? '· ' + m.duree : ''}</div>
+            </div>
+            <span style="background:var(--sage-pale);color:var(--sage);font-size:0.72rem;padding:3px 10px;border-radius:100px">Ajouté</span>
+          </div>`).join('');
+        loadAlertes(data.medicaments?.map(m => m.nom) || []);
+      } catch(e) {
+        document.getElementById('ordoLoading').style.display = 'none';
+        document.getElementById('ordoError').style.display = 'block';
+        document.getElementById('ordoError').textContent = 'Erreur de connexion au serveur.';
+      }
+    };
+    reader.readAsDataURL(file);
+  }
+
   async function loadPrediction() {
     try {
       const res = await fetch(`${BACKEND_URL}/api/prediction/risque`, {
@@ -1186,6 +1294,8 @@ if (urlParams.get('view') === 'protocols') {
     document.getElementById('protocolsView').style.display = view === 'protocols' ? 'block' : 'none';
     document.getElementById('gamificationView').style.display = view === 'gamification' ? 'block' : 'none';
     document.getElementById('programsView').style.display = view === 'programs' ? 'block' : 'none';
+    document.getElementById('ordonnanceView').style.display = view === 'ordonnance' ? 'block' : 'none';
+    if (view === 'ordonnance') initOrdonnance();
     if (view === 'programs') {
       const params = new URLSearchParams(window.location.search);
       if (params.get('program_success')) document.getElementById('programSuccess').style.display = 'block';
