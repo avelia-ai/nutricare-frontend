@@ -342,6 +342,17 @@
     <div id="dashboardView">
       <div class="dashboard-title">Bonjour <span id="dashName">!</span> 👋</div>
       <div class="dashboard-sub">Voici votre tableau de bord santé du jour</div>
+      <div id="predictionBanner" style="display:none;border-radius:12px;padding:16px 20px;margin-bottom:16px;border-left:4px solid #C9A84C;background:#FDF6E8">
+        <div style="display:flex;align-items:flex-start;gap:12px">
+          <div style="font-size:1.4rem;flex-shrink:0" id="predIcon">&#x1F52E;</div>
+          <div style="flex:1">
+            <div style="font-size:0.8rem;font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:#A07820;margin-bottom:4px" id="predTitle">Prediction NutriCare</div>
+            <div style="font-size:0.88rem;color:rgba(0,0,0,0.7);line-height:1.5" id="predMessage"></div>
+            <div style="margin-top:10px;display:flex;gap:8px;flex-wrap:wrap" id="predSignaux"></div>
+          </div>
+          <button onclick="document.getElementById('predictionBanner').style.display='none'" style="background:none;border:none;cursor:pointer;color:rgba(0,0,0,0.3);font-size:1.1rem;flex-shrink:0">x</button>
+        </div>
+      </div>
       <div class="alertes-container" id="alertesContainer"></div>
       <div class="stats-grid">
         <div class="stat-card">
@@ -991,6 +1002,9 @@ function toggleMobileMenu() {
       const meds = profile.medications || [];
       if (meds.length > 0) loadAlertes(meds);
 
+      // Charger la prediction de decrochage
+      loadPrediction();
+
     } catch (err) {
       console.error('Erreur chargement profil:', err);
     }
@@ -1009,6 +1023,30 @@ function toggleMobileMenu() {
     } catch(e) {
       console.error('Erreur achat programme:', e);
     }
+  }
+
+  async function loadPrediction() {
+    try {
+      const res = await fetch(`${BACKEND_URL}/api/prediction/risque`, {
+        headers: { 'Authorization': `Bearer ${authToken}` }
+      });
+      if (!res.ok) return;
+      const data = await res.json();
+      if (data.niveau === 'faible') return;
+      const banner = document.getElementById('predictionBanner');
+      const colors = { moyen: { bg:'#FDF6E8', border:'#C9A84C', title:'#A07820' }, eleve: { bg:'#FEF0F0', border:'#C55', title:'#C55' } };
+      const icons = { moyen: '⚡', eleve: '🚨' };
+      const c = colors[data.niveau] || colors.moyen;
+      banner.style.background = c.bg;
+      banner.style.borderLeftColor = c.border;
+      document.getElementById('predTitle').style.color = c.title;
+      document.getElementById('predTitle').textContent = data.niveau === 'eleve' ? 'Risque de decrochage detecte' : 'Attention a votre suivi';
+      document.getElementById('predIcon').textContent = icons[data.niveau] || '⚡';
+      document.getElementById('predMessage').textContent = data.message || 'Nous avons detecte des signes de decrochage. Revenez sur votre programme !';
+      const signauxEl = document.getElementById('predSignaux');
+      signauxEl.innerHTML = (data.signaux || []).map(s => `<span style="background:rgba(0,0,0,0.06);border-radius:100px;padding:3px 10px;font-size:0.75rem;color:rgba(0,0,0,0.5)">${s}</span>`).join('');
+      banner.style.display = 'block';
+    } catch(e) { console.error('Erreur prediction:', e); }
   }
 
   async function loadGamification() {
