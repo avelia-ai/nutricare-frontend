@@ -713,6 +713,10 @@
   window.onload = () => {
     if (authToken && currentUser) {
       showApp();
+      const params = new URLSearchParams(window.location.search);
+      const view = params.get('view');
+      const pathologie = params.get('p');
+      if (view) setTimeout(() => { showView(view); if (pathologie) window.selectedPathologie = pathologie; }, 600);
     }
   };
 
