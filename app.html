@@ -295,6 +295,7 @@
     <button class="nav-item" onclick="showView('menus', this)">🥗 Mes menus</button>
     <button class="nav-item" onclick="showView('analysis', this)">📸 Analyse repas</button>
     <button class="nav-item" onclick="showView('protocols', this)">🧬 Protocoles</button>
+    <button class="nav-item" onclick="showView('gamification', this)">🏆 Ma progression</button>
     <div class="sidebar-user">
       <div class="sidebar-avatar" id="sidebarAvatar">?</div>
       <div class="sidebar-user-info">
@@ -672,6 +673,59 @@
   <div style="font-size:0.85rem;color:#85B7EB;margin-bottom:32px">Protocoles adaptés à vos pathologies</div>
   <div id="protocolsList" style="display:flex;flex-direction:column;gap:20px"></div>
 </div>
+<div id="gamificationView" style="display:none;padding:32px;overflow-y:auto;background:var(--cream)">
+  <div style="font-family:'Cormorant Garamond',serif;font-size:2rem;font-weight:400;margin-bottom:6px;color:var(--charcoal)">Ma progression 🏆</div>
+  <div style="font-size:0.85rem;color:rgba(0,0,0,0.5);margin-bottom:28px">Vos objectifs, badges et niveau nutritionnel</div>
+
+  <!-- Plan requis -->
+  <div id="gamiFree" style="display:none;background:white;border-radius:16px;padding:40px;text-align:center;border:1px solid var(--border)">
+    <div style="font-size:2rem;margin-bottom:12px">⭐</div>
+    <div style="font-family:'Cormorant Garamond',serif;font-size:1.4rem;margin-bottom:8px">Fonctionnalité Standard & Premium</div>
+    <div style="font-size:0.88rem;color:rgba(0,0,0,0.5);margin-bottom:20px">Passez à un plan payant pour accéder à la progression gamifiée.</div>
+    <button onclick="showView('pricing')" style="background:var(--charcoal);color:white;border:none;border-radius:10px;padding:12px 28px;font-family:'DM Sans',sans-serif;cursor:pointer">Voir les abonnements →</button>
+  </div>
+
+  <div id="gamiContent" style="display:none">
+    <!-- Niveau + Points -->
+    <div style="background:var(--charcoal);border-radius:16px;padding:28px;color:white;margin-bottom:20px;display:flex;align-items:center;gap:24px;flex-wrap:wrap">
+      <div style="font-size:3rem" id="gamiNiveauIcon">🌱</div>
+      <div style="flex:1">
+        <div style="font-size:0.75rem;text-transform:uppercase;letter-spacing:.1em;color:rgba(255,255,255,0.5);margin-bottom:4px">Niveau</div>
+        <div style="font-family:'Cormorant Garamond',serif;font-size:1.8rem" id="gamiNiveauNom">Débutant</div>
+        <div style="font-size:0.82rem;color:rgba(255,255,255,0.6)" id="gamiPoints">0 points</div>
+      </div>
+      <div style="text-align:right">
+        <div style="font-size:0.75rem;color:rgba(255,255,255,0.5);margin-bottom:8px" id="gamiNextNiveau"></div>
+        <div style="background:rgba(255,255,255,0.15);border-radius:100px;height:8px;width:200px;overflow:hidden">
+          <div id="gamiProgressBar" style="background:var(--sage);height:100%;border-radius:100px;width:0%;transition:width 1s ease"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Streak -->
+    <div style="background:white;border-radius:16px;padding:20px;margin-bottom:20px;border:1px solid var(--border);display:flex;align-items:center;gap:16px">
+      <div style="font-size:2.5rem">🔥</div>
+      <div>
+        <div style="font-size:1.8rem;font-weight:600;color:var(--charcoal)" id="gamiStreak">0</div>
+        <div style="font-size:0.82rem;color:rgba(0,0,0,0.5)">jours consécutifs</div>
+      </div>
+      <div style="margin-left:auto;font-size:0.78rem;color:rgba(0,0,0,0.4)" id="gamiStreakMsg"></div>
+    </div>
+
+    <!-- Objectifs hebdo -->
+    <div style="background:white;border-radius:16px;padding:24px;margin-bottom:20px;border:1px solid var(--border)">
+      <div style="font-family:'Cormorant Garamond',serif;font-size:1.2rem;margin-bottom:16px">Objectifs de la semaine</div>
+      <div id="gamiObjectifs" style="display:flex;flex-direction:column;gap:12px"></div>
+    </div>
+
+    <!-- Badges -->
+    <div style="background:white;border-radius:16px;padding:24px;border:1px solid var(--border)">
+      <div style="font-family:'Cormorant Garamond',serif;font-size:1.2rem;margin-bottom:16px">Mes badges</div>
+      <div id="gamiBadges" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:12px"></div>
+    </div>
+  </div>
+</div>
+
 <div id="proView" style="display:none;padding:32px;overflow-y:auto;background:#F0F6FF">
   <div style="font-family:'Cormorant Garamond',serif;font-size:2rem;font-weight:400;margin-bottom:6px;color:#021A35">Mes professionnels de santé</div>
   <div style="font-size:0.85rem;color:#85B7EB;margin-bottom:32px">Partagez vos données avec votre médecin ou nutritionniste</div>
@@ -886,6 +940,74 @@ function toggleMobileMenu() {
     }
   }
 
+  async function loadGamification() {
+    try {
+      const res = await fetch(`${BACKEND_URL}/api/gamification`, {
+        headers: { 'Authorization': `Bearer ${authToken}` }
+      });
+      if (res.status === 403) {
+        document.getElementById('gamiFree').style.display = 'block';
+        document.getElementById('gamiContent').style.display = 'none';
+        return;
+      }
+      const data = await res.json();
+      document.getElementById('gamiFree').style.display = 'none';
+      document.getElementById('gamiContent').style.display = 'block';
+
+      // Niveau
+      document.getElementById('gamiNiveauIcon').textContent = data.niveau?.icon || '🌱';
+      document.getElementById('gamiNiveauNom').textContent = data.niveau?.nom || 'Débutant';
+      document.getElementById('gamiPoints').textContent = `${data.points || 0} points`;
+      if (data.niveauSuivant) {
+        const pct = Math.min(100, ((data.points - data.niveau.min) / (data.niveauSuivant.min - data.niveau.min)) * 100);
+        document.getElementById('gamiProgressBar').style.width = pct + '%';
+        document.getElementById('gamiNextNiveau').textContent = `${data.niveauSuivant.min - data.points} pts pour ${data.niveauSuivant.nom}`;
+      } else {
+        document.getElementById('gamiProgressBar').style.width = '100%';
+        document.getElementById('gamiNextNiveau').textContent = 'Niveau maximum atteint 🏆';
+      }
+
+      // Streak
+      const streak = data.stats?.streak || 0;
+      document.getElementById('gamiStreak').textContent = streak;
+      document.getElementById('gamiStreakMsg').textContent = streak >= 7 ? '🔥 Impressionnant !' : streak >= 3 ? 'Continuez !' : 'Connectez-vous chaque jour !';
+
+      // Objectifs
+      const objContainer = document.getElementById('gamiObjectifs');
+      objContainer.innerHTML = (data.objectifs || []).map(o => {
+        const pct = Math.min(100, (o.actuel / o.cible) * 100);
+        const done = o.actuel >= o.cible;
+        return `<div style="display:flex;align-items:center;gap:12px">
+          <div style="font-size:1.2rem">${o.icon}</div>
+          <div style="flex:1">
+            <div style="display:flex;justify-content:space-between;margin-bottom:4px">
+              <span style="font-size:0.82rem;font-weight:500">${o.nom}</span>
+              <span style="font-size:0.78rem;color:rgba(0,0,0,0.4)">${o.actuel}/${o.cible}</span>
+            </div>
+            <div style="background:#F0F0F0;border-radius:100px;height:6px">
+              <div style="background:${done ? '#6B8F71' : '#C9A84C'};height:100%;border-radius:100px;width:${pct}%;transition:width 1s"></div>
+            </div>
+          </div>
+          ${done ? '<div style="color:#6B8F71;font-size:0.8rem">✓</div>' : ''}
+        </div>`;
+      }).join('');
+
+      // Badges
+      const badgesContainer = document.getElementById('gamiBadges');
+      badgesContainer.innerHTML = (data.badgesTotal || []).map(b => {
+        const obtenu = (data.badgesObtenus || []).find(bo => bo.id === b.id);
+        return `<div style="background:${obtenu ? 'var(--sage-pale)' : '#F5F5F5'};border-radius:12px;padding:14px;text-align:center;opacity:${obtenu ? '1' : '0.4'}">
+          <div style="font-size:1.6rem;margin-bottom:6px">${b.icon}</div>
+          <div style="font-size:0.78rem;font-weight:600;color:var(--charcoal);margin-bottom:2px">${b.nom}</div>
+          <div style="font-size:0.7rem;color:rgba(0,0,0,0.45)">${b.desc}</div>
+        </div>`;
+      }).join('');
+
+    } catch(e) {
+      console.error('Erreur gamification:', e);
+    }
+  }
+
   async function loadAlertes(medicaments) {
     try {
       const res = await fetch(`${BACKEND_URL}/api/interactions/check`, {
@@ -952,6 +1074,8 @@ if (urlParams.get('view') === 'protocols') {
     document.getElementById('proView').style.display = view === 'pro' ? 'block' : 'none';
     if (view === 'pro') loadProfessionals();
     document.getElementById('protocolsView').style.display = view === 'protocols' ? 'block' : 'none';
+    document.getElementById('gamificationView').style.display = view === 'gamification' ? 'block' : 'none';
+    if (view === 'gamification') loadGamification();
     if (view === 'protocols') loadProtocols();
     document.getElementById('healthView').style.display = view === 'health' ? 'block' : 'none';
     if (view === 'health') loadHealthDashboard();
