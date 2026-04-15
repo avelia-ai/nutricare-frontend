@@ -745,6 +745,9 @@
   }
 
   async function login() {
+    // Sauvegarder la vue demandée
+const params = new URLSearchParams(window.location.search);
+if (params.get('view')) localStorage.setItem('redirect_view', params.get('view'));
     const email = document.getElementById('loginEmail').value.trim();
     const password = document.getElementById('loginPassword').value;
     if (!email || !password) return showAuthError('Veuillez remplir tous les champs');
@@ -843,6 +846,11 @@ function toggleMobileMenu() {
 
       const since = new Date(currentUser?.created_at || Date.now());
       document.getElementById('dashSince').textContent = since.toLocaleDateString('fr-FR', { month: 'short', year: 'numeric' });
+      const redirectView = localStorage.getItem('redirect_view');
+if (redirectView) {
+  localStorage.removeItem('redirect_view');
+  setTimeout(() => showView(redirectView), 800);
+}
 
       // Fill profile form
       document.getElementById('profileName').value = profile.full_name || '';
