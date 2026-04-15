@@ -715,7 +715,7 @@
       showApp();
       const params = new URLSearchParams(window.location.search);
       const redirectUrl = params.get('redirect');
-      if (redirectUrl) { setTimeout(() => window.location.href = redirectUrl, 500); }
+      if (redirectUrl) { setTimeout(() => window.location.href = decodeURIComponent(redirectUrl), 500); return; }
       const view = params.get('view');
       const pathologie = params.get('p');
       if (view) setTimeout(() => { showView(view); if (pathologie) window.selectedPathologie = pathologie; }, 600);
@@ -769,6 +769,8 @@
       localStorage.setItem('nutricare_token', authToken);
       localStorage.setItem('nutricare_user', JSON.stringify(currentUser));
       showApp();
+      const redirectUrl = new URLSearchParams(window.location.search).get('redirect');
+      if (redirectUrl) { setTimeout(() => window.location.href = decodeURIComponent(redirectUrl), 500); return; }
     } catch (err) {
       showAuthError('Erreur de connexion au serveur. Réessayez.');
     }
