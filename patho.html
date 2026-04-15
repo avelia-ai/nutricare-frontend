@@ -194,74 +194,53 @@
   document.getElementById('modalPathoName').textContent = pathoDisplay;
   document.getElementById('ctaSub').textContent = `Recevez des conseils nutritionnels personnalisés pour la gestion de ${pathoDisplay} et un suivi adapté à votre condition.`;
 
-  // Charger les données IA
   async function loadPathoData() {
     try {
-      const res = await fetch(`${BACKEND_URL}/api/patho-info`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ pathologie: patho })
-      });
-
+      const res = await fetch(`${BACKEND_URL}/api/protocols/${encodeURIComponent(patho)}`);
       if (res.ok) {
         const data = await res.json();
         renderContent(data);
         return;
       }
     } catch(e) {}
-
-    // Fallback: génération côté client via Claude API
-    await generateWithClaude();
-  }
-
-  async function generateWithClaude() {
-    try {
-      const res = await fetch('https://api.anthropic.com/v1/messages', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          model: 'claude-sonnet-4-20250514',
-          max_tokens: 1000,
-          messages: [{
-            role: 'user',
-            content: `Tu es un expert en nutrition thérapeutique. Génère une fiche complète sur la pathologie : "${pathoDisplay}".
-Réponds UNIQUEMENT en JSON valide avec cette structure exacte :
-{
-  "description": "2-3 phrases expliquant la pathologie et son lien avec la nutrition",
-  "aliments_recommandes": "2-3 phrases sur les aliments bénéfiques",
-  "aliments_tags": ["aliment1", "aliment2", "aliment3", "aliment4"],
-  "aliments_eviter": "2-3 phrases sur les aliments à éviter",
-  "eviter_tags": ["aliment1", "aliment2", "aliment3"],
-  "nutriments": "2-3 phrases sur les nutriments clés",
-  "nutriments_tags": ["nutriment1", "nutriment2", "nutriment3", "nutriment4"],
-  "conseils": "3-4 conseils pratiques sous forme de texte avec des tirets"
-}`
-          }]
-        })
-      });
-
-      const data = await res.json();
-      const text = data.content[0].text.replace(/```json|```/g, '').trim();
-      const parsed = JSON.parse(text);
-      renderContent(parsed);
-    } catch(e) {
-      renderFallback();
-    }
+    renderFallback();
   }
 
   function renderContent(data) {
     document.getElementById('loadingCard').style.display = 'none';
     document.getElementById('content').style.display = 'block';
 
+    document.getElementById('heroTitle').innerHTML = `Protocole <em>${data.name || pathoDisplay}</em>`;
     document.getElementById('sectionDescription').innerHTML = `<p>${data.description || ''}</p>`;
-    document.getElementById('sectionAliments').innerHTML = `<p>${data.aliments_recommandes || ''}</p>`;
-    document.getElementById('sectionEviter').innerHTML = `<p>${data.aliments_eviter || ''}</p>`;
-    document.getElementById('sectionNutriments').innerHTML = `<p>${data.nutriments || ''}</p>`;
-    document.getElementById('sectionConseils').innerHTML = `<p>${(data.conseils || '').replace(/\n/g, '<br>')}</p>`;
 
-    renderTags('tagsAliments', data.aliments_tags || [], '');
-    renderTags('tagsEviter', data.eviter_tags || [], 'tag-red');
-    renderTags('tagsNutriments', data.nutriments_tags || [], 'tag-gold');
+    const aliments = data.nutrition?.aliments_favoriser || [];
+    document.getElementById('sectionAliments').innerHTML = '<p>Aliments recommandés pour ce protocole :</p>';
+    renderTags('tagsAliments', aliments.slice(0, 6), '');
+
+    const eviter = data.nutrition?.aliments_eviter || [];
+    document.getElementById('sectionEviter').innerHTML = '<p>Aliments à limiter ou éviter :</p>';
+    renderTags('tagsEviter', eviter.slice(0, 5), 'tag-red');
+
+    document.getElementById('sectionNutriments').innerHTML =
+      '<p>Compléments et nutriments clés recommandés :</p>' +
+      (data.complements || []).map(c => `<p style="margin-top:8px"><strong>${c.nom}</strong> — ${c.dosage} : ${c.note}</p>`).join('');
+    renderTags('tagsNutriments', (data.complements || []).map(c => c.nom), 'tag-gold');
+
+    const habitudes = data.habitudes || [];
+    document.getElementById('sectionConseils').innerHTML = habitudes.map(h => `<p style="margin-bottom:8px">• ${h}</p>`).join('');
+    if (data.avertissement) {
+      document.getElementById('sectionConseils').innerHTML += `<p style="margin-top:16px;padding:12px;background:#FFF8E8;border-radius:8px;font-size:0.82rem;color:#A07820">⚠️ ${data.avertissement}</p>`;
+    }
+
+    const repas = data.nutrition?.repas_type;
+    if (repas) {
+      const repasHtml = Object.entries(repas).map(([k,v]) => `
+        <div style="padding:10px 0;border-bottom:1px solid rgba(0,0,0,0.06)">
+          <div style="font-size:0.75rem;font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:var(--sage);margin-bottom:4px">${k.replace('_',' ')}</div>
+          <div style="font-size:0.88rem;color:rgba(0,0,0,0.7)">${v}</div>
+        </div>`).join('');
+      document.getElementById('sectionAliments').innerHTML += `<div style="margin-top:16px">${repasHtml}</div>`;
+    }
   }
 
   function renderTags(id, tags, cls) {
