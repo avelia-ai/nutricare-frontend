@@ -869,6 +869,11 @@ function toggleMobileMenu() {
   }
 
   // ── VIEWS ──
+  // Détection paramètres URL
+const urlParams = new URLSearchParams(window.location.search);
+if (urlParams.get('view') === 'protocols') {
+  setTimeout(() => showView('protocols'), 500);
+}
   function showView(view, btn) {
     document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
     if (btn) btn.classList.add('active');
