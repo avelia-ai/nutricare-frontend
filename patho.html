@@ -196,7 +196,22 @@
 
   async function loadPathoData() {
     try {
+      // Essayer d'abord les protocoles statiques
       const res = await fetch(`${BACKEND_URL}/api/protocols/${encodeURIComponent(patho)}`);
+      if (res.ok) {
+        const data = await res.json();
+        renderContent(data);
+        return;
+      }
+    } catch(e) {}
+
+    try {
+      // Générer avec Claude AI pour les pathologies inconnues
+      const res = await fetch(`${BACKEND_URL}/api/protocols/generate`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ pathologie: pathoDisplay })
+      });
       if (res.ok) {
         const data = await res.json();
         renderContent(data);
