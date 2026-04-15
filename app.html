@@ -296,6 +296,7 @@
     <button class="nav-item" onclick="showView('analysis', this)">📸 Analyse repas</button>
     <button class="nav-item" onclick="showView('protocols', this)">🧬 Protocoles</button>
     <button class="nav-item" onclick="showView('gamification', this)">🏆 Ma progression</button>
+    <button class="nav-item" onclick="showView('programs', this)">🎯 Programmes</button>
     <div class="sidebar-user">
       <div class="sidebar-avatar" id="sidebarAvatar">?</div>
       <div class="sidebar-user-info">
@@ -673,6 +674,57 @@
   <div style="font-size:0.85rem;color:#85B7EB;margin-bottom:32px">Protocoles adaptés à vos pathologies</div>
   <div id="protocolsList" style="display:flex;flex-direction:column;gap:20px"></div>
 </div>
+<div id="programsView" style="display:none;padding:32px;overflow-y:auto;background:var(--cream)">
+  <div style="font-family:'Cormorant Garamond',serif;font-size:2rem;font-weight:400;margin-bottom:6px;color:var(--charcoal)">Programmes de coaching 🎯</div>
+  <div style="font-size:0.85rem;color:rgba(0,0,0,0.5);margin-bottom:28px">Transformez votre santé avec un accompagnement intensif personnalisé</div>
+
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;max-width:800px">
+
+    <!-- Programme 30 jours -->
+    <div style="background:white;border-radius:20px;padding:32px;border:1px solid var(--border);display:flex;flex-direction:column">
+      <div style="font-size:2rem;margin-bottom:12px">🗓️</div>
+      <div style="font-family:'Cormorant Garamond',serif;font-size:1.6rem;font-weight:600;margin-bottom:8px">Programme 30 jours</div>
+      <div style="font-size:0.85rem;color:rgba(0,0,0,0.5);margin-bottom:20px;line-height:1.6">Remise en forme nutritionnelle complète. Menus quotidiens, objectifs adaptés et suivi IA personnalisé.</div>
+      <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:24px">
+        <div style="font-size:0.82rem;display:flex;gap:8px;align-items:center"><span style="color:var(--sage)">✓</span> 30 menus quotidiens personnalisés</div>
+        <div style="font-size:0.82rem;display:flex;gap:8px;align-items:center"><span style="color:var(--sage)">✓</span> Suivi IA quotidien</div>
+        <div style="font-size:0.82rem;display:flex;gap:8px;align-items:center"><span style="color:var(--sage)">✓</span> Protocole adapté à vos pathologies</div>
+        <div style="font-size:0.82rem;display:flex;gap:8px;align-items:center"><span style="color:var(--sage)">✓</span> Bilan nutritionnel final</div>
+      </div>
+      <div style="margin-top:auto">
+        <div style="font-family:'Cormorant Garamond',serif;font-size:2rem;font-weight:600;margin-bottom:16px">49€ <span style="font-size:1rem;color:rgba(0,0,0,0.4);font-family:'DM Sans',sans-serif">paiement unique</span></div>
+        <button onclick="buyProgram('price_1TMSzlGujzZFPXDMfxCW9JdX','Programme 30 jours')" style="width:100%;background:var(--charcoal);color:white;border:none;border-radius:12px;padding:14px;font-family:'DM Sans',sans-serif;font-size:0.9rem;font-weight:500;cursor:pointer">Commencer le programme →</button>
+      </div>
+    </div>
+
+    <!-- Programme 90 jours -->
+    <div style="background:var(--charcoal);border-radius:20px;padding:32px;border:none;display:flex;flex-direction:column;position:relative;overflow:hidden">
+      <div style="position:absolute;top:16px;right:16px;background:var(--gold);color:var(--charcoal);font-size:0.7rem;font-weight:700;padding:4px 12px;border-radius:100px;text-transform:uppercase;letter-spacing:.08em">Populaire</div>
+      <div style="font-size:2rem;margin-bottom:12px">💪</div>
+      <div style="font-family:'Cormorant Garamond',serif;font-size:1.6rem;font-weight:600;margin-bottom:8px;color:white">Programme 90 jours</div>
+      <div style="font-size:0.85rem;color:rgba(255,255,255,0.6);margin-bottom:20px;line-height:1.6">Transformation complète et durable. Le programme ultime pour changer votre rapport à l'alimentation.</div>
+      <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:24px">
+        <div style="font-size:0.82rem;display:flex;gap:8px;align-items:center;color:white"><span style="color:#9DC4A3">✓</span> Tout du programme 30 jours</div>
+        <div style="font-size:0.82rem;display:flex;gap:8px;align-items:center;color:white"><span style="color:#9DC4A3">✓</span> Check-ins hebdomadaires IA</div>
+        <div style="font-size:0.82rem;display:flex;gap:8px;align-items:center;color:white"><span style="color:#9DC4A3">✓</span> Ajustements dynamiques du plan</div>
+        <div style="font-size:0.82rem;display:flex;gap:8px;align-items:center;color:white"><span style="color:#9DC4A3">✓</span> Accès prioritaire au support</div>
+        <div style="font-size:0.82rem;display:flex;gap:8px;align-items:center;color:white"><span style="color:#9DC4A3">✓</span> Rapport de transformation final</div>
+      </div>
+      <div style="margin-top:auto">
+        <div style="font-family:'Cormorant Garamond',serif;font-size:2rem;font-weight:600;margin-bottom:16px;color:white">129€ <span style="font-size:1rem;color:rgba(255,255,255,0.4);font-family:'DM Sans',sans-serif">paiement unique</span></div>
+        <button onclick="buyProgram('price_1TMT04GujzZFPXDMEySkxa5x','Programme 90 jours')" style="width:100%;background:var(--sage);color:white;border:none;border-radius:12px;padding:14px;font-family:'DM Sans',sans-serif;font-size:0.9rem;font-weight:500;cursor:pointer">Commencer le programme →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Success message -->
+  <div id="programSuccess" style="display:none;margin-top:24px;background:#EFF7F1;border:1px solid #9DC4A3;border-radius:12px;padding:20px;max-width:800px;text-align:center">
+    <div style="font-size:1.5rem;margin-bottom:8px">🎉</div>
+    <div style="font-family:'Cormorant Garamond',serif;font-size:1.2rem;margin-bottom:4px">Programme activé avec succès !</div>
+    <div style="font-size:0.85rem;color:rgba(0,0,0,0.5)">Votre programme démarre aujourd'hui. Rendez-vous dans le chat IA pour commencer !</div>
+  </div>
+</div>
+
 <div id="gamificationView" style="display:none;padding:32px;overflow-y:auto;background:var(--cream)">
   <div style="font-family:'Cormorant Garamond',serif;font-size:2rem;font-weight:400;margin-bottom:6px;color:var(--charcoal)">Ma progression 🏆</div>
   <div style="font-size:0.85rem;color:rgba(0,0,0,0.5);margin-bottom:28px">Vos objectifs, badges et niveau nutritionnel</div>
@@ -940,6 +992,21 @@ function toggleMobileMenu() {
     }
   }
 
+  async function buyProgram(priceId, programName) {
+    try {
+      const res = await fetch(`${BACKEND_URL}/api/billing/create-program-checkout`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${authToken}` },
+        body: JSON.stringify({ priceId, programName })
+      });
+      const data = await res.json();
+      if (data.url) window.location.href = data.url;
+      else alert('Erreur lors de la création du paiement');
+    } catch(e) {
+      console.error('Erreur achat programme:', e);
+    }
+  }
+
   async function loadGamification() {
     try {
       const res = await fetch(`${BACKEND_URL}/api/gamification`, {
@@ -1075,6 +1142,11 @@ if (urlParams.get('view') === 'protocols') {
     if (view === 'pro') loadProfessionals();
     document.getElementById('protocolsView').style.display = view === 'protocols' ? 'block' : 'none';
     document.getElementById('gamificationView').style.display = view === 'gamification' ? 'block' : 'none';
+    document.getElementById('programsView').style.display = view === 'programs' ? 'block' : 'none';
+    if (view === 'programs') {
+      const params = new URLSearchParams(window.location.search);
+      if (params.get('program_success')) document.getElementById('programSuccess').style.display = 'block';
+    }
     if (view === 'gamification') loadGamification();
     if (view === 'protocols') loadProtocols();
     document.getElementById('healthView').style.display = view === 'health' ? 'block' : 'none';
