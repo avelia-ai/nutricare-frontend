@@ -298,6 +298,7 @@
     <button class="nav-item" onclick="showView('gamification', this)">🏆 Ma progression</button>
     <button class="nav-item" onclick="showView('programs', this)">🎯 Programmes</button>
     <button class="nav-item" onclick="showView('ordonnance', this)">📋 Scan ordonnance</button>
+    <button class="nav-item" onclick="showView('insights', this)">🌍 Observatoire</button>
     <div class="sidebar-user">
       <div class="sidebar-avatar" id="sidebarAvatar">?</div>
       <div class="sidebar-user-info">
@@ -686,6 +687,45 @@
   <div style="font-size:0.85rem;color:#85B7EB;margin-bottom:32px">Protocoles adaptés à vos pathologies</div>
   <div id="protocolsList" style="display:flex;flex-direction:column;gap:20px"></div>
 </div>
+<div id="insightsView" style="display:none;padding:32px;overflow-y:auto;background:white;width:100%">
+  <div style="max-width:900px;margin:0 auto">
+    <div style="display:inline-block;font-size:0.68rem;font-weight:600;text-transform:uppercase;letter-spacing:.12em;color:#C9A84C;background:#FDF6E8;padding:5px 14px;border-radius:100px;margin-bottom:12px">Observatoire NutriCare</div>
+    <div style="font-family:'Cormorant Garamond',serif;font-size:2rem;font-weight:400;color:#021A35;margin-bottom:6px">Santé nutritionnelle <em style="font-style:italic;color:#C9A84C">en temps réel</em></div>
+    <div style="font-size:0.82rem;color:rgba(2,26,53,0.4);margin-bottom:24px">Données agrégées et anonymisées · Mise à jour en continu</div>
+
+    <div id="insightsStats" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:12px;margin-bottom:24px"></div>
+
+    <div id="insightsInsight" style="display:none;background:#021A35;border-radius:14px;padding:20px 22px;margin-bottom:24px;display:flex;gap:14px;align-items:flex-start">
+      <div style="font-size:1.4rem;flex-shrink:0">🔬</div>
+      <div>
+        <div style="font-size:0.65rem;text-transform:uppercase;letter-spacing:.1em;color:#C9A84C;font-weight:600;margin-bottom:6px">Observation IA · Épidémiologie nutritionnelle</div>
+        <div style="font-size:0.84rem;color:rgba(255,255,255,0.72);line-height:1.6" id="insightsAiText"></div>
+      </div>
+    </div>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px" id="insightsGrid">
+      <div style="background:white;border-radius:14px;padding:20px;border:1px solid #B5D4F4">
+        <div style="font-family:'Cormorant Garamond',serif;font-size:1.15rem;font-weight:600;color:#021A35;margin-bottom:16px">Pathologies les plus fréquentes</div>
+        <div id="insightsPathos"></div>
+      </div>
+      <div style="background:white;border-radius:14px;padding:20px;border:1px solid #B5D4F4">
+        <div style="font-family:'Cormorant Garamond',serif;font-size:1.15rem;font-weight:600;color:#021A35;margin-bottom:16px">Nouveaux patients / mois</div>
+        <div style="position:relative;height:190px"><canvas id="insightsTrend" role="img" aria-label="Tendance nouveaux patients">Tendance croissante.</canvas></div>
+      </div>
+    </div>
+
+    <div style="background:white;border-radius:14px;padding:20px;border:1px solid #B5D4F4;margin-bottom:16px">
+      <div style="font-family:'Cormorant Garamond',serif;font-size:1.15rem;font-weight:600;color:#021A35;margin-bottom:16px">Répartition des abonnements</div>
+      <div style="display:flex;gap:24px;align-items:center;flex-wrap:wrap">
+        <div style="position:relative;height:150px;width:150px;flex-shrink:0"><canvas id="insightsPlan" role="img" aria-label="Répartition abonnements">Gratuit, Standard, Premium.</canvas></div>
+        <div style="display:flex;flex-direction:column;gap:10px" id="insightsPlanLegend"></div>
+      </div>
+    </div>
+
+    <div style="font-size:0.7rem;color:rgba(2,26,53,0.25);text-align:right">Données 100% anonymisées · Conformité RGPD · NutriCare AI © 2026</div>
+  </div>
+</div>
+
 <div id="ordonnanceView" style="display:none;padding:32px;overflow-y:auto;background:var(--cream);width:100%">
   <div style="font-family:'Cormorant Garamond',serif;font-size:2rem;font-weight:400;margin-bottom:6px;color:var(--charcoal)">Scan ordonnance 📋</div>
   <div style="font-size:0.85rem;color:rgba(0,0,0,0.5);margin-bottom:28px">Photographiez votre ordonnance pour extraire automatiquement vos médicaments</div>
@@ -1072,6 +1112,84 @@ function toggleMobileMenu() {
     }
   }
 
+  let insightsLoaded = false;
+  let insightsTrendChart = null;
+  let insightsPlanChart = null;
+
+  async function loadInsights() {
+    if (insightsLoaded) return;
+    try {
+      const res = await fetch(`${BACKEND_URL}/api/insights/full`, {
+        headers: { 'Authorization': `Bearer ${authToken}` }
+      });
+      if (!res.ok) return;
+      const data = await res.json();
+
+      // Stats
+      const statsEl = document.getElementById('insightsStats');
+      const stats = [
+        { label: 'Patients suivis', val: (data.total_users || 0).toLocaleString('fr-FR'), trend: `↑ +${data.new_this_month || 0} ce mois` },
+        { label: 'Pathologies', val: data.top_pathologies?.length || 0, trend: 'conditions recensées' },
+        { label: 'Plan Standard', val: data.plan_distribution?.standard || 0, trend: 'abonnés actifs' },
+        { label: 'Plan Premium', val: data.plan_distribution?.premium || 0, trend: 'abonnés premium' },
+      ];
+      statsEl.innerHTML = stats.map(s => `
+        <div style="background:#F0F6FF;border-radius:14px;padding:18px 16px;border:1px solid #B5D4F4">
+          <div style="font-size:0.68rem;color:#85B7EB;text-transform:uppercase;letter-spacing:.08em;margin-bottom:8px;font-weight:600">${s.label}</div>
+          <div style="font-family:'Cormorant Garamond',serif;font-size:2rem;font-weight:600;color:#021A35;line-height:1">${s.val}</div>
+          <div style="font-size:0.72rem;color:#C9A84C;margin-top:4px;font-weight:500">${s.trend}</div>
+        </div>`).join('');
+
+      // Insight IA
+      if (data.ai_insight) {
+        document.getElementById('insightsInsight').style.display = 'flex';
+        document.getElementById('insightsAiText').textContent = data.ai_insight;
+      }
+
+      // Pathologies
+      const colors = ['#021A35','#185FA5','#C9A84C','#378ADD','#021A35','#C9A84C','#85B7EB','#0C447C'];
+      const pathos = data.top_pathologies || [];
+      document.getElementById('insightsPathos').innerHTML = pathos.slice(0,7).map((p,i) => `
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:9px">
+          <div style="font-size:0.75rem;color:rgba(2,26,53,0.5);min-width:105px;text-transform:capitalize;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${p.name}</div>
+          <div style="flex:1;height:7px;background:#E6F1FB;border-radius:100px;overflow:hidden">
+            <div style="height:100%;border-radius:100px;background:${colors[i]};width:${p.pct}%;transition:width 1.2s ease"></div>
+          </div>
+          <div style="font-size:0.72rem;color:rgba(2,26,53,0.35);min-width:28px;text-align:right">${p.pct}%</div>
+        </div>`).join('');
+
+      // Trend chart
+      const monthly = data.monthly_stats || [];
+      if (insightsTrendChart) insightsTrendChart.destroy();
+      insightsTrendChart = new Chart(document.getElementById('insightsTrend'), {
+        type: 'line',
+        data: {
+          labels: monthly.map(m => m.month),
+          datasets: [{ data: monthly.map(m => m.new_users), borderColor: '#021A35', backgroundColor: '#021A3510', fill: true, tension: 0.4, pointBackgroundColor: '#C9A84C', pointBorderColor: 'white', pointBorderWidth: 2, pointRadius: 5 }]
+        },
+        options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { x: { grid: { display: false }, ticks: { font: { size: 11 }, color: 'rgba(2,26,53,0.4)' } }, y: { grid: { color: 'rgba(2,26,53,0.05)' }, ticks: { font: { size: 11 }, color: 'rgba(2,26,53,0.4)' } } } }
+      });
+
+      // Plan chart
+      const plans = data.plan_distribution || {};
+      const total = (plans.free||0) + (plans.standard||0) + (plans.premium||0) || 1;
+      const pcts = [Math.round(plans.free/total*100), Math.round(plans.standard/total*100), Math.round(plans.premium/total*100)];
+      if (insightsPlanChart) insightsPlanChart.destroy();
+      insightsPlanChart = new Chart(document.getElementById('insightsPlan'), {
+        type: 'doughnut',
+        data: { labels: ['Gratuit','Standard','Premium'], datasets: [{ data: pcts, backgroundColor: ['#85B7EB','#021A35','#C9A84C'], borderWidth: 0 }] },
+        options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, cutout: '68%' }
+      });
+      document.getElementById('insightsPlanLegend').innerHTML = [
+        { c:'#85B7EB', l:'Gratuit', p:pcts[0] },
+        { c:'#021A35', l:'Standard', p:pcts[1] },
+        { c:'#C9A84C', l:'Premium', p:pcts[2] },
+      ].map(x => `<div style="display:flex;align-items:center;gap:10px"><div style="width:10px;height:10px;border-radius:2px;background:${x.c};flex-shrink:0"></div><div style="font-size:0.82rem;color:rgba(2,26,53,0.5)">${x.l} <span style="font-weight:500;color:#021A35">${x.p}%</span></div></div>`).join('');
+
+      insightsLoaded = true;
+    } catch(e) { console.error('Erreur insights:', e); }
+  }
+
   function initOrdonnance() {
     const storedUser = JSON.parse(localStorage.getItem('nutricare_user') || '{}');
     const storedProfile = JSON.parse(localStorage.getItem('nutricare_profile') || '{}');
@@ -1297,6 +1415,8 @@ if (urlParams.get('view') === 'protocols') {
     document.getElementById('gamificationView').style.display = view === 'gamification' ? 'block' : 'none';
     document.getElementById('programsView').style.display = view === 'programs' ? 'block' : 'none';
     document.getElementById('ordonnanceView').style.display = view === 'ordonnance' ? 'block' : 'none';
+    document.getElementById('insightsView').style.display = view === 'insights' ? 'block' : 'none';
+    if (view === 'insights') loadInsights();
     if (view === 'ordonnance') initOrdonnance();
     if (view === 'programs') {
       const params = new URLSearchParams(window.location.search);
