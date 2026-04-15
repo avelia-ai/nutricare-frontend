@@ -1021,6 +1021,7 @@ function toggleMobileMenu() {
       const name = profile.full_name || currentUser?.email?.split('@')[0] || 'Utilisateur';
       const initials = name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2);
       const plan = profile.plan || 'free';
+      localStorage.setItem('nutricare_profile', JSON.stringify(profile));
       const planLabels = { free: '🌱 Gratuit', standard: '⭐ Standard', premium: '💎 Premium' };
 
       document.getElementById('sidebarAvatar').textContent = initials;
@@ -1072,9 +1073,10 @@ function toggleMobileMenu() {
   }
 
   function initOrdonnance() {
-    const plan = currentUser?.plan || 'free';
-    const profile = JSON.parse(localStorage.getItem('nutricare_user') || '{}');
-    const userPlan = profile?.plan || 'free';
+    const storedUser = JSON.parse(localStorage.getItem('nutricare_user') || '{}');
+    const storedProfile = JSON.parse(localStorage.getItem('nutricare_profile') || '{}');
+    const userPlan = storedProfile?.plan || storedUser?.plan || 'free';
+    console.log('Plan detecte:', userPlan);
     if (userPlan !== 'premium') {
       document.getElementById('ordoFree').style.display = 'block';
       document.getElementById('ordoContent').style.display = 'none';
@@ -1254,7 +1256,7 @@ function toggleMobileMenu() {
     } catch(e) { console.error('Erreur alertes:', e); }
   }
 
-  function addAlertestoChat(alertes) {
+  function addAlertesToChat(alertes) {
     const dangers = alertes.filter(a => a.niveau === 'danger');
     if (dangers.length === 0) return;
     const msg = `⚠️ **Alerte interactions détectées**\n\n` +
