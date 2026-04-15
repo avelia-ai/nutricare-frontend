@@ -780,7 +780,7 @@ if (params.get('view')) localStorage.setItem('redirect_view', params.get('view')
       currentUser = data.user;
       localStorage.setItem('nutricare_token', authToken);
       localStorage.setItem('nutricare_user', JSON.stringify(currentUser));
-      showApp();
+     showApp();
 
 // Rediriger vers la vue demandée après connexion
 const params = new URLSearchParams(window.location.search);
@@ -792,10 +792,11 @@ if (view) {
     if (pathologie) window.selectedPathologie = pathologie;
   }, 600);
 }
-    } catch (err) {
-      showAuthError('Erreur de connexion au serveur. Réessayez.');
-    }
-  }
+
+} catch (err) {
+  showAuthError('Erreur de connexion au serveur. Réessayez.');
+}
+}
 
   async function register() {
     const name = document.getElementById('registerName').value.trim();
