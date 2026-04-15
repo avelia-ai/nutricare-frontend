@@ -812,7 +812,7 @@
     </div>
 
     <!-- Streak -->
-    <div style="background:white;border-radius:16px;padding:20px;margin-bottom:20px;border:1px solid var(--border);display:flex;align-items:center;gap:16px">
+    <div style="background:white;border-radius:16px;padding:20px;margin-bottom:20px;border:1px solid var(--border);display:flex;align-items:center;gap:16px;flex-wrap:wrap">
       <div style="font-size:2.5rem">🔥</div>
       <div>
         <div style="font-size:1.8rem;font-weight:600;color:var(--charcoal)" id="gamiStreak">0</div>
@@ -1672,7 +1672,7 @@ function renderProfessionals(pros) {
           <button onclick="navigator.clipboard.writeText('${link.code}').then(()=>alert('Code copié !'))" style="background:#378ADD;color:white;border:none;border-radius:100px;padding:5px 12px;font-size:0.72rem;cursor:pointer">🔑 Copier le code</button>
         </div>
       </div>` : ''}
-      <button onclick="deleteProfessional('${p.id}')" style="background:none;border:1px solid #FCC;color:#C55;border-radius:8px;padding:6px 12px;font-size:0.78rem;cursor:pointer">Supprimer</button>
+      <button onclick="deleteProfessional('${p.id}')" style="background:none;border:1px solid #FCC;color:#C55;border-radius:8px;padding:6px 12px;font-size:0.78rem;cursor:pointer;margin-top:8px;flex-shrink:0">Supprimer</button>
     </div>`;
   }).join('');
 }
