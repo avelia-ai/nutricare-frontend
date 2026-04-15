@@ -381,27 +381,9 @@ footer { background:#0A0A0A; padding:64px 48px 32px; }
       <div class="hc-icon">🧑‍⚕️</div>
       <div class="hc-title">Espace médecin</div>
       <div class="hc-desc">Partagez vos données avec votre professionnel de santé</div>
-<div class="patho-card fade-up patho-card-autres" style="cursor:default;transition-delay:.4s;background:#1a1a2e;">
-  <div class="patho-card-overlay" style="background:linear-gradient(to top, rgba(10,10,30,0.95) 0%, rgba(10,10,30,0.4) 100%)"></div>
-  <div class="patho-card-content" style="padding:28px;">
-    <span class="patho-card-icon">🔍</span>
-    <div class="patho-card-name" style="font-size:1.3rem;margin-bottom:8px;">Autre pathologie ?</div>
-    <div class="patho-card-desc" style="margin-bottom:16px;">Tapez votre condition et accédez à un protocole personnalisé</div>
-    <div style="display:flex;gap:8px;">
-      <input id="autrePathoInput" type="text" placeholder="Ex: endométriose, thyroïde..." style="flex:1;padding:10px 14px;border-radius:8px;border:none;font-size:0.82rem;font-family:DM Sans,sans-serif;outline:none;background:rgba(255,255,255,0.15);color:white;" onkeydown="if(event.key==='Enter') goAutrePatho()"/>
-      <button onclick="goAutrePatho()" style="background:white;color:#1a1a2e;border:none;border-radius:8px;padding:10px 16px;font-weight:600;font-size:0.82rem;cursor:pointer;white-space:nowrap;">Accéder →</button>
-    </div>
-  </div>
-</div>
     </div>
   </div>
 </section>
-<script>
-function goAutrePatho() {
-  const val = document.getElementById('autrePathoInput').value.trim();
-  if (val) window.location.href = 'app.html?view=protocols&p=' + encodeURIComponent(val.toLowerCase());
-}
-</script>
 
 <!-- TRUST STRIP -->
 <div class="trust-strip">
@@ -593,9 +575,27 @@ function goAutrePatho() {
     <div class="patho-card-desc">Énergie mitochondriale, adaptogènes</div>
   </div>
 </div>
+<div class="patho-card fade-up patho-card-autres" style="cursor:default;transition-delay:.4s;background:#1a1a2e;">
+  <div class="patho-card-overlay" style="background:linear-gradient(to top, rgba(10,10,30,0.95) 0%, rgba(10,10,30,0.4) 100%)"></div>
+  <div class="patho-card-content" style="padding:28px;">
+    <span class="patho-card-icon">🔍</span>
+    <div class="patho-card-name" style="font-size:1.3rem;margin-bottom:8px;">Autre pathologie ?</div>
+    <div class="patho-card-desc" style="margin-bottom:16px;">Tapez votre condition et accédez à un protocole personnalisé</div>
+    <div style="display:flex;gap:8px;">
+      <input id="autrePathoInput" type="text" placeholder="Ex: endométriose, thyroïde..." style="flex:1;padding:10px 14px;border-radius:8px;border:none;font-size:0.82rem;font-family:DM Sans,sans-serif;outline:none;background:rgba(255,255,255,0.15);color:white;" onkeydown="if(event.key==='Enter') goAutrePatho()"/>
+      <button onclick="goAutrePatho()" style="background:white;color:#1a1a2e;border:none;border-radius:8px;padding:10px 16px;font-weight:600;font-size:0.82rem;cursor:pointer;white-space:nowrap;">Accéder →</button>
+    </div>
+  </div>
+</div>
     </div>
   </div>
 </section>
+<script>
+function goAutrePatho() {
+  const val = document.getElementById('autrePathoInput').value.trim();
+  if (val) window.location.href = 'app.html?view=protocols&p=' + encodeURIComponent(val.toLowerCase());
+}
+</script>
 
 <!-- TESTIMONIALS -->
 <section class="testi-section">
