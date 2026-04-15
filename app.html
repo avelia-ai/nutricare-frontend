@@ -269,12 +269,8 @@
 <div class="page" id="appPage">
 
   <!-- Sidebar -->
-  <div class="page" id="appPage">
-  <!-- Sidebar -->
   <div class="sidebar" id="sidebar">
-    <div class="sidebar-logo" onclick="window.location.href='index.html'" style="cursor:pointer">
-      <div class="sidebar-logo-dot"></div> NutriCare
-    </div>
+    <div class="sidebar-logo"><div class="sidebar-logo-dot"></div> NutriCare</div>
     <div class="nav-label">Principal</div>
     <button class="nav-item active" onclick="showView('chat', this)">💬 Chat IA</button>
     <button class="nav-item" onclick="showView('dashboard', this)">📊 Dashboard</button>
@@ -714,25 +710,11 @@
   let isLoading = false;
 
   // ── INIT ──
-window.onload = () => {
-  if (authToken && currentUser) {
-    showApp();
-    
-    // Lire les paramètres URL après chargement de l'app
-    const params = window._urlParams;
-    const view = params.get('view');
-    const pathologie = params.get('p');
-    
-    if (view) {
-      setTimeout(() => {
-        showView(view);
-        if (pathologie) window.selectedPathologie = pathologie;
-      }, 600);
+  window.onload = () => {
+    if (authToken && currentUser) {
+      showApp();
     }
-  }
-};
-    
-
+  };
 
   // ── AUTH ──
   function switchTab(tab) {
@@ -763,9 +745,6 @@ window.onload = () => {
   }
 
   async function login() {
-    // Sauvegarder la vue demandée
-const params = new URLSearchParams(window.location.search);
-if (params.get('view')) localStorage.setItem('redirect_view', params.get('view'));
     const email = document.getElementById('loginEmail').value.trim();
     const password = document.getElementById('loginPassword').value;
     if (!email || !password) return showAuthError('Veuillez remplir tous les champs');
@@ -783,23 +762,11 @@ if (params.get('view')) localStorage.setItem('redirect_view', params.get('view')
       currentUser = data.user;
       localStorage.setItem('nutricare_token', authToken);
       localStorage.setItem('nutricare_user', JSON.stringify(currentUser));
-     showApp();
-
-// Rediriger vers la vue demandée après connexion
-const params = new URLSearchParams(window.location.search);
-const view = params.get('view');
-const pathologie = params.get('p');
-if (view) {
-  setTimeout(() => {
-    showView(view);
-    if (pathologie) window.selectedPathologie = pathologie;
-  }, 600);
-}
-
-} catch (err) {
-  showAuthError('Erreur de connexion au serveur. Réessayez.');
-}
-}
+      showApp();
+    } catch (err) {
+      showAuthError('Erreur de connexion au serveur. Réessayez.');
+    }
+  }
 
   async function register() {
     const name = document.getElementById('registerName').value.trim();
@@ -859,7 +826,7 @@ function toggleMobileMenu() {
       const res = await fetch(`${BACKEND_URL}/api/profile`, {
         headers: { 'Authorization': `Bearer ${authToken}` }
       });
-      if (!res.ok) { console.warn('Profil non chargé', res.status); return; }
+      if (!res.ok) { logout(); return; }
       const profile = await res.json();
 
       const name = profile.full_name || currentUser?.email?.split('@')[0] || 'Utilisateur';
@@ -876,11 +843,6 @@ function toggleMobileMenu() {
 
       const since = new Date(currentUser?.created_at || Date.now());
       document.getElementById('dashSince').textContent = since.toLocaleDateString('fr-FR', { month: 'short', year: 'numeric' });
-      const redirectView = localStorage.getItem('redirect_view');
-if (redirectView) {
-  localStorage.removeItem('redirect_view');
-  setTimeout(() => showView(redirectView), 800);
-}
 
       // Fill profile form
       document.getElementById('profileName').value = profile.full_name || '';
@@ -908,8 +870,10 @@ if (redirectView) {
 
   // ── VIEWS ──
   // Détection paramètres URL
-// Détection paramètres URL — exécuté après connexion
-window._urlParams = new URLSearchParams(window.location.search);
+const urlParams = new URLSearchParams(window.location.search);
+if (urlParams.get('view') === 'protocols') {
+  setTimeout(() => showView('protocols'), 500);
+}
   function showView(view, btn) {
     document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
     if (btn) btn.classList.add('active');
