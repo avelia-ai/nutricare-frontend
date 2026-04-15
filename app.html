@@ -711,11 +711,38 @@
   let isLoading = false;
 
   // ── INIT ──
-  window.onload = () => {
-    if (authToken && currentUser) {
-      showApp();
+window.onload = () => {
+  if (authToken && currentUser) {
+    showApp();
+    
+    // Lire les paramètres URL après chargement de l'app
+    const params = window._urlParams;
+    const view = params.get('view');
+    const pathologie = params.get('p');
+    
+    if (view) {
+      setTimeout(() => {
+        showView(view);
+        if (pathologie) window.selectedPathologie = pathologie;
+      }, 600);
     }
-  };
+  }
+};
+    
+    // Lire les paramètres URL
+    const params = new URLSearchParams(window.location.search);
+    const view = params.get('view');
+    const pathologie = params.get('p');
+    
+    if (view) {
+      showView(view);
+    }
+    if (pathologie) {
+      // Stocker pour usage dans la vue protocoles
+      window.selectedPathologie = pathologie;
+    }
+  }
+};
 
   // ── AUTH ──
   function switchTab(tab) {
@@ -879,10 +906,8 @@ if (redirectView) {
 
   // ── VIEWS ──
   // Détection paramètres URL
-const urlParams = new URLSearchParams(window.location.search);
-if (urlParams.get('view') === 'protocols') {
-  setTimeout(() => showView('protocols'), 500);
-}
+// Détection paramètres URL — exécuté après connexion
+window._urlParams = new URLSearchParams(window.location.search);
   function showView(view, btn) {
     document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
     if (btn) btn.classList.add('active');
