@@ -1261,7 +1261,9 @@
       if (redirectUrl) { setTimeout(() => window.location.href = decodeURIComponent(redirectUrl), 500); return; }
       const view = params.get('view');
       const pathologie = params.get('p');
-      if (view) { setTimeout(() => { showView(view); if (pathologie) window.selectedPathologie = pathologie; }, 600); }
+      const entrepriseParam = params.get('entreprise');
+      if (entrepriseParam === 'create') { setTimeout(() => showView('entreprise'), 600); }
+      else if (view) { setTimeout(() => { showView(view); if (pathologie) window.selectedPathologie = pathologie; }, 600); }
       else {
         const lastView = localStorage.getItem('nutricare_last_view');
         if (lastView && lastView !== 'chat') setTimeout(() => showView(lastView), 600);
