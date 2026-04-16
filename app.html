@@ -299,6 +299,7 @@
     <button class="nav-item" onclick="showView('programs', this)">🎯 Programmes</button>
     <button class="nav-item" onclick="showView('ordonnance', this)">📋 Scan ordonnance</button>
     <button class="nav-item" onclick="showView('insights', this)">🌍 Observatoire</button>
+    <button class="nav-item" onclick="showView('simulator', this)">🔮 Simulateur</button>
     <div class="sidebar-user">
       <div class="sidebar-avatar" id="sidebarAvatar">?</div>
       <div class="sidebar-user-info">
@@ -687,6 +688,53 @@
   <div style="font-size:0.85rem;color:#85B7EB;margin-bottom:32px">Protocoles adaptés à vos pathologies</div>
   <div id="protocolsList" style="display:flex;flex-direction:column;gap:20px"></div>
 </div>
+<div id="simulatorView" style="display:none;padding:32px;overflow-y:auto;background:white;width:100%">
+  <div style="max-width:800px;margin:0 auto">
+    <div style="display:inline-block;font-size:0.68rem;font-weight:600;text-transform:uppercase;letter-spacing:.12em;color:#C9A84C;background:#FDF6E8;padding:5px 14px;border-radius:100px;margin-bottom:12px">Jumeau Numérique Santé</div>
+    <div style="font-family:'Cormorant Garamond',serif;font-size:2rem;font-weight:400;color:#021A35;margin-bottom:6px">Simulez vos décisions <em style="font-style:italic;color:#C9A84C">avant de les prendre</em></div>
+    <div style="font-size:0.82rem;color:rgba(2,26,53,0.4);margin-bottom:28px">Projection personnalisée basée sur votre profil · Simulation indicative, pas un avis médical</div>
+
+    <div style="display:flex;gap:10px;margin-bottom:16px">
+      <input id="simInput" type="text" placeholder="Ex: Si je dors 5h pendant 3 jours..." style="flex:1;padding:12px 20px;border:1px solid #B5D4F4;border-radius:100px;font-family:'DM Sans',sans-serif;font-size:0.88rem;color:#021A35;outline:none"/>
+      <button onclick="runSimulation()" style="background:#C9A84C;color:#021A35;border:none;border-radius:100px;padding:12px 24px;font-family:'DM Sans',sans-serif;font-size:0.85rem;font-weight:600;cursor:pointer;white-space:nowrap">Simuler →</button>
+    </div>
+
+    <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:24px">
+      <div onclick="setSimQ(this)" style="font-size:0.75rem;padding:6px 14px;border-radius:100px;border:1px solid #B5D4F4;color:rgba(2,26,53,0.6);cursor:pointer;background:#F0F6FF">Si je dors 5h pendant 3 jours ?</div>
+      <div onclick="setSimQ(this)" style="font-size:0.75rem;padding:6px 14px;border-radius:100px;border:1px solid #B5D4F4;color:rgba(2,26,53,0.6);cursor:pointer;background:#F0F6FF">Si j'arrête le sucre 2 semaines ?</div>
+      <div onclick="setSimQ(this)" style="font-size:0.75rem;padding:6px 14px;border-radius:100px;border:1px solid #B5D4F4;color:rgba(2,26,53,0.6);cursor:pointer;background:#F0F6FF">Si je marche 30min par jour ?</div>
+      <div onclick="setSimQ(this)" style="font-size:0.75rem;padding:6px 14px;border-radius:100px;border:1px solid #B5D4F4;color:rgba(2,26,53,0.6);cursor:pointer;background:#F0F6FF">Si je bois 2L d'eau par jour ?</div>
+      <div onclick="setSimQ(this)" style="font-size:0.75rem;padding:6px 14px;border-radius:100px;border:1px solid #B5D4F4;color:rgba(2,26,53,0.6);cursor:pointer;background:#F0F6FF">Si je saute le petit-déjeuner ?</div>
+    </div>
+
+    <div id="simLoading" style="display:none;text-align:center;padding:40px">
+      <div style="width:36px;height:36px;border:3px solid #E6F1FB;border-top-color:#021A35;border-radius:50%;animation:spin 0.8s linear infinite;margin:0 auto 16px"></div>
+      <div style="font-size:0.85rem;color:rgba(2,26,53,0.4)">Votre jumeau numérique analyse la décision...</div>
+    </div>
+
+    <div id="simResult" style="display:none">
+      <div style="background:#F0F6FF;border-radius:12px;padding:14px 18px;margin-bottom:20px;border-left:3px solid #021A35">
+        <div style="font-size:0.68rem;text-transform:uppercase;letter-spacing:.08em;color:#85B7EB;font-weight:600;margin-bottom:4px">Scénario simulé</div>
+        <div style="font-size:0.88rem;color:#021A35;font-weight:500" id="simScenario"></div>
+      </div>
+
+      <div id="simMetrics" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:10px;margin-bottom:20px"></div>
+
+      <div style="background:white;border-radius:12px;padding:20px;border:1px solid #B5D4F4;margin-bottom:20px">
+        <div style="font-size:0.78rem;font-weight:600;color:#021A35;margin-bottom:14px">Projection jour par jour</div>
+        <div id="simTimeline"></div>
+      </div>
+
+      <div style="background:#021A35;border-radius:12px;padding:18px 20px;display:flex;gap:12px;align-items:flex-start;margin-bottom:16px">
+        <div style="font-size:1.2rem;flex-shrink:0">💡</div>
+        <div style="font-size:0.82rem;color:rgba(255,255,255,0.75);line-height:1.5" id="simAdvice"></div>
+      </div>
+
+      <div style="font-size:0.7rem;color:rgba(2,26,53,0.3);text-align:center">⚕️ Simulation indicative basée sur votre profil. Ne remplace pas un avis médical professionnel.</div>
+    </div>
+  </div>
+</div>
+
 <div id="insightsView" style="display:none;padding:32px;overflow-y:auto;background:white;width:100%">
   <div style="max-width:900px;margin:0 auto">
     <div style="display:inline-block;font-size:0.68rem;font-weight:600;text-transform:uppercase;letter-spacing:.12em;color:#C9A84C;background:#FDF6E8;padding:5px 14px;border-radius:100px;margin-bottom:12px">Observatoire NutriCare</div>
@@ -1112,6 +1160,108 @@ function toggleMobileMenu() {
     }
   }
 
+  function setSimQ(el) {
+    document.getElementById('simInput').value = el.textContent;
+    runSimulation();
+  }
+
+  async function runSimulation() {
+    const q = document.getElementById('simInput').value.trim();
+    if (!q) return;
+    document.getElementById('simResult').style.display = 'none';
+    document.getElementById('simLoading').style.display = 'block';
+
+    try {
+      const profile = JSON.parse(localStorage.getItem('nutricare_profile') || '{}');
+      const res = await fetch(`${BACKEND_URL}/api/chat`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${authToken}` },
+        body: JSON.stringify({
+          message: `Tu es un expert en médecine nutritionnelle. L'utilisateur a ce profil: pathologies: ${(profile.pathologies||[]).join(', ')||'non renseignées'}, médicaments: ${(profile.medications||[]).join(', ')||'aucun'}, allergies: ${(profile.allergies||[]).join(', ')||'aucune'}.
+
+Question: "${q}"
+
+Réponds UNIQUEMENT en JSON valide avec cette structure:
+{
+  "scenario": "reformulation courte du scénario",
+  "metrics": [
+    {"icon": "⚡", "label": "Énergie", "avant": 65, "apres": 45, "tendance": "down"},
+    {"icon": "🧠", "label": "Concentration", "avant": 70, "apres": 40, "tendance": "down"},
+    {"icon": "🫀", "label": "Risque cardio", "avant": 20, "apres": 50, "tendance": "up"},
+    {"icon": "😊", "label": "Bien-être", "avant": 65, "apres": 35, "tendance": "down"}
+  ],
+  "timeline": [
+    {"periode": "J+1", "couleur": "#C9A84C", "texte": "description impact jour 1"},
+    {"periode": "J+3", "couleur": "#E24B4A", "texte": "description impact jour 3"},
+    {"periode": "J+7", "couleur": "#639922", "texte": "description récupération"}
+  ],
+  "conseil": "conseil personnalisé selon le profil de l'utilisateur en 2-3 phrases"
+}`
+        })
+      });
+      const data = await res.json();
+      const text = (data.response || data.message || '').replace(/```json|```/g, '').trim();
+      const jsonStart = text.indexOf('{');
+      const jsonEnd = text.lastIndexOf('}');
+      const parsed = JSON.parse(text.substring(jsonStart, jsonEnd + 1));
+      renderSimulation(parsed);
+    } catch(e) {
+      renderSimulationFallback(q);
+    }
+    document.getElementById('simLoading').style.display = 'none';
+  }
+
+  function renderSimulation(data) {
+    document.getElementById('simScenario').textContent = data.scenario || '';
+    const metricsEl = document.getElementById('simMetrics');
+    metricsEl.innerHTML = (data.metrics || []).map(m => {
+      const isUp = m.tendance === 'up';
+      const diff = Math.abs(m.apres - m.avant);
+      const color = isUp ? '#E24B4A' : '#639922';
+      const sign = isUp ? '+' : '-';
+      return `<div style="background:white;border-radius:10px;padding:14px;border:1px solid #B5D4F4;text-align:center">
+        <div style="font-size:1.2rem;margin-bottom:6px">${m.icon}</div>
+        <div style="font-size:0.68rem;text-transform:uppercase;letter-spacing:.06em;color:#85B7EB;margin-bottom:6px;font-weight:600">${m.label}</div>
+        <div style="height:5px;background:#E6F1FB;border-radius:100px;overflow:hidden;margin-bottom:6px">
+          <div style="height:100%;border-radius:100px;background:#021A35;width:${m.apres}%;transition:width 1.2s ease"></div>
+        </div>
+        <div style="font-size:0.78rem;font-weight:600;color:${color}">${sign}${diff}%</div>
+      </div>`;
+    }).join('');
+
+    document.getElementById('simTimeline').innerHTML = (data.timeline || []).map(t => `
+      <div style="display:flex;gap:10px;margin-bottom:10px;align-items:flex-start">
+        <div style="font-size:0.7rem;font-weight:600;color:#85B7EB;min-width:40px;padding-top:2px">${t.periode}</div>
+        <div style="width:8px;height:8px;border-radius:50%;background:${t.couleur};flex-shrink:0;margin-top:4px"></div>
+        <div style="font-size:0.78rem;color:rgba(2,26,53,0.65);line-height:1.4">${t.texte}</div>
+      </div>`).join('');
+
+    document.getElementById('simAdvice').textContent = data.conseil || '';
+    document.getElementById('simResult').style.display = 'block';
+  }
+
+  function renderSimulationFallback(q) {
+    renderSimulation({
+      scenario: q,
+      metrics: [
+        {icon:'⚡',label:'Énergie',avant:65,apres:50,tendance:'down'},
+        {icon:'🧠',label:'Concentration',avant:70,apres:55,tendance:'down'},
+        {icon:'🫀',label:'Santé cardio',avant:60,apres:55,tendance:'down'},
+        {icon:'😊',label:'Bien-être',avant:65,apres:50,tendance:'down'},
+      ],
+      timeline: [
+        {periode:'J+1',couleur:'#C9A84C',texte:'Premiers effets sur votre organisme.'},
+        {periode:'J+7',couleur:'#639922',texte:'Résultats mesurables sur vos indicateurs clés.'},
+      ],
+      conseil: 'Consultez votre médecin avant tout changement significatif de vos habitudes, surtout en lien avec vos pathologies.'
+    });
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    const input = document.getElementById('simInput');
+    if (input) input.addEventListener('keydown', e => { if(e.key==='Enter') runSimulation(); });
+  });
+
   let insightsLoaded = false;
   let insightsTrendChart = null;
   let insightsPlanChart = null;
@@ -1416,6 +1566,7 @@ if (urlParams.get('view') === 'protocols') {
     document.getElementById('programsView').style.display = view === 'programs' ? 'block' : 'none';
     document.getElementById('ordonnanceView').style.display = view === 'ordonnance' ? 'block' : 'none';
     document.getElementById('insightsView').style.display = view === 'insights' ? 'block' : 'none';
+    document.getElementById('simulatorView').style.display = view === 'simulator' ? 'block' : 'none';
     if (view === 'insights') loadInsights();
     if (view === 'ordonnance') initOrdonnance();
     if (view === 'programs') {
