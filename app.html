@@ -715,9 +715,15 @@
       <button onclick="showView('pricing')" style="background:#021A35;color:white;border:none;border-radius:100px;padding:12px 28px;font-family:'DM Sans',sans-serif;cursor:pointer">Voir les abonnements →</button>
     </div>
 
-    <div id="simLoading" style="display:none;text-align:center;padding:40px">
-      <div style="width:36px;height:36px;border:3px solid #E6F1FB;border-top-color:#021A35;border-radius:50%;animation:spin 0.8s linear infinite;margin:0 auto 16px"></div>
-      <div style="font-size:0.85rem;color:rgba(2,26,53,0.4)">Votre jumeau numérique analyse la décision...</div>
+    <div id="simLoading" style="display:none;text-align:center;padding:48px 24px;background:#F0F6FF;border-radius:16px;border:1px solid #B5D4F4">
+      <div style="width:48px;height:48px;border:3px solid #B5D4F4;border-top-color:#021A35;border-radius:50%;animation:spin 0.8s linear infinite;margin:0 auto 20px"></div>
+      <div style="font-family:'Cormorant Garamond',serif;font-size:1.2rem;color:#021A35;margin-bottom:8px" id="simLoadingTitle">Analyse en cours...</div>
+      <div style="font-size:0.82rem;color:rgba(2,26,53,0.45)" id="simLoadingMsg">Votre jumeau numérique étudie votre profil</div>
+      <div style="display:flex;justify-content:center;gap:6px;margin-top:20px">
+        <div style="width:6px;height:6px;border-radius:50%;background:#021A35;animation:pulse 1.4s ease-in-out infinite"></div>
+        <div style="width:6px;height:6px;border-radius:50%;background:#021A35;animation:pulse 1.4s ease-in-out 0.2s infinite"></div>
+        <div style="width:6px;height:6px;border-radius:50%;background:#021A35;animation:pulse 1.4s ease-in-out 0.4s infinite"></div>
+      </div>
     </div>
 
     <div id="simResult" style="display:none">
@@ -1210,6 +1216,23 @@ function toggleMobileMenu() {
     document.getElementById('simResult').style.display = 'none';
     document.getElementById('simLoading').style.display = 'block';
 
+    const loadingMsgs = [
+      ['Analyse de votre profil...', 'Pathologies et médicaments pris en compte'],
+      ['Modélisation physiologique...', 'Calcul des impacts sur vos systèmes biologiques'],
+      ['Projection temporelle...', 'Simulation heure par heure, jour par jour'],
+      ['Analyse des interactions...', 'Vérification des interactions médicamenteuses'],
+      ['Génération des recommandations...', 'Conseils personnalisés selon votre profil'],
+      ['Finalisation...', 'Votre simulation est presque prête'],
+    ];
+    let msgIdx = 0;
+    const loadingInterval = setInterval(() => {
+      msgIdx = (msgIdx + 1) % loadingMsgs.length;
+      const t = document.getElementById('simLoadingTitle');
+      const m = document.getElementById('simLoadingMsg');
+      if (t) t.textContent = loadingMsgs[msgIdx][0];
+      if (m) m.textContent = loadingMsgs[msgIdx][1];
+    }, 2000);
+
     try {
       const res = await fetch(`${BACKEND_URL}/api/simulator/simulate`, {
         method: 'POST',
@@ -1225,6 +1248,7 @@ function toggleMobileMenu() {
     } catch(e) {
       renderSimulationFallback(q);
     }
+    clearInterval(loadingInterval);
     document.getElementById('simLoading').style.display = 'none';
   }
 
