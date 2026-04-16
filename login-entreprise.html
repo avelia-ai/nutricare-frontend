@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NutriCare Entreprise — Connexion</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'DM Sans', sans-serif; background: #021A35; min-height: 100vh; display: flex; }
+
+    .left { flex: 0 0 420px; background: #021A35; padding: 48px; display: flex; flex-direction: column; justify-content: space-between; }
+    .left-logo { display: flex; align-items: center; gap: 8px; text-decoration: none; margin-bottom: 60px; }
+    .logo-dot { width: 7px; height: 7px; border-radius: 50%; background: #C9A84C; }
+    .logo-text { font-family: 'Cormorant Garamond', serif; font-size: 1.3rem; font-weight: 600; color: white; }
+    .logo-badge { font-size: 0.6rem; font-weight: 500; background: rgba(201,168,76,0.15); color: #C9A84C; padding: 3px 8px; border-radius: 4px; letter-spacing: .06em; }
+    .left-content { flex: 1; display: flex; flex-direction: column; justify-content: center; }
+    .left-tag { font-size: 0.68rem; text-transform: uppercase; letter-spacing: .14em; color: #C9A84C; margin-bottom: 16px; }
+    .left-title { font-family: 'Cormorant Garamond', serif; font-size: 2.4rem; font-weight: 300; color: white; line-height: 1.2; margin-bottom: 20px; }
+    .left-title em { font-style: italic; color: #C9A84C; }
+    .left-sub { font-size: 0.85rem; color: rgba(255,255,255,0.45); line-height: 1.7; margin-bottom: 40px; }
+    .left-stats { display: flex; flex-direction: column; gap: 16px; }
+    .left-stat { display: flex; align-items: center; gap: 12px; }
+    .left-stat-icon { width: 36px; height: 36px; border-radius: 4px; background: rgba(255,255,255,0.06); display: flex; align-items: center; justify-content: center; font-size: 1rem; flex-shrink: 0; }
+    .left-stat-text { font-size: 0.82rem; color: rgba(255,255,255,0.5); line-height: 1.4; }
+    .left-stat-text strong { color: white; font-weight: 500; }
+    .left-footer { font-size: 0.72rem; color: rgba(255,255,255,0.2); }
+
+    .right { flex: 1; background: white; display: flex; align-items: center; justify-content: center; padding: 48px; }
+    .auth-card { width: 100%; max-width: 420px; }
+    .auth-tabs { display: flex; gap: 4px; background: #F0F6FF; border-radius: 4px; padding: 4px; margin-bottom: 32px; }
+    .auth-tab { flex: 1; padding: 9px; border: none; background: transparent; border-radius: 4px; font-size: 0.85rem; font-weight: 500; color: rgba(2,26,53,0.45); cursor: pointer; transition: all .2s; font-family: 'DM Sans', sans-serif; }
+    .auth-tab.active { background: white; color: #021A35; box-shadow: 0 1px 4px rgba(0,0,0,0.08); }
+    .auth-title { font-family: 'Cormorant Garamond', serif; font-size: 1.6rem; font-weight: 400; color: #021A35; margin-bottom: 6px; }
+    .auth-sub { font-size: 0.82rem; color: rgba(2,26,53,0.45); margin-bottom: 28px; line-height: 1.5; }
+    .form { display: flex; flex-direction: column; gap: 14px; }
+    .field { display: flex; flex-direction: column; gap: 6px; }
+    .field-label { font-size: 0.72rem; text-transform: uppercase; letter-spacing: .08em; color: rgba(2,26,53,0.45); font-weight: 500; }
+    .field-input { padding: 11px 14px; border: 1px solid rgba(2,26,53,0.12); border-radius: 4px; font-size: 0.88rem; font-family: 'DM Sans', sans-serif; outline: none; transition: border-color .2s; color: #021A35; }
+    .field-input:focus { border-color: #021A35; }
+    .field-input::placeholder { color: rgba(2,26,53,0.25); }
+    .btn-submit { padding: 13px; background: #021A35; color: white; border: none; border-radius: 4px; font-family: 'DM Sans', sans-serif; font-size: 0.9rem; font-weight: 500; cursor: pointer; transition: all .2s; margin-top: 4px; }
+    .btn-submit:hover { background: #0A2D52; }
+    .error-msg { background: #FEE; border: 1px solid #FCC; border-radius: 4px; padding: 10px 14px; font-size: 0.82rem; color: #C55; display: none; }
+    .error-msg.show { display: block; }
+    .success-msg { background: #EFF7F1; border: 1px solid #9DC4A3; border-radius: 4px; padding: 10px 14px; font-size: 0.82rem; color: #3A6B40; display: none; }
+    .success-msg.show { display: block; }
+    .divider { display: flex; align-items: center; gap: 12px; margin: 4px 0; }
+    .divider-line { flex: 1; height: 1px; background: rgba(2,26,53,0.08); }
+    .divider-text { font-size: 0.72rem; color: rgba(2,26,53,0.35); }
+    .back-link { text-align: center; margin-top: 20px; font-size: 0.78rem; color: rgba(2,26,53,0.4); }
+    .back-link a { color: #021A35; text-decoration: none; font-weight: 500; }
+    .note { font-size: 0.72rem; color: rgba(2,26,53,0.35); text-align: center; margin-top: 16px; line-height: 1.5; }
+
+    @media(max-width:768px) {
+      body { flex-direction: column; }
+      .left { flex: none; padding: 32px 24px; }
+      .left-stats { display: none; }
+      .right { padding: 32px 24px; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="left">
+  <a href="entreprise.html" class="left-logo">
+    <div class="logo-dot"></div>
+    <span class="logo-text">NutriCare</span>
+    <span class="logo-badge">ENTREPRISE</span>
+  </a>
+
+  <div class="left-content">
+    <div class="left-tag">Espace Entreprise</div>
+    <h1 class="left-title">Le bien-être<br>nutritionnel de vos<br><em>équipes</em></h1>
+    <p class="left-sub">Créez votre espace entreprise et invitez vos salariés en quelques minutes. Dashboard RH anonymisé inclus.</p>
+    <div class="left-stats">
+      <div class="left-stat">
+        <div class="left-stat-icon">📊</div>
+        <div class="left-stat-text"><strong>Dashboard RH anonymisé</strong><br>Tendances santé de vos équipes</div>
+      </div>
+      <div class="left-stat">
+        <div class="left-stat-icon">🤖</div>
+        <div class="left-stat-text"><strong>Coach IA pour chaque salarié</strong><br>Personnalisé selon ses pathologies</div>
+      </div>
+      <div class="left-stat">
+        <div class="left-stat-icon">📉</div>
+        <div class="left-stat-text"><strong>-20% d'absentéisme estimé</strong><br>ROI mesurable dès 6 mois</div>
+      </div>
+      <div class="left-stat">
+        <div class="left-stat-icon">🔒</div>
+        <div class="left-stat-text"><strong>100% RGPD compliant</strong><br>Aucune donnée individuelle accessible</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="left-footer">© 2026 Avelia AI · NutriCare Entreprise</div>
+</div>
+
+<div class="right">
+  <div class="auth-card">
+    <div class="auth-tabs">
+      <button class="auth-tab active" onclick="switchTab('register')">Créer mon espace</button>
+      <button class="auth-tab" onclick="switchTab('login')">Se connecter</button>
+    </div>
+
+    <!-- INSCRIPTION -->
+    <div id="registerForm">
+      <div class="auth-title">Créer votre espace entreprise</div>
+      <div class="auth-sub">Commencez gratuitement · Déploiement en 48h · Sans engagement</div>
+      <div class="error-msg" id="regError"></div>
+      <div class="success-msg" id="regSuccess"></div>
+      <div class="form">
+        <div class="field">
+          <label class="field-label">Nom de l'entreprise</label>
+          <input type="text" class="field-input" id="regEntreprise" placeholder="Ex: Société Martin & Associés"/>
+        </div>
+        <div class="field">
+          <label class="field-label">Votre nom complet (RH/Dirigeant)</label>
+          <input type="text" class="field-input" id="regNom" placeholder="Marie Dupont"/>
+        </div>
+        <div class="field">
+          <label class="field-label">Email professionnel</label>
+          <input type="email" class="field-input" id="regEmail" placeholder="m.dupont@entreprise.fr"/>
+        </div>
+        <div class="field">
+          <label class="field-label">Nombre de salariés estimé</label>
+          <select class="field-input" id="regLicences">
+            <option value="10">10 - 50 salariés</option>
+            <option value="50">50 - 200 salariés</option>
+            <option value="200">200 - 500 salariés</option>
+            <option value="500">500 - 1000 salariés</option>
+            <option value="1000">+1000 salariés</option>
+          </select>
+        </div>
+        <div class="field">
+          <label class="field-label">Mot de passe</label>
+          <input type="password" class="field-input" id="regPassword" placeholder="Minimum 8 caractères"/>
+        </div>
+        <button class="btn-submit" onclick="register()">Créer mon espace entreprise →</button>
+      </div>
+      <div class="note">En créant votre espace, vous acceptez nos CGU. Vos données sont sécurisées et conformes au RGPD.</div>
+    </div>
+
+    <!-- CONNEXION -->
+    <div id="loginForm" style="display:none">
+      <div class="auth-title">Connexion Entreprise</div>
+      <div class="auth-sub">Accédez à votre espace RH et au dashboard de vos équipes.</div>
+      <div class="error-msg" id="loginError"></div>
+      <div class="form">
+        <div class="field">
+          <label class="field-label">Email professionnel</label>
+          <input type="email" class="field-input" id="loginEmail" placeholder="m.dupont@entreprise.fr"/>
+        </div>
+        <div class="field">
+          <label class="field-label">Mot de passe</label>
+          <input type="password" class="field-input" id="loginPassword" placeholder="Votre mot de passe"/>
+        </div>
+        <button class="btn-submit" onclick="login()">Se connecter →</button>
+      </div>
+    </div>
+
+    <div class="back-link">
+      <a href="entreprise.html">← Retour à la page entreprise</a>
+      &nbsp;·&nbsp;
+      <a href="app.html">Accès particulier</a>
+    </div>
+  </div>
+</div>
+
+<script>
+const BACKEND_URL = 'https://nutricare-backend-production.up.railway.app';
+
+function switchTab(tab) {
+  document.querySelectorAll('.auth-tab').forEach(t => t.classList.remove('active'));
+  event.target.classList.add('active');
+  document.getElementById('registerForm').style.display = tab === 'register' ? 'block' : 'none';
+  document.getElementById('loginForm').style.display = tab === 'login' ? 'block' : 'none';
+}
+
+async function register() {
+  const entreprise = document.getElementById('regEntreprise').value.trim();
+  const nom = document.getElementById('regNom').value.trim();
+  const email = document.getElementById('regEmail').value.trim();
+  const password = document.getElementById('regPassword').value;
+  const licences = +document.getElementById('regLicences').value;
+
+  const errEl = document.getElementById('regError');
+  errEl.classList.remove('show');
+
+  if (!entreprise || !nom || !email || !password) {
+    errEl.textContent = 'Veuillez remplir tous les champs';
+    errEl.classList.add('show');
+    return;
+  }
+
+  try {
+    // 1. Créer le compte utilisateur
+    const resAuth = await fetch(`${BACKEND_URL}/api/auth/register`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, password, full_name: nom })
+    });
+    const authData = await resAuth.json();
+    if (!resAuth.ok) {
+      errEl.textContent = authData.error || 'Erreur lors de la création du compte';
+      errEl.classList.add('show');
+      return;
+    }
+
+    // 2. Sauvegarder le token
+    localStorage.setItem('nutricare_token', authData.token);
+    localStorage.setItem('nutricare_user', JSON.stringify(authData.user));
+
+    // 3. Créer l'entreprise
+    const resEnt = await fetch(`${BACKEND_URL}/api/entreprise/create`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${authData.token}` },
+      body: JSON.stringify({ nom: entreprise, nb_licences: licences })
+    });
+    const entData = await resEnt.json();
+    if (!resEnt.ok) {
+      errEl.textContent = entData.error || 'Erreur lors de la création de l\'entreprise';
+      errEl.classList.add('show');
+      return;
+    }
+
+    // 4. Rediriger vers l'app
+    document.getElementById('regSuccess').textContent = `Espace créé ! Code invitation : ${entData.code_invitation}. Redirection...`;
+    document.getElementById('regSuccess').classList.add('show');
+    setTimeout(() => window.location.href = 'app.html?entreprise=create', 1500);
+
+  } catch(e) {
+    errEl.textContent = 'Erreur de connexion au serveur';
+    errEl.classList.add('show');
+  }
+}
+
+async function login() {
+  const email = document.getElementById('loginEmail').value.trim();
+  const password = document.getElementById('loginPassword').value;
+  const errEl = document.getElementById('loginError');
+  errEl.classList.remove('show');
+
+  try {
+    const res = await fetch(`${BACKEND_URL}/api/auth/login`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, password })
+    });
+    const data = await res.json();
+    if (!res.ok) {
+      errEl.textContent = data.error || 'Erreur de connexion';
+      errEl.classList.add('show');
+      return;
+    }
+    localStorage.setItem('nutricare_token', data.token);
+    localStorage.setItem('nutricare_user', JSON.stringify(data.user));
+    window.location.href = 'app.html?entreprise=create';
+  } catch(e) {
+    errEl.textContent = 'Erreur de connexion au serveur';
+    errEl.classList.add('show');
+  }
+}
+</script>
+</body>
+</html>
