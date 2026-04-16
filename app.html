@@ -286,25 +286,39 @@
   <!-- Sidebar -->
   <div class="sidebar" id="sidebar">
     <div class="sidebar-logo" onclick="window.location.href='index.html'" style="cursor:pointer"><div class="sidebar-logo-dot"></div> NutriCare</div>
-    <div class="nav-label">Principal</div>
-    <button class="nav-item active" onclick="showView('chat', this)">💬 Chat IA</button>
-    <button class="nav-item" onclick="showView('dashboard', this)">📊 Dashboard</button>
-    <button class="nav-item" onclick="showView('profile', this)">👤 Mon profil</button>
-    <div class="nav-label">Abonnement</div>
-    <button class="nav-item" onclick="showView('pricing', this)">💎 Abonnements</button>
-    <button class="nav-item" onclick="showView('pro', this)">🧑‍⚕️ Mon professionnel</button>
-    <button class="nav-item" onclick="showView('health', this)">📊 Suivi santé</button>
-    <button class="nav-item" onclick="showView('menus', this)">🥗 Mes menus</button>
-    <button class="nav-item" onclick="showView('analysis', this)">📸 Analyse repas</button>
-    <button class="nav-item" onclick="showView('protocols', this)">🧬 Protocoles</button>
-    <button class="nav-item" onclick="showView('gamification', this)">🏆 Ma progression</button>
-    <button class="nav-item" onclick="showView('programs', this)">🎯 Programmes</button>
-    <button class="nav-item" onclick="showView('ordonnance', this)">📋 Scan ordonnance</button>
-    <button class="nav-item" onclick="showView('insights', this)">🌍 Observatoire</button>
-    <button class="nav-item" onclick="showView('simulator', this)">🔮 Simulateur</button>
-    <button class="nav-item" onclick="showView('passeport', this)">🧬 Passeport Santé</button>
-    <button class="nav-item" onclick="showView('biologie', this)">🩸 Bilan sanguin</button>
-    <button class="nav-item" onclick="showView('entreprise', this)">🏢 Mon entreprise</button>
+    <!-- Menu particulier -->
+    <div id="menuParticulier">
+      <div class="nav-label">Principal</div>
+      <button class="nav-item active" onclick="showView('chat', this)">💬 Chat IA</button>
+      <button class="nav-item" onclick="showView('dashboard', this)">📊 Dashboard</button>
+      <button class="nav-item" onclick="showView('profile', this)">👤 Mon profil</button>
+      <div class="nav-label">Abonnement</div>
+      <button class="nav-item" onclick="showView('pricing', this)">💎 Abonnements</button>
+      <button class="nav-item" onclick="showView('pro', this)">🧑‍⚕️ Mon professionnel</button>
+      <button class="nav-item" onclick="showView('health', this)">📊 Suivi santé</button>
+      <button class="nav-item" onclick="showView('menus', this)">🥗 Mes menus</button>
+      <button class="nav-item" onclick="showView('analysis', this)">📸 Analyse repas</button>
+      <button class="nav-item" onclick="showView('protocols', this)">🧬 Protocoles</button>
+      <button class="nav-item" onclick="showView('gamification', this)">🏆 Ma progression</button>
+      <button class="nav-item" onclick="showView('programs', this)">🎯 Programmes</button>
+      <button class="nav-item" onclick="showView('ordonnance', this)">📋 Scan ordonnance</button>
+      <button class="nav-item" onclick="showView('insights', this)">🌍 Observatoire</button>
+      <button class="nav-item" onclick="showView('simulator', this)">🔮 Simulateur</button>
+      <button class="nav-item" onclick="showView('passeport', this)">🧬 Passeport Santé</button>
+      <button class="nav-item" onclick="showView('biologie', this)">🩸 Bilan sanguin</button>
+      <button class="nav-item" onclick="showView('entreprise', this)">🏢 Mon entreprise</button>
+    </div>
+    <!-- Menu admin RH -->
+    <div id="menuRH" style="display:none">
+      <div class="nav-label">Espace RH</div>
+      <button class="nav-item active" onclick="showView('entreprise', this)">🏢 Dashboard RH</button>
+      <button class="nav-item" onclick="showView('insights', this)">🌍 Observatoire</button>
+      <div class="nav-label">Mon compte</div>
+      <button class="nav-item" onclick="showView('profile', this)">👤 Mon profil</button>
+      <button class="nav-item" onclick="showView('chat', this)">💬 Chat IA</button>
+      <button class="nav-item" onclick="showView('simulator', this)">🔮 Simulateur</button>
+      <button class="nav-item" onclick="showView('passeport', this)">🧬 Passeport Santé</button>
+    </div>
     <div class="sidebar-user">
       <div class="sidebar-avatar" id="sidebarAvatar">?</div>
       <div class="sidebar-user-info">
@@ -1479,16 +1493,23 @@ function toggleMobileMenu() {
       document.getElementById('entLoading').style.display = 'none';
       if (!data.membre) {
         document.getElementById('entNoMember').style.display = 'block';
+        document.getElementById('menuParticulier').style.display = 'block';
+        document.getElementById('menuRH').style.display = 'none';
       } else if (data.role === 'admin') {
         document.getElementById('entAdmin').style.display = 'block';
         document.getElementById('adminNomDisplay').textContent = data.entreprise.nom;
         document.getElementById('adminCode').textContent = data.entreprise.code_invitation;
+        document.getElementById('menuParticulier').style.display = 'none';
+        document.getElementById('menuRH').style.display = 'block';
+        localStorage.setItem('nutricare_role', 'admin');
         loadEntrepriseDashboard();
       } else {
         document.getElementById('entMember').style.display = 'block';
         document.getElementById('entNomDisplay').textContent = data.entreprise.nom;
         document.getElementById('entPlanDisplay').textContent = 'Plan ' + (data.entreprise.plan || 'Starter');
         document.getElementById('entRoleDisplay').textContent = 'Salarié';
+        document.getElementById('menuParticulier').style.display = 'block';
+        document.getElementById('menuRH').style.display = 'none';
       }
     } catch(e) {
       document.getElementById('entLoading').style.display = 'none';
