@@ -300,6 +300,7 @@
     <button class="nav-item" onclick="showView('ordonnance', this)">📋 Scan ordonnance</button>
     <button class="nav-item" onclick="showView('insights', this)">🌍 Observatoire</button>
     <button class="nav-item" onclick="showView('simulator', this)">🔮 Simulateur</button>
+    <button class="nav-item" onclick="showView('passeport', this)">🧬 Passeport Santé</button>
     <div class="sidebar-user">
       <div class="sidebar-avatar" id="sidebarAvatar">?</div>
       <div class="sidebar-user-info">
@@ -438,6 +439,7 @@
         </div>
         <div style="margin-top:20px;display:flex;align-items:center">
           <button class="btn-save" onclick="saveProfile()">Sauvegarder le profil</button>
+          <button class="btn-save" onclick="showView('passeport')" style="background:#C9A84C;color:#021A35;margin-left:12px">🧬 Générer mon Passeport Santé</button>
           <span class="save-success" id="saveSuccess">✓ Profil sauvegardé !</span>
         </div>
       </div>
@@ -688,6 +690,60 @@
   <div style="font-size:0.85rem;color:#85B7EB;margin-bottom:32px">Protocoles adaptés à vos pathologies</div>
   <div id="protocolsList" style="display:flex;flex-direction:column;gap:20px"></div>
 </div>
+<div id="passeportView" style="display:none;padding:32px;overflow-y:auto;background:white;width:100%">
+  <div style="max-width:800px;margin:0 auto">
+    <div style="display:inline-block;font-size:0.68rem;font-weight:600;text-transform:uppercase;letter-spacing:.12em;color:#C9A84C;background:#FDF6E8;padding:5px 14px;border-radius:4px;margin-bottom:12px">Standard & Premium</div>
+    <div style="font-family:'Cormorant Garamond',serif;font-size:2rem;font-weight:400;color:#021A35;margin-bottom:6px">Passeport Santé <em style="font-style:italic;color:#C9A84C">Nutritionnel</em></div>
+    <div style="font-size:0.82rem;color:rgba(2,26,53,0.4);margin-bottom:28px">Compte-rendu médical nutritionnel généré par IA · Partageable avec votre médecin</div>
+
+    <!-- Bloc non payant -->
+    <div id="passeportFree" style="display:none;background:white;border-radius:4px;padding:40px;text-align:center;border:1px solid #B5D4F4">
+      <div style="font-size:2rem;margin-bottom:12px">🧬</div>
+      <div style="font-family:'Cormorant Garamond',serif;font-size:1.4rem;margin-bottom:8px">Fonctionnalité Standard & Premium</div>
+      <div style="font-size:0.88rem;color:rgba(2,26,53,0.5);margin-bottom:20px">Passez à un plan payant pour générer votre Passeport Santé Nutritionnel.</div>
+      <button onclick="showView('pricing')" style="background:#021A35;color:white;border:none;border-radius:4px;padding:12px 28px;font-family:'DM Sans',sans-serif;cursor:pointer">Voir les abonnements →</button>
+    </div>
+
+    <!-- Contenu -->
+    <div id="passeportContent" style="display:none">
+      <!-- Carte identité -->
+      <div style="background:#021A35;border-radius:4px;padding:28px;margin-bottom:20px;display:flex;gap:24px;align-items:center;flex-wrap:wrap">
+        <div style="width:64px;height:64px;border-radius:50%;background:linear-gradient(135deg,#C9A84C,#A07830);display:flex;align-items:center;justify-content:center;font-family:'Cormorant Garamond',serif;font-size:1.5rem;font-weight:600;color:white;flex-shrink:0" id="ppAvatar">GC</div>
+        <div style="flex:1">
+          <div style="font-family:'Cormorant Garamond',serif;font-size:1.4rem;font-weight:600;color:white;margin-bottom:4px" id="ppName">Chargement...</div>
+          <div style="font-size:0.78rem;color:rgba(255,255,255,0.5)" id="ppDate">Rapport du —</div>
+          <div style="font-size:0.72rem;color:#C9A84C;margin-top:4px;font-weight:600" id="ppId">NC-—</div>
+        </div>
+        <button onclick="generatePasseport()" style="background:rgba(255,255,255,0.1);color:white;border:1px solid rgba(255,255,255,0.2);border-radius:4px;padding:10px 20px;font-family:'DM Sans',sans-serif;font-size:0.82rem;cursor:pointer">↻ Régénérer</button>
+      </div>
+
+      <!-- Stats rapides -->
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:12px;margin-bottom:20px" id="ppStats"></div>
+
+      <!-- Rapport médical -->
+      <div style="background:white;border-radius:4px;padding:28px;border:1px solid #B5D4F4;margin-bottom:20px">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;flex-wrap:wrap;gap:12px">
+          <div style="font-family:'Cormorant Garamond',serif;font-size:1.2rem;font-weight:600;color:#021A35">📋 Compte-rendu médical nutritionnel</div>
+          <button onclick="printPasseport()" style="background:#021A35;color:white;border:none;border-radius:4px;padding:8px 18px;font-family:'DM Sans',sans-serif;font-size:0.78rem;cursor:pointer">🖨️ Imprimer / PDF</button>
+        </div>
+        <div id="ppReport" style="font-size:0.85rem;line-height:1.8;color:rgba(2,26,53,0.75);white-space:pre-wrap"></div>
+      </div>
+
+      <!-- Disclaimer -->
+      <div style="background:#FDF6E8;border-radius:4px;padding:14px 18px;border:1px solid #C9A84C;font-size:0.75rem;color:rgba(2,26,53,0.6);line-height:1.5">
+        ⚕️ Ce document est généré par intelligence artificielle à partir de vos données de suivi. Il ne remplace pas un avis médical professionnel. Partagez-le avec votre médecin comme support de consultation.
+      </div>
+    </div>
+
+    <!-- Loading -->
+    <div id="passeportLoading" style="display:none;text-align:center;padding:48px;background:#F0F6FF;border-radius:4px;border:1px solid #B5D4F4">
+      <div style="width:48px;height:48px;border:3px solid #B5D4F4;border-top-color:#021A35;border-radius:50%;animation:spin 0.8s linear infinite;margin:0 auto 20px"></div>
+      <div style="font-family:'Cormorant Garamond',serif;font-size:1.2rem;color:#021A35;margin-bottom:8px">Génération du passeport...</div>
+      <div style="font-size:0.82rem;color:rgba(2,26,53,0.45)" id="ppLoadingMsg">Analyse de vos données de santé</div>
+    </div>
+  </div>
+</div>
+
 <div id="simulatorView" style="display:none;padding:32px;overflow-y:auto;background:white;width:100%">
   <div style="max-width:800px;margin:0 auto">
     <div style="display:inline-block;font-size:0.68rem;font-weight:600;text-transform:uppercase;letter-spacing:.12em;color:#C9A84C;background:#FDF6E8;padding:5px 14px;border-radius: 4px;margin-bottom:12px">Jumeau Numérique Santé</div>
@@ -1196,6 +1252,110 @@ function toggleMobileMenu() {
     }
   }
 
+  async function initPasseport() {
+    const profile = JSON.parse(localStorage.getItem('nutricare_profile') || '{}');
+    const plan = profile.plan || 'free';
+    if (plan === 'free') {
+      document.getElementById('passeportFree').style.display = 'block';
+      document.getElementById('passeportContent').style.display = 'none';
+      return;
+    }
+    document.getElementById('passeportFree').style.display = 'none';
+    if (!document.getElementById('ppReport').textContent) {
+      generatePasseport();
+    } else {
+      document.getElementById('passeportContent').style.display = 'block';
+    }
+  }
+
+  async function generatePasseport() {
+    document.getElementById('passeportContent').style.display = 'none';
+    document.getElementById('passeportLoading').style.display = 'block';
+
+    const loadingMsgs = [
+      'Analyse de vos données de santé...',
+      'Récupération de votre historique...',
+      'Génération du compte-rendu médical...',
+      'Rédaction des recommandations...',
+      'Finalisation du passeport...',
+    ];
+    let msgIdx = 0;
+    const interval = setInterval(() => {
+      msgIdx = (msgIdx + 1) % loadingMsgs.length;
+      const el = document.getElementById('ppLoadingMsg');
+      if (el) el.textContent = loadingMsgs[msgIdx];
+    }, 2000);
+
+    try {
+      const res = await fetch(`${BACKEND_URL}/api/passeport/generate`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${authToken}` }
+      });
+      const data = await res.json();
+      clearInterval(interval);
+
+      if (!res.ok) throw new Error(data.error);
+
+      const m = data.metadata;
+      const initials = (m.patient || 'U').split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2);
+      document.getElementById('ppAvatar').textContent = initials;
+      document.getElementById('ppName').textContent = m.patient;
+      document.getElementById('ppDate').textContent = 'Rapport du ' + m.date;
+      document.getElementById('ppId').textContent = 'Réf. ' + m.id;
+
+      document.getElementById('ppStats').innerHTML = [
+        { label: 'Entrées suivi', val: m.health_entries || '0', sub: '30 derniers jours' },
+        { label: 'Glycémie moy.', val: m.avg_glycemie ? m.avg_glycemie + ' mmol/L' : '—', sub: 'Moyenne mensuelle' },
+        { label: 'Poids moyen', val: m.avg_poids ? m.avg_poids + ' kg' : '—', sub: 'Moyenne mensuelle' },
+        { label: 'Énergie moy.', val: m.avg_energie ? m.avg_energie + '/10' : '—', sub: 'Moyenne mensuelle' },
+      ].map(s => `
+        <div style="background:#F0F6FF;border-radius:4px;padding:16px;border:1px solid #B5D4F4">
+          <div style="font-size:0.68rem;color:#85B7EB;text-transform:uppercase;letter-spacing:.08em;font-weight:600;margin-bottom:6px">${s.label}</div>
+          <div style="font-family:'Cormorant Garamond',serif;font-size:1.6rem;font-weight:600;color:#021A35">${s.val}</div>
+          <div style="font-size:0.7rem;color:rgba(2,26,53,0.4);margin-top:2px">${s.sub}</div>
+        </div>`).join('');
+
+      document.getElementById('ppReport').textContent = data.report;
+      document.getElementById('passeportLoading').style.display = 'none';
+      document.getElementById('passeportContent').style.display = 'block';
+
+    } catch(e) {
+      clearInterval(interval);
+      document.getElementById('passeportLoading').style.display = 'none';
+      console.error('Erreur passeport:', e);
+    }
+  }
+
+  function printPasseport() {
+    const report = document.getElementById('ppReport').textContent;
+    const name = document.getElementById('ppName').textContent;
+    const date = document.getElementById('ppDate').textContent;
+    const id = document.getElementById('ppId').textContent;
+    const w = window.open('', '_blank');
+    w.document.write(`<!DOCTYPE html><html><head><title>Passeport Santé — ${name}</title>
+    <style>
+      body { font-family: Georgia, serif; max-width: 800px; margin: 40px auto; padding: 40px; color: #021A35; }
+      h1 { font-size: 2rem; font-weight: 400; margin-bottom: 8px; }
+      .meta { font-size: 0.85rem; color: rgba(2,26,53,0.5); margin-bottom: 32px; }
+      .report { font-size: 0.95rem; line-height: 1.8; white-space: pre-wrap; }
+      .header { border-bottom: 2px solid #021A35; padding-bottom: 20px; margin-bottom: 28px; display: flex; justify-content: space-between; align-items: flex-end; }
+      .logo { font-size: 1.2rem; font-weight: 600; }
+      .disclaimer { margin-top: 40px; padding: 16px; background: #FDF6E8; font-size: 0.78rem; color: rgba(2,26,53,0.6); line-height: 1.5; }
+      @media print { body { margin: 20px; } }
+    </style></head><body>
+    <div class="header">
+      <div><div class="logo">● NutriCare AI</div><div style="font-size:0.78rem;color:rgba(2,26,53,0.4)">Passeport Santé Nutritionnel</div></div>
+      <div style="text-align:right;font-size:0.78rem;color:rgba(2,26,53,0.4)">${date}<br>${id}</div>
+    </div>
+    <h1>${name}</h1>
+    <div class="meta">Compte-rendu médical nutritionnel généré par NutriCare AI</div>
+    <div class="report">${report}</div>
+    <div class="disclaimer">⚕️ Ce document est généré par intelligence artificielle. Il ne remplace pas un avis médical professionnel. Document généré le ${date}.</div>
+    </body></html>`);
+    w.document.close();
+    w.print();
+  }
+
   function setSimQ(el) {
     document.getElementById('simInput').value = el.textContent;
     runSimulation();
@@ -1650,6 +1810,8 @@ if (urlParams.get('view') === 'protocols') {
     document.getElementById('ordonnanceView').style.display = view === 'ordonnance' ? 'block' : 'none';
     document.getElementById('insightsView').style.display = view === 'insights' ? 'block' : 'none';
     document.getElementById('simulatorView').style.display = view === 'simulator' ? 'block' : 'none';
+    document.getElementById('passeportView').style.display = view === 'passeport' ? 'block' : 'none';
+    if (view === 'passeport') initPasseport();
     if (view === 'insights') loadInsights();
     if (view === 'ordonnance') initOrdonnance();
     if (view === 'programs') {
