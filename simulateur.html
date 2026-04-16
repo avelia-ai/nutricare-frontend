@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Simulateur de Décisions Santé — NutriCare AI</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;600;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    :root { --charcoal: #021A35; --gold: #C9A84C; --blue: #378ADD; --blue-light: #F0F6FF; --border: #B5D4F4; }
+    body { font-family: 'DM Sans', sans-serif; color: var(--charcoal); background: white; }
+
+    nav { background: white; border-bottom: 1px solid var(--border); padding: 0 40px; display: flex; align-items: center; justify-content: space-between; height: 64px; position: sticky; top: 0; z-index: 10; }
+    .nav-logo { font-family: 'Cormorant Garamond', serif; font-size: 1.4rem; font-weight: 600; color: var(--charcoal); text-decoration: none; display: flex; align-items: center; gap: 8px; }
+    .nav-logo-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--gold); }
+    .nav-actions { display: flex; gap: 12px; align-items: center; }
+    .btn-outline { padding: 8px 20px; border: 1px solid var(--charcoal); border-radius: 4px; background: none; font-family: 'DM Sans', sans-serif; font-size: 0.85rem; color: var(--charcoal); text-decoration: none; }
+    .btn-primary { padding: 8px 20px; border: none; border-radius: 4px; background: var(--charcoal); font-family: 'DM Sans', sans-serif; font-size: 0.85rem; color: white; text-decoration: none; }
+
+    .hero { background: var(--charcoal); padding: 80px 40px; text-align: center; }
+    .hero-tag { display: inline-block; background: rgba(201,168,76,0.2); color: var(--gold); font-size: 0.7rem; font-weight: 600; text-transform: uppercase; letter-spacing: .12em; padding: 5px 14px; border-radius: 4px; margin-bottom: 20px; }
+    .hero-title { font-family: 'Cormorant Garamond', serif; font-size: clamp(2rem, 5vw, 3.5rem); font-weight: 400; color: white; margin-bottom: 16px; }
+    .hero-title em { color: var(--gold); font-style: italic; }
+    .hero-sub { color: rgba(255,255,255,0.6); font-size: 1rem; max-width: 600px; margin: 0 auto 32px; line-height: 1.6; }
+    .hero-btn { display: inline-block; background: var(--gold); color: var(--charcoal); padding: 14px 36px; border-radius: 4px; font-family: 'DM Sans', sans-serif; font-size: 1rem; font-weight: 600; text-decoration: none; }
+
+    .demo { max-width: 900px; margin: 0 auto; padding: 64px 24px; }
+    .demo-title { font-family: 'Cormorant Garamond', serif; font-size: 1.8rem; font-weight: 400; text-align: center; margin-bottom: 8px; }
+    .demo-title em { font-style: italic; color: var(--gold); }
+    .demo-sub { text-align: center; color: rgba(2,26,53,0.45); font-size: 0.88rem; margin-bottom: 40px; }
+
+    .sim-mock { background: var(--charcoal); border-radius: 4px; padding: 28px; }
+    .sim-mock-input { display: flex; gap: 10px; margin-bottom: 20px; }
+    .sim-mock-field { flex: 1; background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15); border-radius: 4px; padding: 12px 16px; color: white; font-family: 'DM Sans', sans-serif; font-size: 0.88rem; }
+    .sim-mock-btn { background: var(--gold); color: var(--charcoal); border: none; border-radius: 4px; padding: 12px 20px; font-family: 'DM Sans', sans-serif; font-size: 0.85rem; font-weight: 600; white-space: nowrap; }
+    .sim-scenario { background: rgba(255,255,255,0.06); border-left: 3px solid var(--gold); border-radius: 0 4px 4px 0; padding: 12px 16px; margin-bottom: 20px; }
+    .sim-scenario-label { font-size: 0.65rem; text-transform: uppercase; letter-spacing: .1em; color: var(--gold); font-weight: 600; margin-bottom: 4px; }
+    .sim-scenario-text { font-size: 0.88rem; color: white; font-weight: 500; }
+    .sim-metrics { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 10px; margin-bottom: 20px; }
+    .sim-metric { background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1); border-radius: 4px; padding: 14px; }
+    .sim-metric-header { display: flex; align-items: center; gap: 6px; margin-bottom: 10px; }
+    .sim-metric-label { font-size: 0.75rem; color: rgba(255,255,255,0.6); flex: 1; }
+    .sim-metric-val { font-size: 0.82rem; font-weight: 700; }
+    .sim-bar-wrap { display: flex; flex-direction: column; gap: 4px; }
+    .sim-bar-row { display: flex; align-items: center; gap: 6px; }
+    .sim-bar-lbl { font-size: 0.62rem; color: rgba(255,255,255,0.35); min-width: 28px; }
+    .sim-bar-track { flex: 1; height: 4px; background: rgba(255,255,255,0.1); border-radius: 2px; overflow: hidden; }
+    .sim-bar-fill { height: 100%; border-radius: 2px; }
+    .sim-timeline { background: rgba(255,255,255,0.04); border-radius: 4px; padding: 16px; }
+    .sim-tl-title { font-size: 0.75rem; font-weight: 600; color: rgba(255,255,255,0.6); margin-bottom: 12px; text-transform: uppercase; letter-spacing: .08em; }
+    .sim-tl-row { display: flex; gap: 10px; margin-bottom: 8px; align-items: flex-start; }
+    .sim-tl-badge { font-size: 0.65rem; font-weight: 700; color: var(--charcoal); padding: 2px 8px; border-radius: 4px; flex-shrink: 0; white-space: nowrap; }
+    .sim-tl-text { font-size: 0.75rem; color: rgba(255,255,255,0.55); line-height: 1.5; }
+
+    .features { background: var(--blue-light); padding: 64px 24px; }
+    .features-inner { max-width: 900px; margin: 0 auto; }
+    .features-title { font-family: 'Cormorant Garamond', serif; font-size: 1.8rem; font-weight: 400; text-align: center; margin-bottom: 40px; }
+    .features-title em { font-style: italic; color: var(--gold); }
+    .features-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 20px; }
+    .feature-card { background: white; border-radius: 4px; padding: 24px; border: 1px solid var(--border); }
+    .feature-icon { font-size: 1.8rem; margin-bottom: 12px; }
+    .feature-title { font-weight: 600; font-size: 0.95rem; margin-bottom: 8px; }
+    .feature-desc { font-size: 0.82rem; color: rgba(2,26,53,0.55); line-height: 1.6; }
+
+    .scenarios { max-width: 900px; margin: 0 auto; padding: 64px 24px; }
+    .scenarios-title { font-family: 'Cormorant Garamond', serif; font-size: 1.8rem; font-weight: 400; text-align: center; margin-bottom: 8px; }
+    .scenarios-title em { font-style: italic; color: var(--gold); }
+    .scenarios-sub { text-align: center; color: rgba(2,26,53,0.45); font-size: 0.88rem; margin-bottom: 32px; }
+    .scenarios-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; }
+    .scenario-pill { background: var(--blue-light); border: 1px solid var(--border); border-radius: 4px; padding: 14px 18px; font-size: 0.85rem; color: var(--charcoal); display: flex; align-items: center; gap: 10px; }
+    .scenario-pill-icon { font-size: 1.2rem; flex-shrink: 0; }
+
+    .cta { background: var(--charcoal); padding: 80px 24px; text-align: center; }
+    .cta-tag { display: inline-block; background: rgba(201,168,76,0.2); color: var(--gold); font-size: 0.7rem; font-weight: 600; text-transform: uppercase; letter-spacing: .12em; padding: 5px 14px; border-radius: 4px; margin-bottom: 16px; }
+    .cta-title { font-family: 'Cormorant Garamond', serif; font-size: clamp(1.8rem, 4vw, 2.8rem); font-weight: 400; color: white; margin-bottom: 12px; }
+    .cta-title em { font-style: italic; color: var(--gold); }
+    .cta-sub { color: rgba(255,255,255,0.55); font-size: 0.9rem; margin-bottom: 32px; max-width: 480px; margin-left: auto; margin-right: auto; }
+    .cta-price { font-family: 'Cormorant Garamond', serif; font-size: 3rem; font-weight: 600; color: var(--gold); margin-bottom: 8px; }
+    .cta-price span { font-size: 1rem; font-family: 'DM Sans', sans-serif; color: rgba(255,255,255,0.4); font-weight: 400; }
+    .cta-features { display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; margin-bottom: 32px; }
+    .cta-feature { display: flex; align-items: center; gap: 6px; font-size: 0.82rem; color: rgba(255,255,255,0.7); }
+    .cta-feature-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--gold); flex-shrink: 0; }
+    .cta-btn { display: inline-block; background: var(--gold); color: var(--charcoal); padding: 16px 48px; border-radius: 4px; font-family: 'DM Sans', sans-serif; font-size: 1rem; font-weight: 600; text-decoration: none; }
+    .cta-note { font-size: 0.75rem; color: rgba(255,255,255,0.3); margin-top: 16px; }
+
+    @media(max-width:480px) { nav { padding: 0 20px; } .hero { padding: 60px 20px; } .btn-outline { display: none; } }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="nav-logo"><div class="nav-logo-dot"></div> NutriCare</a>
+  <div class="nav-actions">
+    <a href="app.html" class="btn-outline">Se connecter</a>
+    <a href="app.html" class="btn-primary">Commencer →</a>
+  </div>
+</nav>
+
+<div class="hero">
+  <div class="hero-tag">Jumeau Numérique Santé · Premium</div>
+  <h1 class="hero-title">Simulez vos décisions <em>avant de les prendre</em></h1>
+  <p class="hero-sub">Testez l'impact de vos choix sur 10 indicateurs physiologiques et psychologiques. Votre jumeau numérique analyse votre profil complet et projette les effets heure par heure.</p>
+  <a href="app.html" class="hero-btn">Accéder au simulateur — Premium →</a>
+</div>
+
+<div class="demo">
+  <h2 class="demo-title">Voici ce que <em>vous obtenez</em></h2>
+  <p class="demo-sub">Exemple de simulation — "Si je dors 5h pendant 3 jours ?"</p>
+
+  <div class="sim-mock">
+    <div class="sim-mock-input">
+      <div class="sim-mock-field">Si je dors 5h pendant 3 jours ?</div>
+      <button class="sim-mock-btn">Simuler →</button>
+    </div>
+
+    <div class="sim-scenario">
+      <div class="sim-scenario-label">Scénario simulé</div>
+      <div class="sim-scenario-text">Restriction de sommeil à 5h/nuit pendant 3 jours consécutifs</div>
+    </div>
+
+    <div class="sim-metrics">
+      <div class="sim-metric">
+        <div class="sim-metric-header"><span>⚡</span><span class="sim-metric-label">Énergie</span><span class="sim-metric-val" style="color:#E24B4A">-35%</span></div>
+        <div class="sim-bar-wrap">
+          <div class="sim-bar-row"><span class="sim-bar-lbl">Avant</span><div class="sim-bar-track"><div class="sim-bar-fill" style="width:70%;background:#85B7EB"></div></div></div>
+          <div class="sim-bar-row"><span class="sim-bar-lbl">Après</span><div class="sim-bar-track"><div class="sim-bar-fill" style="width:35%;background:#E24B4A"></div></div></div>
+        </div>
+        <div style="font-size:0.68rem;color:rgba(255,255,255,0.4);margin-top:8px;line-height:1.4">Réduction de la production d'ATP mitochondrial, baisse des réserves de glycogène.</div>
+      </div>
+      <div class="sim-metric">
+        <div class="sim-metric-header"><span>🧠</span><span class="sim-metric-label">Concentration</span><span class="sim-metric-val" style="color:#E24B4A">-40%</span></div>
+        <div class="sim-bar-wrap">
+          <div class="sim-bar-row"><span class="sim-bar-lbl">Avant</span><div class="sim-bar-track"><div class="sim-bar-fill" style="width:75%;background:#85B7EB"></div></div></div>
+          <div class="sim-bar-row"><span class="sim-bar-lbl">Après</span><div class="sim-bar-track"><div class="sim-bar-fill" style="width:35%;background:#E24B4A"></div></div></div>
+        </div>
+        <div style="font-size:0.68rem;color:rgba(255,255,255,0.4);margin-top:8px;line-height:1.4">Altération du cortex préfrontal, déficit en noradrénaline et acétylcholine.</div>
+      </div>
+      <div class="sim-metric">
+        <div class="sim-metric-header"><span>🧘</span><span class="sim-metric-label">Stress/Cortisol</span><span class="sim-metric-val" style="color:#C9A84C">+65%</span></div>
+        <div class="sim-bar-wrap">
+          <div class="sim-bar-row"><span class="sim-bar-lbl">Avant</span><div class="sim-bar-track"><div class="sim-bar-fill" style="width:25%;background:#85B7EB"></div></div></div>
+          <div class="sim-bar-row"><span class="sim-bar-lbl">Après</span><div class="sim-bar-track"><div class="sim-bar-fill" style="width:65%;background:#C9A84C"></div></div></div>
+        </div>
+        <div style="font-size:0.68rem;color:rgba(255,255,255,0.4);margin-top:8px;line-height:1.4">Axe HPA suractivé, cortisol chroniquement élevé avec impact sur la glycémie.</div>
+      </div>
+      <div class="sim-metric">
+        <div class="sim-metric-header"><span>🫀</span><span class="sim-metric-label">Risque cardio</span><span class="sim-metric-val" style="color:#C9A84C">+50%</span></div>
+        <div class="sim-bar-wrap">
+          <div class="sim-bar-row"><span class="sim-bar-lbl">Avant</span><div class="sim-bar-track"><div class="sim-bar-fill" style="width:20%;background:#85B7EB"></div></div></div>
+          <div class="sim-bar-row"><span class="sim-bar-lbl">Après</span><div class="sim-bar-track"><div class="sim-bar-fill" style="width:55%;background:#C9A84C"></div></div></div>
+        </div>
+        <div style="font-size:0.68rem;color:rgba(255,255,255,0.4);margin-top:8px;line-height:1.4">Tension artérielle +5-10 mmHg, fréquence cardiaque au repos augmentée.</div>
+      </div>
+    </div>
+
+    <div class="sim-timeline">
+      <div class="sim-tl-title">Projection chronologique</div>
+      <div class="sim-tl-row"><div class="sim-tl-badge" style="background:#C9A84C">H+2</div><div class="sim-tl-text">Premières baisses de vigilance, légère irritabilité. Mélatonine perturbée.</div></div>
+      <div class="sim-tl-row"><div class="sim-tl-badge" style="background:#C9A84C">J+1</div><div class="sim-tl-text">Glycémie instable en matinée, fringales sucrées augmentées de 30%. Cortisol pic matinal exacerbé.</div></div>
+      <div class="sim-tl-row"><div class="sim-tl-badge" style="background:#E24B4A">J+3</div><div class="sim-tl-text">Pic d'impact : CRP élevée (inflammation), déficit cognitif mesurable, tension +8 mmHg.</div></div>
+      <div class="sim-tl-row"><div class="sim-tl-badge" style="background:#639922">J+7</div><div class="sim-tl-text">Récupération complète si retour à 7-8h dès J+4. Marqueurs inflammatoires normalisés.</div></div>
+    </div>
+  </div>
+</div>
+
+<div class="features">
+  <div class="features-inner">
+    <h2 class="features-title">10 indicateurs <em>analysés</em></h2>
+    <div class="features-grid">
+      <div class="feature-card"><div class="feature-icon">⚡</div><div class="feature-title">Énergie & vitalité</div><div class="feature-desc">Impact sur la production mitochondriale d'ATP et les réserves énergétiques.</div></div>
+      <div class="feature-card"><div class="feature-icon">🧠</div><div class="feature-title">Concentration & mémoire</div><div class="feature-desc">Effets sur le cortex préfrontal et les neurotransmetteurs cognitifs.</div></div>
+      <div class="feature-card"><div class="feature-icon">🫀</div><div class="feature-title">Risque cardiovasculaire</div><div class="feature-desc">Tension artérielle, fréquence cardiaque et marqueurs de risque cardio.</div></div>
+      <div class="feature-card"><div class="feature-icon">😊</div><div class="feature-title">Bien-être psychologique</div><div class="feature-desc">Sérotonine, dopamine et impact sur l'humeur et la motivation.</div></div>
+      <div class="feature-card"><div class="feature-icon">🩸</div><div class="feature-title">Glycémie & métabolisme</div><div class="feature-desc">Résistance à l'insuline, pics glycémiques et équilibre métabolique.</div></div>
+      <div class="feature-card"><div class="feature-icon">💪</div><div class="feature-title">Masse musculaire</div><div class="feature-desc">Balance catabolisme/anabolisme et impact sur la composition corporelle.</div></div>
+      <div class="feature-card"><div class="feature-icon">😴</div><div class="feature-title">Qualité du sommeil</div><div class="feature-desc">Cycles circadiens, sommeil profond et récupération nocturne.</div></div>
+      <div class="feature-card"><div class="feature-icon">🧘</div><div class="feature-title">Stress & cortisol</div><div class="feature-desc">Axe HPA, réponse au stress et niveaux hormonaux.</div></div>
+      <div class="feature-card"><div class="feature-icon">🦠</div><div class="feature-title">Immunité</div><div class="feature-desc">Production de cytokines et résistance aux agents pathogènes.</div></div>
+      <div class="feature-card"><div class="feature-icon">🧬</div><div class="feature-title">Inflammation</div><div class="feature-desc">Marqueurs CRP, IL-6 et inflammation systémique.</div></div>
+    </div>
+  </div>
+</div>
+
+<div class="scenarios">
+  <h2 class="scenarios-title">Des questions <em>illimitées</em></h2>
+  <p class="scenarios-sub">Posez n'importe quelle question sur vos habitudes de vie — le simulateur s'adapte à votre profil.</p>
+  <div class="scenarios-grid">
+    <div class="scenario-pill"><div class="scenario-pill-icon">😴</div>Si je dors 5h pendant 3 jours ?</div>
+    <div class="scenario-pill"><div class="scenario-pill-icon">🍬</div>Si j'arrête le sucre 2 semaines ?</div>
+    <div class="scenario-pill"><div class="scenario-pill-icon">🚶</div>Si je marche 30min par jour ?</div>
+    <div class="scenario-pill"><div class="scenario-pill-icon">💊</div>Si je prends ce médicament ?</div>
+    <div class="scenario-pill"><div class="scenario-pill-icon">🍷</div>Si je bois un verre de vin/jour ?</div>
+    <div class="scenario-pill"><div class="scenario-pill-icon">🏃</div>Si je cours 3x par semaine ?</div>
+    <div class="scenario-pill"><div class="scenario-pill-icon">🍳</div>Si je saute le petit-déjeuner ?</div>
+    <div class="scenario-pill"><div class="scenario-pill-icon">💧</div>Si je bois 2L d'eau par jour ?</div>
+  </div>
+</div>
+
+<div class="cta">
+  <div class="cta-tag">Plan Premium · Accès immédiat</div>
+  <h2 class="cta-title">Prenez de meilleures décisions <em>pour votre santé</em></h2>
+  <p class="cta-sub">Le simulateur est inclus dans le plan Premium avec toutes les autres fonctionnalités avancées.</p>
+  <div class="cta-price">49€ <span>/ mois · Sans engagement</span></div>
+  <div class="cta-features">
+    <div class="cta-feature"><div class="cta-feature-dot"></div>Simulateur de décisions illimité</div>
+    <div class="cta-feature"><div class="cta-feature-dot"></div>Analyse photo repas</div>
+    <div class="cta-feature"><div class="cta-feature-dot"></div>Scan ordonnances</div>
+    <div class="cta-feature"><div class="cta-feature-dot"></div>Chat IA illimité</div>
+    <div class="cta-feature"><div class="cta-feature-dot"></div>Menus hebdomadaires</div>
+    <div class="cta-feature"><div class="cta-feature-dot"></div>Dashboard santé avancé</div>
+  </div>
+  <a href="app.html" class="cta-btn">Passer au Premium →</a>
+  <div class="cta-note">Paiement sécurisé par Stripe · Remboursé 30 jours si non satisfait</div>
+</div>
+
+</body>
+</html>
