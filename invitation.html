@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Votre entreprise vous offre NutriCare</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'DM Sans', sans-serif; background: #F5F3EE; min-height: 100vh; display: flex; flex-direction: column; }
+
+    nav { background: white; border-bottom: 1px solid rgba(2,26,53,0.08); padding: 0 40px; height: 64px; display: flex; align-items: center; justify-content: space-between; }
+    .nav-logo { font-family: 'Cormorant Garamond', serif; font-size: 1.3rem; font-weight: 600; color: #021A35; text-decoration: none; display: flex; align-items: center; gap: 8px; }
+    .nav-dot { width: 7px; height: 7px; border-radius: 50%; background: #C9A84C; }
+
+    .hero { background: #021A35; padding: 80px 24px; text-align: center; position: relative; overflow: hidden; }
+    .hero::before { content: ''; position: absolute; top: -100px; right: -100px; width: 400px; height: 400px; border-radius: 50%; background: rgba(201,168,76,0.05); }
+    .hero-tag { display: inline-block; background: rgba(201,168,76,0.15); color: #C9A84C; font-size: 0.68rem; font-weight: 600; text-transform: uppercase; letter-spacing: .12em; padding: 5px 16px; border-radius: 4px; margin-bottom: 20px; }
+    .hero-company { font-family: 'Cormorant Garamond', serif; font-size: clamp(2rem, 5vw, 3.5rem); font-weight: 400; color: white; margin-bottom: 8px; }
+    .hero-company em { font-style: italic; color: #C9A84C; }
+    .hero-sub { font-size: 1rem; color: rgba(255,255,255,0.55); max-width: 520px; margin: 0 auto 32px; line-height: 1.6; }
+    .hero-code { display: inline-flex; align-items: center; gap: 12px; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12); border-radius: 4px; padding: 12px 24px; margin-bottom: 32px; }
+    .hero-code-label { font-size: 0.72rem; color: rgba(255,255,255,0.4); text-transform: uppercase; letter-spacing: .1em; }
+    .hero-code-val { font-family: 'DM Mono', monospace; font-size: 1.4rem; font-weight: 700; color: #C9A84C; letter-spacing: 4px; }
+    .hero-btn { display: inline-block; background: #C9A84C; color: #021A35; padding: 14px 40px; border-radius: 4px; font-family: 'DM Sans', sans-serif; font-size: 1rem; font-weight: 600; text-decoration: none; transition: all .2s; }
+    .hero-btn:hover { background: #E8C96A; }
+    .hero-members { font-size: 0.78rem; color: rgba(255,255,255,0.3); margin-top: 16px; }
+
+    .guarantees { max-width: 900px; margin: 0 auto; padding: 64px 24px; }
+    .guarantees-title { font-family: 'Cormorant Garamond', serif; font-size: 1.8rem; font-weight: 400; text-align: center; color: #021A35; margin-bottom: 8px; }
+    .guarantees-title em { font-style: italic; color: #C9A84C; }
+    .guarantees-sub { text-align: center; font-size: 0.85rem; color: rgba(2,26,53,0.45); margin-bottom: 40px; }
+    .guarantees-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; }
+    .guarantee { background: white; border-radius: 4px; padding: 24px; border: 1px solid rgba(2,26,53,0.08); text-align: center; }
+    .guarantee-icon { font-size: 2rem; margin-bottom: 12px; }
+    .guarantee-title { font-weight: 600; font-size: 0.9rem; color: #021A35; margin-bottom: 6px; }
+    .guarantee-desc { font-size: 0.78rem; color: rgba(2,26,53,0.5); line-height: 1.5; }
+
+    .features { background: white; padding: 64px 24px; }
+    .features-inner { max-width: 900px; margin: 0 auto; }
+    .features-title { font-family: 'Cormorant Garamond', serif; font-size: 1.8rem; font-weight: 400; text-align: center; color: #021A35; margin-bottom: 40px; }
+    .features-title em { font-style: italic; color: #C9A84C; }
+    .features-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 20px; }
+    .feature { display: flex; gap: 16px; align-items: flex-start; }
+    .feature-icon { width: 40px; height: 40px; border-radius: 4px; background: #F0F6FF; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; flex-shrink: 0; }
+    .feature-content { }
+    .feature-title { font-weight: 600; font-size: 0.88rem; color: #021A35; margin-bottom: 4px; }
+    .feature-desc { font-size: 0.78rem; color: rgba(2,26,53,0.5); line-height: 1.5; }
+
+    .cta { background: #021A35; padding: 64px 24px; text-align: center; }
+    .cta-title { font-family: 'Cormorant Garamond', serif; font-size: 2rem; font-weight: 400; color: white; margin-bottom: 12px; }
+    .cta-title em { font-style: italic; color: #C9A84C; }
+    .cta-sub { font-size: 0.85rem; color: rgba(255,255,255,0.45); margin-bottom: 28px; }
+    .cta-btn { display: inline-block; background: #C9A84C; color: #021A35; padding: 14px 40px; border-radius: 4px; font-family: 'DM Sans', sans-serif; font-size: 1rem; font-weight: 600; text-decoration: none; }
+
+    footer { background: #010F1F; padding: 24px 40px; text-align: center; }
+    .footer-text { font-size: 0.72rem; color: rgba(255,255,255,0.2); }
+
+    #loadingState { text-align: center; padding: 40px; }
+    .spinner { width: 36px; height: 36px; border: 3px solid rgba(2,26,53,0.1); border-top-color: #021A35; border-radius: 50%; animation: spin 0.8s linear infinite; margin: 0 auto 16px; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="nav-logo"><div class="nav-dot"></div> NutriCare</a>
+  <div style="font-size:0.78rem;color:rgba(2,26,53,0.4)">Invitation salarié</div>
+</nav>
+
+<div id="loadingState" style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center">
+  <div class="spinner"></div>
+  <div style="font-size:0.85rem;color:rgba(2,26,53,0.4)">Chargement de votre invitation...</div>
+</div>
+
+<div id="mainContent" style="display:none;flex:1;flex-direction:column">
+
+  <div class="hero">
+    <div class="hero-tag">Votre entreprise vous offre NutriCare</div>
+    <h1 class="hero-company"><em id="companyName">Votre entreprise</em><br>prend soin de vous</h1>
+    <p class="hero-sub">Accédez gratuitement à votre coach santé & nutrition IA personnalisé. Confidentiel, volontaire et 100% gratuit pour vous.</p>
+    <div style="display:flex;flex-direction:column;align-items:center;gap:16px">
+      <div class="hero-code">
+        <span class="hero-code-label">Votre code</span>
+        <span class="hero-code-val" id="inviteCode">——</span>
+      </div>
+      <a href="#" class="hero-btn" id="joinBtn">Rejoindre gratuitement →</a>
+      <div class="hero-members" id="membersCount"></div>
+    </div>
+  </div>
+
+  <div class="guarantees">
+    <h2 class="guarantees-title">Vos données vous <em>appartiennent</em></h2>
+    <p class="guarantees-sub">Votre employeur n'a accès à aucune donnée personnelle. C'est une garantie contractuelle.</p>
+    <div class="guarantees-grid">
+      <div class="guarantee">
+        <div class="guarantee-icon">🔒</div>
+        <div class="guarantee-title">100% confidentiel</div>
+        <div class="guarantee-desc">Votre RH ne voit jamais vos données de santé personnelles. Jamais.</div>
+      </div>
+      <div class="guarantee">
+        <div class="guarantee-icon">✋</div>
+        <div class="guarantee-title">Totalement volontaire</div>
+        <div class="guarantee-desc">Vous choisissez librement de vous inscrire ou non. Aucune obligation.</div>
+      </div>
+      <div class="guarantee">
+        <div class="guarantee-icon">🇪🇺</div>
+        <div class="guarantee-title">RGPD compliant</div>
+        <div class="guarantee-desc">Données hébergées en Europe. Droit de suppression total à tout moment.</div>
+      </div>
+      <div class="guarantee">
+        <div class="guarantee-icon">🎁</div>
+        <div class="guarantee-title">100% gratuit pour vous</div>
+        <div class="guarantee-desc">Votre entreprise prend en charge l'abonnement. Valeur : 49€/mois.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="features">
+    <div class="features-inner">
+      <h2 class="features-title">Ce que vous obtenez <em>gratuitement</em></h2>
+      <div class="features-grid">
+        <div class="feature">
+          <div class="feature-icon">🤖</div>
+          <div class="feature-content">
+            <div class="feature-title">Coach IA nutritionnel 24h/24</div>
+            <div class="feature-desc">Posez vos questions à tout moment. Conseils adaptés à vos pathologies et médicaments.</div>
+          </div>
+        </div>
+        <div class="feature">
+          <div class="feature-icon">🥗</div>
+          <div class="feature-content">
+            <div class="feature-title">Menus hebdomadaires personnalisés</div>
+            <div class="feature-desc">7 jours de menus générés par l'IA selon votre profil santé unique.</div>
+          </div>
+        </div>
+        <div class="feature">
+          <div class="feature-icon">📸</div>
+          <div class="feature-content">
+            <div class="feature-title">Analyse photo de vos repas</div>
+            <div class="feature-desc">Photographiez votre assiette et obtenez calories, macros et score santé instantanément.</div>
+          </div>
+        </div>
+        <div class="feature">
+          <div class="feature-icon">🩸</div>
+          <div class="feature-content">
+            <div class="feature-title">Analyse de vos bilans sanguins</div>
+            <div class="feature-desc">Uploadez vos résultats biologiques et recevez des explications en langage simple.</div>
+          </div>
+        </div>
+        <div class="feature">
+          <div class="feature-icon">🔮</div>
+          <div class="feature-content">
+            <div class="feature-title">Simulateur de décisions santé</div>
+            <div class="feature-desc">Testez l'impact de vos choix de vie avant de les prendre.</div>
+          </div>
+        </div>
+        <div class="feature">
+          <div class="feature-icon">🧬</div>
+          <div class="feature-content">
+            <div class="feature-title">Passeport Santé Nutritionnel</div>
+            <div class="feature-desc">Rapport médical personnalisé à partager avec votre médecin.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="cta">
+    <h2 class="cta-title">Prêt à prendre soin<br><em>de vous ?</em></h2>
+    <p class="cta-sub">Rejoignez votre espace entreprise en 2 minutes. C'est gratuit et confidentiel.</p>
+    <a href="#" class="cta-btn" id="joinBtn2">Commencer maintenant →</a>
+    <div style="font-size:0.72rem;color:rgba(255,255,255,0.25);margin-top:16px">Désinscription possible à tout moment · Aucune donnée partagée avec votre employeur</div>
+  </div>
+
+</div>
+
+<div id="errorState" style="display:none;flex:1;align-items:center;justify-content:center;padding:40px;text-align:center">
+  <div style="font-size:3rem;margin-bottom:16px">🔍</div>
+  <div style="font-family:'Cormorant Garamond',serif;font-size:1.5rem;color:#021A35;margin-bottom:8px">Code invalide</div>
+  <div style="font-size:0.85rem;color:rgba(2,26,53,0.5);margin-bottom:20px">Ce lien d'invitation n'est pas valide ou a expiré.</div>
+  <a href="index.html" style="background:#021A35;color:white;padding:10px 24px;border-radius:4px;text-decoration:none;font-size:0.85rem">Retour à l'accueil</a>
+</div>
+
+<footer>
+  <div class="footer-text">© 2026 Avelia AI · NutriCare · Données sécurisées RGPD · <a href="legal.html" style="color:rgba(255,255,255,0.2);text-decoration:none">Mentions légales</a></div>
+</footer>
+
+<script>
+const BACKEND_URL = 'https://nutricare-backend-production.up.railway.app';
+const params = new URLSearchParams(window.location.search);
+const code = params.get('code');
+
+async function init() {
+  if (!code) {
+    showError();
+    return;
+  }
+
+  try {
+    const res = await fetch(`${BACKEND_URL}/api/entreprise/public/${code}`);
+    if (!res.ok) { showError(); return; }
+    const data = await res.json();
+
+    document.getElementById('companyName').textContent = data.nom;
+    document.getElementById('inviteCode').textContent = code.toUpperCase();
+    document.title = `${data.nom} vous offre NutriCare`;
+
+    const spots = data.nb_licences - data.nb_membres;
+    document.getElementById('membersCount').textContent = 
+      `${data.nb_membres} salarié(s) déjà inscrit(s) · ${spots} place(s) disponible(s)`;
+
+    const joinUrl = `login-entreprise.html?code=${code}&company=${encodeURIComponent(data.nom)}&mode=join`;
+    document.getElementById('joinBtn').href = joinUrl;
+    document.getElementById('joinBtn2').href = joinUrl;
+
+    document.getElementById('loadingState').style.display = 'none';
+    document.getElementById('mainContent').style.display = 'flex';
+  } catch(e) {
+    showError();
+  }
+}
+
+function showError() {
+  document.getElementById('loadingState').style.display = 'none';
+  document.getElementById('errorState').style.display = 'flex';
+}
+
+init();
+</script>
+</body>
+</html>

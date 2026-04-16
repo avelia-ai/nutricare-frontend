@@ -758,6 +758,7 @@
             <div style="font-family:'DM Mono',monospace;font-size:1rem;font-weight:700;color:#C9A84C;letter-spacing:3px" id="adminCode">——</div>
           </div>
           <button onclick="loadEntrepriseDashboard()" style="background:rgba(255,255,255,0.08);color:white;border:1px solid rgba(255,255,255,0.15);border-radius:4px;padding:8px 16px;font-family:'DM Sans',sans-serif;font-size:0.78rem;cursor:pointer">↻ Actualiser</button>
+          <button onclick="copyInviteLink()" style="background:#C9A84C;color:#021A35;border:none;border-radius:4px;padding:8px 16px;font-family:'DM Sans',sans-serif;font-size:0.78rem;font-weight:600;cursor:pointer">📋 Copier le lien d'invitation</button>
         </div>
       </div>
 
@@ -1468,6 +1469,14 @@ function toggleMobileMenu() {
       document.getElementById('entLoading').style.display = 'none';
       document.getElementById('entNoMember').style.display = 'block';
     }
+  }
+
+  function copyInviteLink() {
+    const code = document.getElementById('adminCode').textContent.trim();
+    const link = `${window.location.origin}/invitation.html?code=${code}`;
+    navigator.clipboard.writeText(link).then(() => {
+      alert('Lien d\'invitation copié ! Partagez-le à vos salariés.');
+    });
   }
 
   async function joinEntreprise() {
