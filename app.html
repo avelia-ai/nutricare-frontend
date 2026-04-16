@@ -783,6 +783,15 @@
         </div>
       </div>
 
+      <!-- Invitation par email -->
+      <div style="background:white;border-radius:4px;padding:20px;border:1px solid #B5D4F4;margin-bottom:16px">
+        <div style="font-family:'Cormorant Garamond',serif;font-size:1.1rem;font-weight:600;color:#021A35;margin-bottom:8px">📧 Inviter des salariés par email</div>
+        <div style="font-size:0.78rem;color:rgba(2,26,53,0.5);margin-bottom:12px">Entrez les emails de vos salariés (séparés par des virgules). Ils recevront un lien d'invitation personnalisé.</div>
+        <textarea id="inviteEmails" placeholder="jean.dupont@entreprise.fr, marie.martin@entreprise.fr..." style="width:100%;padding:10px 14px;border:1px solid #B5D4F4;border-radius:4px;font-family:'DM Sans',sans-serif;font-size:0.82rem;outline:none;resize:vertical;min-height:80px;box-sizing:border-box;margin-bottom:10px"></textarea>
+        <button onclick="sendInvites()" style="background:#021A35;color:white;border:none;border-radius:4px;padding:10px 20px;font-family:'DM Sans',sans-serif;font-size:0.82rem;cursor:pointer">Envoyer les invitations →</button>
+        <div id="inviteResult" style="display:none;margin-top:10px;padding:10px 14px;background:#EFF7F1;border-radius:4px;font-size:0.78rem;color:#3A6B40"></div>
+      </div>
+
       <div style="font-size:0.72rem;color:rgba(2,26,53,0.3);text-align:center">Données 100% anonymisées · Aucune donnée individuelle accessible · Conformité RGPD</div>
     </div>
 
@@ -1468,6 +1477,35 @@ function toggleMobileMenu() {
     } catch(e) {
       document.getElementById('entLoading').style.display = 'none';
       document.getElementById('entNoMember').style.display = 'block';
+    }
+  }
+
+  async function sendInvites() {
+    const emailsText = document.getElementById('inviteEmails').value.trim();
+    if (!emailsText) return;
+    const emails = emailsText.split(',').map(e => e.trim()).filter(e => e.includes('@'));
+    if (!emails.length) return;
+    try {
+      const res = await fetch(`${BACKEND_URL}/api/entreprise/invite`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${authToken}` },
+        body: JSON.stringify({ emails })
+      });
+      const data = await res.json();
+      const resultEl = document.getElementById('inviteResult');
+      resultEl.style.display = 'block';
+      if (res.ok) {
+        const code = document.getElementById('adminCode').textContent.trim();
+        const link = `${window.location.origin}/invitation.html?code=${code}`;
+        resultEl.innerHTML = `✓ ${emails.length} invitation(s) préparée(s) !<br><strong>Lien à partager :</strong> <a href="${link}" target="_blank" style="color:#021A35">${link}</a><br><span style="font-size:0.72rem;opacity:0.7">En production, les emails seront envoyés automatiquement via SendGrid.</span>`;
+        document.getElementById('inviteEmails').value = '';
+      } else {
+        resultEl.style.background = '#FEE';
+        resultEl.style.color = '#C55';
+        resultEl.textContent = data.error || 'Erreur lors de l\'envoi';
+      }
+    } catch(e) {
+      console.error('Erreur invitations:', e);
     }
   }
 
