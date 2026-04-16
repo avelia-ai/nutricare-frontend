@@ -707,27 +707,57 @@
       <div onclick="setSimQ(this)" style="font-size:0.75rem;padding:6px 14px;border-radius:100px;border:1px solid #B5D4F4;color:rgba(2,26,53,0.6);cursor:pointer;background:#F0F6FF">Si je saute le petit-déjeuner ?</div>
     </div>
 
+    <!-- Bloc Premium -->
+    <div id="simPremium" style="display:none;background:white;border-radius:16px;padding:40px;text-align:center;border:1px solid #B5D4F4">
+      <div style="font-size:2rem;margin-bottom:12px">💎</div>
+      <div style="font-family:'Cormorant Garamond',serif;font-size:1.4rem;margin-bottom:8px">Fonctionnalité Premium</div>
+      <div style="font-size:0.88rem;color:rgba(2,26,53,0.5);margin-bottom:20px">Le simulateur de décisions santé est réservé aux abonnés Premium.</div>
+      <button onclick="showView('pricing')" style="background:#021A35;color:white;border:none;border-radius:100px;padding:12px 28px;font-family:'DM Sans',sans-serif;cursor:pointer">Voir les abonnements →</button>
+    </div>
+
     <div id="simLoading" style="display:none;text-align:center;padding:40px">
       <div style="width:36px;height:36px;border:3px solid #E6F1FB;border-top-color:#021A35;border-radius:50%;animation:spin 0.8s linear infinite;margin:0 auto 16px"></div>
       <div style="font-size:0.85rem;color:rgba(2,26,53,0.4)">Votre jumeau numérique analyse la décision...</div>
     </div>
 
     <div id="simResult" style="display:none">
-      <div style="background:#F0F6FF;border-radius:12px;padding:14px 18px;margin-bottom:20px;border-left:3px solid #021A35">
+      <div style="background:#F0F6FF;border-radius:12px;padding:14px 18px;margin-bottom:16px;border-left:3px solid #021A35">
         <div style="font-size:0.68rem;text-transform:uppercase;letter-spacing:.08em;color:#85B7EB;font-weight:600;margin-bottom:4px">Scénario simulé</div>
         <div style="font-size:0.88rem;color:#021A35;font-weight:500" id="simScenario"></div>
       </div>
 
-      <div id="simMetrics" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:10px;margin-bottom:20px"></div>
+      <div id="simResume" style="background:#021A35;border-radius:12px;padding:16px 20px;margin-bottom:16px;font-size:0.88rem;color:rgba(255,255,255,0.8);line-height:1.6"></div>
 
-      <div style="background:white;border-radius:12px;padding:20px;border:1px solid #B5D4F4;margin-bottom:20px">
-        <div style="font-size:0.78rem;font-weight:600;color:#021A35;margin-bottom:14px">Projection jour par jour</div>
+      <div id="simMetrics" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin-bottom:20px"></div>
+
+      <div style="background:white;border-radius:12px;padding:20px;border:1px solid #B5D4F4;margin-bottom:16px">
+        <div style="font-size:0.78rem;font-weight:600;color:#021A35;margin-bottom:16px">📅 Projection chronologique</div>
         <div id="simTimeline"></div>
+      </div>
+
+      <div id="simPatho" style="display:none;background:#FDF6E8;border-radius:12px;padding:16px 20px;margin-bottom:16px;border-left:3px solid #C9A84C">
+        <div style="font-size:0.68rem;text-transform:uppercase;letter-spacing:.08em;color:#854F0B;font-weight:600;margin-bottom:6px">🧬 Impact sur vos pathologies</div>
+        <div style="font-size:0.82rem;color:rgba(2,26,53,0.7);line-height:1.6" id="simPathoText"></div>
+      </div>
+
+      <div id="simMed" style="display:none;background:#FEF0F0;border-radius:12px;padding:16px 20px;margin-bottom:16px;border-left:3px solid #E24B4A">
+        <div style="font-size:0.68rem;text-transform:uppercase;letter-spacing:.08em;color:#A32D2D;font-weight:600;margin-bottom:6px">💊 Interactions médicamenteuses</div>
+        <div style="font-size:0.82rem;color:rgba(2,26,53,0.7);line-height:1.6" id="simMedText"></div>
+      </div>
+
+      <div id="simAlternatives" style="display:none;background:#EAF3DE;border-radius:12px;padding:16px 20px;margin-bottom:16px">
+        <div style="font-size:0.68rem;text-transform:uppercase;letter-spacing:.08em;color:#3B6D11;font-weight:600;margin-bottom:10px">✦ Alternatives recommandées</div>
+        <div id="simAltList"></div>
       </div>
 
       <div style="background:#021A35;border-radius:12px;padding:18px 20px;display:flex;gap:12px;align-items:flex-start;margin-bottom:16px">
         <div style="font-size:1.2rem;flex-shrink:0">💡</div>
-        <div style="font-size:0.82rem;color:rgba(255,255,255,0.75);line-height:1.5" id="simAdvice"></div>
+        <div style="font-size:0.85rem;color:rgba(255,255,255,0.8);line-height:1.6" id="simAdvice"></div>
+      </div>
+
+      <div id="simWarning" style="display:none;background:#FEF0F0;border-radius:10px;padding:12px 16px;margin-bottom:12px;border:1px solid #F09595">
+        <div style="font-size:0.68rem;text-transform:uppercase;letter-spacing:.08em;color:#A32D2D;font-weight:600;margin-bottom:4px">⚠️ Avertissement médical</div>
+        <div style="font-size:0.78rem;color:rgba(2,26,53,0.7);line-height:1.5" id="simWarningText"></div>
       </div>
 
       <div style="font-size:0.7rem;color:rgba(2,26,53,0.3);text-align:center">⚕️ Simulation indicative basée sur votre profil. Ne remplace pas un avis médical professionnel.</div>
@@ -1168,34 +1198,57 @@ function toggleMobileMenu() {
   async function runSimulation() {
     const q = document.getElementById('simInput').value.trim();
     if (!q) return;
+
+    // Vérification Premium
+    const profile = JSON.parse(localStorage.getItem('nutricare_profile') || '{}');
+    if (profile.plan !== 'premium') {
+      document.getElementById('simResult').style.display = 'none';
+      document.getElementById('simPremium').style.display = 'block';
+      return;
+    }
+    document.getElementById('simPremium').style.display = 'none';
     document.getElementById('simResult').style.display = 'none';
     document.getElementById('simLoading').style.display = 'block';
 
     try {
-      const profile = JSON.parse(localStorage.getItem('nutricare_profile') || '{}');
       const res = await fetch(`${BACKEND_URL}/api/chat`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${authToken}` },
         body: JSON.stringify({
-          message: `Tu es un expert en médecine nutritionnelle. L'utilisateur a ce profil: pathologies: ${(profile.pathologies||[]).join(', ')||'non renseignées'}, médicaments: ${(profile.medications||[]).join(', ')||'aucun'}, allergies: ${(profile.allergies||[]).join(', ')||'aucune'}.
+          message: `Tu es un médecin nutritionniste expert en physiologie humaine. Voici le profil complet du patient:
+- Pathologies: ${(profile.pathologies||[]).join(', ')||'non renseignées'}
+- Médicaments: ${(profile.medications||[]).join(', ')||'aucun'}
+- Allergies: ${(profile.allergies||[]).join(', ')||'aucune'}
+- Budget alimentaire: ${profile.budget_alimentaire||'non renseigné'}
+- Contraintes culturelles: ${profile.cultural_constraints||'aucune'}
 
-Question: "${q}"
+Question du patient: "${q}"
 
-Réponds UNIQUEMENT en JSON valide avec cette structure:
+Fais une simulation médicale très détaillée et scientifiquement précise. Réponds UNIQUEMENT en JSON valide:
 {
-  "scenario": "reformulation courte du scénario",
+  "scenario": "reformulation précise et complète du scénario",
+  "resume": "résumé exécutif de l'impact en 2-3 phrases percutantes",
   "metrics": [
-    {"icon": "⚡", "label": "Énergie", "avant": 65, "apres": 45, "tendance": "down"},
-    {"icon": "🧠", "label": "Concentration", "avant": 70, "apres": 40, "tendance": "down"},
-    {"icon": "🫀", "label": "Risque cardio", "avant": 20, "apres": 50, "tendance": "up"},
-    {"icon": "😊", "label": "Bien-être", "avant": 65, "apres": 35, "tendance": "down"}
+    {"icon": "⚡", "label": "Énergie", "avant": 65, "apres": 45, "tendance": "down", "explication": "explication scientifique de l'impact sur l'énergie"},
+    {"icon": "🧠", "label": "Concentration", "avant": 70, "apres": 40, "tendance": "down", "explication": "mécanisme neurologique expliqué"},
+    {"icon": "🫀", "label": "Risque cardio", "avant": 20, "apres": 50, "tendance": "up", "explication": "impact cardiovasculaire détaillé"},
+    {"icon": "😊", "label": "Bien-être", "avant": 65, "apres": 35, "tendance": "down", "explication": "impact psychologique et hormonal"},
+    {"icon": "🩸", "label": "Glycémie", "avant": 60, "apres": 45, "tendance": "down", "explication": "impact métabolique sur la glycémie"},
+    {"icon": "💪", "label": "Masse musculaire", "avant": 70, "apres": 65, "tendance": "down", "explication": "impact catabolique ou anabolique"}
   ],
   "timeline": [
-    {"periode": "J+1", "couleur": "#C9A84C", "texte": "description impact jour 1"},
-    {"periode": "J+3", "couleur": "#E24B4A", "texte": "description impact jour 3"},
-    {"periode": "J+7", "couleur": "#639922", "texte": "description récupération"}
+    {"periode": "H+2", "couleur": "#C9A84C", "texte": "description précise des premiers effets physiologiques"},
+    {"periode": "J+1", "couleur": "#C9A84C", "texte": "impact à 24h avec mécanismes biologiques"},
+    {"periode": "J+3", "couleur": "#E24B4A", "texte": "pic d'impact avec données chiffrées"},
+    {"periode": "J+7", "couleur": "#378ADD", "texte": "évolution à une semaine"},
+    {"periode": "J+14", "couleur": "#639922", "texte": "récupération ou adaptation long terme"},
+    {"periode": "J+30", "couleur": "#639922", "texte": "effets durables et recommandations"}
   ],
-  "conseil": "conseil personnalisé selon le profil de l'utilisateur en 2-3 phrases"
+  "interactions_medicaments": "analyse des interactions avec les médicaments du profil si pertinent, sinon null",
+  "impact_pathologies": "impact spécifique sur les pathologies du patient",
+  "alternatives": ["alternative 1 plus saine", "alternative 2", "alternative 3"],
+  "conseil": "conseil médical personnalisé très détaillé et actionnable en 4-5 phrases selon le profil complet",
+  "avertissement": "avertissement médical spécifique si nécessaire"
 }`
         })
       });
@@ -1213,28 +1266,66 @@ Réponds UNIQUEMENT en JSON valide avec cette structure:
 
   function renderSimulation(data) {
     document.getElementById('simScenario').textContent = data.scenario || '';
+
+    // Résumé
+    const resumeEl = document.getElementById('simResume');
+    if (resumeEl && data.resume) resumeEl.textContent = data.resume;
+
+    // Métriques
     const metricsEl = document.getElementById('simMetrics');
     metricsEl.innerHTML = (data.metrics || []).map(m => {
       const isUp = m.tendance === 'up';
       const diff = Math.abs(m.apres - m.avant);
       const color = isUp ? '#E24B4A' : '#639922';
       const sign = isUp ? '+' : '-';
-      return `<div style="background:white;border-radius:10px;padding:14px;border:1px solid #B5D4F4;text-align:center">
-        <div style="font-size:1.2rem;margin-bottom:6px">${m.icon}</div>
-        <div style="font-size:0.68rem;text-transform:uppercase;letter-spacing:.06em;color:#85B7EB;margin-bottom:6px;font-weight:600">${m.label}</div>
-        <div style="height:5px;background:#E6F1FB;border-radius:100px;overflow:hidden;margin-bottom:6px">
+      return `<div style="background:white;border-radius:12px;padding:16px;border:1px solid #B5D4F4">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">
+          <span style="font-size:1.2rem">${m.icon}</span>
+          <span style="font-size:0.78rem;font-weight:600;color:#021A35">${m.label}</span>
+          <span style="margin-left:auto;font-size:0.82rem;font-weight:700;color:${color}">${sign}${diff}%</span>
+        </div>
+        <div style="height:6px;background:#E6F1FB;border-radius:100px;overflow:hidden;margin-bottom:10px">
           <div style="height:100%;border-radius:100px;background:#021A35;width:${m.apres}%;transition:width 1.2s ease"></div>
         </div>
-        <div style="font-size:0.78rem;font-weight:600;color:${color}">${sign}${diff}%</div>
+        <div style="font-size:0.75rem;color:rgba(2,26,53,0.55);line-height:1.5">${m.explication||''}</div>
       </div>`;
     }).join('');
 
+    // Timeline
     document.getElementById('simTimeline').innerHTML = (data.timeline || []).map(t => `
-      <div style="display:flex;gap:10px;margin-bottom:10px;align-items:flex-start">
-        <div style="font-size:0.7rem;font-weight:600;color:#85B7EB;min-width:40px;padding-top:2px">${t.periode}</div>
-        <div style="width:8px;height:8px;border-radius:50%;background:${t.couleur};flex-shrink:0;margin-top:4px"></div>
-        <div style="font-size:0.78rem;color:rgba(2,26,53,0.65);line-height:1.4">${t.texte}</div>
+      <div style="display:flex;gap:10px;margin-bottom:12px;align-items:flex-start">
+        <div style="font-size:0.7rem;font-weight:700;color:white;background:${t.couleur};padding:3px 8px;border-radius:100px;flex-shrink:0;white-space:nowrap">${t.periode}</div>
+        <div style="font-size:0.78rem;color:rgba(2,26,53,0.65);line-height:1.5;padding-top:2px">${t.texte}</div>
       </div>`).join('');
+
+    // Impact pathologies
+    const pathoEl = document.getElementById('simPatho');
+    if (pathoEl && data.impact_pathologies) {
+      pathoEl.style.display = 'block';
+      document.getElementById('simPathoText').textContent = data.impact_pathologies;
+    }
+
+    // Interactions médicaments
+    const medEl = document.getElementById('simMed');
+    if (medEl && data.interactions_medicaments) {
+      medEl.style.display = 'block';
+      document.getElementById('simMedText').textContent = data.interactions_medicaments;
+    }
+
+    // Alternatives
+    const altEl = document.getElementById('simAlternatives');
+    if (altEl && data.alternatives?.length) {
+      altEl.style.display = 'block';
+      document.getElementById('simAltList').innerHTML = data.alternatives.map(a =>
+        `<div style="display:flex;gap:8px;align-items:flex-start;margin-bottom:6px"><span style="color:#C9A84C;flex-shrink:0">✦</span><span style="font-size:0.82rem;color:rgba(2,26,53,0.7)">${a}</span></div>`
+      ).join('');
+    }
+
+    // Avertissement
+    if (data.avertissement) {
+      const warnEl = document.getElementById('simWarning');
+      if (warnEl) { warnEl.style.display = 'block'; document.getElementById('simWarningText').textContent = data.avertissement; }
+    }
 
     document.getElementById('simAdvice').textContent = data.conseil || '';
     document.getElementById('simResult').style.display = 'block';
