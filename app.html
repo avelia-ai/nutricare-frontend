@@ -301,6 +301,7 @@
     <button class="nav-item" onclick="showView('insights', this)">🌍 Observatoire</button>
     <button class="nav-item" onclick="showView('simulator', this)">🔮 Simulateur</button>
     <button class="nav-item" onclick="showView('passeport', this)">🧬 Passeport Santé</button>
+    <button class="nav-item" onclick="showView('biologie', this)">🩸 Bilan sanguin</button>
     <div class="sidebar-user">
       <div class="sidebar-avatar" id="sidebarAvatar">?</div>
       <div class="sidebar-user-info">
@@ -690,6 +691,89 @@
   <div style="font-size:0.85rem;color:#85B7EB;margin-bottom:32px">Protocoles adaptés à vos pathologies</div>
   <div id="protocolsList" style="display:flex;flex-direction:column;gap:20px"></div>
 </div>
+<div id="biologieView" style="display:none;padding:32px;overflow-y:auto;background:white;width:100%">
+  <div style="max-width:900px;margin:0 auto">
+    <div style="display:inline-block;font-size:0.68rem;font-weight:600;text-transform:uppercase;letter-spacing:.12em;color:#C9A84C;background:#FDF6E8;padding:5px 14px;border-radius:4px;margin-bottom:12px">Premium</div>
+    <div style="font-family:'Cormorant Garamond',serif;font-size:2rem;font-weight:400;color:#021A35;margin-bottom:6px">Analyse de votre <em style="font-style:italic;color:#C9A84C">bilan sanguin</em></div>
+    <div style="font-size:0.82rem;color:rgba(2,26,53,0.4);margin-bottom:28px">Upload votre prise de sang · Résultats expliqués en langage simple · Conseils nutritionnels personnalisés</div>
+
+    <!-- Bloc non Premium -->
+    <div id="bioFree" style="display:none;background:white;border-radius:4px;padding:40px;text-align:center;border:1px solid #B5D4F4">
+      <div style="font-size:2rem;margin-bottom:12px">🩸</div>
+      <div style="font-family:'Cormorant Garamond',serif;font-size:1.4rem;margin-bottom:8px">Fonctionnalité Premium</div>
+      <div style="font-size:0.88rem;color:rgba(2,26,53,0.5);margin-bottom:20px">Passez au plan Premium pour analyser vos bilans sanguins.</div>
+      <button onclick="showView('pricing')" style="background:#021A35;color:white;border:none;border-radius:4px;padding:12px 28px;font-family:'DM Sans',sans-serif;cursor:pointer">Voir les abonnements →</button>
+    </div>
+
+    <!-- Contenu Premium -->
+    <div id="bioContent" style="display:none">
+      <!-- Zone upload -->
+      <div style="background:white;border-radius:4px;padding:28px;border:1px solid #B5D4F4;margin-bottom:20px">
+        <div style="font-family:'Cormorant Garamond',serif;font-size:1.2rem;font-weight:600;color:#021A35;margin-bottom:16px">📄 Importer votre bilan sanguin</div>
+        <div id="bioDropzone" onclick="document.getElementById('bioInput').click()" style="border:2px dashed #B5D4F4;border-radius:4px;padding:40px;text-align:center;cursor:pointer;transition:border .2s;background:#F0F6FF">
+          <div style="font-size:2.5rem;margin-bottom:12px">🩸</div>
+          <div style="font-size:0.9rem;color:rgba(2,26,53,0.6);margin-bottom:6px">Cliquez ou glissez une photo de votre bilan sanguin</div>
+          <div style="font-size:0.78rem;color:rgba(2,26,53,0.35)">JPG, PNG, PDF — Photo de votre ordonnance de résultats</div>
+        </div>
+        <input type="file" id="bioInput" accept="image/*" style="display:none" onchange="analyzeBiologie(this)"/>
+        <div id="bioPreview" style="display:none;margin-top:16px;text-align:center">
+          <img id="bioImg" style="max-height:200px;border-radius:4px;border:1px solid #B5D4F4"/>
+        </div>
+      </div>
+
+      <!-- Loading -->
+      <div id="bioLoading" style="display:none;text-align:center;padding:48px;background:#F0F6FF;border-radius:4px;border:1px solid #B5D4F4;margin-bottom:20px">
+        <div style="width:48px;height:48px;border:3px solid #B5D4F4;border-top-color:#021A35;border-radius:50%;animation:spin 0.8s linear infinite;margin:0 auto 20px"></div>
+        <div style="font-family:'Cormorant Garamond',serif;font-size:1.2rem;color:#021A35;margin-bottom:8px">Analyse en cours...</div>
+        <div style="font-size:0.82rem;color:rgba(2,26,53,0.45)" id="bioLoadingMsg">Lecture de vos résultats biologiques</div>
+      </div>
+
+      <!-- Résultats -->
+      <div id="bioResult" style="display:none">
+        <!-- Résumé global -->
+        <div style="background:#021A35;border-radius:4px;padding:24px;margin-bottom:20px">
+          <div style="font-size:0.68rem;text-transform:uppercase;letter-spacing:.1em;color:#C9A84C;font-weight:600;margin-bottom:10px">🔬 Résumé de votre bilan</div>
+          <div style="font-size:0.9rem;color:rgba(255,255,255,0.8);line-height:1.7" id="bioResume"></div>
+        </div>
+
+        <!-- Points positifs & attention -->
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px">
+          <div style="background:#EAF3DE;border-radius:4px;padding:20px;border:1px solid #C0DD97">
+            <div style="font-size:0.72rem;text-transform:uppercase;letter-spacing:.08em;color:#3B6D11;font-weight:600;margin-bottom:12px">✓ Points positifs</div>
+            <div id="bioPositifs" style="display:flex;flex-direction:column;gap:6px"></div>
+          </div>
+          <div style="background:#FDF6E8;border-radius:4px;padding:20px;border:1px solid #FAC775">
+            <div style="font-size:0.72rem;text-transform:uppercase;letter-spacing:.08em;color:#854F0B;font-weight:600;margin-bottom:12px">⚠️ Points d'attention</div>
+            <div id="bioAttention" style="display:flex;flex-direction:column;gap:6px"></div>
+          </div>
+        </div>
+
+        <!-- Marqueurs détaillés -->
+        <div style="font-family:'Cormorant Garamond',serif;font-size:1.2rem;font-weight:600;color:#021A35;margin-bottom:16px">Vos marqueurs biologiques expliqués</div>
+        <div id="bioMarqueurs" style="display:flex;flex-direction:column;gap:12px;margin-bottom:20px"></div>
+
+        <!-- Recommandations nutritionnelles -->
+        <div style="background:#F0F6FF;border-radius:4px;padding:24px;border:1px solid #B5D4F4;margin-bottom:20px">
+          <div style="font-size:0.72rem;text-transform:uppercase;letter-spacing:.08em;color:#85B7EB;font-weight:600;margin-bottom:12px">🥗 Recommandations nutritionnelles personnalisées</div>
+          <div id="bioReco" style="display:flex;flex-direction:column;gap:8px"></div>
+        </div>
+
+        <!-- Suivi recommandé -->
+        <div style="background:#FDF6E8;border-radius:4px;padding:16px 20px;border:1px solid #FAC775;margin-bottom:16px">
+          <div style="font-size:0.72rem;text-transform:uppercase;letter-spacing:.08em;color:#854F0B;font-weight:600;margin-bottom:6px">📅 Suivi recommandé</div>
+          <div style="font-size:0.85rem;color:rgba(2,26,53,0.7);line-height:1.5" id="bioSuivi"></div>
+        </div>
+
+        <!-- Disclaimer -->
+        <div style="font-size:0.72rem;color:rgba(2,26,53,0.35);text-align:center;line-height:1.5">⚕️ Ces résultats sont analysés par intelligence artificielle à titre indicatif. Consultez votre médecin pour une interprétation définitive.</div>
+      </div>
+
+      <!-- Erreur -->
+      <div id="bioError" style="display:none;background:#FEE;border:1px solid #FCC;border-radius:4px;padding:16px;font-size:0.85rem;color:#C55;margin-bottom:20px"></div>
+    </div>
+  </div>
+</div>
+
 <div id="passeportView" style="display:none;padding:32px;overflow-y:auto;background:white;width:100%">
   <div style="max-width:800px;margin:0 auto">
     <div style="display:inline-block;font-size:0.68rem;font-weight:600;text-transform:uppercase;letter-spacing:.12em;color:#C9A84C;background:#FDF6E8;padding:5px 14px;border-radius:4px;margin-bottom:12px">Standard & Premium</div>
@@ -1252,6 +1336,117 @@ function toggleMobileMenu() {
     }
   }
 
+  function initBiologie() {
+    const profile = JSON.parse(localStorage.getItem('nutricare_profile') || '{}');
+    if (profile.plan !== 'premium') {
+      document.getElementById('bioFree').style.display = 'block';
+      document.getElementById('bioContent').style.display = 'none';
+    } else {
+      document.getElementById('bioFree').style.display = 'none';
+      document.getElementById('bioContent').style.display = 'block';
+    }
+  }
+
+  async function analyzeBiologie(input) {
+    const file = input.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = async (e) => {
+      const base64 = e.target.result.split(',')[1];
+      const mediaType = file.type;
+      document.getElementById('bioPreview').style.display = 'block';
+      document.getElementById('bioImg').src = e.target.result;
+      document.getElementById('bioLoading').style.display = 'block';
+      document.getElementById('bioResult').style.display = 'none';
+      document.getElementById('bioError').style.display = 'none';
+
+      const msgs = ['Lecture de vos résultats biologiques...','Extraction des valeurs...','Analyse clinique en cours...','Personnalisation selon votre profil...','Rédaction des explications...'];
+      let idx = 0;
+      const interval = setInterval(() => {
+        idx = (idx+1) % msgs.length;
+        const el = document.getElementById('bioLoadingMsg');
+        if (el) el.textContent = msgs[idx];
+      }, 2000);
+
+      try {
+        const res = await fetch(`${BACKEND_URL}/api/biologie/analyze`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${authToken}` },
+          body: JSON.stringify({ image: base64, mediaType })
+        });
+        const data = await res.json();
+        clearInterval(interval);
+        document.getElementById('bioLoading').style.display = 'none';
+
+        if (!res.ok || !data.valide) {
+          document.getElementById('bioError').style.display = 'block';
+          document.getElementById('bioError').textContent = data.message || data.error || 'Document non reconnu comme bilan sanguin.';
+          return;
+        }
+
+        // Résumé
+        document.getElementById('bioResume').textContent = data.resume_global || '';
+
+        // Points positifs
+        document.getElementById('bioPositifs').innerHTML = (data.points_positifs || []).map(p =>
+          `<div style="font-size:0.82rem;color:#3B6D11;display:flex;gap:6px"><span>✓</span>${p}</div>`).join('');
+
+        // Points attention
+        document.getElementById('bioAttention').innerHTML = (data.points_attention || []).map(p =>
+          `<div style="font-size:0.82rem;color:#854F0B;display:flex;gap:6px"><span>⚠</span>${p}</div>`).join('');
+
+        // Marqueurs
+        const urgenceColors = { normal: '#EAF3DE', attention: '#FDF6E8', urgent: '#FEE' };
+        const urgenceBorders = { normal: '#C0DD97', attention: '#FAC775', urgent: '#FCC' };
+        const urgenceLabels = { normal: '✓ Normal', attention: '⚠ À surveiller', urgent: '🚨 Urgent' };
+        const urgenceTextColors = { normal: '#3B6D11', attention: '#854F0B', urgent: '#C55' };
+
+        document.getElementById('bioMarqueurs').innerHTML = (data.marqueurs || []).map(m => {
+          const u = m.urgence || 'normal';
+          const isHigh = m.statut === 'eleve';
+          const isLow = m.statut === 'bas';
+          const statusColor = isHigh ? '#E24B4A' : isLow ? '#378ADD' : '#639922';
+          return `<div style="background:white;border-radius:4px;padding:20px;border:1px solid #B5D4F4">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;flex-wrap:wrap;gap:8px">
+              <div style="display:flex;align-items:center;gap:10px">
+                <div style="font-weight:600;font-size:0.95rem;color:#021A35">${m.nom}</div>
+                <div style="font-family:'DM Mono',monospace;font-size:0.88rem;font-weight:700;color:${statusColor}">${m.valeur} ${m.unite}</div>
+              </div>
+              <div style="display:flex;align-items:center;gap:8px">
+                <div style="font-size:0.72rem;color:rgba(2,26,53,0.4)">Norme: ${m.norme_min}–${m.norme_max} ${m.unite}</div>
+                <div style="font-size:0.72rem;font-weight:600;padding:3px 10px;border-radius:4px;background:${urgenceColors[u]};color:${urgenceTextColors[u]};border:1px solid ${urgenceBorders[u]}">${urgenceLabels[u]}</div>
+              </div>
+            </div>
+            <div style="background:#F0F6FF;border-radius:4px;padding:12px;margin-bottom:10px">
+              <div style="font-size:0.72rem;text-transform:uppercase;letter-spacing:.06em;color:#85B7EB;font-weight:600;margin-bottom:4px">Ce que ça signifie</div>
+              <div style="font-size:0.82rem;color:rgba(2,26,53,0.7);line-height:1.5">${m.explication_simple}</div>
+            </div>
+            <div style="font-size:0.82rem;color:rgba(2,26,53,0.65);line-height:1.5;margin-bottom:8px">${m.impact_sante}</div>
+            <div style="background:#FDF6E8;border-radius:4px;padding:10px 14px;font-size:0.8rem;color:#854F0B;line-height:1.5">🥗 ${m.conseil_nutritionnel}</div>
+          </div>`;
+        }).join('');
+
+        // Recommandations
+        document.getElementById('bioReco').innerHTML = (data.recommandations_nutritionnelles || []).map((r, i) =>
+          `<div style="display:flex;gap:10px;align-items:flex-start">
+            <div style="background:#021A35;color:#C9A84C;border-radius:50%;width:22px;height:22px;display:flex;align-items:center;justify-content:center;font-size:0.72rem;font-weight:700;flex-shrink:0">${i+1}</div>
+            <div style="font-size:0.82rem;color:rgba(2,26,53,0.7);line-height:1.5;padding-top:2px">${r}</div>
+          </div>`).join('');
+
+        // Suivi
+        document.getElementById('bioSuivi').textContent = data.suivi_recommande || '';
+
+        document.getElementById('bioResult').style.display = 'block';
+      } catch(e) {
+        clearInterval(interval);
+        document.getElementById('bioLoading').style.display = 'none';
+        document.getElementById('bioError').style.display = 'block';
+        document.getElementById('bioError').textContent = 'Erreur de connexion au serveur.';
+      }
+    };
+    reader.readAsDataURL(file);
+  }
+
   async function initPasseport() {
     const profile = JSON.parse(localStorage.getItem('nutricare_profile') || '{}');
     const plan = profile.plan || 'free';
@@ -1811,6 +2006,8 @@ if (urlParams.get('view') === 'protocols') {
     document.getElementById('insightsView').style.display = view === 'insights' ? 'block' : 'none';
     document.getElementById('simulatorView').style.display = view === 'simulator' ? 'block' : 'none';
     document.getElementById('passeportView').style.display = view === 'passeport' ? 'block' : 'none';
+    document.getElementById('biologieView').style.display = view === 'biologie' ? 'block' : 'none';
+    if (view === 'biologie') initBiologie();
     if (view === 'passeport') initPasseport();
     if (view === 'insights') loadInsights();
     if (view === 'ordonnance') initOrdonnance();
