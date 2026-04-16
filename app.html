@@ -1229,12 +1229,16 @@ Fais une simulation médicale très détaillée et scientifiquement précise. R�
   "scenario": "reformulation précise et complète du scénario",
   "resume": "résumé exécutif de l'impact en 2-3 phrases percutantes",
   "metrics": [
-    {"icon": "⚡", "label": "Énergie", "avant": 65, "apres": 45, "tendance": "down", "explication": "explication scientifique de l'impact sur l'énergie"},
-    {"icon": "🧠", "label": "Concentration", "avant": 70, "apres": 40, "tendance": "down", "explication": "mécanisme neurologique expliqué"},
-    {"icon": "🫀", "label": "Risque cardio", "avant": 20, "apres": 50, "tendance": "up", "explication": "impact cardiovasculaire détaillé"},
-    {"icon": "😊", "label": "Bien-être", "avant": 65, "apres": 35, "tendance": "down", "explication": "impact psychologique et hormonal"},
-    {"icon": "🩸", "label": "Glycémie", "avant": 60, "apres": 45, "tendance": "down", "explication": "impact métabolique sur la glycémie"},
-    {"icon": "💪", "label": "Masse musculaire", "avant": 70, "apres": 65, "tendance": "down", "explication": "impact catabolique ou anabolique"}
+    {"icon": "⚡", "label": "Énergie", "avant": 65, "apres": 45, "tendance": "down", "explication": "explication scientifique précise"},
+    {"icon": "🧠", "label": "Concentration", "avant": 70, "apres": 40, "tendance": "down", "explication": "mécanisme neurologique"},
+    {"icon": "🫀", "label": "Risque cardio", "avant": 20, "apres": 50, "tendance": "up", "explication": "impact cardiovasculaire"},
+    {"icon": "😊", "label": "Bien-être", "avant": 65, "apres": 35, "tendance": "down", "explication": "impact psychologique"},
+    {"icon": "🩸", "label": "Glycémie", "avant": 60, "apres": 45, "tendance": "down", "explication": "impact métabolique"},
+    {"icon": "💪", "label": "Masse musculaire", "avant": 70, "apres": 65, "tendance": "down", "explication": "impact catabolique"},
+    {"icon": "😴", "label": "Qualité sommeil", "avant": 70, "apres": 40, "tendance": "down", "explication": "impact sur les cycles circadiens"},
+    {"icon": "🧘", "label": "Stress/Cortisol", "avant": 30, "apres": 60, "tendance": "up", "explication": "réponse hormonale au stress"},
+    {"icon": "🦠", "label": "Immunité", "avant": 70, "apres": 55, "tendance": "down", "explication": "impact sur le système immunitaire"},
+    {"icon": "🧬", "label": "Inflammation", "avant": 25, "apres": 45, "tendance": "up", "explication": "marqueurs inflammatoires"}
   ],
   "timeline": [
     {"periode": "H+2", "couleur": "#C9A84C", "texte": "description précise des premiers effets physiologiques"},
@@ -1329,6 +1333,10 @@ Fais une simulation médicale très détaillée et scientifiquement précise. R�
 
     document.getElementById('simAdvice').textContent = data.conseil || '';
     document.getElementById('simResult').style.display = 'block';
+    setTimeout(() => {
+      document.querySelectorAll('.sim-bar-fill').forEach(el => el.style.transition = 'width 1.2s ease');
+      document.querySelectorAll('.sim-bar-fill').forEach(el => el.style.width = el.dataset.w + '%');
+    }, 100);
   }
 
   function renderSimulationFallback(q) {
