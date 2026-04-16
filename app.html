@@ -783,6 +783,22 @@
         </div>
       </div>
 
+      <!-- Rapport mensuel -->
+      <div style="background:white;border-radius:4px;padding:20px;border:1px solid #B5D4F4;margin-bottom:16px">
+        <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:12px">
+          <div style="font-family:'Cormorant Garamond',serif;font-size:1.1rem;font-weight:600;color:#021A35">📊 Rapport mensuel RH</div>
+          <button onclick="generateRapport()" id="rapportBtn" style="background:#021A35;color:white;border:none;border-radius:4px;padding:8px 18px;font-family:'DM Sans',sans-serif;font-size:0.78rem;cursor:pointer">Générer le rapport →</button>
+        </div>
+        <div id="rapportLoading" style="display:none;text-align:center;padding:20px">
+          <div style="width:28px;height:28px;border:2px solid #E6F1FB;border-top-color:#021A35;border-radius:50%;animation:spin 0.8s linear infinite;margin:0 auto 10px"></div>
+          <div style="font-size:0.78rem;color:rgba(2,26,53,0.4)">Génération du rapport en cours...</div>
+        </div>
+        <div id="rapportContent" style="display:none">
+          <div style="background:#F0F6FF;border-radius:4px;padding:16px;margin-bottom:12px;font-size:0.82rem;line-height:1.8;color:rgba(2,26,53,0.75);white-space:pre-wrap;max-height:300px;overflow-y:auto" id="rapportText"></div>
+          <button onclick="printRapport()" style="background:#C9A84C;color:#021A35;border:none;border-radius:4px;padding:8px 18px;font-family:'DM Sans',sans-serif;font-size:0.78rem;font-weight:600;cursor:pointer">🖨️ Imprimer / PDF</button>
+        </div>
+      </div>
+
       <!-- Invitation par email -->
       <div style="background:white;border-radius:4px;padding:20px;border:1px solid #B5D4F4;margin-bottom:16px">
         <div style="font-family:'Cormorant Garamond',serif;font-size:1.1rem;font-weight:600;color:#021A35;margin-bottom:8px">📧 Inviter des salariés par email</div>
@@ -1478,6 +1494,43 @@ function toggleMobileMenu() {
       document.getElementById('entLoading').style.display = 'none';
       document.getElementById('entNoMember').style.display = 'block';
     }
+  }
+
+  async function generateRapport() {
+    document.getElementById('rapportLoading').style.display = 'block';
+    document.getElementById('rapportContent').style.display = 'none';
+    document.getElementById('rapportBtn').disabled = true;
+    try {
+      const res = await fetch(`${BACKEND_URL}/api/entreprise/rapport`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${authToken}` }
+      });
+      const data = await res.json();
+      document.getElementById('rapportLoading').style.display = 'none';
+      document.getElementById('rapportBtn').disabled = false;
+      if (!res.ok) { alert(data.error); return; }
+      document.getElementById('rapportText').textContent = data.rapport;
+      document.getElementById('rapportContent').style.display = 'block';
+    } catch(e) {
+      document.getElementById('rapportLoading').style.display = 'none';
+      document.getElementById('rapportBtn').disabled = false;
+      console.error('Erreur rapport:', e);
+    }
+  }
+
+  function printRapport() {
+    const rapport = document.getElementById('rapportText').textContent;
+    const entreprise = document.getElementById('adminNomDisplay').textContent;
+    const w = window.open('', '_blank');
+    w.document.write(`<!DOCTYPE html><html><head><title>Rapport RH — ${entreprise}</title>
+    <style>body{font-family:Georgia,serif;max-width:800px;margin:40px auto;padding:40px;color:#021A35}.header{border-bottom:2px solid #021A35;padding-bottom:20px;margin-bottom:28px;display:flex;justify-content:space-between}.logo{font-size:1.2rem;font-weight:600}.report{font-size:0.95rem;line-height:1.8;white-space:pre-wrap}.disclaimer{margin-top:40px;padding:16px;background:#FDF6E8;font-size:0.78rem;color:rgba(2,26,53,0.6)}@media print{body{margin:20px}}</style>
+    </head><body>
+    <div class="header"><div><div class="logo">● NutriCare Entreprise</div><div style="font-size:0.78rem;color:rgba(2,26,53,0.4)">Rapport mensuel RH · Données anonymisées</div></div><div style="text-align:right;font-size:0.78rem;color:rgba(2,26,53,0.4)">${entreprise}<br>${new Date().toLocaleDateString('fr-FR',{month:'long',year:'numeric'})}</div></div>
+    <div class="report">${rapport}</div>
+    <div class="disclaimer">⚕️ Données 100% anonymisées. Aucune information individuelle n'est présente dans ce rapport. Conformité RGPD garantie.</div>
+    </body></html>`);
+    w.document.close();
+    w.print();
   }
 
   async function sendInvites() {
