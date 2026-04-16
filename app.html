@@ -1211,57 +1211,17 @@ function toggleMobileMenu() {
     document.getElementById('simLoading').style.display = 'block';
 
     try {
-      const res = await fetch(`${BACKEND_URL}/api/chat`, {
+      const res = await fetch(`${BACKEND_URL}/api/simulator/simulate`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${authToken}` },
         body: JSON.stringify({
-          message: `Tu es un médecin nutritionniste expert en physiologie humaine. Voici le profil complet du patient:
-- Pathologies: ${(profile.pathologies||[]).join(', ')||'non renseignées'}
-- Médicaments: ${(profile.medications||[]).join(', ')||'aucun'}
-- Allergies: ${(profile.allergies||[]).join(', ')||'aucune'}
-- Budget alimentaire: ${profile.budget_alimentaire||'non renseigné'}
-- Contraintes culturelles: ${profile.cultural_constraints||'aucune'}
-
-Question du patient: "${q}"
-
-Fais une simulation médicale très détaillée et scientifiquement précise. Réponds UNIQUEMENT en JSON valide:
-{
-  "scenario": "reformulation précise et complète du scénario",
-  "resume": "résumé exécutif de l'impact en 2-3 phrases percutantes",
-  "metrics": [
-    {"icon": "⚡", "label": "Énergie", "avant": 65, "apres": 45, "tendance": "down", "explication": "explication scientifique précise"},
-    {"icon": "🧠", "label": "Concentration", "avant": 70, "apres": 40, "tendance": "down", "explication": "mécanisme neurologique"},
-    {"icon": "🫀", "label": "Risque cardio", "avant": 20, "apres": 50, "tendance": "up", "explication": "impact cardiovasculaire"},
-    {"icon": "😊", "label": "Bien-être", "avant": 65, "apres": 35, "tendance": "down", "explication": "impact psychologique"},
-    {"icon": "🩸", "label": "Glycémie", "avant": 60, "apres": 45, "tendance": "down", "explication": "impact métabolique"},
-    {"icon": "💪", "label": "Masse musculaire", "avant": 70, "apres": 65, "tendance": "down", "explication": "impact catabolique"},
-    {"icon": "😴", "label": "Qualité sommeil", "avant": 70, "apres": 40, "tendance": "down", "explication": "impact sur les cycles circadiens"},
-    {"icon": "🧘", "label": "Stress/Cortisol", "avant": 30, "apres": 60, "tendance": "up", "explication": "réponse hormonale au stress"},
-    {"icon": "🦠", "label": "Immunité", "avant": 70, "apres": 55, "tendance": "down", "explication": "impact sur le système immunitaire"},
-    {"icon": "🧬", "label": "Inflammation", "avant": 25, "apres": 45, "tendance": "up", "explication": "marqueurs inflammatoires"}
-  ],
-  "timeline": [
-    {"periode": "H+2", "couleur": "#C9A84C", "texte": "description précise des premiers effets physiologiques"},
-    {"periode": "J+1", "couleur": "#C9A84C", "texte": "impact à 24h avec mécanismes biologiques"},
-    {"periode": "J+3", "couleur": "#E24B4A", "texte": "pic d'impact avec données chiffrées"},
-    {"periode": "J+7", "couleur": "#378ADD", "texte": "évolution à une semaine"},
-    {"periode": "J+14", "couleur": "#639922", "texte": "récupération ou adaptation long terme"},
-    {"periode": "J+30", "couleur": "#639922", "texte": "effets durables et recommandations"}
-  ],
-  "interactions_medicaments": "analyse des interactions avec les médicaments du profil si pertinent, sinon null",
-  "impact_pathologies": "impact spécifique sur les pathologies du patient",
-  "alternatives": ["alternative 1 plus saine", "alternative 2", "alternative 3"],
-  "conseil": "conseil médical personnalisé très détaillé et actionnable en 4-5 phrases selon le profil complet",
-  "avertissement": "avertissement médical spécifique si nécessaire"
-}`
+          question: q,
+          profile: profile
         })
       });
       const data = await res.json();
-      const text = (data.response || data.message || '').replace(/```json|```/g, '').trim();
-      const jsonStart = text.indexOf('{');
-      const jsonEnd = text.lastIndexOf('}');
-      const parsed = JSON.parse(text.substring(jsonStart, jsonEnd + 1));
-      renderSimulation(parsed);
+      if (!res.ok) throw new Error(data.error);
+      renderSimulation(data);
     } catch(e) {
       renderSimulationFallback(q);
     }
