@@ -201,14 +201,27 @@ async function register() {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ email, password, full_name: nom })
     });
-    const authData = await resAuth.json();
+    const authReg = await resAuth.json();
     if (!resAuth.ok) {
-      errEl.textContent = authData.error || 'Erreur lors de la création du compte';
+      errEl.textContent = authReg.error || 'Erreur lors de la création du compte';
       errEl.classList.add('show');
       return;
     }
 
-    // 2. Sauvegarder le token
+    // 2. Se connecter pour obtenir le token
+    const resLogin = await fetch(`${BACKEND_URL}/api/auth/login`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, password })
+    });
+    const authData = await resLogin.json();
+    if (!resLogin.ok) {
+      errEl.textContent = authData.error || 'Erreur de connexion après inscription';
+      errEl.classList.add('show');
+      return;
+    }
+
+    // 3. Sauvegarder le token
     localStorage.setItem('nutricare_token', authData.token);
     localStorage.setItem('nutricare_user', JSON.stringify(authData.user));
 
