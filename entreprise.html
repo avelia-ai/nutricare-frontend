@@ -185,10 +185,14 @@ grep -n "Nutrition\|Pathologies\|Suivi santé\|Tarifs\|nav-links" /workspaces/nu
 
     /* RESPONSIVE */
     @media(max-width:900px) {
-      nav { padding: 0 24px; }
+      nav { padding: 0 16px; }
       .nav-links { display: none; }
-      .hero { padding: 100px 24px 60px; }
-      .hero-inner { grid-template-columns: 1fr; gap: 40px; }
+      .nav-badge { display: none; }
+      .hero { padding: 90px 20px 50px; }
+      .hero-inner { grid-template-columns: 1fr; gap: 32px; }
+      .hero-title { font-size: 2.2rem; }
+      .hero-actions { flex-direction: column; }
+      .btn-hero-primary, .btn-hero-secondary { text-align: center; width: 100%; box-sizing: border-box; }
       .stats-inner { grid-template-columns: repeat(2,1fr); }
       .features-grid { grid-template-columns: 1fr; }
       .dashboard-header { grid-template-columns: 1fr; }
@@ -196,8 +200,17 @@ grep -n "Nutrition\|Pathologies\|Suivi santé\|Tarifs\|nav-links" /workspaces/nu
       .calc-grid { grid-template-columns: 1fr; }
       .contact-form { grid-template-columns: 1fr; }
       .form-field.full, .form-submit, .form-note { grid-column: span 1; }
-      .features, .dashboard, .pricing, .calculator, .contact { padding: 64px 24px; }
+      .features, .dashboard, .pricing, .calculator, .contact { padding: 52px 20px; }
+      .calc-results { grid-template-columns: 1fr 1fr; }
+      .section-title { font-size: 1.8rem; }
+    }
+    @media(max-width:480px) {
+      .roi-results { grid-template-columns: 1fr 1fr; }
       .calc-results { grid-template-columns: 1fr; }
+      .stats-inner { grid-template-columns: 1fr 1fr; }
+      .hero-trust { display: none; }
+      footer { flex-direction: column; text-align: center; gap: 8px; }
+      .footer-links { justify-content: center; }
     }
 
     /* ANIMATIONS */
