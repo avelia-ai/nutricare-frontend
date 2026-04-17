@@ -180,9 +180,12 @@ if (mode === 'join') {
   document.querySelector('.auth-title').textContent = 'Rejoindre ' + (companyName ? decodeURIComponent(companyName) : 'votre entreprise');
   document.querySelector('.auth-sub').textContent = 'Créez votre compte pour accéder au programme bien-être de votre entreprise.';
   document.querySelector('.left-title').innerHTML = 'Rejoignez votre<br>équipe sur<br><em>' + (companyName ? decodeURIComponent(companyName) : 'NutriCare') + '</em>';
-  // Masquer le champ nom entreprise et licences
   document.getElementById('regEntreprise').closest('.field').style.display = 'none';
   document.getElementById('regLicences').closest('.field').style.display = 'none';
+  document.querySelector('.form-submit').textContent = 'Rejoindre l\'entreprise →';
+  document.querySelector('label[for="regNom"], .field-label').textContent = 'VOTRE NOM COMPLET';
+  const rhLabel = Array.from(document.querySelectorAll('.field-label')).find(l => l.textContent.includes('RH'));
+  if (rhLabel) rhLabel.textContent = 'VOTRE NOM COMPLET';
 }
 
 function switchTab(tab) {
