@@ -2273,18 +2273,58 @@ function toggleMobileMenu() {
     w.print();
   }
 
-  function initOracle() {
+  let oracleData = null;
+
+  async function initOracle() {
     const profile = JSON.parse(localStorage.getItem('nutricare_profile') || '{}');
     const name = profile.full_name || 'Patient';
-    const initials = name.split(' ').map(n=>n[0]).join('').toUpperCase().slice(0,2);
     const plan = profile.plan || 'free';
-    document.getElementById('oraclePatientHeader').textContent = name.toUpperCase() + ' · VITALITÉ: 72/100 · RÉCUP: 87% · TÉLOMÈRES: 6.8kb';
-    if (plan === 'free') {
+
+    if (plan !== 'premium') {
       document.getElementById('oracleView').innerHTML = `<div style="text-align:center;padding:60px;color:#a8c8e0"><div style="font-size:1.2rem;margin-bottom:8px;color:#5a9fc0">Oracle Santé · Premium</div><div style="font-size:0.88rem;color:#4a7a9a;margin-bottom:20px">Fonctionnalité réservée aux abonnés Premium.</div><button onclick="showView('pricing')" style="background:#C9A84C;color:#021A35;border:none;border-radius:4px;padding:12px 28px;cursor:pointer">Voir les abonnements</button></div>`;
+      return;
+    }
+
+    document.getElementById('oraclePatientHeader').textContent = name.toUpperCase() + ' · Analyse en cours...';
+
+    if (!oracleData) {
+      try {
+        const res = await fetch(BACKEND_URL + '/api/oracle/analyze', {
+          headers: { 'Authorization': 'Bearer ' + authToken }
+        });
+        if (res.ok) {
+          oracleData = await res.json();
+          applyOracleData(oracleData, name);
+        }
+      } catch(e) { console.error('Oracle API error:', e); }
+    } else {
+      applyOracleData(oracleData, name);
     }
     oSimU();
     oracleTab('scanner', document.querySelector('#oracleTabs div'));
   }
+
+  function applyOracleData(d, name) {
+    document.getElementById('oraclePatientHeader').textContent =
+      name.toUpperCase() + ' · VITALITÉ: ' + d.score_vitalite + '/100 · RÉCUP: ' + d.recuperabilite + '% · TÉLOMÈRES: ' + d.longueur_telomeres + 'kb';
+    const arc = document.getElementById('oScoreArc');
+    if (arc) arc.setAttribute('stroke-dashoffset', (126 - d.score_vitalite / 100 * 126).toFixed(1));
+    const st = document.getElementById('oScoreText');
+    if (st) st.textContent = d.score_vitalite;
+    const ba = document.getElementById('oBioAge');
+    if (ba) ba.textContent = d.age_biologique;
+    const hud = document.getElementById('oHudData');
+    if (hud && d.marqueurs) hud.textContent = 'HBA1C:' + (d.marqueurs.hba1c?.valeur||'--') + ' CRP:' + (d.marqueurs.crp?.valeur||'--') + ' VITD:' + (d.marqueurs.vitd?.valeur||'--') + ' AGE-BIO:' + d.age_biologique;
+    const m1v = document.getElementById('oM1V');
+    if (m1v && d.marqueurs?.hba1c) m1v.textContent = d.marqueurs.hba1c.valeur;
+    const oEpi = document.getElementById('oEpiAge');
+    if (oEpi) oEpi.textContent = d.age_epigenetique;
+    const oReal = document.getElementById('oRealAge');
+    if (oReal) oReal.textContent = d.age_reel;
+    if (d.timeline) window._oracleTimeline = d.timeline;
+    if (d.interactions_medicaments) window._oracleMeds = d.interactions_medicaments;
+  }
+
 
   function oracleTab(tab, el) {
     ['scanner','simulation','epigenetique','comparaison','medicaments','timeline'].forEach(t => {
