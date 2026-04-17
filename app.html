@@ -3279,8 +3279,11 @@ async function saveHealthLog() {
       msg.style.display = 'inline';
       setTimeout(() => msg.style.display = 'none', 3000);
       loadHealthDashboard();
+    } else {
+      const err = await res.json();
+      alert("Erreur serveur: " + JSON.stringify(err));
     }
-  } catch(e) { console.error(e); }
+  } catch(e) { console.error(e); alert("Erreur saveHealth: " + e.message); }
 }
 
 function renderHealthChart(logs) {
