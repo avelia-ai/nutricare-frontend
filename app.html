@@ -232,6 +232,24 @@
     justify-content: center;
   }
 }
+@media(max-width:700px){
+  #oracleGrid{grid-template-columns:1fr!important;gap:10px}
+  #oracleGrid > div:first-child svg{min-height:420px}
+  #oracleTabs{gap:3px}
+  #oracleTabs > div{font-size:10px!important;padding:4px 8px!important}
+}
+
+<style>
+@media (max-width: 768px) {
+  #oracleScannerGrid { grid-template-columns: 1fr !important; }
+  #oracleView { padding: 12px !important; }
+  #oracleTabs { gap: 3px !important; }
+  #oracleTabs div { padding: 4px 8px !important; font-size: 10px !important; }
+  #oracle-simulation > div { grid-template-columns: 1fr !important; }
+  #oracle-epigenetique > div { grid-template-columns: 1fr !important; }
+  #oracle-comparaison > div { grid-template-columns: 1fr 30px 1fr !important; }
+}
+</style>
 </style>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
 </head>
@@ -1042,7 +1060,7 @@
 
 <!-- SCANNER -->
 <div id="oracle-scanner" style="display:block">
-<div style="display:grid;grid-template-columns:1fr 210px;gap:14px">
+<div style="display:grid;grid-template-columns:1fr 210px;gap:14px" id="oracleGrid">
 <div style="position:relative;background:#0a1018;border-radius:10px;overflow:hidden;border:1px solid #1e3050">
   <div style="position:absolute;top:7px;left:7px;width:12px;height:12px;border-top:2px solid #C9A84C;border-left:2px solid #C9A84C;z-index:3"></div>
   <div style="position:absolute;top:7px;right:7px;width:12px;height:12px;border-top:2px solid #C9A84C;border-right:2px solid #C9A84C;z-index:3"></div>
