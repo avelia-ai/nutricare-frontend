@@ -2280,7 +2280,7 @@ function toggleMobileMenu() {
     const plan = profile.plan || 'free';
     document.getElementById('oraclePatientHeader').textContent = name.toUpperCase() + ' · VITALITÉ: 72/100 · RÉCUP: 87% · TÉLOMÈRES: 6.8kb';
     if (plan === 'free') {
-      document.getElementById('oracleView').innerHTML = '<div style="text-align:center;padding:60px;color:#a8c8e0"><div style="font-size:2rem;margin-bottom:12px">🔮</div><div style="font-size:1.2rem;margin-bottom:8px;color:#5a9fc0">Oracle Santé · Premium</div><div style="font-size:0.88rem;color:#4a7a9a;margin-bottom:20px">Fonctionnalité réservée aux abonnés Premium.</div><button onclick="showView('pricing')" style="background:#C9A84C;color:#021A35;border:none;border-radius:4px;padding:12px 28px;cursor:pointer;font-family:'DM Sans',sans-serif">Voir les abonnements →</button></div>';
+      document.getElementById('oracleView').innerHTML = `<div style="text-align:center;padding:60px;color:#a8c8e0"><div style="font-size:1.2rem;margin-bottom:8px;color:#5a9fc0">Oracle Santé · Premium</div><div style="font-size:0.88rem;color:#4a7a9a;margin-bottom:20px">Fonctionnalité réservée aux abonnés Premium.</div><button onclick="showView('pricing')" style="background:#C9A84C;color:#021A35;border:none;border-radius:4px;padding:12px 28px;cursor:pointer">Voir les abonnements</button></div>`;
     }
     oSimU();
     oracleTab('scanner', document.querySelector('#oracleTabs div'));
