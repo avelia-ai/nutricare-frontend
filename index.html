@@ -405,6 +405,87 @@ footer { background:#0A0A0A; padding:64px 48px 32px; }
   </div>
 </section>
 
+
+<!-- FONCTIONNALITÉS 3D -->
+<section style="padding:80px 24px;background:#fff;max-width:1200px;margin:0 auto">
+  <div style="text-align:center;margin-bottom:48px">
+    <div style="font-size:11px;color:#C9A84C;text-transform:uppercase;letter-spacing:.15em;font-weight:600;margin-bottom:12px">Plateforme complète</div>
+    <h2 style="font-family:'Open Sans',sans-serif;font-size:clamp(1.8rem,3.5vw,2.8rem);font-weight:700;color:#111;margin-bottom:16px">Tout ce dont vous avez besoin</h2>
+    <p style="font-size:0.95rem;color:#666;max-width:560px;margin:0 auto;line-height:1.7">Survolez chaque fonctionnalité pour découvrir comment elle va transformer votre santé.</p>
+  </div>
+  <div class="feat-grid" id="featGrid"></div>
+</section>
+
+<style>
+.feat-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:20px;perspective:1200px}
+.feat-item{height:200px;cursor:pointer}
+.feat-inner{width:100%;height:100%;position:relative;transform-style:preserve-3d;transition:transform .65s cubic-bezier(.4,0,.2,1)}
+.feat-item:hover .feat-inner{transform:rotateY(180deg)}
+.feat-front,.feat-back{position:absolute;width:100%;height:100%;backface-visibility:hidden;border-radius:12px;padding:20px}
+.feat-front{background:#fff;border:1px solid #eee;display:flex;flex-direction:column;align-items:flex-start;justify-content:flex-end;transition:box-shadow .3s}
+.feat-item:hover .feat-front{box-shadow:0 20px 40px rgba(0,0,0,.10)}
+.feat-back{background:#021A35;border:1px solid rgba(201,168,76,.25);transform:rotateY(180deg);display:flex;flex-direction:column;justify-content:space-between}
+.feat-badge{font-size:9px;font-weight:600;padding:2px 7px;border-radius:3px;text-transform:uppercase;letter-spacing:.06em;margin-bottom:auto;align-self:flex-start}
+.feat-icon{width:36px;height:36px;border-radius:8px;background:#f5f5f5;display:flex;align-items:center;justify-content:center;margin-bottom:12px}
+.feat-name{font-size:14px;font-weight:600;color:#111;line-height:1.3;font-family:'Open Sans',sans-serif}
+.feat-cat{font-size:11px;color:#999;margin-top:4px}
+.feat-back-title{font-size:13px;font-weight:600;color:#e8f0f8;margin-bottom:6px;font-family:'Open Sans',sans-serif}
+.feat-back-desc{font-size:11px;color:rgba(255,255,255,.55);line-height:1.55;flex:1}
+.feat-back-cta{font-size:10px;color:#C9A84C;font-weight:700;letter-spacing:.06em;margin-top:10px;text-transform:uppercase}
+@keyframes fadeUpF{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
+@media(max-width:600px){.feat-grid{grid-template-columns:repeat(2,1fr);gap:12px}.feat-item{height:160px}}
+</style>
+
+<script>
+(function(){
+const features=[
+  {name:'Chat IA Nutritionnel',cat:'Assistant santé',badge:'Gratuit',badgeColor:'#E8F4FD',badgeText:'#0C447C',desc:'Posez toutes vos questions nutritionnelles à notre IA spécialisée. Conseils adaptés à vos pathologies et médicaments.',cta:'Commencer →',icon:'<path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>'},
+  {name:'50+ Pathologies',cat:'Protocoles spécialisés',badge:'Gratuit',badgeColor:'#E8F4FD',badgeText:'#0C447C',desc:'Diabète, hypertension, SOPK, maladies inflammatoires... Protocoles nutritionnels validés pour chaque condition.',cta:'Explorer →',icon:'<circle cx="12" cy="12" r="10"/><path d="M8 12h8M12 8v8"/>'},
+  {name:'Menus IA',cat:'Planification repas',badge:'Standard',badgeColor:'#EDF7F2',badgeText:'#085041',desc:'7 jours de menus personnalisés générés selon votre profil, pathologies, budget et préférences alimentaires.',cta:'Générer →',icon:'<rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/>'},
+  {name:'Dashboard Santé',cat:'Suivi & visualisation',badge:'Standard',badgeColor:'#EDF7F2',badgeText:'#085041',desc:'Glycémie, poids, énergie, sommeil. Graphiques évolutifs et détection automatique des tendances.',cta:'Voir →',icon:'<path d="M22 12h-4l-3 9L9 3l-3 9H2"/>'},
+  {name:'Espace médecin',cat:'Partage professionnel',badge:'Standard',badgeColor:'#EDF7F2',badgeText:'#085041',desc:'Partagez vos données avec votre médecin ou nutritionniste. Suivi collaboratif sécurisé et confidentiel.',cta:'Connecter →',icon:'<path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/><path d="M12 11v4m-2-2h4"/>'},
+  {name:'Analyse photo repas',cat:'Vision IA',badge:'Premium',badgeColor:'#FDF6E8',badgeText:'#633806',desc:'Photographiez votre assiette. L'IA détecte les aliments, calcule les calories et adapte les conseils.',cta:'Scanner →',icon:'<rect x="2" y="6" width="20" height="15" rx="2"/><circle cx="12" cy="13" r="3"/><path d="M8 6V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v1"/>'},
+  {name:'Oracle Santé',cat:'Prédiction biologique',badge:'Premium',badgeColor:'#FDF6E8',badgeText:'#633806',desc:'Scanner IA, horloge épigénétique, télomères, simulation temps réel. Prédiction de votre santé sur 10 ans.',cta:'Révolutionnaire →',icon:'<circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/>'},
+  {name:'Bilan sanguin IA',cat:'Analyse biologique',badge:'Premium',badgeColor:'#FDF6E8',badgeText:'#633806',desc:'Uploadez votre bilan sanguin. L'IA l'analyse, détecte les anomalies et génère un plan nutritionnel correctif.',cta:'Analyser →',icon:'<path d="M9 3H5a2 2 0 0 0-2 2v4m6-6h10a2 2 0 0 1 2 2v4M9 3v18m0 0h10a2 2 0 0 0 2-2v-4M9 21H5a2 2 0 0 1-2-2v-4m0 0h18"/>'},
+  {name:'Scan ordonnance',cat:'Vision IA',badge:'Premium',badgeColor:'#FDF6E8',badgeText:'#633806',desc:'Scannez votre ordonnance. L'IA détecte les interactions médicaments-aliments et adapte votre protocole.',cta:'Scanner →',icon:'<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/>'},
+  {name:'Simulateur décisions',cat:'Projections santé',badge:'Premium',badgeColor:'#FDF6E8',badgeText:'#633806',desc:'Simulez l'impact de vos décisions sur votre santé future. Jeûne, sport, alimentation... Voyez le résultat avant.',cta:'Simuler →',icon:'<path d="M13 2 3 14h9l-1 8 10-12h-9l1-8z"/>'},
+  {name:'Passeport Santé',cat:'Document PDF',badge:'Premium',badgeColor:'#FDF6E8',badgeText:'#633806',desc:'Document PDF complet : profil, pathologies, protocoles, médicaments. À partager avec tout soignant.',cta:'Générer →',icon:'<rect x="2" y="3" width="20" height="18" rx="2"/><path d="M8 10h8M8 14h5"/>'},
+  {name:'Dashboard RH',cat:'Santé en entreprise',badge:'Entreprise',badgeColor:'#F0EBF8',badgeText:'#3C3489',desc:'Tableau de bord RH : stats anonymisées, pathologies fréquentes, ROI santé, rapport mensuel IA.',cta:'Découvrir →',icon:'<path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/>'},
+];
+
+const grid = document.getElementById('featGrid');
+features.forEach((f,i) => {
+  const div = document.createElement('div');
+  div.className = 'feat-item fade-up';
+  div.style.animationDelay = (i*0.05)+'s';
+  div.innerHTML = `<div class="feat-inner">
+    <div class="feat-front">
+      <span class="feat-badge" style="background:${f.badgeColor};color:${f.badgeText}">${f.badge}</span>
+      <div class="feat-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#C9A84C" stroke-width="1.5" stroke-linecap="round">${f.icon}</svg></div>
+      <div class="feat-name">${f.name}</div>
+      <div class="feat-cat">${f.cat}</div>
+    </div>
+    <div class="feat-back">
+      <div><div class="feat-back-title">${f.name}</div><div class="feat-back-desc">${f.desc}</div></div>
+      <div class="feat-back-cta">${f.cta}</div>
+    </div>
+  </div>`;
+  grid.appendChild(div);
+
+  div.addEventListener('mousemove', e => {
+    const r = div.getBoundingClientRect();
+    const x = (e.clientX - r.left) / r.width - 0.5;
+    const y = (e.clientY - r.top) / r.height - 0.5;
+    const inner = div.querySelector('.feat-inner');
+    if(inner.style.transform !== 'rotateY(180deg)'){
+      div.style.transform = `perspective(800px) rotateX(${-y*10}deg) rotateY(${x*10}deg) translateZ(8px)`;
+    }
+  });
+  div.addEventListener('mouseleave', () => { div.style.transform=''; });
+});
+})();
+</script>
+
 <!-- TRUST STRIP -->
 <div class="trust-strip">
   <div class="trust-item"><div class="trust-item-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#C9A84C" stroke-width="1.5" stroke-linecap="round"><rect x="3" y="8" width="18" height="13" rx="2"/><path d="M9 8V6a3 3 0 0 1 6 0v2"/><circle cx="9" cy="14" r="1.5" fill="#C9A84C"/><circle cx="15" cy="14" r="1.5" fill="#C9A84C"/><path d="M12 2v2m-7 9H3m18 0h-2"/></svg></div><div class="trust-item-text"><strong>IA Médicale</strong> · Protocoles validés</div></div>
