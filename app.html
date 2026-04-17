@@ -1173,9 +1173,12 @@
     <div style="height:4px;background:#0a1820;border-radius:2px;overflow:hidden;margin-top:5px"><div style="width:87%;height:100%;background:linear-gradient(90deg,#1D9E75,#C9A84C);border-radius:2px"></div></div>
     <div style="font-size:8px;color:#2a5a40;margin-top:3px;font-family:monospace">Récupérabilité: 87/100</div>
   </div>
-  <div style="background:#121c2c;border:1px solid #C9A84C;border-radius:8px;padding:10px;text-align:center;cursor:pointer" onclick="generateOracleAI()">
-    <div style="font-size:10px;color:#C9A84C;font-family:monospace;font-weight:600;letter-spacing:.06em">ACTIVER ORACLE IA COMPLET</div>
-    <div style="font-size:9px;color:#4a7a9a;margin-top:3px">Analyse personnalisée par Claude AI</div>
+  <div style="background:#121c2c;border:1px solid #C9A84C;border-radius:8px;padding:10px;text-align:center;cursor:pointer" onclick="generateOraclePDF()">
+    <div style="font-size:10px;color:#C9A84C;font-family:monospace;font-weight:600;letter-spacing:.06em">EXPORTER RAPPORT MÉDECIN</div>
+    <div style="font-size:9px;color:#4a7a9a;margin-top:3px">PDF imprimable · Partager avec votre médecin</div>
+  </div>
+  <div style="background:#121c2c;border:1px solid #1e3050;border-radius:8px;padding:8px;text-align:center;cursor:pointer;margin-top:6px" onclick="oracleData=null;initOracle()">
+    <div style="font-size:9px;color:#4a7a9a;font-family:monospace;letter-spacing:.06em">Actualiser l'analyse</div>
   </div>
 </div>
 </div>
@@ -2419,6 +2422,138 @@ function toggleMobileMenu() {
     ];
     const tl=document.getElementById('oTlItems');
     if(tl) tl.innerHTML=ev.map((e,i)=>`<div style="display:flex;gap:12px;padding:10px 0;${i<ev.length-1?'border-bottom:1px solid #1e3050':''}"><div style="min-width:58px;text-align:center"><div style="font-size:10px;color:${e.c};font-weight:600;font-family:monospace">${e.t}</div><div style="font-size:8px;color:#2a4a60;font-family:monospace">${e.y}</div></div><div style="display:flex;flex-direction:column;align-items:center"><div style="width:10px;height:10px;border-radius:50%;background:${e.c};box-shadow:0 0 8px ${e.c}80;flex-shrink:0"></div>${i<ev.length-1?'<div style="width:1px;flex:1;background:#1e3050;min-height:16px;margin-top:2px"></div>':''}</div><div><div style="font-size:11px;font-weight:600;color:#a8c8e0;margin-bottom:3px">${e.ti}</div><div style="font-size:10px;color:#6a9ab8;line-height:1.5">${e.d}</div></div></div>`).join('');
+  }
+
+  async function generateOraclePDF() {
+    const profile = JSON.parse(localStorage.getItem('nutricare_profile') || '{}');
+    const name = profile.full_name || 'Patient';
+    const d = oracleData;
+    const date = new Date().toLocaleDateString('fr-FR', {day:'2-digit',month:'long',year:'numeric'});
+
+    const organs = {
+      cerveau:{l:'Cerveau & Cognitif',c:'#7F77DD'},
+      coeur:{l:'Système Cardiovasculaire',c:'#E24B4A'},
+      poumons:{l:'Système Respiratoire',c:'#378ADD'},
+      foie:{l:'Foie & Métabolisme',c:'#BA7517'},
+      intestins:{l:'Microbiome & Digestion',c:'#1D9E75'}
+    };
+
+    const orgHtml = d ? Object.entries(d.organes||{}).map(([k,v])=>`
+      <tr>
+        <td style="padding:8px 12px;font-size:13px;color:#333;border-bottom:1px solid #eee">${organs[k]?.l||k}</td>
+        <td style="padding:8px 12px;text-align:center;font-weight:700;color:${v.score>=80?'#1D9E75':v.score>=65?'#BA7517':'#E24B4A'};border-bottom:1px solid #eee">${v.score}/100</td>
+        <td style="padding:8px 12px;font-size:12px;color:#666;border-bottom:1px solid #eee">${v.desc||''}</td>
+        <td style="padding:8px 12px;font-size:12px;color:#1D9E75;border-bottom:1px solid #eee">${v.pred||''}</td>
+      </tr>`).join('') : '';
+
+    const alertHtml = d ? (d.alertes||[]).map(a=>`
+      <div style="padding:10px 14px;margin-bottom:8px;border-left:4px solid ${a.niveau==='urgent'?'#E24B4A':a.niveau==='attention'?'#BA7517':'#378ADD'};background:${a.niveau==='urgent'?'#fff5f5':a.niveau==='attention'?'#fffbf0':'#f0f7ff'};border-radius:0 6px 6px 0">
+        <div style="font-weight:700;font-size:12px;color:${a.niveau==='urgent'?'#E24B4A':a.niveau==='attention'?'#BA7517':'#378ADD'};text-transform:uppercase;margin-bottom:3px">${a.niveau} — ${a.titre||''}</div>
+        <div style="font-size:12px;color:#444;line-height:1.5">${a.desc||''}</div>
+      </div>`).join('') : '';
+
+    const medHtml = d ? (d.interactions_medicaments||[]).map(m=>`
+      <div style="padding:8px 12px;margin-bottom:6px;border:1px solid #eee;border-radius:6px;background:#fafafa">
+        <span style="font-weight:700;font-size:12px;color:#333">${m.med}</span>
+        <span style="font-size:11px;color:#888;margin:0 6px">→</span>
+        <span style="font-size:12px;color:#555">${m.organe}</span>
+        <span style="float:right;font-size:10px;background:${m.niveau==='urgent'?'#E24B4A':m.niveau==='attention'?'#BA7517':'#378ADD'};color:white;padding:2px 8px;border-radius:3px;font-weight:700">${m.niveau}</span>
+        <div style="font-size:11px;color:#666;margin-top:4px;line-height:1.4">${m.desc||''}</div>
+      </div>`).join('') : '';
+
+    const html = `<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<title>Rapport Oracle Santé — ${name}</title>
+<style>
+  * { box-sizing: border-box; }
+  body { font-family: 'Segoe UI', Arial, sans-serif; color: #222; margin: 0; padding: 0; }
+  .page { max-width: 800px; margin: 0 auto; padding: 40px; }
+  .header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 32px; padding-bottom: 20px; border-bottom: 3px solid #021A35; }
+  .logo { font-size: 22px; font-weight: 700; color: #021A35; }
+  .logo span { color: #C9A84C; }
+  .meta { text-align: right; font-size: 12px; color: #666; }
+  .patient-banner { background: #021A35; color: white; padding: 20px 24px; border-radius: 10px; margin-bottom: 28px; display: flex; justify-content: space-between; align-items: center; }
+  .patient-name { font-size: 20px; font-weight: 700; }
+  .patient-meta { font-size: 12px; color: rgba(255,255,255,0.6); margin-top: 4px; }
+  .score-big { font-size: 36px; font-weight: 700; color: #C9A84C; text-align: right; }
+  .score-label { font-size: 11px; color: rgba(255,255,255,0.5); text-align: right; }
+  .section { margin-bottom: 28px; }
+  .section-title { font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: #021A35; margin-bottom: 14px; padding-bottom: 6px; border-bottom: 2px solid #C9A84C; }
+  .grid-4 { display: grid; grid-template-columns: repeat(4,1fr); gap: 10px; margin-bottom: 20px; }
+  .metric-box { background: #f8f9fa; border: 1px solid #e8e8e8; border-radius: 8px; padding: 12px; text-align: center; }
+  .metric-label { font-size: 10px; color: #888; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 4px; }
+  .metric-val { font-size: 22px; font-weight: 700; }
+  table { width: 100%; border-collapse: collapse; }
+  th { background: #021A35; color: white; padding: 10px 12px; text-align: left; font-size: 11px; text-transform: uppercase; letter-spacing: 0.06em; }
+  .footer { margin-top: 40px; padding-top: 16px; border-top: 1px solid #eee; font-size: 10px; color: #aaa; text-align: center; line-height: 1.6; }
+  @media print { body { print-color-adjust: exact; -webkit-print-color-adjust: exact; } }
+</style>
+</head>
+<body>
+<div class="page">
+  <div class="header">
+    <div>
+      <div class="logo">Avelia <span>AI</span></div>
+      <div style="font-size:12px;color:#666;margin-top:3px">Rapport Oracle Santé · Confidentiel</div>
+    </div>
+    <div class="meta">
+      <div>Date : ${date}</div>
+      <div>Référence : NC-${Date.now().toString(36).toUpperCase()}</div>
+      <div style="margin-top:4px;color:#C9A84C;font-weight:600">DOCUMENT MÉDICAL CONFIDENTIEL</div>
+    </div>
+  </div>
+
+  <div class="patient-banner">
+    <div>
+      <div class="patient-name">${name}</div>
+      <div class="patient-meta">Âge réel : ${d?.age_reel||'--'} ans · Pathologies : ${(profile.pathologies||[]).join(', ')||'Non renseignées'}</div>
+      <div class="patient-meta">Médicaments : ${(profile.medications||[]).join(', ')||'Aucun'}</div>
+    </div>
+    <div>
+      <div class="score-big">${d?.score_vitalite||72}/100</div>
+      <div class="score-label">Indice Vitalité Oracle</div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Indicateurs biologiques clés</div>
+    <div class="grid-4">
+      <div class="metric-box"><div class="metric-label">Âge biologique</div><div class="metric-val" style="color:#BA7517">${d?.age_biologique||'--'}</div><div style="font-size:10px;color:#aaa">ans</div></div>
+      <div class="metric-box"><div class="metric-label">Âge épigénétique</div><div class="metric-val" style="color:#BA7517">${d?.age_epigenetique||'--'}</div><div style="font-size:10px;color:#aaa">ans (Horvath)</div></div>
+      <div class="metric-box"><div class="metric-label">Télomères</div><div class="metric-val" style="color:#378ADD">${d?.longueur_telomeres||'--'}</div><div style="font-size:10px;color:#aaa">kb</div></div>
+      <div class="metric-box"><div class="metric-label">Gain potentiel</div><div class="metric-val" style="color:#1D9E75">+${d?.gain_potentiel||'--'}</div><div style="font-size:10px;color:#aaa">années de vie saine</div></div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Analyse des systèmes biologiques</div>
+    <table>
+      <thead><tr><th>Système</th><th style="text-align:center">Score</th><th>Analyse</th><th>Prédiction 1 an</th></tr></thead>
+      <tbody>${orgHtml}</tbody>
+    </table>
+  </div>
+
+  ${alertHtml ? `<div class="section"><div class="section-title">Alertes & Recommandations</div>${alertHtml}</div>` : ''}
+
+  ${medHtml ? `<div class="section"><div class="section-title">Interactions médicamenteuses</div>${medHtml}</div>` : ''}
+
+  ${d?.oracle_prediction ? `<div class="section"><div class="section-title">Prédiction Oracle IA</div><div style="background:#f8f9fa;border-left:4px solid #C9A84C;padding:16px 20px;border-radius:0 8px 8px 0;font-size:13px;color:#333;line-height:1.7">${d.oracle_prediction}</div></div>` : ''}
+
+  <div class="footer">
+    <div>Ce rapport a été généré par l'intelligence artificielle Avelia AI · Avelia.ai</div>
+    <div>Ce document est fourni à titre informatif et ne remplace pas un avis médical professionnel.</div>
+    <div>Consultez votre médecin pour toute décision thérapeutique.</div>
+  </div>
+</div>
+</body>
+</html>`;
+
+    const w = window.open('', '_blank');
+    w.document.write(html);
+    w.document.close();
+    setTimeout(() => w.print(), 500);
   }
 
   async function generateOracleAI() {
