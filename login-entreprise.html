@@ -205,7 +205,8 @@ async function register() {
   const errEl = document.getElementById('regError');
   errEl.classList.remove('show');
 
-  if (!entreprise || !nom || !email || !password) {
+  const modeJoin = new URLSearchParams(window.location.search).get('mode') === 'join';
+  if ((!entreprise && !modeJoin) || !nom || !email || !password) {
     errEl.textContent = 'Veuillez remplir tous les champs';
     errEl.classList.add('show');
     return;
