@@ -182,7 +182,7 @@ document.addEventListener('DOMContentLoaded', () => {
     document.querySelector('.left-title').innerHTML = 'Rejoignez votre<br>équipe sur<br><em>' + (companyName ? decodeURIComponent(companyName) : 'NutriCare') + '</em>';
     document.getElementById('regEntreprise').closest('.field').style.display = 'none';
     document.getElementById('regLicences').closest('.field').style.display = 'none';
-    document.querySelector('.form-submit').textContent = 'Rejoindre l\'entreprise →';
+    document.querySelector('.btn-submit').textContent = 'Rejoindre l\'entreprise →';
     const rhLabel = Array.from(document.querySelectorAll('.field-label')).find(l => l.textContent.includes('RH'));
     if (rhLabel) rhLabel.textContent = 'VOTRE NOM COMPLET';
   }
@@ -306,7 +306,7 @@ async function login() {
     var title = document.querySelector('.auth-title');
     var sub = document.querySelector('.auth-sub');
     var leftTitle = document.querySelector('.left-title');
-    var submitBtn = document.querySelector('.form-submit');
+    var submitBtn = document.querySelector('.btn-submit');
     var entField = document.getElementById('regEntreprise');
     var licField = document.getElementById('regLicences');
     var labels = document.querySelectorAll('.field-label');
@@ -316,7 +316,7 @@ async function login() {
     if (submitBtn) submitBtn.textContent = 'Rejoindre l'entreprise 2192';
     if (entField) entField.closest('.field').style.display = 'none';
     if (licField) licField.closest('.field').style.display = 'none';
-    labels.forEach(function(l) { if (l.textContent.includes('RH')) l.textContent = 'VOTRE NOM COMPLET'; });
+    labels.forEach(function(l) { if (l.textContent.includes('Dirigeant')) l.textContent = 'VOTRE NOM COMPLET'; });
   }
 })();
 </script>
