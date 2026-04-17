@@ -375,25 +375,7 @@ footer { background:#0A0A0A; padding:64px 48px 32px; }
   <div class="nav-ctas">
     <a href="entreprise.html" class="btn-nav-ghost" style="display:none" id="btnEntrepriseMobile">Entreprise</a>
     <a href="app.html" class="btn-nav-ghost" id="btnConnexion">Se connecter</a>
-<script>
-(function(){
-  const token = localStorage.getItem("nutricare_token");
-  const profile = JSON.parse(localStorage.getItem("nutricare_profile") || "{}");
-  const btn = document.getElementById("btnConnexion");
-  if (token && btn) {
-    const name = profile.full_name ? profile.full_name.split(" ")[0] : "Mon compte";
-    btn.textContent = name + " →";
-    btn.style.color = "#C9A84C";
-    btn.style.borderColor = "#C9A84C";
-  }
-  const btnC = document.getElementById("btnCommencer");
-  if (token && btnC) {
-    btnC.innerHTML = "Mon espace →";
-    btnC.style.background = "#C9A84C";
-    btnC.style.color = "#021A35";
-  }
-})();
-</script>
+
     <a href="app.html" class="btn-nav-dark" id="btnCommencer"><span class="btn-arrow-hide">Commencer →</span><span class="btn-arrow-show">Commencer</span></a>
   </div>
 </nav>
@@ -1219,5 +1201,18 @@ document.querySelectorAll('.fade-up').forEach(el => obs.observe(el));
 })();
 </script>
 
+<script>
+(function(){
+  const token = localStorage.getItem("nutricare_token");
+  const profile = JSON.parse(localStorage.getItem("nutricare_profile") || "{}");
+  const btn = document.getElementById("btnConnexion");
+  const btnC = document.getElementById("btnCommencer");
+  if (token) {
+    const name = profile.full_name ? profile.full_name.split(" ")[0] : "Mon compte";
+    if (btn) { btn.textContent = name + " →"; btn.style.color = "#C9A84C"; btn.style.borderColor = "#C9A84C"; }
+    if (btnC) { btnC.innerHTML = "Mon espace →"; btnC.style.background = "#C9A84C"; btnC.style.color = "#021A35"; }
+  }
+})();
+</script>
 </body>
 </html>
