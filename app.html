@@ -306,6 +306,7 @@
       <button class="nav-item" onclick="showView('ordonnance', this)">Scan ordonnance</button>
       <button class="nav-item" onclick="showView('insights', this)">Observatoire</button>
       <button class="nav-item" onclick="showView('simulator', this)">Simulateur</button>
+    <button class="nav-item" onclick="showView('oracle', this)">Oracle Santé</button>
       <button class="nav-item" onclick="showView('passeport', this)">Passeport Santé</button>
       <button class="nav-item" onclick="showView('biologie', this)">Bilan sanguin</button>
       <button class="nav-item" onclick="showView('entreprise', this)">Mon entreprise</button>
@@ -1015,7 +1016,283 @@
   </div>
 </div>
 
-<div id="simulatorView" style="display:none;padding:32px;overflow-y:auto;background:white;width:100%">
+<div id="oracleView" style="display:none;padding:24px;overflow-y:auto;background:#0e1520;width:100%;min-height:100vh">
+<div style="max-width:1000px;margin:0 auto">
+
+<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;padding-bottom:10px;border-bottom:1px solid #1e3050">
+  <div>
+    <div style="font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:#5a9fc0;font-weight:600">Oracle Santé · Plateforme Biologique Prédictive</div>
+    <div style="font-size:9px;color:#2a5a70;letter-spacing:.05em;margin-top:2px;font-family:monospace" id="oraclePatientHeader">Chargement...</div>
+  </div>
+  <div style="display:flex;align-items:center;gap:6px">
+    <div style="width:6px;height:6px;border-radius:50%;background:#1D9E75;animation:spin .8s linear infinite"></div>
+    <span style="font-size:9px;color:#1D9E75;letter-spacing:.1em;font-family:monospace">ORACLE ACTIF</span>
+  </div>
+</div>
+
+<!-- TABS -->
+<div style="display:flex;gap:4px;margin-bottom:14px;border-bottom:1px solid #1e3050;padding-bottom:10px;flex-wrap:wrap" id="oracleTabs">
+  <div onclick="oracleTab('scanner',this)" style="cursor:pointer;padding:5px 12px;font-size:11px;border-radius:6px;background:#1a2a3e;color:#a8c8e0;border:1px solid #2a4a6a;font-weight:500">Scanner IA</div>
+  <div onclick="oracleTab('simulation',this)" style="cursor:pointer;padding:5px 12px;font-size:11px;border-radius:6px;color:#4a7a9a;border:1px solid transparent">Simulation temps réel</div>
+  <div onclick="oracleTab('epigenetique',this)" style="cursor:pointer;padding:5px 12px;font-size:11px;border-radius:6px;color:#4a7a9a;border:1px solid transparent">Épigénétique & Télomères</div>
+  <div onclick="oracleTab('comparaison',this)" style="cursor:pointer;padding:5px 12px;font-size:11px;border-radius:6px;color:#4a7a9a;border:1px solid transparent">Mode Comparaison</div>
+  <div onclick="oracleTab('medicaments',this)" style="cursor:pointer;padding:5px 12px;font-size:11px;border-radius:6px;color:#4a7a9a;border:1px solid transparent">Alertes Médicaments</div>
+  <div onclick="oracleTab('timeline',this)" style="cursor:pointer;padding:5px 12px;font-size:11px;border-radius:6px;color:#4a7a9a;border:1px solid transparent">Timeline 10 ans</div>
+</div>
+
+<!-- SCANNER -->
+<div id="oracle-scanner" style="display:block">
+<div style="display:grid;grid-template-columns:1fr 210px;gap:14px">
+<div style="position:relative;background:#0a1018;border-radius:10px;overflow:hidden;border:1px solid #1e3050">
+  <div style="position:absolute;top:7px;left:7px;width:12px;height:12px;border-top:2px solid #C9A84C;border-left:2px solid #C9A84C;z-index:3"></div>
+  <div style="position:absolute;top:7px;right:7px;width:12px;height:12px;border-top:2px solid #C9A84C;border-right:2px solid #C9A84C;z-index:3"></div>
+  <div style="position:absolute;bottom:7px;left:7px;width:12px;height:12px;border-bottom:2px solid #C9A84C;border-left:2px solid #C9A84C;z-index:3"></div>
+  <div style="position:absolute;bottom:7px;right:7px;width:12px;height:12px;border-bottom:2px solid #C9A84C;border-right:2px solid #C9A84C;z-index:3"></div>
+  <svg viewBox="0 0 380 490" width="100%" style="display:block">
+    <defs>
+      <filter id="ogS"><feGaussianBlur stdDeviation="5" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+      <filter id="ogM"><feGaussianBlur stdDeviation="2.5" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+      <filter id="ogW"><feGaussianBlur stdDeviation="1.2" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+      <pattern id="ogr" width="18" height="18" patternUnits="userSpaceOnUse"><path d="M18 0L0 0 0 18" fill="none" stroke="#0d1c2a" stroke-width=".5"/></pattern>
+      <radialGradient id="obg" cx="50%" cy="35%" r="55%"><stop offset="0%" stop-color="#0f1e2e"/><stop offset="100%" stop-color="#070d14"/></radialGradient>
+      <linearGradient id="osG" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#5a9fc0" stop-opacity="0"/><stop offset="50%" stop-color="#5a9fc0" stop-opacity=".5"/><stop offset="100%" stop-color="#5a9fc0" stop-opacity="0"/></linearGradient>
+    </defs>
+    <rect width="380" height="490" fill="url(#ogr)"/>
+    <rect width="380" height="490" fill="url(#obg)" opacity=".8"/>
+    <rect id="oScanLine" x="0" y="-5" width="380" height="10" fill="url(#osG)" opacity=".6" style="animation:oScan 5s linear infinite"/>
+    <style>@keyframes oScan{0%{transform:translateY(-8px);opacity:0}5%{opacity:1}92%{opacity:.7}100%{transform:translateY(500px);opacity:0}}@keyframes oPulse{0%,100%{opacity:.35}50%{opacity:.9}}</style>
+    <ellipse cx="190" cy="55" rx="44" ry="48" fill="none" stroke="#1a3a58" stroke-width="1.6"/>
+    <ellipse cx="190" cy="52" rx="32" ry="36" fill="#0d1e30" stroke="#1e4568" stroke-width=".8"/>
+    <ellipse cx="190" cy="47" rx="20" ry="22" fill="#0a1825" stroke="#162e48" stroke-width=".5"/>
+    <path d="M174 46 Q182 40 190 46 Q198 52 206 46" fill="none" stroke="#1e4060" stroke-width=".9" opacity=".8"/>
+    <path d="M172 102 Q181 108 190 108 Q199 108 208 102 L210 124 Q200 130 190 130 Q180 130 170 124Z" fill="#0d1e2c" stroke="#1a3a58" stroke-width="1"/>
+    <rect x="186" y="118" width="8" height="185" rx="3" fill="#0f2232" stroke="#1e4568" stroke-width=".7"/>
+    <rect x="182" y="138" width="16" height="7" rx="2" fill="#152e48"/><rect x="182" y="153" width="16" height="7" rx="2" fill="#152e48"/><rect x="182" y="168" width="16" height="7" rx="2" fill="#152e48"/><rect x="182" y="183" width="16" height="7" rx="2" fill="#152e48"/><rect x="182" y="198" width="16" height="7" rx="2" fill="#152e48"/><rect x="182" y="213" width="16" height="7" rx="2" fill="#152e48"/>
+    <path d="M190 128 Q156 138 148 158M190 142 Q152 152 144 174M190 156 Q150 166 143 190M190 170 Q152 178 146 202" fill="none" stroke="#1a3a58" stroke-width="1.1"/>
+    <path d="M190 128 Q224 138 232 158M190 142 Q228 152 236 174M190 156 Q230 166 237 190M190 170 Q228 178 234 202" fill="none" stroke="#1a3a58" stroke-width="1.1"/>
+    <path d="M148 124 Q116 130 110 154 L106 234 Q108 284 128 294 L152 304 L190 309 L228 304 L252 294 Q272 284 274 234 L270 154 Q264 130 232 124" fill="#0d1e30" stroke="#1a3a58" stroke-width="1.5" fill-opacity=".35"/>
+    <rect x="186" y="130" width="8" height="78" rx="4" fill="#0f2030" stroke="#1e4568" stroke-width=".9"/>
+    <path d="M190 130 Q164 126 150 132M190 130 Q216 126 230 132" fill="none" stroke="#1a3a58" stroke-width="1.2"/>
+    <ellipse cx="190" cy="292" rx="52" ry="30" fill="none" stroke="#1a3a58" stroke-width="1.5"/>
+    <ellipse cx="190" cy="292" rx="38" ry="18" fill="#0d1e2c" stroke="#1e4568" stroke-width=".7"/>
+    <path d="M152 316 L146 444 Q146 458 156 460 L166 460 Q174 460 174 444 L170 316M228 316 L234 444 Q234 458 224 460 L214 460 Q206 460 206 444 L210 316" fill="none" stroke="#1a3a58" stroke-width="1.2"/>
+    <path d="M148 154 Q132 166 128 206 L126 272 Q126 286 136 288 L144 288 Q152 286 152 272 L150 218M232 154 Q248 166 252 206 L254 272 Q254 286 244 288 L236 288 Q228 286 228 272 L230 218" fill="none" stroke="#1a3a58" stroke-width="1.2"/>
+    <circle cx="160" cy="382" r="9" fill="none" stroke="#1e4060" stroke-width=".9" opacity=".5"/>
+    <circle cx="220" cy="382" r="9" fill="none" stroke="#1e4060" stroke-width=".9" opacity=".5"/>
+    <ellipse cx="158" cy="464" rx="16" ry="9" fill="none" stroke="#1a3a58" stroke-width="1"/>
+    <ellipse cx="222" cy="464" rx="16" ry="9" fill="none" stroke="#1a3a58" stroke-width="1"/>
+    <g style="cursor:pointer" onclick="oSelOrgan('cerveau')">
+      <circle cx="190" cy="47" r="25" fill="#7F77DD" opacity=".12" filter="url(#ogS)"/>
+      <circle cx="190" cy="47" r="12" fill="#7F77DD" opacity=".45" filter="url(#ogM)"/>
+      <circle cx="190" cy="47" r="8" fill="#7F77DD" opacity=".85" filter="url(#ogW)"/>
+      <circle cx="190" cy="47" r="15" fill="none" stroke="#7F77DD" stroke-width="1.4" opacity=".55" style="animation:oPulse 2.2s ease-in-out infinite"/>
+      <line x1="202" y1="41" x2="232" y2="28" stroke="#7F77DD" stroke-width=".7" opacity=".7"/>
+      <rect x="234" y="18" width="68" height="22" rx="3" fill="#0f1e30" stroke="#7F77DD" stroke-width=".7"/>
+      <text x="239" y="27" font-size="8.5" font-family="monospace" fill="#7F77DD">CERVEAU</text>
+      <text x="239" y="37" font-size="7.5" font-family="monospace" fill="#3a6a80">68/100 · COGNITIF</text>
+    </g>
+    <g style="cursor:pointer" onclick="oSelOrgan('coeur')">
+      <circle cx="173" cy="162" r="23" fill="#E24B4A" opacity=".12" filter="url(#ogS)"/>
+      <circle cx="173" cy="162" r="12" fill="#E24B4A" opacity=".4" filter="url(#ogM)"/>
+      <path d="M173 174 C160 164 158 150 167 147 C170 146 173 150 173 150 C173 150 176 146 179 147 C188 150 186 164 173 174Z" fill="#E24B4A" opacity=".85" filter="url(#ogW)"/>
+      <circle cx="173" cy="161" r="16" fill="none" stroke="#E24B4A" stroke-width="1.4" opacity=".55" style="animation:oPulse 1.3s ease-in-out infinite"/>
+      <polyline points="84,156 90,156 93,145 97,169 100,150 103,156 112,156" fill="none" stroke="#E24B4A" stroke-width="1.1" opacity=".8"/>
+      <line x1="160" y1="153" x2="130" y2="140" stroke="#E24B4A" stroke-width=".7" opacity=".7"/>
+      <rect x="52" y="129" width="76" height="22" rx="3" fill="#0f1e30" stroke="#E24B4A" stroke-width=".7"/>
+      <text x="57" y="138" font-size="8.5" font-family="monospace" fill="#E24B4A">CARDIO</text>
+      <text x="57" y="148" font-size="7.5" font-family="monospace" fill="#3a6a80">71/100 · TA 132/84</text>
+    </g>
+    <g style="cursor:pointer" onclick="oSelOrgan('poumons')">
+      <ellipse cx="210" cy="157" rx="18" ry="23" fill="#378ADD" opacity=".12" filter="url(#ogS)"/>
+      <ellipse cx="210" cy="157" rx="9" ry="13" fill="#378ADD" opacity=".4" filter="url(#ogM)"/>
+      <ellipse cx="210" cy="157" rx="6" ry="9" fill="#378ADD" opacity=".8" filter="url(#ogW)"/>
+      <ellipse cx="210" cy="157" rx="13" ry="17" fill="none" stroke="#378ADD" stroke-width="1.2" opacity=".5" style="animation:oPulse 2.2s ease-in-out infinite"/>
+      <line x1="224" y1="146" x2="250" y2="133" stroke="#378ADD" stroke-width=".7" opacity=".7"/>
+      <rect x="252" y="122" width="72" height="22" rx="3" fill="#0f1e30" stroke="#378ADD" stroke-width=".7"/>
+      <text x="257" y="131" font-size="8.5" font-family="monospace" fill="#378ADD">POUMONS</text>
+      <text x="257" y="141" font-size="7.5" font-family="monospace" fill="#3a6a80">82/100 · BON</text>
+    </g>
+    <g style="cursor:pointer" onclick="oSelOrgan('foie')">
+      <ellipse cx="208" cy="206" rx="25" ry="16" fill="#BA7517" opacity=".15" filter="url(#ogS)"/>
+      <ellipse cx="208" cy="206" rx="15" ry="9" fill="#BA7517" opacity=".45" filter="url(#ogM)"/>
+      <ellipse cx="208" cy="206" rx="10" ry="6" fill="#BA7517" opacity=".85" filter="url(#ogW)"/>
+      <ellipse cx="208" cy="206" rx="18" ry="12" fill="none" stroke="#BA7517" stroke-width="1.4" opacity=".5" style="animation:oPulse .8s ease-in-out infinite"/>
+      <line x1="226" y1="200" x2="250" y2="190" stroke="#BA7517" stroke-width=".7" opacity=".7"/>
+      <rect x="252" y="179" width="80" height="22" rx="3" fill="#0f1e30" stroke="#BA7517" stroke-width=".7"/>
+      <text x="257" y="188" font-size="8.5" font-family="monospace" fill="#BA7517">FOIE ALERTE</text>
+      <text x="257" y="198" font-size="7.5" font-family="monospace" fill="#3a6a80">65/100 · GLYC UP</text>
+    </g>
+    <g style="cursor:pointer" onclick="oSelOrgan('intestins')">
+      <circle cx="190" cy="250" r="25" fill="#1D9E75" opacity=".12" filter="url(#ogS)"/>
+      <circle cx="190" cy="250" r="14" fill="#1D9E75" opacity=".35" filter="url(#ogM)"/>
+      <path d="M178 240 Q188 231 200 237 Q210 243 208 253 Q206 263 196 266 Q186 269 180 259 Q175 249 184 244" fill="none" stroke="#1D9E75" stroke-width="2.8" opacity=".85" filter="url(#ogW)" stroke-linecap="round"/>
+      <circle cx="190" cy="250" r="19" fill="none" stroke="#1D9E75" stroke-width="1.2" opacity=".4" style="animation:oPulse 2.2s ease-in-out infinite"/>
+      <line x1="172" y1="252" x2="140" y2="262" stroke="#1D9E75" stroke-width=".7" opacity=".7"/>
+      <rect x="44" y="252" width="94" height="22" rx="3" fill="#0f1e30" stroke="#1D9E75" stroke-width=".7"/>
+      <text x="49" y="261" font-size="8.5" font-family="monospace" fill="#1D9E75">MICROBIOME</text>
+      <text x="49" y="271" font-size="7.5" font-family="monospace" fill="#3a6a80">59/100 · BIODIV DN</text>
+    </g>
+    <circle cx="190" cy="428" r="33" fill="#0d1820" stroke="#1a3050" stroke-width="1"/>
+    <circle cx="190" cy="428" r="28" fill="none" stroke="#C9A84C" stroke-width="3.5" stroke-linecap="round" stroke-dasharray="126" stroke-dashoffset="35" transform="rotate(-90 190 428)" id="oScoreArc"/>
+    <text x="190" y="424" text-anchor="middle" font-size="16" font-weight="600" fill="#e8f0f8" id="oScoreText">72</text>
+    <text x="190" y="436" text-anchor="middle" font-size="8" fill="#4a7a90" font-family="monospace">/100</text>
+    <text font-family="monospace" font-size="8" fill="#2a5a70" x="10" y="18">IRM-NUTRITIONNEL v3.0 ORACLE-AI</text>
+    <text font-family="monospace" font-size="8" fill="#2a5a70" x="10" y="476" style="animation:oScan 4s ease-in-out infinite" id="oHudData">HBA1C:5.8% CRP:2.8 VITD:28 GLYC:6.1</text>
+    <text font-family="monospace" font-size="8" fill="#2a5a70" x="10" y="486">LDL:1.4 TG:1.8 AGE-BIO:41 TELOMERES:6.8kb</text>
+    <text font-family="monospace" font-size="8" fill="#2a5a70" x="272" y="476">SCORE:72/100</text>
+    <text font-family="monospace" font-size="8" fill="#2a5a70" x="272" y="486">RECUP:87%</text>
+  </svg>
+</div>
+<div style="display:flex;flex-direction:column;gap:8px;color:#a8c8e0">
+  <div style="background:#121c2c;border:1px solid #1e3050;border-radius:8px;padding:10px">
+    <div style="font-size:8px;color:#3a7a9a;text-transform:uppercase;letter-spacing:.1em;margin-bottom:7px;font-weight:600">Systèmes biologiques</div>
+    <div onclick="oSelOrgan('cerveau')" id="ob-cerveau" style="cursor:pointer;display:flex;align-items:center;gap:6px;padding:6px 8px;border-radius:6px;border:1px solid #1e3050;background:#121c2c;margin-bottom:4px"><div style="width:7px;height:7px;border-radius:50%;background:#7F77DD;box-shadow:0 0 7px #7F77DD80"></div><span style="font-size:10px">Cerveau</span><span style="margin-left:auto;font-size:10px;font-weight:600;color:#7F77DD">68</span></div>
+    <div onclick="oSelOrgan('coeur')" id="ob-coeur" style="cursor:pointer;display:flex;align-items:center;gap:6px;padding:6px 8px;border-radius:6px;border:1px solid #1e3050;background:#121c2c;margin-bottom:4px"><div style="width:7px;height:7px;border-radius:50%;background:#E24B4A;box-shadow:0 0 7px #E24B4A80;animation:oPulse 1.3s infinite"></div><span style="font-size:10px">Cardio</span><span style="margin-left:auto;font-size:10px;font-weight:600;color:#E24B4A">71</span></div>
+    <div onclick="oSelOrgan('poumons')" id="ob-poumons" style="cursor:pointer;display:flex;align-items:center;gap:6px;padding:6px 8px;border-radius:6px;border:1px solid #1e3050;background:#121c2c;margin-bottom:4px"><div style="width:7px;height:7px;border-radius:50%;background:#378ADD;box-shadow:0 0 7px #378ADD80"></div><span style="font-size:10px">Poumons</span><span style="margin-left:auto;font-size:10px;font-weight:600;color:#378ADD">82</span></div>
+    <div onclick="oSelOrgan('foie')" id="ob-foie" style="cursor:pointer;display:flex;align-items:center;gap:6px;padding:6px 8px;border-radius:6px;border:1px solid #3a1e08;background:#121c2c;margin-bottom:4px"><div style="width:7px;height:7px;border-radius:50%;background:#BA7517;box-shadow:0 0 7px #BA751780;animation:oPulse .8s infinite"></div><span style="font-size:10px">Foie</span><span style="margin-left:auto;font-size:10px;font-weight:600;color:#BA7517">65</span></div>
+    <div onclick="oSelOrgan('intestins')" id="ob-intestins" style="cursor:pointer;display:flex;align-items:center;gap:6px;padding:6px 8px;border-radius:6px;border:1px solid #1e3050;background:#121c2c;margin-bottom:4px"><div style="width:7px;height:7px;border-radius:50%;background:#1D9E75;box-shadow:0 0 7px #1D9E7580"></div><span style="font-size:10px">Microbiome</span><span style="margin-left:auto;font-size:10px;font-weight:600;color:#1D9E75">59</span></div>
+    <div id="oOrgDetail" style="display:none;margin-top:8px;border-top:1px solid #1e3050;padding-top:8px">
+      <div style="font-size:8px;text-transform:uppercase;letter-spacing:.07em;margin-bottom:4px;font-weight:600" id="oOrgN"></div>
+      <div style="font-size:10px;color:#6a9ab8;line-height:1.5;margin-bottom:5px" id="oOrgD"></div>
+      <div style="font-size:9px;line-height:1.5;margin-bottom:5px" id="oOrgP"></div>
+      <div id="oOrgA"></div>
+    </div>
+  </div>
+  <div style="background:#121c2c;border:1px solid #1e3050;border-radius:8px;padding:10px">
+    <div style="font-size:8px;color:#3a7a9a;text-transform:uppercase;letter-spacing:.1em;margin-bottom:7px;font-weight:600">Marqueurs clés</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:5px">
+      <div style="background:#0d1820;border-radius:6px;padding:7px 9px;border:1px solid #1e3050"><div style="font-size:8px;color:#3a6a80;font-family:monospace" id="oM1L">HbA1c</div><div style="font-size:13px;font-weight:600;color:#BA7517" id="oM1V">5.8%</div></div>
+      <div style="background:#0d1820;border-radius:6px;padding:7px 9px;border:1px solid #1e3050"><div style="font-size:8px;color:#3a6a80;font-family:monospace">CRP</div><div style="font-size:13px;font-weight:600;color:#BA7517">2.8</div></div>
+      <div style="background:#0d1820;border-radius:6px;padding:7px 9px;border:1px solid #1e3050"><div style="font-size:8px;color:#3a6a80;font-family:monospace">Vit D</div><div style="font-size:13px;font-weight:600;color:#E24B4A">28</div></div>
+      <div style="background:#0d1820;border-radius:6px;padding:7px 9px;border:1px solid #1e3050"><div style="font-size:8px;color:#3a6a80;font-family:monospace">Âge bio</div><div style="font-size:13px;font-weight:600;color:#C9A84C" id="oBioAge">41</div></div>
+    </div>
+  </div>
+  <div style="background:#121c2c;border:1px solid #1e3050;border-radius:8px;padding:10px">
+    <div style="font-size:8px;color:#3a7a9a;text-transform:uppercase;letter-spacing:.1em;margin-bottom:6px;font-weight:600">Gain potentiel</div>
+    <div style="font-size:24px;font-weight:600;color:#1D9E75">+7.8 <span style="font-size:11px;color:#4a8a70">ans</span></div>
+    <div style="height:4px;background:#0a1820;border-radius:2px;overflow:hidden;margin-top:5px"><div style="width:87%;height:100%;background:linear-gradient(90deg,#1D9E75,#C9A84C);border-radius:2px"></div></div>
+    <div style="font-size:8px;color:#2a5a40;margin-top:3px;font-family:monospace">Récupérabilité: 87/100</div>
+  </div>
+  <div style="background:#121c2c;border:1px solid #C9A84C;border-radius:8px;padding:10px;text-align:center;cursor:pointer" onclick="generateOracleAI()">
+    <div style="font-size:10px;color:#C9A84C;font-family:monospace;font-weight:600;letter-spacing:.06em">ACTIVER ORACLE IA COMPLET</div>
+    <div style="font-size:9px;color:#4a7a9a;margin-top:3px">Analyse personnalisée par Claude AI</div>
+  </div>
+</div>
+</div>
+</div>
+
+<!-- SIMULATION -->
+<div id="oracle-simulation" style="display:none;color:#a8c8e0">
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+  <div>
+    <div style="font-size:9px;color:#3a7a9a;text-transform:uppercase;letter-spacing:.1em;margin-bottom:12px;font-weight:600">Ajustez vos habitudes</div>
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:9px"><label style="font-size:10px;color:#6a9ab8;min-width:95px">Sommeil (h/nuit)</label><input type="range" min="4" max="10" value="7" step=".5" id="osl-sleep" oninput="oSimU()" style="flex:1"/><span style="font-size:10px;color:#a8c8e0;min-width:32px;text-align:right;font-family:monospace" id="osv-sleep">7h</span></div>
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:9px"><label style="font-size:10px;color:#6a9ab8;min-width:95px">Stress (1-10)</label><input type="range" min="1" max="10" value="6" step="1" id="osl-stress" oninput="oSimU()" style="flex:1"/><span style="font-size:10px;color:#a8c8e0;min-width:32px;text-align:right;font-family:monospace" id="osv-stress">6</span></div>
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:9px"><label style="font-size:10px;color:#6a9ab8;min-width:95px">Activité (min/j)</label><input type="range" min="0" max="90" value="20" step="5" id="osl-sport" oninput="oSimU()" style="flex:1"/><span style="font-size:10px;color:#a8c8e0;min-width:32px;text-align:right;font-family:monospace" id="osv-sport">20</span></div>
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:9px"><label style="font-size:10px;color:#6a9ab8;min-width:95px">Sucre (g/j)</label><input type="range" min="0" max="100" value="55" step="5" id="osl-sucre" oninput="oSimU()" style="flex:1"/><span style="font-size:10px;color:#a8c8e0;min-width:32px;text-align:right;font-family:monospace" id="osv-sucre">55g</span></div>
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:9px"><label style="font-size:10px;color:#6a9ab8;min-width:95px">Hydratation (L/j)</label><input type="range" min=".5" max="3" value="1.5" step=".1" id="osl-eau" oninput="oSimU()" style="flex:1"/><span style="font-size:10px;color:#a8c8e0;min-width:32px;text-align:right;font-family:monospace" id="osv-eau">1.5L</span></div>
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:9px"><label style="font-size:10px;color:#6a9ab8;min-width:95px">Alcool (verres/sem)</label><input type="range" min="0" max="20" value="5" step="1" id="osl-alcool" oninput="oSimU()" style="flex:1"/><span style="font-size:10px;color:#a8c8e0;min-width:32px;text-align:right;font-family:monospace" id="osv-alcool">5</span></div>
+  </div>
+  <div>
+    <div style="font-size:9px;color:#3a7a9a;text-transform:uppercase;letter-spacing:.1em;margin-bottom:12px;font-weight:600">Impact temps réel</div>
+    <div style="background:#0d1820;border-radius:8px;padding:14px;border:1px solid #1e3050;margin-bottom:10px">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">
+        <div style="text-align:center"><div style="font-size:9px;color:#4a7a9a;margin-bottom:2px">Actuel</div><div style="font-size:26px;font-weight:600;color:#C9A84C">72</div></div>
+        <div style="font-size:16px;color:#2a4a6a">→</div>
+        <div style="text-align:center"><div style="font-size:9px;color:#4a7a9a;margin-bottom:2px">Prédit 1 an</div><div style="font-size:26px;font-weight:600;transition:color .5s" id="oSimF">74</div></div>
+        <div style="margin-left:auto;text-align:center"><div style="font-size:9px;color:#4a7a9a;margin-bottom:2px">Âge bio</div><div style="font-size:20px;font-weight:600;transition:color .5s" id="oSimBA">41</div></div>
+      </div>
+      <div id="oSimBars"></div>
+    </div>
+    <div style="background:#0d1820;border-radius:8px;padding:10px;border:1px solid #1e3050"><div style="font-size:8px;color:#3a7a9a;text-transform:uppercase;letter-spacing:.08em;margin-bottom:7px;font-weight:600">Organes impactés</div><div id="oSimOrg"></div></div>
+  </div>
+</div>
+</div>
+
+<!-- ÉPIGÉNÉTIQUE -->
+<div id="oracle-epigenetique" style="display:none;color:#a8c8e0">
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+  <div style="background:#0d1820;border-radius:10px;padding:16px;border:1px solid #1e3050">
+    <div style="font-size:9px;color:#3a7a9a;text-transform:uppercase;letter-spacing:.1em;margin-bottom:12px;font-weight:600">Horloge Épigénétique — Horvath Clock</div>
+    <div style="text-align:center;margin-bottom:14px">
+      <div style="font-size:10px;color:#4a7a9a;margin-bottom:5px">Âge méthylation ADN estimé</div>
+      <div style="font-size:34px;font-weight:600;color:#BA7517" id="oEpiAge">41.2</div>
+      <div style="font-size:10px;color:#4a7a9a">ans (réel: <span id="oRealAge">38</span>) · <span style="color:#BA7517">+3.2 ans accéléré</span></div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:7px;margin-bottom:12px">
+      <div><div style="display:flex;justify-content:space-between;margin-bottom:2px"><span style="font-size:10px;color:#6a9ab8">Méthylation ADN</span><span style="font-size:10px;color:#BA7517">Défavorable</span></div><div style="height:5px;background:#1a3050;border-radius:3px;overflow:hidden"><div style="height:100%;border-radius:3px;background:#BA7517;width:68%"></div></div></div>
+      <div><div style="display:flex;justify-content:space-between;margin-bottom:2px"><span style="font-size:10px;color:#6a9ab8">Expression génique</span><span style="font-size:10px;color:#C9A84C">Modérée</span></div><div style="height:5px;background:#1a3050;border-radius:3px;overflow:hidden"><div style="height:100%;border-radius:3px;background:#C9A84C;width:55%"></div></div></div>
+      <div><div style="display:flex;justify-content:space-between;margin-bottom:2px"><span style="font-size:10px;color:#6a9ab8">Inflammation chronique</span><span style="font-size:10px;color:#E24B4A">Élevée</span></div><div style="height:5px;background:#1a3050;border-radius:3px;overflow:hidden"><div style="height:100%;border-radius:3px;background:#E24B4A;width:72%"></div></div></div>
+      <div><div style="display:flex;justify-content:space-between;margin-bottom:2px"><span style="font-size:10px;color:#6a9ab8">Autophagie cellulaire</span><span style="font-size:10px;color:#C9A84C">Modérée</span></div><div style="height:5px;background:#1a3050;border-radius:3px;overflow:hidden"><div style="height:100%;border-radius:3px;background:#C9A84C;width:48%"></div></div></div>
+      <div><div style="display:flex;justify-content:space-between;margin-bottom:2px"><span style="font-size:10px;color:#6a9ab8">Sirtuines SIRT1</span><span style="font-size:10px;color:#C9A84C">Réduite</span></div><div style="height:5px;background:#1a3050;border-radius:3px;overflow:hidden"><div style="height:100%;border-radius:3px;background:#C9A84C;width:42%"></div></div></div>
+    </div>
+    <div style="padding:9px;background:#121c2c;border-radius:6px;font-size:10px;color:#6a9ab8;line-height:1.5">En réduisant l'inflammation via NutriCare, votre horloge épigénétique peut ralentir de 40%. Objectif : âge méthylation 37 ans dans 18 mois.</div>
+  </div>
+  <div style="background:#0d1820;border-radius:10px;padding:16px;border:1px solid #1e3050">
+    <div style="font-size:9px;color:#3a7a9a;text-transform:uppercase;letter-spacing:.1em;margin-bottom:12px;font-weight:600">Score Télomérique</div>
+    <div style="text-align:center;margin-bottom:14px">
+      <div style="font-size:10px;color:#4a7a9a;margin-bottom:5px">Longueur télomères estimée</div>
+      <div style="font-size:34px;font-weight:600;color:#378ADD">6.8 <span style="font-size:13px;color:#4a7a9a">kb</span></div>
+      <div style="font-size:10px;color:#BA7517">Norme 38 ans: 7.2 kb · Raccourcissement accéléré</div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:7px;margin-bottom:12px">
+      <div><div style="display:flex;justify-content:space-between;margin-bottom:2px"><span style="font-size:10px;color:#6a9ab8">Stress oxydatif</span><span style="font-size:10px;color:#E24B4A">-0.4 kb/an</span></div><div style="height:5px;background:#1a3050;border-radius:3px;overflow:hidden"><div style="height:100%;border-radius:3px;background:#E24B4A;width:75%"></div></div></div>
+      <div><div style="display:flex;justify-content:space-between;margin-bottom:2px"><span style="font-size:10px;color:#6a9ab8">Inflammation CRP</span><span style="font-size:10px;color:#BA7517">-0.2 kb/an</span></div><div style="height:5px;background:#1a3050;border-radius:3px;overflow:hidden"><div style="height:100%;border-radius:3px;background:#BA7517;width:55%"></div></div></div>
+      <div><div style="display:flex;justify-content:space-between;margin-bottom:2px"><span style="font-size:10px;color:#6a9ab8">Cortisol chronique</span><span style="font-size:10px;color:#BA7517">-0.3 kb/an</span></div><div style="height:5px;background:#1a3050;border-radius:3px;overflow:hidden"><div style="height:100%;border-radius:3px;background:#BA7517;width:65%"></div></div></div>
+      <div><div style="display:flex;justify-content:space-between;margin-bottom:2px"><span style="font-size:10px;color:#6a9ab8">Sport aérobie</span><span style="font-size:10px;color:#1D9E75">+0.15 kb/an</span></div><div style="height:5px;background:#1a3050;border-radius:3px;overflow:hidden"><div style="height:100%;border-radius:3px;background:#1D9E75;width:30%"></div></div></div>
+      <div><div style="display:flex;justify-content:space-between;margin-bottom:2px"><span style="font-size:10px;color:#6a9ab8">Polyphénols</span><span style="font-size:10px;color:#1D9E75">+0.08 kb/an</span></div><div style="height:5px;background:#1a3050;border-radius:3px;overflow:hidden"><div style="height:100%;border-radius:3px;background:#1D9E75;width:20%"></div></div></div>
+    </div>
+    <div style="padding:9px;background:#121c2c;border-radius:6px;font-size:10px;color:#6a9ab8;line-height:1.5">Sport 3x/sem + anti-oxydants + gestion stress : raccourcissement ralenti de 60%. Télomères préservés à 6.6 kb dans 5 ans.</div>
+  </div>
+</div>
+</div>
+
+<!-- COMPARAISON -->
+<div id="oracle-comparaison" style="display:none;color:#a8c8e0">
+  <div style="font-size:9px;color:#3a7a9a;text-transform:uppercase;letter-spacing:.1em;margin-bottom:12px;font-weight:600">Votre profil vs Profil optimal 38 ans</div>
+  <div style="display:grid;grid-template-columns:1fr 50px 1fr;gap:12px;align-items:start">
+    <div style="background:#0d1820;border-radius:8px;padding:14px;border:1px solid #1e3050">
+      <div style="text-align:center;margin-bottom:12px"><div style="font-size:9px;color:#4a7a9a;margin-bottom:4px">Votre profil</div><div style="font-size:30px;font-weight:600;color:#C9A84C">72</div></div>
+      <div id="oMyP"></div>
+    </div>
+    <div style="display:flex;align-items:center;justify-content:center;padding-top:40px"><span style="font-size:14px;color:#2a4a6a;font-weight:600">vs</span></div>
+    <div style="background:#0d1820;border-radius:8px;padding:14px;border:1px solid #1D9E7440">
+      <div style="text-align:center;margin-bottom:12px"><div style="font-size:9px;color:#1D9E75;margin-bottom:4px">Profil optimal</div><div style="font-size:30px;font-weight:600;color:#1D9E75">91</div></div>
+      <div id="oOptP"></div>
+    </div>
+  </div>
+  <div style="margin-top:12px;background:#0d1820;border-radius:8px;padding:12px;border:1px solid #1e3050;font-size:10px;color:#6a9ab8;line-height:1.6">Votre profil est à 79% de l'optimal. Les 3 écarts majeurs : microbiome (-32pts), foie (-26pts), cerveau (-23pts). En 18 mois de protocole NutriCare : 88/100 — 97% de l'optimal.</div>
+</div>
+
+<!-- MÉDICAMENTS -->
+<div id="oracle-medicaments" style="display:none;color:#a8c8e0">
+  <div style="font-size:9px;color:#3a7a9a;text-transform:uppercase;letter-spacing:.1em;margin-bottom:12px;font-weight:600">Alertes interactions médicaments · organes</div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+    <div>
+      <div style="font-size:8px;color:#3a7a9a;text-transform:uppercase;letter-spacing:.08em;margin-bottom:8px;font-weight:600">Médicament → Organe</div>
+      <div style="padding:9px 11px;border-radius:7px;margin-bottom:7px;border-left:3px solid #E24B4A;background:#0d1820"><div style="display:flex;align-items:center;gap:6px;margin-bottom:4px"><span style="font-size:8px;background:#E24B4A22;color:#E24B4A;padding:2px 6px;border-radius:3px;font-weight:600">URGENT</span><span style="font-size:10px;color:#a8c8e0;font-weight:500">Coumadine → Foie</span></div><div style="font-size:10px;color:#6a9ab8;line-height:1.5">INR mensuelle obligatoire. Foie sous stress glycémique — vigilance accrue.</div></div>
+      <div style="padding:9px 11px;border-radius:7px;margin-bottom:7px;border-left:3px solid #BA7517;background:#0d1820"><div style="display:flex;align-items:center;gap:6px;margin-bottom:4px"><span style="font-size:8px;background:#BA751722;color:#BA7517;padding:2px 6px;border-radius:3px;font-weight:600">ATTENTION</span><span style="font-size:10px;color:#a8c8e0;font-weight:500">Coumadine → Microbiome</span></div><div style="font-size:10px;color:#6a9ab8;line-height:1.5">Antibiotiques altèrent la flore productrice de vitamine K. Probiotiques recommandés.</div></div>
+      <div style="padding:9px 11px;border-radius:7px;margin-bottom:7px;border-left:3px solid #378ADD;background:#0d1820"><div style="display:flex;align-items:center;gap:6px;margin-bottom:4px"><span style="font-size:8px;background:#378ADD22;color:#378ADD;padding:2px 6px;border-radius:3px;font-weight:600">INFO</span><span style="font-size:10px;color:#a8c8e0;font-weight:500">Coumadine → Cardio</span></div><div style="font-size:10px;color:#6a9ab8;line-height:1.5">Alcool + Coumadine augmente l'anticoagulation. Risque hémorragique.</div></div>
+    </div>
+    <div>
+      <div style="font-size:8px;color:#3a7a9a;text-transform:uppercase;letter-spacing:.08em;margin-bottom:8px;font-weight:600">Alimentation → Médicament</div>
+      <div style="padding:9px 11px;border-radius:7px;margin-bottom:7px;border-left:3px solid #1D9E75;background:#0d1820"><div style="font-size:10px;color:#1D9E75;font-weight:600;margin-bottom:3px">Vitamine K alimentaire</div><div style="font-size:10px;color:#6a9ab8;line-height:1.4">Brocoli, épinards, chou : régularité indispensable pour contrôler l'INR.</div></div>
+      <div style="padding:9px 11px;border-radius:7px;margin-bottom:7px;border-left:3px solid #C9A84C;background:#0d1820"><div style="font-size:10px;color:#C9A84C;font-weight:600;margin-bottom:3px">Oméga-3 + Coumadine</div><div style="font-size:10px;color:#6a9ab8;line-height:1.4">Synergie anticoagulante. Informer médecin. Surveillance INR renforcée.</div></div>
+      <div style="padding:9px 11px;border-radius:7px;margin-bottom:7px;border-left:3px solid #E24B4A;background:#0d1820"><div style="font-size:10px;color:#E24B4A;font-weight:600;margin-bottom:3px">Alcool + Coumadine</div><div style="font-size:10px;color:#6a9ab8;line-height:1.4">Interaction majeure. Max 1 verre/semaine. Risque hémorragique sévère.</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- TIMELINE -->
+<div id="oracle-timeline" style="display:none;color:#a8c8e0">
+  <div style="font-size:9px;color:#3a7a9a;text-transform:uppercase;letter-spacing:.1em;margin-bottom:12px;font-weight:600">Timeline de votre biologie sur 10 ans</div>
+  <div id="oTlItems"></div>
+</div>
+
+</div>
+</div>
+
+<div id="simulatorView"<div id="simulatorView" style="display:none;padding:32px;overflow-y:auto;background:white;width:100%">
   <div style="max-width:800px;margin:0 auto">
     <div style="display:inline-block;font-size:0.68rem;font-weight:600;text-transform:uppercase;letter-spacing:.12em;color:#C9A84C;background:#FDF6E8;padding:5px 14px;border-radius: 4px;margin-bottom:12px">Jumeau Numérique Santé</div>
     <div style="font-family:'Open Sans',serif;font-size:2rem;font-weight:400;color:#021A35;margin-bottom:6px">Simulez vos décisions <em style="font-style:italic;color:#C9A84C">avant de les prendre</em></div>
@@ -1996,6 +2273,127 @@ function toggleMobileMenu() {
     w.print();
   }
 
+  function initOracle() {
+    const profile = JSON.parse(localStorage.getItem('nutricare_profile') || '{}');
+    const name = profile.full_name || 'Patient';
+    const initials = name.split(' ').map(n=>n[0]).join('').toUpperCase().slice(0,2);
+    const plan = profile.plan || 'free';
+    document.getElementById('oraclePatientHeader').textContent = name.toUpperCase() + ' · VITALITÉ: 72/100 · RÉCUP: 87% · TÉLOMÈRES: 6.8kb';
+    if (plan === 'free') {
+      document.getElementById('oracleView').innerHTML = '<div style="text-align:center;padding:60px;color:#a8c8e0"><div style="font-size:2rem;margin-bottom:12px">🔮</div><div style="font-size:1.2rem;margin-bottom:8px;color:#5a9fc0">Oracle Santé · Premium</div><div style="font-size:0.88rem;color:#4a7a9a;margin-bottom:20px">Fonctionnalité réservée aux abonnés Premium.</div><button onclick="showView('pricing')" style="background:#C9A84C;color:#021A35;border:none;border-radius:4px;padding:12px 28px;cursor:pointer;font-family:'DM Sans',sans-serif">Voir les abonnements →</button></div>';
+    }
+    oSimU();
+    oracleTab('scanner', document.querySelector('#oracleTabs div'));
+  }
+
+  function oracleTab(tab, el) {
+    ['scanner','simulation','epigenetique','comparaison','medicaments','timeline'].forEach(t => {
+      const el2 = document.getElementById('oracle-'+t);
+      if (el2) el2.style.display = t === tab ? 'block' : 'none';
+    });
+    document.querySelectorAll('#oracleTabs div').forEach(d => {
+      d.style.background = 'transparent';
+      d.style.color = '#4a7a9a';
+      d.style.borderColor = 'transparent';
+      d.style.fontWeight = '400';
+    });
+    if (el) {
+      el.style.background = '#1a2a3e';
+      el.style.color = '#a8c8e0';
+      el.style.borderColor = '#2a4a6a';
+      el.style.fontWeight = '500';
+    }
+    if (tab === 'comparaison') oBuildCmp();
+    if (tab === 'timeline') oBuildTL();
+  }
+
+  function oSelOrgan(k) {
+    const OD = {
+      cerveau:{l:'CERVEAU',c:'#7F77DD',d:'Déficit DHA et magnésium. Cortisol nocturne perturbant le cortex préfrontal.',p:'Score 74 (+6). Déclin cognitif -35%. Mémoire +22%.',a:['DHA 1g/j + Mg 400mg','Méditation 10min/j','Sommeil 8h régulier']},
+      coeur:{l:'CARDIO',c:'#E24B4A',d:'TA 132/84 mmHg. CRP 2.8 mg/L — inflammation vasculaire.',p:'Score 78 (+7). TA normalisée en 3 mois. Risque -28%.',a:['DASH — sel<5g/j','Cardio 30min 5x/sem','CoQ10 200mg']},
+      poumons:{l:'POUMONS',c:'#378ADD',d:'Capacité 94% théorique. Saturation O2 98%.',p:'Score 86 (+4). Capacité +8% avec sport.',a:['Hydratation 2L/j','Aérobie 3x/sem','Vit D 2000 UI']},
+      foie:{l:'FOIE — ALERTE',c:'#BA7517',d:'Glycémie 6.1 mmol/L pré-diabétique. TG 1.8g/L.',p:'Score 76 (+11). Glycémie normalisée 3 mois. DT2 -60%.',a:['IG bas<55','Jeûne 16:8','Berberine 500mg']},
+      intestins:{l:'MICROBIOME',c:'#1D9E75',d:'Diversité réduite. Fibres 18g/j. Perméabilité suspectée.',p:'Score 72 (+13). Diversité +45% en 3 mois.',a:['30g fibres/j','Probiotiques L.rhamnosus','Test perméabilité']}
+    };
+    const o = OD[k];
+    document.querySelectorAll('[id^="ob-"]').forEach(b => { b.style.background = '#121c2c'; b.style.borderColor = '#1e3050'; });
+    const btn = document.getElementById('ob-'+k);
+    if (btn) { btn.style.background = '#1a2a3e'; btn.style.borderColor = '#4a8fa8'; }
+    document.getElementById('oOrgN').textContent = o.l;
+    document.getElementById('oOrgN').style.color = o.c;
+    document.getElementById('oOrgD').textContent = o.d;
+    document.getElementById('oOrgP').innerHTML = '<span style="color:'+o.c+'">'+o.p+'</span>';
+    document.getElementById('oOrgA').innerHTML = o.a.map((a,i) => '<div style="display:flex;gap:4px;margin-bottom:2px"><span style="font-size:8px;color:'+o.c+';font-weight:700;font-family:monospace">'+(i+1)+'.</span><span style="font-size:9px;color:#6a9ab8">'+a+'</span></div>').join('');
+    document.getElementById('oOrgDetail').style.display = 'block';
+  }
+
+  function oSimU() {
+    const sl = +(document.getElementById('osl-sleep')||{value:7}).value;
+    const st = +(document.getElementById('osl-stress')||{value:6}).value;
+    const sp = +(document.getElementById('osl-sport')||{value:20}).value;
+    const su = +(document.getElementById('osl-sucre')||{value:55}).value;
+    const ea = +(document.getElementById('osl-eau')||{value:1.5}).value;
+    const al = +(document.getElementById('osl-alcool')||{value:5}).value;
+    const sv = (id,v) => { const el=document.getElementById(id); if(el) el.textContent=v; };
+    sv('osv-sleep',sl+'h'); sv('osv-stress',st); sv('osv-sport',sp+'min'); sv('osv-sucre',su+'g'); sv('osv-eau',ea.toFixed(1)+'L'); sv('osv-alcool',al);
+    const sc = {
+      energy: Math.round(Math.min(100,Math.max(0,50+(sl-6)*8-(st-5)*4+sp*.4-(su-30)*.3+(ea-1.5)*10-al*2))),
+      cardio: Math.round(Math.min(100,Math.max(0,71+(sl-7)*3-(st-5)*3+sp*.5-al*2))),
+      foie:   Math.round(Math.min(100,Math.max(0,65-(su-30)*.4-al*3+(ea-1.5)*5+sp*.3))),
+      microb: Math.round(Math.min(100,Math.max(0,59-(su-30)*.3+(ea-1.5)*8+sp*.2-al*1.5))),
+      stress: Math.round(Math.min(100,Math.max(0,60-(st-5)*8+(sl-7)*5+sp*.4))),
+    };
+    const tot = Math.round(Object.values(sc).reduce((a,b)=>a+b,0)/5);
+    const ba = Math.round(41+(72-tot)*.15);
+    const c = tot>80?'#1D9E75':tot>65?'#C9A84C':'#E24B4A';
+    const sf = document.getElementById('oSimF'); if(sf){sf.textContent=tot;sf.style.color=c;}
+    const sba = document.getElementById('oSimBA'); if(sba){sba.textContent=ba;sba.style.color=tot>75?'#1D9E75':'#C9A84C';}
+    const bars = [{l:'Énergie',v:sc.energy,c:'#C9A84C'},{l:'Cardio',v:sc.cardio,c:'#E24B4A'},{l:'Foie',v:sc.foie,c:'#BA7517'},{l:'Microbiome',v:sc.microb,c:'#1D9E75'},{l:'Bien-être',v:sc.stress,c:'#7F77DD'}];
+    const sb = document.getElementById('oSimBars'); if(sb) sb.innerHTML=bars.map(b=>`<div style="margin-bottom:4px"><div style="display:flex;justify-content:space-between;margin-bottom:2px"><span style="font-size:9px;color:#6a9ab8">${b.l}</span><span style="font-size:9px;color:${b.c};font-family:monospace">${b.v}</span></div><div style="height:4px;background:#1a3050;border-radius:2px;overflow:hidden"><div style="height:100%;border-radius:2px;background:${b.c};width:${b.v}%;transition:width .6s ease"></div></div></div>`).join('');
+    const imp = [];
+    if(sl<6) imp.push({o:'Cerveau',t:'Manque sommeil — cortisol élevé',c:'#E24B4A'});
+    if(st>7) imp.push({o:'Cardio',t:'Stress élevé — TA augmentée',c:'#E24B4A'});
+    if(su>60) imp.push({o:'Foie',t:'Sucre élevé — glycémie instable',c:'#BA7517'});
+    if(al>7) imp.push({o:'Foie',t:'Alcool — interaction Coumadine',c:'#E24B4A'});
+    if(sp>40) imp.push({o:'Système',t:'Bonne activité — télomères protégés',c:'#1D9E75'});
+    if(ea>=2) imp.push({o:'Microbiome',t:'Bonne hydratation — transit optimal',c:'#1D9E75'});
+    const so = document.getElementById('oSimOrg'); if(so) so.innerHTML=imp.map(i=>`<div style="display:flex;gap:6px;align-items:flex-start;padding:5px;background:#0d1820;border-radius:4px;border-left:2px solid ${i.c};margin-bottom:4px"><span style="font-size:9px;color:${i.c};font-weight:600;min-width:55px">${i.o}</span><span style="font-size:9px;color:#6a9ab8;line-height:1.4">${i.t}</span></div>`).join('');
+  }
+
+  function oBuildCmp() {
+    const data=[{l:'Cerveau',my:68,opt:91},{l:'Cardio',my:71,opt:94},{l:'Poumons',my:82,opt:96},{l:'Foie',my:65,opt:91},{l:'Microbiome',my:59,opt:89},{l:'Hormonal',my:62,opt:92}];
+    const mk=(isOpt)=>data.map(r=>{const v=isOpt?r.opt:r.my;const c=v>=85?'#1D9E75':v>=70?'#C9A84C':'#E24B4A';return `<div style="margin-bottom:6px"><div style="display:flex;justify-content:space-between;margin-bottom:2px"><span style="font-size:9px;color:#6a9ab8">${r.l}</span><span style="font-size:9px;color:${c};font-family:monospace">${v}</span></div><div style="height:4px;background:#1a3050;border-radius:2px;overflow:hidden"><div style="height:100%;border-radius:2px;background:${c};width:${v}%;transition:width .8s ease"></div></div></div>`;}).join('');
+    const mp=document.getElementById('oMyP'); if(mp) mp.innerHTML=mk(false);
+    const op=document.getElementById('oOptP'); if(op) op.innerHTML=mk(true);
+  }
+
+  function oBuildTL() {
+    const ev=[
+      {t:'Maintenant',y:'2026',c:'#BA7517',ti:'Zone pré-diabétique détectée',d:'HbA1c 5.8% — intervention nutritionnelle urgente. Score: 72/100'},
+      {t:'+3 mois',y:'2026',c:'#C9A84C',ti:'Normalisation glycémique',d:'Jeûne 16:8 + IG bas: glycémie à 5.4. Foie score: 72'},
+      {t:'+6 mois',y:'2026',c:'#C9A84C',ti:'Âge biologique recule',d:'Score 78/100. Âge bio: 39.5 ans. CRP: 1.8 mg/L'},
+      {t:'+1 an',y:'2027',c:'#1D9E75',ti:'Microbiome régénéré',d:'Diversité +45%. Score 83/100. Énergie: 8.2/10'},
+      {t:'+2 ans',y:'2028',c:'#1D9E75',ti:'Âge biologique = âge réel',d:'Score 88/100. Âge bio: 40 ans. Télomères: 6.6 kb'},
+      {t:'+5 ans',y:'2031',c:'#1D9E75',ti:'Vieillissement inversé',d:'Score 94/100. Âge bio: 39 ans pour réel 43. +4 ans.'},
+      {t:'+10 ans',y:'2036',c:'#1D9E75',ti:'Longévité premium',d:'Score 97/100. Âge bio: 38 pour réel 48. +7.8 ans de vie saine.'},
+    ];
+    const tl=document.getElementById('oTlItems');
+    if(tl) tl.innerHTML=ev.map((e,i)=>`<div style="display:flex;gap:12px;padding:10px 0;${i<ev.length-1?'border-bottom:1px solid #1e3050':''}"><div style="min-width:58px;text-align:center"><div style="font-size:10px;color:${e.c};font-weight:600;font-family:monospace">${e.t}</div><div style="font-size:8px;color:#2a4a60;font-family:monospace">${e.y}</div></div><div style="display:flex;flex-direction:column;align-items:center"><div style="width:10px;height:10px;border-radius:50%;background:${e.c};box-shadow:0 0 8px ${e.c}80;flex-shrink:0"></div>${i<ev.length-1?'<div style="width:1px;flex:1;background:#1e3050;min-height:16px;margin-top:2px"></div>':''}</div><div><div style="font-size:11px;font-weight:600;color:#a8c8e0;margin-bottom:3px">${e.ti}</div><div style="font-size:10px;color:#6a9ab8;line-height:1.5">${e.d}</div></div></div>`).join('');
+  }
+
+  async function generateOracleAI() {
+    const profile = JSON.parse(localStorage.getItem('nutricare_profile') || '{}');
+    try {
+      const res = await fetch(BACKEND_URL + '/api/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + authToken },
+        body: JSON.stringify({ message: 'Génère une analyse Oracle Santé complète pour ce profil: pathologies: ' + (profile.pathologies||[]).join(', ') + ', médicaments: ' + (profile.medications||[]).join(', ') + '. Donne un score de vitalité 0-100, un âge biologique estimé, les 3 principales alertes, et les 3 actions prioritaires. Sois concis et médical.' })
+      });
+      const data = await res.json();
+      alert('Oracle IA : ' + (data.response || data.message || 'Analyse générée'));
+    } catch(e) { console.error(e); }
+  }
+
   function setSimQ(el) {
     document.getElementById('simInput').value = el.textContent;
     runSimulation();
@@ -2450,6 +2848,8 @@ if (urlParams.get('view') === 'protocols') {
     document.getElementById('ordonnanceView').style.display = view === 'ordonnance' ? 'block' : 'none';
     document.getElementById('insightsView').style.display = view === 'insights' ? 'block' : 'none';
     document.getElementById('simulatorView').style.display = view === 'simulator' ? 'block' : 'none';
+    document.getElementById('oracleView').style.display = view === 'oracle' ? 'flex' : 'none';
+    if (view === 'oracle') initOracle();
     document.getElementById('passeportView').style.display = view === 'passeport' ? 'block' : 'none';
     document.getElementById('biologieView').style.display = view === 'biologie' ? 'block' : 'none';
     document.getElementById('entrepriseView').style.display = view === 'entreprise' ? 'block' : 'none';
