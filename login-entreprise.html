@@ -170,6 +170,20 @@
 
 <script>
 const BACKEND_URL = 'https://nutricare-backend-production.up.railway.app';
+const params = new URLSearchParams(window.location.search);
+const mode = params.get('mode');
+const inviteCode = params.get('code');
+const companyName = params.get('company');
+
+// Adapter l'UI selon le mode
+if (mode === 'join') {
+  document.querySelector('.auth-title').textContent = 'Rejoindre ' + (companyName ? decodeURIComponent(companyName) : 'votre entreprise');
+  document.querySelector('.auth-sub').textContent = 'Créez votre compte pour accéder au programme bien-être de votre entreprise.';
+  document.querySelector('.left-title').innerHTML = 'Rejoignez votre<br>équipe sur<br><em>' + (companyName ? decodeURIComponent(companyName) : 'NutriCare') + '</em>';
+  // Masquer le champ nom entreprise et licences
+  document.getElementById('regEntreprise').closest('.field').style.display = 'none';
+  document.getElementById('regLicences').closest('.field').style.display = 'none';
+}
 
 function switchTab(tab) {
   document.querySelectorAll('.auth-tab').forEach(t => t.classList.remove('active'));
@@ -221,27 +235,31 @@ async function register() {
       return;
     }
 
-    // 3. Sauvegarder le token
     localStorage.setItem('nutricare_token', authData.token);
     localStorage.setItem('nutricare_user', JSON.stringify(authData.user));
-
-    // 3. Créer l'entreprise
-    const resEnt = await fetch(`${BACKEND_URL}/api/entreprise/create`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${authData.token}` },
-      body: JSON.stringify({ nom: entreprise, nb_licences: licences })
-    });
-    const entData = await resEnt.json();
-    if (!resEnt.ok) {
-      errEl.textContent = entData.error || 'Erreur lors de la création de l\'entreprise';
-      errEl.classList.add('show');
-      return;
+    if (mode === 'join' && inviteCode) {
+      const resJoin = await fetch(BACKEND_URL + '/api/entreprise/join', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + authData.token },
+        body: JSON.stringify({ code: inviteCode })
+      });
+      const joinData = await resJoin.json();
+      if (!resJoin.ok) { errEl.textContent = joinData.error || 'Code invalide'; errEl.classList.add('show'); return; }
+      document.getElementById('regSuccess').textContent = 'Bienvenue ! Redirection...';
+      document.getElementById('regSuccess').classList.add('show');
+      setTimeout(() => window.location.href = 'app.html?view=entreprise', 1500);
+    } else {
+      const resEnt = await fetch(BACKEND_URL + '/api/entreprise/create', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + authData.token },
+        body: JSON.stringify({ nom: entreprise, nb_licences: licences })
+      });
+      const entData = await resEnt.json();
+      if (!resEnt.ok) { errEl.textContent = entData.error || 'Erreur'; errEl.classList.add('show'); return; }
+      document.getElementById('regSuccess').textContent = 'Espace cree ! Code : ' + entData.code_invitation + '. Redirection...';
+      document.getElementById('regSuccess').classList.add('show');
+      setTimeout(() => window.location.href = 'app.html?entreprise=create', 1500);
     }
-
-    // 4. Rediriger vers l'app
-    document.getElementById('regSuccess').textContent = `Espace créé ! Code invitation : ${entData.code_invitation}. Redirection...`;
-    document.getElementById('regSuccess').classList.add('show');
-    setTimeout(() => window.location.href = 'app.html?entreprise=create', 1500);
 
   } catch(e) {
     errEl.textContent = 'Erreur de connexion au serveur';
