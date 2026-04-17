@@ -751,8 +751,51 @@
           <div style="font-size:0.88rem;font-weight:500;color:white" id="entRoleDisplay">Salarié</div>
         </div>
       </div>
-      <div style="background:#EAF3DE;border-radius:4px;padding:16px 20px;border:1px solid #C0DD97;font-size:0.85rem;color:#3B6D11">
-        ✓ Vous bénéficiez du programme bien-être nutritionnel de votre entreprise. Toutes les fonctionnalités Premium sont accessibles.
+      <div style="background:#EAF3DE;border-radius:4px;padding:16px 20px;border:1px solid #C0DD97;font-size:0.85rem;color:#3B6D11;margin-bottom:20px">
+        ✓ Vous bénéficiez du programme bien-être nutritionnel de votre entreprise.
+      </div>
+
+      <!-- Progression salarié -->
+      <div id="entProgression" style="background:white;border-radius:4px;padding:24px;border:1px solid #B5D4F4;margin-bottom:16px">
+        <div style="font-family:'Cormorant Garamond',serif;font-size:1.3rem;font-weight:600;color:#021A35;margin-bottom:4px">🎯 Votre progression</div>
+        <div style="font-size:0.78rem;color:rgba(2,26,53,0.45);margin-bottom:20px">Complétez votre profil pour débloquer des avantages exclusifs</div>
+
+        <!-- Barre progression -->
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
+          <span style="font-size:0.78rem;font-weight:600;color:#021A35">Profil complété</span>
+          <span style="font-family:'Cormorant Garamond',serif;font-size:1.4rem;font-weight:600;color:#C9A84C" id="entProgressPct">0%</span>
+        </div>
+        <div style="height:8px;background:#E6F1FB;border-radius:4px;overflow:hidden;margin-bottom:20px">
+          <div id="entProgressBar" style="height:100%;background:linear-gradient(90deg,#C9A84C,#E8C96A);border-radius:4px;width:0%;transition:width 1s ease"></div>
+        </div>
+
+        <!-- Paliers -->
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:20px">
+          <div id="palier1" style="border-radius:4px;padding:12px;text-align:center;border:1px solid #E6F1FB;background:#F0F6FF">
+            <div style="font-size:1.4rem;margin-bottom:4px">🥉</div>
+            <div style="font-size:0.72rem;font-weight:600;color:#021A35;margin-bottom:2px">Bronze · 40%</div>
+            <div style="font-size:0.68rem;color:rgba(2,26,53,0.5)">Standard 1 mois</div>
+          </div>
+          <div id="palier2" style="border-radius:4px;padding:12px;text-align:center;border:1px solid #E6F1FB;background:#F0F6FF">
+            <div style="font-size:1.4rem;margin-bottom:4px">🥈</div>
+            <div style="font-size:0.72rem;font-weight:600;color:#021A35;margin-bottom:2px">Argent · 70%</div>
+            <div style="font-size:0.68rem;color:rgba(2,26,53,0.5)">Standard permanent</div>
+          </div>
+          <div id="palier3" style="border-radius:4px;padding:12px;text-align:center;border:1px solid #E6F1FB;background:#F0F6FF">
+            <div style="font-size:1.4rem;margin-bottom:4px">🥇</div>
+            <div style="font-size:0.72rem;font-weight:600;color:#021A35;margin-bottom:2px">Or · 100%</div>
+            <div style="font-size:0.68rem;color:rgba(2,26,53,0.5)">Premium offert !</div>
+          </div>
+        </div>
+
+        <!-- Critères -->
+        <div style="font-size:0.72rem;font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:#85B7EB;margin-bottom:10px">Ce qu'il reste à faire</div>
+        <div id="entCriteres" style="display:flex;flex-direction:column;gap:6px"></div>
+
+        <!-- Prochain palier -->
+        <div id="entNextPalier" style="display:none;background:#FDF6E8;border-radius:4px;padding:12px 16px;margin-top:16px;border-left:3px solid #C9A84C">
+          <div style="font-size:0.78rem;color:#854F0B;font-weight:500" id="entNextPalierText"></div>
+        </div>
       </div>
     </div>
 
@@ -1510,6 +1553,7 @@ function toggleMobileMenu() {
         document.getElementById('entRoleDisplay').textContent = 'Salarié';
         document.getElementById('menuParticulier').style.display = 'block';
         document.getElementById('menuRH').style.display = 'none';
+        loadProgression();
       }
     } catch(e) {
       document.getElementById('entLoading').style.display = 'none';
@@ -1634,6 +1678,51 @@ function toggleMobileMenu() {
       document.getElementById('entCreateError').style.display = 'block';
       document.getElementById('entCreateError').textContent = 'Erreur de connexion';
     }
+  }
+
+  async function loadProgression() {
+    try {
+      const res = await fetch(`${BACKEND_URL}/api/entreprise/progression`, {
+        headers: { 'Authorization': `Bearer ${authToken}` }
+      });
+      const data = await res.json();
+      if (!res.ok) return;
+
+      // Barre progression
+      const pct = data.score;
+      document.getElementById('entProgressPct').textContent = pct + '%';
+      setTimeout(() => document.getElementById('entProgressBar').style.width = pct + '%', 100);
+
+      // Paliers
+      const palierEls = ['palier1', 'palier2', 'palier3'];
+      const seuils = [40, 70, 100];
+      palierEls.forEach((id, i) => {
+        const el = document.getElementById(id);
+        if (pct >= seuils[i]) {
+          el.style.background = '#EAF3DE';
+          el.style.border = '1px solid #C0DD97';
+          el.innerHTML += '<div style="font-size:0.65rem;color:#3B6D11;font-weight:600;margin-top:4px">✓ Débloqué !</div>';
+        }
+      });
+
+      // Critères
+      const criteresEl = document.getElementById('entCriteres');
+      criteresEl.innerHTML = data.criteres.map(c => `
+        <div style="display:flex;align-items:center;gap:8px;padding:6px 0;border-bottom:1px solid rgba(2,26,53,0.05)">
+          <div style="width:18px;height:18px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:0.7rem;${c.done ? 'background:#EAF3DE;color:#3B6D11' : 'background:#E6F1FB;color:#85B7EB'}">${c.done ? '✓' : '○'}</div>
+          <div style="flex:1;font-size:0.78rem;color:${c.done ? 'rgba(2,26,53,0.4)' : '#021A35'};text-decoration:${c.done ? 'line-through' : 'none'}">${c.label}</div>
+          <div style="font-size:0.7rem;color:#C9A84C;font-weight:600">+${c.points}pts</div>
+        </div>`).join('');
+
+      // Prochain palier
+      if (data.prochain_palier) {
+        const next = data.prochain_palier;
+        const pts_needed = Math.round((next.seuil - pct) * data.max_points / 100);
+        document.getElementById('entNextPalier').style.display = 'block';
+        document.getElementById('entNextPalierText').textContent = `${next.icon} Plus que ${next.seuil - pct}% pour débloquer le palier ${next.label} — ${next.desc} !`;
+      }
+
+    } catch(e) { console.error('Erreur progression:', e); }
   }
 
   async function loadEntrepriseDashboard() {
