@@ -386,9 +386,15 @@ footer { background:#0A0A0A; padding:64px 48px 32px; }
     btn.style.color = "#C9A84C";
     btn.style.borderColor = "#C9A84C";
   }
+  const btnC = document.getElementById("btnCommencer");
+  if (token && btnC) {
+    btnC.innerHTML = "Mon espace →";
+    btnC.style.background = "#C9A84C";
+    btnC.style.color = "#021A35";
+  }
 })();
 </script>
-    <a href="app.html" class="btn-nav-dark"><span class="btn-arrow-hide">Commencer →</span><span class="btn-arrow-show">Commencer</span></a>
+    <a href="app.html" class="btn-nav-dark" id="btnCommencer"><span class="btn-arrow-hide">Commencer →</span><span class="btn-arrow-show">Commencer</span></a>
   </div>
 </nav>
 
