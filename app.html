@@ -3329,8 +3329,10 @@ function renderHealthHistory(logs) {
     </div>`).join('');
 }
 async function loadProtocols() {
-  const profile = JSON.parse(localStorage.getItem('nutricare_user') || '{}');
-  const pathologies = document.getElementById('profilePathologies')?.value?.split(',').map(s => s.trim()).filter(Boolean) || [];
+  const profile = JSON.parse(localStorage.getItem('nutricare_profile') || localStorage.getItem('nutricare_user') || '{}');
+  const storedPathologies = profile.pathologies || [];
+  const fieldPathologies = document.getElementById('profilePathologies')?.value?.split(',').map(s => s.trim()).filter(Boolean) || [];
+  const pathologies = fieldPathologies.length ? fieldPathologies : storedPathologies;
 
   if (!pathologies.length) {
     document.getElementById('protocolsList').innerHTML = `
