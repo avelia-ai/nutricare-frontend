@@ -1216,24 +1216,49 @@ document.querySelectorAll('.fade-up').forEach(el => obs.observe(el));
 })();
 </script>
 <script>
-var featUrls = [
-  'feature.html?id=chat',
-  'feature.html?id=protocols',
-  'feature.html?id=menus',
-  'feature.html?id=health',
-  'feature.html?id=pro',
-  'feature.html?id=analysis',
-  'feature.html?id=oracle',
-  'feature.html?id=biology',
-  'feature.html?id=ordonnance',
-  'feature.html?id=simulator',
-  'feature.html?id=passeport',
-  'entreprise.html'
+var featData = [
+  {url:'feature.html?id=chat',    appView:'chat',       plan:'free'},
+  {url:'feature.html?id=protocols',appView:'protocols', plan:'free'},
+  {url:'feature.html?id=menus',   appView:'menus',      plan:'standard'},
+  {url:'feature.html?id=health',  appView:'health',     plan:'standard'},
+  {url:'feature.html?id=pro',     appView:'pro',        plan:'standard'},
+  {url:'feature.html?id=analysis',appView:'analysis',   plan:'premium'},
+  {url:'feature.html?id=oracle',  appView:'oracle',     plan:'premium'},
+  {url:'feature.html?id=biology', appView:'biology',    plan:'premium'},
+  {url:'feature.html?id=ordonnance',appView:'ordonnance',plan:'premium'},
+  {url:'feature.html?id=simulator',appView:'simulator', plan:'premium'},
+  {url:'feature.html?id=passeport',appView:'passeport', plan:'premium'},
+  {url:'entreprise.html',         appView:null,          plan:'entreprise'},
 ];
+
+var planLevel = {free:0, standard:1, premium:2, entreprise:3};
+
 document.querySelectorAll('.feat-item').forEach(function(card, i) {
   card.style.cursor = 'pointer';
   card.addEventListener('click', function() {
-    window.location.href = featUrls[i] || 'app.html';
+    var f = featData[i];
+    var token = localStorage.getItem('nutricare_token');
+    var profile = JSON.parse(localStorage.getItem('nutricare_profile') || '{}');
+    var userPlan = profile.plan || 'free';
+
+    if (!token) {
+      window.location.href = f.url;
+      return;
+    }
+
+    // Connecté
+    if (f.appView === null) {
+      window.location.href = 'entreprise.html';
+      return;
+    }
+
+    if (planLevel[userPlan] >= planLevel[f.plan]) {
+      // Plan suffisant -> accès direct
+      window.location.href = 'app.html?view=' + f.appView;
+    } else {
+      // Plan insuffisant -> page tarifs
+      window.location.href = 'app.html?view=pricing';
+    }
   });
 });
 </script>
