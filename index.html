@@ -653,7 +653,7 @@ document.querySelectorAll('.feat-item').forEach(function(card){
 .feat-back.entreprise .feat-back-cta{color:#AFA9EC}
 .feat-item{height:200px;cursor:pointer}
 .feat-inner{width:100%;height:100%;position:relative;transform-style:preserve-3d;transition:transform .65s cubic-bezier(.4,0,.2,1)}
-.feat-item:hover .feat-inner{transform:rotateY(180deg)}
+
 .feat-front,.feat-back{position:absolute;width:100%;height:100%;backface-visibility:hidden;border-radius:12px;padding:20px}
 .feat-front{background:#fff;border:1px solid #eee;display:flex;flex-direction:column;align-items:flex-start;justify-content:flex-end;transition:box-shadow .3s}
 .feat-item:hover .feat-front{box-shadow:0 20px 40px rgba(0,0,0,.10)}
@@ -1218,18 +1218,8 @@ document.querySelectorAll('.fade-up').forEach(el => obs.observe(el));
 var featUrls = ['app.html','app.html','app.html','app.html','app.html','app.html','app.html','app.html','app.html','app.html','app.html','entreprise.html'];
 document.querySelectorAll('.feat-item').forEach(function(card, i) {
   card.style.cursor = 'pointer';
-  var flipped = false;
   card.addEventListener('click', function() {
-    if (!flipped) {
-      flipped = true;
-      card.querySelector('.feat-inner').style.transform = 'rotateY(180deg)';
-    } else {
-      window.location.href = featUrls[i] || 'app.html';
-    }
-  });
-  card.addEventListener('mouseleave', function() {
-    flipped = false;
-    card.querySelector('.feat-inner').style.transform = '';
+    window.location.href = featUrls[i] || 'app.html';
   });
 });
 </script>
