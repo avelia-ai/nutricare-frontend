@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Avelia AI · Fonctionnalité</title>
+<link rel="icon" href="favicon.ico">
+<link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--navy:#021A35;--gold:#C9A84C;--gold-light:#FAC775;--white:#fff;--gray:#f8f8f6}
+body{font-family:'Open Sans',sans-serif;color:var(--navy);background:var(--white)}
+
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:16px 40px;display:flex;align-items:center;justify-content:space-between;background:rgba(255,255,255,.95);backdrop-filter:blur(10px);border-bottom:1px solid #eee}
+.nav-logo img{height:36px}
+.nav-actions{display:flex;gap:12px;align-items:center}
+.btn-ghost{padding:9px 22px;border:1.5px solid #ddd;border-radius:4px;font-size:.85rem;color:var(--navy);text-decoration:none;transition:all .2s}
+.btn-ghost:hover{border-color:var(--navy)}
+.btn-dark{padding:10px 24px;background:var(--navy);color:white;border:none;border-radius:4px;font-size:.85rem;text-decoration:none;cursor:pointer;transition:all .2s}
+.btn-dark:hover{background:#0a2d52}
+.btn-gold{padding:10px 24px;background:var(--gold);color:var(--navy);border:none;border-radius:4px;font-size:.85rem;font-weight:700;text-decoration:none;cursor:pointer;transition:all .2s}
+.btn-gold:hover{background:var(--gold-light)}
+
+/* HERO */
+.feature-hero{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:120px 40px 80px;position:relative;overflow:hidden;background:var(--navy)}
+.feature-hero-bg{position:absolute;inset:0;opacity:.12;pointer-events:none}
+.feature-hero-badge{display:inline-flex;align-items:center;gap:8px;background:rgba(201,168,76,.15);border:1px solid rgba(201,168,76,.3);color:var(--gold);font-size:.75rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:6px 16px;border-radius:4px;margin-bottom:28px}
+.feature-hero h1{font-size:clamp(2.2rem,5vw,4rem);font-weight:700;color:white;line-height:1.1;margin-bottom:20px;max-width:800px}
+.feature-hero h1 em{color:var(--gold);font-style:normal}
+.feature-hero-sub{font-size:1.05rem;color:rgba(255,255,255,.65);max-width:580px;line-height:1.75;margin-bottom:40px}
+.feature-hero-ctas{display:flex;gap:14px;justify-content:center;flex-wrap:wrap}
+.feature-hero-icon{width:80px;height:80px;background:rgba(201,168,76,.15);border:1px solid rgba(201,168,76,.25);border-radius:16px;display:flex;align-items:center;justify-content:center;margin:0 auto 32px}
+
+/* BÉNÉFICES */
+.benefits{padding:80px 40px;background:var(--white);max-width:1100px;margin:0 auto}
+.section-label{font-size:.75rem;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:var(--gold);margin-bottom:12px}
+.section-title{font-size:clamp(1.6rem,3vw,2.4rem);font-weight:700;color:var(--navy);margin-bottom:48px;max-width:600px}
+.benefits-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:24px}
+.benefit-card{padding:28px;border:1px solid #eee;border-radius:10px;transition:all .3s}
+.benefit-card:hover{border-color:var(--gold);box-shadow:0 8px 32px rgba(201,168,76,.1);transform:translateY(-4px)}
+.benefit-icon{width:44px;height:44px;background:#f8f8f6;border-radius:10px;display:flex;align-items:center;justify-content:center;margin-bottom:16px}
+.benefit-card h3{font-size:1rem;font-weight:700;color:var(--navy);margin-bottom:8px}
+.benefit-card p{font-size:.88rem;color:#666;line-height:1.65}
+
+/* COMMENT ÇA MARCHE */
+.how{padding:80px 40px;background:var(--gray);max-width:100%}
+.how-inner{max-width:1100px;margin:0 auto}
+.steps{display:flex;flex-direction:column;gap:0;margin-top:40px}
+.step{display:grid;grid-template-columns:60px 1fr;gap:24px;padding:28px 0;border-bottom:1px solid #eee;align-items:start}
+.step:last-child{border-bottom:none}
+.step-num{width:48px;height:48px;background:var(--navy);color:var(--gold);font-size:1.1rem;font-weight:700;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.step h3{font-size:1rem;font-weight:700;color:var(--navy);margin-bottom:6px}
+.step p{font-size:.88rem;color:#666;line-height:1.65}
+
+/* CTA FINAL */
+.cta-section{padding:100px 40px;background:var(--navy);text-align:center;position:relative;overflow:hidden}
+.cta-section h2{font-size:clamp(1.8rem,4vw,3rem);font-weight:700;color:white;margin-bottom:16px}
+.cta-section p{font-size:1rem;color:rgba(255,255,255,.6);margin-bottom:40px;max-width:500px;margin-left:auto;margin-right:auto;line-height:1.7}
+.cta-section .btn-gold{font-size:1rem;padding:14px 36px}
+
+/* PLAN BADGE */
+.plan-required{display:inline-flex;align-items:center;gap:6px;padding:4px 12px;border-radius:3px;font-size:.75rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;margin-bottom:16px}
+.plan-free{background:#E8F4FD;color:#0C447C}
+.plan-standard{background:#EDF7F2;color:#085041}
+.plan-premium{background:rgba(201,168,76,.15);color:var(--gold);border:1px solid rgba(201,168,76,.3)}
+.plan-entreprise{background:#EEEDFE;color:#3C3489}
+
+/* FOOTER */
+footer{padding:32px 40px;text-align:center;border-top:1px solid #eee;font-size:.82rem;color:#aaa}
+
+@media(max-width:768px){
+  nav{padding:14px 20px}
+  .feature-hero{padding:100px 24px 60px}
+  .benefits,.how-inner{padding:60px 24px}
+  .how{padding:60px 0}
+  .cta-section{padding:70px 24px}
+  .step{grid-template-columns:44px 1fr;gap:16px}
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html"><img src="avelia-logo-banner.svg" alt="Avelia AI" style="height:32px"></a>
+  <div class="nav-actions">
+    <a href="index.html" class="btn-ghost">Retour</a>
+    <a href="app.html" class="btn-dark" id="navCta">Commencer →</a>
+  </div>
+</nav>
+
+<section class="feature-hero" id="featureHero">
+  <svg class="feature-hero-bg" id="heroBg" viewBox="0 0 800 600" preserveAspectRatio="xMidYMid slice"></svg>
+  <div class="feature-hero-badge" id="heroPlan">Gratuit</div>
+  <div class="feature-hero-icon" id="heroIcon"></div>
+  <h1 id="heroTitle">Fonctionnalité</h1>
+  <p class="feature-hero-sub" id="heroSub">Description</p>
+  <div class="feature-hero-ctas">
+    <a href="app.html" class="btn-gold" id="heroCta1">Commencer gratuitement →</a>
+    <a href="index.html#tarifs" class="btn-ghost" style="color:white;border-color:rgba(255,255,255,.3)" id="heroCta2">Voir les tarifs</a>
+  </div>
+</section>
+
+<section class="benefits" id="benefitsSection">
+  <div class="section-label">Pourquoi c'est différent</div>
+  <h2 class="section-title" id="benefitsTitle">Ce que vous obtenez</h2>
+  <div class="benefits-grid" id="benefitsGrid"></div>
+</section>
+
+<section class="how">
+  <div class="how-inner">
+    <div class="section-label">Mode d'emploi</div>
+    <h2 class="section-title" id="howTitle">Comment ça marche</h2>
+    <div class="steps" id="stepsGrid"></div>
+  </div>
+</section>
+
+<section class="cta-section" id="ctaSection">
+  <h2 id="ctaTitle">Prêt à commencer ?</h2>
+  <p id="ctaSub">Rejoignez 2 400+ patients qui transforment leur santé avec Avelia AI.</p>
+  <a href="app.html" class="btn-gold" id="ctaBtn">Créer mon compte gratuitement →</a>
+</section>
+
+<footer>
+  <p>© 2026 Avelia AI · <a href="index.html" style="color:#aaa">Retour à l'accueil</a></p>
+</footer>
+
+<script>
+const features = {
+  chat: {
+    plan:'Gratuit', planClass:'plan-free',
+    title:'Chat IA <em>Nutritionnel</em>',
+    sub:'Un coach nutritionnel disponible 24h/24, spécialisé dans votre condition de santé. Posez toutes vos questions, obtenez des réponses personnalisées en quelques secondes.',
+    icon:'<path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>',
+    bgSvg:'circles',
+    cta1:'Créer mon compte gratuitement →', cta2:'En savoir plus',
+    benefits:[
+      {icon:'M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10', title:'Adapté à vos pathologies', desc:'L\'IA connaît vos conditions de santé et adapte chaque réponse en conséquence. Diabète, hypertension, SOPK — chaque conseil est personnalisé.'},
+      {icon:'M12 2a10 10 0 1 0 0 20A10 10 0 0 0 12 2zM12 8v4l3 3', title:'Disponible 24h/24', desc:'Pas de salle d\'attente, pas de rendez-vous. Posez vos questions à n\'importe quelle heure, obtenez une réponse en 2 secondes.'},
+      {icon:'M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z', title:'Mémoire de vos échanges', desc:'L\'IA se souvient de vos préférences, allergies et historique. Chaque conversation s\'appuie sur ce que vous avez partagé.'},
+      {icon:'M9 12l2 2 4-4m6 2a9 9 0 1 1-18 0 9 9 0 0 1 18 0', title:'Protocoles validés', desc:'Nos conseils sont basés sur des protocoles nutritionnels validés scientifiquement pour chaque pathologie.'},
+    ],
+    steps:[
+      {title:'Créez votre profil', desc:'Renseignez vos pathologies, médicaments, allergies et objectifs. L\'IA configure votre profil nutritionnel en 3 minutes.'},
+      {title:'Posez votre question', desc:'Tapez naturellement — "Puis-je manger des noix avec ma Coumadine ?" ou "Que manger ce soir pour ma glycémie ?"'},
+      {title:'Obtenez votre réponse', desc:'En 2 secondes, une réponse personnalisée, sourcée et adaptée à votre profil. Avec des suggestions concrètes.'},
+    ],
+    ctaTitle:'Votre coach nutritionnel vous attend',
+    ctaSub:'Gratuit, sans carte bancaire. Créez votre compte en 2 minutes.',
+    ctaBtn:'Commencer gratuitement →',
+  },
+  menus: {
+    plan:'Standard', planClass:'plan-standard',
+    title:'Menus <em>hebdomadaires IA</em>',
+    sub:'7 jours de repas complets générés par l\'IA selon votre profil, vos pathologies, votre budget et vos préférences. Fini le stress du "qu\'est-ce qu\'on mange ce soir ?"',
+    icon:'<rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/>',
+    bgSvg:'hexagons',
+    cta1:'Voir les abonnements →', cta2:'Essayer gratuitement',
+    benefits:[
+      {icon:'M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2M9 5a2 2 0 0 0 2 2h2a2 2 0 0 0 2-2M9 5a2 2 0 0 0 2-2h2a2 2 0 0 0 2 2', title:'7 jours complets', desc:'Petit-déjeuner, déjeuner, dîner et collations pour toute la semaine. Liste de courses incluse.'},
+      {icon:'M12 2a10 10 0 1 0 0 20A10 10 0 0 0 12 2z', title:'Adapté à vos pathologies', desc:'Chaque repas respecte les contraintes de vos pathologies. Glycémie, tension, cholestérol — tout est pris en compte.'},
+      {icon:'M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17', title:'Budget maîtrisé', desc:'Indiquez votre budget alimentaire hebdomadaire et l\'IA génère des menus économiques sans compromis nutritionnel.'},
+      {icon:'M4.318 6.318a4.5 4.5 0 0 0 0 6.364L12 20.364l7.682-7.682a4.5 4.5 0 0 0-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 0 0-6.364 0z', title:'Vos préférences respectées', desc:'Végétarien, sans gluten, sans lactose — l\'IA adapte chaque semaine à vos goûts et restrictions.'},
+    ],
+    steps:[
+      {title:'Complétez votre profil', desc:'Pathologies, allergies, budget, préférences alimentaires. Plus votre profil est complet, plus les menus sont pertinents.'},
+      {title:'Générez votre menu', desc:'En un clic, l\'IA génère 7 jours de repas complets adaptés à votre situation. Régénérez autant que vous voulez.'},
+      {title:'Cuisinez & suivez', desc:'La liste de courses est générée automatiquement. Chaque recette est simple et rapide à préparer.'},
+    ],
+    ctaTitle:'Finissez de stresser pour les repas',
+    ctaSub:'Abonnement Standard à partir de 9,99€/mois. Annulable à tout moment.',
+    ctaBtn:'Voir les abonnements →',
+  },
+  oracle: {
+    plan:'Premium', planClass:'plan-premium',
+    title:'Oracle <em>Santé</em>',
+    sub:'La fonctionnalité la plus révolutionnaire en santé numérique. Prédisez votre futur biologique sur 10 ans grâce à l\'IA, l\'épigénétique et l\'analyse télomérique.',
+    icon:'<circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/>',
+    bgSvg:'dna',
+    cta1:'Passer Premium →', cta2:'Découvrir les tarifs',
+    benefits:[
+      {icon:'M9 3H5a2 2 0 0 0-2 2v4m6-6h10a2 2 0 0 1 2 2v4M9 3v18', title:'Scanner biologique IA', desc:'Visualisez votre corps comme un scanner IRM. Chaque organe est analysé, scoré et prédit sur 10 ans.'},
+      {icon:'M12 2v20M8 6l4-4 4 4', title:'Horloge épigénétique', desc:'Découvrez votre âge biologique réel (méthode Horvath) et comment votre alimentation peut le faire reculer.'},
+      {icon:'M13 2 3 14h9l-1 8 10-12h-9l1-8z', title:'Simulation temps réel', desc:'Ajustez votre sommeil, stress, alimentation avec des sliders et voyez l\'impact sur votre santé en temps réel.'},
+      {icon:'M9 12l2 2 4-4', title:'Rapport médecin PDF', desc:'Exportez un rapport médical complet à partager avec votre médecin. Marqueurs biologiques, prédictions, interactions.'},
+    ],
+    steps:[
+      {title:'Complétez votre profil', desc:'Pathologies, médicaments, bilans sanguins, habitudes de vie. Plus votre profil est riche, plus l\'Oracle est précis.'},
+      {title:'L\'IA analyse votre biologie', desc:'Claude AI analyse toutes vos données et génère votre profil biologique complet en 30 secondes.'},
+      {title:'Explorez vos prédictions', desc:'Scanner interactif, simulation temps réel, épigénétique, timeline 10 ans. Découvrez votre futur biologique.'},
+      {title:'Agissez', desc:'Suivez le plan d\'action personnalisé de l\'Oracle. Chaque action est quantifiée en années de vie gagnées.'},
+    ],
+    ctaTitle:'Découvrez votre futur biologique',
+    ctaSub:'Fonctionnalité Premium exclusive. Unique au monde — aucune app ne propose ça.',
+    ctaBtn:'Passer Premium →',
+  },
+  analysis: {
+    plan:'Premium', planClass:'plan-premium',
+    title:'Analyse <em>photo repas</em>',
+    sub:'Photographiez votre assiette et obtenez instantanément les calories, macronutriments et des conseils adaptés à vos pathologies.',
+    icon:'<rect x="2" y="6" width="20" height="15" rx="2"/><circle cx="12" cy="13" r="3"/><path d="M8 6V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v1"/>',
+    bgSvg:'waves',
+    cta1:'Passer Premium →', cta2:'Voir les tarifs',
+    benefits:[
+      {icon:'M3 9a2 2 0 0 1 2-2h.93a2 2 0 0 0 1.664-.89l.812-1.22A2 2 0 0 1 10.07 4h3.86a2 2 0 0 1 1.664.89l.812 1.22A2 2 0 0 0 18.07 7H19a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V9z', title:'Reconnaissance instantanée', desc:'L\'IA identifie tous les aliments dans votre photo en moins de 3 secondes avec une précision de 95%.'},
+      {icon:'M9 19v-6a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h2a2 2 0 0 0 2-2zm0 0V9a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v10', title:'Analyse nutritionnelle complète', desc:'Calories, protéines, glucides, lipides, fibres, vitamines — tout est calculé et adapté à vos besoins.'},
+      {icon:'M12 9v3m0 0v3m0-3h3m-3 0H9', title:'Conseils pathologies', desc:'Si votre repas contient un aliment déconseillé pour vos pathologies, l\'IA vous alerte immédiatement.'},
+      {icon:'M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2', title:'Journal alimentaire automatique', desc:'Chaque scan est enregistré dans votre journal. Visualisez vos apports sur 30 jours.'},
+    ],
+    steps:[
+      {title:'Prenez une photo', desc:'Photographiez votre assiette, votre plat ou même l\'étiquette d\'un produit. La qualité n\'a pas besoin d\'être parfaite.'},
+      {title:'L\'IA analyse', desc:'En 3 secondes, Claude Vision identifie les aliments, calcule les valeurs nutritionnelles et vérifie la compatibilité avec vos pathologies.'},
+      {title:'Recevez vos conseils', desc:'Un bilan nutritionnel complet et des conseils personnalisés. Ajustez votre prochain repas en conséquence.'},
+    ],
+    ctaTitle:'Analysez chaque repas en 3 secondes',
+    ctaSub:'Disponible avec l\'abonnement Premium. Essayez gratuitement 7 jours.',
+    ctaBtn:'Passer Premium →',
+  },
+  health: {
+    plan:'Standard', planClass:'plan-standard',
+    title:'Dashboard <em>Santé</em>',
+    sub:'Suivez vos indicateurs de santé quotidiens et visualisez votre progression sur 30 jours. Glycémie, poids, énergie, sommeil — tout en un seul endroit.',
+    icon:'<path d="M22 12h-4l-3 9L9 3l-3 9H2"/>',
+    bgSvg:'graph',
+    cta1:'Voir les abonnements →', cta2:'En savoir plus',
+    benefits:[
+      {icon:'M9 19v-6a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h2a2 2 0 0 0 2-2zm0 0V9a2 2 0 0 0-2-2H5', title:'6 indicateurs clés', desc:'Glycémie, poids, énergie, sommeil, tension et hydratation. Saisissez vos données en 30 secondes chaque matin.'},
+      {icon:'M13 7h8m0 0v8m0-8l-8 8-4-4-6 6', title:'Graphiques évolutifs', desc:'Visualisez vos tendances sur 7, 30 ou 90 jours. Identifiez les patterns et progressions.'},
+      {icon:'M15 17h5l-1.405-1.405A2.032 2.032 0 0 1 18 14.158V11a6.002 6.002 0 0 0-4-5.659V5a2 2 0 0 0-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5', title:'Alertes intelligentes', desc:'L\'IA détecte les anomalies et vous alerte si un indicateur sort de votre zone optimale.'},
+      {icon:'M9 12l2 2 4-4m6 2a9 9 0 1 1-18 0 9 9 0 0 1 18 0', title:'Corrélations automatiques', desc:'Découvrez les liens entre votre alimentation et vos indicateurs. Quand vous mangez X, votre énergie fait Y.'},
+    ],
+    steps:[
+      {title:'Saisissez vos données', desc:'Chaque matin en 30 secondes : glycémie, poids, énergie, sommeil. L\'habitude la plus simple et la plus puissante.'},
+      {title:'Visualisez vos tendances', desc:'Des graphiques clairs vous montrent votre progression sur 30 jours. Identifiez ce qui fonctionne.'},
+      {title:'Recevez des insights', desc:'L\'IA analyse vos données et vous envoie des recommandations personnalisées chaque semaine.'},
+    ],
+    ctaTitle:'Commencez à suivre votre santé',
+    ctaSub:'Disponible avec l\'abonnement Standard à 9,99€/mois.',
+    ctaBtn:'Voir les abonnements →',
+  },
+  biology: {
+    plan:'Premium', planClass:'plan-premium',
+    title:'Bilan sanguin <em>IA</em>',
+    sub:'Uploadez votre bilan sanguin et obtenez une interprétation complète par l\'IA. Anomalies détectées, explications claires et plan nutritionnel correctif.',
+    icon:'<path d="M9 3H5a2 2 0 0 0-2 2v4m6-6h10a2 2 0 0 1 2 2v4M9 3v18"/>',
+    bgSvg:'grid',
+    cta1:'Passer Premium →', cta2:'Voir les tarifs',
+    benefits:[
+      {icon:'M9 12h6m-6 4h6m2 5H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5.586a1 1 0 0 1 .707.293l5.414 5.414a1 1 0 0 1 .293.707V19a2 2 0 0 1-2 2z', title:'Interprétation complète', desc:'Chaque marqueur est expliqué en langage clair. Plus besoin d\'attendre le retour du médecin pour comprendre.'},
+      {icon:'M12 9v3m0 0v3m0-3h3m-3 0H9m12 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0', title:'Anomalies détectées', desc:'L\'IA identifie les valeurs hors normes et les met en contexte avec vos pathologies et médicaments.'},
+      {icon:'M4 6h16M4 10h16M4 14h16M4 18h16', title:'Plan nutritionnel correctif', desc:'Sur la base de votre bilan, l\'IA génère un plan nutritionnel ciblé pour corriger les carences et excès.'},
+      {icon:'M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0 1 12 2.944a11.955 11.955 0 0 1-8.618 3.04A12.02 12.02 0 0 0 3 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z', title:'Suivi dans le temps', desc:'Comparez vos bilans successifs et visualisez l\'amélioration de vos marqueurs grâce à vos changements nutritionnels.'},
+    ],
+    steps:[
+      {title:'Uploadez votre bilan', desc:'PDF ou photo de votre bilan sanguin. L\'IA lit tous les formats de laboratoires français.'},
+      {title:'L\'IA analyse', desc:'En 30 secondes, tous vos marqueurs sont analysés, comparés aux normes et mis en contexte avec vos pathologies.'},
+      {title:'Recevez votre plan', desc:'Un plan nutritionnel correctif personnalisé pour chaque anomalie détectée. Avec des aliments concrets à intégrer.'},
+    ],
+    ctaTitle:'Comprenez enfin votre bilan sanguin',
+    ctaSub:'Disponible avec l\'abonnement Premium. Accès illimité à l\'analyse.',
+    ctaBtn:'Passer Premium →',
+  },
+  protocols: {
+    plan:'Gratuit', planClass:'plan-free',
+    title:'50+ <em>Pathologies</em>',
+    sub:'Des protocoles nutritionnels spécialisés pour plus de 50 conditions de santé. Développés par des experts et personnalisés par l\'IA selon votre profil.',
+    icon:'<circle cx="12" cy="12" r="10"/><path d="M8 12h8M12 8v8"/>',
+    bgSvg:'hexagons',
+    cta1:'Créer mon compte →', cta2:'Voir les pathologies',
+    benefits:[
+      {icon:'M9 12l2 2 4-4m6 2a9 9 0 1 1-18 0 9 9 0 0 1 18 0', title:'Protocoles validés', desc:'Chaque protocole est basé sur les dernières recherches en nutrition thérapeutique. Diabète, hypertension, SOPK, maladies inflammatoires et bien plus.'},
+      {icon:'M12 4.354a4 4 0 1 1 0 5.292M15 21H3v-1a6 6 0 0 1 12 0v1zm0 0h6v-1a6 6 0 0 0-9-5.197', title:'Personnalisé pour vous', desc:'L\'IA adapte chaque protocole à vos médicaments, allergies et préférences. Pas de solution générique.'},
+      {icon:'M13 7h8m0 0v8m0-8l-8 8-4-4-6 6', title:'Mis à jour régulièrement', desc:'Nos protocoles sont mis à jour dès que de nouvelles études scientifiques sont publiées.'},
+      {icon:'M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 0 1-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z', title:'Accompagnement IA', desc:'Posez toutes vos questions sur votre protocole directement au chat IA. Obtenu des réponses instantanées.'},
+    ],
+    steps:[
+      {title:'Renseignez vos pathologies', desc:'Lors de l\'inscription, indiquez vos conditions de santé. L\'IA sélectionne automatiquement vos protocoles.'},
+      {title:'Explorez vos protocoles', desc:'Accédez à des fiches détaillées : aliments à favoriser, à éviter, suppléments recommandés, recettes adaptées.'},
+      {title:'Appliquez et suivez', desc:'Intégrez les recommandations dans vos menus hebdomadaires générés par l\'IA. Suivez votre progression.'},
+    ],
+    ctaTitle:'Accédez à votre protocole personnalisé',
+    ctaSub:'Gratuit, sans carte bancaire. Votre protocole en 2 minutes.',
+    ctaBtn:'Créer mon compte →',
+  },
+  pro: {
+    plan:'Standard', planClass:'plan-standard',
+    title:'Espace <em>médecin</em>',
+    sub:'Connectez votre médecin, nutritionniste ou diététicien à votre compte Avelia AI. Partagez vos données en toute sécurité pour un suivi collaboratif optimal.',
+    icon:'<path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/><path d="M12 11v4m-2-2h4"/>',
+    bgSvg:'nodes',
+    cta1:'Voir les abonnements →', cta2:'En savoir plus',
+    benefits:[
+      {icon:'M12 15v2m-6 4h12a2 2 0 0 0 2-2v-6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2zm10-10V7a4 4 0 0 0-8 0v4h8z', title:'Partage sécurisé', desc:'Vos données sont partagées de façon chiffrée et sécurisée. Vous contrôlez ce que votre professionnel peut voir.'},
+      {icon:'M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2', title:'Dossier nutritionnel complet', desc:'Votre professionnel accède à votre historique alimentaire, vos indicateurs de santé et vos protocoles en cours.'},
+      {icon:'M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8', title:'Communication directe', desc:'Échangez des messages avec votre professionnel directement dans l\'app. Commentaires sur vos repas et indicateurs.'},
+      {icon:'M9 12l2 2 4-4m6 2a9 9 0 1 1-18 0 9 9 0 0 1 18 0', title:'Suivi optimisé', desc:'Votre médecin peut ajuster vos protocoles et recommandations directement depuis son interface dédiée.'},
+    ],
+    steps:[
+      {title:'Invitez votre professionnel', desc:'Entrez l\'email de votre médecin ou nutritionniste. Il reçoit une invitation à rejoindre votre espace.'},
+      {title:'Définissez les accès', desc:'Choisissez exactement quelles données partager : repas, indicateurs, protocoles, historique.'},
+      {title:'Suivez ensemble', desc:'Votre professionnel commente vos données, ajuste vos protocoles et vous envoie des recommandations.'},
+    ],
+    ctaTitle:'Impliquez votre équipe soignante',
+    ctaSub:'Disponible avec l\'abonnement Standard à 9,99€/mois.',
+    ctaBtn:'Voir les abonnements →',
+  },
+  simulator: {
+    plan:'Premium', planClass:'plan-premium',
+    title:'Simulateur <em>décisions santé</em>',
+    sub:'Et si vous arrêtiez le sucre ? Et si vous adoptiez le jeûne intermittent ? Simulez l\'impact de vos décisions sur votre santé avant de vous lancer.',
+    icon:'<path d="M13 2 3 14h9l-1 8 10-12h-9l1-8z"/>',
+    bgSvg:'graph',
+    cta1:'Passer Premium →', cta2:'Voir les tarifs',
+    benefits:[
+      {icon:'M9 19v-6a2 2 0 0 0-2-2H5', title:'10 décisions simulables', desc:'Jeûne intermittent, régime méditerranéen, arrêt du sucre, sport quotidien... Simulez l\'impact sur 12 indicateurs de santé.'},
+      {icon:'M13 7h8m0 0v8m0-8l-8 8-4-4-6 6', title:'Projections sur 1 an', desc:'Voyez comment votre glycémie, poids, énergie et risques cardiovasculaires évolueraient dans 6 et 12 mois.'},
+      {icon:'M9 12l2 2 4-4m6 2a9 9 0 1 1-18 0 9 9 0 0 1 18 0', title:'Basé sur votre profil', desc:'Les simulations utilisent vos données réelles pour des prédictions précises et personnalisées.'},
+      {icon:'M4 6h16M4 10h16M4 14h16M4 18h16', title:'Plan d\'action concret', desc:'Une fois votre décision prise, l\'IA génère un plan d\'action pas à pas pour l\'implémenter progressivement.'},
+    ],
+    steps:[
+      {title:'Choisissez une décision', desc:'Sélectionnez parmi 10 changements de vie majeurs à simuler. Ou décrivez librement votre projet.'},
+      {title:'Personnalisez les paramètres', desc:'Ajustez la durée, l\'intensité, le contexte. L\'IA affine la simulation selon votre profil.'},
+      {title:'Visualisez l\'impact', desc:'Des graphiques clairs montrent l\'évolution de vos indicateurs sur 12 mois si vous adoptez ce changement.'},
+    ],
+    ctaTitle:'Prenez des décisions éclairées',
+    ctaSub:'Disponible avec l\'abonnement Premium. Simulations illimitées.',
+    ctaBtn:'Passer Premium →',
+  },
+  passeport: {
+    plan:'Premium', planClass:'plan-premium',
+    title:'Passeport <em>Santé Nutritionnel</em>',
+    sub:'Un document PDF complet qui résume votre profil de santé nutritionnel. À partager avec n\'importe quel professionnel de santé, en France ou à l\'étranger.',
+    icon:'<rect x="2" y="3" width="20" height="18" rx="2"/><path d="M8 10h8M8 14h5"/>',
+    bgSvg:'star',
+    cta1:'Passer Premium →', cta2:'Voir les tarifs',
+    benefits:[
+      {icon:'M9 12h6m-6 4h6m2 5H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5.586', title:'Document complet', desc:'Pathologies, médicaments, allergies, protocoles nutritionnels, indicateurs clés. Tout en un seul document professionnel.'},
+      {icon:'M3.055 11H5a2 2 0 0 1 2 2v1a2 2 0 0 0 2 2 2 2 0 0 1 2 2v2.945', title:'Reconnu internationalement', desc:'Format médical standardisé, compréhensible par n\'importe quel professionnel de santé dans le monde.'},
+      {icon:'M4 4v5h.582m15.356 2A8.001 8.001 0 0 0 4.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 0 1-15.357-2m15.357 2H15', title:'Mis à jour automatiquement', desc:'Votre passeport se met à jour dès que vous modifiez votre profil ou ajoutez des données de suivi.'},
+      {icon:'M12 15v2m-6 4h12a2 2 0 0 0 2-2v-6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2z', title:'Données chiffrées', desc:'Partagé en toute sécurité. Vous choisissez quelles informations inclure dans le document.'},
+    ],
+    steps:[
+      {title:'Complétez votre profil', desc:'Plus votre profil est complet, plus votre passeport est riche et utile pour les professionnels de santé.'},
+      {title:'Générez votre passeport', desc:'En un clic, l\'IA génère un PDF professionnel avec toutes vos informations de santé nutritionnelle.'},
+      {title:'Partagez', desc:'Envoyez par email, imprimez ou partagez directement avec votre médecin lors de votre prochaine consultation.'},
+    ],
+    ctaTitle:'Votre identité nutritionnelle en un document',
+    ctaSub:'Disponible avec l\'abonnement Premium. Générez autant de fois que vous voulez.',
+    ctaBtn:'Passer Premium →',
+  },
+  ordonnance: {
+    plan:'Premium', planClass:'plan-premium',
+    title:'Scan <em>ordonnance</em>',
+    sub:'Photographiez votre ordonnance et découvrez instantanément les interactions entre vos médicaments et votre alimentation.',
+    icon:'<path d="M14 2H6a2 2 0 0 0-2 2v16h16V8z"/><path d="M14 2v6h6"/>',
+    bgSvg:'waves',
+    cta1:'Passer Premium →', cta2:'Voir les tarifs',
+    benefits:[
+      {icon:'M12 9v3m0 0v3m0-3h3m-3 0H9m12 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0', title:'Interactions détectées', desc:'L\'IA identifie toutes les interactions entre vos médicaments et les aliments. Coumadine, vitamine K — plus aucun risque.'},
+      {icon:'M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0 1 12 2.944', title:'Aliments à éviter', desc:'Une liste claire des aliments déconseillés avec chaque médicament. Et ceux qui amplifient ou réduisent l\'efficacité.'},
+      {icon:'M4 6h16M4 10h16M4 14h16M4 18h16', title:'Plan adapté', desc:'Vos menus hebdomadaires sont automatiquement ajustés pour éviter les interactions dangereuses.'},
+      {icon:'M15 17h5l-1.405-1.405A2.032 2.032 0 0 1 18 14.158V11', title:'Alertes en temps réel', desc:'Si vous scannez un repas contenant un aliment dangereux avec vos médicaments, l\'app vous alerte immédiatement.'},
+    ],
+    steps:[
+      {title:'Photographiez votre ordonnance', desc:'Une photo nette suffit. L\'IA reconnaît tous les médicaments courants prescrits en France.'},
+      {title:'L\'IA analyse les interactions', desc:'En 10 secondes, toutes les interactions médicaments-aliments sont identifiées et expliquées clairement.'},
+      {title:'Adaptez votre alimentation', desc:'Votre profil est mis à jour automatiquement. Vos menus et conseils tiennent compte de vos médicaments.'},
+    ],
+    ctaTitle:'Évitez les interactions dangereuses',
+    ctaSub:'Disponible avec l\'abonnement Premium. Scans illimités.',
+    ctaBtn:'Passer Premium →',
+  },
+};
+
+const svgBgs = {
+  circles: '<circle cx="700" cy="50" r="300" fill="none" stroke="#C9A84C" stroke-width="1"/><circle cx="700" cy="50" r="200" fill="none" stroke="#C9A84C" stroke-width="1"/><circle cx="700" cy="50" r="100" fill="none" stroke="#C9A84C" stroke-width="1.5"/><line x1="0" y1="500" x2="800" y2="300" stroke="#C9A84C" stroke-width=".5"/><line x1="0" y1="600" x2="800" y2="400" stroke="#C9A84C" stroke-width=".5"/>',
+  hexagons: '<polygon points="400,20 450,50 450,110 400,140 350,110 350,50" fill="none" stroke="#C9A84C" stroke-width="1"/><polygon points="500,80 550,110 550,170 500,200 450,170 450,110" fill="none" stroke="#C9A84C" stroke-width="1"/><polygon points="600,20 650,50 650,110 600,140 550,110 550,50" fill="none" stroke="#C9A84C" stroke-width="1"/><polygon points="700,80 750,110 750,170 700,200 650,170 650,110" fill="none" stroke="#C9A84C" stroke-width="1"/>',
+  dna: '<path d="M100,0 Q400,150 700,0 Q400,150 100,300 Q400,450 700,300 Q400,450 100,600" fill="none" stroke="#C9A84C" stroke-width="1.5"/><path d="M700,0 Q400,150 100,0 Q400,150 700,300 Q400,450 100,300 Q400,450 700,600" fill="none" stroke="#C9A84C" stroke-width="1.5" opacity=".5"/><line x1="100" y1="150" x2="700" y2="150" stroke="#C9A84C" stroke-width="1" opacity=".6"/><line x1="100" y1="300" x2="700" y2="300" stroke="#C9A84C" stroke-width="1" opacity=".6"/><line x1="100" y1="450" x2="700" y2="450" stroke="#C9A84C" stroke-width="1" opacity=".6"/>',
+  waves: '<path d="M0,200 Q100,120 200,200 Q300,280 400,200 Q500,120 600,200 Q700,280 800,200" fill="none" stroke="#C9A84C" stroke-width="1.5"/><path d="M0,300 Q100,220 200,300 Q300,380 400,300 Q500,220 600,300 Q700,380 800,300" fill="none" stroke="#C9A84C" stroke-width="1" opacity=".5"/><path d="M0,100 Q100,20 200,100 Q300,180 400,100 Q500,20 600,100 Q700,180 800,100" fill="none" stroke="#C9A84C" stroke-width="1" opacity=".3"/>',
+  graph: '<polyline points="50,500 150,380 300,420 450,250 550,300 700,100 800,150" fill="none" stroke="#C9A84C" stroke-width="2"/><polyline points="50,550 150,460 300,490 450,370 550,400 700,250 800,300" fill="none" stroke="#C9A84C" stroke-width="1" opacity=".5"/><circle cx="450" cy="250" r="8" fill="#C9A84C" opacity=".7"/><circle cx="700" cy="100" r="8" fill="#C9A84C" opacity=".7"/>',
+  grid: '<rect x="200" y="50" width="400" height="400" fill="none" stroke="#C9A84C" stroke-width="1"/><line x1="333" y1="50" x2="333" y2="450" stroke="#C9A84C" stroke-width=".5"/><line x1="467" y1="50" x2="467" y2="450" stroke="#C9A84C" stroke-width=".5"/><line x1="200" y1="183" x2="600" y2="183" stroke="#C9A84C" stroke-width=".5"/><line x1="200" y1="317" x2="600" y2="317" stroke="#C9A84C" stroke-width=".5"/><circle cx="400" cy="250" r="20" fill="#C9A84C" opacity=".3"/>',
+  nodes: '<line x1="400" y1="300" x2="150" y2="150" stroke="#C9A84C" stroke-width="1"/><line x1="400" y1="300" x2="650" y2="150" stroke="#C9A84C" stroke-width="1"/><line x1="400" y1="300" x2="680" y2="400" stroke="#C9A84C" stroke-width="1"/><line x1="400" y1="300" x2="120" y2="400" stroke="#C9A84C" stroke-width="1"/><circle cx="400" cy="300" r="24" fill="#C9A84C" opacity=".2"/><circle cx="400" cy="300" r="12" fill="#C9A84C" opacity=".6"/><circle cx="150" cy="150" r="10" fill="#C9A84C" opacity=".4"/><circle cx="650" cy="150" r="10" fill="#C9A84C" opacity=".4"/><circle cx="680" cy="400" r="10" fill="#C9A84C" opacity=".4"/><circle cx="120" cy="400" r="10" fill="#C9A84C" opacity=".4"/>',
+  star: '<polygon points="400,50 450,200 600,200 480,290 520,440 400,350 280,440 320,290 200,200 350,200" fill="none" stroke="#C9A84C" stroke-width="1"/><circle cx="400" cy="300" r="80" fill="none" stroke="#C9A84C" stroke-width=".8" opacity=".5"/>',
+};
+
+function init() {
+  const params = new URLSearchParams(window.location.search);
+  const id = params.get('id') || 'chat';
+  const f = features[id];
+  if (!f) { window.location.href = 'index.html'; return; }
+
+  document.title = 'Avelia AI · ' + f.title.replace(/<em>|<\/em>/g,'');
+
+  // Plan badge
+  const planEl = document.getElementById('heroPlan');
+  planEl.textContent = f.plan;
+  planEl.className = 'plan-required ' + f.planClass;
+
+  // SVG bg
+  document.getElementById('heroBg').innerHTML = svgBgs[f.bgSvg] || '';
+
+  // Icon
+  document.getElementById('heroIcon').innerHTML = '<svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#C9A84C" stroke-width="1.5" stroke-linecap="round">' + f.icon + '</svg>';
+
+  // Titre & sub
+  document.getElementById('heroTitle').innerHTML = f.title;
+  document.getElementById('heroSub').textContent = f.sub;
+
+  // CTAs
+  document.getElementById('heroCta1').textContent = f.cta1;
+  document.getElementById('heroCta2').textContent = f.cta2;
+
+  if (f.plan === 'Gratuit') {
+    document.getElementById('heroCta1').href = 'app.html';
+    document.getElementById('heroCta1').style.background = '#C9A84C';
+  } else {
+    document.getElementById('heroCta1').href = 'app.html?view=pricing';
+  }
+
+  // Benefits
+  document.getElementById('benefitsTitle').textContent = 'Ce que vous obtenez avec ' + f.title.replace(/<em>|<\/em>/g,'');
+  document.getElementById('benefitsGrid').innerHTML = f.benefits.map(b => `
+    <div class="benefit-card">
+      <div class="benefit-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#C9A84C" stroke-width="1.5" stroke-linecap="round"><path d="${b.icon}"/></svg></div>
+      <h3>${b.title}</h3>
+      <p>${b.desc}</p>
+    </div>`).join('');
+
+  // Steps
+  document.getElementById('howTitle').textContent = 'En 3 étapes simples';
+  document.getElementById('stepsGrid').innerHTML = f.steps.map((s,i) => `
+    <div class="step">
+      <div class="step-num">${i+1}</div>
+      <div><h3>${s.title}</h3><p>${s.desc}</p></div>
+    </div>`).join('');
+
+  // CTA final
+  document.getElementById('ctaTitle').textContent = f.ctaTitle;
+  document.getElementById('ctaSub').textContent = f.ctaSub;
+  document.getElementById('ctaBtn').textContent = f.ctaBtn;
+  document.getElementById('ctaBtn').href = f.plan === 'Gratuit' ? 'app.html' : 'app.html?view=pricing';
+
+  // Nav CTA
+  const token = localStorage.getItem('nutricare_token');
+  if (token) {
+    document.getElementById('navCta').textContent = 'Mon espace →';
+    document.getElementById('navCta').href = 'app.html';
+  }
+}
+
+init();
+</script>
+</body>
+</html>
