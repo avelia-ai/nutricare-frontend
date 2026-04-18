@@ -1215,29 +1215,21 @@ document.querySelectorAll('.fade-up').forEach(el => obs.observe(el));
 })();
 </script>
 <script>
-var featLinks = {
-  'Chat IA Nutritionnel': 'app.html',
-  '50+ Pathologies': 'app.html',
-  'Menus IA': 'app.html',
-  'Dashboard Santé': 'app.html',
-  'Espace médecin': 'app.html',
-  'Analyse photo repas': 'app.html',
-  'Oracle Santé': 'app.html',
-  'Bilan sanguin IA': 'app.html',
-  'Scan ordonnance': 'app.html',
-  'Simulateur décisions': 'app.html',
-  'Passeport Santé': 'app.html',
-  'Dashboard RH': 'entreprise.html'
-};
-document.querySelectorAll('.feat-back-cta').forEach(function(cta) {
-  cta.style.cursor = 'pointer';
-  cta.style.textDecoration = 'underline';
-  cta.addEventListener('click', function(e) {
-    e.stopPropagation();
-    var card = cta.closest('.feat-item');
-    var name = card.querySelector('.feat-name').textContent.trim();
-    var url = featLinks[name] || 'app.html';
-    window.location.href = url;
+var featUrls = ['app.html','app.html','app.html','app.html','app.html','app.html','app.html','app.html','app.html','app.html','app.html','entreprise.html'];
+document.querySelectorAll('.feat-item').forEach(function(card, i) {
+  card.style.cursor = 'pointer';
+  var flipped = false;
+  card.addEventListener('click', function() {
+    if (!flipped) {
+      flipped = true;
+      card.querySelector('.feat-inner').style.transform = 'rotateY(180deg)';
+    } else {
+      window.location.href = featUrls[i] || 'app.html';
+    }
+  });
+  card.addEventListener('mouseleave', function() {
+    flipped = false;
+    card.querySelector('.feat-inner').style.transform = '';
   });
 });
 </script>
