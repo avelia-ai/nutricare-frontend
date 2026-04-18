@@ -1638,6 +1638,13 @@
 
   // ── INIT ──
   window.onload = () => {
+    // Lire le paramètre view dans l'URL
+    const urlParams = new URLSearchParams(window.location.search);
+    const urlView = urlParams.get('view');
+    if (urlView) {
+      setTimeout(() => showView(urlView, document.querySelector(`[onclick*="showView('${urlView}']")`)), 500);
+    }
+
     if (authToken && currentUser) {
       showApp();
       const params = new URLSearchParams(window.location.search);
