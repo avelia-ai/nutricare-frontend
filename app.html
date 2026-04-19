@@ -1726,6 +1726,9 @@
       currentUser = data.user;
       localStorage.setItem('nutricare_token', authToken);
       localStorage.setItem('nutricare_user', JSON.stringify(currentUser));
+      if (data.profile) {
+        localStorage.setItem('nutricare_profile', JSON.stringify(data.profile));
+      }
       showApp();
       const redirectUrl = new URLSearchParams(window.location.search).get('redirect');
       if (redirectUrl) { setTimeout(() => window.location.href = decodeURIComponent(redirectUrl), 500); return; }
