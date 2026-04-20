@@ -97,9 +97,7 @@ const TRANSLATIONS = {
 
 function setLang(lang) {
   localStorage.setItem('nutricare_lang', lang);
-  const sel = document.getElementById('langSelector');
-  if (sel) sel.value = lang;
-  applyTranslations(lang);
+  location.reload();
 }
 
 function applyTranslations(lang) {
