@@ -2935,7 +2935,6 @@ function oSelOrgan(k) {
     const pathoEl = document.getElementById('simPatho');
     if (pathoEl && data.impact_pathologies) {
 
-javascript
       pathoEl.style.display = 'block';
       document.getElementById('simPathoText').textContent = data.impact_pathologies;
     }
@@ -3137,7 +3136,6 @@ javascript
     try {
       const res = await fetch(`${BACKEND_URL}/api/prediction/risque`, {
 
-javascript
         headers: { 'Authorization': `Bearer ${authToken}` }
       });
       if (!res.ok) return;
