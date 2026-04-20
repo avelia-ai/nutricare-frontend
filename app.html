@@ -3119,7 +3119,7 @@ function toggleMobileMenu() {
     if (dangers.length === 0) return;
     const msg = ` **Alerte interactions détectées**\n\n` +
       dangers.map(a => `• **${a.medicament} × ${a.aliment}** : ${a.message}\n   ${a.conseil}`).join('\n\n');
-    appendMessage('assistant', msg);
+    addMessage('ai', msg);
   }
 
   function updatePricingButtons(plan) {
