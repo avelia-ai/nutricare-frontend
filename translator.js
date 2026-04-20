@@ -83,7 +83,7 @@ async function applyAutoTranslation(lang) {
     // Appliquer les traductions
     nodes.forEach(node => {
       const orig = node.textContent.trim();
-      if (allTranslated[orig]) node.textContent = node.textContent.replace(orig, allTranslated[orig]);
+      if (allTranslated[orig]) node.textContent = allTranslated[orig];
     });
 
     // Traduire aussi les placeholders
