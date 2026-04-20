@@ -1726,6 +1726,22 @@
     premium: 'price_1TM1yPGujzZFPXDMoFPHynma'
 };
 
+  (function restoreSession() {
+    const token = sessionStorage.getItem('transfer_token');
+    if (!token) return;
+    localStorage.setItem('nutricare_token', token);
+    const user = sessionStorage.getItem('transfer_user');
+    const profile = sessionStorage.getItem('transfer_profile');
+    const view = sessionStorage.getItem('transfer_view');
+    if (user) localStorage.setItem('nutricare_user', user);
+    if (profile) localStorage.setItem('nutricare_profile', profile);
+    if (view) localStorage.setItem('nutricare_last_view', view);
+    sessionStorage.removeItem('transfer_token');
+    sessionStorage.removeItem('transfer_user');
+    sessionStorage.removeItem('transfer_profile');
+    sessionStorage.removeItem('transfer_view');
+  })();
+
   // ── STATE ──
   let authToken = localStorage.getItem('nutricare_token') || null;
   let currentUser = JSON.parse(localStorage.getItem('nutricare_user') || 'null');
