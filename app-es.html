@@ -215,6 +215,36 @@
 </style>
 </head>
 <body>
+<script>
+function switchLang(lang) {
+  var token = localStorage.getItem('nutricare_token');
+  var user = localStorage.getItem('nutricare_user');
+  var profile = localStorage.getItem('nutricare_profile');
+  var view = localStorage.getItem('nutricare_last_view') || 'chat';
+  sessionStorage.setItem('transfer_token', token || '');
+  sessionStorage.setItem('transfer_user', user || '');
+  sessionStorage.setItem('transfer_profile', profile || '');
+  sessionStorage.setItem('transfer_view', view);
+  if (lang === 'fr') window.location.href = 'app.html';
+  else window.location.href = 'app-' + lang + '.html';
+}
+(function() {
+  var token = sessionStorage.getItem('transfer_token');
+  if (!token) return;
+  localStorage.setItem('nutricare_token', token);
+  var user = sessionStorage.getItem('transfer_user');
+  var profile = sessionStorage.getItem('transfer_profile');
+  var view = sessionStorage.getItem('transfer_view');
+  if (user) localStorage.setItem('nutricare_user', user);
+  if (profile) localStorage.setItem('nutricare_profile', profile);
+  if (view) localStorage.setItem('nutricare_last_view', view);
+  sessionStorage.removeItem('transfer_token');
+  sessionStorage.removeItem('transfer_user');
+  sessionStorage.removeItem('transfer_profile');
+  sessionStorage.removeItem('transfer_view');
+})();
+</script>
+
 
 <!-- AUTH PAGE -->
 <div id="authPage" class="page active">
