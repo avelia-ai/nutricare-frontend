@@ -419,6 +419,12 @@ function switchLang(lang) {
       <button class="nav-item" onclick="showView('simulator', this)" data-i18n="nav_simulator">Simulator</button>
       <button class="nav-item" onclick="showView('passeport', this)">Health Passport</button>
     </div>
+    <div style="padding:8px 0 4px 0">
+      <select onchange="switchLang(this.value)" id="langSelector" style="width:100%;background:rgba(255,255,255,0.08);color:white;border:1px solid rgba(255,255,255,0.15);border-radius:4px;padding:5px 8px;font-size:0.78rem;cursor:pointer;font-family:'DM Sans',sans-serif">
+        <option value="fr">🇫🇷 Français</option>
+        <option value="en">🇬🇧 English</option>
+      </select>
+    </div>
     <div class="sidebar-user">
       <div class="sidebar-avatar" id="sidebarAvatar">?</div>
       <div class="sidebar-user-info">
@@ -426,10 +432,6 @@ function switchLang(lang) {
         <div class="sidebar-user-plan" id="sidebarPlan">Free</div>
       </div>
       
-      <select onchange="switchLang(this.value)" id="langSelector" style="background:rgba(255,255,255,0.08);color:white;border:1px solid rgba(255,255,255,0.15);border-radius:4px;padding:3px 6px;font-size:0.75rem;cursor:pointer;margin-right:6px">
-        <option value="fr">🇫🇷 FR</option>
-        <option value="en">🇬🇧 EN</option>
-      </select>
       <button class="btn-logout" onclick="logout()" title="Logout"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg></button>
     </div>
   </div>
