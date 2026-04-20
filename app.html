@@ -254,6 +254,7 @@
 </style>
 </style>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+<script src="i18n.js"></script>
 </head>
 <body>
 
@@ -311,21 +312,21 @@
     <!-- Menu particulier -->
     <div id="menuParticulier">
       <div class="nav-label">Principal</div>
-      <button class="nav-item active" onclick="showView('chat', this)">Chat IA</button>
-      <button class="nav-item" onclick="showView('dashboard', this)">Dashboard</button>
-      <button class="nav-item" onclick="showView('profile', this)">Mon profil</button>
+      <button class="nav-item active" onclick="showView('chat', this)" data-i18n="nav_chat">Chat IA</button>
+      <button class="nav-item" onclick="showView('dashboard', this)" data-i18n="nav_dashboard">Dashboard</button>
+      <button class="nav-item" onclick="showView('profile', this)" data-i18n="nav_profile">Mon profil</button>
       <div class="nav-label">Abonnement</div>
-      <button class="nav-item" onclick="showView('pricing', this)">Abonnements</button>
+      <button class="nav-item" onclick="showView('pricing', this)" data-i18n="nav_subscriptions">Abonnements</button>
       <button class="nav-item" onclick="showView('pro', this)">Mon professionnel</button>
       <button class="nav-item" onclick="showView('health', this)">Suivi santé</button>
-      <button class="nav-item" onclick="showView('menus', this)">Mes menus</button>
+      <button class="nav-item" onclick="showView('menus', this)" data-i18n="nav_menus">Mes menus</button>
       <button class="nav-item" onclick="showView('analysis', this)">Analyse repas</button>
-      <button class="nav-item" onclick="showView('protocols', this)">Protocoles</button>
+      <button class="nav-item" onclick="showView('protocols', this)" data-i18n="nav_protocols">Protocoles</button>
       <button class="nav-item" onclick="showView('gamification', this)">Ma progression</button>
-      <button class="nav-item" onclick="showView('programs', this)">Programmes</button>
+      <button class="nav-item" onclick="showView('programs', this)" data-i18n="nav_programs">Programmes</button>
       <button class="nav-item" onclick="showView('ordonnance', this)">Scan ordonnance</button>
       <button class="nav-item" onclick="showView('insights', this)">Observatoire</button>
-      <button class="nav-item" onclick="showView('simulator', this)">Simulateur</button>
+      <button class="nav-item" onclick="showView('simulator', this)" data-i18n="nav_simulator">Simulateur</button>
     <button class="nav-item" onclick="showView('oracle', this)">Oracle Santé</button>
       <button class="nav-item" onclick="showView('passeport', this)">Passeport Santé</button>
       <button class="nav-item" onclick="showView('biologie', this)">Bilan sanguin</button>
@@ -337,9 +338,9 @@
       <button class="nav-item active" onclick="showView('entreprise', this)">Dashboard RH</button>
       <button class="nav-item" onclick="showView('insights', this)">Observatoire</button>
       <div class="nav-label">Mon compte</div>
-      <button class="nav-item" onclick="showView('profile', this)">Mon profil</button>
-      <button class="nav-item" onclick="showView('chat', this)">Chat IA</button>
-      <button class="nav-item" onclick="showView('simulator', this)">Simulateur</button>
+      <button class="nav-item" onclick="showView('profile', this)" data-i18n="nav_profile">Mon profil</button>
+      <button class="nav-item" onclick="showView('chat', this)" data-i18n="nav_chat">Chat IA</button>
+      <button class="nav-item" onclick="showView('simulator', this)" data-i18n="nav_simulator">Simulateur</button>
       <button class="nav-item" onclick="showView('passeport', this)">Passeport Santé</button>
     </div>
     <div class="sidebar-user">
@@ -348,6 +349,7 @@
         <div class="sidebar-user-name" id="sidebarName">Chargement...</div>
         <div class="sidebar-user-plan" id="sidebarPlan">Gratuit</div>
       </div>
+      <select onchange="setLang(this.value)" style="background:#1a2a3a;color:white;border:1px solid rgba(255,255,255,0.15);border-radius:4px;padding:4px 8px;font-size:0.78rem;cursor:pointer;margin-right:8px" id="langSelector"><option value="fr">🇫🇷 FR</option><option value="en">🇬🇧 EN</option><option value="es">🇪🇸 ES</option><option value="ar">🇸🇦 AR</option></select>
       <button class="btn-logout" onclick="logout()" title="Déconnexion"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg></button>
     </div>
   </div>
@@ -1917,7 +1919,8 @@ function toggleMobileMenu() {
     const w = window.open('', '_blank');
     w.document.write(`<!DOCTYPE html><html><head><title>Rapport RH — ${entreprise}</title>
     <style>body{font-family:Georgia,serif;max-width:800px;margin:40px auto;padding:40px;color:#021A35}.header{border-bottom:2px solid #021A35;padding-bottom:20px;margin-bottom:28px;display:flex;justify-content:space-between}.logo{font-size:1.2rem;font-weight:600}.report{font-size:0.95rem;line-height:1.8;white-space:pre-wrap}.disclaimer{margin-top:40px;padding:16px;background:#FDF6E8;font-size:0.78rem;color:rgba(2,26,53,0.6)}@media print{body{margin:20px}}</style>
-    </head><body>
+    <script src="i18n.js"></script>
+</head><body>
     <div class="header"><div><div class="logo">● Leonarda Entreprise</div><div style="font-size:0.78rem;color:rgba(2,26,53,0.4)">Rapport mensuel RH · Données anonymisées</div></div><div style="text-align:right;font-size:0.78rem;color:rgba(2,26,53,0.4)">${entreprise}<br>${new Date().toLocaleDateString('fr-FR',{month:'long',year:'numeric'})}</div></div>
     <div class="report">${rapport}</div>
     <div class="disclaimer">️ Données 100% anonymisées. Aucune information individuelle n'est présente dans ce rapport. Conformité RGPD garantie.</div>
@@ -2308,7 +2311,8 @@ function toggleMobileMenu() {
       .logo { font-size: 1.2rem; font-weight: 600; }
       .disclaimer { margin-top: 40px; padding: 16px; background: #FDF6E8; font-size: 0.78rem; color: rgba(2,26,53,0.6); line-height: 1.5; }
       @media print { body { margin: 20px; } }
-    </style></head><body>
+    </style><script src="i18n.js"></script>
+</head><body>
     <div class="header">
       <div><div class="logo">● Leonarda</div><div style="font-size:0.78rem;color:rgba(2,26,53,0.4)">Passeport Santé Nutritionnel</div></div>
       <div style="text-align:right;font-size:0.78rem;color:rgba(2,26,53,0.4)">${date}<br>${id}</div>
@@ -2624,6 +2628,7 @@ function toggleMobileMenu() {
   #healthGrid>div:nth-child(5){grid-column:1/-1}
 }
 </style>
+<script src="i18n.js"></script>
 </head>
 <body>
 <div class="page">
