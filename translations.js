@@ -29,7 +29,22 @@ const TRANSLATIONS = {
     "Plan actuel": "Current Plan", "Choisir": "Choose",
     "Score de vitalité": "Vitality Score", "Âge biologique": "Biological Age",
     "Alertes": "Alerts", "Actions prioritaires": "Priority Actions",
-    "Profil mis à jour": "Profile updated", "Erreur de connexion": "Connection error"
+    "Profil mis à jour": "Profile updated", "Erreur de connexion": "Connection error",
+    "Email": "Email", "Mot de passe": "Password", "Se connecter →": "Login →",
+    "Créer mon compte →": "Create my account →", "Mon professionnel": "My Professional",
+    "Oracle Santé": "Health Oracle", "Bilan sanguin": "Blood Test",
+    "Mon entreprise": "My Company", "Espace RH": "HR Space", "Dashboard RH": "HR Dashboard",
+    "Mon compte": "My Account", "En ligne": "Online", "En Ligne": "Online",
+    "Bonjour": "Hello", "Coach santé & nutrition · Personnalisé pour vous": "Health & nutrition coach · Personalized for you",
+    "Posez votre question à Leonarda...": "Ask Leonarda your question...",
+    "Vous avez atteint votre limite de 10 messages/jour.": "You have reached your daily limit of 10 messages.",
+    "Passer à Standard →": "Upgrade to Standard →",
+    "Votre tableau de bord santé du jour": "Your health dashboard for today",
+    "Principal": "Main", "fr FR": "fr FR", "gb EN": "gb EN", "es ES": "es ES", "sa AR": "sa AR",
+    "Leonarda est un coach nutritionnel et ne remplace pas un avis médical.": "Leonarda is a nutritional coach and does not replace medical advice.",
+    "Prénom et nom": "First and last name", "Mot de passe": "Password",
+    "Votre coach santé & nutrition personnalisé": "Your personalized health & nutrition coach"
+
   },
   es: {
     "Chat IA": "Chat IA", "Dashboard": "Panel", "Mon profil": "Mi perfil",
@@ -60,7 +75,21 @@ const TRANSLATIONS = {
     "Plan actuel": "Plan actual", "Choisir": "Elegir",
     "Score de vitalité": "Puntuación de vitalidad", "Âge biologique": "Edad biológica",
     "Alertes": "Alertas", "Actions prioritaires": "Acciones prioritarias",
-    "Profil mis à jour": "Perfil actualizado", "Erreur de connexion": "Error de conexión"
+    "Profil mis à jour": "Perfil actualizado", "Erreur de connexion": "Error de conexión",
+    "Email": "Correo electrónico", "Mot de passe": "Contraseña", "Se connecter →": "Iniciar sesión →",
+    "Créer mon compte →": "Crear mi cuenta →", "Mon professionnel": "Mi profesional",
+    "Oracle Santé": "Oráculo de Salud", "Bilan sanguin": "Análisis de sangre",
+    "Mon entreprise": "Mi empresa", "Espace RH": "Espacio RRHH", "Dashboard RH": "Panel RRHH",
+    "Mon compte": "Mi cuenta", "En ligne": "En línea", "En Ligne": "En línea",
+    "Bonjour": "Hola", "Coach santé & nutrition · Personnalisé pour vous": "Coach de salud y nutrición · Personalizado para usted",
+    "Posez votre question à Leonarda...": "Haga su pregunta a Leonarda...",
+    "Vous avez atteint votre limite de 10 messages/jour.": "Ha alcanzado su límite de 10 mensajes por día.",
+    "Passer à Standard →": "Cambiar a Estándar →",
+    "Votre tableau de bord santé du jour": "Su panel de salud de hoy",
+    "Principal": "Principal", "Leonarda est un coach nutritionnel et ne remplace pas un avis médical.": "Leonarda es un coach nutricional y no reemplaza el consejo médico.",
+    "Prénom et nom": "Nombre y apellido",
+    "Votre coach santé & nutrition personnalisé": "Su coach de salud y nutrición personalizado"
+
   },
   ar: {
     "Chat IA": "دردشة الذكاء الاصطناعي", "Dashboard": "لوحة التحكم", "Mon profil": "ملفي الشخصي",
@@ -91,7 +120,21 @@ const TRANSLATIONS = {
     "Plan actuel": "الخطة الحالية", "Choisir": "اختر",
     "Score de vitalité": "درجة الحيوية", "Âge biologique": "العمر البيولوجي",
     "Alertes": "تنبيهات", "Actions prioritaires": "الإجراءات ذات الأولوية",
-    "Profil mis à jour": "تم تحديث الملف", "Erreur de connexion": "خطأ في الاتصال"
+    "Profil mis à jour": "تم تحديث الملف", "Erreur de connexion": "خطأ في الاتصال",
+    "Email": "البريد الإلكتروني", "Mot de passe": "كلمة المرور", "Se connecter →": "تسجيل الدخول →",
+    "Créer mon compte →": "إنشاء حسابي →", "Mon professionnel": "متخصصي",
+    "Oracle Santé": "أوراكل الصحة", "Bilan sanguin": "تحليل الدم",
+    "Mon entreprise": "شركتي", "Espace RH": "فضاء الموارد البشرية", "Dashboard RH": "لوحة الموارد البشرية",
+    "Mon compte": "حسابي", "En ligne": "متصل", "En Ligne": "متصل",
+    "Bonjour": "مرحبا", "Coach santé & nutrition · Personnalisé pour vous": "مدرب الصحة والتغذية · مخصص لك",
+    "Posez votre question à Leonarda...": "اطرح سؤالك على ليوناردا...",
+    "Vous avez atteint votre limite de 10 messages/jour.": "لقد وصلت إلى حد 10 رسائل يومياً.",
+    "Passer à Standard →": "الترقية إلى ستاندرد →",
+    "Votre tableau de bord santé du jour": "لوحة صحتك اليوم",
+    "Principal": "الرئيسية", "Leonarda est un coach nutritionnel et ne remplace pas un avis médical.": "ليوناردا مدرب تغذية ولا يحل محل المشورة الطبية.",
+    "Prénom et nom": "الاسم الأول والأخير",
+    "Votre coach santé & nutrition personnalisé": "مدربك الشخصي للصحة والتغذية"
+
   }
 };
 
