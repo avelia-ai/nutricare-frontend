@@ -1,4 +1,4 @@
-const ANTHROPIC_API_URL = 'https://api.anthropic.com/v1/messages';
+const ANTHROPIC_API_URL = null;
 
 let translationCache = JSON.parse(localStorage.getItem('nutricare_translations') || '{}');
 
@@ -7,27 +7,12 @@ async function translateTexts(texts, targetLang) {
   const cacheKey = targetLang + '_' + btoa(unescape(encodeURIComponent(texts.join('|')))).slice(0, 32);
   if (translationCache[cacheKey]) return translationCache[cacheKey];
 
-  const response = await fetch(ANTHROPIC_API_URL, {
+  const response = await fetch(BACKEND_URL + '/api/translate', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      model: 'claude-sonnet-4-20250514',
-      max_tokens: 4000,
-      messages: [{
-        role: 'user',
-        content: `Translate the following French UI texts to ${langNames[targetLang]}. 
-Return ONLY a JSON array with the translated strings in the same order.
-Do not translate: variable names, HTML tags, URLs, emails, numbers, brand names (Leonarda, NutriCare, Railway, Supabase).
-Keep medical/nutritional terms accurate.
-Texts to translate:
-${JSON.stringify(texts)}`
-      }]
-    })
+    body: JSON.stringify({ texts, lang: targetLang })
   });
-
-  const data = await response.json();
-  const text = data.content[0].text.replace(/```json|```/g, '').trim();
-  const translated = JSON.parse(text);
+  const translated = await response.json();
   translationCache[cacheKey] = translated;
   localStorage.setItem('nutricare_translations', JSON.stringify(translationCache));
   return translated;
