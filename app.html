@@ -254,7 +254,6 @@
 </style>
 </style>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
-<script src="i18n.js"></script>
 </head>
 <body>
 
@@ -1919,12 +1918,12 @@ function toggleMobileMenu() {
     const w = window.open('', '_blank');
     w.document.write(`<!DOCTYPE html><html><head><title>Rapport RH — ${entreprise}</title>
     <style>body{font-family:Georgia,serif;max-width:800px;margin:40px auto;padding:40px;color:#021A35}.header{border-bottom:2px solid #021A35;padding-bottom:20px;margin-bottom:28px;display:flex;justify-content:space-between}.logo{font-size:1.2rem;font-weight:600}.report{font-size:0.95rem;line-height:1.8;white-space:pre-wrap}.disclaimer{margin-top:40px;padding:16px;background:#FDF6E8;font-size:0.78rem;color:rgba(2,26,53,0.6)}@media print{body{margin:20px}}</style>
-    <script src="i18n.js"></script>
-</head><body>
+    </head><body>
     <div class="header"><div><div class="logo">● Leonarda Entreprise</div><div style="font-size:0.78rem;color:rgba(2,26,53,0.4)">Rapport mensuel RH · Données anonymisées</div></div><div style="text-align:right;font-size:0.78rem;color:rgba(2,26,53,0.4)">${entreprise}<br>${new Date().toLocaleDateString('fr-FR',{month:'long',year:'numeric'})}</div></div>
     <div class="report">${rapport}</div>
     <div class="disclaimer">️ Données 100% anonymisées. Aucune information individuelle n'est présente dans ce rapport. Conformité RGPD garantie.</div>
-    </body></html>`);
+    <script src="i18n.js"></script>
+</body></html>`);
     w.document.close();
     w.print();
   }
@@ -2311,8 +2310,7 @@ function toggleMobileMenu() {
       .logo { font-size: 1.2rem; font-weight: 600; }
       .disclaimer { margin-top: 40px; padding: 16px; background: #FDF6E8; font-size: 0.78rem; color: rgba(2,26,53,0.6); line-height: 1.5; }
       @media print { body { margin: 20px; } }
-    </style><script src="i18n.js"></script>
-</head><body>
+    </style></head><body>
     <div class="header">
       <div><div class="logo">● Leonarda</div><div style="font-size:0.78rem;color:rgba(2,26,53,0.4)">Passeport Santé Nutritionnel</div></div>
       <div style="text-align:right;font-size:0.78rem;color:rgba(2,26,53,0.4)">${date}<br>${id}</div>
@@ -2321,7 +2319,8 @@ function toggleMobileMenu() {
     <div class="meta">Compte-rendu médical nutritionnel généré par Leonarda</div>
     <div class="report">${report}</div>
     <div class="disclaimer">️ Ce document est généré par intelligence artificielle. Il ne remplace pas un avis médical professionnel. Document généré le ${date}.</div>
-    </body></html>`);
+    <script src="i18n.js"></script>
+</body></html>`);
     w.document.close();
     w.print();
   }
@@ -2628,7 +2627,6 @@ function toggleMobileMenu() {
   #healthGrid>div:nth-child(5){grid-column:1/-1}
 }
 </style>
-<script src="i18n.js"></script>
 </head>
 <body>
 <div class="page">
@@ -2686,6 +2684,7 @@ function toggleMobileMenu() {
     <div>Consultez votre médecin pour toute décision thérapeutique.</div>
   </div>
 </div>
+<script src="i18n.js"></script>
 </body>
 </html>`;
 
@@ -3747,5 +3746,6 @@ async function deleteProfessional(id) {
     }
   }
 </script>
+<script src="i18n.js"></script>
 </body>
 </html>
