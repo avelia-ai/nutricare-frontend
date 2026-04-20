@@ -1664,12 +1664,6 @@
       setTimeout(() => showView(urlView, document.querySelector(`[onclick*="showView('${urlView}']")`)), 500);
     }
 
-    const urlParams2 = new URLSearchParams(window.location.search);
-    const urlView = urlParams.get('view');
-    if (urlView) {
-      setTimeout(() => showView(urlView, document.querySelector(`[onclick*="showView('${urlView}']")`)), 500);
-    }
-
     if (authToken && currentUser) {
       showApp();
       const params = new URLSearchParams(window.location.search);
@@ -3139,10 +3133,6 @@ function toggleMobileMenu() {
 
   // ── VIEWS ──
   // Détection paramètres URL
-const urlParams3 = new URLSearchParams(window.location.search);
-if (urlParams.get('view') === 'protocols') {
-  setTimeout(() => showView('protocols'), 500);
-}
   function showView(view, btn) {
     document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
     if (btn) btn.classList.add('active');
