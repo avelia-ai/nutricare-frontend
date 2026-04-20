@@ -3172,7 +3172,7 @@ function toggleMobileMenu() {
       if (params.get('program_success')) document.getElementById('programSuccess').style.display = 'block';
     }
     if (view === 'gamification') loadGamification();
-    if (view === 'protocols') loadProtocols();
+    if (view === 'protocols') setTimeout(loadProtocols, 300);
     document.getElementById('healthView').style.display = view === 'health' ? 'block' : 'none';
     if (view === 'health') loadHealthDashboard();
     document.getElementById('menusView').style.display = view === 'menus' ? 'block' : 'none';
