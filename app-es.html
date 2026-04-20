@@ -325,7 +325,6 @@
           onkeydown="handleChatKeydown(event)"
         ></textarea>
         <button id="sendButton" class="btn-send" onclick="sendMessage()">➤
-```html
   .plan-card .btn-plan:hover { background: var(--sage); }
   .plan-card.dark .btn-plan { background: white; color: var(--charcoal); }
   .plan-card.gold .btn-plan { background: var(--gold); color: var(--charcoal); }
@@ -526,7 +525,6 @@
           </div>
           <button onclick="document.getElementById('predictionBanner').style.display='none'" style="background:none;border:none;cursor:pointer;color:rgba(0,0,0,0.3);font-size:1.1rem;flex-shrink:0">x</button>
         </div>
-```
 </div>
       <div class="alertes-container" id="alertesContainer"></div>
       <div class="stats-grid">
@@ -1471,7 +1469,6 @@
       <div onclick="setSimQ(this)" style="font-size:0.75rem;padding:6px 14px;border-radius: 4px;border:1px solid #B5D4F4;color:rgba(2,26,53,0.6);cursor:pointer;background:#F0F6FF">¿Si camino 30min por día?</div>
       <div onclick="setSimQ(this)" style="font-size:0.75rem;padding:6px 14px;border-radius: 4px;border:1px solid #B5D4F4;color:rgba(2,26,53,0.6);cursor:pointer;background:#F0F6FF">¿Si bebo 2L de agua por día?</div>
       <div onclick="setSimQ(this)"
-```html
 <div style="font-size:0.68rem;text-transform:uppercase;letter-spacing:.08em;color:#3B6D11;font-weight:600;margin-bottom:10px">Alternativas recomendadas</div>
         <div id="simAltList"></div>
       </div>
@@ -1672,8 +1669,6 @@
     </div>
 
     <!-- Badges -->
-```
-```html
     <div style="background:white;border-radius: 4px;padding:24px;border:1px solid var(--border)">
       <div style="font-family:'Open Sans',serif;font-size:1.2rem;margin-bottom:16px">Mis insignias</div>
       <div id="gamiBadges" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:12px"></div>
@@ -1890,8 +1885,6 @@ function toggleMobileMenu() {
       });
       if (!res.ok) { logout(); return; }
       const profile = await res.json();
-```
-```html
       const name = profile.full_name || currentUser?.email?.split('@')[0] || 'Usuario';
       const initials = name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2);
       const plan = profile.plan || 'free';
@@ -2091,8 +2084,6 @@ function toggleMobileMenu() {
         body: JSON.stringify({ nom, nb_licences })
       });
       const data = await res.json();
-```
-```html
       if (!res.ok) {
         document.getElementById('entCreateError').style.display = 'block';
         document.getElementById('entCreateError').textContent = data.error;
@@ -2293,8 +2284,6 @@ function toggleMobileMenu() {
             <div style="background:#FDF6E8;border-radius:4px;padding:10px 14px;font-size:0.8rem;color:#854F0B;line-height:1.5"> ${m.conseil_nutritionnel}</div>
           </div>`;
         }).join('');
-```
-```html
         // Recomendaciones
         document.getElementById('bioReco').innerHTML = (data.recommandations_nutritionnelles || []).map((r, i) =>
           `<div style="display:flex;gap:10px;align-items:flex-start">
@@ -2494,8 +2483,6 @@ function toggleMobileMenu() {
     if (tab === 'timeline') oBuildTL();
   }
 
-```
-```html
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -2661,9 +2648,9 @@ ${d && d.interactions_medicaments && d.interactions_medicaments.length ? `<div c
     div.className = type + '-message';
     div.style.cssText = `margin-bottom:12px;padding:12px 16px;border-radius:12px;max-width:85%;${type==='user'?'background:#1D9E75;color:white;margin-left:auto;text-align:right':'background:#f0f4f8;color:#333'}`;
     
-    if (type === 'ai' && content.includes('```')) {
+    if (type === 'ai' && content.includes('')) {
       // Formatter le code
-      const parts = content.split('```');
+      const parts = content.split('');
       let html = '';
       for (let i = 0; i < parts.length; i++) {
         if (i % 2 === 0) {
@@ -2730,8 +2717,6 @@ ${d && d.interactions_medicaments && d.interactions_medicaments.length ? `<div c
     localStorage.removeItem('nutricare_profile');
     window.location.href = 'connexion.html';
   }
-```
-```html
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -2939,7 +2924,6 @@ ${d && d.interactions_medicaments && d.interactions_medicaments.length ? `<div c
     // Impacto patologías
     const pathoEl = document.getElementById('simPatho');
     if (pathoEl && data.impact_pathologies) {
-```
       pathoEl.style.display = 'block';
       document.getElementById('simPathoText').textContent = data.impact_pathologies;
     }
@@ -3140,7 +3124,6 @@ ${d && d.interactions_medicaments && d.interactions_medicaments.length ? `<div c
   async function loadPrediction() {
     try {
       const res = await fetch(`${BACKEND_URL}/api/prediction/risque`, {
-```html
         headers: { 'Authorization': `Bearer ${authToken}` }
       });
       if (!res.ok) return;
@@ -3341,8 +3324,6 @@ async function previewAndAnalyze(event) {
   reader.onload = async (e) => {
     const base64 = e.target.result.split(',')[1];
     const mediaType = file.type;
-```
-```html
 document.getElementById('analysisPreview').src = e.target.result;
     document.getElementById('analysisPreview').style.display = 'block';
     document.getElementById('analysisLoading').style.display = 'block';
@@ -3542,7 +3523,6 @@ async function saveHealthLog() {
     }
   } catch(e) { console.error(e); alert("Error saveHealth: " + e.message); }
 }
-```
 function renderHealthChart(logs) {
   const canvas = document.getElementById('healthChart');
   if (!canvas || !logs.length) return;
@@ -3743,7 +3723,6 @@ async function addProfessional() {
       document.getElementById('proAddError').style.display = 'none';
       loadProfessionals();
     }
-```html
 } catch(e) { console.error(e); }
 }
 
@@ -3893,4 +3872,3 @@ async function deleteProfessional(id) {
 <script src="translator.js"></script>
 </body>
 </html>
-```<script src="translator.js"></script>

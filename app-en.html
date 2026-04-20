@@ -1,4 +1,3 @@
-```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -331,7 +330,6 @@
             Hello! I'm Leonarda, your personalized health coach. I'm here to help you with nutrition, wellness, and achieving your health goals
 Looking at the HTML content, I need to translate all visible French text and placeholder/title/alt attributes while keeping everything else exactly as-is. Here's the translated version:
 
-```html
   .plan-card .btn-plan:hover { background: var(--sage); }
   .plan-card.dark .btn-plan { background: white; color: var(--charcoal); }
   .plan-card.gold .btn-plan { background: var(--gold); color: var(--charcoal); }
@@ -532,7 +530,6 @@ Looking at the HTML content, I need to translate all visible French text and pla
           </div>
           <button onclick="document.getElementById('predictionBanner').style.display='none'" style="background:none;border:none;cursor:pointer;color:rgba(0,0,0,0.3);font-size:1.1rem;flex-shrink:0">x</button>
         </div>
-```
 </div>
       <div class="alertes-container" id="alertesContainer"></div>
       <div class="stats-grid">
@@ -933,7 +930,6 @@ Looking at the HTML content, I need to translate all visible French text and pla
           <div id="palier1" style="border-radius:4px;padding:12px;text-align:center;border:1px solid #E6F1FB;background:#F0F6FF">
             <div style="font-size:1.4rem;margin-bottom:4px"></div>
             <div style="font-size:0.72rem;font-weight:600;color:#021A35;margin-bottom:2px">Bronze · 40%</div>
-```html
             <div style="font-size:0.68rem;color:rgba(2,26,53,0.5)">Standard 1 month</div>
           </div>
           <div id="palier2" style="border-radius:4px;padding:12px;text-align:center;border:1px solid #E6F1FB;background:#F0F6FF">
@@ -1134,7 +1130,6 @@ Looking at the HTML content, I need to translate all visible French text and pla
     </div>
 
     <!-- Contenu -->
-```
 <div id="passeportContent" style="display:none">
       <!-- Carte identité -->
       <div style="background:#021A35;border-radius:4px;padding:28px;margin-bottom:20px;display:flex;gap:24px;align-items:center;flex-wrap:wrap">
@@ -1328,7 +1323,6 @@ Looking at the HTML content, I need to translate all visible French text and pla
     <div onclick="oSelOrgan('foie')" id="ob-foie" style="cursor:pointer;display:flex;align-items:center;gap:6px;padding:6px 8px;border-radius:6px;border:1px solid #3a1e08;background:#121c2c;margin-bottom:4px"><div style="width:7px;height:7px;border-radius:50%;background:#BA7517;box-shadow:0 0 7px #BA751780;animation:oPulse .8s infinite"></div>
 Looking at the HTML content provided, here is the translation from French to English:
 
-```html
     <div style="font-size:8px;color:#3a7a9a;text-transform:uppercase;letter-spacing:.1em;margin-bottom:7px;font-weight:600">Key Markers</div>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:5px">
       <div style="background:#0d1820;border-radius:6px;padding:7px 9px;border:1px solid #1e3050"><div style="font-size:8px;color:#3a6a80;font-family:monospace" id="oM1L">HbA1c</div><div style="font-size:13px;font-weight:600;color:#BA7517" id="oM1V">5.8%</div></div>
@@ -1689,7 +1683,6 @@ Looking at the HTML content provided, here is the translation from French to Eng
     </div>
 
     <!-- Badges -->
-```html
     <div style="background:white;border-radius: 4px;padding:24px;border:1px solid var(--border)">
       <div style="font-family:'Open Sans',serif;font-size:1.2rem;margin-bottom:16px">My badges</div>
       <div id="gamiBadges" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:12px"></div>
@@ -1906,10 +1899,7 @@ function toggleMobileMenu() {
       });
       if (!res.ok) { logout(); return; }
       const profile = await res.json();
-```
-Here is the translated HTML with all French text converted to English:
 
-```html
       const name = profile.full_name || currentUser?.email?.split('@')[0] || 'User';
       const initials = name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2);
       const plan = profile.plan || 'free';
@@ -2109,10 +2099,8 @@ Here is the translated HTML with all French text converted to English:
         body: JSON.stringify({ nom, nb_licences })
       });
       const data = await res.json();
-```
 Looking at this HTML code, I can see it contains JavaScript with some French text in strings and error messages. Here's the translated version with only the visible text and user-facing strings translated to English:
 
-```html
       if (!res.ok) {
         document.getElementById('entCreateError').style.display = 'block';
         document.getElementById('entCreateError').textContent = data.error;
@@ -2314,8 +2302,6 @@ Looking at this HTML code, I can see it contains JavaScript with some French tex
           </div>`;
         }).join('');
 
-```
-```html
         // Recommendations
         document.getElementById('bioReco').innerHTML = (data.recommandations_nutritionnelles || []).map((r, i) =>
           `<div style="display:flex;gap:10px;align-items:flex-start">
@@ -2514,10 +2500,8 @@ Looking at this HTML code, I can see it contains JavaScript with some French tex
     if (tab === 'comparaison') oBuildCmp();
     if (tab === 'timeline') oBuildTL();
   }
-```
 Here is the HTML with all French text translated to English:
 
-```html
 function oSelOrgan(k) {
     const OD = {
       cerveau:{l:'BRAIN',c:'#7F77DD',d:'DHA and magnesium deficit. Nocturnal cortisol disrupting prefrontal cortex.',p:'Score 74 (+6). Cognitive decline -35%. Memory +22%.',a:['DHA 1g/day + Mg 400mg','Meditation 10min/day','Regular 8h sleep']},
@@ -2718,8 +2702,6 @@ function oSelOrgan(k) {
 <meta charset="UTF-8">
 <title>Health Oracle Report — ${name}</title>
 <style>
-```
-```html
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -2927,10 +2909,9 @@ function oSelOrgan(k) {
     // Impact pathologies
     const pathoEl = document.getElementById('simPatho');
     if (pathoEl && data.impact_pathologies) {
-```
 Looking at the provided HTML code fragment, I can see this is JavaScript code with French comments and some text content. Here's the translated version with only the visible text and relevant attributes translated to English:
 
-```javascript
+javascript
       pathoEl.style.display = 'block';
       document.getElementById('simPathoText').textContent = data.impact_pathologies;
     }
@@ -3131,10 +3112,9 @@ Looking at the provided HTML code fragment, I can see this is JavaScript code wi
   async function loadPrediction() {
     try {
       const res = await fetch(`${BACKEND_URL}/api/prediction/risque`, {
-```
 Looking at this HTML/JavaScript code, I can see it contains French text that needs to be translated to English. Here are the visible French texts and attributes that need translation:
 
-```javascript
+javascript
         headers: { 'Authorization': `Bearer ${authToken}` }
       });
       if (!res.ok) return;
@@ -3335,7 +3315,6 @@ async function previewAndAnalyze(event) {
   reader.onload = async (e) => {
     const base64 = e.target.result.split(',')[1];
     const mediaType = file.type;
-```html
 document.getElementById('analysisPreview').src = e.target.result;
     document.getElementById('analysisPreview').style.display = 'block';
     document.getElementById('analysisLoading').style.display = 'block';
@@ -3535,7 +3514,6 @@ async function saveHealthLog() {
     }
   } catch(e) { console.error(e); alert("saveHealth error: " + e.message); }
 }
-```
 function renderHealthChart(logs) {
   const canvas = document.getElementById('healthChart');
   if (!canvas || !logs.length) return;
@@ -3736,7 +3714,6 @@ async function addProfessional() {
       document.getElementById('proAddError').style.display = 'none';
       loadProfessionals();
     }
-```html
 } catch(e) { console.error(e); }
 }
 
@@ -3886,4 +3863,3 @@ async function deleteProfessional(id) {
 <script src="translator.js"></script>
 </body>
 </html>
-```<script src="translator.js"></script>

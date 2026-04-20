@@ -312,7 +312,6 @@
     <div id
 Looking at this HTML file, I need to translate all French visible text and certain attributes to Arabic while keeping the HTML structure and JavaScript exactly as-is. Here's the translated version:
 
-```html
   .plan-card .btn-plan:hover { background: var(--sage); }
   .plan-card.dark .btn-plan { background: white; color: var(--charcoal); }
   .plan-card.gold .btn-plan { background: var(--gold); color: var(--charcoal); }
@@ -513,7 +512,6 @@ Looking at this HTML file, I need to translate all French visible text and certa
           </div>
           <button onclick="document.getElementById('predictionBanner').style.display='none'" style="background:none;border:none;cursor:pointer;color:rgba(0,0,0,0.3);font-size:1.1rem;flex-shrink:0">x</button>
         </div>
-```
 </div>
       <div class="alertes-container" id="alertesContainer"></div>
       <div class="stats-grid">
@@ -914,7 +912,6 @@ Looking at this HTML file, I need to translate all French visible text and certa
           <div id="palier1" style="border-radius:4px;padding:12px;text-align:center;border:1px solid #E6F1FB;background:#F0F6FF">
             <div style="font-size:1.4rem;margin-bottom:4px"></div>
             <div style="font-size:0.72rem;font-weight:600;color:#021A35;margin-bottom:2px">برونزي · 40%</div>
-```html
 <div style="font-size:0.68rem;color:rgba(2,26,53,0.5)">معياري شهر واحد</div>
           </div>
           <div id="palier2" style="border-radius:4px;padding:12px;text-align:center;border:1px solid #E6F1FB;background:#F0F6FF">
@@ -1115,7 +1112,6 @@ Looking at this HTML file, I need to translate all French visible text and certa
     </div>
 
     <!-- Contenu -->
-```
 <div id="passeportContent" style="display:none">
       <!-- Carte identité -->
       <div style="background:#021A35;border-radius:4px;padding:28px;margin-bottom:20px;display:flex;gap:24px;align-items:center;flex-wrap:wrap">
@@ -1308,7 +1304,6 @@ Looking at this HTML file, I need to translate all French visible text and certa
     <div onclick="oSelOrgan('poumons')" id="ob-poumons" style="cursor:pointer;display:flex;align-items:center;gap:
 Looking at this HTML, I need to translate the French text to Arabic while preserving all HTML structure, JavaScript, and CSS exactly as-is. Here's the translated version:
 
-```html
     <div style="font-size:8px;color:#3a7a9a;text-transform:uppercase;letter-spacing:.1em;margin-bottom:7px;font-weight:600">المؤشرات الرئيسية</div>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:5px">
       <div style="background:#0d1820;border-radius:6px;padding:7px 9px;border:1px solid #1e3050"><div style="font-size:8px;color:#3a6a80;font-family:monospace" id="oM1L">HbA1c</div><div style="font-size:13px;font-weight:600;color:#BA7517" id="oM1V">5.8%</div></div>
@@ -1869,7 +1864,6 @@ function toggleMobileMenu() {
       });
       if (!res.ok) { logout(); return; }
       const profile = await res.json();
-```html
 const name = profile.full_name || currentUser?.email?.split('@')[0] || 'مستخدم';
       const initials = name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2);
       const plan = profile.plan || 'free';
@@ -2069,8 +2063,6 @@ const name = profile.full_name || currentUser?.email?.split('@')[0] || 'مستخ
         body: JSON.stringify({ nom, nb_licences })
       });
       const data = await res.json();
-```
-```html
       if (!res.ok) {
         document.getElementById('entCreateError').style.display = 'block';
         document.getElementById('entCreateError').textContent = data.error;
@@ -2271,7 +2263,6 @@ const name = profile.full_name || currentUser?.email?.split('@')[0] || 'مستخ
             <div style="background:#FDF6E8;border-radius:4px;padding:10px 14px;font-size:0.8rem;color:#854F0B;line-height:1.5"> ${m.conseil_nutritionnel}</div>
           </div>`;
         }).join('');
-```
 
 
         // التوصيات
@@ -2472,7 +2463,6 @@ const name = profile.full_name || currentUser?.email?.split('@')[0] || 'مستخ
     if (tab === 'comparaison') oBuildCmp();
     if (tab === 'timeline') oBuildTL();
   }
-```html
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -2680,8 +2670,6 @@ const name = profile.full_name || currentUser?.email?.split('@')[0] || 'مستخ
 <meta charset="UTF-8">
 <title>تقرير أوراكل الصحة — ${name}</title>
 <style>
-```
-```html
 <!DOCTYPE html>
 <html lang="ar">
 <head>
@@ -2774,6 +2762,7 @@ const name = profile.full_name || currentUser?.email?.split('@')[0] || 'مستخ
     <div>استشر طبيبك لأي قرار علاجي.</div>
   </div>
 </div>
+<script src="translator.js"></script>
 </body>
 </html>`;
 
@@ -2889,7 +2878,6 @@ const name = profile.full_name || currentUser?.email?.split('@')[0] || 'مستخ
     // تأثير الأمراض
     const pathoEl = document.getElementById('simPatho');
     if (pathoEl && data.impact_pathologies) {
-```html
       pathoEl.style.display = 'block';
       document.getElementById('simPathoText').textContent = data.impact_pathologies;
     }
@@ -3090,8 +3078,6 @@ const name = profile.full_name || currentUser?.email?.split('@')[0] || 'مستخ
   async function loadPrediction() {
     try {
       const res = await fetch(`${BACKEND_URL}/api/prediction/risque`, {
-```
-```html
         headers: { 'Authorization': `Bearer ${authToken}` }
       });
       if (!res.ok) return;
@@ -3292,10 +3278,8 @@ async function previewAndAnalyze(event) {
   reader.onload = async (e) => {
     const base64 = e.target.result.split(',')[1];
     const mediaType = file.type;
-```
-Here is the translated HTML with all visible French text converted to Arabic:
 
-```javascript
+javascript
     document.getElementById('analysisPreview').src = e.target.result;
     document.getElementById('analysisPreview').style.display = 'block';
     document.getElementById('analysisLoading').style.display = 'block';
@@ -3495,8 +3479,6 @@ async function saveHealthLog() {
     }
   } catch(e) { console.error(e); alert("خطأ في حفظ الصحة: " + e.message); }
 }
-```
-```html
 function renderHealthChart(logs) {
   const canvas = document.getElementById('healthChart');
   if (!canvas || !logs.length) return;
@@ -3697,8 +3679,6 @@ async function addProfessional() {
       document.getElementById('proAddError').style.display = 'none';
       loadProfessionals();
     }
-```
-```html
 <!DOCTYPE html>
 <html lang="ar">
 <head>
@@ -4124,4 +4104,4 @@ document.getElementById('loginTab').onclick = () => {
   document.getElementById('loginTab').classList.add('active');
   document.getElementById('registerTab').classList.remove('active');
   document.getElementById('registerFields').classList.add('hidden');
-  document.getElementById('authSubmitBtn').textContent<script src="translator.js"></script>
+  document.getElementById('authSubmitBtn').textContent
