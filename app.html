@@ -281,10 +281,12 @@ function switchLang(lang) {
   sessionStorage.setItem('transfer_user', user || '');
   sessionStorage.setItem('transfer_profile', profile || '');
   sessionStorage.setItem('transfer_view', view);
+  localStorage.setItem('nutricare_lang', lang);
   if (lang === 'fr') window.location.href = 'app.html';
   else window.location.href = 'app-' + lang + '.html';
 }
 </script>
+
 
 
 <script>

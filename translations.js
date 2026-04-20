@@ -140,7 +140,7 @@ const TRANSLATIONS = {
 
 function setLang(lang) {
   localStorage.setItem('nutricare_lang', lang);
-  location.reload();
+  switchLang(lang);
 }
 
 function applyTranslations(lang) {
