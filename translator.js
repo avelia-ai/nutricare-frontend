@@ -125,3 +125,48 @@ function initTranslator() {
   if (sel) sel.value = saved;
   if (saved !== 'fr') applyAutoTranslation(saved);
 }
+
+function switchLang(lang) {
+  // Sauvegarder la session
+  const token = localStorage.getItem('nutricare_token');
+  const user = localStorage.getItem('nutricare_user');
+  const profile = localStorage.getItem('nutricare_profile');
+  const lastView = localStorage.getItem('nutricare_last_view');
+  
+  // Sauvegarder temporairement pour la page cible
+  sessionStorage.setItem('transfer_token', token || '');
+  sessionStorage.setItem('transfer_user', user || '');
+  sessionStorage.setItem('transfer_profile', profile || '');
+  sessionStorage.setItem('transfer_view', lastView || 'chat');
+  
+  // Rediriger
+  if (lang === 'fr') {
+    window.location.href = 'app.html';
+  } else {
+    window.location.href = `app-${lang}.html`;
+  }
+}
+
+function restoreSession() {
+  const token = sessionStorage.getItem('transfer_token');
+  if (!token) return;
+  
+  if (token) localStorage.setItem('nutricare_token', token);
+  const user = sessionStorage.getItem('transfer_user');
+  const profile = sessionStorage.getItem('transfer_profile');
+  const view = sessionStorage.getItem('transfer_view') || 'chat';
+  
+  if (user) localStorage.setItem('nutricare_user', user);
+  if (profile) localStorage.setItem('nutricare_profile', profile);
+  
+  // Nettoyer
+  sessionStorage.removeItem('transfer_token');
+  sessionStorage.removeItem('transfer_user');
+  sessionStorage.removeItem('transfer_profile');
+  sessionStorage.removeItem('transfer_view');
+  
+  localStorage.setItem('nutricare_last_view', view);
+}
+
+// Appeler au chargement
+restoreSession();
