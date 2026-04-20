@@ -1788,6 +1788,7 @@ function toggleMobileMenu() {
     document.getElementById('authPage').classList.remove('active');
     document.getElementById('appPage').classList.add('active');
     await loadProfile();
+  setTimeout(initTranslator, 800);
   }
 
   async function loadProfile() {
