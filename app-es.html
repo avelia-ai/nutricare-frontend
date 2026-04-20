@@ -3542,7 +3542,7 @@ async function loadProtocols() {
     const res = await fetch(`${BACKEND_URL}/api/protocols/match`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${authToken}` },
-      body: JSON.stringify({ pathologies })
+      body: JSON.stringify({ pathologies, lang: 'es' })
     });
     const raw = await res.json();
     let protocols = Array.isArray(raw) ? raw : [];
