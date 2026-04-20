@@ -216,6 +216,7 @@
     top: 0 !important;
     height: 100vh !important;
     overflow-y: auto !important;
+    overflow-y: auto !important;
     z-index: 100 !important;
     transition: left 0.3s ease !important;
     width: 260px !important;
@@ -1657,6 +1658,12 @@
   // ── INIT ──
   window.onload = () => {
     // Lire le paramètre view dans l'URL
+    const urlParams = new URLSearchParams(window.location.search);
+    const urlView = urlParams.get('view');
+    if (urlView) {
+      setTimeout(() => showView(urlView, document.querySelector(`[onclick*="showView('${urlView}']")`)), 500);
+    }
+
     const urlParams = new URLSearchParams(window.location.search);
     const urlView = urlParams.get('view');
     if (urlView) {
@@ -3157,6 +3164,7 @@ if (urlParams.get('view') === 'protocols') {
     document.getElementById('insightsView').style.display = view === 'insights' ? 'block' : 'none';
     document.getElementById('simulatorView').style.display = view === 'simulator' ? 'block' : 'none';
     document.getElementById('oracleView').style.display = view === 'oracle' ? 'flex' : 'none';
+    if (view === 'oracle') initOracle();
     document.getElementById('historyView').style.display = view === 'history' ? 'block' : 'none';
     if (view === 'history') loadHistory();
     if (view === 'chat') loadChatHistory();
