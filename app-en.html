@@ -148,7 +148,7 @@
   .progress-bar { height: 6px; background: var(--border); border-radius: 4px; margin-top: 8px; overflow: hidden; }
   .progress-fill { height: 100%; background: var(--sage); border-radius: 4px; transition: width .5s; }
   .adherence-item { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
-  .adherence-label { font-size: 0.82rem; color: var(--mid); }
+.adherence-label { font-size: 0.82rem; color: var(--mid); }
   .adherence-value { font-size: 0.82rem; font-weight: 600; color: var(--charcoal); }
 
   /* ── PROFILE VIEW ── */
@@ -198,167 +198,6 @@
   .plan-card.gold .plan-check { color: var(--gold); }
   .btn-plan { width: 100%; padding: 12px; border-radius: 4px; font-size: 0.88rem; font-weight: 500; border: none; cursor: pointer; font-family: 'DM Sans', sans-serif; transition: all .2s; }
   .plan-card .btn-plan { background: var(--charcoal); color: white; }
-
-  .plan-card.dark .btn-plan { background: white; color: var(--charcoal); }
-  .plan-card.gold .btn-plan { background: var(--gold); color: white; }
-  .btn-plan:hover { opacity: 0.9; }
-  
-  /* Mobile responsive */
-  @media(max-width:768px) {
-    #appPage { flex-direction: column; }
-    .sidebar { width: 100%; order: 2; }
-    .main-content { order: 1; }
-    .nav-label:first-of-type { margin-top: 0; }
-    .stats-grid { grid-template-columns: repeat(2, 1fr); }
-    .dashboard-grid { grid-template-columns: 1fr; }
-    .pricing-grid { grid-template-columns: 1fr; }
-    .profile-grid { grid-template-columns: 1fr; }
-    .chat-messages { padding: 16px 20px; }
-    .chat-input-area { padding: 12px 20px; }
-    #dashboardView, #profileView, #pricingView { padding: 20px; }
-  }
-</style>
-</head>
-<body>
-<script>
-function switchLang(lang) {
-  var token = localStorage.getItem('nutricare_token');
-  var user = localStorage.getItem('nutricare_user');
-  var profile = localStorage.getItem('nutricare_profile');
-  var view = localStorage.getItem('nutricare_last_view') || 'chat';
-  sessionStorage.setItem('transfer_token', token || '');
-  sessionStorage.setItem('transfer_user', user || '');
-  sessionStorage.setItem('transfer_profile', profile || '');
-  sessionStorage.setItem('transfer_view', view);
-  if (lang === 'fr') window.location.href = 'app.html';
-  else window.location.href = 'app-' + lang + '.html';
-}
-(function() {
-  var token = sessionStorage.getItem('transfer_token');
-  if (!token) return;
-  localStorage.setItem('nutricare_token', token);
-  var user = sessionStorage.getItem('transfer_user');
-  var profile = sessionStorage.getItem('transfer_profile');
-  var view = sessionStorage.getItem('transfer_view');
-  if (user) localStorage.setItem('nutricare_user', user);
-  if (profile) localStorage.setItem('nutricare_profile', profile);
-  if (view) localStorage.setItem('nutricare_last_view', view);
-  sessionStorage.removeItem('transfer_token');
-  sessionStorage.removeItem('transfer_user');
-  sessionStorage.removeItem('transfer_profile');
-  sessionStorage.removeItem('transfer_view');
-})();
-</script>
-
-
-<!-- ═══════ AUTH PAGE ═══════ -->
-<div class="page active" id="authPage">
-  <div class="auth-logo">
-    <span>Leonarda</span>
-    <span class="auth-logo-dot"></span>
-  </div>
-  <p class="auth-sub">Your personalized health coach</p>
-  
-  <div class="auth-card">
-    <div class="auth-tabs">
-      <button class="auth-tab active" id="loginTab">Login</button>
-      <button class="auth-tab" id="signupTab">Sign Up</button>
-    </div>
-
-    <!-- Login Form -->
-    <form id="loginForm" class="auth-form">
-      <div id="authError" class="auth-error"></div>
-      <div id="authSuccess" class="auth-success"></div>
-      
-      <div class="form-group">
-        <label class="form-label" for="loginEmail">Email</label>
-        <input type="email" id="loginEmail" class="form-input" placeholder="your.email@example.com" required>
-      </div>
-      
-      <div class="form-group">
-        <label class="form-label" for="loginPassword">Password</label>
-        <input type="password" id="loginPassword" class="form-input" placeholder="••••••••" required>
-      </div>
-      
-      <button type="submit" class="btn-auth">Login</button>
-    </form>
-
-    <!-- Signup Form -->
-    <form id="signupForm" class="auth-form" style="display:none;">
-      <div id="signupError" class="auth-error"></div>
-      <div id="signupSuccess" class="auth-success"></div>
-      
-      <div class="form-group">
-        <label class="form-label" for="signupName">Full Name</label>
-        <input type="text" id="signupName" class="form-input" placeholder="Jean Dupont" required>
-      </div>
-      
-      <div class="form-group">
-        <label class="form-label" for="signupEmail">Email</label>
-        <input type="email" id="signupEmail" class="form-input" placeholder="your.email@example.com" required>
-      </div>
-      
-      <div class="form-group">
-        <label class="form-label" for="signupPassword">Password</label>
-        <input type="password" id="signupPassword" class="form-input" placeholder="••••••••" required>
-      </div>
-      
-      <button type="submit" class="btn-auth">Create Account</button>
-    </form>
-  </div>
-</div>
-
-<!-- ═══════ APP PAGE ═══════ -->
-<div class="page" id="appPage">
-  <!-- Sidebar -->
-  <div class="sidebar">
-    <div class="sidebar-logo">
-      <span>Leonarda</span>
-      <span class="sidebar-logo-dot"></span>
-    </div>
-    
-    <nav>
-      <div class="nav-label">Main</div>
-      <button class="nav-item active" data-view="chat">Chat</button>
-      <button class="nav-item" data-view="dashboard">Dashboard</button>
-      
-      <div class="nav-label">Settings</div>
-      <button class="nav-item" data-view="profile">Profile</button>
-      <button class="nav-item" data-view="pricing">Subscription</button>
-    </nav>
-    
-    <div class="sidebar-user">
-      <div class="sidebar-avatar" id="userAvatar">JD</div>
-      <div class="sidebar-user-info">
-        <div class="sidebar-user-name" id="userName">Jean Dupont</div>
-        <div class="sidebar-user-plan" id="userPlan">Free</div>
-      </div>
-      <button class="btn-logout" id="btnLogout">⏻</button>
-    </div>
-  </div>
-
-  <!-- Main content -->
-  <div class="main-content">
-    
-    <!-- ═══ CHAT VIEW ═══ -->
-    <div id="chatView">
-      <div class="chat-header">
-        <div class="chat-header-info">
-          <h2>Your Health Coach</h2>
-          <p>Personalized nutrition and wellness advice</p>
-        </div>
-        <div class="status-pill">
-          <span class="status-dot"></span>
-          Online
-        </div>
-      </div>
-      
-      <div class="chat-messages" id="chatMessages">
-        <div class="msg-row ai">
-          <div class="msg-avatar">🌿</div>
-          <div class="msg-bubble">
-            Hello! I'm Leonarda, your personalized health coach. I'm here to help you with nutrition, wellness, and achieving your health goals
-
   .plan-card .btn-plan:hover { background: var(--sage); }
   .plan-card.dark .btn-plan { background: white; color: var(--charcoal); }
   .plan-card.gold .btn-plan { background: var(--gold); color: var(--charcoal); }
@@ -417,6 +256,66 @@ function switchLang(lang) {
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
 </head>
 <body>
+<script>
+(function() {
+  var token = sessionStorage.getItem('transfer_token');
+  if (!token) return;
+  localStorage.setItem('nutricare_token', token);
+  var user = sessionStorage.getItem('transfer_user');
+  var profile = sessionStorage.getItem('transfer_profile');
+  var view = sessionStorage.getItem('transfer_view');
+  if (user) localStorage.setItem('nutricare_user', user);
+  if (profile) localStorage.setItem('nutricare_profile', profile);
+  if (view) localStorage.setItem('nutricare_last_view', view);
+  sessionStorage.removeItem('transfer_token');
+  sessionStorage.removeItem('transfer_user');
+  sessionStorage.removeItem('transfer_profile');
+  sessionStorage.removeItem('transfer_view');
+})();
+function switchLang(lang) {
+  var token = localStorage.getItem('nutricare_token');
+  var user = localStorage.getItem('nutricare_user');
+  var profile = localStorage.getItem('nutricare_profile');
+  var view = localStorage.getItem('nutricare_last_view') || 'chat';
+  sessionStorage.setItem('transfer_token', token || '');
+  sessionStorage.setItem('transfer_user', user || '');
+  sessionStorage.setItem('transfer_profile', profile || '');
+  sessionStorage.setItem('transfer_view', view);
+  if (lang === 'fr') window.location.href = 'app.html';
+  else window.location.href = 'app-' + lang + '.html';
+}
+</script>
+<script>
+function switchLang(lang) {
+  var token = localStorage.getItem('nutricare_token');
+  var user = localStorage.getItem('nutricare_user');
+  var profile = localStorage.getItem('nutricare_profile');
+  var view = localStorage.getItem('nutricare_last_view') || 'chat';
+  sessionStorage.setItem('transfer_token', token || '');
+  sessionStorage.setItem('transfer_user', user || '');
+  sessionStorage.setItem('transfer_profile', profile || '');
+  sessionStorage.setItem('transfer_view', view);
+  if (lang === 'fr') window.location.href = 'app.html';
+  else window.location.href = 'app-' + lang + '.html';
+}
+// Restaurer session
+(function() {
+  var token = sessionStorage.getItem('transfer_token');
+  if (!token) return;
+  localStorage.setItem('nutricare_token', token);
+  var user = sessionStorage.getItem('transfer_user');
+  var profile = sessionStorage.getItem('transfer_profile');
+  var view = sessionStorage.getItem('transfer_view');
+  if (user) localStorage.setItem('nutricare_user', user);
+  if (profile) localStorage.setItem('nutricare_profile', profile);
+  if (view) localStorage.setItem('nutricare_last_view', view);
+  sessionStorage.removeItem('transfer_token');
+  sessionStorage.removeItem('transfer_user');
+  sessionStorage.removeItem('transfer_profile');
+  sessionStorage.removeItem('transfer_view');
+})();
+</script>
+
 
 <!-- ── AUTH PAGE ── -->
 <div class="page active" id="authPage">
@@ -428,7 +327,7 @@ function switchLang(lang) {
       <button class="auth-tab" onclick="switchTab('register')">Sign up</button>
     </div>
     <div id="authError" class="auth-error"></div>
-    <div id="authSuccess" class="auth-success"></div>
+<div id="authSuccess" class="auth-success"></div>
 
     <!-- Login form -->
     <div id="loginForm" class="auth-form">
@@ -440,7 +339,7 @@ function switchLang(lang) {
         <label class="form-label">Password</label>
         <input type="password" class="form-input" id="loginPassword" placeholder="••••••••">
       </div>
-      <button class="btn-auth" onclick="login()">Log in →</button>
+      <button class="btn-auth" onclick="login()">Sign in →</button>
     </div>
 
     <!-- Register form -->
@@ -509,7 +408,7 @@ function switchLang(lang) {
         <div class="sidebar-user-name" id="sidebarName">Loading...</div>
         <div class="sidebar-user-plan" id="sidebarPlan">Free</div>
       </div>
-      <select onchange="this.value==='fr'?window.location.href='app.html':window.location.href='app-'+this.value+'.html'" style="background:#1a2a3a;color:white;border:1px solid rgba(255,255,255,0.15);border-radius:4px;padding:4px 8px;font-size:0.78rem;cursor:pointer;margin-right:8px" id="langSelector"><option value="fr">🇫🇷 FR</option><option value="en">🇬🇧 EN</option><option value="es">🇪🇸 ES</option><option value="ar">🇸🇦 AR</option></select>
+      <select onchange="switchLang(this.value)"  style="background:#1a2a3a;color:white;border:1px solid rgba(255,255,255,0.15);border-radius:4px;padding:4px 8px;font-size:0.78rem;cursor:pointer;margin-right:8px" id="langSelector"><option value="fr">🇫🇷 FR</option><option value="en">🇬🇧 EN</option><option value="es">🇪🇸 ES</option><option value="ar">🇸🇦 AR</option></select>
       <button class="btn-logout" onclick="logout()" title="Logout"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg></button>
     </div>
   </div>
@@ -548,6 +447,7 @@ function switchLang(lang) {
     <!-- DASHBOARD VIEW -->
     <div id="dashboardView">
       <div class="dashboard-title">Hello <span id="dashName">!</span> </div>
+      <div class="dashboard-sub">Here is your daily health dashboard</div>
       <div id="predictionBanner" style="display:none;border-radius: 4px;padding:16px 20px;margin-bottom:16px;border-left:4px solid #C9A84C;background:#FDF6E8">
         <div style="display:flex;align-items:flex-start;gap:12px">
           <div style="font-size:1.4rem;flex-shrink:0" id="predIcon">&#x1F52E;</div>
@@ -558,7 +458,7 @@ function switchLang(lang) {
           </div>
           <button onclick="document.getElementById('predictionBanner').style.display='none'" style="background:none;border:none;cursor:pointer;color:rgba(0,0,0,0.3);font-size:1.1rem;flex-shrink:0">x</button>
         </div>
-</div>
+      </div>
       <div class="alertes-container" id="alertesContainer"></div>
       <div class="stats-grid">
         <div class="stat-card">
@@ -572,25 +472,25 @@ function switchLang(lang) {
           <div class="stat-card-trend">Active subscription</div>
         </div>
         <div class="stat-card">
-          <div class="stat-card-label">Tracked conditions</div>
+          <div class="stat-card-label">Tracked pathologies</div>
           <div class="stat-card-value" id="dashPatho">0</div>
           <div class="stat-card-trend">Active protocols</div>
         </div>
         <div class="stat-card">
-          <div class="stat-card-label">Member since</div>
+<div class="stat-card-label">Member since</div>
           <div class="stat-card-value" id="dashSince" style="font-size:1rem;margin-top:6px">-</div>
           <div class="stat-card-trend">Registration date</div>
         </div>
       </div>
       <div class="dashboard-grid">
         <div class="dash-card">
-          <div class="dash-card-title"> Today's suggested meals</div>
+          <div class="dash-card-title"> Suggested meals today</div>
           <div class="meal-row"><span class="meal-emoji"></span><span class="meal-name">Balanced breakfast</span><span class="meal-cal">~320 kcal</span></div>
           <div class="meal-row"><span class="meal-emoji"></span><span class="meal-name">Protein lunch</span><span class="meal-cal">~480 kcal</span></div>
           <div class="meal-row"><span class="meal-emoji"></span><span class="meal-name">Healthy snack</span><span class="meal-cal">~90 kcal</span></div>
           <div class="meal-row"><span class="meal-emoji"></span><span class="meal-name">Light dinner</span><span class="meal-cal">~420 kcal</span></div>
           <div style="margin-top:14px">
-            <div style="display:flex;justify-content:space-between;font-size:0.78rem;color:var(--soft);margin-bottom:4px"><span>Caloric goal</span><span>1310 / 1800 kcal</span></div>
+            <div style="display:flex;justify-content:space-between;font-size:0.78rem;color:var(--soft);margin-bottom:4px"><span>Calorie goal</span><span>1310 / 1800 kcal</span></div>
             <div class="progress-bar"><div class="progress-fill" style="width:73%"></div></div>
           </div>
         </div>
@@ -602,7 +502,7 @@ function switchLang(lang) {
           <div class="progress-bar" style="margin-bottom:14px"><div class="progress-fill" style="width:90%"></div></div>
           <div class="adherence-item"><span class="adherence-label">Physical activity</span><span class="adherence-value">3/5 sessions</span></div>
           <div class="progress-bar"><div class="progress-fill" style="width:60%"></div></div>
-          <p style="font-size:0.75rem;color:var(--soft);margin-top:16px"> Complete your profile for even more precise tracking</p>
+          <p style="font-size:0.75rem;color:var(--soft);margin-top:16px"> Complete your profile for even more accurate tracking</p>
         </div>
       </div>
     </div>
@@ -619,24 +519,24 @@ function switchLang(lang) {
             <input type="text" class="profile-input" id="profileName" placeholder="Your name">
           </div>
           <div class="profile-field" style="grid-column:span 2">
-            <label class="profile-label">Medical conditions (separated by commas)</label>
-            <input type="text" class="profile-input" id="profilePathologies" placeholder="e.g.: type 2 diabetes, hypertension">
+            <label class="profile-label">Pathologies (separated by commas)</label>
+            <input type="text" class="profile-input" id="profilePathologies" placeholder="ex: type 2 diabetes, hypertension">
           </div>
           <div class="profile-field" style="grid-column:span 2">
             <label class="profile-label">Food allergies</label>
-            <input type="text" class="profile-input" id="profileAllergies" placeholder="e.g.: gluten, lactose, nuts">
+            <input type="text" class="profile-input" id="profileAllergies" placeholder="ex: gluten, lactose, nuts">
           </div>
           <div class="profile-field" style="grid-column:span 2">
             <label class="profile-label">Current medications</label>
-            <input type="text" class="profile-input" id="profileMedications" placeholder="e.g.: metformin, lisinopril">
+            <input type="text" class="profile-input" id="profileMedications" placeholder="ex: metformin, lisinopril">
           </div>
           <div class="profile-field" style="grid-column:span 2">
             <label class="profile-label">Cultural/religious constraints</label>
-            <input type="text" class="profile-input" id="profileCultural" placeholder="e.g.: halal, vegetarian">
+            <input type="text" class="profile-input" id="profileCultural" placeholder="ex: halal, vegetarian">
           </div>
           <div class="profile-field" style="grid-column:span 2">
             <label class="profile-label">Monthly food budget</label>
-            <input type="text" class="profile-input" id="profileBudget" placeholder="e.g.: €200/month">
+            <input type="text" class="profile-input" id="profileBudget" placeholder="ex: €200/month">
           </div>
         </div>
         <div style="margin-top:20px;display:flex;align-items:stretch;gap:12px;flex-wrap:wrap">
@@ -645,13 +545,13 @@ function switchLang(lang) {
           <span class="save-success" id="saveSuccess"> Profile saved!</span>
         </div>
       </div>
-      <p style="font-size:0.75rem;color:var(--soft);max-width:500px"> Your data is encrypted and never shared without your consent. Leonarda uses this information only to personalize your nutritional advice.</p>
+      <p style="font-size:0.75rem;color:var(--soft);max-width:500px"> Your data is encrypted and is never shared without your consent. Leonarda uses this information only to personalize your nutritional advice.</p>
     </div>
 
     <!-- PRICING VIEW -->
     <div id="pricingView">
       <div class="pricing-title">Choose your plan</div>
-      <div class="pricing-sub">Start for free. Upgrade when you're ready.</div>
+      <div class="pricing-sub">Start free. Upgrade when you're ready.</div>
       <div class="pricing-grid">
         <div class="plan-card">
           <div class="plan-badge">Free</div>
@@ -677,7 +577,7 @@ function switchLang(lang) {
             <li><span class="plan-check"></span> Personalized plans</li>
             <li><span class="plan-check"></span> Health dashboard</li>
             <li><span class="plan-check"></span> Weekly menus</li>
-            <li><span class="plan-check"></span> Condition protocols</li>
+            <li><span class="plan-check"></span> Pathology protocols</li>
             <li><span class="plan-check"></span> Smart nudges</li>
           </ul>
           <button class="btn-plan" id="standardPlanBtn" onclick="selectPlan('standard')" style="margin-top:16px">Choose Standard</button>
@@ -688,9 +588,9 @@ function switchLang(lang) {
           <div class="plan-price">€49</div>
           <div class="plan-period">/ month</div>
           <ul class="plan-features-list">
-            <li><span class="plan-check"></span> Everything in Standard</li>
+            <li><span class="plan-check"></span> Everything from Standard</li>
             <li><span class="plan-check"></span> Meal photo analysis</li>
-            <li><span class="plan-check"></span> Health pro integration</li>
+            <li><span class="plan-check"></span> Health professional integration</li>
             <li><span class="plan-check"></span> Long-term memory</li>
             <li><span class="plan-check"></span> Behavioral coaching</li>
             <li><span class="plan-check"></span> Exclusive programs</li>
@@ -714,7 +614,7 @@ function switchLang(lang) {
   <div id="analysisPlanRequired" style="display:none;background:white;border-radius: 4px;padding:28px;border:1px solid #B5D4F4;text-align:center;margin-bottom:24px">
     <div style="font-size:1.4rem;margin-bottom:8px"></div>
     <div style="font-size:1rem;font-weight:600;color:#021A35;margin-bottom:8px">Standard & Premium Feature</div>
-    <div style="font-size:0.85rem;color:#85B7EB;margin-bottom:18px">Upgrade to a paid plan to analyze your meals with photos.</div>
+    <div style="font-size:0.85rem;color:#85B7EB;margin-bottom:18px">Upgrade to a paid plan to analyze your meals from photos.</div>
     <button onclick="showView('pricing')" style="background:#021A35;color:white;padding:10px 24px;border:none;border-radius: 4px;font-size:0.88rem;cursor:pointer;font-family:'DM Sans',sans-serif">View subscriptions →</button>
   </div>
 
@@ -727,10 +627,10 @@ function switchLang(lang) {
         <div style="font-size:0.82rem;color:#85B7EB">Click here or drag a photo of your meal</div>
       </div>
       <input type="file" id="analysisFileInput" accept="image/*" capture="environment" style="display:none" onchange="previewAndAnalyze(event)">
-      <img id="analysisPreview" style="display:none;max-width:300px;max-height:300px;border-radius: 4px;margin-top:16px;object-fit:cover">
+<img id="analysisPreview" style="display:none;max-width:300px;max-height:300px;border-radius: 4px;margin-top:16px;object-fit:cover">
     </div>
 
-    <!-- Analysis result -->
+    <!-- Analysis Result -->
     <div id="analysisResult" style="display:none">
       <div style="background:white;border-radius: 4px;border:1px solid #B5D4F4;overflow:hidden;margin-bottom:20px">
         <div style="background:#021A35;padding:18px 24px;display:flex;align-items:center;justify-content:space-between">
@@ -738,11 +638,11 @@ function switchLang(lang) {
           <div style="display:flex;gap:12px">
             <div style="text-align:center">
               <div style="font-family:'DM Mono',monospace;font-size:1.4rem;font-weight:700;color:#C9A84C" id="analysisScoreSante">—</div>
-              <div style="font-size:0.65rem;color:#85B7EB;text-transform:uppercase;letter-spacing:1px">Health score</div>
+              <div style="font-size:0.65rem;color:#85B7EB;text-transform:uppercase;letter-spacing:1px">Health Score</div>
             </div>
             <div style="text-align:center">
               <div style="font-family:'DM Mono',monospace;font-size:1.4rem;font-weight:700;color:#28C840" id="analysisScorePatho">—</div>
-              <div style="font-size:0.65rem;color:#85B7EB;text-transform:uppercase;letter-spacing:1px">Condition score</div>
+              <div style="font-size:0.65rem;color:#85B7EB;text-transform:uppercase;letter-spacing:1px">Patho Score</div>
             </div>
             <div style="text-align:center">
               <div style="font-family:'DM Mono',monospace;font-size:1.4rem;font-weight:700;color:white" id="analysisCalories">—</div>
@@ -752,13 +652,13 @@ function switchLang(lang) {
         </div>
         <div style="padding:24px;display:grid;grid-template-columns:1fr 1fr;gap:20px">
           <div>
-            <div style="font-size:0.72rem;font-weight:600;text-transform:uppercase;letter-spacing:1.5px;color:#85B7EB;margin-bottom:12px"> IDENTIFIED FOODS</div>
+            <div style="font-size:0.72rem;font-weight:600;text-transform:uppercase;letter-spacing:1.5px;color:#85B7EB;margin-bottom:12px">IDENTIFIED FOODS</div>
             <div id="analysisAliments"></div>
             <div style="margin-top:16px">
-              <div style="font-size:0.72rem;font-weight:600;text-transform:uppercase;letter-spacing:1.5px;color:#85B7EB;margin-bottom:12px"> MACRONUTRIENTS</div>
+              <div style="font-size:0.72rem;font-weight:600;text-transform:uppercase;letter-spacing:1.5px;color:#85B7EB;margin-bottom:12px">MACRONUTRIENTS</div>
               <div id="analysisMacros"></div>
             </div>
-</div>
+          </div>
           <div>
             <div style="font-size:0.72rem;font-weight:600;text-transform:uppercase;letter-spacing:1.5px;color:#28C840;margin-bottom:12px">POSITIVE POINTS</div>
             <div id="analysisPositifs" style="margin-bottom:16px"></div>
@@ -782,7 +682,7 @@ function switchLang(lang) {
       <div style="font-size:0.85rem;color:#85B7EB">Claude is analyzing your meal according to your profile</div>
     </div>
 
-    <!-- Historique -->
+    <!-- History -->
     <div style="background:white;border-radius: 4px;padding:24px;border:1px solid #B5D4F4">
       <div style="font-size:0.72rem;font-weight:600;text-transform:uppercase;letter-spacing:1.5px;color:#85B7EB;margin-bottom:16px">ANALYSIS HISTORY</div>
       <div id="analysisHistory"><p style="font-size:0.85rem;color:#85B7EB">No analysis performed.</p></div>
@@ -791,9 +691,9 @@ function switchLang(lang) {
 </div>
 <div id="menusView" style="display:none;padding:32px;overflow-y:auto;background:var(--cream);width:100%">
   <div style="font-family:'Open Sans',serif;font-size:2rem;font-weight:400;margin-bottom:6px;color:#021A35">My weekly menus</div>
-  <div style="font-size:0.85rem;color:#85B7EB;margin-bottom:28px">Personalized menus according to your condition and preferences</div>
+  <div style="font-size:0.85rem;color:#85B7EB;margin-bottom:28px">Personalized menus according to your pathology and preferences</div>
 
-  <!-- Plan requis -->
+  <!-- Plan required -->
   <div id="menusPlanRequired" style="display:none;background:white;border-radius: 4px;padding:28px;border:1px solid #B5D4F4;text-align:center;margin-bottom:24px">
     <div style="font-size:1.4rem;margin-bottom:8px">⭐</div>
     <div style="font-size:1rem;font-weight:600;color:#021A35;margin-bottom:8px">Standard & Premium Feature</div>
@@ -801,7 +701,7 @@ function switchLang(lang) {
     <button onclick="showView('pricing')" style="background:#021A35;color:white;padding:10px 24px;border:none;border-radius: 4px;font-size:0.88rem;cursor:pointer;font-family:'DM Sans',sans-serif">View subscriptions →</button>
   </div>
 
-  <!-- Contenu menus -->
+  <!-- Menu content -->
   <div id="menusContent" style="display:none">
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:24px">
       <div style="font-size:0.85rem;color:#85B7EB" id="menusWeekLabel">Current week</div>
@@ -814,13 +714,13 @@ function switchLang(lang) {
     <div id="menusLoading" style="display:none;text-align:center;padding:48px">
       <div style="font-size:2rem;margin-bottom:16px"></div>
       <div style="font-size:1rem;color:#021A35;font-weight:500;margin-bottom:8px">Leonarda is generating your menu...</div>
-      <div style="font-size:0.85rem;color:#85B7EB">Adapting to your conditions and preferences in progress</div>
+      <div style="font-size:0.85rem;color:#85B7EB">Adapting to your pathologies and preferences in progress</div>
     </div>
 
-    <!-- Menu semaine -->
+    <!-- Weekly menu -->
     <div id="menusDays" style="display:flex;flex-direction:column;gap:16px"></div>
 
-    <!-- Liste de courses -->
+    <!-- Shopping list -->
     <div id="menusShoppingList" style="display:none;background:white;border-radius: 4px;padding:24px;border:1px solid #B5D4F4;margin-top:24px">
       <div style="font-size:0.72rem;font-weight:600;text-transform:uppercase;letter-spacing:1.5px;color:#85B7EB;margin-bottom:16px;display:flex;justify-content:space-between;align-items:center">
          SHOPPING LIST
@@ -835,28 +735,28 @@ function switchLang(lang) {
   <div style="font-family:'Open Sans',serif;font-size:2rem;font-weight:400;margin-bottom:6px;color:#021A35">My health tracking</div>
   <div style="font-size:0.85rem;color:#85B7EB;margin-bottom:28px">Enter your daily indicators</div>
 
-  <!-- Formulaire saisie -->
+  <!-- Entry form -->
   <div style="background:white;border-radius: 4px;padding:24px;border:1px solid #B5D4F4;margin-bottom:24px">
     <div style="font-size:0.72rem;font-weight:600;text-transform:uppercase;letter-spacing:1.5px;color:#85B7EB;margin-bottom:18px">TODAY'S ENTRY</div>
     <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:16px;align-items:end" id="healthGrid">
       <div>
-        <label style="font-size:0.75rem;color:#85B7EB;display:block;margin-bottom:4px">Blood sugar (mmol/L)</label>
-        <input type="number" id="hGlycemia" step="0.1" placeholder="e.g: 5.4" style="width:100%;padding:10px;border:1.5px solid #B5D4F4;border-radius: 4px;font-size:0.88rem;font-family:'DM Sans',sans-serif;outline:none">
+        <label style="font-size:0.75rem;color:#85B7EB;display:block;margin-bottom:4px">Blood Sugar (mmol/L)</label>
+        <input type="number" id="hGlycemia" step="0.1" placeholder="e.g.: 5.4" style="width:100%;padding:10px;border:1.5px solid #B5D4F4;border-radius: 4px;font-size:0.88rem;font-family:'DM Sans',sans-serif;outline:none">
       </div>
       <div>
         <label style="font-size:0.75rem;color:#85B7EB;display:block;margin-bottom:4px">Weight (kg)</label>
-        <input type="number" id="hWeight" step="0.1" placeholder="e.g: 68.5" style="width:100%;padding:10px;border:1.5px solid #B5D4F4;border-radius: 4px;font-size:0.88rem;font-family:'DM Sans',sans-serif;outline:none">
+        <input type="number" id="hWeight" step="0.1" placeholder="e.g.: 68.5" style="width:100%;padding:10px;border:1.5px solid #B5D4F4;border-radius: 4px;font-size:0.88rem;font-family:'DM Sans',sans-serif;outline:none">
       </div>
       <div>
         <label style="font-size:0.75rem;color:#85B7EB;display:block;margin-bottom:4px">Energy (1-10)</label>
-        <input type="number" id="hEnergy" min="1" max="10" placeholder="e.g: 7" style="width:100%;padding:10px;border:1.5px solid #B5D4F4;border-radius: 4px;font-size:0.88rem;font-family:'DM Sans',sans-serif;outline:none">
+        <input type="number" id="hEnergy" min="1" max="10" placeholder="e.g.: 7" style="width:100%;padding:10px;border:1.5px solid #B5D4F4;border-radius: 4px;font-size:0.88rem;font-family:'DM Sans',sans-serif;outline:none">
       </div>
       <div>
         <label style="font-size:0.75rem;color:#85B7EB;display:block;margin-bottom:4px">Sleep (hours)</label>
-        <input type="number" id="hSleep" step="0.5" placeholder="e.g: 7.5" style="width:100%;padding:10px;border:1.5px solid #B5D4F4;border-radius: 4px;font-size:0.88rem;font-family:'DM Sans',sans-serif;outline:none">
+        <input type="number" id="hSleep" step="0.5" placeholder="e.g.: 7.5" style="width:100%;padding:10px;border:1.5px solid #B5D4F4;border-radius: 4px;font-size:0.88rem;font-family:'DM Sans',sans-serif;outline:none">
       </div>
       <div>
-        <label style="font-size:0.75rem;color:#85B7EB;display:block;margin-bottom:4px">Blood pressure (sys/dia)</label>
+        <label style="font-size:0.75rem;color:#85B7EB;display:block;margin-bottom:4px">Blood Pressure (sys/dia)</label>
         <div style="display:flex;gap:6px">
           <input type="number" id="hBpSys" placeholder="120" style="width:50%;padding:10px;border:1.5px solid #B5D4F4;border-radius: 4px;font-size:0.88rem;font-family:'DM Sans',sans-serif;outline:none">
           <input type="number" id="hBpDia" placeholder="80" style="width:50%;padding:10px;border:1.5px solid #B5D4F4;border-radius: 4px;font-size:0.88rem;font-family:'DM Sans',sans-serif;outline:none">
@@ -864,65 +764,65 @@ function switchLang(lang) {
       </div>
       <div>
         <label style="font-size:0.75rem;color:#85B7EB;display:block;margin-bottom:4px">Hydration (L)</label>
-        <input type="number" id="hHydration" step="0.1" placeholder="e.g: 1.8" style="width:100%;padding:10px;border:1.5px solid #B5D4F4;border-radius: 4px;font-size:0.88rem;font-family:'DM Sans',sans-serif;outline:none">
+        <input type="number" id="hHydration" step="0.1" placeholder="e.g.: 1.8" style="width:100%;padding:10px;border:1.5px solid #B5D4F4;border-radius: 4px;font-size:0.88rem;font-family:'DM Sans',sans-serif;outline:none">
       </div>
     </div>
     <div style="margin-bottom:14px">
       <label style="font-size:0.75rem;color:#85B7EB;display:block;margin-bottom:4px">Daily notes</label>
-      <textarea id="hNotes" placeholder="How are you feeling today?" style="width:100%;padding:10px;border:1.5px solid #B5D4F4;border-radius: 4px;font-size:0.88rem;font-family:'DM Sans',sans-serif;outline:none;resize:none;height:70px"></textarea>
+      <textarea id="hNotes" placeholder="How do you feel today?" style="width:100%;padding:10px;border:1.5px solid #B5D4F4;border-radius: 4px;font-size:0.88rem;font-family:'DM Sans',sans-serif;outline:none;resize:none;height:70px"></textarea>
     </div>
     <button onclick="saveHealthLog()" style="background:#021A35;color:white;padding:11px 28px;border:none;border-radius: 4px;font-size:0.88rem;font-weight:500;cursor:pointer;font-family:'DM Sans',sans-serif">Save →</button>
     <span id="healthSaveMsg" style="font-size:0.78rem;color:#28C840;margin-left:12px;display:none">Saved!</span>
   </div>
 
-  <!-- Graphiques et historique -->
+  <!-- Charts and history -->
   <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px">
-    <div style="background:white;border-radius: 4px;padding:22px;border:1px solid #B5D4F4">
-      <div style="font-size:0.72rem;font-weight:600;text-transform:uppercase;letter-spacing:1.5px;color:#85B7EB;margin-bottom:16px">EVOLUTION — 30 DAYS</div>
+<div style="background:white;border-radius: 4px;padding:22px;border:1px solid #B5D4F4">
+      <div style="font-size:0.72rem;font-weight:600;text-transform:uppercase;letter-spacing:1.5px;color:#85B7EB;margin-bottom:16px"> EVOLUTION — 30 DAYS</div>
       <canvas id="healthChart" height="200"></canvas>
     </div>
     <div style="background:white;border-radius: 4px;padding:22px;border:1px solid #B5D4F4">
-      <div style="font-size:0.72rem;font-weight:600;text-transform:uppercase;letter-spacing:1.5px;color:#85B7EB;margin-bottom:16px">RECENT HISTORY</div>
+      <div style="font-size:0.72rem;font-weight:600;text-transform:uppercase;letter-spacing:1.5px;color:#85B7EB;margin-bottom:16px"> RECENT HISTORY</div>
       <div id="healthHistory"></div>
     </div>
   </div>
 </div>
 <div id="protocolsView" style="display:none;padding:32px;overflow-y:auto;background:var(--cream);width:100%">
   <div style="font-family:'Open Sans',serif;font-size:2rem;font-weight:400;margin-bottom:6px;color:#021A35">My nutritional protocols</div>
-  <div style="font-size:0.85rem;color:#85B7EB;margin-bottom:32px">Protocols adapted to your conditions</div>
+  <div style="font-size:0.85rem;color:#85B7EB;margin-bottom:32px">Protocols adapted to your pathologies</div>
   <div id="protocolsList" style="display:flex;flex-direction:column;gap:20px"></div>
 </div>
 <div id="entrepriseView" style="display:none;padding:32px;overflow-y:auto;background:white;width:100%">
   <div style="max-width:900px;margin:0 auto">
-    <div style="display:inline-block;font-size:0.68rem;font-weight:600;text-transform:uppercase;letter-spacing:.12em;color:#C9A84C;background:#FDF6E8;padding:5px 14px;border-radius:4px;margin-bottom:12px">Corporate Space</div>
+    <div style="display:inline-block;font-size:0.68rem;font-weight:600;text-transform:uppercase;letter-spacing:.12em;color:#C9A84C;background:#FDF6E8;padding:5px 14px;border-radius:4px;margin-bottom:12px">Business Space</div>
     <div style="font-family:'Open Sans',serif;font-size:2rem;font-weight:400;color:#021A35;margin-bottom:6px">My <em style="font-style:italic;color:#C9A84C">company</em></div>
     <div style="font-size:0.82rem;color:rgba(2,26,53,0.4);margin-bottom:28px">Corporate nutritional wellness program</div>
 
-    <!-- PAS MEMBRE -->
+    <!-- NOT A MEMBER -->
     <div id="entNoMember" style="display:none">
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:20px">
-        <!-- Rejoindre -->
+        <!-- Join -->
         <div style="background:white;border-radius:4px;padding:28px;border:1px solid #B5D4F4">
           <div style="font-family:'Open Sans',serif;font-size:1.3rem;font-weight:600;color:#021A35;margin-bottom:8px">Join my company</div>
           <div style="font-size:0.82rem;color:rgba(2,26,53,0.5);margin-bottom:20px">Enter the code provided by your HR to access your company's wellness program.</div>
-          <input id="entCode" type="text" placeholder="Company code (e.g: ABC123)" style="width:100%;padding:10px 14px;border:1px solid #B5D4F4;border-radius:4px;font-family:'DM Sans',sans-serif;font-size:0.88rem;outline:none;margin-bottom:12px;box-sizing:border-box;text-transform:uppercase"/>
+          <input id="entCode" type="text" placeholder="Company code (ex: ABC123)" style="width:100%;padding:10px 14px;border:1px solid #B5D4F4;border-radius:4px;font-family:'DM Sans',sans-serif;font-size:0.88rem;outline:none;margin-bottom:12px;box-sizing:border-box;text-transform:uppercase"/>
           <button onclick="joinEntreprise()" style="width:100%;background:#021A35;color:white;border:none;border-radius:4px;padding:12px;font-family:'DM Sans',sans-serif;cursor:pointer">Join →</button>
           <div id="entJoinError" style="display:none;color:#C55;font-size:0.78rem;margin-top:8px"></div>
         </div>
-        <!-- Créer -->
+        <!-- Create -->
         <div style="background:#021A35;border-radius:4px;padding:28px">
-          <div style="font-family:'Open Sans',serif;font-size:1.3rem;font-weight:600;color:white;margin-bottom:8px">Create my corporate space</div>
-          <div style="font-size:0.82rem;color:rgba(255,255,255,0.5);margin-bottom:20px">Are you HR or a manager? Create the corporate space and invite your employees.</div>
+          <div style="font-family:'Open Sans',serif;font-size:1.3rem;font-weight:600;color:white;margin-bottom:8px">Create my business space</div>
+          <div style="font-size:0.82rem;color:rgba(255,255,255,0.5);margin-bottom:20px">Are you HR or a manager? Create the business space and invite your employees.</div>
           <input id="entNom" type="text" placeholder="Company name" style="width:100%;padding:10px 14px;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.15);border-radius:4px;font-family:'DM Sans',sans-serif;font-size:0.88rem;color:white;outline:none;margin-bottom:8px;box-sizing:border-box"/>
           <input id="entLicences" type="number" placeholder="Number of employees" value="50" style="width:100%;padding:10px 14px;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.15);border-radius:4px;font-family:'DM Sans',sans-serif;font-size:0.88rem;color:white;outline:none;margin-bottom:12px;box-sizing:border-box"/>
-          <button onclick="createEntreprise()" style="width:100%;background:#C9A84C;color:#021A35;border:none;border-radius:4px;padding:12px;font-family:'DM Sans',sans-serif;font-weight:600;cursor:pointer">Create space →</button>
+          <button onclick="createEntreprise()" style="width:100%;background:#C9A84C;color:#021A35;border:none;border-radius:4px;padding:12px;font-family:'DM Sans',sans-serif;font-weight:600;cursor:pointer">Create the space →</button>
           <div id="entCreateError" style="display:none;color:#FAC775;font-size:0.78rem;margin-top:8px"></div>
         </div>
       </div>
-      <div style="text-align:center;padding:20px;font-size:0.82rem;color:rgba(2,26,53,0.4)">Don't have a corporate account yet? <a href="entreprise.html" style="color:#C9A84C;text-decoration:none">Discover Leonarda Corporate →</a></div>
+      <div style="text-align:center;padding:20px;font-size:0.82rem;color:rgba(2,26,53,0.4)">Don't have a business account yet? <a href="entreprise.html" style="color:#C9A84C;text-decoration:none">Discover Leonarda Business →</a></div>
     </div>
 
-    <!-- MEMBRE SALARIÉ -->
+    <!-- EMPLOYEE MEMBER -->
     <div id="entMember" style="display:none">
       <div style="background:#021A35;border-radius:4px;padding:24px;margin-bottom:20px;display:flex;align-items:center;gap:20px;flex-wrap:wrap">
         <div style="width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,#C9A84C,#A07830);display:flex;align-items:center;justify-content:center;font-size:1.4rem;flex-shrink:0"></div>
@@ -939,12 +839,12 @@ function switchLang(lang) {
          You benefit from your company's nutritional wellness program.
       </div>
 
-      <!-- Progression salarié -->
+      <!-- Employee progression -->
       <div id="entProgression" style="background:white;border-radius:4px;padding:24px;border:1px solid #B5D4F4;margin-bottom:16px">
-        <div style="font-family:'Open Sans',serif;font-size:1.3rem;font-weight:600;color:#021A35;margin-bottom:4px">Your progress</div>
+        <div style="font-family:'Open Sans',serif;font-size:1.3rem;font-weight:600;color:#021A35;margin-bottom:4px"> Your progress</div>
         <div style="font-size:0.78rem;color:rgba(2,26,53,0.45);margin-bottom:20px">Complete your profile to unlock exclusive benefits</div>
 
-        <!-- Barre progression -->
+        <!-- Progress bar -->
         <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
           <span style="font-size:0.78rem;font-weight:600;color:#021A35">Profile completed</span>
           <span style="font-family:'Open Sans',serif;font-size:1.4rem;font-weight:600;color:#C9A84C" id="entProgressPct">0%</span>
@@ -953,7 +853,7 @@ function switchLang(lang) {
           <div id="entProgressBar" style="height:100%;background:linear-gradient(90deg,#C9A84C,#E8C96A);border-radius:4px;width:0%;transition:width 1s ease"></div>
         </div>
 
-        <!-- Paliers -->
+        <!-- Tiers -->
         <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:20px">
           <div id="palier1" style="border-radius:4px;padding:12px;text-align:center;border:1px solid #E6F1FB;background:#F0F6FF">
             <div style="font-size:1.4rem;margin-bottom:4px"></div>
@@ -963,27 +863,27 @@ function switchLang(lang) {
           <div id="palier2" style="border-radius:4px;padding:12px;text-align:center;border:1px solid #E6F1FB;background:#F0F6FF">
             <div style="font-size:1.4rem;margin-bottom:4px"></div>
             <div style="font-size:0.72rem;font-weight:600;color:#021A35;margin-bottom:2px">Silver · 70%</div>
-            <div style="font-size:0.68rem;color:rgba(2,26,53,0.5)">Permanent Standard</div>
+            <div style="font-size:0.68rem;color:rgba(2,26,53,0.5)">Standard permanent</div>
           </div>
           <div id="palier3" style="border-radius:4px;padding:12px;text-align:center;border:1px solid #E6F1FB;background:#F0F6FF">
             <div style="font-size:1.4rem;margin-bottom:4px"></div>
             <div style="font-size:0.72rem;font-weight:600;color:#021A35;margin-bottom:2px">Gold · 100%</div>
-            <div style="font-size:0.68rem;color:rgba(2,26,53,0.5)">Premium included!</div>
+            <div style="font-size:0.68rem;color:rgba(2,26,53,0.5)">Premium offered!</div>
           </div>
         </div>
 
-        <!-- Critères -->
+        <!-- Criteria -->
         <div style="font-size:0.72rem;font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:#85B7EB;margin-bottom:10px">What remains to be done</div>
         <div id="entCriteres" style="display:flex;flex-direction:column;gap:6px"></div>
 
-        <!-- Prochain palier -->
+        <!-- Next tier -->
         <div id="entNextPalier" style="display:none;background:#FDF6E8;border-radius:4px;padding:12px 16px;margin-top:16px;border-left:3px solid #C9A84C">
           <div style="font-size:0.78rem;color:#854F0B;font-weight:500" id="entNextPalierText"></div>
         </div>
       </div>
     </div>
 
-    <!-- ADMIN RH DASHBOARD -->
+    <!-- HR ADMIN DASHBOARD -->
     <div id="entAdmin" style="display:none">
       <div style="background:#021A35;border-radius:4px;padding:24px;margin-bottom:20px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px">
         <div style="display:flex;align-items:center;gap:16px">
@@ -1003,10 +903,10 @@ function switchLang(lang) {
         </div>
       </div>
 
-      <!-- Stats RH -->
+      <!-- HR Stats -->
       <div id="adminStats" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:12px;margin-bottom:20px"></div>
 
-      <!-- Insight IA -->
+      <!-- AI Insight -->
       <div id="adminInsight" style="display:none;background:#FDF6E8;border-radius:4px;padding:16px 20px;border-left:3px solid #C9A84C;margin-bottom:20px">
         <div style="font-size:0.68rem;text-transform:uppercase;letter-spacing:.08em;color:#854F0B;font-weight:600;margin-bottom:6px"> AI Observation · Occupational physician</div>
         <div style="font-size:0.85rem;color:rgba(2,26,53,0.7);line-height:1.6" id="adminInsightText"></div>
@@ -1015,7 +915,7 @@ function switchLang(lang) {
       <!-- Pathologies -->
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px">
         <div style="background:white;border-radius:4px;padding:20px;border:1px solid #B5D4F4">
-          <div style="font-family:'Open Sans',serif;font-size:1.1rem;font-weight:600;color:#021A35;margin-bottom:16px">Most monitored conditions</div>
+          <div style="font-family:'Open Sans',serif;font-size:1.1rem;font-weight:600;color:#021A35;margin-bottom:16px">Most monitored pathologies</div>
           <div id="adminPathos"></div>
         </div>
         <div style="background:white;border-radius:4px;padding:20px;border:1px solid #B5D4F4">
@@ -1024,15 +924,15 @@ function switchLang(lang) {
         </div>
       </div>
 
-      <!-- Rapport mensuel -->
+      <!-- Monthly report -->
       <div style="background:white;border-radius:4px;padding:20px;border:1px solid #B5D4F4;margin-bottom:16px">
         <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:12px">
-          <div style="font-family:'Open Sans',serif;font-size:1.1rem;font-weight:600;color:#021A35">Monthly HR report</div>
+<div style="font-family:'Open Sans',serif;font-size:1.1rem;font-weight:600;color:#021A35">Monthly HR Report</div>
           <button onclick="generateRapport()" id="rapportBtn" style="background:#021A35;color:white;border:none;border-radius:4px;padding:8px 18px;font-family:'DM Sans',sans-serif;font-size:0.78rem;cursor:pointer">Generate report →</button>
         </div>
         <div id="rapportLoading" style="display:none;text-align:center;padding:20px">
           <div style="width:28px;height:28px;border:2px solid #E6F1FB;border-top-color:#021A35;border-radius:50%;animation:spin 0.8s linear infinite;margin:0 auto 10px"></div>
-          <div style="font-size:0.78rem;color:rgba(2,26,53,0.4)">Generating report in progress...</div>
+          <div style="font-size:0.78rem;color:rgba(2,26,53,0.4)">Generating report...</div>
         </div>
         <div id="rapportContent" style="display:none">
           <div style="background:#F0F6FF;border-radius:4px;padding:16px;margin-bottom:12px;font-size:0.82rem;line-height:1.8;color:rgba(2,26,53,0.75);white-space:pre-wrap;max-height:300px;overflow-y:auto" id="rapportText"></div>
@@ -1040,16 +940,16 @@ function switchLang(lang) {
         </div>
       </div>
 
-      <!-- Invitation par email -->
+      <!-- Email invitation -->
       <div style="background:white;border-radius:4px;padding:20px;border:1px solid #B5D4F4;margin-bottom:16px">
         <div style="font-family:'Open Sans',serif;font-size:1.1rem;font-weight:600;color:#021A35;margin-bottom:8px">Invite employees by email</div>
         <div style="font-size:0.78rem;color:rgba(2,26,53,0.5);margin-bottom:12px">Enter your employees' emails (separated by commas). They will receive a personalized invitation link.</div>
-        <textarea id="inviteEmails" placeholder="john.doe@company.com, mary.smith@company.com..." style="width:100%;padding:10px 14px;border:1px solid #B5D4F4;border-radius:4px;font-family:'DM Sans',sans-serif;font-size:0.82rem;outline:none;resize:vertical;min-height:80px;box-sizing:border-box;margin-bottom:10px"></textarea>
+        <textarea id="inviteEmails" placeholder="john.doe@company.com, mary.martin@company.com..." style="width:100%;padding:10px 14px;border:1px solid #B5D4F4;border-radius:4px;font-family:'DM Sans',sans-serif;font-size:0.82rem;outline:none;resize:vertical;min-height:80px;box-sizing:border-box;margin-bottom:10px"></textarea>
         <button onclick="sendInvites()" style="background:#021A35;color:white;border:none;border-radius:4px;padding:10px 20px;font-family:'DM Sans',sans-serif;font-size:0.82rem;cursor:pointer">Send invitations →</button>
         <div id="inviteResult" style="display:none;margin-top:10px;padding:10px 14px;background:#EFF7F1;border-radius:4px;font-size:0.78rem;color:#3A6B40"></div>
       </div>
 
-      <div style="font-size:0.72rem;color:rgba(2,26,53,0.3);text-align:center">100% anonymized data · No individual data accessible · GDPR compliance</div>
+      <div style="font-size:0.72rem;color:rgba(2,26,53,0.3);text-align:center">100% anonymized data · No individual data accessible · GDPR compliant</div>
     </div>
 
     <!-- Loading -->
@@ -1066,19 +966,19 @@ function switchLang(lang) {
     <div style="font-family:'Open Sans',serif;font-size:2rem;font-weight:400;color:#021A35;margin-bottom:6px">Analysis of your <em style="font-style:italic;color:#C9A84C">blood test</em></div>
     <div style="font-size:0.82rem;color:rgba(2,26,53,0.4);margin-bottom:28px">Upload your blood test · Results explained in simple language · Personalized nutritional advice</div>
 
-    <!-- Bloc non Premium -->
+    <!-- Non-Premium block -->
     <div id="bioFree" style="display:none;background:white;border-radius:4px;padding:40px;text-align:center;border:1px solid #B5D4F4">
       <div style="font-size:2rem;margin-bottom:12px"></div>
-      <div style="font-family:'Open Sans',serif;font-size:1.4rem;margin-bottom:8px">Premium feature</div>
+      <div style="font-family:'Open Sans',serif;font-size:1.4rem;margin-bottom:8px">Premium Feature</div>
       <div style="font-size:0.88rem;color:rgba(2,26,53,0.5);margin-bottom:20px">Upgrade to Premium plan to analyze your blood tests.</div>
       <button onclick="showView('pricing')" style="background:#021A35;color:white;border:none;border-radius:4px;padding:12px 28px;font-family:'DM Sans',sans-serif;cursor:pointer">View subscriptions →</button>
     </div>
 
-    <!-- Contenu Premium -->
+    <!-- Premium content -->
     <div id="bioContent" style="display:none">
-      <!-- Zone upload -->
+      <!-- Upload zone -->
       <div style="background:white;border-radius:4px;padding:28px;border:1px solid #B5D4F4;margin-bottom:20px">
-        <div style="font-family:'Open Sans',serif;font-size:1.2rem;font-weight:600;color:#021A35;margin-bottom:16px"> Import your blood test</div>
+        <div style="font-family:'Open Sans',serif;font-size:1.2rem;font-weight:600;color:#021A35;margin-bottom:16px"> Upload your blood test</div>
         <div id="bioDropzone" onclick="document.getElementById('bioInput').click()" style="border:2px dashed #B5D4F4;border-radius:4px;padding:40px;text-align:center;cursor:pointer;transition:border .2s;background:#F0F6FF">
           <div style="font-size:2.5rem;margin-bottom:12px"></div>
           <div style="font-size:0.9rem;color:rgba(2,26,53,0.6);margin-bottom:6px">Click or drag a photo of your blood test</div>
@@ -1097,15 +997,15 @@ function switchLang(lang) {
         <div style="font-size:0.82rem;color:rgba(2,26,53,0.45)" id="bioLoadingMsg">Reading your biological results</div>
       </div>
 
-      <!-- Résultats -->
+      <!-- Results -->
       <div id="bioResult" style="display:none">
-        <!-- Résumé global -->
+        <!-- Global summary -->
         <div style="background:#021A35;border-radius:4px;padding:24px;margin-bottom:20px">
           <div style="font-size:0.68rem;text-transform:uppercase;letter-spacing:.1em;color:#C9A84C;font-weight:600;margin-bottom:10px"> Summary of your test</div>
           <div style="font-size:0.9rem;color:rgba(255,255,255,0.8);line-height:1.7" id="bioResume"></div>
         </div>
 
-        <!-- Points positifs & attention -->
+        <!-- Positive points & attention -->
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px">
           <div style="background:#EAF3DE;border-radius:4px;padding:20px;border:1px solid #C0DD97">
             <div style="font-size:0.72rem;text-transform:uppercase;letter-spacing:.08em;color:#3B6D11;font-weight:600;margin-bottom:12px"> Positive points</div>
@@ -1117,27 +1017,27 @@ function switchLang(lang) {
           </div>
         </div>
 
-        <!-- Marqueurs détaillés -->
+        <!-- Detailed markers -->
         <div style="font-family:'Open Sans',serif;font-size:1.2rem;font-weight:600;color:#021A35;margin-bottom:16px">Your biological markers explained</div>
         <div id="bioMarqueurs" style="display:flex;flex-direction:column;gap:12px;margin-bottom:20px"></div>
 
-        <!-- Recommandations nutritionnelles -->
+        <!-- Nutritional recommendations -->
         <div style="background:#F0F6FF;border-radius:4px;padding:24px;border:1px solid #B5D4F4;margin-bottom:20px">
           <div style="font-size:0.72rem;text-transform:uppercase;letter-spacing:.08em;color:#85B7EB;font-weight:600;margin-bottom:12px"> Personalized nutritional recommendations</div>
           <div id="bioReco" style="display:flex;flex-direction:column;gap:8px"></div>
         </div>
 
-        <!-- Suivi recommandé -->
+        <!-- Recommended follow-up -->
         <div style="background:#FDF6E8;border-radius:4px;padding:16px 20px;border:1px solid #FAC775;margin-bottom:16px">
           <div style="font-size:0.72rem;text-transform:uppercase;letter-spacing:.08em;color:#854F0B;font-weight:600;margin-bottom:6px"> Recommended follow-up</div>
           <div style="font-size:0.85rem;color:rgba(2,26,53,0.7);line-height:1.5" id="bioSuivi"></div>
         </div>
 
         <!-- Disclaimer -->
-        <div style="font-size:0.72rem;color:rgba(2,26,53,0.35);text-align:center;line-height:1.5">️ These results are analyzed by artificial intelligence for informational purposes. Consult your doctor for definitive interpretation.</div>
+        <div style="font-size:0.72rem;color:rgba(2,26,53,0.35);text-align:center;line-height:1.5">️ These results are analyzed by artificial intelligence for informational purposes. Consult your doctor for a definitive interpretation.</div>
       </div>
 
-      <!-- Erreur -->
+      <!-- Error -->
       <div id="bioError" style="display:none;background:#FEE;border:1px solid #FCC;border-radius:4px;padding:16px;font-size:0.85rem;color:#C55;margin-bottom:20px"></div>
     </div>
   </div>
@@ -1146,20 +1046,20 @@ function switchLang(lang) {
 <div id="passeportView" style="display:none;padding:32px;overflow-y:auto;background:white;width:100%">
   <div style="max-width:800px;margin:0 auto">
     <div style="display:inline-block;font-size:0.68rem;font-weight:600;text-transform:uppercase;letter-spacing:.12em;color:#C9A84C;background:#FDF6E8;padding:5px 14px;border-radius:4px;margin-bottom:12px">Standard & Premium</div>
-    <div style="font-family:'Open Sans',serif;font-size:2rem;font-weight:400;color:#021A35;margin-bottom:6px">Nutritional <em style="font-style:italic;color:#C9A84C">Health</em> Passport</div>
+    <div style="font-family:'Open Sans',serif;font-size:2rem;font-weight:400;color:#021A35;margin-bottom:6px"><em style="font-style:italic;color:#C9A84C">Nutritional</em> Health Passport</div>
     <div style="font-size:0.82rem;color:rgba(2,26,53,0.4);margin-bottom:28px">AI-generated nutritional medical report · Shareable with your doctor</div>
 
-    <!-- Bloc non payant -->
+    <!-- Non-paid block -->
     <div id="passeportFree" style="display:none;background:white;border-radius:4px;padding:40px;text-align:center;border:1px solid #B5D4F4">
       <div style="font-size:2rem;margin-bottom:12px"></div>
-      <div style="font-family:'Open Sans',serif;font-size:1.4rem;margin-bottom:8px">Standard & Premium feature</div>
+      <div style="font-family:'Open Sans',serif;font-size:1.4rem;margin-bottom:8px">Standard & Premium Feature</div>
       <div style="font-size:0.88rem;color:rgba(2,26,53,0.5);margin-bottom:20px">Upgrade to a paid plan to generate your Nutritional Health Passport.</div>
       <button onclick="showView('pricing')" style="background:#021A35;color:white;border:none;border-radius:4px;padding:12px 28px;font-family:'DM Sans',sans-serif;cursor:pointer">View subscriptions →</button>
     </div>
 
-    <!-- Contenu -->
-<div id="passeportContent" style="display:none">
-      <!-- Carte identité -->
+    <!-- Content -->
+    <div id="passeportContent" style="display:none">
+      <!-- Identity card -->
       <div style="background:#021A35;border-radius:4px;padding:28px;margin-bottom:20px;display:flex;gap:24px;align-items:center;flex-wrap:wrap">
         <div style="width:64px;height:64px;border-radius:50%;background:linear-gradient(135deg,#C9A84C,#A07830);display:flex;align-items:center;justify-content:center;font-family:'Open Sans',serif;font-size:1.5rem;font-weight:600;color:white;flex-shrink:0" id="ppAvatar">GC</div>
         <div style="flex:1">
@@ -1170,21 +1070,21 @@ function switchLang(lang) {
         <button onclick="generatePasseport()" style="background:rgba(255,255,255,0.1);color:white;border:1px solid rgba(255,255,255,0.2);border-radius:4px;padding:10px 20px;font-family:'DM Sans',sans-serif;font-size:0.82rem;cursor:pointer">↻ Regenerate</button>
       </div>
 
-      <!-- Stats rapides -->
+      <!-- Quick stats -->
       <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:12px;margin-bottom:20px" id="ppStats"></div>
 
-      <!-- Rapport médical -->
+      <!-- Medical report -->
       <div style="background:white;border-radius:4px;padding:28px;border:1px solid #B5D4F4;margin-bottom:20px">
         <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;flex-wrap:wrap;gap:12px">
-          <div style="font-family:'Open Sans',serif;font-size:1.2rem;font-weight:600;color:#021A35">Nutritional Medical Report</div>
-          <button onclick="printPasseport()" style="background:#021A35;color:white;border:none;border-radius:4px;padding:8px 18px;font-family:'DM Sans',sans-serif;font-size:0.78rem;cursor:pointer">️ Print / PDF</button>
+          <div style="font-family:'Open Sans',serif;font-size:1.2rem;font-weight:600;color:#021A35"> Nutritional medical report</div>
+<button onclick="printPasseport()" style="background:#021A35;color:white;border:none;border-radius:4px;padding:8px 18px;font-family:'DM Sans',sans-serif;font-size:0.78rem;cursor:pointer">️ Print / PDF</button>
         </div>
         <div id="ppReport" style="font-size:0.85rem;line-height:1.8;color:rgba(2,26,53,0.75);white-space:pre-wrap"></div>
       </div>
 
       <!-- Disclaimer -->
       <div style="background:#FDF6E8;border-radius:4px;padding:14px 18px;border:1px solid #C9A84C;font-size:0.75rem;color:rgba(2,26,53,0.6);line-height:1.5">
-        ️ This document is generated by artificial intelligence based on your tracking data. It does not replace professional medical advice. Share it with your doctor as a consultation aid.
+        ️ This document is generated by artificial intelligence from your tracking data. It does not replace professional medical advice. Share it with your doctor as consultation support.
       </div>
     </div>
 
@@ -1199,7 +1099,7 @@ function switchLang(lang) {
 
 <div id="historyView" style="display:none;padding:32px;overflow-y:auto;background:var(--cream);width:100%">
   <div style="max-width:900px;margin:0 auto">
-    <h2 style="font-family:'Open Sans',sans-serif;font-size:1.8rem;font-weight:700;color:#021A35;margin-bottom:6px">My History</h2>
+    <h2 style="font-family:'Open Sans',sans-serif;font-size:1.8rem;font-weight:700;color:#021A35;margin-bottom:6px">My history</h2>
     <p style="color:#85B7EB;margin-bottom:28px">All your activities on Leonarda</p>
 
     <!-- Stats -->
@@ -1207,7 +1107,7 @@ function switchLang(lang) {
 
     <!-- Timeline -->
     <div style="background:white;border-radius:10px;border:1px solid #B5D4F4;padding:24px">
-      <div style="font-size:0.75rem;font-weight:600;text-transform:uppercase;letter-spacing:1.5px;color:#85B7EB;margin-bottom:18px">Recent Activity</div>
+      <div style="font-size:0.75rem;font-weight:600;text-transform:uppercase;letter-spacing:1.5px;color:#85B7EB;margin-bottom:18px">Recent activity</div>
       <div id="historyTimeline" style="display:flex;flex-direction:column;gap:0">
         <div style="text-align:center;color:#85B7EB;padding:40px">Loading your history...</div>
       </div>
@@ -1232,11 +1132,11 @@ function switchLang(lang) {
 <!-- TABS -->
 <div style="display:flex;gap:4px;margin-bottom:14px;border-bottom:1px solid #1e3050;padding-bottom:10px;flex-wrap:wrap" id="oracleTabs">
   <div onclick="oracleTab('scanner',this)" style="cursor:pointer;padding:5px 12px;font-size:11px;border-radius:6px;background:#1a2a3e;color:#a8c8e0;border:1px solid #2a4a6a;font-weight:500">AI Scanner</div>
-  <div onclick="oracleTab('simulation',this)" style="cursor:pointer;padding:5px 12px;font-size:11px;border-radius:6px;color:#4a7a9a;border:1px solid transparent">Real-time Simulation</div>
+  <div onclick="oracleTab('simulation',this)" style="cursor:pointer;padding:5px 12px;font-size:11px;border-radius:6px;color:#4a7a9a;border:1px solid transparent">Real-time simulation</div>
   <div onclick="oracleTab('epigenetique',this)" style="cursor:pointer;padding:5px 12px;font-size:11px;border-radius:6px;color:#4a7a9a;border:1px solid transparent">Epigenetics & Telomeres</div>
   <div onclick="oracleTab('comparaison',this)" style="cursor:pointer;padding:5px 12px;font-size:11px;border-radius:6px;color:#4a7a9a;border:1px solid transparent">Comparison Mode</div>
-  <div onclick="oracleTab('medicaments',this)" style="cursor:pointer;padding:5px 12px;font-size:11px;border-radius:6px;color:#4a7a9a;border:1px solid transparent">Medication Alerts</div>
-  <div onclick="oracleTab('timeline',this)" style="cursor:pointer;padding:5px 12px;font-size:11px;border-radius:6px;color:#4a7a9a;border:1px solid transparent">10-Year Timeline</div>
+  <div onclick="oracleTab('medicaments',this)" style="cursor:pointer;padding:5px 12px;font-size:11px;border-radius:6px;color:#4a7a9a;border:1px solid transparent">Drug Alerts</div>
+  <div onclick="oracleTab('timeline',this)" style="cursor:pointer;padding:5px 12px;font-size:11px;border-radius:6px;color:#4a7a9a;border:1px solid transparent">10-year Timeline</div>
 </div>
 
 <!-- SCANNER -->
@@ -1319,7 +1219,7 @@ function switchLang(lang) {
       <line x1="226" y1="200" x2="250" y2="190" stroke="#BA7517" stroke-width=".7" opacity=".7"/>
       <rect x="252" y="179" width="80" height="22" rx="3" fill="#0f1e30" stroke="#BA7517" stroke-width=".7"/>
       <text x="257" y="188" font-size="8.5" font-family="monospace" fill="#BA7517">LIVER ALERT</text>
-      <text x="257" y="198" font-size="7.5" font-family="monospace" fill="#3a6a80">65/100 · GLUC UP</text>
+      <text x="257" y="198" font-size="7.5" font-family="monospace" fill="#3a6a80">65/100 · GLUCOSE UP</text>
     </g>
     <g style="cursor:pointer" onclick="oSelOrgan('intestins')">
       <circle cx="190" cy="250" r="25" fill="#1D9E75" opacity=".12" filter="url(#ogS)"/>
@@ -1327,7 +1227,7 @@ function switchLang(lang) {
       <path d="M178 240 Q188 231 200 237 Q210 243 208 253 Q206 263 196 266 Q186 269 180 259 Q175 249 184 244" fill="none" stroke="#1D9E75" stroke-width="2.8" opacity=".85" filter="url(#ogW)" stroke-linecap="round"/>
       <circle cx="190" cy="250" r="19" fill="none" stroke="#1D9E75" stroke-width="1.2" opacity=".4" style="animation:oPulse 2.2s ease-in-out infinite"/>
       <line x1="172" y1="252" x2="140" y2="262" stroke="#1D9E75" stroke-width=".7" opacity=".7"/>
-      <rect x="44" y="252" width="94" height="22" rx="3" fill="#0f1e30" stroke="#1D9E75" stroke-width=".7"/>
+<rect x="44" y="252" width="94" height="22" rx="3" fill="#0f1e30" stroke="#1D9E75" stroke-width=".7"/>
       <text x="49" y="261" font-size="8.5" font-family="monospace" fill="#1D9E75">MICROBIOME</text>
       <text x="49" y="271" font-size="7.5" font-family="monospace" fill="#3a6a80">59/100 · BIODIV DN</text>
     </g>
@@ -1335,8 +1235,8 @@ function switchLang(lang) {
     <circle cx="190" cy="428" r="28" fill="none" stroke="#C9A84C" stroke-width="3.5" stroke-linecap="round" stroke-dasharray="126" stroke-dashoffset="35" transform="rotate(-90 190 428)" id="oScoreArc"/>
     <text x="190" y="424" text-anchor="middle" font-size="16" font-weight="600" fill="#e8f0f8" id="oScoreText">72</text>
     <text x="190" y="436" text-anchor="middle" font-size="8" fill="#4a7a90" font-family="monospace">/100</text>
-    <text font-family="monospace" font-size="8" fill="#2a5a70" x="10" y="18">NUTRITIONAL-MRI v3.0 ORACLE-AI</text>
-    <text font-family="monospace" font-size="8" fill="#2a5a70" x="10" y="476" style="animation:oScan 4s ease-in-out infinite" id="oHudData">HBA1C:5.8% CRP:2.8 VITD:28 GLUC:6.1</text>
+    <text font-family="monospace" font-size="8" fill="#2a5a70" x="10" y="18">IRM-NUTRITIONAL v3.0 ORACLE-AI</text>
+    <text font-family="monospace" font-size="8" fill="#2a5a70" x="10" y="476" style="animation:oScan 4s ease-in-out infinite" id="oHudData">HBA1C:5.8% CRP:2.8 VITD:28 GLYC:6.1</text>
     <text font-family="monospace" font-size="8" fill="#2a5a70" x="10" y="486">LDL:1.4 TG:1.8 BIO-AGE:41 TELOMERES:6.8kb</text>
     <text font-family="monospace" font-size="8" fill="#2a5a70" x="272" y="476">SCORE:72/100</text>
     <text font-family="monospace" font-size="8" fill="#2a5a70" x="272" y="486">RECOV:87%</text>
@@ -1344,13 +1244,21 @@ function switchLang(lang) {
 </div>
 <div style="display:flex;flex-direction:column;gap:8px;color:#a8c8e0">
   <div style="background:#121c2c;border:1px solid #1e3050;border-radius:8px;padding:10px">
-    <div style="font-size:8px;color:#3a7a9a;text-transform:uppercase;letter-spacing:.1em;margin-bottom:7px;font-weight:600">Biological Systems</div>
+    <div style="font-size:8px;color:#3a7a9a;text-transform:uppercase;letter-spacing:.1em;margin-bottom:7px;font-weight:600">Biological systems</div>
     <div onclick="oSelOrgan('cerveau')" id="ob-cerveau" style="cursor:pointer;display:flex;align-items:center;gap:6px;padding:6px 8px;border-radius:6px;border:1px solid #1e3050;background:#121c2c;margin-bottom:4px"><div style="width:7px;height:7px;border-radius:50%;background:#7F77DD;box-shadow:0 0 7px #7F77DD80"></div><span style="font-size:10px">Brain</span><span style="margin-left:auto;font-size:10px;font-weight:600;color:#7F77DD">68</span></div>
     <div onclick="oSelOrgan('coeur')" id="ob-coeur" style="cursor:pointer;display:flex;align-items:center;gap:6px;padding:6px 8px;border-radius:6px;border:1px solid #1e3050;background:#121c2c;margin-bottom:4px"><div style="width:7px;height:7px;border-radius:50%;background:#E24B4A;box-shadow:0 0 7px #E24B4A80;animation:oPulse 1.3s infinite"></div><span style="font-size:10px">Cardio</span><span style="margin-left:auto;font-size:10px;font-weight:600;color:#E24B4A">71</span></div>
     <div onclick="oSelOrgan('poumons')" id="ob-poumons" style="cursor:pointer;display:flex;align-items:center;gap:6px;padding:6px 8px;border-radius:6px;border:1px solid #1e3050;background:#121c2c;margin-bottom:4px"><div style="width:7px;height:7px;border-radius:50%;background:#378ADD;box-shadow:0 0 7px #378ADD80"></div><span style="font-size:10px">Lungs</span><span style="margin-left:auto;font-size:10px;font-weight:600;color:#378ADD">82</span></div>
-    <div onclick="oSelOrgan('foie')" id="ob-foie" style="cursor:pointer;display:flex;align-items:center;gap:6px;padding:6px 8px;border-radius:6px;border:1px solid #3a1e08;background:#121c2c;margin-bottom:4px"><div style="width:7px;height:7px;border-radius:50%;background:#BA7517;box-shadow:0 0 7px #BA751780;animation:oPulse .8s infinite"></div>
-
-    <div style="font-size:8px;color:#3a7a9a;text-transform:uppercase;letter-spacing:.1em;margin-bottom:7px;font-weight:600">Key Markers</div>
+    <div onclick="oSelOrgan('foie')" id="ob-foie" style="cursor:pointer;display:flex;align-items:center;gap:6px;padding:6px 8px;border-radius:6px;border:1px solid #3a1e08;background:#121c2c;margin-bottom:4px"><div style="width:7px;height:7px;border-radius:50%;background:#BA7517;box-shadow:0 0 7px #BA751780;animation:oPulse .8s infinite"></div><span style="font-size:10px">Liver</span><span style="margin-left:auto;font-size:10px;font-weight:600;color:#BA7517">65</span></div>
+    <div onclick="oSelOrgan('intestins')" id="ob-intestins" style="cursor:pointer;display:flex;align-items:center;gap:6px;padding:6px 8px;border-radius:6px;border:1px solid #1e3050;background:#121c2c;margin-bottom:4px"><div style="width:7px;height:7px;border-radius:50%;background:#1D9E75;box-shadow:0 0 7px #1D9E7580"></div><span style="font-size:10px">Microbiome</span><span style="margin-left:auto;font-size:10px;font-weight:600;color:#1D9E75">59</span></div>
+    <div id="oOrgDetail" style="display:none;margin-top:8px;border-top:1px solid #1e3050;padding-top:8px">
+      <div style="font-size:8px;text-transform:uppercase;letter-spacing:.07em;margin-bottom:4px;font-weight:600" id="oOrgN"></div>
+      <div style="font-size:10px;color:#6a9ab8;line-height:1.5;margin-bottom:5px" id="oOrgD"></div>
+      <div style="font-size:9px;line-height:1.5;margin-bottom:5px" id="oOrgP"></div>
+      <div id="oOrgA"></div>
+    </div>
+  </div>
+  <div style="background:#121c2c;border:1px solid #1e3050;border-radius:8px;padding:10px">
+    <div style="font-size:8px;color:#3a7a9a;text-transform:uppercase;letter-spacing:.1em;margin-bottom:7px;font-weight:600">Key markers</div>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:5px">
       <div style="background:#0d1820;border-radius:6px;padding:7px 9px;border:1px solid #1e3050"><div style="font-size:8px;color:#3a6a80;font-family:monospace" id="oM1L">HbA1c</div><div style="font-size:13px;font-weight:600;color:#BA7517" id="oM1V">5.8%</div></div>
       <div style="background:#0d1820;border-radius:6px;padding:7px 9px;border:1px solid #1e3050"><div style="font-size:8px;color:#3a6a80;font-family:monospace">CRP</div><div style="font-size:13px;font-weight:600;color:#BA7517">2.8</div></div>
@@ -1365,11 +1273,11 @@ function switchLang(lang) {
     <div style="font-size:8px;color:#2a5a40;margin-top:3px;font-family:monospace">Recoverability: 87/100</div>
   </div>
   <div style="background:#121c2c;border:1px solid #C9A84C;border-radius:8px;padding:10px;text-align:center;cursor:pointer" onclick="generateOraclePDF()">
-    <div style="font-size:10px;color:#C9A84C;font-family:monospace;font-weight:600;letter-spacing:.06em">EXPORT DOCTOR REPORT</div>
-    <div style="font-size:9px;color:#4a7a9a;margin-top:3px">Printable PDF · Share with your doctor</div>
+    <div style="font-size:10px;color:#C9A84C;font-family:monospace;font-weight:600;letter-spacing:.06em">EXPORT MEDICAL REPORT</div>
+    <div style="font-size:9px;color:#4a7a9a;margin-top:3px">PDF printable · Share with your doctor</div>
   </div>
   <div style="background:#121c2c;border:1px solid #1e3050;border-radius:8px;padding:8px;text-align:center;cursor:pointer;margin-top:6px" onclick="oracleData=null;initOracle()">
-    <div style="font-size:9px;color:#4a7a9a;font-family:monospace;letter-spacing:.06em">Update analysis</div>
+    <div style="font-size:9px;color:#4a7a9a;font-family:monospace;letter-spacing:.06em">Refresh analysis</div>
   </div>
 </div>
 </div>
@@ -1398,20 +1306,20 @@ function switchLang(lang) {
       </div>
       <div id="oSimBars"></div>
     </div>
-    <div style="background:#0d1820;border-radius:8px;padding:10px;border:1px solid #1e3050"><div style="font-size:8px;color:#3a7a9a;text-transform:uppercase;letter-spacing:.08em;margin-bottom:7px;font-weight:600">Organs impacted</div><div id="oSimOrg"></div></div>
+    <div style="background:#0d1820;border-radius:8px;padding:10px;border:1px solid #1e3050"><div style="font-size:8px;color:#3a7a9a;text-transform:uppercase;letter-spacing:.08em;margin-bottom:7px;font-weight:600">Affected organs</div><div id="oSimOrg"></div></div>
   </div>
 </div>
 </div>
 
-<!-- EPIGENETIC -->
+<!-- EPIGENETICS -->
 <div id="oracle-epigenetique" style="display:none;color:#a8c8e0">
 <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
   <div style="background:#0d1820;border-radius:10px;padding:16px;border:1px solid #1e3050">
     <div style="font-size:9px;color:#3a7a9a;text-transform:uppercase;letter-spacing:.1em;margin-bottom:12px;font-weight:600">Epigenetic Clock — Horvath Clock</div>
     <div style="text-align:center;margin-bottom:14px">
-      <div style="font-size:10px;color:#4a7a9a;margin-bottom:5px">Estimated DNA methylation age</div>
+      <div style="font-size:10px;color:#4a7a9a;margin-bottom:5px">DNA methylation age estimated</div>
       <div style="font-size:34px;font-weight:600;color:#BA7517" id="oEpiAge">41.2</div>
-      <div style="font-size:10px;color:#4a7a9a">years (actual: <span id="oRealAge">38</span>) · <span style="color:#BA7517">+3.2 years accelerated</span></div>
+      <div style="font-size:10px;color:#4a7a9a">years (real: <span id="oRealAge">38</span>) · <span style="color:#BA7517">+3.2 years accelerated</span></div>
     </div>
     <div style="display:flex;flex-direction:column;gap:7px;margin-bottom:12px">
       <div><div style="display:flex;justify-content:space-between;margin-bottom:2px"><span style="font-size:10px;color:#6a9ab8">DNA methylation</span><span style="font-size:10px;color:#BA7517">Unfavorable</span></div><div style="height:5px;background:#1a3050;border-radius:3px;overflow:hidden"><div style="height:100%;border-radius:3px;background:#BA7517;width:68%"></div></div></div>
@@ -1420,14 +1328,14 @@ function switchLang(lang) {
       <div><div style="display:flex;justify-content:space-between;margin-bottom:2px"><span style="font-size:10px;color:#6a9ab8">Cellular autophagy</span><span style="font-size:10px;color:#C9A84C">Moderate</span></div><div style="height:5px;background:#1a3050;border-radius:3px;overflow:hidden"><div style="height:100%;border-radius:3px;background:#C9A84C;width:48%"></div></div></div>
       <div><div style="display:flex;justify-content:space-between;margin-bottom:2px"><span style="font-size:10px;color:#6a9ab8">Sirtuins SIRT1</span><span style="font-size:10px;color:#C9A84C">Reduced</span></div><div style="height:5px;background:#1a3050;border-radius:3px;overflow:hidden"><div style="height:100%;border-radius:3px;background:#C9A84C;width:42%"></div></div></div>
     </div>
-    <div style="padding:9px;background:#121c2c;border-radius:6px;font-size:10px;color:#6a9ab8;line-height:1.5">By reducing inflammation via Leonarda, your epigenetic clock can slow by 40%. Target: methylation age 37 years in 18 months.</div>
+    <div style="padding:9px;background:#121c2c;border-radius:6px;font-size:10px;color:#6a9ab8;line-height:1.5">By reducing inflammation via Leonarda, your epigenetic clock can slow by 40%. Goal: methylation age 37 years in 18 months.</div>
   </div>
   <div style="background:#0d1820;border-radius:10px;padding:16px;border:1px solid #1e3050">
     <div style="font-size:9px;color:#3a7a9a;text-transform:uppercase;letter-spacing:.1em;margin-bottom:12px;font-weight:600">Telomeric Score</div>
     <div style="text-align:center;margin-bottom:14px">
       <div style="font-size:10px;color:#4a7a9a;margin-bottom:5px">Estimated telomere length</div>
       <div style="font-size:34px;font-weight:600;color:#378ADD">6.8 <span style="font-size:13px;color:#4a7a9a">kb</span></div>
-      <div style="font-size:10px;color:#BA7517">38 years norm: 7.2 kb · Accelerated shortening</div>
+      <div style="font-size:10px;color:#BA7517">Norm 38 years: 7.2 kb · Accelerated shortening</div>
     </div>
     <div style="display:flex;flex-direction:column;gap:7px;margin-bottom:12px">
       <div><div style="display:flex;justify-content:space-between;margin-bottom:2px"><span style="font-size:10px;color:#6a9ab8">Oxidative stress</span><span style="font-size:10px;color:#E24B4A">-0.4 kb/year</span></div><div style="height:5px;background:#1a3050;border-radius:3px;overflow:hidden"><div style="height:100%;border-radius:3px;background:#E24B4A;width:75%"></div></div></div>
@@ -1443,7 +1351,7 @@ function switchLang(lang) {
 
 <!-- COMPARISON -->
 <div id="oracle-comparaison" style="display:none;color:#a8c8e0">
-  <div style="font-size:9px;color:#3a7a9a;text-transform:uppercase;letter-spacing:.1em;margin-bottom:12px;font-weight:600">Your profile vs Optimal 38-year-old profile</div>
+  <div style="font-size:9px;color:#3a7a9a;text-transform:uppercase;letter-spacing:.1em;margin-bottom:12px;font-weight:600">Your profile vs Optimal profile 38 years</div>
   <div style="display:grid;grid-template-columns:1fr 50px 1fr;gap:12px;align-items:start">
     <div style="background:#0d1820;border-radius:8px;padding:14px;border:1px solid #1e3050">
       <div style="text-align:center;margin-bottom:12px"><div style="font-size:9px;color:#4a7a9a;margin-bottom:4px">Your profile</div><div style="font-size:30px;font-weight:600;color:#C9A84C">72</div></div>
@@ -1455,22 +1363,20 @@ function switchLang(lang) {
       <div id="oOptP"></div>
     </div>
   </div>
-  <div style="margin-top:12px;background:#0d1820;border-radius:8px;padding:12px;border:1px solid #1e3050;font-size:10px;color:#6a9ab8;line-height:1.6">Your profile is 79% of optimal. The 3 major gaps: microbiome (-32pts), liver (-26pts), brain (-23pts). After 18 months of Leonarda protocol: 88/100 — 97% of optimal.</div>
+  <div style="margin-top:12px;background:#0d1820;border-radius:8px;padding:12px;border:1px solid #1e3050;font-size:10px;color:#6a9ab8;line-height:1.6">Your profile is at 79% of optimal. The 3 major gaps: microbiome (-32pts), liver (-26pts), brain (-23pts). In 18 months of Leonarda protocol: 88/100 — 97% of optimal.</div>
 </div>
 
 <!-- MEDICATIONS -->
 <div id="oracle-medicaments" style="display:none;color:#a8c8e0">
-  <div style="font-size:9px;color:#3a7a9a;text-transform:uppercase;letter-spacing:.1em;margin-bottom:12px;font-weight:600">Drug-organ interaction alerts</div>
+  <div style="font-size:9px;color:#3a7a9a;text-transform:uppercase;letter-spacing:.1em;margin-bottom:12px;font-weight:600">Drug interactions alerts · organs</div>
   <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
     <div>
       <div style="font-size:8px;color:#3a7a9a;text-transform:uppercase;letter-spacing:.08em;margin-bottom:8px;font-weight:600">Medication → Organ</div>
-      <div style="padding:9px 11px;border-radius:7px;margin-bottom:7px;border-left:3px solid #E24B4A;background:#0d1820"><div style="display:flex;align-items:center;gap:6px;margin-bottom:4px"><span style="font-size:8px;background:#E24B4A22;color:#E24B4A;padding:2px 6px;border-radius:3px;font-weight:600">URGENT</span><span style="font-size:10px;color:#a8c8e0;font-weight:500">Coumadin → Liver</span></div><div style="font-size:10px;color:#6a9ab8;line-height:1.5">Monthly INR mandatory. Liver under glycemic stress — increased vigilance.</div></div>
-      <div style="padding:9px 11px;border-radius:7px;margin-bottom:7px;border-left:3px solid #BA7517;background:#0d1820"><div style="display:flex;align-items:center;gap:6px;margin-bottom:4px"><span style="font-size:8px;background:#BA751722;color:#BA7517;padding:2px 6px;border-radius:3px;font-weight:600">CAUTION</span><span style="font-size:10px;color:#a8c8e0;font-weight:500">Coumadin → Microbiome</span></div><div style="font-size:10px;color:#6a9ab8;line-height:1.5">Antibiotics alter vitamin K-producing flora. Probiotics recommended.</div></div>
-      <div style="padding:9px 11px;border-radius:7px;margin-bottom:7px;border-left:3px solid #378ADD;background:#0d1820"><div style="display:flex;align-items:center;gap:6px;margin-bottom:4px"><span style="font-size:8px;background:#378ADD22;color:#378ADD;padding:2px 6px;border-radius:3px;font-weight:600">INFO</span><span style="font-size:10px;color:#a8c8e0;font-weight:500">Coumadin → Cardio</span></div><div style="font-size:10px;color:#6a9ab8;line-height:1.5">Alcohol + Coumadin increases anticoagulation. Bleeding risk.</div></div>
-    </div>
-    <div>
-      <div style="font-size:8px;color:#3a7a9a;text-transform:uppercase;letter-spacing:.08em;margin-bottom:8px;font-weight:600">Food → Medication</div>
-      <div style="padding:9px 11px;border-radius:7px;margin-bottom:7px;border-left:3px solid #1D9E75;background:#0d1820"><div style="font-size:10px;color:#1D9E75;font-weight:600;margin-bottom:3px">Dietary vitamin K</div><div style="font-size:10px;color:#6a9ab8;line-height:1.4">Broccoli, spinach, cabbage: consistency essential to control INR.</div></div>
+      <div style="padding:9px 11px;border-radius:7px;margin-bottom:7px;border-left:3px solid #E24B4A;background:#0d1820"><div style="display:flex;align-items:center;gap:6px;margin-bottom:4px"><span style="font-size:8px;background:#E24B4A22;color:#E24B4A;padding:2px 6px;border-radius:3px;font-weight:600">URGENT</span><span style="font-size:10px;color:#a8c8e0;font-weight:500">Coumadin → Liver</span></div><div style="font-size:10px;color:#6a9ab8;line-height:1.5">Monthly INR required. Liver under glycemic stress — increased vigilance.</div></div>
+      <div style="padding:9px 11px;border-radius:7px;margin-bottom:7px;border-left:3px solid #BA7517;background:#0d1820"><div style="display:flex;align-items:center;gap:6px;margin-bottom:4px"><span style="font-size:8px;background:#BA751722;color:#BA7517;padding:2px 6px;border-radius:3px;font-weight:600">WARNING</span><span style="font-size:10px;color:#a8c8e0;font-weight:500">Coumadin → Microbiome</span></div><div style="font-size:10px;color:#6a9ab8;line-height:1.5">Antibiotics alter vitamin K-producing flora. Probiotics recommended.</div></div>
+      <div style="padding:9px 11px;border-radius:7px;
+<div style="font-size:8px;color:#3a7a9a;text-transform:uppercase;letter-spacing:.08em;margin-bottom:8px;font-weight:600">Food → Medicine</div>
+      <div style="padding:9px 11px;border-radius:7px;margin-bottom:7px;border-left:3px solid #1D9E75;background:#0d1820"><div style="font-size:10px;color:#1D9E75;font-weight:600;margin-bottom:3px">Dietary Vitamin K</div><div style="font-size:10px;color:#6a9ab8;line-height:1.4">Broccoli, spinach, cabbage: regularity essential to control INR.</div></div>
       <div style="padding:9px 11px;border-radius:7px;margin-bottom:7px;border-left:3px solid #C9A84C;background:#0d1820"><div style="font-size:10px;color:#C9A84C;font-weight:600;margin-bottom:3px">Omega-3 + Coumadin</div><div style="font-size:10px;color:#6a9ab8;line-height:1.4">Anticoagulant synergy. Inform doctor. Enhanced INR monitoring.</div></div>
       <div style="padding:9px 11px;border-radius:7px;margin-bottom:7px;border-left:3px solid #E24B4A;background:#0d1820"><div style="font-size:10px;color:#E24B4A;font-weight:600;margin-bottom:3px">Alcohol + Coumadin</div><div style="font-size:10px;color:#6a9ab8;line-height:1.4">Major interaction. Max 1 drink/week. Severe bleeding risk.</div></div>
     </div>
@@ -1479,7 +1385,7 @@ function switchLang(lang) {
 
 <!-- TIMELINE -->
 <div id="oracle-timeline" style="display:none;color:#a8c8e0">
-  <div style="font-size:9px;color:#3a7a9a;text-transform:uppercase;letter-spacing:.1em;margin-bottom:12px;font-weight:600">Your 10-year biological timeline</div>
+  <div style="font-size:9px;color:#3a7a9a;text-transform:uppercase;letter-spacing:.1em;margin-bottom:12px;font-weight:600">Your 10-year biology timeline</div>
   <div id="oTlItems"></div>
 </div>
 
@@ -1509,8 +1415,48 @@ function switchLang(lang) {
     <div id="simPremium" style="display:none;background:white;border-radius: 4px;padding:40px;text-align:center;border:1px solid #B5D4F4">
       <div style="font-size:2rem;margin-bottom:12px"></div>
       <div style="font-family:'Open Sans',serif;font-size:1.4rem;margin-bottom:8px">Premium Feature</div>
-      <div style="font-size:0.88rem;color:
-<div style="font-size:0.68rem;text-transform:uppercase;letter-spacing:.08em;color:#3B6D11;font-weight:600;margin-bottom:10px"> Recommended alternatives</div>
+      <div style="font-size:0.88rem;color:rgba(2,26,53,0.5);margin-bottom:20px">The health decision simulator is reserved for Premium subscribers.</div>
+      <button onclick="showView('pricing')" style="background:#021A35;color:white;border:none;border-radius: 4px;padding:12px 28px;font-family:'DM Sans',sans-serif;cursor:pointer">View subscriptions →</button>
+    </div>
+
+    <div id="simLoading" style="display:none;text-align:center;padding:48px 24px;background:#F0F6FF;border-radius: 4px;border:1px solid #B5D4F4">
+      <div style="width:48px;height:48px;border:3px solid #B5D4F4;border-top-color:#021A35;border-radius:50%;animation:spin 0.8s linear infinite;margin:0 auto 20px"></div>
+      <div style="font-family:'Open Sans',serif;font-size:1.2rem;color:#021A35;margin-bottom:8px" id="simLoadingTitle">Analysis in progress...</div>
+      <div style="font-size:0.82rem;color:rgba(2,26,53,0.45)" id="simLoadingMsg">Your digital twin is studying your profile</div>
+      <div style="display:flex;justify-content:center;gap:6px;margin-top:20px">
+        <div style="width:6px;height:6px;border-radius:50%;background:#021A35;animation:pulse 1.4s ease-in-out infinite"></div>
+        <div style="width:6px;height:6px;border-radius:50%;background:#021A35;animation:pulse 1.4s ease-in-out 0.2s infinite"></div>
+        <div style="width:6px;height:6px;border-radius:50%;background:#021A35;animation:pulse 1.4s ease-in-out 0.4s infinite"></div>
+      </div>
+    </div>
+
+    <div id="simResult" style="display:none">
+      <div style="background:#F0F6FF;border-radius: 4px;padding:14px 18px;margin-bottom:16px;border-left:3px solid #021A35">
+        <div style="font-size:0.68rem;text-transform:uppercase;letter-spacing:.08em;color:#85B7EB;font-weight:600;margin-bottom:4px">Simulated scenario</div>
+        <div style="font-size:0.88rem;color:#021A35;font-weight:500" id="simScenario"></div>
+      </div>
+
+      <div id="simResume" style="background:#021A35;border-radius: 4px;padding:16px 20px;margin-bottom:16px;font-size:0.88rem;color:rgba(255,255,255,0.8);line-height:1.6"></div>
+
+      <div id="simMetrics" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin-bottom:20px"></div>
+
+      <div style="background:white;border-radius: 4px;padding:20px;border:1px solid #B5D4F4;margin-bottom:16px">
+        <div style="font-size:0.78rem;font-weight:600;color:#021A35;margin-bottom:16px">Chronological projection</div>
+        <div id="simTimeline"></div>
+      </div>
+
+      <div id="simPatho" style="display:none;background:#FDF6E8;border-radius: 4px;padding:16px 20px;margin-bottom:16px;border-left:3px solid #C9A84C">
+        <div style="font-size:0.68rem;text-transform:uppercase;letter-spacing:.08em;color:#854F0B;font-weight:600;margin-bottom:6px">Impact on your pathologies</div>
+        <div style="font-size:0.82rem;color:rgba(2,26,53,0.7);line-height:1.6" id="simPathoText"></div>
+      </div>
+
+      <div id="simMed" style="display:none;background:#FEF0F0;border-radius: 4px;padding:16px 20px;margin-bottom:16px;border-left:3px solid #E24B4A">
+        <div style="font-size:0.68rem;text-transform:uppercase;letter-spacing:.08em;color:#A32D2D;font-weight:600;margin-bottom:6px">Drug interactions</div>
+        <div style="font-size:0.82rem;color:rgba(2,26,53,0.7);line-height:1.6" id="simMedText"></div>
+      </div>
+
+      <div id="simAlternatives" style="display:none;background:#EAF3DE;border-radius: 4px;padding:16px 20px;margin-bottom:16px">
+        <div style="font-size:0.68rem;text-transform:uppercase;letter-spacing:.08em;color:#3B6D11;font-weight:600;margin-bottom:10px">Recommended alternatives</div>
         <div id="simAltList"></div>
       </div>
 
@@ -1520,7 +1466,7 @@ function switchLang(lang) {
       </div>
 
       <div id="simWarning" style="display:none;background:#FEF0F0;border-radius: 4px;padding:12px 16px;margin-bottom:12px;border:1px solid #F09595">
-        <div style="font-size:0.68rem;text-transform:uppercase;letter-spacing:.08em;color:#A32D2D;font-weight:600;margin-bottom:4px"> Medical warning</div>
+        <div style="font-size:0.68rem;text-transform:uppercase;letter-spacing:.08em;color:#A32D2D;font-weight:600;margin-bottom:4px">Medical warning</div>
         <div style="font-size:0.78rem;color:rgba(2,26,53,0.7);line-height:1.5" id="simWarningText"></div>
       </div>
 
@@ -1540,7 +1486,7 @@ function switchLang(lang) {
     <div id="insightsInsight" style="display:none;background:#021A35;border-radius: 4px;padding:20px 22px;margin-bottom:24px;display:flex;gap:14px;align-items:flex-start">
       <div style="font-size:1.4rem;flex-shrink:0"></div>
       <div>
-        <div style="font-size:0.65rem;text-transform:uppercase;letter-spacing:.1em;color:#C9A84C;font-weight:600;margin-bottom:6px">AI Observation · Nutritional epidemiology</div>
+        <div style="font-size:0.65rem;text-transform:uppercase;letter-spacing:.1em;color:#C9A84C;font-weight:600;margin-bottom:6px">AI Observation · Nutritional Epidemiology</div>
         <div style="font-size:0.84rem;color:rgba(255,255,255,0.72);line-height:1.6" id="insightsAiText"></div>
       </div>
     </div>
@@ -1557,9 +1503,9 @@ function switchLang(lang) {
     </div>
 
     <div style="background:white;border-radius: 4px;padding:20px;border:1px solid #B5D4F4;margin-bottom:16px">
-      <div style="font-family:'Open Sans',serif;font-size:1.15rem;font-weight:600;color:#021A35;margin-bottom:16px">Subscription distribution</div>
+      <div style="font-family:'Open Sans',serif;font-size:1.15rem;font-weight:600;color:#021A35;margin-bottom:16px">Subscription breakdown</div>
       <div style="display:flex;gap:24px;align-items:center;flex-wrap:wrap">
-        <div style="position:relative;height:150px;width:150px;flex-shrink:0"><canvas id="insightsPlan" role="img" aria-label="Subscription distribution">Free, Standard, Premium.</canvas></div>
+        <div style="position:relative;height:150px;width:150px;flex-shrink:0"><canvas id="insightsPlan" role="img" aria-label="Subscription breakdown">Free, Standard, Premium.</canvas></div>
         <div style="display:flex;flex-direction:column;gap:10px" id="insightsPlanLegend"></div>
       </div>
     </div>
@@ -1578,10 +1524,9 @@ function switchLang(lang) {
     <div style="font-size:0.88rem;color:rgba(0,0,0,0.5);margin-bottom:20px">Upgrade to Premium plan to scan your prescriptions.</div>
     <button onclick="showView('pricing')" style="background:var(--charcoal);color:white;border:none;border-radius: 4px;padding:12px 28px;font-family:'DM Sans',sans-serif;cursor:pointer">View subscriptions →</button>
   </div>
-
-  <div id="ordoContent" style="display:none;max-width:700px">
+<div id="ordoContent" style="display:none;max-width:700px">
     <div style="background:white;border-radius: 4px;padding:28px;border:1px solid var(--border);margin-bottom:20px">
-      <div style="font-family:'Open Sans',serif;font-size:1.2rem;margin-bottom:16px"> Import a prescription</div>
+      <div style="font-family:'Open Sans',serif;font-size:1.2rem;margin-bottom:16px">Import a prescription</div>
       <div id="ordoDropzone" onclick="document.getElementById('ordoInput').click()" style="border:2px dashed rgba(0,0,0,0.15);border-radius: 4px;padding:40px;text-align:center;cursor:pointer;transition:border .2s">
         <div style="font-size:2.5rem;margin-bottom:12px"></div>
         <div style="font-size:0.9rem;color:rgba(0,0,0,0.5)">Click or drag a photo of your prescription</div>
@@ -1599,7 +1544,7 @@ function switchLang(lang) {
     </div>
 
     <div id="ordoResult" style="display:none;background:white;border-radius: 4px;padding:28px;border:1px solid var(--border)">
-      <div style="font-family:'Open Sans',serif;font-size:1.2rem;margin-bottom:16px"> Prescription analyzed</div>
+      <div style="font-family:'Open Sans',serif;font-size:1.2rem;margin-bottom:16px">Prescription analyzed</div>
       <div id="ordoInfos" style="margin-bottom:16px;padding:12px;background:var(--sage-pale);border-radius: 4px;font-size:0.82rem;color:rgba(0,0,0,0.6)"></div>
       <div style="font-weight:500;font-size:0.88rem;margin-bottom:12px">Detected medications:</div>
       <div id="ordoMeds" style="display:flex;flex-direction:column;gap:10px"></div>
@@ -1614,16 +1559,16 @@ function switchLang(lang) {
 </div>
 
 <div id="programsView" style="display:none;padding:32px;overflow-y:auto;background:var(--cream);width:100%">
-  <div style="font-family:'Open Sans',serif;font-size:2rem;font-weight:400;margin-bottom:6px;color:var(--charcoal)">Coaching programs </div>
-  <div style="font-size:0.85rem;color:rgba(0,0,0,0.5);margin-bottom:28px">Transform your health with intensive personalized support</div>
+  <div style="font-family:'Open Sans',serif;font-size:2rem;font-weight:400;margin-bottom:6px;color:var(--charcoal)">Coaching programs</div>
+  <div style="font-size:0.85rem;color:rgba(0,0,0,0.5);margin-bottom:28px">Transform your health with personalized intensive coaching</div>
 
   <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:24px;max-width:800px">
 
-    <!-- 30-day program -->
+    <!-- Programme 30 jours -->
     <div style="background:white;border-radius: 4px;padding:32px;border:1px solid var(--border);display:flex;flex-direction:column">
       <div style="font-size:2rem;margin-bottom:12px">️</div>
       <div style="font-family:'Open Sans',serif;font-size:1.6rem;font-weight:600;margin-bottom:8px">30-day program</div>
-      <div style="font-size:0.85rem;color:rgba(0,0,0,0.5);margin-bottom:20px;line-height:1.6">Complete nutritional fitness reset. Daily menus, adapted goals and personalized AI monitoring.</div>
+      <div style="font-size:0.85rem;color:rgba(0,0,0,0.5);margin-bottom:20px;line-height:1.6">Complete nutritional fitness overhaul. Daily menus, adapted goals and personalized AI monitoring.</div>
       <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:24px">
         <div style="font-size:0.82rem;display:flex;gap:8px;align-items:center"><span style="color:var(--sage)"></span> 30 personalized daily menus</div>
         <div style="font-size:0.82rem;display:flex;gap:8px;align-items:center"><span style="color:var(--sage)"></span> Daily AI monitoring</div>
@@ -1636,14 +1581,14 @@ function switchLang(lang) {
       </div>
     </div>
 
-    <!-- 90-day program -->
+    <!-- Programme 90 jours -->
     <div style="background:var(--charcoal);border-radius: 4px;padding:32px;border:none;display:flex;flex-direction:column;position:relative;overflow:hidden">
       <div style="position:absolute;top:16px;right:16px;background:var(--gold);color:var(--charcoal);font-size:0.7rem;font-weight:700;padding:4px 12px;border-radius: 4px;text-transform:uppercase;letter-spacing:.08em">Popular</div>
       <div style="font-size:2rem;margin-bottom:12px"></div>
       <div style="font-family:'Open Sans',serif;font-size:1.6rem;font-weight:600;margin-bottom:8px;color:white">90-day program</div>
       <div style="font-size:0.85rem;color:rgba(255,255,255,0.6);margin-bottom:20px;line-height:1.6">Complete and lasting transformation. The ultimate program to change your relationship with food.</div>
       <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:24px">
-        <div style="font-size:0.82rem;display:flex;gap:8px;align-items:center;color:white"><span style="color:#9DC4A3"></span> Everything from 30-day program</div>
+        <div style="font-size:0.82rem;display:flex;gap:8px;align-items:center;color:white"><span style="color:#9DC4A3"></span> Everything from the 30-day program</div>
         <div style="font-size:0.82rem;display:flex;gap:8px;align-items:center;color:white"><span style="color:#9DC4A3"></span> Weekly AI check-ins</div>
         <div style="font-size:0.82rem;display:flex;gap:8px;align-items:center;color:white"><span style="color:#9DC4A3"></span> Dynamic plan adjustments</div>
         <div style="font-size:0.82rem;display:flex;gap:8px;align-items:center;color:white"><span style="color:#9DC4A3"></span> Priority support access</div>
@@ -1659,25 +1604,25 @@ function switchLang(lang) {
   <!-- Success message -->
   <div id="programSuccess" style="display:none;margin-top:24px;background:#EFF7F1;border:1px solid #9DC4A3;border-radius: 4px;padding:20px;max-width:800px;text-align:center">
     <div style="font-size:1.5rem;margin-bottom:8px"></div>
-    <div style="font-family:'Open Sans',serif;font-size:1.2rem;margin-bottom:4px">Program successfully activated!</div>
-    <div style="font-size:0.85rem;color:rgba(0,0,0,0.5)">Your program starts today. Go to the AI chat to begin!</div>
+    <div style="font-family:'Open Sans',serif;font-size:1.2rem;margin-bottom:4px">Program activated successfully!</div>
+    <div style="font-size:0.85rem;color:rgba(0,0,0,0.5)">Your program starts today. Head to the AI chat to begin!</div>
   </div>
 </div>
 
 <div id="gamificationView" style="display:none;padding:32px;overflow-y:auto;background:var(--cream);width:100%">
-  <div style="font-family:'Open Sans',serif;font-size:2rem;font-weight:400;margin-bottom:6px;color:var(--charcoal)">My progress </div>
+  <div style="font-family:'Open Sans',serif;font-size:2rem;font-weight:400;margin-bottom:6px;color:var(--charcoal)">My progress</div>
   <div style="font-size:0.85rem;color:rgba(0,0,0,0.5);margin-bottom:28px">Your goals, badges and nutritional level</div>
 
-  <!-- Plan required -->
+  <!-- Plan requis -->
   <div id="gamiFree" style="display:none;background:white;border-radius: 4px;padding:40px;text-align:center;border:1px solid var(--border)">
     <div style="font-size:2rem;margin-bottom:12px">⭐</div>
-    <div style="font-family:'Open Sans',serif;font-size:1.4rem;margin-bottom:8px">Standard & Premium Feature</div>
+    <div style="font-family:'Open Sans',serif;font-size:1.4rem;margin-bottom:8px">Standard & Premium feature</div>
     <div style="font-size:0.88rem;color:rgba(0,0,0,0.5);margin-bottom:20px">Upgrade to a paid plan to access gamified progress.</div>
     <button onclick="showView('pricing')" style="background:var(--charcoal);color:white;border:none;border-radius: 4px;padding:12px 28px;font-family:'DM Sans',sans-serif;cursor:pointer">View subscriptions →</button>
   </div>
 
   <div id="gamiContent" style="display:none">
-    <!-- Level + Points -->
+    <!-- Niveau + Points -->
     <div style="background:var(--charcoal);border-radius: 4px;padding:28px;color:white;margin-bottom:20px;display:flex;align-items:center;gap:24px;flex-wrap:wrap">
       <div style="font-size:3rem" id="gamiNiveauIcon"></div>
       <div style="flex:1">
@@ -1703,9 +1648,9 @@ function switchLang(lang) {
       <div style="margin-left:auto;font-size:0.78rem;color:rgba(0,0,0,0.4)" id="gamiStreakMsg"></div>
     </div>
 
-    <!-- Weekly goals -->
+    <!-- Objectifs hebdo -->
     <div style="background:white;border-radius: 4px;padding:24px;margin-bottom:20px;border:1px solid var(--border)">
-      <div style="font-family:'Open Sans',serif;font-size:1.2rem;margin-bottom:16px">Weekly goals</div>
+      <div style="font-family:'Open Sans',serif;font-size:1.2rem;margin-bottom:16px">This week's goals</div>
       <div id="gamiObjectifs" style="display:flex;flex-direction:column;gap:12px"></div>
     </div>
 
@@ -1724,14 +1669,13 @@ function switchLang(lang) {
   <!-- Plan requis -->
   <div id="proPlanRequired" style="display:none;background:white;border-radius: 4px;padding:28px;border:1px solid #B5D4F4;text-align:center;margin-bottom:24px">
     <div style="font-size:1.4rem;margin-bottom:8px">⭐</div>
-    <div style="font-size:1rem;font-weight:600;color:#021A35;margin-bottom:8px">Standard & Premium Feature</div>
+    <div style="font-size:1rem;font-weight:600;color:#021A35;margin-bottom:8px">Standard & Premium feature</div>
     <div style="font-size:0.85rem;color:#85B7EB;margin-bottom:18px">Upgrade to a paid plan to share your data with your healthcare professionals.</div>
     <button onclick="showView('pricing')" style="background:#021A35;color:white;padding:10px 24px;border:none;border-radius: 4px;font-size:0.88rem;cursor:pointer;font-family:'DM Sans',sans-serif">View subscriptions →</button>
   </div>
-
-  <!-- Contenu pro -->
+<!-- Professional content -->
   <div id="proContent" style="display:none">
-    <!-- Ajouter un professionnel -->
+    <!-- Add a professional -->
     <div style="background:white;border-radius: 4px;padding:24px;border:1px solid #B5D4F4;margin-bottom:20px">
       <div style="font-size:0.72rem;font-weight:600;text-transform:uppercase;letter-spacing:1.5px;color:#85B7EB;margin-bottom:16px">ADD A PROFESSIONAL</div>
       <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin-bottom:14px">
@@ -1743,10 +1687,10 @@ function switchLang(lang) {
       <div id="proAddError" style="font-size:0.78rem;color:#C55;margin-top:8px;display:none"></div>
     </div>
 
-    <!-- Liste des professionnels -->
+    <!-- List of professionals -->
     <div id="proList" style="display:flex;flex-direction:column;gap:14px"></div>
 
-    <!-- Commentaires reçus -->
+    <!-- Comments received -->
     <div style="background:white;border-radius: 4px;padding:24px;border:1px solid #B5D4F4;margin-top:20px">
       <div style="font-size:0.72rem;font-weight:600;text-transform:uppercase;letter-spacing:1.5px;color:#85B7EB;margin-bottom:16px">COMMENTS FROM YOUR PROFESSIONALS</div>
       <div id="proComments"><p style="font-size:0.85rem;color:#85B7EB">No comments received yet.</p></div>
@@ -1762,6 +1706,7 @@ function switchLang(lang) {
     premium: 'price_1TM1yPGujzZFPXDMoFPHynma'
 };
 
+  // Restaurer session après changement de langue
   (function restoreSession() {
     const token = sessionStorage.getItem('transfer_token');
     if (!token) return;
@@ -1870,7 +1815,7 @@ function switchLang(lang) {
     const email = document.getElementById('registerEmail').value.trim();
     const password = document.getElementById('registerPassword').value;
     if (!name || !email || !password) return showAuthError('Please fill in all fields');
-    if (password.length < 6) return showAuthError('Password must be at least 6 characters long');
+    if (password.length < 6) return showAuthError('Password must be at least 6 characters');
 
     try {
       const res = await fetch(`${BACKEND_URL}/api/auth/register`, {
@@ -1878,7 +1823,7 @@ function switchLang(lang) {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password, full_name: name })
       });
-      const data = await res.json();
+const data = await res.json();
       if (!res.ok) return showAuthError(data.error || 'Registration error');
       showAuthSuccess('Account created! You can now log in.');
       switchTabByName('login');
@@ -1941,7 +1886,7 @@ function toggleMobileMenu() {
       document.getElementById('dashPatho').textContent = profile.pathologies?.length || 0;
 
       const since = new Date(currentUser?.created_at || Date.now());
-      document.getElementById('dashSince').textContent = since.toLocaleDateString('fr-FR', { month: 'short', year: 'numeric' });
+      document.getElementById('dashSince').textContent = since.toLocaleDateString('en-US', { month: 'short', year: 'numeric' });
 
       // Fill profile form
       document.getElementById('profileName').value = profile.full_name || '';
@@ -2028,7 +1973,7 @@ function toggleMobileMenu() {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${authToken}` }
       });
-      const data = await res.json();
+const data = await res.json();
       document.getElementById('rapportLoading').style.display = 'none';
       document.getElementById('rapportBtn').disabled = false;
       if (!res.ok) { alert(data.error); return; }
@@ -2048,7 +1993,7 @@ function toggleMobileMenu() {
     w.document.write(`<!DOCTYPE html><html><head><title>HR Report — ${entreprise}</title>
     <style>body{font-family:Georgia,serif;max-width:800px;margin:40px auto;padding:40px;color:#021A35}.header{border-bottom:2px solid #021A35;padding-bottom:20px;margin-bottom:28px;display:flex;justify-content:space-between}.logo{font-size:1.2rem;font-weight:600}.report{font-size:0.95rem;line-height:1.8;white-space:pre-wrap}.disclaimer{margin-top:40px;padding:16px;background:#FDF6E8;font-size:0.78rem;color:rgba(2,26,53,0.6)}@media print{body{margin:20px}}</style>
     </head><body>
-    <div class="header"><div><div class="logo">● Leonarda Enterprise</div><div style="font-size:0.78rem;color:rgba(2,26,53,0.4)">Monthly HR Report · Anonymized Data</div></div><div style="text-align:right;font-size:0.78rem;color:rgba(2,26,53,0.4)">${entreprise}<br>${new Date().toLocaleDateString('fr-FR',{month:'long',year:'numeric'})}</div></div>
+    <div class="header"><div><div class="logo">● Leonarda Entreprise</div><div style="font-size:0.78rem;color:rgba(2,26,53,0.4)">Monthly HR Report · Anonymized Data</div></div><div style="text-align:right;font-size:0.78rem;color:rgba(2,26,53,0.4)">${entreprise}<br>${new Date().toLocaleDateString('en-US',{month:'long',year:'numeric'})}</div></div>
     <div class="report">${rapport}</div>
     <div class="disclaimer">️ 100% anonymized data. No individual information is present in this report. GDPR compliance guaranteed.</div>
     </body></html>`);
@@ -2126,7 +2071,6 @@ function toggleMobileMenu() {
         body: JSON.stringify({ nom, nb_licences })
       });
       const data = await res.json();
-
       if (!res.ok) {
         document.getElementById('entCreateError').style.display = 'block';
         document.getElementById('entCreateError').textContent = data.error;
@@ -2152,7 +2096,7 @@ function toggleMobileMenu() {
       document.getElementById('entProgressPct').textContent = pct + '%';
       setTimeout(() => document.getElementById('entProgressBar').style.width = pct + '%', 100);
 
-      // Milestones
+      // Tiers
       const palierEls = ['palier1', 'palier2', 'palier3'];
       const seuils = [40, 70, 100];
       palierEls.forEach((id, i) => {
@@ -2173,13 +2117,13 @@ function toggleMobileMenu() {
           <div style="font-size:0.7rem;color:#C9A84C;font-weight:600">+${c.points}pts</div>
         </div>`).join('');
 
-      // Next milestone
+      // Next tier
       if (data.prochain_palier) {
         const next = data.prochain_palier;
         const pts_needed = Math.round((next.seuil - pct) * data.max_points / 100);
         document.getElementById('entNextPalier').style.display = 'block';
-        document.getElementById('entNextPalierText').textContent = `${next.icon} Only ${next.seuil - pct}% left to unlock the ${next.label} milestone — ${next.desc}!`;
-      }
+        document.getElementById('entNextPalierText').textContent = `${next.icon} Only ${next.seuil - pct}% left to unlock the ${next.label} tier — ${next.desc}!`;
+}
 
     } catch(e) { console.error('Progress error:', e); }
   }
@@ -2198,7 +2142,7 @@ function toggleMobileMenu() {
         { label: 'Active employees', val: s.total_membres, trend: `+${s.new_this_month} this month` },
         { label: 'Engagement rate', val: s.engagement + '%', trend: `${s.actifs} active` },
         { label: 'Average streak', val: s.avg_streak + ' days', trend: 'consecutive' },
-        { label: 'AI messages', val: s.total_messages.toLocaleString('en-US'), trend: 'total consultations' },
+        { label: 'AI messages', val: s.total_messages.toLocaleString('fr-FR'), trend: 'total consultations' },
       ].map(st => `
         <div style="background:#F0F6FF;border-radius:4px;padding:16px;border:1px solid #B5D4F4">
           <div style="font-size:0.68rem;color:#85B7EB;text-transform:uppercase;letter-spacing:.08em;font-weight:600;margin-bottom:6px">${st.label}</div>
@@ -2212,7 +2156,7 @@ function toggleMobileMenu() {
         document.getElementById('adminInsightText').textContent = data.ai_insight;
       }
 
-      // Conditions
+      // Pathologies
       const colors = ['#021A35','#185FA5','#C9A84C','#378ADD','#0C447C'];
       document.getElementById('adminPathos').innerHTML = (data.top_pathologies || []).map((p, i) => `
         <div style="display:flex;align-items:center;gap:8px;margin-bottom:9px">
@@ -2226,7 +2170,7 @@ function toggleMobileMenu() {
       // Average health
       const h = data.health_averages;
       document.getElementById('adminHealth').innerHTML = [
-        { icon: '', label: 'Average blood sugar', val: h.glycemie ? h.glycemie + ' mmol/L' : '—' },
+        { icon: '', label: 'Average glycemia', val: h.glycemie ? h.glycemie + ' mmol/L' : '—' },
         { icon: '', label: 'Average energy', val: h.energie ? h.energie + '/10' : '—' },
         { icon: '', label: 'Average sleep', val: h.sommeil ? h.sommeil + 'h' : '—' },
       ].map(it => `
@@ -2282,7 +2226,7 @@ function toggleMobileMenu() {
 
         if (!res.ok || !data.valide) {
           document.getElementById('bioError').style.display = 'block';
-          document.getElementById('bioError').textContent = data.message || data.error || 'Document not recognized as blood test results.';
+          document.getElementById('bioError').textContent = data.message || data.error || 'Document not recognized as blood test.';
           return;
         }
 
@@ -2293,14 +2237,14 @@ function toggleMobileMenu() {
         document.getElementById('bioPositifs').innerHTML = (data.points_positifs || []).map(p =>
           `<div style="font-size:0.82rem;color:#3B6D11;display:flex;gap:6px"><span></span>${p}</div>`).join('');
 
-        // Points of concern
+        // Points of attention
         document.getElementById('bioAttention').innerHTML = (data.points_attention || []).map(p =>
           `<div style="font-size:0.82rem;color:#854F0B;display:flex;gap:6px"><span></span>${p}</div>`).join('');
 
         // Markers
         const urgenceColors = { normal: '#EAF3DE', attention: '#FDF6E8', urgent: '#FEE' };
         const urgenceBorders = { normal: '#C0DD97', attention: '#FAC775', urgent: '#FCC' };
-        const urgenceLabels = { normal: ' Normal', attention: ' Watch', urgent: ' Urgent' };
+        const urgenceLabels = { normal: ' Normal', attention: ' To monitor', urgent: ' Urgent' };
         const urgenceTextColors = { normal: '#3B6D11', attention: '#854F0B', urgent: '#C55' };
 
         document.getElementById('bioMarqueurs').innerHTML = (data.marqueurs || []).map(m => {
@@ -2315,12 +2259,12 @@ function toggleMobileMenu() {
                 <div style="font-family:'DM Mono',monospace;font-size:0.88rem;font-weight:700;color:${statusColor}">${m.valeur} ${m.unite}</div>
               </div>
               <div style="display:flex;align-items:center;gap:8px">
-                <div style="font-size:0.72rem;color:rgba(2,26,53,0.4)">Range: ${m.norme_min}–${m.norme_max} ${m.unite}</div>
+                <div style="font-size:0.72rem;color:rgba(2,26,53,0.4)">Normal: ${m.norme_min}–${m.norme_max} ${m.unite}</div>
                 <div style="font-size:0.72rem;font-weight:600;padding:3px 10px;border-radius:4px;background:${urgenceColors[u]};color:${urgenceTextColors[u]};border:1px solid ${urgenceBorders[u]}">${urgenceLabels[u]}</div>
               </div>
             </div>
             <div style="background:#F0F6FF;border-radius:4px;padding:12px;margin-bottom:10px">
-              <div style="font-size:0.72rem;text-transform:uppercase;letter-spacing:.06em;color:#85B7EB;font-weight:600;margin-bottom:4px">What this means</div>
+              <div style="font-size:0.72rem;text-transform:uppercase;letter-spacing:.06em;color:#85B7EB;font-weight:600;margin-bottom:4px">What it means</div>
               <div style="font-size:0.82rem;color:rgba(2,26,53,0.7);line-height:1.5">${m.explication_simple}</div>
             </div>
             <div style="font-size:0.82rem;color:rgba(2,26,53,0.65);line-height:1.5;margin-bottom:8px">${m.impact_sante}</div>
@@ -2329,7 +2273,7 @@ function toggleMobileMenu() {
         }).join('');
 
         // Recommendations
-        document.getElementById('bioReco').innerHTML = (data.recommandations_nutritionnelles || []).map((r, i) =>
+document.getElementById('bioReco').innerHTML = (data.recommandations_nutritionnelles || []).map((r, i) =>
           `<div style="display:flex;gap:10px;align-items:flex-start">
             <div style="background:#021A35;color:#C9A84C;border-radius:50%;width:22px;height:22px;display:flex;align-items:center;justify-content:center;font-size:0.72rem;font-weight:700;flex-shrink:0">${i+1}</div>
             <div style="font-size:0.82rem;color:rgba(2,26,53,0.7);line-height:1.5;padding-top:2px">${r}</div>
@@ -2401,9 +2345,9 @@ function toggleMobileMenu() {
       document.getElementById('ppId').textContent = 'Ref. ' + m.id;
 
       document.getElementById('ppStats').innerHTML = [
-        { label: 'Tracking entries', val: m.health_entries || '0', sub: 'Last 30 days' },
+        { label: 'Tracked entries', val: m.health_entries || '0', sub: 'Last 30 days' },
         { label: 'Avg. glucose', val: m.avg_glycemie ? m.avg_glycemie + ' mmol/L' : '—', sub: 'Monthly average' },
-        { label: 'Avg. weight', val: m.avg_poids ? m.avg_poids + ' kg' : '—', sub: 'Monthly average' },
+        { label: 'Average weight', val: m.avg_poids ? m.avg_poids + ' kg' : '—', sub: 'Monthly average' },
         { label: 'Avg. energy', val: m.avg_energie ? m.avg_energie + '/10' : '—', sub: 'Monthly average' },
       ].map(s => `
         <div style="background:#F0F6FF;border-radius:4px;padding:16px;border:1px solid #B5D4F4">
@@ -2479,14 +2423,14 @@ function toggleMobileMenu() {
       } catch(e) { console.error('Oracle API error:', e); }
     } else {
       applyOracleData(oracleData, name);
-    }
+}
     oSimU();
     oracleTab('scanner', document.querySelector('#oracleTabs div'));
   }
 
   function applyOracleData(d, name) {
     document.getElementById('oraclePatientHeader').textContent =
-      name.toUpperCase() + ' · VITALITY: ' + d.score_vitalite + '/100 · RECOV: ' + d.recuperabilite + '% · TELOMERES: ' + d.longueur_telomeres + 'kb';
+      name.toUpperCase() + ' · VITALITY: ' + d.score_vitalite + '/100 · RECOVERY: ' + d.recuperabilite + '% · TELOMERES: ' + d.longueur_telomeres + 'kb';
     const arc = document.getElementById('oScoreArc');
     if (arc) arc.setAttribute('stroke-dashoffset', (126 - d.score_vitalite / 100 * 126).toFixed(1));
     const st = document.getElementById('oScoreText');
@@ -2527,12 +2471,12 @@ function toggleMobileMenu() {
     if (tab === 'timeline') oBuildTL();
   }
 
-function oSelOrgan(k) {
+  function oSelOrgan(k) {
     const OD = {
-      cerveau:{l:'BRAIN',c:'#7F77DD',d:'DHA and magnesium deficit. Nocturnal cortisol disrupting prefrontal cortex.',p:'Score 74 (+6). Cognitive decline -35%. Memory +22%.',a:['DHA 1g/day + Mg 400mg','Meditation 10min/day','Regular 8h sleep']},
+      cerveau:{l:'BRAIN',c:'#7F77DD',d:'DHA and magnesium deficit. Nocturnal cortisol disrupting prefrontal cortex.',p:'Score 74 (+6). Cognitive decline -35%. Memory +22%.',a:['DHA 1g/day + Mg 400mg','Meditation 10min/day','Sleep 8h regular']},
       coeur:{l:'CARDIO',c:'#E24B4A',d:'BP 132/84 mmHg. CRP 2.8 mg/L — vascular inflammation.',p:'Score 78 (+7). BP normalized in 3 months. Risk -28%.',a:['DASH — salt<5g/day','Cardio 30min 5x/week','CoQ10 200mg']},
-      poumons:{l:'LUNGS',c:'#378ADD',d:'Theoretical capacity 94%. O2 saturation 98%.',p:'Score 86 (+4). Capacity +8% with exercise.',a:['Hydration 2L/day','Aerobic 3x/week','Vit D 2000 IU']},
-      foie:{l:'LIVER — ALERT',c:'#BA7517',d:'Blood sugar 6.1 mmol/L pre-diabetic. TG 1.8g/L.',p:'Score 76 (+11). Blood sugar normalized 3 months. T2D -60%.',a:['Low GI<55','Fasting 16:8','Berberine 500mg']},
+      poumons:{l:'LUNGS',c:'#378ADD',d:'Capacity 94% theoretical. O2 saturation 98%.',p:'Score 86 (+4). Capacity +8% with exercise.',a:['Hydration 2L/day','Aerobic 3x/week','Vit D 2000 IU']},
+      foie:{l:'LIVER — ALERT',c:'#BA7517',d:'Glucose 6.1 mmol/L pre-diabetic. TG 1.8g/L.',p:'Score 76 (+11). Glucose normalized 3 months. DT2 -60%.',a:['Low GI<55','Fasting 16:8','Berberine 500mg']},
       intestins:{l:'MICROBIOME',c:'#1D9E75',d:'Reduced diversity. Fiber 18g/day. Suspected permeability.',p:'Score 72 (+13). Diversity +45% in 3 months.',a:['30g fiber/day','Probiotics L.rhamnosus','Permeability test']}
     };
     const o = OD[k];
@@ -2571,9 +2515,9 @@ function oSelOrgan(k) {
     const bars = [{l:'Energy',v:sc.energy,c:'#C9A84C'},{l:'Cardio',v:sc.cardio,c:'#E24B4A'},{l:'Liver',v:sc.foie,c:'#BA7517'},{l:'Microbiome',v:sc.microb,c:'#1D9E75'},{l:'Well-being',v:sc.stress,c:'#7F77DD'}];
     const sb = document.getElementById('oSimBars'); if(sb) sb.innerHTML=bars.map(b=>`<div style="margin-bottom:4px"><div style="display:flex;justify-content:space-between;margin-bottom:2px"><span style="font-size:9px;color:#6a9ab8">${b.l}</span><span style="font-size:9px;color:${b.c};font-family:monospace">${b.v}</span></div><div style="height:4px;background:#1a3050;border-radius:2px;overflow:hidden"><div style="height:100%;border-radius:2px;background:${b.c};width:${b.v}%;transition:width .6s ease"></div></div></div>`).join('');
     const imp = [];
-    if(sl<6) imp.push({o:'Brain',t:'Sleep deficit — elevated cortisol',c:'#E24B4A'});
+    if(sl<6) imp.push({o:'Brain',t:'Sleep deprivation — elevated cortisol',c:'#E24B4A'});
     if(st>7) imp.push({o:'Cardio',t:'High stress — increased BP',c:'#E24B4A'});
-    if(su>60) imp.push({o:'Liver',t:'High sugar — unstable blood sugar',c:'#BA7517'});
+    if(su>60) imp.push({o:'Liver',t:'High sugar — unstable glucose',c:'#BA7517'});
     if(al>7) imp.push({o:'Liver',t:'Alcohol — Coumadin interaction',c:'#E24B4A'});
     if(sp>40) imp.push({o:'System',t:'Good activity — protected telomeres',c:'#1D9E75'});
     if(ea>=2) imp.push({o:'Microbiome',t:'Good hydration — optimal transit',c:'#1D9E75'});
@@ -2590,12 +2534,12 @@ function oSelOrgan(k) {
   function oBuildTL() {
     const ev=[
       {t:'Now',y:'2026',c:'#BA7517',ti:'Pre-diabetic zone detected',d:'HbA1c 5.8% — urgent nutritional intervention. Score: 72/100'},
-      {t:'+3 months',y:'2026',c:'#C9A84C',ti:'Blood sugar normalization',d:'Fasting 16:8 + low GI: blood sugar at 5.4. Liver score: 72'},
-      {t:'+6 months',y:'2026',c:'#C9A84C',ti:'Biological age reversal',d:'Score 78/100. Bio age: 39.5 years. CRP: 1.8 mg/L'},
-      {t:'+1 year',y:'2027',c:'#1D9E75',ti:'Microbiome regenerated',d:'Diversity +45%. Score 83/100. Energy: 8.2/10'},
+      {t:'+3 months',y:'2026',c:'#C9A84C',ti:'Glucose normalization',d:'16:8 fasting + low GI: glucose at 5.4. Liver score: 72'},
+      {t:'+6 months',y:'2026',c:'#C9A84C',ti:'Biological age reverses',d:'Score 78/100. Bio age: 39.5 years. CRP: 1.8 mg/L'},
+      {t:'+1 year',y:'2027',c:'#1D9E75',ti:'Regenerated microbiome',d:'Diversity +45%. Score 83/100. Energy: 8.2/10'},
       {t:'+2 years',y:'2028',c:'#1D9E75',ti:'Biological age = real age',d:'Score 88/100. Bio age: 40 years. Telomeres: 6.6 kb'},
-      {t:'+5 years',y:'2031',c:'#1D9E75',ti:'Reversed aging',d:'Score 94/100. Bio age: 39 for real 43. +4 years.'},
-      {t:'+10 years',y:'2036',c:'#1D9E75',ti:'Premium longevity',d:'Score 97/100. Bio age: 38 for real 48. +7.8 years of healthy life.'},
+      {t:'+5 years',y:'2031',c:'#1D9E75',ti:'Reversed aging',d:'Score 94/100. Bio age: 39 years for real 43. +4 years.'},
+      {t:'+10 years',y:'2036',c:'#1D9E75',ti:'Premium longevity',d:'Score 97/100. Bio age: 38 for real 48. +7.8 years healthy life.'},
     ];
     const tl=document.getElementById('oTlItems');
     if(tl) tl.innerHTML=ev.map((e,i)=>`<div style="display:flex;gap:12px;padding:10px 0;${i<ev.length-1?'border-bottom:1px solid #1e3050':''}"><div style="min-width:58px;text-align:center"><div style="font-size:10px;color:${e.c};font-weight:600;font-family:monospace">${e.t}</div><div style="font-size:8px;color:#2a4a60;font-family:monospace">${e.y}</div></div><div style="display:flex;flex-direction:column;align-items:center"><div style="width:10px;height:10px;border-radius:50%;background:${e.c};box-shadow:0 0 8px ${e.c}80;flex-shrink:0"></div>${i<ev.length-1?'<div style="width:1px;flex:1;background:#1e3050;min-height:16px;margin-top:2px"></div>':''}</div><div><div style="font-size:11px;font-weight:600;color:#a8c8e0;margin-bottom:3px">${e.ti}</div><div style="font-size:10px;color:#6a9ab8;line-height:1.5">${e.d}</div></div></div>`).join('');
@@ -2628,8 +2572,7 @@ function oSelOrgan(k) {
         headers: { 'Authorization': 'Bearer ' + authToken }
       });
       const data = await res.json();
-
-      // Stats
+// Stats
       const icons = { health_entries:'📊', chat_messages:'💬', menus_generated:'📅', analyses:'📸', oracle_sessions:'🔮' };
       const labels = { health_entries:'Health tracking', chat_messages:'AI advice', menus_generated:'Generated menus', analyses:'Meal analyses', oracle_sessions:'Oracle sessions' };
       document.getElementById('historyStats').innerHTML = Object.entries(data.stats||{}).map(([k,v]) => `
@@ -2656,14 +2599,14 @@ function oSelOrgan(k) {
       };
 
       if (!data.events || !data.events.length) {
-        document.getElementById('historyTimeline').innerHTML = '<div style="text-align:center;color:#85B7EB;padding:40px">No recorded activity at the moment.</div>';
+        document.getElementById('historyTimeline').innerHTML = '<div style="text-align:center;color:#85B7EB;padding:40px">No activity recorded at the moment.</div>';
         return;
       }
 
       document.getElementById('historyTimeline').innerHTML = data.events.map((e, i) => {
         const color = typeColors[e.type] || '#85B7EB';
         const icon = typeIcons[e.type] || '<circle cx="12" cy="12" r="10"/>';
-        const date = new Date(e.date).toLocaleDateString('en-US', { day:'numeric', month:'short', year:'numeric', hour:'2-digit', minute:'2-digit' });
+        const date = new Date(e.date).toLocaleDateString('en-GB', { day:'numeric', month:'short', year:'numeric', hour:'2-digit', minute:'2-digit' });
         return `<div style="display:flex;gap:14px;padding:14px 0;${i < data.events.length-1 ? 'border-bottom:1px solid #f0f4f8' : ''}">
           <div style="display:flex;flex-direction:column;align-items:center;gap:0">
             <div style="width:36px;height:36px;border-radius:50%;background:${color}18;border:1.5px solid ${color}40;display:flex;align-items:center;justify-content:center;flex-shrink:0">
@@ -2688,7 +2631,7 @@ function oSelOrgan(k) {
     const profile = JSON.parse(localStorage.getItem('nutricare_profile') || '{}');
     const name = profile.full_name || 'Patient';
     const d = oracleData;
-    const date = new Date().toLocaleDateString('en-US', {day:'2-digit',month:'long',year:'numeric'});
+    const date = new Date().toLocaleDateString('en-GB', {day:'2-digit',month:'long',year:'numeric'});
 
     const organs = {
       cerveau:{l:'Brain & Cognitive',c:'#7F77DD'},
@@ -2727,13 +2670,6 @@ function oSelOrgan(k) {
 <meta charset="UTF-8">
 <title>Health Oracle Report — ${name}</title>
 <style>
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>NutriCare Premium - Health Oracle</title>
-  <style>
   * { box-sizing: border-box; }
   body { font-family: 'Segoe UI', Arial, sans-serif; color: #222; margin: 0; padding: 0; }
   .page { max-width: 800px; margin: 0 auto; padding: 40px; }
@@ -2780,13 +2716,13 @@ function oSelOrgan(k) {
   <div class="patient-banner">
     <div>
       <div class="patient-name">${name}</div>
-      <div class="patient-meta">Real age: ${d?.age_reel||'--'} years · Conditions: ${(profile.pathologies||[]).join(', ')||'Not specified'}</div>
+      <div class="patient-meta">Real age: ${d?.age_reel||'--'} years · Pathologies: ${(profile.pathologies||[]).join(', ')||'Not specified'}</div>
       <div class="patient-meta">Medications: ${(profile.medications||[]).join(', ')||'None'}</div>
     </div>
     <div>
       <div class="score-big">${d?.score_vitalite||72}/100</div>
       <div class="score-label">Oracle Vitality Index</div>
-    </div>
+</div>
   </div>
 
   <div class="section">
@@ -2811,7 +2747,7 @@ function oSelOrgan(k) {
 
   ${medHtml ? `<div class="section"><div class="section-title">Drug interactions</div>${medHtml}</div>` : ''}
 
-  ${d?.oracle_prediction ? `<div class="section"><div class="section-title">Oracle AI Prediction</div><div style="background:#f8f9fa;border-left:4px solid #C9A84C;padding:16px 20px;border-radius:0 8px 8px 0;font-size:13px;color:#333;line-height:1.7">${d.oracle_prediction}</div></div>` : ''}
+  ${d?.oracle_prediction ? `<div class="section"><div class="section-title">AI Oracle Prediction</div><div style="background:#f8f9fa;border-left:4px solid #C9A84C;padding:16px 20px;border-radius:0 8px 8px 0;font-size:13px;color:#333;line-height:1.7">${d.oracle_prediction}</div></div>` : ''}
 
   <div class="footer">
     <div>This report was generated by Leonarda artificial intelligence · Leonarda.ai</div>
@@ -2834,10 +2770,10 @@ function oSelOrgan(k) {
       const res = await fetch(BACKEND_URL + '/api/chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + authToken },
-        body: JSON.stringify({ message: 'Generate a complete Health Oracle analysis for this profile: conditions: ' + (profile.pathologies||[]).join(', ') + ', medications: ' + (profile.medications||[]).join(', ') + '. Give a vitality score 0-100, an estimated biological age, the 3 main alerts, and the 3 priority actions. Be concise and medical.' })
+        body: JSON.stringify({ message: 'Generate a complete Health Oracle analysis for this profile: pathologies: ' + (profile.pathologies||[]).join(', ') + ', medications: ' + (profile.medications||[]).join(', ') + '. Give a vitality score 0-100, an estimated biological age, the 3 main alerts, and the 3 priority actions. Be concise and medical.' })
       });
       const data = await res.json();
-      alert('Oracle AI : ' + (data.response || data.message || 'Analysis generated'));
+      alert('AI Oracle : ' + (data.response || data.message || 'Analysis generated'));
     } catch(e) { console.error(e); }
   }
 
@@ -2862,9 +2798,9 @@ function oSelOrgan(k) {
     document.getElementById('simLoading').style.display = 'block';
 
     const loadingMsgs = [
-      ['Analyzing your profile...', 'Conditions and medications taken into account'],
+      ['Analyzing your profile...', 'Pathologies and medications taken into account'],
       ['Physiological modeling...', 'Calculating impacts on your biological systems'],
-      ['Time projection...', 'Simulation hour by hour, day by day'],
+      ['Temporal projection...', 'Hour by hour, day by day simulation'],
       ['Interaction analysis...', 'Checking drug interactions'],
       ['Generating recommendations...', 'Personalized advice according to your profile'],
       ['Finalizing...', 'Your simulation is almost ready'],
@@ -2931,13 +2867,12 @@ function oSelOrgan(k) {
         <div style="font-size:0.78rem;color:rgba(2,26,53,0.65);line-height:1.5;padding-top:2px">${t.texte}</div>
       </div>`).join('');
 
-    // Impact pathologies
+    // Pathology impact
     const pathoEl = document.getElementById('simPatho');
     if (pathoEl && data.impact_pathologies) {
-
       pathoEl.style.display = 'block';
       document.getElementById('simPathoText').textContent = data.impact_pathologies;
-    }
+}
 
     // Drug interactions
     const medEl = document.getElementById('simMed');
@@ -2975,7 +2910,7 @@ function oSelOrgan(k) {
       metrics: [
         {icon:'',label:'Energy',avant:65,apres:50,tendance:'down'},
         {icon:'',label:'Concentration',avant:70,apres:55,tendance:'down'},
-        {icon:'🫀',label:'Cardio health',avant:60,apres:55,tendance:'down'},
+        {icon:'🫀',label:'Cardiac health',avant:60,apres:55,tendance:'down'},
         {icon:'',label:'Well-being',avant:65,apres:50,tendance:'down'},
       ],
       timeline: [
@@ -3087,7 +3022,7 @@ function oSelOrgan(k) {
     const file = input.files[0];
     if (!file) return;
     const reader = new FileReader();
-    reader.onload = async (e) => {
+reader.onload = async (e) => {
       const base64 = e.target.result.split(',')[1];
       const mediaType = file.type;
       document.getElementById('ordoPreview').style.display = 'block';
@@ -3135,7 +3070,6 @@ function oSelOrgan(k) {
   async function loadPrediction() {
     try {
       const res = await fetch(`${BACKEND_URL}/api/prediction/risque`, {
-
         headers: { 'Authorization': `Bearer ${authToken}` }
       });
       if (!res.ok) return;
@@ -3148,13 +3082,13 @@ function oSelOrgan(k) {
       banner.style.background = c.bg;
       banner.style.borderLeftColor = c.border;
       document.getElementById('predTitle').style.color = c.title;
-      document.getElementById('predTitle').textContent = data.niveau === 'eleve' ? 'Dropout risk detected' : 'Pay attention to your tracking';
+      document.getElementById('predTitle').textContent = data.niveau === 'eleve' ? 'Dropout risk detected' : 'Pay attention to your follow-up';
       document.getElementById('predIcon').textContent = icons[data.niveau] || '';
       document.getElementById('predMessage').textContent = data.message || 'We have detected signs of dropout. Get back to your program!';
       const signauxEl = document.getElementById('predSignaux');
       signauxEl.innerHTML = (data.signaux || []).map(s => `<span style="background:rgba(0,0,0,0.06);border-radius: 4px;padding:3px 10px;font-size:0.75rem;color:rgba(0,0,0,0.5)">${s}</span>`).join('');
       banner.style.display = 'block';
-    } catch(e) { console.error('Prediction error:', e); }
+    } catch(e) { console.error('Erreur prediction:', e); }
   }
 
   async function loadGamification() {
@@ -3171,7 +3105,7 @@ function oSelOrgan(k) {
       document.getElementById('gamiFree').style.display = 'none';
       document.getElementById('gamiContent').style.display = 'block';
 
-      // Level
+      // Niveau
       document.getElementById('gamiNiveauIcon').textContent = data.niveau?.icon || '';
       document.getElementById('gamiNiveauNom').textContent = data.niveau?.nom || 'Beginner';
       document.getElementById('gamiPoints').textContent = `${data.points || 0} points`;
@@ -3189,7 +3123,7 @@ function oSelOrgan(k) {
       document.getElementById('gamiStreak').textContent = streak;
       document.getElementById('gamiStreakMsg').textContent = streak >= 7 ? ' Impressive!' : streak >= 3 ? 'Keep going!' : 'Log in every day!';
 
-      // Goals
+      // Objectifs
       const objContainer = document.getElementById('gamiObjectifs');
       objContainer.innerHTML = (data.objectifs || []).map(o => {
         const pct = Math.min(100, (o.actuel / o.cible) * 100);
@@ -3221,7 +3155,7 @@ function oSelOrgan(k) {
       }).join('');
 
     } catch(e) {
-      console.error('Gamification error:', e);
+      console.error('Erreur gamification:', e);
     }
   }
 
@@ -3238,7 +3172,7 @@ function oSelOrgan(k) {
       if (alertes.length === 0) return;
 
       const icons = { danger: '', attention: '', info: 'ℹ️' };
-      const container = document.getElementById('alertesContainer');
+const container = document.getElementById('alertesContainer');
       container.innerHTML = alertes.map(a => `
         <div class="alerte-card ${a.niveau}">
           <div class="alerte-icon">${icons[a.niveau] || ''}</div>
@@ -3251,13 +3185,13 @@ function oSelOrgan(k) {
 
       // Alert in chat
       addAlertesToChat(alertes);
-    } catch(e) { console.error('Alerts error:', e); }
+    } catch(e) { console.error('Alert error:', e); }
   }
 
   function addAlertesToChat(alertes) {
     const dangers = alertes.filter(a => a.niveau === 'danger');
     if (dangers.length === 0) return;
-    const msg = ` **Interactions alert detected**\n\n` +
+    const msg = ` **Interaction alerts detected**\n\n` +
       dangers.map(a => `• **${a.medicament} × ${a.aliment}** : ${a.message}\n   ${a.conseil}`).join('\n\n');
     addMessage('ai', msg);
   }
@@ -3267,7 +3201,7 @@ function oSelOrgan(k) {
     const btns = { free: 'freePlanBtn', standard: 'standardPlanBtn', premium: 'premiumPlanBtn' };
     plans.forEach(p => {
       const btn = document.getElementById(btns[p]);
-      if (btn) btn.textContent = p === plan ? ' Current plan' : (p === 'free' ? 'Choose Free' : `Choose ${p.charAt(0).toUpperCase() + p.slice(1)}`);
+      if (btn) btn.textContent = p === plan ? ' Current Plan' : (p === 'free' ? 'Choose Free' : `Choose ${p.charAt(0).toUpperCase() + p.slice(1)}`);
     });
   }
 
@@ -3336,7 +3270,7 @@ async function previewAndAnalyze(event) {
   reader.onload = async (e) => {
     const base64 = e.target.result.split(',')[1];
     const mediaType = file.type;
-document.getElementById('analysisPreview').src = e.target.result;
+    document.getElementById('analysisPreview').src = e.target.result;
     document.getElementById('analysisPreview').style.display = 'block';
     document.getElementById('analysisLoading').style.display = 'block';
     document.getElementById('analysisResult').style.display = 'none';
@@ -3365,7 +3299,7 @@ function renderAnalysis(a) {
   const m = a.macronutriments || {};
   document.getElementById('analysisMacros').innerHTML = `
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
-      ${[['Proteins', m.proteines_g, 'g'], ['Carbohydrates', m.glucides_g, 'g'], ['Fats', m.lipides_g, 'g'], ['Fiber', m.fibres_g, 'g']].map(([label, val, unit]) => `
+      ${[['Proteins', m.proteines_g, 'g'], ['Carbs', m.glucides_g, 'g'], ['Fats', m.lipides_g, 'g'], ['Fiber', m.fibres_g, 'g']].map(([label, val, unit]) => `
       <div style="background:#F0F6FF;border-radius: 4px;padding:10px;text-align:center">
         <div style="font-family:'DM Mono',monospace;font-size:1.1rem;font-weight:700;color:#021A35">${val || 0}${unit}</div>
         <div style="font-size:0.7rem;color:#85B7EB">${label}</div>
@@ -3388,12 +3322,12 @@ async function loadAnalysisHistory() {
     });
     const history = await res.json();
     const el = document.getElementById('analysisHistory');
-    if (!history.length) { el.innerHTML = '<p style="font-size:0.85rem;color:#85B7EB">No analysis performed.</p>'; return; }
+if (!history.length) { el.innerHTML = '<p style="font-size:0.85rem;color:#85B7EB">No analysis performed.</p>'; return; }
     el.innerHTML = history.map(h => `
       <div style="padding:10px 0;border-bottom:1px solid #E6F1FB;display:flex;justify-content:space-between;align-items:center">
         <div>
           <div style="font-size:0.85rem;font-weight:600;color:#021A35">${h.analysis_data?.repas_identifie || 'Meal'}</div>
-          <div style="font-size:0.75rem;color:#85B7EB">${new Date(h.analyzed_at).toLocaleDateString('en-US', { day:'numeric', month:'short', hour:'2-digit', minute:'2-digit' })}</div>
+          <div style="font-size:0.75rem;color:#85B7EB">${new Date(h.analyzed_at).toLocaleDateString('fr-FR', { day:'numeric', month:'short', hour:'2-digit', minute:'2-digit' })}</div>
         </div>
         <div style="display:flex;gap:12px;font-size:0.82rem">
           <span style="color:#C9A84C">⭐ ${h.analysis_data?.score_sante}/10</span>
@@ -3421,7 +3355,7 @@ async function loadAnalysisHistory() {
 async function generateMenu() {
   const btn = document.getElementById('generateMenuBtn');
   btn.disabled = true;
-  btn.textContent = '⏳ Generating...';
+  btn.textContent = '⏳ Generation in progress...';
   document.getElementById('menusLoading').style.display = 'block';
   document.getElementById('menusDays').innerHTML = '';
   document.getElementById('menusShoppingList').style.display = 'none';
@@ -3433,7 +3367,7 @@ async function generateMenu() {
     });
     const menu = await res.json();
     if (res.ok) renderMenu(menu);
-    else alert(menu.error || 'Generation error');
+    else alert(menu.error || 'Error during generation');
   } catch(e) {
     alert('Connection error');
   } finally {
@@ -3466,7 +3400,7 @@ function renderMenu(menu) {
 
   if (menu.liste_courses) {
     document.getElementById('menusShoppingList').style.display = 'block';
-    const categories = { fruits_legumes: ' Fruits & Vegetables', proteines: ' Proteins', feculents: ' Starches', produits_laitiers: ' Dairy products', epicerie: ' Groceries', autres: ' Others' };
+    const categories = { fruits_legumes: ' Fruits & Vegetables', proteines: ' Proteins', feculents: ' Starches', produits_laitiers: ' Dairy products', epicerie: ' Grocery', autres: ' Others' };
     document.getElementById('shoppingListContent').innerHTML = Object.entries(categories).map(([key, label]) => {
       const items = menu.liste_courses[key] || [];
       if (!items.length) return '';
@@ -3533,11 +3467,12 @@ async function saveHealthLog() {
       const err = await res.json();
       alert("Server error: " + JSON.stringify(err));
     }
-  } catch(e) { console.error(e); alert("saveHealth error: " + e.message); }
+  } catch(e) { console.error(e); alert("Error saveHealth: " + e.message); }
 }
+
 function renderHealthChart(logs) {
   const canvas = document.getElementById('healthChart');
-  if (!canvas || !logs.length) return;
+if (!canvas || !logs.length) return;
   const existing = Chart.getChart(canvas);
   if (existing) existing.destroy();
   const labels = logs.map(l => new Date(l.date).toLocaleDateString('fr-FR', { day:'numeric', month:'short' }));
@@ -3580,8 +3515,8 @@ async function loadProtocols() {
     document.getElementById('protocolsList').innerHTML = `
       <div style="background:white;border-radius: 4px;padding:28px;border:1px solid #B5D4F4;text-align:center">
         <div style="font-size:1.4rem;margin-bottom:8px"></div>
-        <div style="font-size:1rem;font-weight:600;color:#021A35;margin-bottom:8px">No condition specified</div>
-        <div style="font-size:0.85rem;color:#85B7EB;margin-bottom:18px">Add your conditions in your profile to access personalized protocols.</div>
+        <div style="font-size:1rem;font-weight:600;color:#021A35;margin-bottom:8px">No pathology specified</div>
+        <div style="font-size:0.85rem;color:#85B7EB;margin-bottom:18px">Add your pathologies in your profile to access personalized protocols.</div>
         <button onclick="showView('profile')" style="background:#021A35;color:white;padding:10px 24px;border:none;border-radius: 4px;font-size:0.88rem;cursor:pointer;font-family:'DM Sans',sans-serif">Complete my profile →</button>
       </div>`;
     return;
@@ -3608,7 +3543,7 @@ async function loadProtocols() {
     }
 
     if (!protocols.length) {
-      document.getElementById('protocolsList').innerHTML = '<p style="color:#85B7EB">No protocol found for your conditions. Try rephrasing in your profile.</p>';
+      document.getElementById('protocolsList').innerHTML = '<p style="color:#85B7EB">No protocol found for your pathologies. Try rephrasing in your profile.</p>';
       return;
     }
 
@@ -3686,8 +3621,8 @@ function renderProfessionals(pros) {
         </div>
         <div style="flex:1;min-width:0">
           <div style="font-weight:600;color:#021A35;font-size:0.95rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${p.name}</div>
-          <div style="font-size:0.78rem;color:#85B7EB">${p.specialty || 'Health professional'}</div>
-          ${p.email ? `<div style="font-size:0.75rem;color:#85B7EB">${p.email}</div>` : ''}
+          <div style="font-size:0.78rem;color:#85B7EB">${p.specialty || 'Healthcare professional'}</div>
+${p.email ? `<div style="font-size:0.75rem;color:#85B7EB">${p.email}</div>` : ''}
         </div>
         <button onclick="deleteProfessional('${p.id}')" style="background:none;border:1px solid #FCC;color:#C55;border-radius: 4px;padding:6px 12px;font-size:0.78rem;cursor:pointer;flex-shrink:0;white-space:nowrap">Delete</button>
       </div>
@@ -3710,7 +3645,7 @@ function renderComments(comments) {
   el.innerHTML = comments.map(c => `
     <div style="padding:12px 0;border-bottom:1px solid #E6F1FB">
       <div style="font-size:0.72rem;color:#85B7EB;margin-bottom:4px">
-        ${c.sharing_links?.professionals?.name || 'Professional'} · ${new Date(c.created_at).toLocaleDateString('fr-FR')}
+        ${c.sharing_links?.professionals?.name || 'Professional'} · ${new Date(c.created_at).toLocaleDateString('en-US')}
       </div>
       <div style="font-size:0.88rem;color:#021A35">${c.comment}</div>
     </div>`).join('');
@@ -3735,7 +3670,7 @@ async function addProfessional() {
       document.getElementById('proAddError').style.display = 'none';
       loadProfessionals();
     }
-} catch(e) { console.error(e); }
+  } catch(e) { console.error(e); }
 }
 
 async function deleteProfessional(id) {
@@ -3805,7 +3740,7 @@ async function deleteProfessional(id) {
       }
 
       if (!res.ok) {
-        addMessage('ai', "Sorry, an error occurred. Please try again in a moment.");
+        addMessage('ai', "Sorry, an error occurred. Try again in a moment.");
         return;
       }
 
@@ -3837,7 +3772,7 @@ async function deleteProfessional(id) {
     const updates = {
       full_name: document.getElementById('profileName').value.trim(),
       pathologies: document.getElementById('profilePathologies').value.split(',').map(s => s.trim()).filter(Boolean),
-      allergies: document.getElementById('profileAllergies').value.split(',').map(s => s.trim()).filter(Boolean),
+allergies: document.getElementById('profileAllergies').value.split(',').map(s => s.trim()).filter(Boolean),
       medications: document.getElementById('profileMedications').value.split(',').map(s => s.trim()).filter(Boolean),
       cultural_constraints: document.getElementById('profileCultural').value.trim(),
       budget_alimentaire: document.getElementById('profileBudget').value.trim()
@@ -3881,6 +3816,6 @@ async function deleteProfessional(id) {
     }
   }
 </script>
-<script src="translator.js"></script>
+<script src="translations.js?v=2"></script>
 </body>
 </html>
