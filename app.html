@@ -3454,7 +3454,15 @@ async function loadProtocols() {
       headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${authToken}` },
       body: JSON.stringify({ pathologies })
     });
-    const protocols = await res.json();
+    let protocols = await res.json();
+    const matchedNames = protocols.map(p => p.name?.toLowerCase() || "");
+    const missing = pathologies.filter(p => !matchedNames.some(n => n.includes(p.toLowerCase().split(" ")[0])));
+    for (const pathologie of missing) {
+      try {
+        const genRes = await fetch(`${BACKEND_URL}/api/protocols/generate`, {method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({pathologie})});
+        if (genRes.ok) { const generated = await genRes.json(); protocols.push(generated); }
+      } catch(e) { console.error("generate error:", e); }
+    }
 
     if (!protocols.length) {
       document.getElementById('protocolsList').innerHTML = '<p style="color:#85B7EB">Aucun protocole trouvé pour vos pathologies. Essayez de reformuler dans votre profil.</p>';
