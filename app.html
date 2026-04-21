@@ -3637,14 +3637,13 @@ async function loadChrono() {
       </div>
     </div>`).join('');
 
-  // Conseils personnalisés
+  const goalAdvice = {
     energy: ["Petit-dejeuner riche en proteines", "Evitez les glucides simples avant une reunion", "Cafe uniquement avant 14h"],
     sleep: ["Diner 3h avant le coucher minimum", "Tryptophane le soir : dinde, banane", "Evitez alcool et cafeine apres 15h"],
     weight: ["Petit-dejeuner copieux, diner leger", "Fenetre alimentaire 8-10h", "Glucides le matin, proteines le soir"],
     focus: ["Omega-3 le matin", "Dejeuner modere", "Collation proteinee avant taches importantes"],
     digestion: ["Manger lentement", "Evitez repas copieux le soir", "Probiotiques au petit-dejeuner"],
     sport: ["Glucides 2h avant effort", "Proteines 30min post-entrainement", "Hydratation optimale"],
-    sport: ["Glucides 2h avant l effort", "Proteines dans les 30 min post-entrainement", "Hydratation optimale tout au long de la journee"],
   };
 
   const advices = goalAdvice[goal] || [
