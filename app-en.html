@@ -3386,7 +3386,8 @@ async function generateMenu() {
   try {
     const res = await fetch(`${BACKEND_URL}/api/menus/generate`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${authToken}` }
+      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${authToken}` },
+      body: JSON.stringify({ lang: 'en' })
     });
     const menu = await res.json();
     if (res.ok) renderMenu(menu);
