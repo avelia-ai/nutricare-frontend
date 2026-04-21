@@ -59,19 +59,19 @@ body::before { content: ''; position: fixed; inset: 0; background-image: url("da
 .soc-txt { font-size: 0.85rem; color: rgba(230,241,251,.5); }
 .soc-txt strong { color: white; }
 .features { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; margin: 48px 0; animation: fadeUp .8s .85s ease both; }
-.feat { background: #F8F5F0; border: 1px solid #B5D4F4; border-radius: 100px; padding: 10px 20px; font-size: 13px; color: rgba(2,26,53,.7); display: flex; align-items: center; gap: 8px; transition: all .3s; }
-.feat:hover { background: #E6F1FB; border-color: #021A35; color: #021A35; transform: translateY(-2px); }
+.feat { background: rgba(255,255,255,.04); border: 1px solid rgba(255,255,255,.08); border-radius: 100px; padding: 10px 20px; font-size: 13px; color: rgba(230,241,251,.6); display: flex; align-items: center; gap: 8px; transition: all .3s; }
+.feat:hover { background: rgba(201,168,76,.1); border-color: rgba(201,168,76,.3); color: white; transform: translateY(-2px); }
 .stats-grid { display: grid; grid-template-columns: repeat(auto-fit,minmax(160px,1fr)); gap: 16px; width: 100%; margin: 0 0 64px; animation: fadeUp .8s .9s ease both; }
 .stat { background: rgba(255,255,255,.04); border: 1px solid rgba(255,255,255,.08); border-radius: 12px; padding: 24px 16px; }
 .stat-n { font-family: 'Playfair Display', serif; font-size: 2.5rem; font-weight: 700; color: var(--gold); line-height: 1; margin-bottom: 8px; }
 .stat-l { font-size: 0.78rem; color: rgba(230,241,251,.55); line-height: 1.5; }
 .ben-grid { display: grid; grid-template-columns: repeat(auto-fit,minmax(240px,1fr)); gap: 16px; width: 100%; margin-bottom: 64px; animation: fadeUp .8s .95s ease both; }
-.ben { background: #F8F5F0; border: 1px solid #B5D4F4; border-radius: 14px; padding: 24px; text-align: left; transition: border-color .3s, transform .3s; }
-.ben:hover { border-color: #021A35; transform: translateY(-3px); }
+.ben { background: rgba(255,255,255,.03); border: 1px solid rgba(255,255,255,.07); border-radius: 14px; padding: 24px; text-align: left; transition: border-color .3s, transform .3s; }
+.ben:hover { border-color: rgba(201,168,76,.3); transform: translateY(-3px); }
 .ben-icon { font-size: 1.5rem; margin-bottom: 12px; }
-.ben-title { font-size: 0.9rem; font-weight: 600; color: #021A35; margin-bottom: 8px; }
-.ben-desc { font-size: 0.78rem; color: rgba(2,26,53,.6); line-height: 1.6; }
-.ben-tag { display: inline-block; margin-top: 12px; background: #E6F1FB; border: 1px solid #B5D4F4; color: #185FA5; font-size: .65rem; padding: 3px 10px; border-radius: 100px; }
+.ben-title { font-size: 0.9rem; font-weight: 600; color: white; margin-bottom: 8px; }
+.ben-desc { font-size: 0.78rem; color: rgba(230,241,251,.5); line-height: 1.6; }
+.ben-tag { display: inline-block; margin-top: 12px; background: rgba(201,168,76,.1); border: 1px solid rgba(201,168,76,.25); color: #FAC775; font-size: .65rem; padding: 3px 10px; border-radius: 100px; }
 .cta-wrap { display: flex; flex-direction: column; align-items: center; gap: 16px; animation: fadeUp .8s 1s ease both; width: 100%; }
 .cta-form { max-width: 520px; width: 100%; }
 .logo-wrap { margin-top: 64px; animation: fadeUp .8s 1.1s ease both; }
@@ -137,11 +137,7 @@ body::before { content: ''; position: fixed; inset: 0; background-image: url("da
     </div>
     <div class="soc-txt"><strong id="inscrit">366</strong> personnes deja inscrites</div>
   </div>
-</div><!-- fin wrap hero -->
-
-<section style="background:white;padding:60px 24px;">
-<div style="max-width:860px;margin:0 auto;">
-  <div class="features" style="margin:0;">
+  <div class="features">
     <div class="feat">🧬 Protocoles medicaux</div>
     <div class="feat">🍽️ Menus personnalises</div>
     <div class="feat">📸 Analyse photo repas</div>
@@ -157,11 +153,7 @@ body::before { content: ''; position: fixed; inset: 0; background-image: url("da
     <div class="stat"><div class="stat-n">94%</div><div class="stat-l">de satisfaction sur la qualite des conseils</div></div>
     <div class="stat"><div class="stat-n">3 min</div><div class="stat-l">pour obtenir votre protocole sante complet</div></div>
   </div></div></div><div class="wrap">
-</div></div></section>
-
-<section style="background:white;padding:80px 24px;">
-<div style="max-width:860px;margin:0 auto;">
-  <div class="ben-grid" style="margin:0;">
+  <div class="ben-grid">
     <div class="ben"><div class="ben-icon">🧬</div><div class="ben-title">Protocoles adaptes a vos pathologies</div><div class="ben-desc">Hypertension, diabete, cholesterol, SOPK... Mirella genere un protocole precis adapte a vos medicaments.</div><span class="ben-tag">Recommande par des nutritionnistes</span></div>
     <div class="ben"><div class="ben-icon">🍽️</div><div class="ben-title">7 jours de menus sur mesure</div><div class="ben-desc">Menus hebdomadaires avec liste de courses, calories et temps de preparation.</div><span class="ben-tag">Gain de temps 2h/semaine</span></div>
     <div class="ben"><div class="ben-icon">🔮</div><div class="ben-title">Oracle Sante predictif</div><div class="ben-desc">Anticipe les risques avant qu ils n apparaissent. Score de vitalite, age biologique.</div><span class="ben-tag">Technologie IA exclusive</span></div>
@@ -169,10 +161,6 @@ body::before { content: ''; position: fixed; inset: 0; background-image: url("da
     <div class="ben"><div class="ben-icon">🌍</div><div class="ben-title">Accessible partout dans le monde</div><div class="ben-desc">En francais et en anglais, sur mobile et desktop, 24h/24.</div><span class="ben-tag">FR - EN - Plus a venir</span></div>
     <div class="ben"><div class="ben-icon">📸</div><div class="ben-title">Analyse photo de vos repas</div><div class="ben-desc">Mirella analyse instantanement les calories et nutriments de votre assiette.</div><span class="ben-tag">En quelques secondes</span></div>
   </div>
-</div></div></section>
-
-<section style="background:#0d3666;padding:80px 24px;text-align:center;">
-<div style="max-width:860px;margin:0 auto;">
   <div class="cta-wrap">
     <div class="cta-form">
       <div class="form-row" id="formRow2">
@@ -183,10 +171,7 @@ body::before { content: ''; position: fixed; inset: 0; background-image: url("da
     </div>
     <p style="font-size:12px;color:rgba(230,241,251,.3);letter-spacing:.05em">Acces early bird - Prix de lancement exclusif</p>
   </div>
-</div></div></section>
-
-<div style="background:#021A35;padding:32px;text-align:center;">
-  <div class="logo-wrap" style="margin:0;">
+  <div class="logo-wrap">
     <div class="logo"><div class="logo-mark">M</div>Mirella</div>
   </div>
 </div>
