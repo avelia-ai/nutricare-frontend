@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mirella - Acces Early Bird</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+body { background: #F8F5F0; color: #021A35; font-family: 'DM Sans', sans-serif; min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 40px 20px; }
+.logo { font-family: 'Playfair Display', serif; font-size: 1.8rem; color: #021A35; margin-bottom: 8px; text-align: center; }
+.logo img { height: 48px; }
+.subtitle { font-size: 0.9rem; color: rgba(2,26,53,.5); margin-bottom: 48px; text-align: center; }
+.badge { display: inline-flex; align-items: center; gap: 8px; background: rgba(201,168,76,.1); border: 1px solid rgba(201,168,76,.4); border-radius: 100px; padding: 6px 16px; font-size: 0.7rem; letter-spacing: 2px; text-transform: uppercase; color: #8B6914; margin-bottom: 24px; }
+h1 { font-family: 'Playfair Display', serif; font-size: clamp(1.8rem, 4vw, 2.8rem); text-align: center; margin-bottom: 12px; }
+h1 em { font-style: italic; color: #C9A84C; }
+.intro { font-size: 0.95rem; color: rgba(2,26,53,.6); text-align: center; max-width: 480px; margin: 0 auto 48px; line-height: 1.7; }
+.plans { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; max-width: 720px; width: 100%; margin-bottom: 32px; }
+@media(max-width:600px) { .plans { grid-template-columns: 1fr; } }
+.plan { background: white; border: 1.5px solid #B5D4F4; border-radius: 12px; padding: 32px; position: relative; transition: transform .2s, border-color .2s; }
+.plan:hover { transform: translateY(-4px); border-color: #021A35; }
+.plan.featured { background: #021A35; border-color: #021A35; color: white; }
+.plan-label { font-size: 0.7rem; letter-spacing: 2px; text-transform: uppercase; color: #C9A84C; margin-bottom: 12px; }
+.plan-name { font-family: 'Playfair Display', serif; font-size: 1.6rem; margin-bottom: 20px; color: #021A35; }
+.plan.featured .plan-name { color: white; }
+.plan-price-old { font-size: 0.85rem; color: rgba(2,26,53,.4); text-decoration: line-through; margin-bottom: 4px; }
+.plan.featured .plan-price-old { color: rgba(255,255,255,.4); }
+.plan-price { display: flex; align-items: baseline; gap: 6px; margin-bottom: 8px; }
+.plan-price-val { font-family: 'Playfair Display', serif; font-size: 2.8rem; font-weight: 700; color: #C9A84C; }
+.plan-price-period { font-size: 0.85rem; color: rgba(2,26,53,.5); }
+.plan.featured .plan-price-period { color: rgba(255,255,255,.5); }
+.plan-saving { display: inline-block; background: rgba(201,168,76,.15); border: 1px solid rgba(201,168,76,.3); color: #8B6914; font-size: 0.72rem; padding: 3px 10px; border-radius: 100px; margin-bottom: 24px; font-weight: 600; }
+.plan.featured .plan-saving { background: rgba(201,168,76,.2); color: #FAC775; }
+.plan-features { list-style: none; margin-bottom: 28px; display: flex; flex-direction: column; gap: 10px; }
+.plan-features li { display: flex; align-items: center; gap: 10px; font-size: 0.85rem; color: rgba(2,26,53,.7); }
+.plan.featured .plan-features li { color: rgba(255,255,255,.75); }
+.plan-features li::before { content: ''; width: 18px; height: 18px; border-radius: 50%; background: #021A35; flex-shrink: 0; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12'%3E%3Cpath d='M2 6l3 3 5-5' stroke='%23fff' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: center; }
+.plan.featured .plan-features li::before { background-color: rgba(255,255,255,.2); }
+.plan-btn { display: block; width: 100%; padding: 14px; border-radius: 6px; font-size: 0.9rem; font-weight: 600; font-family: 'DM Sans', sans-serif; cursor: pointer; text-align: center; text-decoration: none; border: none; transition: all .2s; }
+.plan-btn-outline { background: white; border: 1.5px solid #021A35; color: #021A35; }
+.plan-btn-outline:hover { background: #021A35; color: white; }
+.plan-btn-gold { background: #C9A84C; color: #021A35; }
+.plan-btn-gold:hover { background: #d4af5c; }
+.plan-badge { position: absolute; top: -12px; left: 50%; transform: translateX(-50%); background: #C9A84C; color: #021A35; font-size: 0.68rem; font-weight: 700; padding: 4px 14px; border-radius: 100px; white-space: nowrap; }
+.guarantee { text-align: center; font-size: 0.8rem; color: rgba(2,26,53,.4); max-width: 400px; }
+.guarantee strong { color: rgba(2,26,53,.6); }
+</style>
+</head>
+<body>
+<div class="badge">Acces exclusif Early Bird</div>
+<div class="logo">
+  <img src="mirella-logo.png" alt="Mirella" onerror="this.style.display='none';this.nextElementSibling.style.display='block'">
+  <span style="display:none">Mirella</span>
+</div>
+<p class="subtitle">Votre coach sante IA personnalise</p>
+<h1>Choisissez votre plan <em>a -50% a vie</em></h1>
+<p class="intro">En tant qu early bird, vous beneficiez d un tarif preferentiel garanti a vie. Choisissez le plan qui vous convient — vous ne paierez jamais plus.</p>
+
+<div class="plans">
+  <div class="plan">
+    <div class="plan-label">Standard Early Bird</div>
+    <div class="plan-name">Standard</div>
+    <div class="plan-price-old">19,90€/mois</div>
+    <div class="plan-price">
+      <span class="plan-price-val">9,90€</span>
+      <span class="plan-price-period">/mois a vie</span>
+    </div>
+    <span class="plan-saving">-50% a vie garanti</span>
+    <ul class="plan-features">
+      <li>Chat IA illimite</li>
+      <li>Protocoles nutritionnels</li>
+      <li>Menus hebdomadaires</li>
+      <li>Analyse photo repas</li>
+      <li>Suivi sante</li>
+    </ul>
+    <a href="#" class="plan-btn plan-btn-outline" onclick="checkout('price_1TOeVWGujzZFPXDMWUeLmoA3')">Choisir Standard</a>
+  </div>
+
+  <div class="plan featured">
+    <div class="plan-badge">Le plus populaire</div>
+    <div class="plan-label">Premium Early Bird</div>
+    <div class="plan-name">Premium</div>
+    <div class="plan-price-old">39,90€/mois</div>
+    <div class="plan-price">
+      <span class="plan-price-val">19,90€</span>
+      <span class="plan-price-period">/mois a vie</span>
+    </div>
+    <span class="plan-saving">-50% a vie garanti</span>
+    <ul class="plan-features">
+      <li>Tout le Standard</li>
+      <li>Oracle Sante predictif</li>
+      <li>Analyse bilan sanguin</li>
+      <li>Programmes exclusifs</li>
+      <li>Scan ordonnance</li>
+      <li>Acces prioritaire nouveautes</li>
+    </ul>
+    <a href="#" class="plan-btn plan-btn-gold" onclick="checkout('price_1TOeVzGujzZFPXDM9A01Iw0f')">Choisir Premium</a>
+  </div>
+</div>
+
+<p class="guarantee"><strong>Garantie satisfait ou rembourse 30 jours.</strong> Sans engagement. Annulez quand vous voulez. Le tarif early bird est garanti a vie tant que vous restez abonne.</p>
+
+<script>
+const BACKEND_URL = 'https://nutricare-backend-production.up.railway.app';
+
+async function checkout(priceId) {
+  try {
+    const token = localStorage.getItem('nutricare_token');
+    const res = await fetch(BACKEND_URL + '/api/billing/create-checkout', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
+      body: JSON.stringify({ priceId, successUrl: window.location.origin + '/app.html', cancelUrl: window.location.href })
+    });
+    const data = await res.json();
+    if (data.url) window.location.href = data.url;
+    else alert('Erreur lors de la creation de la session de paiement.');
+  } catch(e) {
+    alert('Erreur de connexion. Veuillez reessayer.');
+  }
+}
+</script>
+</body>
+</html>
