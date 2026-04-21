@@ -157,7 +157,23 @@ h1 em { font-style: italic; color: var(--gold); display: block; }
 @keyframes spin3d { 0%{transform:rotateY(0deg) scale(1)} 25%{transform:rotateY(180deg) scale(1.1)} 50%{transform:rotateY(360deg) scale(1)} 75%{transform:rotateY(180deg) scale(1.05)} 100%{transform:rotateY(0deg) scale(1)} }
 footer { background: white; border-top: 1px solid var(--border); padding: 28px 48px 60px; display: flex; justify-content: space-between; align-items: center; font-size: .75rem; color: rgba(2,26,53,.35); flex-wrap: wrap; gap: 12px; }
 .footer-logo { font-family: 'Playfair Display', serif; color: var(--dark); font-size: 1.1rem; }
-@media(max-width:768px) { nav { padding: 16px 20px; } .cards-section, .grey-section, .stats-section, .cta-section { padding: 72px 24px; } }
+@media(max-width:768px) { 
+  nav { padding: 16px 20px; } 
+  .cards-section, .grey-section, .stats-section, .cta-section { padding: 72px 24px; }
+  .countdown { gap: 8px; }
+  .cd-block { min-width: 60px; padding: 10px 12px; }
+  .cd-num { font-size: 1.6rem; }
+  .cd-lbl { font-size: 8px; }
+  .cd-sep { font-size: 1.4rem; margin-bottom: 10px; }
+  .offer-box { padding: 20px 24px; }
+  .offer-val { font-size: 2.5rem; }
+}
+@media(max-width:400px) {
+  .countdown { gap: 6px; }
+  .cd-block { min-width: 52px; padding: 8px 10px; }
+  .cd-num { font-size: 1.4rem; }
+  .cd-sep { font-size: 1.2rem; }
+}
 </style>
 </head>
 <body>
