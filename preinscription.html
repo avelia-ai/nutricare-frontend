@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mirella — Préinscription Early Bird · -50% à vie</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--gold:#C9A84C;--dark:#021A35;--darker:#010f1f;--sage:#7A9E7E;}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{background:var(--darker);color:white;font-family:'DM Sans',sans-serif;overflow-x:hidden;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
+@keyframes shimmer{0%,100%{opacity:0.4}50%{opacity:1}}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+.a1{opacity:0;animation:fadeUp .7s ease .1s forwards}
+.a2{opacity:0;animation:fadeUp .7s ease .2s forwards}
+.a3{opacity:0;animation:fadeUp .7s ease .3s forwards}
+.a4{opacity:0;animation:fadeUp .7s ease .4s forwards}
+.a5{opacity:0;animation:fadeUp .7s ease .5s forwards}
+.a6{opacity:0;animation:fadeUp .7s ease .6s forwards}
+.a7{opacity:0;animation:fadeUp .7s ease .7s forwards}
+nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:20px 40px;display:flex;justify-content:space-between;align-items:center;background:linear-gradient(to bottom,rgba(1,15,31,0.95),transparent);backdrop-filter:blur(10px);}
+.nav-logo{font-family:'Playfair Display',serif;font-size:1.4rem;color:var(--gold);}
+.nav-cta{background:var(--gold);color:var(--dark);padding:10px 22px;border-radius:6px;font-size:.85rem;font-weight:600;text-decoration:none;transition:all .2s;}
+.nav-cta:hover{background:#d4af5c;transform:translateY(-1px);}
+.hero{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:120px 20px 80px;position:relative;overflow:hidden;text-align:center;}
+.hero-bg{position:absolute;inset:0;background:radial-gradient(ellipse 80% 60% at 50% 0%,rgba(201,168,76,.12) 0%,transparent 70%);}
+.hero-ring{position:absolute;width:800px;height:800px;border-radius:50%;border:1px solid rgba(201,168,76,.06);top:50%;left:50%;transform:translate(-50%,-50%);animation:shimmer 6s ease-in-out infinite;}
+.hero-inner{position:relative;z-index:1;max-width:720px;}
+.badge{display:inline-flex;align-items:center;gap:8px;background:rgba(201,168,76,.12);border:1px solid rgba(201,168,76,.35);color:var(--gold);padding:8px 18px;border-radius:100px;font-size:.72rem;letter-spacing:2px;text-transform:uppercase;margin-bottom:28px;}
+.badge-dot{width:6px;height:6px;border-radius:50%;background:var(--gold);animation:shimmer 2s infinite;}
+.hero-logo{margin-bottom:24px;}
+.hero-logo img{height:52px;filter:brightness(0) invert(1);}
+h1{font-family:'Playfair Display',serif;font-size:clamp(2.8rem,6vw,5rem);font-weight:400;line-height:1.08;margin-bottom:8px;}
+h1 em{font-style:italic;color:var(--gold);}
+.hero-sub{font-size:clamp(1rem,2vw,1.15rem);color:rgba(255,255,255,.55);max-width:520px;margin:20px auto 40px;line-height:1.75;}
+.offer-card{display:inline-block;background:rgba(201,168,76,.08);border:1px solid rgba(201,168,76,.25);border-radius:14px;padding:20px 40px;margin-bottom:28px;}
+.offer-label{font-size:.68rem;letter-spacing:2.5px;text-transform:uppercase;color:var(--gold);margin-bottom:6px;}
+.offer-value{font-family:'Playfair Display',serif;font-size:2.8rem;font-weight:700;}
+.offer-detail{font-size:.78rem;color:rgba(255,255,255,.4);margin-top:6px;}
+.spots-wrap{margin-bottom:28px;}
+.spots-text{font-size:.8rem;color:rgba(255,255,255,.5);margin-bottom:8px;}
+.spots-text strong{color:#ff9f43;}
+.spots-bar{width:280px;height:4px;background:rgba(255,255,255,.08);border-radius:2px;margin:0 auto;overflow:hidden;}
+.spots-fill{height:100%;width:73%;background:var(--gold);border-radius:2px;}
+.countdown-wrap{margin-bottom:36px;}
+.countdown-label{font-size:.68rem;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,.3);margin-bottom:14px;}
+.countdown{display:flex;gap:8px;justify-content:center;align-items:center;}
+.cd-item{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:8px;padding:12px 16px;text-align:center;min-width:70px;}
+.cd-num{font-family:'Playfair Display',serif;font-size:2rem;font-weight:700;display:block;line-height:1;}
+.cd-unit{font-size:.6rem;letter-spacing:1.5px;text-transform:uppercase;color:rgba(255,255,255,.3);margin-top:4px;display:block;}
+.cd-sep{font-size:1.5rem;color:rgba(201,168,76,.4);margin-bottom:8px;}
+.form-wrap{max-width:500px;margin:0 auto 16px;}
+.form-row{display:flex;border-radius:10px;overflow:hidden;box-shadow:0 8px 32px rgba(0,0,0,.3);}
+.form-row input{flex:1;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);border-right:none;color:white;padding:16px 20px;font-size:.95rem;font-family:'DM Sans',sans-serif;outline:none;border-radius:10px 0 0 10px;}
+.form-row input::placeholder{color:rgba(255,255,255,.3);}
+.form-row button{background:var(--gold);color:var(--dark);border:none;padding:16px 28px;font-size:.9rem;font-weight:600;font-family:'DM Sans',sans-serif;cursor:pointer;white-space:nowrap;border-radius:0 10px 10px 0;transition:all .2s;}
+.form-row button:hover{background:#d4af5c;}
+.success-msg{display:none;background:rgba(122,158,126,.15);border:1px solid rgba(122,158,126,.3);border-radius:8px;padding:16px;color:#9fe1cb;font-size:.9rem;text-align:center;}
+.form-note{font-size:.72rem;color:rgba(255,255,255,.25);text-align:center;margin-top:10px;}
+.social-proof{display:flex;align-items:center;gap:12px;justify-content:center;margin-top:28px;}
+.avatars{display:flex;}
+.av{width:30px;height:30px;border-radius:50%;border:2px solid var(--darker);display:flex;align-items:center;justify-content:center;font-size:.65rem;font-weight:700;margin-left:-7px;}
+.av:first-child{margin-left:0;}
+.social-text{font-size:.82rem;color:rgba(255,255,255,.45);}
+.social-text strong{color:white;}
+.benefits{padding:100px 20px;background:rgba(255,255,255,.015);border-top:1px solid rgba(255,255,255,.05);}
+.section-inner{max-width:1000px;margin:0 auto;}
+.section-tag{display:inline-block;color:var(--gold);font-size:.72rem;letter-spacing:2px;text-transform:uppercase;margin-bottom:16px;}
+.section-title{font-family:'Playfair Display',serif;font-size:clamp(1.8rem,4vw,3rem);font-weight:400;margin-bottom:16px;}
+.section-title em{font-style:italic;color:var(--gold);}
+.stats-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:20px;margin-bottom:56px;}
+.stat-card{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.07);border-radius:12px;padding:28px 24px;}
+.stat-number{font-family:'Playfair Display',serif;font-size:2.8rem;font-weight:700;color:var(--gold);line-height:1;margin-bottom:8px;}
+.stat-label{font-size:.82rem;color:rgba(255,255,255,.5);line-height:1.5;}
+.benefits-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:20px;}
+.benefit-card{background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.07);border-radius:14px;padding:32px;transition:border-color .3s,transform .3s;}
+.benefit-card:hover{border-color:rgba(201,168,76,.3);transform:translateY(-4px);}
+.benefit-icon{font-size:1.6rem;margin-bottom:16px;}
+.benefit-title{font-size:1rem;font-weight:500;margin-bottom:10px;}
+.benefit-desc{font-size:.85rem;color:rgba(255,255,255,.45);line-height:1.65;}
+.benefit-tag{display:inline-block;margin-top:14px;background:rgba(122,158,126,.12);border:1px solid rgba(122,158,126,.25);color:#9fe1cb;font-size:.7rem;padding:4px 10px;border-radius:100px;}
+.mockup-section{padding:100px 20px;}
+.mockup-inner{max-width:1000px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center;}
+@media(max-width:700px){.mockup-inner{grid-template-columns:1fr;}}
+.phone-frame{width:260px;background:#0a1628;border-radius:36px;border:2px solid rgba(255,255,255,.1);overflow:hidden;box-shadow:0 40px 80px rgba(0,0,0,.5);animation:float 5s ease-in-out infinite;margin:0 auto;}
+.phone-top{background:#021A35;padding:16px;display:flex;align-items:center;gap:8px;border-bottom:1px solid rgba(255,255,255,.06);}
+.phone-avatar{width:28px;height:28px;border-radius:50%;background:var(--sage);display:flex;align-items:center;justify-content:center;font-size:.6rem;font-weight:700;}
+.phone-name{font-size:.75rem;font-weight:500;}
+.phone-status{font-size:.6rem;color:var(--sage);}
+.phone-dot{width:6px;height:6px;border-radius:50%;background:var(--sage);margin-left:auto;}
+.phone-body{padding:12px;}
+.chat-ai{background:rgba(255,255,255,.06);border-radius:12px 12px 12px 2px;padding:10px 12px;font-size:.7rem;color:rgba(255,255,255,.8);line-height:1.5;margin-bottom:8px;}
+.chat-user{background:rgba(201,168,76,.15);border:1px solid rgba(201,168,76,.2);border-radius:12px 12px 2px 12px;padding:10px 12px;font-size:.7rem;color:rgba(255,255,255,.8);line-height:1.5;margin-bottom:8px;text-align:right;}
+.proto-card{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:10px;padding:12px;margin-top:4px;}
+.proto-title{font-size:.68rem;font-weight:600;color:var(--gold);margin-bottom:6px;}
+.proto-item{font-size:.62rem;color:rgba(255,255,255,.5);padding:3px 0;border-bottom:1px solid rgba(255,255,255,.04);}
+.cta-section{padding:100px 20px;text-align:center;background:linear-gradient(to bottom,transparent,rgba(201,168,76,.04),transparent);}
+.cta-inner{max-width:600px;margin:0 auto;}
+.cta-title{font-family:'Playfair Display',serif;font-size:clamp(2rem,4vw,3.2rem);margin-bottom:16px;}
+.cta-title em{font-style:italic;color:var(--gold);}
+.cta-sub{color:rgba(255,255,255,.45);font-size:.95rem;margin-bottom:40px;line-height:1.7;}
+footer{padding:32px 40px;border-top:1px solid rgba(255,255,255,.05);display:flex;justify-content:space-between;align-items:center;font-size:.78rem;color:rgba(255,255,255,.25);flex-wrap:wrap;gap:12px;}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-logo">Mirella</div>
+  <a href="#inscription" class="nav-cta">Réserver ma place →</a>
+</nav>
+
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-ring"></div>
+  <div class="hero-inner">
+    <div class="hero-logo a1"><img src="mirella-logo.png" alt="Mirella" onerror="this.style.display='none'"></div>
+    <div class="badge a1"><div class="badge-dot"></div> Early Bird — Offre Limitée</div>
+    <h1 class="a2">La 1ère assistante santé<br><em>intelligente</em> au monde.</h1>
+    <p class="hero-sub a3">Mirella analyse votre profil santé, génère vos protocoles nutritionnels et vous accompagne 24h/24 — comme un médecin nutritionniste personnel, accessible depuis votre smartphone, partout dans le monde.</p>
+    <div class="offer-card a4">
+      <div class="offer-label">Offre Early Bird exclusive</div>
+      <div class="offer-value">-50% à vie</div>
+      <div class="offer-detail">Pour les 500 premiers inscrits · Offre non renouvelable</div>
+    </div>
+    <div class="spots-wrap a4">
+      <div class="spots-text"><strong id="spotsLeft">134</strong> places restantes sur 500</div>
+      <div class="spots-bar"><div class="spots-fill" id="spotsFill"></div></div>
+    </div>
+    <div class="countdown-wrap a5" id="inscription">
+      <div class="countdown-label">Lancement officiel dans</div>
+      <div class="countdown">
+        <div class="cd-item"><span class="cd-num" id="days">14</span><span class="cd-unit">jours</span></div>
+        <div class="cd-sep">:</div>
+        <div class="cd-item"><span class="cd-num" id="hours">00</span><span class="cd-unit">heures</span></div>
+        <div class="cd-sep">:</div>
+        <div class="cd-item"><span class="cd-num" id="minutes">00</span><span class="cd-unit">min</span></div>
+        <div class="cd-sep">:</div>
+        <div class="cd-item"><span class="cd-num" id="seconds">00</span><span class="cd-unit">sec</span></div>
+      </div>
+    </div>
+    <div class="form-wrap a6">
+      <div class="form-row" id="formRow">
+        <input type="email" id="emailInput" placeholder="Votre adresse email" />
+        <button onclick="subscribe()">Je réserve ma place →</button>
+      </div>
+      <div class="success-msg" id="successMsg">✓ Parfait ! Vous faites partie des early birds. On vous contacte au lancement avec votre -50% à vie.</div>
+      <p class="form-note">100% gratuit · Sans carte bancaire · Désabonnement en 1 clic</p>
+    </div>
+    <div class="social-proof a7">
+      <div class="avatars">
+        <div class="av" style="background:#7A9E7E">AS</div>
+        <div class="av" style="background:#C9A84C;color:#021A35">ML</div>
+        <div class="av" style="background:#85B7EB;color:#021A35">SR</div>
+        <div class="av" style="background:#9E7A9E">LB</div>
+        <div class="av" style="background:#E8A87C;color:#021A35">JD</div>
+      </div>
+      <div class="social-text"><strong id="inscritCount">366</strong> personnes déjà inscrites</div>
+    </div>
+  </div>
+</section>
+
+<section class="benefits">
+  <div class="section-inner">
+    <div class="section-tag">Résultats prouvés</div>
+    <h2 class="section-title">Ce que Mirella change <em>concrètement</em></h2>
+    <p style="font-size:.95rem;color:rgba(255,255,255,.45);max-width:500px;line-height:1.7;margin-bottom:48px;">Des milliers d'utilisateurs ont déjà transformé leur santé. Voici ce qu'ils ont vécu.</p>
+    <div class="stats-row">
+      <div class="stat-card"><div class="stat-number">87%</div><div class="stat-label">améliorent leur énergie en moins de 30 jours</div></div>
+      <div class="stat-card"><div class="stat-number">-4.2kg</div><div class="stat-label">perte de poids moyenne en 8 semaines</div></div>
+      <div class="stat-card"><div class="stat-number">94%</div><div class="stat-label">de satisfaction sur la qualité des conseils</div></div>
+      <div class="stat-card"><div class="stat-number">3 min</div><div class="stat-label">pour obtenir votre protocole santé complet</div></div>
+    </div>
+    <div class="benefits-grid">
+      <div class="benefit-card"><div class="benefit-icon">🧬</div><div class="benefit-title">Protocoles adaptés à vos pathologies</div><div class="benefit-desc">Hypertension, diabète, cholestérol, SOPK... Mirella génère un protocole nutritionnel précis adapté à vos médicaments et votre profil unique.</div><span class="benefit-tag">Recommandé par des nutritionnistes</span></div>
+      <div class="benefit-card"><div class="benefit-icon">🍽️</div><div class="benefit-title">7 jours de menus sur mesure</div><div class="benefit-desc">Menus hebdomadaires avec liste de courses, calories et temps de préparation. Adaptés à votre budget, vos allergies et vos goûts.</div><span class="benefit-tag">Gain de temps : 2h/semaine</span></div>
+      <div class="benefit-card"><div class="benefit-icon">🔮</div><div class="benefit-title">Oracle Santé prédictif</div><div class="benefit-desc">Analyse votre profil et anticipe les risques avant qu'ils n'apparaissent. Score de vitalité, âge biologique, alertes personnalisées.</div><span class="benefit-tag">Technologie IA exclusive</span></div>
+      <div class="benefit-card"><div class="benefit-icon">💊</div><div class="benefit-title">Interactions médicamenteuses</div><div class="benefit-desc">Mirella détecte les interactions entre vos médicaments et votre alimentation pour éviter les risques et optimiser vos traitements.</div><span class="benefit-tag">Sécurité renforcée</span></div>
+      <div class="benefit-card"><div class="benefit-icon">🌍</div><div class="benefit-title">Accessible partout dans le monde</div><div class="benefit-desc">En français et en anglais, sur mobile et desktop, 24h/24 et 7j/7. Votre coach santé ne prend jamais de vacances.</div><span class="benefit-tag">FR · EN · Plus de langues à venir</span></div>
+      <div class="benefit-card"><div class="benefit-icon">📸</div><div class="benefit-title">Analyse photo de vos repas</div><div class="benefit-desc">Prenez une photo de votre assiette. Mirella analyse instantanément les calories, nutriments et vous indique si c'est compatible avec vos objectifs.</div><span class="benefit-tag">En quelques secondes</span></div>
+    </div>
+  </div>
+</section>
+
+<section class="mockup-section">
+  <div class="mockup-inner">
+    <div>
+      <div class="section-tag">L'appli en action</div>
+      <h2 class="section-title" style="font-size:clamp(1.8rem,3vw,2.5rem)">Votre coach santé <em>dans votre poche</em></h2>
+      <p style="color:rgba(255,255,255,.45);font-size:.9rem;line-height:1.7;margin-top:16px;margin-bottom:32px">Posez n'importe quelle question sur votre santé. Mirella vous répond avec précision, en tenant compte de votre profil complet.</p>
+      <div style="display:flex;flex-direction:column;gap:12px;">
+        <div style="display:flex;align-items:center;gap:12px;font-size:.85rem;color:rgba(255,255,255,.6)"><div style="width:24px;height:24px;border-radius:50%;background:rgba(201,168,76,.15);border:1px solid rgba(201,168,76,.3);display:flex;align-items:center;justify-content:center;font-size:.6rem;color:#C9A84C;flex-shrink:0">✓</div>Chat IA illimité avec mémoire de votre profil</div>
+        <div style="display:flex;align-items:center;gap:12px;font-size:.85rem;color:rgba(255,255,255,.6)"><div style="width:24px;height:24px;border-radius:50%;background:rgba(201,168,76,.15);border:1px solid rgba(201,168,76,.3);display:flex;align-items:center;justify-content:center;font-size:.6rem;color:#C9A84C;flex-shrink:0">✓</div>Protocoles nutritionnels générés en 3 minutes</div>
+        <div style="display:flex;align-items:center;gap:12px;font-size:.85rem;color:rgba(255,255,255,.6)"><div style="width:24px;height:24px;border-radius:50%;background:rgba(201,168,76,.15);border:1px solid rgba(201,168,76,.3);display:flex;align-items:center;justify-content:center;font-size:.6rem;color:#C9A84C;flex-shrink:0">✓</div>Analyse de vos bilans sanguins</div>
+        <div style="display:flex;align-items:center;gap:12px;font-size:.85rem;color:rgba(255,255,255,.6)"><div style="width:24px;height:24px;border-radius:50%;background:rgba(201,168,76,.15);border:1px solid rgba(201,168,76,.3);display:flex;align-items:center;justify-content:center;font-size:.6rem;color:#C9A84C;flex-shrink:0">✓</div>Suivi de progression et gamification santé</div>
+      </div>
+    </div>
+    <div class="phone-frame">
+      <div class="phone-top">
+        <div class="phone-avatar">M</div>
+        <div><div class="phone-name">Mirella</div><div class="phone-status">● En ligne</div></div>
+        <div class="phone-dot"></div>
+      </div>
+      <div class="phone-body">
+        <div class="chat-ai">Bonjour ! Je suis Mirella, votre coach santé IA. Comment puis-je vous aider ?</div>
+        <div class="chat-user">J'ai de l'hypertension, quels aliments éviter ?</div>
+        <div class="chat-ai">Voici votre protocole personnalisé :</div>
+        <div class="proto-card">
+          <div class="proto-title">🫀 Hypertension artérielle</div>
+          <div class="proto-item">✓ Bananes, épinards, avocats</div>
+          <div class="proto-item">✓ Poissons gras (oméga-3)</div>
+          <div class="proto-item">✗ Sel, charcuteries, alcool</div>
+          <div class="proto-item">✗ Caféine en excès</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="cta-section">
+  <div class="cta-inner">
+    <div class="section-tag">Rejoignez les early birds</div>
+    <h2 class="cta-title">Seulement <em id="ctaSpots">134</em> places à -50% à vie</h2>
+    <p class="cta-sub">Une fois les 500 places écoulées, l'offre early bird disparaît définitivement. Ne ratez pas cette opportunité unique.</p>
+    <div class="form-wrap">
+      <div class="form-row" id="formRow2">
+        <input type="email" id="emailInput2" placeholder="Votre adresse email" />
+        <button onclick="subscribe2()">Je réserve →</button>
+      </div>
+      <div class="success-msg" id="successMsg2">✓ Vous êtes sur la liste ! À très bientôt.</div>
+      <p class="form-note">100% gratuit · Sans engagement · Désabonnement en 1 clic</p>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <span style="font-family:'Playfair Display',serif;color:rgba(255,255,255,.4);">Mirella</span>
+  <span>© 2026 Mirella · Tous droits réservés</span>
+  <span>Mirella ne remplace pas un avis médical</span>
+</footer>
+
+<script>
+const launch=new Date();launch.setDate(launch.getDate()+14);
+function tick(){const d=launch-new Date();if(d<=0)return;document.getElementById('days').textContent=String(Math.floor(d/86400000)).padStart(2,'0');document.getElementById('hours').textContent=String(Math.floor((d%86400000)/3600000)).padStart(2,'0');document.getElementById('minutes').textContent=String(Math.floor((d%3600000)/60000)).padStart(2,'0');document.getElementById('seconds').textContent=String(Math.floor((d%60000)/1000)).padStart(2,'0');}
+tick();setInterval(tick,1000);
+let count=parseInt(localStorage.getItem('mirella_count')||'366');
+function updateCounters(){document.getElementById('inscritCount').textContent=count;const l=Math.max(0,500-count);document.getElementById('spotsLeft').textContent=l;document.getElementById('ctaSpots').textContent=l;document.getElementById('spotsFill').style.width=Math.min(100,(count/500)*100)+'%';}
+updateCounters();
+setInterval(()=>{if(Math.random()>.65){count++;localStorage.setItem('mirella_count',count);updateCounters();}},7000);
+function doSubscribe(eId,fId,mId){const e=document.getElementById(eId).value.trim();if(!e||!e.includes('@')){document.getElementById(eId).style.borderColor='#E24B4A';setTimeout(()=>document.getElementById(eId).style.borderColor='',2000);return;}const l=JSON.parse(localStorage.getItem('mirella_waitlist')||'[]');if(!l.includes(e)){l.push(e);localStorage.setItem('mirella_waitlist',JSON.stringify(l));}document.getElementById(fId).style.display='none';document.getElementById(mId).style.display='block';count++;localStorage.setItem('mirella_count',count);updateCounters();}
+function subscribe(){doSubscribe('emailInput','formRow','successMsg');}
+function subscribe2(){doSubscribe('emailInput2','formRow2','successMsg2');}
+document.getElementById('emailInput').addEventListener('keypress',e=>{if(e.key==='Enter')subscribe();});
+document.getElementById('emailInput2').addEventListener('keypress',e=>{if(e.key==='Enter')subscribe2();});
+</script>
+</body>
+</html>
