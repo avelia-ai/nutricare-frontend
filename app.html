@@ -857,6 +857,55 @@ function switchLang(lang) {
   <div style="font-size:0.85rem;color:#85B7EB;margin-bottom:32px">Protocoles adaptés à vos pathologies</div>
   <div id="protocolsList" style="display:flex;flex-direction:column;gap:20px"></div>
 </div>
+<div id="chronoView" style="display:none;padding:32px;overflow-y:auto;background:var(--cream);width:100%">
+  <div style="max-width:900px;margin:0 auto;">
+    <div style="font-family:'Open Sans',serif;font-size:2rem;font-weight:400;margin-bottom:6px;color:#021A35">Mon rythme circadien</div>
+    <div style="font-size:0.85rem;color:#85B7EB;margin-bottom:32px">Horaires optimaux selon votre profil chronobiologique</div>
+    <div style="background:#021A35;border-radius:8px;padding:28px;margin-bottom:24px;display:flex;align-items:center;gap:32px;flex-wrap:wrap;">
+      <div style="text-align:center;">
+        <div style="font-family:'Open Sans',serif;font-size:3.5rem;font-weight:700;color:#C9A84C;line-height:1;" id="chronoScore">--</div>
+        <div style="font-size:0.75rem;color:rgba(255,255,255,.5);margin-top:4px;text-transform:uppercase;letter-spacing:1px;">Score circadien</div>
+      </div>
+      <div style="flex:1;min-width:200px;">
+        <div style="font-size:1rem;font-weight:500;color:white;margin-bottom:8px;" id="chronoScoreLabel">Chargement...</div>
+        <div style="font-size:0.82rem;color:rgba(255,255,255,.55);line-height:1.6;" id="chronoScoreDesc"></div>
+      </div>
+    </div>
+    <div style="background:white;border-radius:8px;padding:28px;border:1px solid #B5D4F4;margin-bottom:24px;">
+      <div style="font-size:0.75rem;font-weight:600;text-transform:uppercase;letter-spacing:1px;color:#85B7EB;margin-bottom:20px;">Horaires optimaux de vos repas</div>
+      <div id="chronoTimeline" style="display:flex;flex-direction:column;gap:16px;"></div>
+    </div>
+    <div style="background:white;border-radius:8px;padding:28px;border:1px solid #B5D4F4;margin-bottom:24px;">
+      <div style="font-size:0.75rem;font-weight:600;text-transform:uppercase;letter-spacing:1px;color:#85B7EB;margin-bottom:20px;">Conseils chronobiologiques personnalises</div>
+      <div id="chronoAdvice" style="display:flex;flex-direction:column;gap:12px;"></div>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;margin-bottom:24px;">
+      <div style="background:white;border-radius:8px;padding:20px;border:1px solid #B5D4F4;">
+        <div style="font-size:1.2rem;margin-bottom:8px;">&#127749;</div>
+        <div style="font-size:0.82rem;font-weight:600;color:#021A35;margin-bottom:8px;">Matin - Energie</div>
+        <div style="font-size:0.75rem;color:rgba(2,26,53,.6);line-height:1.6;">Proteines, oeufs, fromage blanc, fruits rouges, avoine. Evitez les sucres rapides.</div>
+      </div>
+      <div style="background:white;border-radius:8px;padding:20px;border:1px solid #B5D4F4;">
+        <div style="font-size:1.2rem;margin-bottom:8px;">&#9728;</div>
+        <div style="font-size:0.82rem;font-weight:600;color:#021A35;margin-bottom:8px;">Midi - Repas principal</div>
+        <div style="font-size:0.75rem;color:rgba(2,26,53,.6);line-height:1.6;">Repas le plus complet. Proteines + legumes + feculents. Tolerance glucidique maximale.</div>
+      </div>
+      <div style="background:white;border-radius:8px;padding:20px;border:1px solid #B5D4F4;">
+        <div style="font-size:1.2rem;margin-bottom:8px;">&#127974;</div>
+        <div style="font-size:0.82rem;font-weight:600;color:#021A35;margin-bottom:8px;">Apres-midi - Collation</div>
+        <div style="font-size:0.75rem;color:rgba(2,26,53,.6);line-height:1.6;">Fruits, oleagineux, yaourt. Evitez les excitants apres 15h pour preserver le sommeil.</div>
+      </div>
+      <div style="background:white;border-radius:8px;padding:20px;border:1px solid #B5D4F4;">
+        <div style="font-size:1.2rem;margin-bottom:8px;">&#127769;</div>
+        <div style="font-size:0.82rem;font-weight:600;color:#021A35;margin-bottom:8px;">Soir - Legerete</div>
+        <div style="font-size:0.75rem;color:rgba(2,26,53,.6);line-height:1.6;">Repas leger 2-3h avant le coucher. Legumes, poisson blanc, tryptophane pour le sommeil.</div>
+      </div>
+    </div>
+    <div style="text-align:center;">
+      <button onclick="showView('profile')" style="background:#021A35;color:white;padding:12px 28px;border:none;border-radius:4px;font-size:0.88rem;cursor:pointer;font-family:'DM Sans',sans-serif;">Modifier mes horaires</button>
+    </div>
+  </div>
+</div>
 <div id="entrepriseView" style="display:none;padding:32px;overflow-y:auto;background:white;width:100%">
   <div style="max-width:900px;margin:0 auto">
     <div style="display:inline-block;font-size:0.68rem;font-weight:600;text-transform:uppercase;letter-spacing:.12em;color:#C9A84C;background:#FDF6E8;padding:5px 14px;border-radius:4px;margin-bottom:12px">Espace Entreprise</div>
