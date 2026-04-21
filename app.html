@@ -506,6 +506,11 @@ function switchLang(lang) {
           <div class="stat-card-value" id="dashSince" style="font-size:1rem;margin-top:6px">-</div>
           <div class="stat-card-trend">Date d'inscription</div>
         </div>
+        <div class="stat-card" onclick="showView('chrono')" style="cursor:pointer;border-left:3px solid #C9A84C;">
+          <div class="stat-card-label">Score circadien</div>
+          <div class="stat-card-value" id="dashChronoScore" style="color:#C9A84C">--</div>
+          <div class="stat-card-trend" id="dashChronoLabel">Chrono-nutrition</div>
+        </div>
       </div>
       <div class="dashboard-grid">
         <div class="dash-card">
@@ -2018,6 +2023,21 @@ function toggleMobileMenu() {
       if (document.getElementById('profileWorkStart')) document.getElementById('profileWorkStart').value = profile.work_start || '09:00';
       if (document.getElementById('profileWorkEnd')) document.getElementById('profileWorkEnd').value = profile.work_end || '18:00';
       if (document.getElementById('profileChronoGoal')) document.getElementById('profileChronoGoal').value = profile.chrono_goal || '';
+      // Score circadien dans le dashboard
+      if (profile.wake_up || profile.sleep_time) {
+        const wakeH = parseInt((profile.wake_up || '07:00').split(':')[0]);
+        const sleepH = parseInt((profile.sleep_time || '23:00').split(':')[0]);
+        const sleepDur = sleepH > wakeH ? 24 - sleepH + wakeH : wakeH - sleepH;
+        let score = 70;
+        if (sleepDur >= 7 && sleepDur <= 9) score += 15;
+        if (wakeH >= 6 && wakeH <= 8) score += 10;
+        if (sleepH >= 22 && sleepH <= 24) score += 5;
+        score = Math.min(100, score);
+        if (document.getElementById('dashChronoScore')) {
+          document.getElementById('dashChronoScore').textContent = score;
+          document.getElementById('dashChronoLabel').textContent = score >= 85 ? 'Excellent rythme' : score >= 70 ? 'Bon rythme' : 'A ameliorer';
+        }
+      }
 
       // Update pricing buttons
       updatePricingButtons(plan);
