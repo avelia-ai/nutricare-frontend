@@ -141,6 +141,9 @@ h1 em { font-style: italic; color: var(--gold); display: block; }
 .ticker-item { font-size: 11px; letter-spacing: .15em; text-transform: uppercase; color: rgba(255,255,255,.3); flex-shrink: 0; display: flex; align-items: center; gap: 12px; }
 .ticker-item span { color: var(--gold); }
 
+.particles { position: fixed; inset: 0; pointer-events: none; z-index: 0; overflow: hidden; }
+.particle { position: absolute; background: #85B7EB; border-radius: 50%; opacity: 0; animation: pfloat linear infinite; }
+@keyframes pfloat { 0%{transform:translateY(100vh);opacity:0} 10%{opacity:.4} 90%{opacity:.15} 100%{transform:translateY(-10vh) translateX(20px);opacity:0} }
 footer { background: white; border-top: 1px solid var(--border); padding: 28px 48px 60px; display: flex; justify-content: space-between; align-items: center; font-size: .75rem; color: rgba(2,26,53,.35); flex-wrap: wrap; gap: 12px; }
 .footer-logo { font-family: 'Playfair Display', serif; color: var(--dark); font-size: 1.1rem; }
 @media(max-width:768px) { nav { padding: 16px 20px; } .cards-section, .grey-section, .stats-section, .cta-section { padding: 72px 24px; } }
@@ -148,6 +151,7 @@ footer { background: white; border-top: 1px solid var(--border); padding: 28px 4
 </head>
 <body>
 
+<div class="particles" id="particles"></div>
 <nav>
   <div class="nav-logo">
     <img src="mirella-logo.png" alt="Mirella" onerror="this.style.display='none';this.nextElementSibling.style.display='block'">
@@ -342,6 +346,12 @@ footer { background: white; border-top: 1px solid var(--border); padding: 28px 4
 </footer>
 
 <script>
+const pc = document.getElementById('particles');
+for (let i = 0; i < 30; i++) {
+  const p = document.createElement('div'); p.className = 'particle';
+  p.style.cssText = 'left:' + (Math.random()*100) + '%;width:' + (1+Math.random()*3) + 'px;height:' + (1+Math.random()*3) + 'px;animation-duration:' + (8+Math.random()*12) + 's;animation-delay:' + (Math.random()*10) + 's;';
+  pc.appendChild(p);
+}
 const launch = new Date(); launch.setDate(launch.getDate() + 14);
 function tick() {
   const d = launch - new Date(); if (d <= 0) return;
