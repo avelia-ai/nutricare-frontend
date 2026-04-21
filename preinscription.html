@@ -158,11 +158,19 @@ h1 em { font-style: italic; color: #C9A84C; display: block; }
 .ticker-item { font-size: 11px; letter-spacing: .15em; text-transform: uppercase; color: rgba(255,255,255,.3); flex-shrink: 0; display: flex; align-items: center; gap: 12px; }
 .ticker-item span { color: #C9A84C; }
 
+
+.particles { position: fixed; inset: 0; pointer-events: none; z-index: 0; overflow: hidden; }
+.particle { position: absolute; width: 2px; height: 2px; background: #B5D4F4; border-radius: 50%; opacity: 0; animation: particle-float linear infinite; }
+@keyframes particle-float { 0%{transform:translateY(100vh) translateX(0);opacity:0} 10%{opacity:.5} 90%{opacity:.2} 100%{transform:translateY(-10vh) translateX(20px);opacity:0} }
+
 footer { background: #021A35; padding: 28px 48px; display: flex; justify-content: space-between; align-items: center; font-size: 0.75rem; color: rgba(255,255,255,.3); flex-wrap: wrap; gap: 12px; border-top: 1px solid rgba(255,255,255,.06); }
 .footer-logo { font-family: 'Playfair Display', serif; color: rgba(255,255,255,.5); font-size: 1.1rem; }
 </style>
 </head>
 <body>
+
+
+<div class="particles" id="particles"></div>
 
 <nav>
   <div class="nav-logo">
@@ -377,6 +385,15 @@ doubled.forEach(t => {
   el.innerHTML = '✦ ' + t;
   ticker.appendChild(el);
 });
+
+const pc = document.getElementById('particles');
+for (let i = 0; i < 30; i++) {
+  const p = document.createElement('div');
+  p.className = 'particle';
+  p.style.cssText = 'left:' + (Math.random()*100) + '%;animation-duration:' + (6+Math.random()*10) + 's;animation-delay:' + (Math.random()*8) + 's;width:' + (1+Math.random()*2) + 'px;height:' + (1+Math.random()*2) + 'px;';
+  pc.appendChild(p);
+}
+
 </script>
 </body>
 </html>
