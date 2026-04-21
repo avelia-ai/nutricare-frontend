@@ -3708,6 +3708,44 @@ async function loadChrono() {
     </div>`).join('');
 }
 
+function sendChronoAlert() {
+  const profile = JSON.parse(localStorage.getItem('nutricare_profile') || '{}');
+  if (!profile.wake_up && !profile.sleep_time) return;
+
+  const now = new Date();
+  const hour = now.getHours();
+  const wakeH = profile.wake_up ? parseInt(profile.wake_up.split(':')[0]) : 7;
+  const sleepH = profile.sleep_time ? parseInt(profile.sleep_time.split(':')[0]) : 23;
+  const workStartH = profile.work_start ? parseInt(profile.work_start.split(':')[0]) : 9;
+  const workEndH = profile.work_end ? parseInt(profile.work_end.split(':')[0]) : 18;
+
+  let alert = null;
+
+  if (hour >= wakeH && hour < wakeH + 2) {
+    alert = "Bonjour ! C est le moment ideal pour votre petit-dejeuner. Privilegiez les proteines et les bons lipides pour demarrer la journee avec energie. Evitez les sucres rapides qui provoquent un pic glycemique suivi d une fatigue.";
+  } else if (hour >= 12 && hour < 14) {
+    alert = "C est l heure du dejeuner - votre repas principal de la journee ! Votre metabolisme est au maximum en ce moment. C est le meilleur moment pour consommer des glucides complexes et des proteines.";
+  } else if (hour >= workEndH - 1 && hour < workEndH + 1) {
+    alert = "Fin de journee de travail ! Une petite collation s impose : fruits + oleagineux pour tenir jusqu au diner sans grignoter. Evitez la cafeine maintenant pour preserver votre sommeil ce soir.";
+  } else if (hour >= sleepH - 3 && hour < sleepH - 1) {
+    alert = "Il est bientot l heure du diner. Pensez a manger leger - 2 a 3h avant votre heure de coucher (${profile.sleep_time}). Privilegiez les legumes, les proteines maigres et evitez les glucides raffinés pour un meilleur sommeil.";
+  } else if (hour >= sleepH - 1 || hour < wakeH) {
+    alert = "Il est tard ! Evitez de manger maintenant, cela perturberait votre sommeil et votre metabolisme nocturne. Si vous avez vraiment faim, une petite tisane ou quelques amandes suffiront.";
+  } else if (hour >= 15 && hour < 17) {
+    alert = "Coup de barre de l apres-midi ? C est normal selon votre rythme circadien. Une collation legere (fruit + proteine) peut vous aider. Evitez absolument la cafeine apres 15h pour preserver votre sommeil.";
+  }
+
+  if (alert) {
+    const chatMessages = document.getElementById('chatMessages');
+    if (!chatMessages) return;
+    const alertDiv = document.createElement('div');
+    alertDiv.className = 'msg-row ai';
+    alertDiv.innerHTML = '<div class="msg-avatar"></div><div class="msg-bubble" style="border-left:3px solid #C9A84C;background:rgba(201,168,76,.06)"><div style="font-size:0.7rem;color:#C9A84C;font-weight:600;margin-bottom:6px;text-transform:uppercase;letter-spacing:1px">Alerte Chrono-nutrition</div>' + alert + '</div>';
+    chatMessages.appendChild(alertDiv);
+    chatMessages.scrollTop = chatMessages.scrollHeight;
+  }
+}
+
 async function loadProtocols() {
   const profile = JSON.parse(localStorage.getItem('nutricare_profile') || localStorage.getItem('nutricare_user') || '{}');
   const storedPathologies = profile.pathologies || [];
@@ -3998,6 +4036,7 @@ async function deleteProfessional(id) {
         setTimeout(() => success.classList.remove('show'), 3000);
         await loadProfile();
         if (typeof loadChrono === 'function') loadChrono();
+        setTimeout(sendChronoAlert, 2000);
       }
     } catch (err) {
       console.error('Erreur sauvegarde:', err);
