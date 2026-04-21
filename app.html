@@ -405,6 +405,7 @@ function switchLang(lang) {
       <button class="nav-item" onclick="showView('insights', this)">Observatoire</button>
       <button class="nav-item" onclick="showView('simulator', this)" data-i18n="nav_simulator">Simulateur</button>
     <button class="nav-item" onclick="showView('oracle', this)">Oracle Santé</button>
+      <button class="nav-item" onclick="showView('chrono', this)">🌙 Chrono-nutrition</button>
       <button class="nav-item" onclick="showView('passeport', this)">Passeport Santé</button>
       <button class="nav-item" onclick="showView('biologie', this)">Bilan sanguin</button>
       <button class="nav-item" onclick="showView('entreprise', this)">Mon entreprise</button>
@@ -3296,6 +3297,7 @@ function toggleMobileMenu() {
     document.getElementById('proView').style.display = view === 'pro' ? 'block' : 'none';
     if (view === 'pro') loadProfessionals();
     document.getElementById('protocolsView').style.display = view === 'protocols' ? 'block' : 'none';
+    document.getElementById('chronoView').style.display = view === 'chrono' ? 'block' : 'none';
     document.getElementById('gamificationView').style.display = view === 'gamification' ? 'block' : 'none';
     document.getElementById('programsView').style.display = view === 'programs' ? 'block' : 'none';
     document.getElementById('ordonnanceView').style.display = view === 'ordonnance' ? 'block' : 'none';
@@ -3321,6 +3323,7 @@ function toggleMobileMenu() {
     }
     if (view === 'gamification') loadGamification();
     if (view === 'protocols') setTimeout(loadProtocols, 300);
+    if (view === 'chrono') setTimeout(loadChrono, 300);
     document.getElementById('healthView').style.display = view === 'health' ? 'block' : 'none';
     if (view === 'health') loadHealthDashboard();
     document.getElementById('menusView').style.display = view === 'menus' ? 'block' : 'none';
@@ -3579,6 +3582,84 @@ function renderHealthHistory(logs) {
       ${l.notes ? `<div style="color:#021A35;margin-top:4px;font-style:italic">"${l.notes}"</div>` : ''}
     </div>`).join('');
 }
+async function loadChrono() {
+  const profile = JSON.parse(localStorage.getItem('nutricare_profile') || '{}');
+  const wake = profile.wake_up || '07:00';
+  const sleep = profile.sleep_time || '23:00';
+  const workStart = profile.work_start || '09:00';
+  const workEnd = profile.work_end || '18:00';
+  const goal = profile.chrono_goal || '';
+
+  // Calculer le score circadien
+  const wakeH = parseInt(wake.split(':')[0]);
+  const sleepH = parseInt(sleep.split(':')[0]);
+  const sleepDuration = sleepH > wakeH ? 24 - sleepH + wakeH : wakeH - sleepH;
+  let score = 70;
+  if (sleepDuration >= 7 && sleepDuration <= 9) score += 15;
+  if (wakeH >= 6 && wakeH <= 8) score += 10;
+  if (sleepH >= 22 && sleepH <= 24) score += 5;
+  score = Math.min(100, score);
+
+  document.getElementById('chronoScore').textContent = score;
+  const labels = { 90: 'Excellent', 75: 'Bon', 60: 'Moyen', 0: 'À améliorer' };
+  const label = Object.keys(labels).reverse().find(k => score >= k);
+  document.getElementById('chronoScoreLabel').textContent = labels[label] + ' rythme circadien';
+  document.getElementById('chronoScoreDesc').textContent = score >= 85
+    ? 'Votre rythme circadien est optimal. Vos horaires favorisent énergie, métabolisme et sommeil.'
+    : score >= 70
+    ? 'Votre rythme est bon. Quelques ajustements peuvent optimiser votre énergie.'
+    : 'Votre rythme circadien peut être amélioré. Consultez les conseils ci-dessous.';
+
+  // Timeline des repas
+  const wakeMin = parseInt(wake.split(':')[0]) * 60 + parseInt(wake.split(':')[1]);
+  const breakfastTime = `${String(Math.floor((wakeMin + 45) / 60)).padStart(2,'0')}:${String((wakeMin + 45) % 60).padStart(2,'0')}`;
+  const lunchTime = '12:30';
+  const snackH = parseInt(workEnd.split(':')[0]) - 1;
+  const snackTime = `${snackH}:00`;
+  const sleepMin = parseInt(sleep.split(':')[0]) * 60 + parseInt(sleep.split(':')[1]);
+  const dinnerMin = sleepMin - 150;
+  const dinnerTime = `${String(Math.floor(dinnerMin / 60)).padStart(2,'0')}:${String(dinnerMin % 60).padStart(2,'0')}`;
+
+  const timeline = [
+    { time: breakfastTime, meal: 'Petit-déjeuner', icon: '🌅', desc: 'Protéines + bons lipides. Lance le métabolisme.', color: '#C9A84C' },
+    { time: lunchTime, meal: 'Déjeuner', icon: '☀️', desc: 'Repas principal. Tolérance glucidique maximale.', color: '#378ADD' },
+    { time: snackTime, meal: 'Collation', icon: '🍎', desc: 'Fruits + oléagineux. Pas de sucres raffinés.', color: '#7A9E7E' },
+    { time: dinnerTime, meal: 'Dîner', icon: '🌙', desc: 'Repas léger. Favorise la récupération nocturne.', color: '#9E7A9E' },
+  ];
+
+  document.getElementById('chronoTimeline').innerHTML = timeline.map(t => `
+    <div style="display:flex;align-items:center;gap:16px;padding:12px;background:#F8F5F0;border-radius:6px;border-left:3px solid ${t.color}">
+      <div style="font-size:1.4rem">${t.icon}</div>
+      <div style="background:${t.color};color:white;padding:4px 10px;border-radius:4px;font-size:0.78rem;font-weight:600;min-width:50px;text-align:center">${t.time}</div>
+      <div>
+        <div style="font-size:0.88rem;font-weight:600;color:#021A35">${t.meal}</div>
+        <div style="font-size:0.75rem;color:rgba(2,26,53,.55)">${t.desc}</div>
+      </div>
+    </div>`).join('');
+
+  // Conseils personnalisés
+  const goalAdvice = {
+    energy: ['Petit-déjeuner riche en protéines pour un pic d'énergie matinal', 'Évitez les glucides simples avant une réunion importante', 'Café uniquement avant 14h pour ne pas perturber le sommeil'],
+    sleep: ['Dîner 3h avant le coucher minimum', 'Tryptophane le soir : dinde, banane, lait chaud', 'Évitez l'alcool et la caféine après 15h'],
+    weight: ['Petit-déjeuner copieux, dîner léger', 'Fenêtre alimentaire de 8-10h pour optimiser le métabolisme', 'Glucides complexes le matin, protéines le soir'],
+    focus: ['Oméga-3 le matin pour la concentration', 'Déjeuner modéré pour éviter la somnolence post-prandiale', 'Collation protéinée avant les tâches importantes'],
+    digestion: ['Manger lentement, mastiquer 20+ fois', 'Évitez les repas copieux le soir', 'Probiotiques et fibres au petit-déjeuner'],
+    sport: ['Glucides 2h avant l'effort', 'Protéines dans les 30 min post-entraînement', 'Hydratation optimale tout au long de la journée'],
+  };
+
+  const advices = goalAdvice[goal] || [
+    'Respectez des horaires de repas réguliers pour stabiliser votre glycémie',
+    'Mangez votre repas principal le midi quand votre métabolisme est au maximum',
+    'Évitez de manger dans les 2h avant le coucher pour améliorer votre sommeil',
+  ];
+
+  document.getElementById('chronoAdvice').innerHTML = advices.map((a, i) => `
+    <div style="display:flex;align-items:flex-start;gap:12px;padding:12px;background:#F8F5F0;border-radius:6px;">
+      <div style="width:24px;height:24px;border-radius:50%;background:#021A35;color:#C9A84C;display:flex;align-items:center;justify-content:center;font-size:0.72rem;font-weight:700;flex-shrink:0">${i+1}</div>
+      <div style="font-size:0.85rem;color:rgba(2,26,53,.75);line-height:1.5">${a}</div>
+    </div>`).join('');
+}
+
 async function loadProtocols() {
   const profile = JSON.parse(localStorage.getItem('nutricare_profile') || localStorage.getItem('nutricare_user') || '{}');
   const storedPathologies = profile.pathologies || [];
