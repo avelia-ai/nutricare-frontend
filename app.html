@@ -3798,7 +3798,7 @@ async function loadProtocols() {
         const cacheKey = 'protocol_' + pathologie.toLowerCase().replace(/\s+/g, '_');
         const cached = localStorage.getItem(cacheKey);
         if (cached) { protocols.push(JSON.parse(cached)); continue; }
-        const genRes = await fetch(`${BACKEND_URL}/api/protocols/generate`, {method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({pathologie})});
+        const pProf = JSON.parse(localStorage.getItem("nutricare_profile") || "{}"); const genRes = await fetch(`${BACKEND_URL}/api/protocols/generate`, {method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({pathologie, wake_up: pProf.wake_up, sleep_time: pProf.sleep_time, work_start: pProf.work_start, work_end: pProf.work_end, chrono_goal: pProf.chrono_goal})});
         if (genRes.ok) { const generated = await genRes.json(); localStorage.setItem(cacheKey, JSON.stringify(generated)); protocols.push(generated); }
       } catch(e) { console.error("generate error:", e); }
     }
