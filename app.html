@@ -550,6 +550,23 @@ function switchLang(lang) {
             <input type="text" class="profile-input" id="profileName" placeholder="Votre nom">
           </div>
           <div class="profile-field" style="grid-column:span 2">
+            <label class="profile-label">Origine ethnique <span style="font-size:0.7rem;color:var(--soft);font-weight:400;">(facultatif - aide a personnaliser les conseils nutritionnels)</span></label>
+            <select class="profile-input" id="profileEthnicity">
+              <option value="">Non renseigne</option>
+              <option value="europeen">Europeen / Caucasien</option>
+              <option value="africain">Africain / Afro-caribeen</option>
+              <option value="maghrebin">Maghrebin / Nord-africain</option>
+              <option value="moyen-orient">Moyen-Orient</option>
+              <option value="asiatique-est">Asiatique de l Est (Chine, Japon, Coree)</option>
+              <option value="asiatique-sud">Asiatique du Sud (Inde, Pakistan, Bangladesh)</option>
+              <option value="asiatique-sudest">Asiatique du Sud-Est (Vietnam, Thailand, Philippines)</option>
+              <option value="latino">Latino-americain / Hispanique</option>
+              <option value="amerindien">Amerindien / Autochtone</option>
+              <option value="mixte">Metis / Origine multiple</option>
+              <option value="autre">Autre</option>
+            </select>
+          </div>
+          <div class="profile-field" style="grid-column:span 2">
             <label class="profile-label">Pathologies (séparées par des virgules)</label>
             <input type="text" class="profile-input" id="profilePathologies" placeholder="ex: diabète type 2, hypertension">
           </div>
@@ -2083,6 +2100,7 @@ function toggleMobileMenu() {
       document.getElementById('profileMedications').value = profile.medications?.join(', ') || '';
       document.getElementById('profileCultural').value = profile.cultural_constraints || '';
       document.getElementById('profileBudget').value = profile.budget_alimentaire || '';
+      if (document.getElementById('profileEthnicity')) document.getElementById('profileEthnicity').value = profile.ethnicity || '';
       if (document.getElementById('profileWakeUp')) document.getElementById('profileWakeUp').value = profile.wake_up || '07:00';
       if (document.getElementById('profileSleep')) document.getElementById('profileSleep').value = profile.sleep_time || '23:00';
       if (document.getElementById('profileWorkStart')) document.getElementById('profileWorkStart').value = profile.work_start || '09:00';
@@ -4192,6 +4210,7 @@ async function deleteProfessional(id) {
       medications: document.getElementById('profileMedications').value.split(',').map(s => s.trim()).filter(Boolean),
       cultural_constraints: document.getElementById('profileCultural').value.trim(),
       budget_alimentaire: document.getElementById('profileBudget').value.trim(),
+      ethnicity: document.getElementById('profileEthnicity')?.value || '',
       wake_up: document.getElementById('profileWakeUp')?.value || '',
       sleep_time: document.getElementById('profileSleep')?.value || '',
       work_start: document.getElementById('profileWorkStart')?.value || '',
