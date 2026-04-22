@@ -2111,6 +2111,7 @@ function toggleMobileMenu() {
       if (document.getElementById('profileWorkStart')) document.getElementById('profileWorkStart').value = profile.work_start || '09:00';
       if (document.getElementById('profileWorkEnd')) document.getElementById('profileWorkEnd').value = profile.work_end || '18:00';
       if (document.getElementById('profileChronoGoal')) document.getElementById('profileChronoGoal').value = profile.chrono_goal || '';
+      updateMenu(profile.plan || 'free');
       // Score circadien dans le dashboard
       if (profile.wake_up || profile.sleep_time) {
         const wakeH = parseInt((profile.wake_up || '07:00').split(':')[0]);
@@ -3976,6 +3977,22 @@ function showUpgradeModal(requiredPlan) {
   </div>`;
   document.body.appendChild(modal);
   modal.addEventListener('click', e => { if (e.target === modal) modal.remove(); });
+}
+
+function updateMenu(plan) {
+  const standard = document.getElementById('menuStandard');
+  const premium = document.getElementById('menuPremium');
+  if (!standard || !premium) return;
+  if (plan === 'free') {
+    standard.style.display = 'none';
+    premium.style.display = 'none';
+  } else if (plan === 'standard') {
+    standard.style.display = 'block';
+    premium.style.display = 'none';
+  } else if (plan === 'premium') {
+    standard.style.display = 'block';
+    premium.style.display = 'block';
+  }
 }
 
 async function loadProtocols() {
