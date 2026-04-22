@@ -927,6 +927,11 @@ function switchLang(lang) {
         <div style="font-size:0.75rem;color:rgba(2,26,53,.45);">JPG, PNG, WEBP</div>
       </div>
       <input type="file" id="visualInput" accept="image/*" style="display:none" onchange="analyzeVisual(this.files[0])">
+      <input type="file" id="visualCamera" accept="image/*" capture="environment" style="display:none" onchange="analyzeVisual(this.files[0])">
+      <div style="display:flex;gap:10px;margin-top:12px;">
+        <button onclick="document.getElementById('visualCamera').click()" style="flex:1;background:#021A35;color:white;border:none;padding:12px;border-radius:6px;font-size:0.85rem;cursor:pointer;font-family:'DM Sans',sans-serif;display:flex;align-items:center;justify-content:center;gap:8px;">📷 Prendre une photo</button>
+        <button onclick="document.getElementById('visualInput').click()" style="flex:1;background:white;color:#021A35;border:1.5px solid #B5D4F4;padding:12px;border-radius:6px;font-size:0.85rem;cursor:pointer;font-family:'DM Sans',sans-serif;display:flex;align-items:center;justify-content:center;gap:8px;">🖼️ Choisir une photo</button>
+      </div>
       <div style="margin-top:20px;">
         <div style="font-size:0.78rem;font-weight:600;color:#021A35;margin-bottom:10px;">Zone analysee :</div>
         <div style="display:flex;flex-wrap:wrap;gap:8px;" id="visualCats">
