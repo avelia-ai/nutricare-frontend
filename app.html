@@ -402,6 +402,7 @@ function switchLang(lang) {
       <button class="nav-item" onclick="showView('gamification', this)">Ma progression</button>
       <button class="nav-item" onclick="showView('programs', this)" data-i18n="nav_programs">Programmes</button>
       <button class="nav-item" onclick="showView('ordonnance', this)">Scan ordonnance</button>
+      <button class="nav-item" onclick="showView('visual', this)">🔬 Detection visuelle</button>
       <button class="nav-item" onclick="showView('insights', this)">Observatoire</button>
       <button class="nav-item" onclick="showView('simulator', this)" data-i18n="nav_simulator">Simulateur</button>
     <button class="nav-item" onclick="showView('oracle', this)">Oracle Santé</button>
@@ -908,6 +909,65 @@ function switchLang(lang) {
     </div>
     <div style="text-align:center;">
       <button onclick="showView('profile')" style="background:#021A35;color:white;padding:12px 28px;border:none;border-radius:4px;font-size:0.88rem;cursor:pointer;font-family:'DM Sans',sans-serif;">Modifier mes horaires</button>
+    </div>
+  </div>
+</div>
+<div id="visualView" style="display:none;padding:32px;overflow-y:auto;background:var(--cream);width:100%">
+  <div style="max-width:800px;margin:0 auto;">
+    <div style="font-family:'Open Sans',serif;font-size:2rem;font-weight:400;margin-bottom:6px;color:#021A35">Detection et analyse visuelle</div>
+    <div style="font-size:0.85rem;color:#85B7EB;margin-bottom:16px">Analyse de signes visuels par intelligence artificielle</div>
+    <div style="background:#FDF6E8;border:1px solid #C9A84C;border-radius:6px;padding:12px 16px;margin-bottom:28px;font-size:0.78rem;color:#8B6914;line-height:1.5;">
+      <strong>Avertissement</strong> — Cet outil ne remplace pas un diagnostic medical. Il identifie des signes visuels potentiels et vous oriente vers les bons professionnels. Consultez toujours un medecin pour tout diagnostic.
+    </div>
+    <div style="background:white;border-radius:8px;border:1px solid #B5D4F4;padding:28px;margin-bottom:24px;">
+      <div style="font-size:0.75rem;font-weight:600;text-transform:uppercase;letter-spacing:1px;color:#85B7EB;margin-bottom:16px;">Charger une image</div>
+      <div id="visualDropZone" style="border:2px dashed #B5D4F4;border-radius:8px;padding:40px;text-align:center;cursor:pointer;transition:all .2s;" onclick="document.getElementById('visualInput').click()" ondragover="event.preventDefault();this.style.borderColor='#021A35'" ondragleave="this.style.borderColor='#B5D4F4'" ondrop="handleVisualDrop(event)">
+        <div style="font-size:2.5rem;margin-bottom:12px;">📸</div>
+        <div style="font-size:0.9rem;font-weight:500;color:#021A35;margin-bottom:6px;">Glissez une photo ou cliquez pour parcourir</div>
+        <div style="font-size:0.75rem;color:rgba(2,26,53,.45);">JPG, PNG, WEBP</div>
+      </div>
+      <input type="file" id="visualInput" accept="image/*" style="display:none" onchange="analyzeVisual(this.files[0])">
+      <div style="margin-top:20px;">
+        <div style="font-size:0.78rem;font-weight:600;color:#021A35;margin-bottom:10px;">Zone analysee :</div>
+        <div style="display:flex;flex-wrap:wrap;gap:8px;" id="visualCats">
+          <button onclick="setVisualCategory(this,'peau','peau et dermatologie')" style="background:#021A35;color:white;border:none;padding:6px 14px;border-radius:100px;font-size:0.75rem;cursor:pointer;">Peau / Dermatologie</button>
+          <button onclick="setVisualCategory(this,'oeil','yeux et sclerotique')" style="background:white;color:#021A35;border:1px solid #B5D4F4;padding:6px 14px;border-radius:100px;font-size:0.75rem;cursor:pointer;">Yeux</button>
+          <button onclick="setVisualCategory(this,'ongle','ongles')" style="background:white;color:#021A35;border:1px solid #B5D4F4;padding:6px 14px;border-radius:100px;font-size:0.75rem;cursor:pointer;">Ongles</button>
+          <button onclick="setVisualCategory(this,'langue','langue et bouche')" style="background:white;color:#021A35;border:1px solid #B5D4F4;padding:6px 14px;border-radius:100px;font-size:0.75rem;cursor:pointer;">Langue</button>
+          <button onclick="setVisualCategory(this,'general','aspect general')" style="background:white;color:#021A35;border:1px solid #B5D4F4;padding:6px 14px;border-radius:100px;font-size:0.75rem;cursor:pointer;">General</button>
+        </div>
+      </div>
+    </div>
+    <div id="visualPreview" style="display:none;background:white;border-radius:8px;border:1px solid #B5D4F4;padding:20px;margin-bottom:24px;">
+      <div style="display:flex;gap:20px;align-items:flex-start;flex-wrap:wrap;">
+        <img id="visualImg" style="max-width:200px;max-height:200px;border-radius:6px;border:1px solid #B5D4F4;object-fit:cover;" src="">
+        <div style="flex:1;min-width:200px;">
+          <div style="font-size:0.85rem;font-weight:500;color:#021A35;margin-bottom:12px;" id="visualFileName"></div>
+          <button onclick="analyzeVisualImage()" id="visualBtn" style="background:#021A35;color:white;padding:12px 24px;border:none;border-radius:4px;font-size:0.88rem;cursor:pointer;font-family:'DM Sans',sans-serif;width:100%;">Analyser avec Mirella IA</button>
+        </div>
+      </div>
+    </div>
+    <div id="visualLoader" style="display:none;text-align:center;padding:40px;">
+      <div style="font-size:2rem;margin-bottom:12px;">🔬</div>
+      <div style="font-size:0.9rem;color:#021A35;font-weight:500;">Mirella analyse votre image...</div>
+    </div>
+    <div id="visualResult" style="display:none;"></div>
+    <div style="background:white;border-radius:8px;border:1px solid #B5D4F4;padding:24px;margin-top:24px;">
+      <div style="font-size:0.75rem;font-weight:600;text-transform:uppercase;letter-spacing:1px;color:#85B7EB;margin-bottom:16px;">Signes detectables</div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;">
+        <div style="background:#F8F5F0;border-radius:6px;padding:10px;font-size:0.78rem;color:#021A35;">🔴 Melanome</div>
+        <div style="background:#F8F5F0;border-radius:6px;padding:10px;font-size:0.78rem;color:#021A35;">🟡 Jaunisse</div>
+        <div style="background:#F8F5F0;border-radius:6px;padding:10px;font-size:0.78rem;color:#021A35;">🔵 Eczema</div>
+        <div style="background:#F8F5F0;border-radius:6px;padding:10px;font-size:0.78rem;color:#021A35;">⚪ Psoriasis</div>
+        <div style="background:#F8F5F0;border-radius:6px;padding:10px;font-size:0.78rem;color:#021A35;">🟠 Rosacee</div>
+        <div style="background:#F8F5F0;border-radius:6px;padding:10px;font-size:0.78rem;color:#021A35;">🟤 Acne severe</div>
+        <div style="background:#F8F5F0;border-radius:6px;padding:10px;font-size:0.78rem;color:#021A35;">🩸 Diabete (signes)</div>
+        <div style="background:#F8F5F0;border-radius:6px;padding:10px;font-size:0.78rem;color:#021A35;">🫀 Probleme foie</div>
+        <div style="background:#F8F5F0;border-radius:6px;padding:10px;font-size:0.78rem;color:#021A35;">💅 Carences ongles</div>
+        <div style="background:#F8F5F0;border-radius:6px;padding:10px;font-size:0.78rem;color:#021A35;">👁️ Anemie yeux</div>
+        <div style="background:#F8F5F0;border-radius:6px;padding:10px;font-size:0.78rem;color:#021A35;">🌿 Dermatite</div>
+        <div style="background:#F8F5F0;border-radius:6px;padding:10px;font-size:0.78rem;color:#021A35;">⭕ Urticaire</div>
+      </div>
     </div>
   </div>
 </div>
@@ -3367,6 +3427,7 @@ function toggleMobileMenu() {
     if (view === 'pro') loadProfessionals();
     document.getElementById('protocolsView').style.display = view === 'protocols' ? 'block' : 'none';
     document.getElementById('chronoView').style.display = view === 'chrono' ? 'block' : 'none';
+    if (document.getElementById('visualView')) document.getElementById('visualView').style.display = view === 'visual' ? 'block' : 'none';
     document.getElementById('gamificationView').style.display = view === 'gamification' ? 'block' : 'none';
     document.getElementById('programsView').style.display = view === 'programs' ? 'block' : 'none';
     document.getElementById('ordonnanceView').style.display = view === 'ordonnance' ? 'block' : 'none';
@@ -3764,6 +3825,91 @@ function sendChronoAlert() {
     chatMessages.appendChild(alertDiv);
     chatMessages.scrollTop = chatMessages.scrollHeight;
   }
+}
+
+let visualCategory = 'peau';
+let visualCategoryLabel = 'peau et dermatologie';
+let visualFileData = null;
+
+function setVisualCategory(btn, cat, label) {
+  visualCategory = cat;
+  visualCategoryLabel = label;
+  document.querySelectorAll('#visualCats button').forEach(b => {
+    b.style.background = 'white';
+    b.style.color = '#021A35';
+    b.style.border = '1px solid #B5D4F4';
+  });
+  btn.style.background = '#021A35';
+  btn.style.color = 'white';
+  btn.style.border = 'none';
+}
+
+function handleVisualDrop(e) {
+  e.preventDefault();
+  document.getElementById('visualDropZone').style.borderColor = '#B5D4F4';
+  const file = e.dataTransfer.files[0];
+  if (file && file.type.startsWith('image/')) analyzeVisual(file);
+}
+
+function analyzeVisual(file) {
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    visualFileData = e.target.result;
+    document.getElementById('visualImg').src = visualFileData;
+    document.getElementById('visualFileName').textContent = file.name + ' (' + (file.size/1024).toFixed(0) + ' KB)';
+    document.getElementById('visualPreview').style.display = 'block';
+    document.getElementById('visualResult').style.display = 'none';
+  };
+  reader.readAsDataURL(file);
+}
+
+async function analyzeVisualImage() {
+  if (!visualFileData) return;
+  document.getElementById('visualLoader').style.display = 'block';
+  document.getElementById('visualResult').style.display = 'none';
+  document.getElementById('visualBtn').disabled = true;
+  const base64 = visualFileData.split(',')[1];
+  const mediaType = visualFileData.split(';')[0].split(':')[1];
+  try {
+    const backendRes = await fetch(BACKEND_URL + '/api/visual-analysis', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + authToken },
+      body: JSON.stringify({ imageBase64: base64, mediaType, category: visualCategory, categoryLabel: visualCategoryLabel })
+    });
+    const data = await backendRes.json();
+    if (!backendRes.ok) throw new Error(data.error || 'Erreur analyse');
+    displayVisualResult(data);
+  } catch(e) {
+    document.getElementById('visualResult').innerHTML = '<div style="background:#FEE;border:1px solid #F99;border-radius:8px;padding:16px;color:#C00;">Erreur : ' + e.message + '</div>';
+    document.getElementById('visualResult').style.display = 'block';
+  }
+  document.getElementById('visualLoader').style.display = 'none';
+  document.getElementById('visualBtn').disabled = false;
+}
+
+function displayVisualResult(data) {
+  const urgenceColors = { routine: '#7A9E7E', consulter_bientot: '#C9A84C', urgent: '#E05C00' };
+  const urgenceLabels = { routine: 'Surveillance conseillee', consulter_bientot: 'Consultez bientot', urgent: 'Consultation urgente' };
+  const niveauColors = { faible: '#7A9E7E', modere: '#C9A84C', eleve: '#E05C00' };
+  let html = '<div style="background:white;border-radius:8px;border:1px solid #B5D4F4;padding:24px;margin-bottom:16px;">';
+  html += '<div style="display:flex;align-items:center;gap:12px;margin-bottom:20px;"><div style="background:' + (urgenceColors[data.urgence]||'#7A9E7E') + ';color:white;padding:6px 14px;border-radius:100px;font-size:0.75rem;font-weight:600;">' + (urgenceLabels[data.urgence]||'') + '</div></div>';
+  html += '<div style="font-size:0.75rem;font-weight:600;text-transform:uppercase;letter-spacing:1px;color:#85B7EB;margin-bottom:8px;">Apparence generale</div>';
+  html += '<div style="font-size:0.88rem;color:rgba(2,26,53,.7);margin-bottom:20px;line-height:1.6;">' + (data.apparence_generale||'') + '</div>';
+  if (data.signes_detectes?.length) {
+    html += '<div style="font-size:0.75rem;font-weight:600;text-transform:uppercase;letter-spacing:1px;color:#85B7EB;margin-bottom:10px;">Signes detectes</div>';
+    html += '<div style="display:flex;flex-direction:column;gap:8px;margin-bottom:20px;">' + data.signes_detectes.map(s => '<div style="display:flex;align-items:flex-start;gap:10px;padding:10px;background:#F8F5F0;border-radius:6px;border-left:3px solid ' + (niveauColors[s.niveau_alerte]||'#85B7EB') + '"><div style="flex:1"><div style="font-size:0.85rem;font-weight:600;color:#021A35;">' + s.signe + '</div><div style="font-size:0.78rem;color:rgba(2,26,53,.6);margin-top:2px;">' + s.description + '</div></div><span style="background:' + (niveauColors[s.niveau_alerte]||'#85B7EB') + ';color:white;font-size:0.65rem;padding:2px 8px;border-radius:100px;">' + s.niveau_alerte + '</span></div>').join('') + '</div>';
+  }
+  if (data.pathologies_possibles?.length) {
+    html += '<div style="font-size:0.75rem;font-weight:600;text-transform:uppercase;letter-spacing:1px;color:#85B7EB;margin-bottom:10px;">Pathologies possibles</div>';
+    html += '<div style="display:flex;flex-direction:column;gap:8px;margin-bottom:20px;">' + data.pathologies_possibles.map(p => '<div style="padding:12px;background:#F8F5F0;border-radius:6px;"><div style="display:flex;justify-content:space-between;margin-bottom:4px;"><div style="font-size:0.88rem;font-weight:600;color:#021A35;">' + p.nom + '</div><span style="font-size:0.7rem;color:rgba(2,26,53,.5);">' + p.probabilite + '</span></div><div style="font-size:0.78rem;color:rgba(2,26,53,.6);">' + p.description + '</div></div>').join('') + '</div>';
+  }
+  html += '<div style="font-size:0.75rem;font-weight:600;text-transform:uppercase;letter-spacing:1px;color:#85B7EB;margin-bottom:10px;">Recommandations</div>';
+  html += '<div style="display:flex;flex-direction:column;gap:6px;margin-bottom:20px;">' + (data.recommandations||[]).map((r,i) => '<div style="display:flex;gap:10px;font-size:0.85rem;color:rgba(2,26,53,.7);"><span style="color:#C9A84C;font-weight:700;">' + (i+1) + '.</span>' + r + '</div>').join('') + '</div>';
+  html += '<div style="background:#021A35;border-radius:6px;padding:12px 16px;display:flex;align-items:center;gap:10px;"><span>👨‍⚕️</span><div><div style="font-size:0.75rem;color:rgba(255,255,255,.5);margin-bottom:2px;">Specialiste recommande</div><div style="font-size:0.88rem;color:white;font-weight:500;">' + (data.specialiste_recommande||'Medecin generaliste') + '</div></div></div>';
+  html += '<div style="margin-top:16px;padding:10px 14px;background:#FDF6E8;border-radius:6px;font-size:0.72rem;color:#8B6914;">' + (data.disclaimer||'') + '</div></div>';
+  document.getElementById('visualResult').innerHTML = html;
+  document.getElementById('visualResult').style.display = 'block';
 }
 
 async function loadProtocols() {
