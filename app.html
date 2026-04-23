@@ -1959,8 +1959,7 @@ function switchLang(lang) {
       if (entrepriseParam === 'create') { setTimeout(() => showView('entreprise'), 600); }
       else if (view) { setTimeout(() => { showView(view); if (pathologie) window.selectedPathologie = pathologie; }, 600); }
       else {
-        const lastView = localStorage.getItem('nutricare_last_view');
-        if (lastView && lastView !== 'chat') setTimeout(() => showView(lastView), 600);
+        setTimeout(() => showView('chat'), 600);
       }
     }
   };
