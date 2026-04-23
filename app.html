@@ -3690,9 +3690,27 @@ async function generateMenu() {
 }
 
 function unsplashUrl(nom) {
-  const ids = ['1546069901-ba9599a7e63c','1567620905732-2d1ec7ab7445','1565299624946-b28f40a0ae38','1484723091739-30f299613534','1490645935967-10de6ba17061','1512621776951-a57141f2aefd','1473093226795-af9932fe5856','1498837167922-ddd27525d352','1540189549336-e6e99eb4978','1504674900247-0877df9cc836','1563379091339-03246963d96a','1567188040759-fb8a883dc6d8','1571019613454-1cb2f99b2d8b','1414235077428-338989a2e8c0','1455619452474-a2be138948f2'];
-  const seed = (nom.charCodeAt(0) + nom.length * 7) % ids.length;
-  return `https://images.unsplash.com/photo-${ids[seed]}?w=400&q=80&fit=crop`;
+  const keywords = {
+    'porridge': 'oatmeal-bowl', 'avoine': 'oatmeal', 'granola': 'granola-bowl',
+    'oeuf': 'eggs-breakfast', 'omelette': 'omelette', 'smoothie': 'smoothie-green',
+    'yaourt': 'yogurt-bowl', 'fromage': 'cheese', 'pain': 'bread-toast',
+    'saumon': 'salmon-dish', 'poulet': 'chicken-dish', 'boeuf': 'beef-meal',
+    'poisson': 'fish-dish', 'thon': 'tuna-salad', 'crevette': 'shrimp-dish',
+    'soupe': 'soup-bowl', 'salade': 'salad-bowl', 'quinoa': 'quinoa-bowl',
+    'pates': 'pasta-dish', 'riz': 'rice-dish', 'lentille': 'lentil-soup',
+    'légumes': 'vegetables-roasted', 'tomate': 'tomato-dish', 'avocat': 'avocado-toast',
+    'fruit': 'fruit-bowl', 'pomme': 'apple', 'banane': 'banana',
+    'chocolat': 'chocolate-dessert', 'cake': 'healthy-cake', 'tartine': 'toast-avocado',
+    'curry': 'curry-dish', 'wok': 'stir-fry', 'burger': 'healthy-burger',
+    'wrap': 'wrap-sandwich', 'bowl': 'food-bowl', 'velouté': 'cream-soup'
+  };
+  const nomLower = nom.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '');
+  let keyword = 'healthy-food';
+  for (const [key, val] of Object.entries(keywords)) {
+    if (nomLower.includes(key.normalize('NFD').replace(/[̀-ͯ]/g, ''))) { keyword = val; break; }
+  }
+  const seed = (nom.charCodeAt(0) * 13 + nom.length * 7) % 100;
+  return `https://source.unsplash.com/400x300/?${keyword}&sig=${seed}`;
 }
 function showRecipeModal(repasJson) {
   const r = JSON.parse(repasJson);
