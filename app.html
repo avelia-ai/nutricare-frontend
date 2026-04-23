@@ -3689,41 +3689,18 @@ async function generateMenu() {
   }
 }
 
-function unsplashUrl(nom) {
-  const n = nom.toLowerCase()
-    .replace(/[àâä]/g,'a').replace(/[éèêë]/g,'e').replace(/[îï]/g,'i')
-    .replace(/[ôö]/g,'o').replace(/[ùûü]/g,'u').replace(/ç/g,'c');
-  const photoMap = [
-    [['avoine','porridge','muesli','granola','flocon','cereale'], '1504308651169-5e0f75a8e032'],
-    [['smoothie','jus de'], '1638437447-00dc4f2a7e8c'],
-    [['oeuf','omelette','brouille','scramble'], '1482049016688-2d3e1b311543'],
-    [['yaourt','yogurt','fromage blanc'], '1505253716362-afaea1d3d1af'],
-    [['pain','tartine','toast','biscotte'], '1484723091739-30f299613534'],
-    [['saumon','truite'], '1467003909585-2f8a72700288'],
-    [['poulet','dinde','volaille'], '1598103442097-8b74394b95c3'],
-    [['boeuf','steak','viande rouge','agneau','veau'], '1558030006-c4c7d7e39297'],
-    [['poisson','cabillaud','merlu','sole','lieu'], '1519708227418-a8d869efeccc'],
-    [['thon','sardine','maquereau'], '1546069901-ba9599a7e63c'],
-    [['crevette','moule','calmar'], '1559715541-d4fc97b8d2dd'],
-    [['soupe','veloute','potage','bouillon','minestrone'], '1547592166-23ac45744acd'],
-    [['salade','crudite','mesclun'], '1512621776951-a57141f2aefd'],
-    [['quinoa'], '1490645935967-10de6ba17061'],
-    [['pate','spaghetti','tagliatelle','linguine','rigatoni'], '1473093226795-af9932fe5856'],
-    [['riz','risotto'], '1536304929831-ee1ca9d44906'],
-    [['lentille','pois chiche','haricot','flageolet'], '1585032226651-676a6f012cfc'],
-    [['curry','tikka','massala','tajine'], '1565557623262-b51ff475928c'],
-    [['avocat'], '1523049673857-eb18f1d7b578'],
-    [['fruit rouge','fraise','framboise','myrtille','baie'], '1490474418585-ba9bad8fd0ea'],
-    [['chocolat','cacao'], '1511381939415-e44a1ef8ea93'],
-    [['wrap','burrito','galette','crepe'], '1565557623262-b51ff475928c'],
-    [['wok','saute','asiatique','nouille','ramen'], '1569050467447-ce54b3bbc37d'],
-    [['bowl','bolo','poke'], '1512621776951-a57141f2aefd'],
-    [['legume','brocoli','courgette','carotte','epinard'], '1498837167922-ddd27525d352'],
-    [['banane','pomme','poire','orange','kiwi'], '1490474418585-ba9bad8fd0ea']
-  ];
-  for (const [keys, id] of photoMap) {
-    if (keys.some(k => n.includes(k))) return `https://images.unsplash.com/photo-${id}?w=400&h=300&q=80&fit=crop`;
+async function loadMealPhoto(nom, keyword, imgEl) {
+  try {
+    const q = keyword || nom.split(' ').slice(0,3).join(' ');
+    const res = await fetch(`${BACKEND_URL}/api/photos/search?q=${encodeURIComponent(q)}`);
+    const data = await res.json();
+    if (data.url) imgEl.src = data.url;
+    else imgEl.src = 'https://images.unsplash.com/photo-1498837167922-ddd27525d352?w=400&h=300&q=80&fit=crop';
+  } catch(e) {
+    imgEl.src = 'https://images.unsplash.com/photo-1498837167922-ddd27525d352?w=400&h=300&q=80&fit=crop';
   }
+}
+function unsplashUrl(nom, keyword) {
   return 'https://images.unsplash.com/photo-1498837167922-ddd27525d352?w=400&h=300&q=80&fit=crop';
 }
 function showRecipeModal(repasJson) {
@@ -3754,7 +3731,7 @@ function renderMenu(menu) {
           const rJson = JSON.stringify(r).replace(/"/g,'&quot;');
           return `<div style="border-right:1px solid #E6F1FB;overflow:hidden">
             <div style="position:relative;height:130px;overflow:hidden">
-              <img src="${unsplashUrl(r.nom)}" style="width:100%;height:100%;object-fit:cover" onerror="this.parentNode.style.background='#E6F1FB'">
+              <img data-meal-name="${r.nom}" data-keyword="${r.photo_keyword||''}" style="width:100%;height:100%;object-fit:cover;background:#E6F1FB" onerror="this.parentNode.style.background='#E6F1FB'">
               <div style="position:absolute;bottom:0;left:0;right:0;background:linear-gradient(transparent,rgba(2,26,53,0.75));padding:8px">
                 <div style="font-size:0.65rem;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;color:rgba(255,255,255,0.9)">${repasIcons[repas]} ${repasLabels[repas]}</div>
               </div>
@@ -3777,6 +3754,14 @@ function renderMenu(menu) {
         }).join('')}
       </div>
     </div>`).join('');
+  // Charger les photos Pexels pour chaque repas
+  setTimeout(() => {
+    document.querySelectorAll('[data-meal-name]').forEach(img => {
+      const nom = img.getAttribute('data-meal-name');
+      const kw = img.getAttribute('data-keyword');
+      loadMealPhoto(nom, kw, img);
+    });
+  }, 100);
   if (menu.liste_courses) {
     document.getElementById('menusShoppingList').style.display = 'block';
     const categories = { fruits_legumes: '🥦 Fruits & Légumes', proteines: '🥩 Protéines', feculents: '🌾 Féculents', produits_laitiers: '🥛 Produits laitiers', epicerie: '🛒 Épicerie', autres: '📦 Autres' };
