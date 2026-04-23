@@ -3709,8 +3709,8 @@ async function loadMealPhoto(nom, keyword, imgEl) {
 function unsplashUrl(nom, keyword) {
   return 'https://images.unsplash.com/photo-1498837167922-ddd27525d352?w=400&h=300&q=80&fit=crop';
 }
-function showRecipeModal(repasJson) {
-  const r = JSON.parse(repasJson);
+function showRecipeModal(btn) {
+  const r = JSON.parse(btn.getAttribute('data-recipe').replace(/&quot;/g,'"'));
   document.getElementById('recipeModalTitle').textContent = r.nom;
   document.getElementById('recipeModalImg').src = unsplashUrl(r.nom);
   document.getElementById('recipeModalMacros').innerHTML = `
@@ -3751,7 +3751,7 @@ function renderMenu(menu) {
                 <span style="background:#E6F1FB;color:#378ADD;font-size:0.68rem;padding:2px 8px;border-radius:10px">💪${r.proteines||'—'}g</span>
               </div>
               <div style="font-size:0.72rem;color:#85B7EB;margin-bottom:10px">⏱ ${r.prep_minutes||0} min</div>
-              <button onclick='showRecipeModal("${rJson}")'
+              <button onclick='showRecipeModal(this)' data-recipe="${rJson}" 
                 style="width:100%;padding:7px;background:#021A35;color:white;border:none;border-radius:8px;font-size:0.75rem;cursor:pointer;font-weight:600;letter-spacing:0.3px">
                 📖 Voir la recette
               </button>
