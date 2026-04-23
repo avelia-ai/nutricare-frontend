@@ -2227,7 +2227,27 @@ function toggleMobileMenu() {
     <div class="header"><div><div class="logo">● Mirella Entreprise</div><div style="font-size:0.78rem;color:rgba(2,26,53,0.4)">Rapport mensuel RH · Données anonymisées</div></div><div style="text-align:right;font-size:0.78rem;color:rgba(2,26,53,0.4)">${entreprise}<br>${new Date().toLocaleDateString('fr-FR',{month:'long',year:'numeric'})}</div></div>
     <div class="report">${rapport}</div>
     <div class="disclaimer">️ Données 100% anonymisées. Aucune information individuelle n'est présente dans ce rapport. Conformité RGPD garantie.</div>
-    </body></html>`);
+    
+<!-- Modal Recette -->
+<div id="recipeModal" style="display:none;position:fixed;inset:0;background:rgba(2,26,53,0.6);z-index:9999;align-items:center;justify-content:center;padding:20px" onclick="if(event.target===this)this.style.display='none'">
+  <div style="background:white;border-radius:16px;max-width:520px;width:100%;max-height:85vh;overflow-y:auto;box-shadow:0 20px 60px rgba(2,26,53,0.3)">
+    <div style="position:relative;height:200px;overflow:hidden;border-radius:16px 16px 0 0">
+      <img id="recipeModalImg" src="" style="width:100%;height:100%;object-fit:cover">
+      <div style="position:absolute;inset:0;background:linear-gradient(transparent,rgba(2,26,53,0.8));display:flex;align-items:flex-end;padding:16px">
+        <div id="recipeModalTitle" style="font-size:1.2rem;font-weight:700;color:white"></div>
+      </div>
+      <button onclick="document.getElementById('recipeModal').style.display='none'" style="position:absolute;top:12px;right:12px;background:rgba(255,255,255,0.9);border:none;border-radius:50%;width:32px;height:32px;cursor:pointer;font-size:1rem">✕</button>
+    </div>
+    <div style="padding:20px">
+      <div id="recipeModalMacros" style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:20px"></div>
+      <div style="font-size:0.85rem;font-weight:700;color:#021A35;margin-bottom:10px;text-transform:uppercase;letter-spacing:1px">🛒 Ingrédients</div>
+      <ul id="recipeModalIngredients" style="list-style:none;padding:0;margin:0 0 20px 0"></ul>
+      <div style="font-size:0.85rem;font-weight:700;color:#021A35;margin-bottom:10px;text-transform:uppercase;letter-spacing:1px">👨‍🍳 Préparation</div>
+      <div id="recipeModalEtapes"></div>
+    </div>
+  </div>
+</div>
+</body></html>`);
     w.document.close();
     w.print();
   }
@@ -2628,7 +2648,27 @@ function toggleMobileMenu() {
     <div class="meta">Compte-rendu médical nutritionnel généré par Mirella</div>
     <div class="report">${report}</div>
     <div class="disclaimer">️ Ce document est généré par intelligence artificielle. Il ne remplace pas un avis médical professionnel. Document généré le ${date}.</div>
-    </body></html>`);
+    
+<!-- Modal Recette -->
+<div id="recipeModal" style="display:none;position:fixed;inset:0;background:rgba(2,26,53,0.6);z-index:9999;align-items:center;justify-content:center;padding:20px" onclick="if(event.target===this)this.style.display='none'">
+  <div style="background:white;border-radius:16px;max-width:520px;width:100%;max-height:85vh;overflow-y:auto;box-shadow:0 20px 60px rgba(2,26,53,0.3)">
+    <div style="position:relative;height:200px;overflow:hidden;border-radius:16px 16px 0 0">
+      <img id="recipeModalImg" src="" style="width:100%;height:100%;object-fit:cover">
+      <div style="position:absolute;inset:0;background:linear-gradient(transparent,rgba(2,26,53,0.8));display:flex;align-items:flex-end;padding:16px">
+        <div id="recipeModalTitle" style="font-size:1.2rem;font-weight:700;color:white"></div>
+      </div>
+      <button onclick="document.getElementById('recipeModal').style.display='none'" style="position:absolute;top:12px;right:12px;background:rgba(255,255,255,0.9);border:none;border-radius:50%;width:32px;height:32px;cursor:pointer;font-size:1rem">✕</button>
+    </div>
+    <div style="padding:20px">
+      <div id="recipeModalMacros" style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:20px"></div>
+      <div style="font-size:0.85rem;font-weight:700;color:#021A35;margin-bottom:10px;text-transform:uppercase;letter-spacing:1px">🛒 Ingrédients</div>
+      <ul id="recipeModalIngredients" style="list-style:none;padding:0;margin:0 0 20px 0"></ul>
+      <div style="font-size:0.85rem;font-weight:700;color:#021A35;margin-bottom:10px;text-transform:uppercase;letter-spacing:1px">👨‍🍳 Préparation</div>
+      <div id="recipeModalEtapes"></div>
+    </div>
+  </div>
+</div>
+</body></html>`);
     w.document.close();
     w.print();
   }
@@ -2990,6 +3030,26 @@ function toggleMobileMenu() {
     <div>Ce rapport a été généré par l'intelligence artificielle Mirella · Mirella.ai</div>
     <div>Ce document est fourni à titre informatif et ne remplace pas un avis médical professionnel.</div>
     <div>Consultez votre médecin pour toute décision thérapeutique.</div>
+  </div>
+</div>
+
+<!-- Modal Recette -->
+<div id="recipeModal" style="display:none;position:fixed;inset:0;background:rgba(2,26,53,0.6);z-index:9999;align-items:center;justify-content:center;padding:20px" onclick="if(event.target===this)this.style.display='none'">
+  <div style="background:white;border-radius:16px;max-width:520px;width:100%;max-height:85vh;overflow-y:auto;box-shadow:0 20px 60px rgba(2,26,53,0.3)">
+    <div style="position:relative;height:200px;overflow:hidden;border-radius:16px 16px 0 0">
+      <img id="recipeModalImg" src="" style="width:100%;height:100%;object-fit:cover">
+      <div style="position:absolute;inset:0;background:linear-gradient(transparent,rgba(2,26,53,0.8));display:flex;align-items:flex-end;padding:16px">
+        <div id="recipeModalTitle" style="font-size:1.2rem;font-weight:700;color:white"></div>
+      </div>
+      <button onclick="document.getElementById('recipeModal').style.display='none'" style="position:absolute;top:12px;right:12px;background:rgba(255,255,255,0.9);border:none;border-radius:50%;width:32px;height:32px;cursor:pointer;font-size:1rem">✕</button>
+    </div>
+    <div style="padding:20px">
+      <div id="recipeModalMacros" style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:20px"></div>
+      <div style="font-size:0.85rem;font-weight:700;color:#021A35;margin-bottom:10px;text-transform:uppercase;letter-spacing:1px">🛒 Ingrédients</div>
+      <ul id="recipeModalIngredients" style="list-style:none;padding:0;margin:0 0 20px 0"></ul>
+      <div style="font-size:0.85rem;font-weight:700;color:#021A35;margin-bottom:10px;text-transform:uppercase;letter-spacing:1px">👨‍🍳 Préparation</div>
+      <div id="recipeModalEtapes"></div>
+    </div>
   </div>
 </div>
 </body>
@@ -3629,30 +3689,65 @@ async function generateMenu() {
   }
 }
 
+function unsplashUrl(nom) {
+  const ids = ['1546069901-ba9599a7e63c','1567620905732-2d1ec7ab7445','1565299624946-b28f40a0ae38','1484723091739-30f299613534','1490645935967-10de6ba17061','1512621776951-a57141f2aefd','1473093226795-af9932fe5856','1498837167922-ddd27525d352','1540189549336-e6e99eb4978','1504674900247-0877df9cc836','1563379091339-03246963d96a','1567188040759-fb8a883dc6d8','1571019613454-1cb2f99b2d8b','1414235077428-338989a2e8c0','1455619452474-a2be138948f2'];
+  const seed = (nom.charCodeAt(0) + nom.length * 7) % ids.length;
+  return `https://images.unsplash.com/photo-${ids[seed]}?w=400&q=80&fit=crop`;
+}
+function showRecipeModal(repasJson) {
+  const r = JSON.parse(repasJson);
+  document.getElementById('recipeModalTitle').textContent = r.nom;
+  document.getElementById('recipeModalImg').src = unsplashUrl(r.nom);
+  document.getElementById('recipeModalMacros').innerHTML = `
+    <span style="background:#FDF6E8;color:#B8860B;padding:4px 12px;border-radius:20px;font-size:0.78rem;font-weight:700">${r.calories||0} kcal</span>
+    <span style="background:#E6F1FB;color:#378ADD;padding:4px 12px;border-radius:20px;font-size:0.78rem">🥑 ${r.lipides||'—'}g lip.</span>
+    <span style="background:#E6F1FB;color:#378ADD;padding:4px 12px;border-radius:20px;font-size:0.78rem">🌾 ${r.glucides||'—'}g gluc.</span>
+    <span style="background:#E6F1FB;color:#378ADD;padding:4px 12px;border-radius:20px;font-size:0.78rem">💪 ${r.proteines||'—'}g prot.</span>`;
+  document.getElementById('recipeModalIngredients').innerHTML = (r.ingredients||[]).map(i=>`<li style="font-size:0.85rem;color:#021A35;padding:4px 0;border-bottom:1px solid #E6F1FB">• ${i}</li>`).join('');
+  document.getElementById('recipeModalEtapes').innerHTML = (r.etapes||['Préparer les ingrédients','Assembler et cuire','Servir chaud']).map((e,i)=>`<div style="display:flex;gap:12px;padding:10px 0;border-bottom:1px solid #E6F1FB"><span style="background:#021A35;color:white;border-radius:50%;width:24px;height:24px;min-width:24px;display:flex;align-items:center;justify-content:center;font-size:0.72rem">${i+1}</span><span style="font-size:0.85rem;color:#021A35;line-height:1.5">${e}</span></div>`).join('');
+  document.getElementById('recipeModal').style.display = 'flex';
+}
 function renderMenu(menu) {
-  const repasIcons = { petit_dejeuner: '', dejeuner: '', collation: '', diner: '' };
+  const repasIcons = { petit_dejeuner: '🌅', dejeuner: '☀️', collation: '🍎', diner: '🌙' };
   const repasLabels = { petit_dejeuner: 'Petit-déjeuner', dejeuner: 'Déjeuner', collation: 'Collation', diner: 'Dîner' };
-
   document.getElementById('menusDays').innerHTML = menu.semaine.map(jour => `
-    <div style="background:white;border-radius: 4px;border:1px solid #B5D4F4;overflow:hidden">
+    <div style="background:white;border-radius:12px;border:1px solid #E6F1FB;overflow:hidden;margin-bottom:16px;box-shadow:0 2px 8px rgba(2,26,53,0.06)">
       <div style="background:#021A35;padding:14px 20px">
-        <div style="font-family:'Open Sans',serif;font-size:1.2rem;color:white">${jour.jour}</div>
+        <div style="font-size:1.1rem;color:white;font-weight:600">${jour.jour}</div>
       </div>
       <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:0">
-        ${['petit_dejeuner','dejeuner','collation','diner'].map(repas => `
-        <div style="padding:16px;border-right:1px solid #E6F1FB;border-top:1px solid #E6F1FB">
-          <div style="font-size:1.2rem;margin-bottom:6px">${repasIcons[repas]}</div>
-          <div style="font-size:0.72rem;font-weight:600;text-transform:uppercase;letter-spacing:1px;color:#85B7EB;margin-bottom:6px">${repasLabels[repas]}</div>
-          <div style="font-size:0.85rem;font-weight:600;color:#021A35;margin-bottom:6px">${jour[repas]?.nom || '—'}</div>
-          <div style="font-size:0.75rem;color:#85B7EB">${jour[repas]?.calories || 0} kcal · ${jour[repas]?.prep_minutes || 0} min</div>
-          <div style="margin-top:8px">${(jour[repas]?.ingredients || []).slice(0,3).map(i => `<div style="font-size:0.72rem;color:#378ADD;padding:1px 0">• ${i}</div>`).join('')}</div>
-        </div>`).join('')}
+        ${['petit_dejeuner','dejeuner','collation','diner'].map(repas => {
+          const r = jour[repas];
+          if (!r) return '<div></div>';
+          const rJson = JSON.stringify(r).replace(/"/g,'&quot;');
+          return `<div style="border-right:1px solid #E6F1FB;overflow:hidden">
+            <div style="position:relative;height:130px;overflow:hidden">
+              <img src="${unsplashUrl(r.nom)}" style="width:100%;height:100%;object-fit:cover" onerror="this.parentNode.style.background='#E6F1FB'">
+              <div style="position:absolute;bottom:0;left:0;right:0;background:linear-gradient(transparent,rgba(2,26,53,0.75));padding:8px">
+                <div style="font-size:0.65rem;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;color:rgba(255,255,255,0.9)">${repasIcons[repas]} ${repasLabels[repas]}</div>
+              </div>
+            </div>
+            <div style="padding:12px">
+              <div style="font-size:0.82rem;font-weight:700;color:#021A35;margin-bottom:8px;line-height:1.3;min-height:36px">${r.nom}</div>
+              <div style="display:flex;gap:4px;flex-wrap:wrap;margin-bottom:8px">
+                <span style="background:#FDF6E8;color:#B8860B;font-size:0.68rem;font-weight:700;padding:2px 8px;border-radius:10px">${r.calories||0} kcal</span>
+                <span style="background:#E6F1FB;color:#378ADD;font-size:0.68rem;padding:2px 8px;border-radius:10px">🥑${r.lipides||'—'}g</span>
+                <span style="background:#E6F1FB;color:#378ADD;font-size:0.68rem;padding:2px 8px;border-radius:10px">🌾${r.glucides||'—'}g</span>
+                <span style="background:#E6F1FB;color:#378ADD;font-size:0.68rem;padding:2px 8px;border-radius:10px">💪${r.proteines||'—'}g</span>
+              </div>
+              <div style="font-size:0.72rem;color:#85B7EB;margin-bottom:10px">⏱ ${r.prep_minutes||0} min</div>
+              <button onclick='showRecipeModal("${rJson}")'
+                style="width:100%;padding:7px;background:#021A35;color:white;border:none;border-radius:8px;font-size:0.75rem;cursor:pointer;font-weight:600;letter-spacing:0.3px">
+                📖 Voir la recette
+              </button>
+            </div>
+          </div>`;
+        }).join('')}
       </div>
     </div>`).join('');
-
   if (menu.liste_courses) {
     document.getElementById('menusShoppingList').style.display = 'block';
-    const categories = { fruits_legumes: ' Fruits & Légumes', proteines: ' Protéines', feculents: ' Féculents', produits_laitiers: ' Produits laitiers', epicerie: ' Épicerie', autres: ' Autres' };
+    const categories = { fruits_legumes: '🥦 Fruits & Légumes', proteines: '🥩 Protéines', feculents: '🌾 Féculents', produits_laitiers: '🥛 Produits laitiers', epicerie: '🛒 Épicerie', autres: '📦 Autres' };
     document.getElementById('shoppingListContent').innerHTML = Object.entries(categories).map(([key, label]) => {
       const items = menu.liste_courses[key] || [];
       if (!items.length) return '';
@@ -3662,11 +3757,10 @@ function renderMenu(menu) {
       </div>`;
     }).join('');
     if (menu.conseils_semaine) {
-      document.getElementById('menusConseils').textContent = ' ' + menu.conseils_semaine;
+      document.getElementById('menusConseils').textContent = '💡 ' + menu.conseils_semaine;
     }
   }
 }
-
 function copyShoppingList() {
   const items = document.querySelectorAll('#shoppingListContent div[style*="color:#378ADD"]');
   const text = Array.from(items).map(i => i.textContent).join('\n');
@@ -4323,5 +4417,25 @@ async function deleteProfessional(id) {
   }
 </script>
 <script src="translations.js?v=2"></script>
+
+<!-- Modal Recette -->
+<div id="recipeModal" style="display:none;position:fixed;inset:0;background:rgba(2,26,53,0.6);z-index:9999;align-items:center;justify-content:center;padding:20px" onclick="if(event.target===this)this.style.display='none'">
+  <div style="background:white;border-radius:16px;max-width:520px;width:100%;max-height:85vh;overflow-y:auto;box-shadow:0 20px 60px rgba(2,26,53,0.3)">
+    <div style="position:relative;height:200px;overflow:hidden;border-radius:16px 16px 0 0">
+      <img id="recipeModalImg" src="" style="width:100%;height:100%;object-fit:cover">
+      <div style="position:absolute;inset:0;background:linear-gradient(transparent,rgba(2,26,53,0.8));display:flex;align-items:flex-end;padding:16px">
+        <div id="recipeModalTitle" style="font-size:1.2rem;font-weight:700;color:white"></div>
+      </div>
+      <button onclick="document.getElementById('recipeModal').style.display='none'" style="position:absolute;top:12px;right:12px;background:rgba(255,255,255,0.9);border:none;border-radius:50%;width:32px;height:32px;cursor:pointer;font-size:1rem">✕</button>
+    </div>
+    <div style="padding:20px">
+      <div id="recipeModalMacros" style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:20px"></div>
+      <div style="font-size:0.85rem;font-weight:700;color:#021A35;margin-bottom:10px;text-transform:uppercase;letter-spacing:1px">🛒 Ingrédients</div>
+      <ul id="recipeModalIngredients" style="list-style:none;padding:0;margin:0 0 20px 0"></ul>
+      <div style="font-size:0.85rem;font-weight:700;color:#021A35;margin-bottom:10px;text-transform:uppercase;letter-spacing:1px">👨‍🍳 Préparation</div>
+      <div id="recipeModalEtapes"></div>
+    </div>
+  </div>
+</div>
 </body>
 </html>
