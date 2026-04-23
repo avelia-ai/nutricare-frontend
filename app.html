@@ -1945,7 +1945,7 @@ function switchLang(lang) {
     const urlParams = new URLSearchParams(window.location.search);
     const urlView = urlParams.get('view');
     if (urlView) {
-      setTimeout(() => showView(urlView, document.querySelector(`[onclick*="showView('${urlView}']")`)), 500);
+      setTimeout(() => showView(urlView, document.querySelector('[onclick*="showView(\'' + urlView + '\')"]')), 500);
     }
 
     if (authToken && currentUser) {
@@ -3332,7 +3332,7 @@ function toggleMobileMenu() {
     const urlParams = new URLSearchParams(window.location.search);
     const urlView = urlParams.get('view');
     if (urlView) {
-      setTimeout(() => showView(urlView, document.querySelector(`[onclick*="showView('${urlView}']")`)), 500);
+      setTimeout(() => showView(urlView, document.querySelector('[onclick*="showView(\'' + urlView + '\')"]')), 500);
     }
 
     if (authToken && currentUser) {
