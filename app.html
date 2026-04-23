@@ -3673,15 +3673,21 @@ async function generateMenu() {
   document.getElementById('menusShoppingList').style.display = 'none';
 
   try {
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 120000);
     const res = await fetch(`${BACKEND_URL}/api/menus/generate`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${authToken}` }
+      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${authToken}` },
+      body: JSON.stringify({ lang: 'fr' }),
+      signal: controller.signal
     });
+    clearTimeout(timeoutId);
     const menu = await res.json();
     if (res.ok) renderMenu(menu);
     else alert(menu.error || 'Erreur lors de la génération');
   } catch(e) {
-    alert('Erreur de connexion');
+    if (e.name === 'AbortError') alert('Génération trop longue, réessayez');
+    else alert('Erreur de connexion: ' + e.message);
   } finally {
     btn.disabled = false;
     btn.textContent = ' Régénérer mon menu IA';
