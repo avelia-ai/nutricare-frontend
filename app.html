@@ -3690,27 +3690,37 @@ async function generateMenu() {
 }
 
 function unsplashUrl(nom) {
-  const keywords = {
-    'porridge': 'oatmeal-bowl', 'avoine': 'oatmeal', 'granola': 'granola-bowl',
-    'oeuf': 'eggs-breakfast', 'omelette': 'omelette', 'smoothie': 'smoothie-green',
-    'yaourt': 'yogurt-bowl', 'fromage': 'cheese', 'pain': 'bread-toast',
-    'saumon': 'salmon-dish', 'poulet': 'chicken-dish', 'boeuf': 'beef-meal',
-    'poisson': 'fish-dish', 'thon': 'tuna-salad', 'crevette': 'shrimp-dish',
-    'soupe': 'soup-bowl', 'salade': 'salad-bowl', 'quinoa': 'quinoa-bowl',
-    'pates': 'pasta-dish', 'riz': 'rice-dish', 'lentille': 'lentil-soup',
-    'légumes': 'vegetables-roasted', 'tomate': 'tomato-dish', 'avocat': 'avocado-toast',
-    'fruit': 'fruit-bowl', 'pomme': 'apple', 'banane': 'banana',
-    'chocolat': 'chocolate-dessert', 'cake': 'healthy-cake', 'tartine': 'toast-avocado',
-    'curry': 'curry-dish', 'wok': 'stir-fry', 'burger': 'healthy-burger',
-    'wrap': 'wrap-sandwich', 'bowl': 'food-bowl', 'velouté': 'cream-soup'
-  };
-  const nomLower = nom.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '');
-  let keyword = 'healthy-food';
-  for (const [key, val] of Object.entries(keywords)) {
-    if (nomLower.includes(key.normalize('NFD').replace(/[̀-ͯ]/g, ''))) { keyword = val; break; }
+  const photoMap = [
+    [['avoine','porridge','muesli','granola','flocon'], '1504308651169-5e0f75a8e032'],
+    [['smoothie','jus','shake'], '1556909114-f6e7ad7d3136'],
+    [['oeuf','omelette','brouille'], '1482049016688-2d3e1b311543'],
+    [['yaourt','yogurt'], '1505253716362-afaea1d3d1af'],
+    [['pain','tartine','toast'], '1484723091739-30f299613534'],
+    [['saumon','truite'], '1467003909585-2f8a72700288'],
+    [['poulet','volaille','dinde'], '1598103442097-8b74394b95c3'],
+    [['boeuf','viande','steak','agneau'], '1558030006-c4c7d7e39297'],
+    [['poisson','cabillaud','merlu','sole'], '1519708227418-a8d869efeccc'],
+    [['thon'], '1546069901-ba9599a7e63c'],
+    [['crevette','fruits de mer'], '1565557623262-b51ff475928c'],
+    [['soupe','veloute','potage','bouillon'], '1547592166-23ac45744acd'],
+    [['salade','crudite'], '1512621776951-a57141f2aefd'],
+    [['quinoa'], '1490645935967-10de6ba17061'],
+    [['pate','pasta','spaghetti','tagliatelle'], '1473093226795-af9932fe5856'],
+    [['riz'], '1536304929831-ee1ca9d44906'],
+    [['lentille','legumineuse','pois chiche','haricot'], '1585032226651-676a6f012cfc'],
+    [['curry','tikka','massala'], '1565557623262-b51ff475928c'],
+    [['avocat'], '1523049673857-eb18f1d7b578'],
+    [['fruit','baie','fraise','framboise','myrtille'], '1490474418585-ba9bad8fd0ea'],
+    [['chocolat','cacao'], '1511381939415-e44a1ef8ea93'],
+    [['wrap','burrito'], '1565557623262-b51ff475928c'],
+    [['wok','asiatique','nouille'], '1569050467447-ce54b3bbc37d'],
+    [['bowl'], '1512621776951-a57141f2aefd']
+  ];
+  const n = nom.toLowerCase().normalize('NFD').replace(/\u0300-\u036f/g,'').replace(/[^a-z0-9 ]/g,'');
+  for (const [keys, id] of photoMap) {
+    if (keys.some(k => n.includes(k))) return `https://images.unsplash.com/photo-${id}?w=400&h=300&q=80&fit=crop`;
   }
-  const seed = (nom.charCodeAt(0) * 13 + nom.length * 7) % 100;
-  return `https://source.unsplash.com/400x300/?${keyword}&sig=${seed}`;
+  return 'https://images.unsplash.com/photo-1498837167922-ddd27525d352?w=400&h=300&q=80&fit=crop';
 }
 function showRecipeModal(repasJson) {
   const r = JSON.parse(repasJson);
