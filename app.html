@@ -2588,7 +2588,8 @@ function toggleMobileMenu() {
           <div style="font-size:0.7rem;color:rgba(2,26,53,0.4);margin-top:2px">${s.sub}</div>
         </div>`).join('');
 
-      document.getElementById('ppReport').textContent = data.report;
+      document.getElementById('ppReport').innerHTML = data.report.replace(/**(.+?)**/g, '<strong>$1</strong>').replace(/^# (.+)$/mg, '<h2>$1</h2>').replace(/^## (.+)$/mg, '<h3>$1</h3>').replace(/^### (.+)$/mg, '<h4>$1</h4>').replace(/
+/g, '<br>');
       document.getElementById('passeportLoading').style.display = 'none';
       document.getElementById('passeportContent').style.display = 'block';
 
