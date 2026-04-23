@@ -3823,6 +3823,18 @@ async function loadMealPhoto(nom, keyword, imgEl) {
 function unsplashUrl(nom, keyword) {
   return 'https://images.unsplash.com/photo-1498837167922-ddd27525d352?w=400&h=300&q=80&fit=crop';
 }
+let _recipeBase = {};
+let _portions = 1;
+function changePortions(delta) {
+  _portions = Math.max(1, Math.min(20, _portions + delta));
+  document.getElementById('portionsCount').textContent = _portions + (_portions === 1 ? ' personne' : ' personnes');
+  const m = _recipeBase;
+  document.getElementById('portionsMacros').innerHTML = `
+    <span style="background:#FDF6E8;color:#B8860B;padding:4px 12px;border-radius:20px;font-size:0.78rem;font-weight:700">${Math.round((m.calories||0)*_portions)} kcal</span>
+    <span style="background:#E6F1FB;color:#378ADD;padding:4px 12px;border-radius:20px;font-size:0.78rem">🥑 ${Math.round((m.lipides||0)*_portions)}g lip.</span>
+    <span style="background:#E6F1FB;color:#378ADD;padding:4px 12px;border-radius:20px;font-size:0.78rem">🌾 ${Math.round((m.glucides||0)*_portions)}g gluc.</span>
+    <span style="background:#E6F1FB;color:#378ADD;padding:4px 12px;border-radius:20px;font-size:0.78rem">💪 ${Math.round((m.proteines||0)*_portions)}g prot.</span>`;
+}
 async function showRecipeModal(btn) {
   const r = JSON.parse(btn.getAttribute('data-recipe').replace(/&quot;/g,'"'));
   document.getElementById('recipeModalTitle').textContent = r.nom;
@@ -3835,6 +3847,10 @@ async function showRecipeModal(btn) {
   document.getElementById('recipeModalIngredients').innerHTML = (r.ingredients||[]).map(i=>`<li style="font-size:0.85rem;color:#021A35;padding:4px 0;border-bottom:1px solid #E6F1FB">• ${i}</li>`).join('');
   document.getElementById('recipeModalEtapes').innerHTML = '<div style="color:#85B7EB;font-size:0.85rem;padding:16px 0">⏳ Génération de la recette en cours...</div>';
   document.getElementById('recipeModal').style.display = 'flex';
+  _recipeBase = { calories: r.calories, lipides: r.lipides, glucides: r.glucides, proteines: r.proteines };
+  _portions = 1;
+  document.getElementById('portionsCount').textContent = '1 personne';
+  changePortions(0);
   // Charger la photo Pexels
   if (r.photo_keyword) loadMealPhoto(r.nom, r.photo_keyword, document.getElementById('recipeModalImg'));
   // Générer les étapes via IA
