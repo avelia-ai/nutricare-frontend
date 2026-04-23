@@ -2228,45 +2228,6 @@ function toggleMobileMenu() {
     <div class="report">${rapport}</div>
     <div class="disclaimer">️ Données 100% anonymisées. Aucune information individuelle n'est présente dans ce rapport. Conformité RGPD garantie.</div>
     
-<style>
-@media (max-width: 768px) {
-  #menusDays > div > div:last-child {
-    display: flex !important;
-    flex-direction: column !important;
-  }
-  #menusDays > div > div:last-child > div {
-    border-right: none !important;
-    border-bottom: 1px solid #E6F1FB !important;
-    display: flex !important;
-    flex-direction: row !important;
-    gap: 10px !important;
-    padding: 10px !important;
-    align-items: flex-start !important;
-  }
-  #menusDays > div > div:last-child > div > div:first-child {
-    width: 80px !important;
-    min-width: 80px !important;
-    height: 80px !important;
-    border-radius: 8px !important;
-    overflow: hidden !important;
-  }
-  #menusDays > div > div:last-child > div > div:nth-child(2) {
-    flex: 1 !important;
-    padding: 0 !important;
-    min-height: auto !important;
-  }
-  #menusDays > div > div:last-child > div > div:nth-child(2) > div:nth-child(1) {
-    min-height: auto !important;
-    font-size: 0.8rem !important;
-  }
-  #menusDays > div > div:last-child > div > div:nth-child(2) button {
-    width: auto !important;
-    padding: 5px 10px !important;
-    font-size: 0.68rem !important;
-  }
-}
-</style>
-
 <div id="protocolsView" style="display:none;padding:32px;overflow-y:auto;background:var(--cream);width:100%">
   <div style="font-family:'Open Sans',serif;font-size:2rem;font-weight:400;margin-bottom:6px;color:#021A35">Mes protocoles nutritionnels</div>
   <div style="font-size:0.85rem;color:#85B7EB;margin-bottom:32px">Protocoles adaptés à vos pathologies</div>
@@ -3653,30 +3614,7 @@ function toggleMobileMenu() {
   }
 }
 </style>
-
-</body></html>`);
-    w.document.close();
-    w.print();
-  }
-
-  async function sendInvites() {
-    const emailsText = document.getElementById('inviteEmails').value.trim();
-    if (!emailsText) return;
-    const emails = emailsText.split(',').map(e => e.trim()).filter(e => e.includes('@'));
-    if (!emails.length) return;
-    try {
-      const res = await fetch(`${BACKEND_URL}/api/entreprise/invite`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${authToken}` },
-        body: JSON.stringify({ emails })
-      });
-      const data = await res.json();
-      const resultEl = document.getElementById('inviteResult');
-      resultEl.style.display = 'block';
-      if (res.ok) {
-        const code = document.getElementById('adminCode').textContent.trim();
-        const link = `${window.location.origin}/invitation.html?code=${code}`;
-        resultEl.innerHTML = ` ${emails.length} invitation(s) préparée(s) !<br><strong>Lien à partager :</strong> <a href="${link}" target="_blank" style="color:#021A35">${link}</a><br><span style="font-size:0.72rem;opacity:0.7">En production, les emails seront envoyés automatiquement via SendGrid.</span>`;
+seront envoyés automatiquement via SendGrid.</span>`;
         document.getElementById('inviteEmails').value = '';
       } else {
         resultEl.style.background = '#FEE';
@@ -4119,29 +4057,7 @@ function toggleMobileMenu() {
         const res = await fetch(BACKEND_URL + '/api/oracle/analyze', {
           headers: { 'Authorization': 'Bearer ' + authToken }
         });
-        if (res.ok) {
-          oracleData = await res.json();
-          applyOracleData(oracleData, name);
-        }
-      } catch(e) { console.error('Oracle API error:', e); }
-    } else {
-      applyOracleData(oracleData, name);
-    }
-    oSimU();
-    oracleTab('scanner', document.querySelector('#oracleTabs div'));
-  }
-
-  function applyOracleData(d, name) {
-    document.getElementById('oraclePatientHeader').textContent =
-      name.toUpperCase() + ' · VITALITÉ: ' + d.score_vitalite + '/100 · RÉCUP: ' + d.recuperabilite + '% · TÉLOMÈRES: ' + d.longueur_telomeres + 'kb';
-    const arc = document.getElementById('oScoreArc');
-    if (arc) arc.setAttribute('stroke-dashoffset', (126 - d.score_vitalite / 100 * 126).toFixed(1));
-    const st = document.getElementById('oScoreText');
-    if (st) st.textContent = d.score_vitalite;
-    const ba = document.getElementById('oBioAge');
-    if (ba) ba.textContent = d.age_biologique;
-    const hud = document.getElementById('oHudData');
-    if (hud && d.marqueurs) hud.textContent = 'HBA1C:' + (d.marqueurs.hba1c?.valeur||'--') + ' CRP:' + (d.marqueurs.crp?.valeur||'--') + ' VITD:' + (d.marqueurs.vitd?.valeur||'--') + ' AGE-BIO:' + d.age_biologique;
+        if (r') + ' AGE-BIO:' + d.age_biologique;
     const m1v = document.getElementById('oM1V');
     if (m1v && d.marqueurs?.hba1c) m1v.textContent = d.marqueurs.hba1c.valeur;
     const oEpi = document.getElementById('oEpiAge');
@@ -4550,39 +4466,7 @@ function toggleMobileMenu() {
       ['Finalisation...', 'Votre simulation est presque prête'],
     ];
     let msgIdx = 0;
-    const loadingInterval = setInterval(() => {
-      msgIdx = (msgIdx + 1) % loadingMsgs.length;
-      const t = document.getElementById('simLoadingTitle');
-      const m = document.getElementById('simLoadingMsg');
-      if (t) t.textContent = loadingMsgs[msgIdx][0];
-      if (m) m.textContent = loadingMsgs[msgIdx][1];
-    }, 2000);
-
-    try {
-      const res = await fetch(`${BACKEND_URL}/api/simulator/simulate`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${authToken}` },
-        body: JSON.stringify({
-          question: q,
-          profile: profile
-        })
-      });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error);
-      renderSimulation(data);
-    } catch(e) {
-      renderSimulationFallback(q);
-    }
-    clearInterval(loadingInterval);
-    document.getElementById('simLoading').style.display = 'none';
-  }
-
-  function renderSimulation(data) {
-    document.getElementById('simScenario').textContent = data.scenario || '';
-
-    // Résumé
-    const resumeEl = document.getElementById('simResume');
-    if (resumeEl && data.resume) resumeEl.textContent = data.resume;
+    consttent = data.resume;
 
     // Métriques
     const metricsEl = document.getElementById('simMetrics');
