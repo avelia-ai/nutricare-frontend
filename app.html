@@ -2066,7 +2066,22 @@ function toggleMobileMenu() {
   }
 
   // ── APP ──
-  async function showApp() {
+  function updateMenu(plan) {
+  const standard = document.getElementById('menuStandard');
+  const premium = document.getElementById('menuPremium');
+  if (!standard || !premium) return;
+  if (plan === 'free') {
+    standard.style.display = 'none';
+    premium.style.display = 'none';
+  } else if (plan === 'standard') {
+    standard.style.display = 'block';
+    premium.style.display = 'none';
+  } else if (plan === 'premium') {
+    standard.style.display = 'block';
+    premium.style.display = 'block';
+  }
+}
+async function showApp() {
     document.getElementById('authPage').classList.remove('active');
     document.getElementById('appPage').classList.add('active');
     await loadProfile();
@@ -5466,21 +5481,7 @@ function showUpgradeModal(requiredPlan) {
   modal.addEventListener('click', e => { if (e.target === modal) modal.remove(); });
 }
 
-function updateMenu(plan) {
-  const standard = document.getElementById('menuStandard');
-  const premium = document.getElementById('menuPremium');
-  if (!standard || !premium) return;
-  if (plan === 'free') {
-    standard.style.display = 'none';
-    premium.style.display = 'none';
-  } else if (plan === 'standard') {
-    standard.style.display = 'block';
-    premium.style.display = 'none';
-  } else if (plan === 'premium') {
-    standard.style.display = 'block';
-    premium.style.display = 'block';
-  }
-}
+
 
 async function loadProtocols() {
   const profile = JSON.parse(localStorage.getItem('nutricare_profile') || localStorage.getItem('nutricare_user') || '{}');
