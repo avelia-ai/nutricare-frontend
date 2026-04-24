@@ -3968,7 +3968,10 @@ function toggleMobileMenu() {
         const res = await fetch(BACKEND_URL + '/api/oracle/analyze', {
           headers: { 'Authorization': 'Bearer ' + authToken }
         });
-        if (r') + ' AGE-BIO:' + d.age_biologique;
+        if (!res.ok) throw new Error('Erreur oracle');
+        const d = await res.json();
+        oracleData = d;
+        document.getElementById('oraclePatientHeader').textContent = name.toUpperCase() + ' · AGE-BIO:' + d.age_biologique;
     const m1v = document.getElementById('oM1V');
     if (m1v && d.marqueurs?.hba1c) m1v.textContent = d.marqueurs.hba1c.valeur;
     const oEpi = document.getElementById('oEpiAge');
