@@ -591,6 +591,19 @@ function switchLang(lang) {
             <label class="profile-label">Budget alimentaire mensuel</label>
             <input type="text" class="profile-input" id="profileBudget" placeholder="ex: 200€/mois">
           </div>
+          <div class="profile-field">
+            <label class="profile-label">Objectif nutritionnel</label>
+            <select class="profile-input" id="profileObjectif">
+              <option value="">-- Choisir un objectif --</option>
+              <option value="perte_de_poids">Perte de poids</option>
+              <option value="prise_de_masse">Prise de masse musculaire</option>
+              <option value="seche">Sèche (maintien musculaire, perte de graisse)</option>
+              <option value="maintenance">Maintien du poids</option>
+              <option value="performance">Performance sportive</option>
+              <option value="sante">Amélioration santé générale</option>
+              <option value="autre">Autre</option>
+            </select>
+          </div>
         </div>
 
         <!-- CHRONO-NUTRITION -->
@@ -2110,6 +2123,7 @@ function toggleMobileMenu() {
       if (document.getElementById('profileWorkStart')) document.getElementById('profileWorkStart').value = profile.work_start || '09:00';
       if (document.getElementById('profileWorkEnd')) document.getElementById('profileWorkEnd').value = profile.work_end || '18:00';
       if (document.getElementById('profileChronoGoal')) document.getElementById('profileChronoGoal').value = profile.chrono_goal || '';
+      if (document.getElementById('profileObjectif')) document.getElementById('profileObjectif').value = profile.objectif_nutritionnel || '';
       updateMenu(profile.plan || 'free');
       // Score circadien dans le dashboard
       if (profile.wake_up || profile.sleep_time) {
@@ -4391,6 +4405,7 @@ async function deleteProfessional(id) {
       medications: document.getElementById('profileMedications').value.split(',').map(s => s.trim()).filter(Boolean),
       cultural_constraints: document.getElementById('profileCultural').value.trim(),
       budget_alimentaire: document.getElementById('profileBudget').value.trim(),
+        objectif_nutritionnel: document.getElementById('profileObjectif')?.value || '',
       ethnicity: document.getElementById('profileEthnicity')?.value || '',
       wake_up: document.getElementById('profileWakeUp')?.value || '',
       sleep_time: document.getElementById('profileSleep')?.value || '',
