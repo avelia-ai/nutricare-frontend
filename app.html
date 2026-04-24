@@ -2066,7 +2066,7 @@ function switchLang(lang) {
       if (entrepriseParam === 'create') { setTimeout(() => showView('entreprise'), 600); }
       else if (view) { setTimeout(() => { showView(view); if (pathologie) window.selectedPathologie = pathologie; }, 600); }
       else {
-        setTimeout(() => showView('chat'), 600);
+        setTimeout(() => { showView('chat'); setTimeout(() => showMirellaNotif('👋 Bon retour ' + (currentUser?.email?.split('@')[0] || '') + ' ! Je suis là pour vous accompagner. Comment puis-je vous aider aujourd\'hui ?'), 1000); }, 600);
       }
     }
   };
@@ -3160,6 +3160,49 @@ function toggleMobileMenu() {
     </div>
   </div>
 </div>
+
+<!-- Bulle notification Mirella -->
+<div id="mirellaNotif" style="display:none;position:fixed;bottom:24px;right:24px;z-index:9998;max-width:320px;animation:slideInNotif 0.4s ease">
+  <div style="background:#021A35;border-radius:16px 16px 4px 16px;padding:16px 20px;box-shadow:0 8px 32px rgba(2,26,53,0.25);position:relative">
+    <div style="display:flex;align-items:flex-start;gap:12px">
+      <div style="width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,#C9A84C,#B8860B);display:flex;align-items:center;justify-content:center;font-size:1.1rem;flex-shrink:0">●</div>
+      <div style="flex:1">
+        <div style="font-size:0.72rem;font-weight:700;color:#C9A84C;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px">Mirella</div>
+        <div id="mirellaNotifMsg" style="font-size:0.82rem;color:white;line-height:1.5"></div>
+      </div>
+      <button onclick="closeMirellaNotif()" style="background:none;border:none;color:rgba(255,255,255,0.5);cursor:pointer;font-size:1rem;padding:0;flex-shrink:0">✕</button>
+    </div>
+  </div>
+  <div style="width:0;height:0;border-left:8px solid transparent;border-right:0;border-top:8px solid #021A35;margin-left:auto;margin-right:24px"></div>
+</div>
+
+<style>
+@keyframes slideInNotif {
+  from { transform: translateX(120%); opacity: 0; }
+  to { transform: translateX(0); opacity: 1; }
+}
+</style>
+
+<script>
+let _notifTimeout = null;
+function showMirellaNotif(msg, duration = 6000) {
+  const el = document.getElementById('mirellaNotif');
+  const msgEl = document.getElementById('mirellaNotifMsg');
+  if (!el || !msgEl) return;
+  msgEl.textContent = msg;
+  el.style.display = 'block';
+  el.style.animation = 'none';
+  el.offsetHeight; // reflow
+  el.style.animation = 'slideInNotif 0.4s ease';
+  if (_notifTimeout) clearTimeout(_notifTimeout);
+  _notifTimeout = setTimeout(() => closeMirellaNotif(), duration);
+}
+function closeMirellaNotif() {
+  const el = document.getElementById('mirellaNotif');
+  if (el) el.style.display = 'none';
+  if (_notifTimeout) clearTimeout(_notifTimeout);
+}
+</script>
 </body>
 </html>`;
 
@@ -3449,6 +3492,7 @@ function toggleMobileMenu() {
           return;
         }
         document.getElementById('ordoResult').style.display = 'block';
+        showMirellaNotif('💊 Ordonnance analysée ! J\'ai extrait vos médicaments et vérifié les interactions. Vos conseils nutritionnels sont maintenant adaptés.');
         let infos = '';
         if (data.prescripteur) infos += 'Prescripteur : ' + data.prescripteur + ' · ';
         if (data.date) infos += 'Date : ' + data.date + ' · ';
@@ -3715,7 +3759,7 @@ async function previewAndAnalyze(event) {
         body: JSON.stringify({ image_base64: base64, media_type: mediaType })
       });
       const data = await res.json();
-      if (res.ok) renderAnalysis(data);
+      if (res.ok) { renderAnalysis(data); showMirellaNotif('📸 Analyse terminée ! J\'ai examiné votre repas et calculé les apports nutritionnels. Consultez les résultats ci-dessous.'); }
       else alert(data.error || 'Erreur analyse');
     } catch(e) { alert('Erreur de connexion'); }
     finally { document.getElementById('analysisLoading').style.display = 'none'; }
@@ -3805,7 +3849,7 @@ async function generateMenu() {
     });
     clearTimeout(timeoutId);
     const menu = await res.json();
-    if (res.ok) renderMenu(menu);
+    if (res.ok) { renderMenu(menu); showMirellaNotif('🍽️ Votre menu de la semaine est prêt ! J\'ai adapté chaque repas à votre objectif et votre profil santé. Bonne dégustation !'); }
     else alert(menu.error || 'Erreur lors de la génération');
   } catch(e) {
     if (e.name === 'AbortError') alert('Génération trop longue, réessayez');
@@ -4675,5 +4719,48 @@ async function deleteProfessional(id) {
     </div>
   </div>
 </div>
+
+<!-- Bulle notification Mirella -->
+<div id="mirellaNotif" style="display:none;position:fixed;bottom:24px;right:24px;z-index:9998;max-width:320px;animation:slideInNotif 0.4s ease">
+  <div style="background:#021A35;border-radius:16px 16px 4px 16px;padding:16px 20px;box-shadow:0 8px 32px rgba(2,26,53,0.25);position:relative">
+    <div style="display:flex;align-items:flex-start;gap:12px">
+      <div style="width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,#C9A84C,#B8860B);display:flex;align-items:center;justify-content:center;font-size:1.1rem;flex-shrink:0">●</div>
+      <div style="flex:1">
+        <div style="font-size:0.72rem;font-weight:700;color:#C9A84C;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px">Mirella</div>
+        <div id="mirellaNotifMsg" style="font-size:0.82rem;color:white;line-height:1.5"></div>
+      </div>
+      <button onclick="closeMirellaNotif()" style="background:none;border:none;color:rgba(255,255,255,0.5);cursor:pointer;font-size:1rem;padding:0;flex-shrink:0">✕</button>
+    </div>
+  </div>
+  <div style="width:0;height:0;border-left:8px solid transparent;border-right:0;border-top:8px solid #021A35;margin-left:auto;margin-right:24px"></div>
+</div>
+
+<style>
+@keyframes slideInNotif {
+  from { transform: translateX(120%); opacity: 0; }
+  to { transform: translateX(0); opacity: 1; }
+}
+</style>
+
+<script>
+let _notifTimeout = null;
+function showMirellaNotif(msg, duration = 6000) {
+  const el = document.getElementById('mirellaNotif');
+  const msgEl = document.getElementById('mirellaNotifMsg');
+  if (!el || !msgEl) return;
+  msgEl.textContent = msg;
+  el.style.display = 'block';
+  el.style.animation = 'none';
+  el.offsetHeight; // reflow
+  el.style.animation = 'slideInNotif 0.4s ease';
+  if (_notifTimeout) clearTimeout(_notifTimeout);
+  _notifTimeout = setTimeout(() => closeMirellaNotif(), duration);
+}
+function closeMirellaNotif() {
+  const el = document.getElementById('mirellaNotif');
+  if (el) el.style.display = 'none';
+  if (_notifTimeout) clearTimeout(_notifTimeout);
+}
+</script>
 </body>
 </html>
