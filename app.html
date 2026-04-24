@@ -2066,7 +2066,7 @@ function switchLang(lang) {
       if (entrepriseParam === 'create') { setTimeout(() => showView('entreprise'), 600); }
       else if (view) { setTimeout(() => { showView(view); if (pathologie) window.selectedPathologie = pathologie; }, 600); }
       else {
-        setTimeout(() => { showView('chat'); setTimeout(() => showMirellaNotif('👋 Bon retour ' + (currentUser?.email?.split('@')[0] || '') + ' ! Je suis là pour vous accompagner. Comment puis-je vous aider aujourd\'hui ?'), 1000); }, 600);
+        setTimeout(() => { showView('chat'); setTimeout(() => showMirellaNotif('👋 Bon retour ' + (currentUser?.user_metadata?.full_name?.split(' ')[0] || currentUser?.email?.split('@')[0] || '') + ' ! Je suis là pour vous accompagner. Comment puis-je vous aider aujourd\'hui ?'), 1000); }, 600);
       }
     }
   };
