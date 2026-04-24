@@ -2577,7 +2577,7 @@ function toggleMobileMenu() {
         const res = await fetch(`${BACKEND_URL}/api/biologie/analyze`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${authToken}` },
-          body: JSON.stringify({ image: base64, mediaType })
+          body: JSON.stringify({ image_base64: base64, media_type: mediaType })
         });
         const data = await res.json();
         clearInterval(interval);
@@ -3439,7 +3439,7 @@ function toggleMobileMenu() {
         const res = await fetch(`${BACKEND_URL}/api/ordonnance/scan`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${authToken}` },
-          body: JSON.stringify({ image: base64, mediaType })
+          body: JSON.stringify({ image_base64: base64, media_type: mediaType })
         });
         const data = await res.json();
         document.getElementById('ordoLoading').style.display = 'none';
