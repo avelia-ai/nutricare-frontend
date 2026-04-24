@@ -240,9 +240,20 @@
   #oracleTabs{gap:3px}
   #oracleTabs > div{font-size:10px!important;padding:4px 8px!important}
 }
+
+<style>
+@media (max-width: 768px) {
+  #oracleScannerGrid { grid-template-columns: 1fr !important; }
+  #oracleView { padding: 12px !important; }
+  #oracleTabs { gap: 3px !important; }
+  #oracleTabs div { padding: 4px 8px !important; font-size: 10px !important; }
+  #oracle-simulation > div { grid-template-columns: 1fr !important; }
+  #oracle-epigenetique > div { grid-template-columns: 1fr !important; }
+  #oracle-comparaison > div { grid-template-columns: 1fr 30px 1fr !important; }
+}
+</style>
 </style>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
-
 </head>
 <body>
 <script>
@@ -1934,7 +1945,7 @@ function switchLang(lang) {
     const urlParams = new URLSearchParams(window.location.search);
     const urlView = urlParams.get('view');
     if (urlView) {
-      setTimeout(() => showView(urlView, document.querySelector('[onclick*="showView(\'' + urlView + '\')"]')), 500);
+      setTimeout(() => showView(urlView, document.querySelector(`[onclick*="showView('${urlView}']")`)), 500);
     }
 
     if (authToken && currentUser) {
@@ -2055,22 +2066,7 @@ function toggleMobileMenu() {
   }
 
   // ── APP ──
-  function updateMenu(plan) {
-  const standard = document.getElementById('menuStandard');
-  const premium = document.getElementById('menuPremium');
-  if (!standard || !premium) return;
-  if (plan === 'free') {
-    standard.style.display = 'none';
-    premium.style.display = 'none';
-  } else if (plan === 'standard') {
-    standard.style.display = 'block';
-    premium.style.display = 'none';
-  } else if (plan === 'premium') {
-    standard.style.display = 'block';
-    premium.style.display = 'block';
-  }
-}
-async function showApp() {
+  async function showApp() {
     document.getElementById('authPage').classList.remove('active');
     document.getElementById('appPage').classList.add('active');
     await loadProfile();
@@ -2221,8 +2217,56 @@ async function showApp() {
     }
   }
 
+  function printRapport() {
+    const rapport = document.getElementById('rapportText').textContent;
+    const entreprise = document.getElementById('adminNomDisplay').textContent;
+    const w = window.open('', '_blank');
+    w.document.write(`<!DOCTYPE html><html><head><title>Rapport RH — ${entreprise}</title>
+    <style>body{font-family:Georgia,serif;max-width:800px;margin:40px auto;padding:40px;color:#021A35}.header{border-bottom:2px solid #021A35;padding-bottom:20px;margin-bottom:28px;display:flex;justify-content:space-between}.logo{font-size:1.2rem;font-weight:600}.report{font-size:0.95rem;line-height:1.8;white-space:pre-wrap}.disclaimer{margin-top:40px;padding:16px;background:#FDF6E8;font-size:0.78rem;color:rgba(2,26,53,0.6)}@media print{body{margin:20px}}</style>
+    </head><body>
+    <div class="header"><div><div class="logo">● Mirella Entreprise</div><div style="font-size:0.78rem;color:rgba(2,26,53,0.4)">Rapport mensuel RH · Données anonymisées</div></div><div style="text-align:right;font-size:0.78rem;color:rgba(2,26,53,0.4)">${entreprise}<br>${new Date().toLocaleDateString('fr-FR',{month:'long',year:'numeric'})}</div></div>
+    <div class="report">${rapport}</div>
+    <div class="disclaimer">️ Données 100% anonymisées. Aucune information individuelle n'est présente dans ce rapport. Conformité RGPD garantie.</div>
+    
+<style>
+@media (max-width: 768px) {
+  #menusDays > div > div:last-child {
+    display: flex !important;
+    flex-direction: column !important;
+  }
+  #menusDays > div > div:last-child > div {
+    border-right: none !important;
+    border-bottom: 1px solid #E6F1FB !important;
+    display: flex !important;
+    flex-direction: row !important;
+    gap: 10px !important;
+    padding: 10px !important;
+    align-items: flex-start !important;
+  }
+  #menusDays > div > div:last-child > div > div:first-child {
+    width: 80px !important;
+    min-width: 80px !important;
+    height: 80px !important;
+    border-radius: 8px !important;
+    overflow: hidden !important;
+  }
+  #menusDays > div > div:last-child > div > div:nth-child(2) {
+    flex: 1 !important;
+    padding: 0 !important;
+    min-height: auto !important;
+  }
+  #menusDays > div > div:last-child > div > div:nth-child(2) > div:nth-child(1) {
+    min-height: auto !important;
+    font-size: 0.8rem !important;
+  }
+  #menusDays > div > div:last-child > div > div:nth-child(2) button {
+    width: auto !important;
+    padding: 5px 10px !important;
+    font-size: 0.68rem !important;
+  }
+}
+</style>
 
-</script>
 <div id="protocolsView" style="display:none;padding:32px;overflow-y:auto;background:var(--cream);width:100%">
   <div style="font-family:'Open Sans',serif;font-size:2rem;font-weight:400;margin-bottom:6px;color:#021A35">Mes protocoles nutritionnels</div>
   <div style="font-size:0.85rem;color:#85B7EB;margin-bottom:32px">Protocoles adaptés à vos pathologies</div>
@@ -3253,7 +3297,7 @@ async function showApp() {
 
 <script>
   // ── CONFIG ──
-  window.BACKEND_URL = window.BACKEND_URL || = 'https://nutricare-backend-production.up.railway.app';
+  const BACKEND_URL = 'https://nutricare-backend-production.up.railway.app';
   const STRIPE_PRICES = {
     standard: 'price_1TM1xoGujzZFPXDMuBLCZpxk',
     premium: 'price_1TM1yPGujzZFPXDMoFPHynma'
@@ -3288,7 +3332,7 @@ async function showApp() {
     const urlParams = new URLSearchParams(window.location.search);
     const urlView = urlParams.get('view');
     if (urlView) {
-      setTimeout(() => showView(urlView, document.querySelector('[onclick*="showView(\'' + urlView + '\')"]')), 500);
+      setTimeout(() => showView(urlView, document.querySelector(`[onclick*="showView('${urlView}']")`)), 500);
     }
 
     if (authToken && currentUser) {
@@ -3570,10 +3614,79 @@ function toggleMobileMenu() {
     <div class="header"><div><div class="logo">● Mirella Entreprise</div><div style="font-size:0.78rem;color:rgba(2,26,53,0.4)">Rapport mensuel RH · Données anonymisées</div></div><div style="text-align:right;font-size:0.78rem;color:rgba(2,26,53,0.4)">${entreprise}<br>${new Date().toLocaleDateString('fr-FR',{month:'long',year:'numeric'})}</div></div>
     <div class="report">${rapport}</div>
     <div class="disclaimer">️ Données 100% anonymisées. Aucune information individuelle n'est présente dans ce rapport. Conformité RGPD garantie.</div>
-    </body></html>`);
+    
+<style>
+@media (max-width: 768px) {
+  #menusDays > div > div:last-child {
+    display: flex !important;
+    flex-direction: column !important;
+  }
+  #menusDays > div > div:last-child > div {
+    border-right: none !important;
+    border-bottom: 1px solid #E6F1FB !important;
+    display: flex !important;
+    flex-direction: row !important;
+    gap: 10px !important;
+    padding: 10px !important;
+    align-items: flex-start !important;
+  }
+  #menusDays > div > div:last-child > div > div:first-child {
+    width: 80px !important;
+    min-width: 80px !important;
+    height: 80px !important;
+    border-radius: 8px !important;
+    overflow: hidden !important;
+  }
+  #menusDays > div > div:last-child > div > div:nth-child(2) {
+    flex: 1 !important;
+    padding: 0 !important;
+    min-height: auto !important;
+  }
+  #menusDays > div > div:last-child > div > div:nth-child(2) > div:nth-child(1) {
+    min-height: auto !important;
+    font-size: 0.8rem !important;
+  }
+  #menusDays > div > div:last-child > div > div:nth-child(2) button {
+    width: auto !important;
+    padding: 5px 10px !important;
+    font-size: 0.68rem !important;
+  }
+}
+</style>
+
+</body></html>`);
     w.document.close();
+    w.print();
   }
 
+  async function sendInvites() {
+    const emailsText = document.getElementById('inviteEmails').value.trim();
+    if (!emailsText) return;
+    const emails = emailsText.split(',').map(e => e.trim()).filter(e => e.includes('@'));
+    if (!emails.length) return;
+    try {
+      const res = await fetch(`${BACKEND_URL}/api/entreprise/invite`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${authToken}` },
+        body: JSON.stringify({ emails })
+      });
+      const data = await res.json();
+      const resultEl = document.getElementById('inviteResult');
+      resultEl.style.display = 'block';
+      if (res.ok) {
+        const code = document.getElementById('adminCode').textContent.trim();
+        const link = `${window.location.origin}/invitation.html?code=${code}`;
+        resultEl.innerHTML = ` ${emails.length} invitation(s) préparée(s) !<br><strong>Lien à partager :</strong> <a href="${link}" target="_blank" style="color:#021A35">${link}</a><br><span style="font-size:0.72rem;opacity:0.7">En production, les emails seront envoyés automatiquement via SendGrid.</span>`;
+        document.getElementById('inviteEmails').value = '';
+      } else {
+        resultEl.style.background = '#FEE';
+        resultEl.style.color = '#C55';
+        resultEl.textContent = data.error || 'Erreur lors de l\'envoi';
+      }
+    } catch(e) {
+      console.error('Erreur invitations:', e);
+    }
+  }
 
   function copyInviteLink() {
     const code = document.getElementById('adminCode').textContent.trim();
@@ -3943,6 +4056,44 @@ function toggleMobileMenu() {
     <div class="report">${report}</div>
     <div class="disclaimer">️ Ce document est généré par intelligence artificielle. Il ne remplace pas un avis médical professionnel. Document généré le ${date}.</div>
     
+<style>
+@media (max-width: 768px) {
+  #menusDays > div > div:last-child {
+    display: flex !important;
+    flex-direction: column !important;
+  }
+  #menusDays > div > div:last-child > div {
+    border-right: none !important;
+    border-bottom: 1px solid #E6F1FB !important;
+    display: flex !important;
+    flex-direction: row !important;
+    gap: 10px !important;
+    padding: 10px !important;
+    align-items: flex-start !important;
+  }
+  #menusDays > div > div:last-child > div > div:first-child {
+    width: 80px !important;
+    min-width: 80px !important;
+    height: 80px !important;
+    border-radius: 8px !important;
+    overflow: hidden !important;
+  }
+  #menusDays > div > div:last-child > div > div:nth-child(2) {
+    flex: 1 !important;
+    padding: 0 !important;
+    min-height: auto !important;
+  }
+  #menusDays > div > div:last-child > div > div:nth-child(2) > div:nth-child(1) {
+    min-height: auto !important;
+    font-size: 0.8rem !important;
+  }
+  #menusDays > div > div:last-child > div > div:nth-child(2) button {
+    width: auto !important;
+    padding: 5px 10px !important;
+    font-size: 0.68rem !important;
+  }
+}
+</style>
 
 </body></html>`);
     w.document.close();
@@ -3968,10 +4119,29 @@ function toggleMobileMenu() {
         const res = await fetch(BACKEND_URL + '/api/oracle/analyze', {
           headers: { 'Authorization': 'Bearer ' + authToken }
         });
-        if (!res.ok) throw new Error('Erreur oracle');
-        const d = await res.json();
-        oracleData = d;
-        document.getElementById('oraclePatientHeader').textContent = name.toUpperCase() + ' · AGE-BIO:' + d.age_biologique;
+        if (res.ok) {
+          oracleData = await res.json();
+          applyOracleData(oracleData, name);
+        }
+      } catch(e) { console.error('Oracle API error:', e); }
+    } else {
+      applyOracleData(oracleData, name);
+    }
+    oSimU();
+    oracleTab('scanner', document.querySelector('#oracleTabs div'));
+  }
+
+  function applyOracleData(d, name) {
+    document.getElementById('oraclePatientHeader').textContent =
+      name.toUpperCase() + ' · VITALITÉ: ' + d.score_vitalite + '/100 · RÉCUP: ' + d.recuperabilite + '% · TÉLOMÈRES: ' + d.longueur_telomeres + 'kb';
+    const arc = document.getElementById('oScoreArc');
+    if (arc) arc.setAttribute('stroke-dashoffset', (126 - d.score_vitalite / 100 * 126).toFixed(1));
+    const st = document.getElementById('oScoreText');
+    if (st) st.textContent = d.score_vitalite;
+    const ba = document.getElementById('oBioAge');
+    if (ba) ba.textContent = d.age_biologique;
+    const hud = document.getElementById('oHudData');
+    if (hud && d.marqueurs) hud.textContent = 'HBA1C:' + (d.marqueurs.hba1c?.valeur||'--') + ' CRP:' + (d.marqueurs.crp?.valeur||'--') + ' VITD:' + (d.marqueurs.vitd?.valeur||'--') + ' AGE-BIO:' + d.age_biologique;
     const m1v = document.getElementById('oM1V');
     if (m1v && d.marqueurs?.hba1c) m1v.textContent = d.marqueurs.hba1c.valeur;
     const oEpi = document.getElementById('oEpiAge');
@@ -3980,8 +4150,6 @@ function toggleMobileMenu() {
     if (oReal) oReal.textContent = d.age_reel;
     if (d.timeline) window._oracleTimeline = d.timeline;
     if (d.interactions_medicaments) window._oracleMeds = d.interactions_medicaments;
-      } catch(e) { console.error('Oracle error:', e); }
-    }
   }
 
 
@@ -4292,6 +4460,44 @@ function toggleMobileMenu() {
   </div>
 </div>
 
+<style>
+@media (max-width: 768px) {
+  #menusDays > div > div:last-child {
+    display: flex !important;
+    flex-direction: column !important;
+  }
+  #menusDays > div > div:last-child > div {
+    border-right: none !important;
+    border-bottom: 1px solid #E6F1FB !important;
+    display: flex !important;
+    flex-direction: row !important;
+    gap: 10px !important;
+    padding: 10px !important;
+    align-items: flex-start !important;
+  }
+  #menusDays > div > div:last-child > div > div:first-child {
+    width: 80px !important;
+    min-width: 80px !important;
+    height: 80px !important;
+    border-radius: 8px !important;
+    overflow: hidden !important;
+  }
+  #menusDays > div > div:last-child > div > div:nth-child(2) {
+    flex: 1 !important;
+    padding: 0 !important;
+    min-height: auto !important;
+  }
+  #menusDays > div > div:last-child > div > div:nth-child(2) > div:nth-child(1) {
+    min-height: auto !important;
+    font-size: 0.8rem !important;
+  }
+  #menusDays > div > div:last-child > div > div:nth-child(2) button {
+    width: auto !important;
+    padding: 5px 10px !important;
+    font-size: 0.68rem !important;
+  }
+}
+</style>
 
 </body>
 </html>`;
@@ -4344,7 +4550,39 @@ function toggleMobileMenu() {
       ['Finalisation...', 'Votre simulation est presque prête'],
     ];
     let msgIdx = 0;
-    consttent = data.resume;
+    const loadingInterval = setInterval(() => {
+      msgIdx = (msgIdx + 1) % loadingMsgs.length;
+      const t = document.getElementById('simLoadingTitle');
+      const m = document.getElementById('simLoadingMsg');
+      if (t) t.textContent = loadingMsgs[msgIdx][0];
+      if (m) m.textContent = loadingMsgs[msgIdx][1];
+    }, 2000);
+
+    try {
+      const res = await fetch(`${BACKEND_URL}/api/simulator/simulate`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${authToken}` },
+        body: JSON.stringify({
+          question: q,
+          profile: profile
+        })
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error);
+      renderSimulation(data);
+    } catch(e) {
+      renderSimulationFallback(q);
+    }
+    clearInterval(loadingInterval);
+    document.getElementById('simLoading').style.display = 'none';
+  }
+
+  function renderSimulation(data) {
+    document.getElementById('simScenario').textContent = data.scenario || '';
+
+    // Résumé
+    const resumeEl = document.getElementById('simResume');
+    if (resumeEl && data.resume) resumeEl.textContent = data.resume;
 
     // Métriques
     const metricsEl = document.getElementById('simMetrics');
@@ -5341,7 +5579,21 @@ function showUpgradeModal(requiredPlan) {
   modal.addEventListener('click', e => { if (e.target === modal) modal.remove(); });
 }
 
-
+function updateMenu(plan) {
+  const standard = document.getElementById('menuStandard');
+  const premium = document.getElementById('menuPremium');
+  if (!standard || !premium) return;
+  if (plan === 'free') {
+    standard.style.display = 'none';
+    premium.style.display = 'none';
+  } else if (plan === 'standard') {
+    standard.style.display = 'block';
+    premium.style.display = 'none';
+  } else if (plan === 'premium') {
+    standard.style.display = 'block';
+    premium.style.display = 'block';
+  }
+}
 
 async function loadProtocols() {
   const profile = JSON.parse(localStorage.getItem('nutricare_profile') || localStorage.getItem('nutricare_user') || '{}');
@@ -5668,6 +5920,44 @@ async function deleteProfessional(id) {
 </script>
 <script src="translations.js?v=2"></script>
 
+<style>
+@media (max-width: 768px) {
+  #menusDays > div > div:last-child {
+    display: flex !important;
+    flex-direction: column !important;
+  }
+  #menusDays > div > div:last-child > div {
+    border-right: none !important;
+    border-bottom: 1px solid #E6F1FB !important;
+    display: flex !important;
+    flex-direction: row !important;
+    gap: 10px !important;
+    padding: 10px !important;
+    align-items: flex-start !important;
+  }
+  #menusDays > div > div:last-child > div > div:first-child {
+    width: 80px !important;
+    min-width: 80px !important;
+    height: 80px !important;
+    border-radius: 8px !important;
+    overflow: hidden !important;
+  }
+  #menusDays > div > div:last-child > div > div:nth-child(2) {
+    flex: 1 !important;
+    padding: 0 !important;
+    min-height: auto !important;
+  }
+  #menusDays > div > div:last-child > div > div:nth-child(2) > div:nth-child(1) {
+    min-height: auto !important;
+    font-size: 0.8rem !important;
+  }
+  #menusDays > div > div:last-child > div > div:nth-child(2) button {
+    width: auto !important;
+    padding: 5px 10px !important;
+    font-size: 0.68rem !important;
+  }
+}
+</style>
 <!-- Modal Recette -->
 <div id="recipeModal" style="display:none;position:fixed;inset:0;background:rgba(2,26,53,0.6);z-index:9999;align-items:center;justify-content:center;padding:20px" onclick="if(event.target===this)this.style.display='none'">
   <div style="background:white;border-radius:16px;max-width:520px;width:100%;max-height:85vh;overflow-y:auto;box-shadow:0 20px 60px rgba(2,26,53,0.3)">
@@ -5682,15 +5972,6 @@ async function deleteProfessional(id) {
       <div id="recipeModalMacros" style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:20px"></div>
       <div style="font-size:0.85rem;font-weight:700;color:#021A35;margin-bottom:10px;text-transform:uppercase;letter-spacing:1px">🛒 Ingrédients</div>
       <ul id="recipeModalIngredients" style="list-style:none;padding:0;margin:0 0 20px 0"></ul>
-      <div style="background:#F0F7FF;border-radius:12px;padding:14px;margin-bottom:20px">
-        <div style="font-size:0.78rem;font-weight:700;color:#021A35;margin-bottom:10px;text-transform:uppercase;letter-spacing:1px">🍽️ Calculateur de portions</div>
-        <div style="display:flex;align-items:center;gap:12px;margin-bottom:10px">
-          <button onclick="changePortions(-1)" style="background:#021A35;color:white;border:none;border-radius:50%;width:30px;height:30px;font-size:1.1rem;cursor:pointer">−</button>
-          <span id="portionsCount" style="font-size:1.1rem;font-weight:700;color:#021A35;min-width:80px;text-align:center">1 personne</span>
-          <button onclick="changePortions(1)" style="background:#021A35;color:white;border:none;border-radius:50%;width:30px;height:30px;font-size:1.1rem;cursor:pointer">+</button>
-        </div>
-        <div id="portionsMacros" style="display:flex;gap:8px;flex-wrap:wrap"></div>
-      </div>
       <div style="font-size:0.85rem;font-weight:700;color:#021A35;margin-bottom:10px;text-transform:uppercase;letter-spacing:1px">👨‍🍳 Préparation</div>
       <div id="recipeModalEtapes"></div>
     </div>
