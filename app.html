@@ -3185,23 +3185,7 @@ function toggleMobileMenu() {
 
 <script>
 let _notifTimeout = null;
-function showMirellaNotif(msg, duration = 6000) {
-  const el = document.getElementById('mirellaNotif');
-  const msgEl = document.getElementById('mirellaNotifMsg');
-  if (!el || !msgEl) return;
-  msgEl.textContent = msg;
-  el.style.display = 'block';
-  el.style.animation = 'none';
-  el.offsetHeight; // reflow
-  el.style.animation = 'slideInNotif 0.4s ease';
-  if (_notifTimeout) clearTimeout(_notifTimeout);
-  _notifTimeout = setTimeout(() => closeMirellaNotif(), duration);
-}
-function closeMirellaNotif() {
-  const el = document.getElementById('mirellaNotif');
-  if (el) el.style.display = 'none';
-  if (_notifTimeout) clearTimeout(_notifTimeout);
-}
+
 </script>
 </body>
 </html>`;
