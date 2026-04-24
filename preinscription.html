@@ -463,11 +463,19 @@ function upd() {
 }
 upd();
 setInterval(() => { if (Math.random() > 0.65) { count++; localStorage.setItem('mc', count); upd(); } }, 7000);
-function sub(eId, fId, mId) {
+async function sub(eId, fId, mId) {
   const e = document.getElementById(eId).value.trim();
   if (!e || !e.includes('@')) { document.getElementById(eId).style.borderColor = '#E24B4A'; setTimeout(() => document.getElementById(eId).style.borderColor = '', 2000); return; }
   const l = JSON.parse(localStorage.getItem('mw') || '[]');
   if (!l.includes(e)) { l.push(e); localStorage.setItem('mw', JSON.stringify(l)); }
+  // Sauvegarder en Supabase via backend
+  try {
+    await fetch('https://nutricare-backend-production.up.railway.app/api/preinscription', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email: e, source: 'preinscription' })
+    });
+  } catch(err) { console.log('Erreur sauvegarde:', err); }
   document.getElementById(fId).style.display = 'none';
   document.getElementById(mId).style.display = 'block';
   count++; localStorage.setItem('mc', count); upd();
