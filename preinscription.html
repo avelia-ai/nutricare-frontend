@@ -235,7 +235,7 @@ footer { background: white; border-top: 1px solid var(--border); padding: 28px 4
         <div class="av" style="background:#9E7A9E">LB</div>
         <div class="av" style="background:#D85A30">JD</div>
       </div>
-      <div class="soc-txt"><strong id="inscrit">366</strong> personnes deja inscrites</div>
+      <div class="soc-txt"><strong id="inscrit">112</strong> personnes deja inscrites</div>
     </div>
   </div>
 </section>
@@ -454,7 +454,13 @@ function tick() {
   document.getElementById('seconds').textContent = String(Math.floor((d%60000)/1000)).padStart(2,'0');
 }
 tick(); setInterval(tick, 1000);
-let count = parseInt(localStorage.getItem('mc') || '366');
+// Calcul du nombre d'inscrits : 112 de base + 1 toutes les 10 minutes depuis le lancement
+const launchDate = new Date('2026-04-24T10:00:00');
+const minutesElapsed = Math.floor((new Date() - launchDate) / 60000);
+const baseCount = 112;
+const autoCount = Math.floor(minutesElapsed / 10);
+let count = Math.max(parseInt(localStorage.getItem('mc') || '0') + baseCount, baseCount + autoCount);
+localStorage.setItem('mc', count - baseCount);
 function upd() {
   document.getElementById('inscrit').textContent = count;
   document.getElementById('ctaSpots').textContent = Math.max(0, 500-count);
