@@ -823,6 +823,65 @@ function switchLang(lang) {
       <div style="font-size:0.85rem;color:#85B7EB">Adaptation à vos pathologies et préférences en cours</div>
     </div>
 
+    <!-- Résumé nutritionnel du jour -->
+    <div id="menusNutritionPanel" style="display:none;background:white;border-radius:12px;border:1px solid #E6F1FB;padding:24px;margin-bottom:24px;box-shadow:0 2px 8px rgba(2,26,53,0.06)">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;flex-wrap:wrap;gap:12px">
+        <div style="font-size:0.75rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#021A35">📊 Résumé nutritionnel du jour</div>
+        <select id="menusDaySelector" onchange="updateNutritionPanel()" style="padding:6px 12px;border:1px solid #E6F1FB;border-radius:8px;font-size:0.82rem;color:#021A35;background:white;cursor:pointer">
+          <option value="0">Lundi</option>
+          <option value="1">Mardi</option>
+          <option value="2">Mercredi</option>
+          <option value="3">Jeudi</option>
+          <option value="4">Vendredi</option>
+          <option value="5">Samedi</option>
+          <option value="6">Dimanche</option>
+        </select>
+      </div>
+      <div style="display:grid;grid-template-columns:200px 1fr;gap:24px;align-items:center">
+        <!-- Donut chart -->
+        <div style="position:relative;width:180px;height:180px;margin:0 auto">
+          <canvas id="caloriesDonut" width="180" height="180"></canvas>
+          <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center">
+            <div id="donutCalories" style="font-size:1.4rem;font-weight:700;color:#021A35">0</div>
+            <div style="font-size:0.65rem;color:#85B7EB">kcal / jour</div>
+            <div id="donutPct" style="font-size:0.72rem;font-weight:600;color:#C9A84C">0%</div>
+          </div>
+        </div>
+        <!-- Barres macros -->
+        <div style="display:flex;flex-direction:column;gap:14px">
+          <div>
+            <div style="display:flex;justify-content:space-between;margin-bottom:4px">
+              <span style="font-size:0.78rem;font-weight:600;color:#021A35">🥑 Lipides</span>
+              <span id="macroLipidesVal" style="font-size:0.78rem;color:#85B7EB">0g / ~70g</span>
+            </div>
+            <div style="background:#E6F1FB;border-radius:20px;height:8px;overflow:hidden">
+              <div id="macroLipidesBar" style="background:#C9A84C;height:100%;border-radius:20px;width:0%;transition:width 0.5s"></div>
+            </div>
+          </div>
+          <div>
+            <div style="display:flex;justify-content:space-between;margin-bottom:4px">
+              <span style="font-size:0.78rem;font-weight:600;color:#021A35">🌾 Glucides</span>
+              <span id="macroGlucidesVal" style="font-size:0.78rem;color:#85B7EB">0g / ~250g</span>
+            </div>
+            <div style="background:#E6F1FB;border-radius:20px;height:8px;overflow:hidden">
+              <div id="macroGlucidesBar" style="background:#378ADD;height:100%;border-radius:20px;width:0%;transition:width 0.5s"></div>
+            </div>
+          </div>
+          <div>
+            <div style="display:flex;justify-content:space-between;margin-bottom:4px">
+              <span style="font-size:0.78rem;font-weight:600;color:#021A35">💪 Protéines</span>
+              <span id="macroProteinesVal" style="font-size:0.78rem;color:#85B7EB">0g / ~60g</span>
+            </div>
+            <div style="background:#E6F1FB;border-radius:20px;height:8px;overflow:hidden">
+              <div id="macroProteinesBar" style="background:#3B6D11;height:100%;border-radius:20px;width:0%;transition:width 0.5s"></div>
+            </div>
+          </div>
+          <div style="margin-top:4px;padding:10px;background:#F0F7FF;border-radius:8px;font-size:0.75rem;color:#378ADD" id="nutritionAdvice">
+            💡 Sélectionnez un jour pour voir vos apports
+          </div>
+        </div>
+      </div>
+    </div>
     <!-- Menu semaine -->
     <div id="menusDays" style="display:flex;flex-direction:column;gap:16px"></div>
 
@@ -3736,9 +3795,87 @@ function showRecipeModal(btn) {
   document.getElementById('recipeModalEtapes').innerHTML = (r.etapes||['Préparer les ingrédients','Assembler et cuire','Servir chaud']).map((e,i)=>`<div style="display:flex;gap:12px;padding:10px 0;border-bottom:1px solid #E6F1FB"><span style="background:#021A35;color:white;border-radius:50%;width:24px;height:24px;min-width:24px;display:flex;align-items:center;justify-content:center;font-size:0.72rem">${i+1}</span><span style="font-size:0.85rem;color:#021A35;line-height:1.5">${e}</span></div>`).join('');
   document.getElementById('recipeModal').style.display = 'flex';
 }
+let _currentMenu = null;
+let _donutChart = null;
+
+function updateNutritionPanel(dayIndex) {
+  if (!_currentMenu || !_currentMenu.semaine) return;
+  const idx = dayIndex !== undefined ? dayIndex : parseInt(document.getElementById('menusDaySelector')?.value || 0);
+  const jour = _currentMenu.semaine[idx];
+  if (!jour) return;
+
+  // Calculer totaux
+  const repas = ['petit_dejeuner','dejeuner','collation','diner'];
+  const totals = repas.reduce((acc, r) => {
+    const m = jour[r] || {};
+    acc.cal += m.calories || 0;
+    acc.lip += m.lipides || 0;
+    acc.glu += m.glucides || 0;
+    acc.pro += m.proteines || 0;
+    return acc;
+  }, {cal:0, lip:0, glu:0, pro:0});
+
+  // Besoins estimés (moyennes)
+  const besoins = { cal: 2000, lip: 70, glu: 250, pro: 60 };
+  const pct = Math.min(100, Math.round(totals.cal / besoins.cal * 100));
+
+  // Donut chart
+  const canvas = document.getElementById('caloriesDonut');
+  if (canvas) {
+    const ctx = canvas.getContext('2d');
+    if (_donutChart) _donutChart.destroy();
+    _donutChart = new Chart(ctx, {
+      type: 'doughnut',
+      data: {
+        datasets: [{
+          data: [pct, 100 - pct],
+          backgroundColor: ['#C9A84C', '#E6F1FB'],
+          borderWidth: 0
+        }]
+      },
+      options: {
+        cutout: '75%',
+        plugins: { legend: { display: false }, tooltip: { enabled: false } },
+        animation: { duration: 600 }
+      }
+    });
+  }
+
+  document.getElementById('donutCalories').textContent = totals.cal;
+  document.getElementById('donutPct').textContent = pct + '% des besoins';
+
+  // Barres macros
+  const lipPct = Math.min(100, Math.round(totals.lip / besoins.lip * 100));
+  const gluPct = Math.min(100, Math.round(totals.glu / besoins.glu * 100));
+  const proPct = Math.min(100, Math.round(totals.pro / besoins.pro * 100));
+
+  document.getElementById('macroLipidesBar').style.width = lipPct + '%';
+  document.getElementById('macroGlucidesBar').style.width = gluPct + '%';
+  document.getElementById('macroProteinesBar').style.width = proPct + '%';
+  document.getElementById('macroLipidesVal').textContent = totals.lip + 'g / ~' + besoins.lip + 'g';
+  document.getElementById('macroGlucidesVal').textContent = totals.glu + 'g / ~' + besoins.glu + 'g';
+  document.getElementById('macroProteinesVal').textContent = totals.pro + 'g / ~' + besoins.pro + 'g';
+
+  // Conseil
+  const advice = pct < 70 ? '⚠️ Apports caloriques insuffisants pour ce jour' :
+    pct > 110 ? '⚠️ Apports caloriques élevés pour ce jour' :
+    '✅ Apports caloriques bien équilibrés pour ce jour';
+  document.getElementById('nutritionAdvice').textContent = advice;
+
+  // Sélectionner le bon jour dans le dropdown
+  const sel = document.getElementById('menusDaySelector');
+  if (sel) sel.value = idx;
+}
+
 function renderMenu(menu) {
   const repasIcons = { petit_dejeuner: '🌅', dejeuner: '☀️', collation: '🍎', diner: '🌙' };
   const repasLabels = { petit_dejeuner: 'Petit-déjeuner', dejeuner: 'Déjeuner', collation: 'Collation', diner: 'Dîner' };
+  _currentMenu = menu;
+  document.getElementById('menusNutritionPanel').style.display = 'block';
+  // Sélectionner le jour actuel
+  const today = new Date().getDay();
+  const dayIdx = today === 0 ? 6 : today - 1;
+  setTimeout(() => updateNutritionPanel(dayIdx), 200);
   document.getElementById('menusDays').innerHTML = menu.semaine.map(jour => `
     <div style="background:white;border-radius:12px;border:1px solid #E6F1FB;overflow:hidden;margin-bottom:16px;box-shadow:0 2px 8px rgba(2,26,53,0.06)">
       <div style="background:#021A35;padding:14px 20px">
