@@ -3724,8 +3724,7 @@ document.getElementById('analysisView').style.display = view === 'analysis' ? 'b
 if (view === 'analysis') loadAnalysis();
   }
   async function loadAnalysis() {
-  const plan = document.getElementById('sidebarPlan').textContent;
-  const isPaid = plan.includes('Standard') || plan.includes('Premium');
+  const isPaid = currentPlan === 'standard' || currentPlan === 'premium';
   document.getElementById('analysisPlanRequired').style.display = isPaid ? 'none' : 'block';
   document.getElementById('analysisContent').style.display = isPaid ? 'block' : 'none';
   if (!isPaid) return;
@@ -3806,8 +3805,7 @@ async function loadAnalysisHistory() {
   } catch(e) { console.error(e); }
 }
   async function loadMenus() {
-  const plan = document.getElementById('sidebarPlan').textContent;
-  const isPaid = plan.includes('Standard') || plan.includes('Premium');
+  const isPaid = currentPlan === 'standard' || currentPlan === 'premium';
   document.getElementById('menusPlanRequired').style.display = isPaid ? 'none' : 'block';
   document.getElementById('menusContent').style.display = isPaid ? 'block' : 'none';
   if (!isPaid) return;
@@ -4615,7 +4613,7 @@ async function loadProtocols() {
   }
 }
   async function loadProfessionals() {
-  const plan = document.getElementById('sidebarPlan').textContent;
+  const plan = currentPlan;
   const isPaid = plan.includes('Standard') || plan.includes('Premium');
   document.getElementById('proPlanRequired').style.display = isPaid ? 'none' : 'block';
   document.getElementById('proContent').style.display = isPaid ? 'block' : 'none';
