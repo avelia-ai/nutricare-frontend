@@ -3819,7 +3819,12 @@ async function loadAnalysisHistory() {
       headers: { 'Authorization': `Bearer ${authToken}` }
     });
     const menu = await res.json();
-    if (menu) renderMenu(menu);
+    console.log('menus/current response:', res.status, JSON.stringify(menu).substring(0, 200));
+    if (menu && menu.semaine) renderMenu(menu);
+    else {
+      // Aucun menu existant, afficher bouton de génération
+      document.getElementById('menusLoading').style.display = 'none';
+    }
   } catch(e) { console.error(e); }
 }
 
