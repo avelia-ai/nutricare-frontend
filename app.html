@@ -3838,7 +3838,7 @@ async function showRecipeModal(btn) {
     <span style="background:#E6F1FB;color:#378ADD;padding:4px 12px;border-radius:20px;font-size:0.78rem">🥑 ${r.lipides||'—'}g lip.</span>
     <span style="background:#E6F1FB;color:#378ADD;padding:4px 12px;border-radius:20px;font-size:0.78rem">🌾 ${r.glucides||'—'}g gluc.</span>
     <span style="background:#E6F1FB;color:#378ADD;padding:4px 12px;border-radius:20px;font-size:0.78rem">💪 ${r.proteines||'—'}g prot.</span>`;
-  document.getElementById('recipeModalIngredients').innerHTML = (r.ingredients||[]).map(i=>`<li style="font-size:0.85rem;color:#021A35;padding:4px 0;border-bottom:1px solid #E6F1FB">• ${i}</li>`).join('');
+  // Les ingrédients sont gérés par changePortions() après initialisation de _recipeBase
   document.getElementById('recipeModalEtapes').innerHTML = '<div style="color:#85B7EB;font-size:0.85rem;padding:16px 0">⏳ Génération de la recette en cours...</div>';
   document.getElementById('recipeModal').style.display = 'flex';
   _recipeBase = { calories: r.calories, lipides: r.lipides, glucides: r.glucides, proteines: r.proteines, cout_estime: r.cout_estime, ingredients: r.ingredients };
