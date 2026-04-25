@@ -4016,7 +4016,10 @@ function renderMenu(menu) {
                 <span style="background:#E6F1FB;color:#378ADD;font-size:0.68rem;padding:2px 8px;border-radius:10px">🌾${r.glucides||'—'}g</span>
                 <span style="background:#E6F1FB;color:#378ADD;font-size:0.68rem;padding:2px 8px;border-radius:10px">💪${r.proteines||'—'}g</span>
               </div>
-              <div style="font-size:0.72rem;color:#85B7EB;margin-bottom:10px">⏱ ${r.prep_minutes||0} min</div>
+              <div style="display:flex;gap:8px;align-items:center;margin-bottom:10px">
+                <div style="font-size:0.72rem;color:#85B7EB">⏱ ${r.prep_minutes||0} min</div>
+                ${r.cout_estime ? `<div style="font-size:0.72rem;color:#3B6D11;font-weight:600">💰 ${r.cout_estime.toFixed(2)}€</div>` : ''}
+              </div>
               <button onclick='showRecipeModal(this)' data-recipe="${rJson}" 
                 style="width:100%;padding:7px;background:#021A35;color:white;border:none;border-radius:8px;font-size:0.75rem;cursor:pointer;font-weight:600;letter-spacing:0.3px">
                 📖 Voir la recette
