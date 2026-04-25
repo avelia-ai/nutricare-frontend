@@ -3806,7 +3806,7 @@ async function loadAnalysisHistory() {
 }
   async function loadMenus() {
   // Attendre que le profil soit chargé si currentPlan pas encore défini
-  if (currentPlan === 'free' && authToken) {
+  if ((window.currentPlan || 'free') === 'free' && authToken) {
     await new Promise(r => setTimeout(r, 1200));
   }
   const isPaid = (window.currentPlan || 'free') === 'standard' || (window.currentPlan || 'free') === 'premium';
