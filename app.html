@@ -2134,20 +2134,17 @@ function switchLang(lang) {
     }
 
     if (authToken && currentUser) {
-      showApp().then(() => {
+      showApp().then(async () => {
         const params = new URLSearchParams(window.location.search);
         const redirectUrl = params.get('redirect');
         if (redirectUrl) { window.location.href = decodeURIComponent(redirectUrl); return; }
-        if (urlView) showView(urlView, null);
+        const view = params.get('view') || urlView;
+        const pathologie = params.get('p');
+        const entrepriseParam = params.get('entreprise');
+        if (entrepriseParam === 'create') { await showView('entreprise'); }
+        else if (view) { await showView(view); if (pathologie) window.selectedPathologie = pathologie; }
+        else { await showView('chat'); }
       });
-      const view = params.get('view');
-      const pathologie = params.get('p');
-      const entrepriseParam = params.get('entreprise');
-      if (entrepriseParam === 'create') { setTimeout(() => showView('entreprise'), 600); }
-      else if (view) { setTimeout(() => { showView(view); if (pathologie) window.selectedPathologie = pathologie; }, 600); }
-      else {
-        setTimeout(() => { showView('chat'); setTimeout(() => showMirellaNotif('👋 Bon retour ' + (currentUser?.user_metadata?.full_name?.split(' ')[0] || currentUser?.email?.split('@')[0] || '') + ' ! Je suis là pour vous accompagner. Comment puis-je vous aider aujourd\'hui ?'), 1000); }, 600);
-      }
     }
   };
 
