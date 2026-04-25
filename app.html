@@ -3806,6 +3806,29 @@ async function loadMealPhoto(nom, keyword, imgEl) {
 function unsplashUrl(nom, keyword) {
   return 'https://images.unsplash.com/photo-1498837167922-ddd27525d352?w=400&h=300&q=80&fit=crop';
 }
+let _recipeBase = {};
+let _portions = 1;
+
+function changePortions(delta) {
+  _portions = Math.max(1, Math.min(20, _portions + delta));
+  document.getElementById('portionsCount').textContent = _portions + (_portions === 1 ? ' personne' : ' personnes');
+  const m = _recipeBase;
+  document.getElementById('portionsMacros').innerHTML = `
+    <span style="background:#FDF6E8;color:#B8860B;padding:4px 12px;border-radius:20px;font-size:0.78rem;font-weight:700">${Math.round((m.calories||0)*_portions)} kcal</span>
+    <span style="background:#E6F1FB;color:#378ADD;padding:4px 12px;border-radius:20px;font-size:0.78rem">🥑 ${Math.round((m.lipides||0)*_portions)}g lip.</span>
+    <span style="background:#E6F1FB;color:#378ADD;padding:4px 12px;border-radius:20px;font-size:0.78rem">🌾 ${Math.round((m.glucides||0)*_portions)}g gluc.</span>
+    <span style="background:#E6F1FB;color:#378ADD;padding:4px 12px;border-radius:20px;font-size:0.78rem">💪 ${Math.round((m.proteines||0)*_portions)}g prot.</span>
+    ${m.cout_estime ? `<span style="background:#E8F5E9;color:#2E7D32;padding:4px 12px;border-radius:20px;font-size:0.78rem;font-weight:600">💰 ${(m.cout_estime*_portions).toFixed(2)}€</span>` : ''}`;
+  // Adapter les quantités des ingrédients
+  const ingredients = m.ingredients || [];
+  document.getElementById('recipeModalIngredients').innerHTML = ingredients.map(ing => {
+    const adapted = ing.replace(/(\d+(?:[.,]\d+)?)\s*(g|kg|ml|l|cl|cs|cc|cuillère|tasse|verre|tranche|unité|pièce)/gi, (match, num, unit) => {
+      return Math.round(parseFloat(num.replace(',','.')) * _portions) + unit;
+    });
+    return `<li style="font-size:0.85rem;color:#021A35;padding:4px 0;border-bottom:1px solid #E6F1FB">• ${adapted}</li>`;
+  }).join('');
+}
+
 async function showRecipeModal(btn) {
   const r = JSON.parse(btn.getAttribute('data-recipe').replace(/&quot;/g,'"'));
   document.getElementById('recipeModalTitle').textContent = r.nom;
