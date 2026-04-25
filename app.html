@@ -3676,7 +3676,7 @@ function toggleMobileMenu() {
   // Détection paramètres URL
   function showView(view, btn) {
   const p = JSON.parse(localStorage.getItem('nutricare_profile') || '{}');
-  const plan = p.plan || 'free';
+  const plan = window.currentPlan !== 'free' ? window.currentPlan : (p.plan || 'free');
   const premiumViews = ['oracle', 'simulator', 'biologie', 'ordonnance', 'programs', 'visual'];
   const standardViews = ['menus', 'protocols', 'analysis', 'health', 'gamification'];
   if (premiumViews.includes(view) && plan !== 'premium') {
