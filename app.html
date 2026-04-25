@@ -3676,9 +3676,20 @@ function toggleMobileMenu() {
 
   // ── VIEWS ──
   // Détection paramètres URL
-  function showView(view, btn) {
-  const p = JSON.parse(localStorage.getItem('nutricare_profile') || '{}');
-  const plan = window.currentPlan !== 'free' ? window.currentPlan : (p.plan || 'free');
+  async function showView(view, btn) {
+  // Si plan pas encore chargé, attendre loadProfile
+  if (window.currentPlan === 'free' && authToken) {
+    const p = JSON.parse(localStorage.getItem('nutricare_profile') || '{}');
+    if (!p.plan) {
+      try {
+        const pr = await fetchWithAuth(`${BACKEND_URL}/api/profile`);
+        if (pr.ok) { const pd = await pr.json(); window.currentPlan = pd.plan || 'free'; localStorage.setItem('nutricare_profile', JSON.stringify(pd)); }
+      } catch(e) {}
+    } else {
+      window.currentPlan = p.plan;
+    }
+  }
+  const plan = window.currentPlan;
   const premiumViews = ['oracle', 'simulator', 'biologie', 'ordonnance', 'programs', 'visual'];
   const standardViews = ['menus', 'protocols', 'analysis', 'health', 'gamification'];
   if (premiumViews.includes(view) && plan !== 'premium') {
