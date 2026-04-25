@@ -3724,7 +3724,7 @@ document.getElementById('analysisView').style.display = view === 'analysis' ? 'b
 if (view === 'analysis') loadAnalysis();
   }
   async function loadAnalysis() {
-  const isPaid = currentPlan === 'standard' || currentPlan === 'premium';
+  const isPaid = (window.currentPlan || 'free') === 'standard' || (window.currentPlan || 'free') === 'premium';
   document.getElementById('analysisPlanRequired').style.display = isPaid ? 'none' : 'block';
   document.getElementById('analysisContent').style.display = isPaid ? 'block' : 'none';
   if (!isPaid) return;
@@ -3809,7 +3809,7 @@ async function loadAnalysisHistory() {
   if (currentPlan === 'free' && authToken) {
     await new Promise(r => setTimeout(r, 1200));
   }
-  const isPaid = currentPlan === 'standard' || currentPlan === 'premium';
+  const isPaid = (window.currentPlan || 'free') === 'standard' || (window.currentPlan || 'free') === 'premium';
   document.getElementById('menusPlanRequired').style.display = isPaid ? 'none' : 'block';
   document.getElementById('menusContent').style.display = isPaid ? 'block' : 'none';
   if (!isPaid) return;
