@@ -2132,7 +2132,14 @@ function switchLang(lang) {
     const urlEntreprise = urlParams.get('entreprise');
     const urlRedirect = urlParams.get('redirect');
     // Stocker immédiatement le view demandé
-    if (urlView) localStorage.setItem('nutricare_last_view', urlView);
+    // Toujours écraser last_view avec le paramètre URL
+    if (urlView) {
+      localStorage.setItem('nutricare_last_view', urlView);
+    } else {
+      // Si pas de paramètre URL, ne pas utiliser oracle comme vue par défaut
+      const lv = localStorage.getItem('nutricare_last_view');
+      if (!lv || lv === 'oracle') localStorage.setItem('nutricare_last_view', 'chat');
+    }
     if (authToken && currentUser) {
       await showApp();
       if (urlRedirect) { window.location.href = decodeURIComponent(urlRedirect); return; }
