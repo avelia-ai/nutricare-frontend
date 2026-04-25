@@ -3823,7 +3823,7 @@ async function loadAnalysisHistory() {
   let isPaid = window.currentPlan === 'standard' || window.currentPlan === 'premium';
   if (!isPaid && authToken) {
     try {
-      const pr = await fetch(`${BACKEND_URL}/api/profile`, { headers: { 'Authorization': `Bearer ${authToken}` } });
+      const pr = await fetchWithAuth(`${BACKEND_URL}/api/profile`);
       if (pr.ok) { const pd = await pr.json(); window.currentPlan = pd.plan || 'free'; isPaid = pd.plan === 'standard' || pd.plan === 'premium'; }
     } catch(e) {}
   }
@@ -4642,7 +4642,7 @@ async function loadProtocols() {
   let isPaid = window.currentPlan === 'standard' || window.currentPlan === 'premium';
   if (!isPaid && authToken) {
     try {
-      const pr = await fetch(`${BACKEND_URL}/api/profile`, { headers: { 'Authorization': `Bearer ${authToken}` } });
+      const pr = await fetchWithAuth(`${BACKEND_URL}/api/profile`);
       if (pr.ok) { const pd = await pr.json(); window.currentPlan = pd.plan || 'free'; isPaid = pd.plan === 'standard' || pd.plan === 'premium'; }
     } catch(e) {}
   }
