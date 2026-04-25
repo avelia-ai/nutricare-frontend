@@ -2106,6 +2106,20 @@ function switchLang(lang) {
 
   // ── STATE ──
   let authToken = localStorage.getItem('nutricare_token') || null;
+  window.currentPlan = 'free';
+
+  async function fetchWithAuth(url, options = {}) {
+    options.headers = { ...options.headers, 'Authorization': `Bearer ${authToken}` };
+    let res = await fetch(url, options);
+    if (res.status === 401) {
+      const refreshed = await refreshAuthToken();
+      if (refreshed) {
+        options.headers['Authorization'] = `Bearer ${authToken}`;
+        res = await fetch(url, options);
+      }
+    }
+    return res;
+  }
   let currentUser = JSON.parse(localStorage.getItem('nutricare_user') || 'null');
   let conversationId = null;
   let isLoading = false;
