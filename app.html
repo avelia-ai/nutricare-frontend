@@ -3738,7 +3738,13 @@ document.getElementById('analysisView').style.display = view === 'analysis' ? 'b
 if (view === 'analysis') loadAnalysis();
   }
   async function loadAnalysis() {
-  const isPaid = (window.currentPlan || 'free') === 'standard' || (window.currentPlan || 'free') === 'premium';
+  let isPaid = window.currentPlan === 'standard' || window.currentPlan === 'premium';
+  if (!isPaid && authToken) {
+    try {
+      const pr = await fetchWithAuth(`${BACKEND_URL}/api/profile`);
+      if (pr.ok) { const pd = await pr.json(); window.currentPlan = pd.plan || 'free'; isPaid = pd.plan === 'standard' || pd.plan === 'premium'; }
+    } catch(e) {}
+  }
   document.getElementById('analysisPlanRequired').style.display = isPaid ? 'none' : 'block';
   document.getElementById('analysisContent').style.display = isPaid ? 'block' : 'none';
   if (!isPaid) return;
