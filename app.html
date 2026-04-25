@@ -449,7 +449,7 @@ function switchLang(lang) {
 
   <!-- Sidebar -->
   <div class="sidebar" id="sidebar">
-    <div class="sidebar-logo" onclick="window.location.href='index.html'" style="cursor:pointer"><div class="sidebar-logo-dot"></div> Mirella</div>
+    <div class="sidebar-logo" onclick="window.location.href='/landing'" style="cursor:pointer"><div class="sidebar-logo-dot"></div> Mirella</div>
     <!-- Menu particulier -->
     <div id="menuParticulier">
       <div class="nav-label">Principal</div>
@@ -1167,7 +1167,7 @@ function switchLang(lang) {
           <div id="entCreateError" style="display:none;color:#FAC775;font-size:0.78rem;margin-top:8px"></div>
         </div>
       </div>
-      <div style="text-align:center;padding:20px;font-size:0.82rem;color:rgba(2,26,53,0.4)">Vous n'avez pas encore de compte entreprise ? <a href="entreprise.html" style="color:#C9A84C;text-decoration:none">Découvrir Mirella Entreprise →</a></div>
+      <div style="text-align:center;padding:20px;font-size:0.82rem;color:rgba(2,26,53,0.4)">Vous n'avez pas encore de compte entreprise ? <a href="/entreprise" style="color:#C9A84C;text-decoration:none">Découvrir Mirella Entreprise →</a></div>
     </div>
 
     <!-- MEMBRE SALARIÉ -->
@@ -2423,7 +2423,7 @@ function toggleMobileMenu() {
       resultEl.style.display = 'block';
       if (res.ok) {
         const code = document.getElementById('adminCode').textContent.trim();
-        const link = `${window.location.origin}/invitation.html?code=${code}`;
+        const link = `${window.location.origin}/invitation?code=${code}`;
         resultEl.innerHTML = ` ${emails.length} invitation(s) préparée(s) !<br><strong>Lien à partager :</strong> <a href="${link}" target="_blank" style="color:#021A35">${link}</a><br><span style="font-size:0.72rem;opacity:0.7">En production, les emails seront envoyés automatiquement via SendGrid.</span>`;
         document.getElementById('inviteEmails').value = '';
       } else {
@@ -2438,7 +2438,7 @@ function toggleMobileMenu() {
 
   function copyInviteLink() {
     const code = document.getElementById('adminCode').textContent.trim();
-    const link = `${window.location.origin}/invitation.html?code=${code}`;
+    const link = `${window.location.origin}/invitation?code=${code}`;
     navigator.clipboard.writeText(link).then(() => {
       alert('Lien d\'invitation copié ! Partagez-le à vos salariés.');
     });
@@ -4644,7 +4644,7 @@ function renderProfessionals(pros) {
   }
   list.innerHTML = pros.map(p => {
     const link = p.sharing_links?.[0];
-    const shareUrl = `${window.location.origin}/pro-access.html?token=${link?.token}`;
+    const shareUrl = `${window.location.origin}/pro-access?token=${link?.token}`;
     return `
     <div style="background:white;border-radius: 4px;padding:22px;border:1px solid #B5D4F4;overflow:hidden">
       <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px">
