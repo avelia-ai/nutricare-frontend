@@ -3805,6 +3805,10 @@ async function loadAnalysisHistory() {
   } catch(e) { console.error(e); }
 }
   async function loadMenus() {
+  // Attendre que le profil soit chargé si currentPlan pas encore défini
+  if (currentPlan === 'free' && authToken) {
+    await new Promise(r => setTimeout(r, 1200));
+  }
   const isPaid = currentPlan === 'standard' || currentPlan === 'premium';
   document.getElementById('menusPlanRequired').style.display = isPaid ? 'none' : 'block';
   document.getElementById('menusContent').style.display = isPaid ? 'block' : 'none';
