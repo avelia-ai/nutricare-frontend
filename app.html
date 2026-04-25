@@ -3805,11 +3805,13 @@ async function loadAnalysisHistory() {
   } catch(e) { console.error(e); }
 }
   async function loadMenus() {
-  // Attendre que le profil soit chargé si currentPlan pas encore défini
-  if ((window.currentPlan || 'free') === 'free' && authToken) {
-    await new Promise(r => setTimeout(r, 1200));
+  // Attendre que le profil soit chargé (max 3s)
+  let waited = 0;
+  while (window.currentPlan === 'free' && authToken && waited < 3000) {
+    await new Promise(r => setTimeout(r, 200));
+    waited += 200;
   }
-  const isPaid = (window.currentPlan || 'free') === 'standard' || (window.currentPlan || 'free') === 'premium';
+  const isPaid = window.currentPlan === 'standard' || window.currentPlan === 'premium';
   document.getElementById('menusPlanRequired').style.display = isPaid ? 'none' : 'block';
   document.getElementById('menusContent').style.display = isPaid ? 'block' : 'none';
   if (!isPaid) return;
