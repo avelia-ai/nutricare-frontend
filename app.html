@@ -860,6 +860,11 @@ function switchLang(lang) {
 
     <!-- Résumé nutritionnel du jour -->
     <div id="menusNutritionPanel" style="display:none;background:white;border-radius:12px;border:1px solid #E6F1FB;padding:24px;margin-bottom:24px;box-shadow:0 2px 8px rgba(2,26,53,0.06)">
+      <div id="menusBudgetBar" style="display:none;background:#F0F7FF;border-radius:8px;padding:10px 16px;margin-bottom:16px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px">
+        <div style="font-size:0.78rem;color:#021A35">💰 <strong>Budget semaine estimé :</strong> <span id="menusBudgetTotal">—</span></div>
+        <div style="font-size:0.78rem;color:#85B7EB">Budget mensuel : <span id="menusBudgetMensuel">—</span></div>
+        <div id="menusBudgetStatus" style="font-size:0.72rem;padding:3px 10px;border-radius:20px;font-weight:600"></div>
+      </div>
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;flex-wrap:wrap;gap:12px">
         <div style="font-size:0.75rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#021A35">📊 Résumé nutritionnel du jour</div>
         <select id="menusDaySelector" onchange="updateNutritionPanel()" style="padding:6px 12px;border:1px solid #E6F1FB;border-radius:8px;font-size:0.82rem;color:#021A35;background:white;cursor:pointer">
@@ -3956,6 +3961,32 @@ function renderMenu(menu) {
   const repasLabels = { petit_dejeuner: 'Petit-déjeuner', dejeuner: 'Déjeuner', collation: 'Collation', diner: 'Dîner' };
   _currentMenu = menu;
   document.getElementById('menusNutritionPanel').style.display = 'block';
+  // Calculer budget semaine
+  let totalCout = 0;
+  (menu.semaine || []).forEach(jour => {
+    ['petit_dejeuner','dejeuner','collation','diner'].forEach(r => {
+      totalCout += jour[r]?.cout_estime || 0;
+    });
+  });
+  if (totalCout > 0) {
+    const profile = JSON.parse(localStorage.getItem('nutricare_profile') || '{}');
+    const budgetMensuel = parseInt(profile.budget_alimentaire) || 0;
+    document.getElementById('menusBudgetTotal').textContent = totalCout.toFixed(2) + '€';
+    document.getElementById('menusBudgetMensuel').textContent = budgetMensuel ? budgetMensuel + '€/mois' : 'Non défini';
+    const budgetSemaine = budgetMensuel / 4;
+    const status = document.getElementById('menusBudgetStatus');
+    if (budgetMensuel && totalCout > budgetSemaine * 1.1) {
+      status.textContent = '⚠️ Au-dessus du budget';
+      status.style.background = '#FFEBEE'; status.style.color = '#C62828';
+    } else if (budgetMensuel && totalCout < budgetSemaine * 0.9) {
+      status.textContent = '✅ Dans le budget';
+      status.style.background = '#E8F5E9'; status.style.color = '#2E7D32';
+    } else {
+      status.textContent = '✅ Budget respecté';
+      status.style.background = '#E8F5E9'; status.style.color = '#2E7D32';
+    }
+    document.getElementById('menusBudgetBar').style.display = 'flex';
+  }
   // Sélectionner le jour actuel
   const today = new Date().getDay();
   const dayIdx = today === 0 ? 6 : today - 1;
