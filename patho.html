@@ -93,12 +93,12 @@
 
 <!-- NAV -->
 <nav>
-  <a href="index.html" class="nav-logo">
+  <a href="/landing" class="nav-logo">
     <div class="nav-logo-dot"></div> NutriCare
   </a>
   <div class="nav-actions">
-    <a href="app.html" class="btn-outline">Se connecter</a>
-    <a href="app.html" class="btn-primary">Commencer →</a>
+    <a href="/app" class="btn-outline">Se connecter</a>
+    <a href="/app" class="btn-primary">Commencer →</a>
   </div>
 </nav>
 
@@ -180,7 +180,7 @@
     <input class="modal-input" type="email" id="modalEmail" placeholder="Email" />
     <input class="modal-input" type="password" id="modalPassword" placeholder="Mot de passe" />
     <button class="modal-btn" onclick="loginAndAdd()">Se connecter et ajouter →</button>
-    <div class="modal-link">Pas encore de compte ? <a href="app.html">Créer un compte</a></div>
+    <div class="modal-link">Pas encore de compte ? <a href="/app">Créer un compte</a></div>
   </div>
 </div>
 
@@ -312,7 +312,7 @@
 
       // Rediriger vers app après 2s
       setTimeout(() => {
-        window.location.href = `app.html?view=protocols&p=${encodeURIComponent(patho)}`;
+        window.location.href = `/app?view=protocols&p=${encodeURIComponent(patho)}`;
       }, 2000);
 
     } catch(e) {
