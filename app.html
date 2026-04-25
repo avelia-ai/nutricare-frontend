@@ -2138,12 +2138,20 @@ function switchLang(lang) {
         const params = new URLSearchParams(window.location.search);
         const redirectUrl = params.get('redirect');
         if (redirectUrl) { window.location.href = decodeURIComponent(redirectUrl); return; }
-        const view = params.get('view') || urlView;
+        const urlViewParam = params.get('view') || urlView;
         const pathologie = params.get('p');
         const entrepriseParam = params.get('entreprise');
         if (entrepriseParam === 'create') { await showView('entreprise'); }
-        else if (view) { await showView(view); if (pathologie) window.selectedPathologie = pathologie; }
-        else { await showView('chat'); }
+        else if (urlViewParam) {
+          // Paramètre URL prime sur last_view
+          localStorage.setItem('nutricare_last_view', urlViewParam);
+          await showView(urlViewParam);
+          if (pathologie) window.selectedPathologie = pathologie;
+        }
+        else {
+          const lastView = localStorage.getItem('nutricare_last_view') || 'chat';
+          await showView(lastView);
+        }
       });
     }
   };
