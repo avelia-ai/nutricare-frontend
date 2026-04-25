@@ -3841,6 +3841,10 @@ async function showRecipeModal(btn) {
   document.getElementById('recipeModalIngredients').innerHTML = (r.ingredients||[]).map(i=>`<li style="font-size:0.85rem;color:#021A35;padding:4px 0;border-bottom:1px solid #E6F1FB">• ${i}</li>`).join('');
   document.getElementById('recipeModalEtapes').innerHTML = '<div style="color:#85B7EB;font-size:0.85rem;padding:16px 0">⏳ Génération de la recette en cours...</div>';
   document.getElementById('recipeModal').style.display = 'flex';
+  _recipeBase = { calories: r.calories, lipides: r.lipides, glucides: r.glucides, proteines: r.proteines, cout_estime: r.cout_estime, ingredients: r.ingredients };
+  _portions = 1;
+  document.getElementById('portionsCount').textContent = '1 personne';
+  changePortions(0);
   if (r.photo_keyword) loadMealPhoto(r.nom, r.photo_keyword, document.getElementById('recipeModalImg'));
   try {
     const res = await fetch(`${BACKEND_URL}/api/menus/recipe`, {
