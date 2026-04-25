@@ -3812,6 +3812,19 @@ let _portions = 1;
 function changePortions(delta) {
   _portions = Math.max(1, Math.min(20, _portions + delta));
   document.getElementById('portionsCount').textContent = _portions + (_portions === 1 ? ' personne' : ' personnes');
+  // Régénérer les étapes si portions changées
+  if (delta !== 0 && _recipeBase.nom) {
+    document.getElementById('recipeModalEtapes').innerHTML = '<div style="color:#85B7EB;font-size:0.85rem;padding:8px 0">⏳ Mise à jour de la recette...</div>';
+    fetch(`${BACKEND_URL}/api/menus/recipe`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${authToken}` },
+      body: JSON.stringify({ nom: _recipeBase.nom, ingredients: _recipeBase.ingredients, portions: _portions })
+    }).then(r => r.json()).then(data => {
+      if (data.etapes) {
+        document.getElementById('recipeModalEtapes').innerHTML = data.etapes.map((e,i)=>`<div style="display:flex;gap:12px;padding:10px 0;border-bottom:1px solid #E6F1FB"><span style="background:#021A35;color:white;border-radius:50%;width:24px;height:24px;min-width:24px;display:flex;align-items:center;justify-content:center;font-size:0.72rem">${i+1}</span><span style="font-size:0.85rem;color:#021A35;line-height:1.5">${e}</span></div>`).join('');
+      }
+    }).catch(() => {});
+  }
   const m = _recipeBase;
   document.getElementById('portionsMacros').innerHTML = `
     <span style="background:#FDF6E8;color:#B8860B;padding:4px 12px;border-radius:20px;font-size:0.78rem;font-weight:700">${Math.round((m.calories||0)*_portions)} kcal</span>
@@ -3841,7 +3854,7 @@ async function showRecipeModal(btn) {
   // Les ingrédients sont gérés par changePortions() après initialisation de _recipeBase
   document.getElementById('recipeModalEtapes').innerHTML = '<div style="color:#85B7EB;font-size:0.85rem;padding:16px 0">⏳ Génération de la recette en cours...</div>';
   document.getElementById('recipeModal').style.display = 'flex';
-  _recipeBase = { calories: r.calories, lipides: r.lipides, glucides: r.glucides, proteines: r.proteines, cout_estime: r.cout_estime, ingredients: r.ingredients };
+  _recipeBase = { nom: r.nom, calories: r.calories, lipides: r.lipides, glucides: r.glucides, proteines: r.proteines, cout_estime: r.cout_estime, ingredients: r.ingredients };
   _portions = 1;
   document.getElementById('portionsCount').textContent = '1 personne';
   changePortions(0);
