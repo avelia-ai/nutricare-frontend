@@ -1846,6 +1846,11 @@ function switchLang(lang) {
       <div style="font-size:0.78rem;color:#85B7EB;margin-top:4px">Emballage, étiquette nutritionnelle — JPG, PNG</div>
     </div>
     <input type="file" id="produitInput" accept="image/*" style="display:none" onchange="scanProduit(this)"/>
+    <input type="file" id="produitCamera" accept="image/*" capture="environment" style="display:none" onchange="scanProduit(this)"/>
+    <div style="display:flex;gap:12px;margin-top:16px;justify-content:center">
+      <button onclick="document.getElementById('produitInput').click()" style="background:#F0F7FF;color:#378ADD;border:1px solid #B5D4F4;padding:10px 20px;border-radius:8px;cursor:pointer;font-size:0.85rem;font-family:'DM Sans',sans-serif">📁 Importer une photo</button>
+      <button onclick="document.getElementById('produitCamera').click()" style="background:#021A35;color:white;border:none;padding:10px 20px;border-radius:8px;cursor:pointer;font-size:0.85rem;font-family:'DM Sans',sans-serif">📷 Prendre une photo</button>
+    </div>
     <div id="produitPreview" style="display:none;margin-top:16px;text-align:center">
       <img id="produitImg" style="max-height:200px;border-radius:8px;max-width:100%"/>
     </div>
