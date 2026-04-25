@@ -2125,37 +2125,22 @@ function switchLang(lang) {
   let isLoading = false;
 
   // ── INIT ──
-  window.onload = () => {
-    // Lire le paramètre view dans l'URL
+  window.onload = async () => {
     const urlParams = new URLSearchParams(window.location.search);
     const urlView = urlParams.get('view');
-    if (!authToken && urlView) {
-      setTimeout(() => showView(urlView, null), 500);
-    }
-
-    // Pré-stocker le view URL pour qu'il survive au chargement
+    const urlPathologie = urlParams.get('p');
+    const urlEntreprise = urlParams.get('entreprise');
+    const urlRedirect = urlParams.get('redirect');
+    // Stocker immédiatement le view demandé
     if (urlView) localStorage.setItem('nutricare_last_view', urlView);
     if (authToken && currentUser) {
-      showApp().then(async () => {
-        const params = new URLSearchParams(window.location.search);
-        const redirectUrl = params.get('redirect');
-        if (redirectUrl) { window.location.href = decodeURIComponent(redirectUrl); return; }
-        const urlViewParam = params.get('view') || urlView;
-        const pathologie = params.get('p');
-        const entrepriseParam = params.get('entreprise');
-        if (entrepriseParam === 'create') { await showView('entreprise'); }
-        else if (urlViewParam) {
-          // Paramètre URL prime sur last_view
-          localStorage.setItem('nutricare_last_view', urlViewParam);
-          await showView(urlViewParam);
-          if (pathologie) window.selectedPathologie = pathologie;
-        }
-        else {
-          const lastView = localStorage.getItem('nutricare_last_view') || 'chat';
-          await showView(lastView);
-        }
-      });
+      await showApp();
+      if (urlRedirect) { window.location.href = decodeURIComponent(urlRedirect); return; }
+      const targetView = urlView || localStorage.getItem('nutricare_last_view') || 'chat';
+      if (urlEntreprise === 'create') await showView('entreprise');
+      else { await showView(targetView); if (urlPathologie) window.selectedPathologie = urlPathologie; }
     }
+  };
   };
 
   // ── AUTH ──
