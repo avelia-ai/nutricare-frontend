@@ -2145,6 +2145,7 @@ function switchLang(lang) {
         else if (urlViewParam) {
           // Paramètre URL prime sur last_view
           localStorage.setItem('nutricare_last_view', urlViewParam);
+          history.replaceState({}, '', '/app');
           await showView(urlViewParam);
           if (pathologie) window.selectedPathologie = pathologie;
         }
