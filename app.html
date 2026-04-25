@@ -2116,7 +2116,7 @@ function switchLang(lang) {
     const urlParams = new URLSearchParams(window.location.search);
     const urlView = urlParams.get('view');
     if (urlView) {
-      setTimeout(() => showView(urlView, document.querySelector(`[onclick*="showView('${urlView}']")`)), 500);
+      setTimeout(() => showView(urlView, null), 500);
     }
 
     if (authToken && currentUser) {
@@ -3805,13 +3805,14 @@ async function loadAnalysisHistory() {
   } catch(e) { console.error(e); }
 }
   async function loadMenus() {
-  // Attendre que le profil soit chargé (max 3s)
-  let waited = 0;
-  while (window.currentPlan === 'free' && authToken && waited < 3000) {
-    await new Promise(r => setTimeout(r, 200));
-    waited += 200;
+  // Lire le plan directement depuis le profil API
+  let isPaid = window.currentPlan === 'standard' || window.currentPlan === 'premium';
+  if (!isPaid && authToken) {
+    try {
+      const pr = await fetch(`${BACKEND_URL}/api/profile`, { headers: { 'Authorization': `Bearer ${authToken}` } });
+      if (pr.ok) { const pd = await pr.json(); window.currentPlan = pd.plan || 'free'; isPaid = pd.plan === 'standard' || pd.plan === 'premium'; }
+    } catch(e) {}
   }
-  const isPaid = window.currentPlan === 'standard' || window.currentPlan === 'premium';
   document.getElementById('menusPlanRequired').style.display = isPaid ? 'none' : 'block';
   document.getElementById('menusContent').style.display = isPaid ? 'block' : 'none';
   if (!isPaid) return;
