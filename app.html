@@ -4625,8 +4625,13 @@ async function loadProtocols() {
   }
 }
   async function loadProfessionals() {
-  const plan = currentPlan;
-  const isPaid = plan.includes('Standard') || plan.includes('Premium');
+  let isPaid = window.currentPlan === 'standard' || window.currentPlan === 'premium';
+  if (!isPaid && authToken) {
+    try {
+      const pr = await fetch(`${BACKEND_URL}/api/profile`, { headers: { 'Authorization': `Bearer ${authToken}` } });
+      if (pr.ok) { const pd = await pr.json(); window.currentPlan = pd.plan || 'free'; isPaid = pd.plan === 'standard' || pd.plan === 'premium'; }
+    } catch(e) {}
+  }
   document.getElementById('proPlanRequired').style.display = isPaid ? 'none' : 'block';
   document.getElementById('proContent').style.display = isPaid ? 'block' : 'none';
   if (!isPaid) return;
