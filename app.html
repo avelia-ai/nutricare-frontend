@@ -308,7 +308,36 @@
   sessionStorage.removeItem('transfer_view');
 })();
 function switchLang(lang) {
-  var token = localStorage.getItem('nutricare_token');
+  // Refresh token automatique
+async function refreshAuthToken() {
+  const refreshToken = localStorage.getItem('nutricare_refresh_token');
+  if (!refreshToken) return false;
+  try {
+    const res = await fetch(`${BACKEND_URL}/api/auth/refresh`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ refresh_token: refreshToken })
+    });
+    if (res.ok) {
+      const data = await res.json();
+      localStorage.setItem('nutricare_token', data.token);
+      if (data.refresh_token) localStorage.setItem('nutricare_refresh_token', data.refresh_token);
+      if (data.expires_at) localStorage.setItem('nutricare_expires_at', data.expires_at);
+      authToken = data.token;
+      return true;
+    }
+  } catch(e) {}
+  return false;
+}
+
+// Vérifier et rafraîchir token toutes les 30 minutes
+setInterval(async () => {
+  const expiresAt = parseInt(localStorage.getItem('nutricare_expires_at') || '0');
+  const now = Math.floor(Date.now() / 1000);
+  if (expiresAt && expiresAt - now < 300) await refreshAuthToken();
+}, 30 * 60 * 1000);
+
+var token = localStorage.getItem('nutricare_token');
   var user = localStorage.getItem('nutricare_user');
   var profile = localStorage.getItem('nutricare_profile');
   var view = localStorage.getItem('nutricare_last_view') || 'chat';
