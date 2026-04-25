@@ -2135,6 +2135,7 @@ function switchLang(lang) {
     if (urlView) localStorage.setItem('nutricare_last_view', urlView);
     if (authToken && currentUser) {
       await showApp();
+      alert('targetView=' + (urlView || localStorage.getItem('nutricare_last_view') || 'chat') + ' plan=' + window.currentPlan);
       if (urlRedirect) { window.location.href = decodeURIComponent(urlRedirect); return; }
       const targetView = urlView || localStorage.getItem('nutricare_last_view') || 'chat';
       if (urlEntreprise === 'create') await showView('entreprise');
