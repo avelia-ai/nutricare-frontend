@@ -1,20 +1,78 @@
 {
   "rewrites": [
-    { "source": "/preinscription", "destination": "/preinscription.html" },
-    { "source": "/early-bird", "destination": "/early-bird.html" },
-    { "source": "/invitation", "destination": "/invitation.html" },
-    { "source": "/landing", "destination": "/index.html" },
-    { "source": "/app", "destination": "/app.html" },
-    { "source": "/patho", "destination": "/patho.html" },
-    { "source": "/dashboard", "destination": "/dashboard-sante.html" },
-    { "source": "/entreprise", "destination": "/entreprise.html" },
-    { "source": "/legal", "destination": "/legal.html" },
-    { "source": "/simulateur", "destination": "/simulateur.html" },
-    { "source": "/pro-access", "destination": "/pro-access.html" },
-    { "source": "/analyse-repas", "destination": "/analyse-repas.html" },
-    { "source": "/login-entreprise", "destination": "/login-entreprise.html" }
+    {
+      "source": "/preinscription",
+      "destination": "/preinscription.html"
+    },
+    {
+      "source": "/early-bird",
+      "destination": "/early-bird.html"
+    },
+    {
+      "source": "/invitation",
+      "destination": "/invitation.html"
+    },
+    {
+      "source": "/landing",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/app",
+      "destination": "/app.html"
+    },
+    {
+      "source": "/patho",
+      "destination": "/patho.html"
+    },
+    {
+      "source": "/dashboard",
+      "destination": "/dashboard-sante.html"
+    },
+    {
+      "source": "/entreprise",
+      "destination": "/entreprise.html"
+    },
+    {
+      "source": "/legal",
+      "destination": "/legal.html"
+    },
+    {
+      "source": "/simulateur",
+      "destination": "/simulateur.html"
+    },
+    {
+      "source": "/pro-access",
+      "destination": "/pro-access.html"
+    },
+    {
+      "source": "/analyse-repas",
+      "destination": "/analyse-repas.html"
+    },
+    {
+      "source": "/login-entreprise",
+      "destination": "/login-entreprise.html"
+    }
   ],
   "redirects": [
-    { "source": "/", "destination": "/preinscription", "permanent": false }
+    {
+      "source": "/",
+      "destination": "/preinscription",
+      "permanent": false
+    }
+  ],
+  "headers": [
+    {
+      "source": "/app.html",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "no-cache, no-store, must-revalidate"
+        },
+        {
+          "key": "Pragma",
+          "value": "no-cache"
+        }
+      ]
+    }
   ]
 }
