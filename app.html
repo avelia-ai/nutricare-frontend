@@ -5184,12 +5184,15 @@ function initBottomNav() {
     // Ajouter padding top et bottom au contenu
     const mainContent = document.getElementById('mainContent');
     if (mainContent) {
-      mainContent.style.paddingTop = '60px';
+      mainContent.style.paddingTop = '70px';
       mainContent.style.paddingBottom = '90px';
     }
     // Ajouter padding-bottom à toutes les vues
     document.querySelectorAll('[id$="View"]').forEach(v => {
       v.style.paddingBottom = '90px';
+      if (v.style.paddingTop === '' || v.style.paddingTop === '0px') {
+        v.style.paddingTop = '70px';
+      }
     });
   }
 }
