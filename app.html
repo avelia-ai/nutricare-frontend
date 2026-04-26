@@ -228,11 +228,7 @@
     margin-left: 0 !important;
     width: 100% !important;
   }
-  #mobileMenuBtn {
-    display: flex !important;
-    align-items: center;
-    justify-content: center;
-  }
+  
 }
 @media(max-width:700px){
   #oracleGrid{grid-template-columns:1fr!important;gap:10px}
@@ -649,7 +645,6 @@ function switchLang(lang) {
 
   <!-- Main content -->
    <!-- Bouton hamburger mobile -->
-<button id="mobileMenuBtn" onclick="toggleMobileMenu()" style="display:none;position:fixed;top:16px;right:16px;z-index:1000;background:#021A35;color:white;border:none;border-radius:50%;width:44px;height:44px;cursor:pointer;box-shadow:0 4px 12px rgba(2,26,53,0.3);align-items:center;justify-content:center"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg></button>
 <!-- Overlay mobile -->
 <div id="mobileOverlay" onclick="toggleMobileMenu()" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:99"></div>
   <div class="main-content">
@@ -2376,13 +2371,7 @@ function switchLang(lang) {
     document.getElementById('loginForm').style.display = tab === 'login' ? 'flex' : 'none';
     document.getElementById('registerForm').style.display = tab === 'register' ? 'flex' : 'none';
   }
-function toggleMobileMenu() {
-  const sidebar = document.getElementById('sidebar');
-  const overlay = document.getElementById('mobileOverlay');
-  const isOpen = sidebar.classList.contains('open');
-  sidebar.classList.toggle('open');
-  overlay.style.display = isOpen ? 'none' : 'block';
-}
+
   function logout() {
     authToken = null;
     currentUser = null;
