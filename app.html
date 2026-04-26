@@ -3700,7 +3700,7 @@ function toggleMobileMenu() {
   }
     document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
     if (btn) btn.classList.add('active');
-    localStorage.setItem('nutricare_last_view', view);
+    if (view !== 'oracle') localStorage.setItem('nutricare_last_view', view);
     if (window.innerWidth <= 768) {
   document.getElementById('sidebar').classList.remove('open');
   document.getElementById('mobileOverlay').style.display = 'none';
