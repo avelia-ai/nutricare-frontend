@@ -3693,6 +3693,11 @@ function toggleMobileMenu() {
       window.currentPlan = p.plan;
     }
   }
+  // Toujours vérifier localStorage en cas de plan non chargé
+  if (window.currentPlan === 'free') {
+    const p = JSON.parse(localStorage.getItem('nutricare_profile') || '{}');
+    if (p.plan) window.currentPlan = p.plan;
+  }
   const plan = window.currentPlan;
   const premiumViews = ['oracle', 'simulator', 'biologie', 'ordonnance', 'programs', 'visual'];
   const standardViews = ['menus', 'protocols', 'analysis', 'health', 'gamification'];
