@@ -649,30 +649,7 @@ function switchLang(lang) {
 
   <!-- Main content -->
    <!-- Bouton hamburger mobile -->
-<!-- Bottom Navigation Mobile -->
-<nav class="bottom-nav" id="bottomNav">
-  <div class="bottom-nav-items">
-    <button class="bottom-nav-btn active" onclick="showView('chat',this)" id="bnChat">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-      Chat
-    </button>
-    <button class="bottom-nav-btn" onclick="showView('protocols',this)" id="bnProtocols">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 2a10 10 0 1 0 0 20A10 10 0 0 0 12 2z"/><path d="M8 12h8M12 8v8"/></svg>
-      Pathologies
-    </button>
-    <button class="bottom-nav-center" onclick="toggleQuickMenu()">
-      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
-    </button>
-    <button class="bottom-nav-btn" onclick="showView('dashboard',this)" id="bnDashboard">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
-      Dashboard
-    </button>
-    <button class="bottom-nav-btn" onclick="showView('profile',this)" id="bnProfile">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-      Profil
-    </button>
-  </div>
-</nav>
+<button id="mobileMenuBtn" onclick="toggleMobileMenu()" style="display:none;position:fixed;top:16px;right:16px;z-index:1000;background:#021A35;color:white;border:none;border-radius:50%;width:44px;height:44px;cursor:pointer;box-shadow:0 4px 12px rgba(2,26,53,0.3);align-items:center;justify-content:center"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg></button>
 <!-- Overlay mobile -->
 <div id="mobileOverlay" onclick="toggleMobileMenu()" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:99"></div>
   <div class="main-content">
@@ -2583,39 +2560,7 @@ function toggleMobileMenu() {
     
 <!-- Modal Recette -->
 
-
-<!-- Quick Menu Mobile -->
-<div id="quickMenu" style="display:none;position:fixed;inset:0;z-index:999;background:rgba(0,0,0,0.5)" onclick="toggleQuickMenu()">
-  <div onclick="event.stopPropagation()" style="position:absolute;bottom:80px;left:16px;right:16px;background:white;border-radius:24px;padding:20px;max-height:70vh;overflow-y:auto">
-    <div style="font-size:1rem;font-weight:700;color:#2D2D2D;margin-bottom:16px;text-align:center">Toutes les fonctionnalités</div>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
-      <button onclick="toggleQuickMenu();showView('chat')" style="display:flex;align-items:center;gap:8px;padding:12px;background:#FFF5F0;border:none;border-radius:12px;font-size:0.82rem;font-weight:600;color:#2D2D2D;cursor:pointer">💬 Chat IA</button>
-      <button onclick="toggleQuickMenu();showView('protocols')" style="display:flex;align-items:center;gap:8px;padding:12px;background:#FFF5F0;border:none;border-radius:12px;font-size:0.82rem;font-weight:600;color:#2D2D2D;cursor:pointer">🏥 Pathologies</button>
-      <button onclick="toggleQuickMenu();showView('menus')" style="display:flex;align-items:center;gap:8px;padding:12px;background:#FFF5F0;border:none;border-radius:12px;font-size:0.82rem;font-weight:600;color:#2D2D2D;cursor:pointer">🍽️ Mes menus</button>
-      <button onclick="toggleQuickMenu();showView('health')" style="display:flex;align-items:center;gap:8px;padding:12px;background:#FFF5F0;border:none;border-radius:12px;font-size:0.82rem;font-weight:600;color:#2D2D2D;cursor:pointer">📊 Suivi santé</button>
-      <button onclick="toggleQuickMenu();showView('analysis')" style="display:flex;align-items:center;gap:8px;padding:12px;background:#FFF5F0;border:none;border-radius:12px;font-size:0.82rem;font-weight:600;color:#2D2D2D;cursor:pointer">📸 Analyse repas</button>
-      <button onclick="toggleQuickMenu();showView('visual')" style="display:flex;align-items:center;gap:8px;padding:12px;background:#FFF5F0;border:none;border-radius:12px;font-size:0.82rem;font-weight:600;color:#2D2D2D;cursor:pointer">🔬 Détection visuelle</button>
-      <button onclick="toggleQuickMenu();showView('pro')" style="display:flex;align-items:center;gap:8px;padding:12px;background:#FFF5F0;border:none;border-radius:12px;font-size:0.82rem;font-weight:600;color:#2D2D2D;cursor:pointer">👨‍⚕️ Espace médecin</button>
-      <button onclick="toggleQuickMenu();showView('oracle')" style="display:flex;align-items:center;gap:8px;padding:12px;background:linear-gradient(135deg,#FF6B6B,#FF9A3C);border:none;border-radius:12px;font-size:0.82rem;font-weight:600;color:white;cursor:pointer">👑 Oracle Santé</button>
-      <button onclick="toggleQuickMenu();showView('chrono')" style="display:flex;align-items:center;gap:8px;padding:12px;background:#FFF5F0;border:none;border-radius:12px;font-size:0.82rem;font-weight:600;color:#2D2D2D;cursor:pointer">🌙 Chrono-nutrition</button>
-      <button onclick="toggleQuickMenu();showView('biologie')" style="display:flex;align-items:center;gap:8px;padding:12px;background:#FFF5F0;border:none;border-radius:12px;font-size:0.82rem;font-weight:600;color:#2D2D2D;cursor:pointer">🧬 Bilan sanguin</button>
-      <button onclick="toggleQuickMenu();showView('ordonnance')" style="display:flex;align-items:center;gap:8px;padding:12px;background:#FFF5F0;border:none;border-radius:12px;font-size:0.82rem;font-weight:600;color:#2D2D2D;cursor:pointer">📋 Scan ordonnance</button>
-      <button onclick="toggleQuickMenu();showView('simulator')" style="display:flex;align-items:center;gap:8px;padding:12px;background:#FFF5F0;border:none;border-radius:12px;font-size:0.82rem;font-weight:600;color:#2D2D2D;cursor:pointer">⚡ Simulateur</button>
-      <button onclick="toggleQuickMenu();showView('programs')" style="display:flex;align-items:center;gap:8px;padding:12px;background:#FFF5F0;border:none;border-radius:12px;font-size:0.82rem;font-weight:600;color:#2D2D2D;cursor:pointer">🎯 Programmes</button>
-      <button onclick="toggleQuickMenu();showView('passeport')" style="display:flex;align-items:center;gap:8px;padding:12px;background:#FFF5F0;border:none;border-radius:12px;font-size:0.82rem;font-weight:600;color:#2D2D2D;cursor:pointer">📄 Passeport santé</button>
-      <button onclick="toggleQuickMenu();showView('pricing')" style="display:flex;align-items:center;gap:8px;padding:12px;background:#FFF5F0;border:none;border-radius:12px;font-size:0.82rem;font-weight:600;color:#2D2D2D;cursor:pointer">⭐ Abonnements</button>
-      <button onclick="toggleQuickMenu();showView('profile')" style="display:flex;align-items:center;gap:8px;padding:12px;background:#FFF5F0;border:none;border-radius:12px;font-size:0.82rem;font-weight:600;color:#2D2D2D;cursor:pointer">👤 Mon profil</button>
-    </div>
-  </div>
-</div>
-
-<script>
-function toggleQuickMenu() {
-  const menu = document.getElementById('quickMenu');
-  menu.style.display = menu.style.display === 'none' ? 'block' : 'none';
-}
-</script>
-`);
+</body></html>`);
     w.document.close();
     w.print();
   }
@@ -3019,39 +2964,7 @@ function toggleQuickMenu() {
     
 <!-- Modal Recette -->
 
-
-<!-- Quick Menu Mobile -->
-<div id="quickMenu" style="display:none;position:fixed;inset:0;z-index:999;background:rgba(0,0,0,0.5)" onclick="toggleQuickMenu()">
-  <div onclick="event.stopPropagation()" style="position:absolute;bottom:80px;left:16px;right:16px;background:white;border-radius:24px;padding:20px;max-height:70vh;overflow-y:auto">
-    <div style="font-size:1rem;font-weight:700;color:#2D2D2D;margin-bottom:16px;text-align:center">Toutes les fonctionnalités</div>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
-      <button onclick="toggleQuickMenu();showView('chat')" style="display:flex;align-items:center;gap:8px;padding:12px;background:#FFF5F0;border:none;border-radius:12px;font-size:0.82rem;font-weight:600;color:#2D2D2D;cursor:pointer">💬 Chat IA</button>
-      <button onclick="toggleQuickMenu();showView('protocols')" style="display:flex;align-items:center;gap:8px;padding:12px;background:#FFF5F0;border:none;border-radius:12px;font-size:0.82rem;font-weight:600;color:#2D2D2D;cursor:pointer">🏥 Pathologies</button>
-      <button onclick="toggleQuickMenu();showView('menus')" style="display:flex;align-items:center;gap:8px;padding:12px;background:#FFF5F0;border:none;border-radius:12px;font-size:0.82rem;font-weight:600;color:#2D2D2D;cursor:pointer">🍽️ Mes menus</button>
-      <button onclick="toggleQuickMenu();showView('health')" style="display:flex;align-items:center;gap:8px;padding:12px;background:#FFF5F0;border:none;border-radius:12px;font-size:0.82rem;font-weight:600;color:#2D2D2D;cursor:pointer">📊 Suivi santé</button>
-      <button onclick="toggleQuickMenu();showView('analysis')" style="display:flex;align-items:center;gap:8px;padding:12px;background:#FFF5F0;border:none;border-radius:12px;font-size:0.82rem;font-weight:600;color:#2D2D2D;cursor:pointer">📸 Analyse repas</button>
-      <button onclick="toggleQuickMenu();showView('visual')" style="display:flex;align-items:center;gap:8px;padding:12px;background:#FFF5F0;border:none;border-radius:12px;font-size:0.82rem;font-weight:600;color:#2D2D2D;cursor:pointer">🔬 Détection visuelle</button>
-      <button onclick="toggleQuickMenu();showView('pro')" style="display:flex;align-items:center;gap:8px;padding:12px;background:#FFF5F0;border:none;border-radius:12px;font-size:0.82rem;font-weight:600;color:#2D2D2D;cursor:pointer">👨‍⚕️ Espace médecin</button>
-      <button onclick="toggleQuickMenu();showView('oracle')" style="display:flex;align-items:center;gap:8px;padding:12px;background:linear-gradient(135deg,#FF6B6B,#FF9A3C);border:none;border-radius:12px;font-size:0.82rem;font-weight:600;color:white;cursor:pointer">👑 Oracle Santé</button>
-      <button onclick="toggleQuickMenu();showView('chrono')" style="display:flex;align-items:center;gap:8px;padding:12px;background:#FFF5F0;border:none;border-radius:12px;font-size:0.82rem;font-weight:600;color:#2D2D2D;cursor:pointer">🌙 Chrono-nutrition</button>
-      <button onclick="toggleQuickMenu();showView('biologie')" style="display:flex;align-items:center;gap:8px;padding:12px;background:#FFF5F0;border:none;border-radius:12px;font-size:0.82rem;font-weight:600;color:#2D2D2D;cursor:pointer">🧬 Bilan sanguin</button>
-      <button onclick="toggleQuickMenu();showView('ordonnance')" style="display:flex;align-items:center;gap:8px;padding:12px;background:#FFF5F0;border:none;border-radius:12px;font-size:0.82rem;font-weight:600;color:#2D2D2D;cursor:pointer">📋 Scan ordonnance</button>
-      <button onclick="toggleQuickMenu();showView('simulator')" style="display:flex;align-items:center;gap:8px;padding:12px;background:#FFF5F0;border:none;border-radius:12px;font-size:0.82rem;font-weight:600;color:#2D2D2D;cursor:pointer">⚡ Simulateur</button>
-      <button onclick="toggleQuickMenu();showView('programs')" style="display:flex;align-items:center;gap:8px;padding:12px;background:#FFF5F0;border:none;border-radius:12px;font-size:0.82rem;font-weight:600;color:#2D2D2D;cursor:pointer">🎯 Programmes</button>
-      <button onclick="toggleQuickMenu();showView('passeport')" style="display:flex;align-items:center;gap:8px;padding:12px;background:#FFF5F0;border:none;border-radius:12px;font-size:0.82rem;font-weight:600;color:#2D2D2D;cursor:pointer">📄 Passeport santé</button>
-      <button onclick="toggleQuickMenu();showView('pricing')" style="display:flex;align-items:center;gap:8px;padding:12px;background:#FFF5F0;border:none;border-radius:12px;font-size:0.82rem;font-weight:600;color:#2D2D2D;cursor:pointer">⭐ Abonnements</button>
-      <button onclick="toggleQuickMenu();showView('profile')" style="display:flex;align-items:center;gap:8px;padding:12px;background:#FFF5F0;border:none;border-radius:12px;font-size:0.82rem;font-weight:600;color:#2D2D2D;cursor:pointer">👤 Mon profil</button>
-    </div>
-  </div>
-</div>
-
-<script>
-function toggleQuickMenu() {
-  const menu = document.getElementById('quickMenu');
-  menu.style.display = menu.style.display === 'none' ? 'block' : 'none';
-}
-</script>
-`);
+</body></html>`);
     w.document.close();
     w.print();
   }
@@ -5211,38 +5124,6 @@ function closeMirellaNotif() {
   const el = document.getElementById('mirellaNotif');
   if (el) el.style.display = 'none';
   if (_notifTimeout) clearTimeout(_notifTimeout);
-}
-</script>
-
-<!-- Quick Menu Mobile -->
-<div id="quickMenu" style="display:none;position:fixed;inset:0;z-index:999;background:rgba(0,0,0,0.5)" onclick="toggleQuickMenu()">
-  <div onclick="event.stopPropagation()" style="position:absolute;bottom:80px;left:16px;right:16px;background:white;border-radius:24px;padding:20px;max-height:70vh;overflow-y:auto">
-    <div style="font-size:1rem;font-weight:700;color:#2D2D2D;margin-bottom:16px;text-align:center">Toutes les fonctionnalités</div>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
-      <button onclick="toggleQuickMenu();showView('chat')" style="display:flex;align-items:center;gap:8px;padding:12px;background:#FFF5F0;border:none;border-radius:12px;font-size:0.82rem;font-weight:600;color:#2D2D2D;cursor:pointer">💬 Chat IA</button>
-      <button onclick="toggleQuickMenu();showView('protocols')" style="display:flex;align-items:center;gap:8px;padding:12px;background:#FFF5F0;border:none;border-radius:12px;font-size:0.82rem;font-weight:600;color:#2D2D2D;cursor:pointer">🏥 Pathologies</button>
-      <button onclick="toggleQuickMenu();showView('menus')" style="display:flex;align-items:center;gap:8px;padding:12px;background:#FFF5F0;border:none;border-radius:12px;font-size:0.82rem;font-weight:600;color:#2D2D2D;cursor:pointer">🍽️ Mes menus</button>
-      <button onclick="toggleQuickMenu();showView('health')" style="display:flex;align-items:center;gap:8px;padding:12px;background:#FFF5F0;border:none;border-radius:12px;font-size:0.82rem;font-weight:600;color:#2D2D2D;cursor:pointer">📊 Suivi santé</button>
-      <button onclick="toggleQuickMenu();showView('analysis')" style="display:flex;align-items:center;gap:8px;padding:12px;background:#FFF5F0;border:none;border-radius:12px;font-size:0.82rem;font-weight:600;color:#2D2D2D;cursor:pointer">📸 Analyse repas</button>
-      <button onclick="toggleQuickMenu();showView('visual')" style="display:flex;align-items:center;gap:8px;padding:12px;background:#FFF5F0;border:none;border-radius:12px;font-size:0.82rem;font-weight:600;color:#2D2D2D;cursor:pointer">🔬 Détection visuelle</button>
-      <button onclick="toggleQuickMenu();showView('pro')" style="display:flex;align-items:center;gap:8px;padding:12px;background:#FFF5F0;border:none;border-radius:12px;font-size:0.82rem;font-weight:600;color:#2D2D2D;cursor:pointer">👨‍⚕️ Espace médecin</button>
-      <button onclick="toggleQuickMenu();showView('oracle')" style="display:flex;align-items:center;gap:8px;padding:12px;background:linear-gradient(135deg,#FF6B6B,#FF9A3C);border:none;border-radius:12px;font-size:0.82rem;font-weight:600;color:white;cursor:pointer">👑 Oracle Santé</button>
-      <button onclick="toggleQuickMenu();showView('chrono')" style="display:flex;align-items:center;gap:8px;padding:12px;background:#FFF5F0;border:none;border-radius:12px;font-size:0.82rem;font-weight:600;color:#2D2D2D;cursor:pointer">🌙 Chrono-nutrition</button>
-      <button onclick="toggleQuickMenu();showView('biologie')" style="display:flex;align-items:center;gap:8px;padding:12px;background:#FFF5F0;border:none;border-radius:12px;font-size:0.82rem;font-weight:600;color:#2D2D2D;cursor:pointer">🧬 Bilan sanguin</button>
-      <button onclick="toggleQuickMenu();showView('ordonnance')" style="display:flex;align-items:center;gap:8px;padding:12px;background:#FFF5F0;border:none;border-radius:12px;font-size:0.82rem;font-weight:600;color:#2D2D2D;cursor:pointer">📋 Scan ordonnance</button>
-      <button onclick="toggleQuickMenu();showView('simulator')" style="display:flex;align-items:center;gap:8px;padding:12px;background:#FFF5F0;border:none;border-radius:12px;font-size:0.82rem;font-weight:600;color:#2D2D2D;cursor:pointer">⚡ Simulateur</button>
-      <button onclick="toggleQuickMenu();showView('programs')" style="display:flex;align-items:center;gap:8px;padding:12px;background:#FFF5F0;border:none;border-radius:12px;font-size:0.82rem;font-weight:600;color:#2D2D2D;cursor:pointer">🎯 Programmes</button>
-      <button onclick="toggleQuickMenu();showView('passeport')" style="display:flex;align-items:center;gap:8px;padding:12px;background:#FFF5F0;border:none;border-radius:12px;font-size:0.82rem;font-weight:600;color:#2D2D2D;cursor:pointer">📄 Passeport santé</button>
-      <button onclick="toggleQuickMenu();showView('pricing')" style="display:flex;align-items:center;gap:8px;padding:12px;background:#FFF5F0;border:none;border-radius:12px;font-size:0.82rem;font-weight:600;color:#2D2D2D;cursor:pointer">⭐ Abonnements</button>
-      <button onclick="toggleQuickMenu();showView('profile')" style="display:flex;align-items:center;gap:8px;padding:12px;background:#FFF5F0;border:none;border-radius:12px;font-size:0.82rem;font-weight:600;color:#2D2D2D;cursor:pointer">👤 Mon profil</button>
-    </div>
-  </div>
-</div>
-
-<script>
-function toggleQuickMenu() {
-  const menu = document.getElementById('quickMenu');
-  menu.style.display = menu.style.display === 'none' ? 'block' : 'none';
 }
 </script>
 </body>
