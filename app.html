@@ -580,6 +580,14 @@ function switchLang(lang) {
 
 <!-- ── APP PAGE ── -->
 <div class="page" id="appPage">
+<!-- Top bar mobile -->
+<div id="mobileTopbar" style="display:none;position:fixed;top:0;left:0;right:0;z-index:500;background:white;border-bottom:1px solid rgba(255,107,107,0.1);padding:12px 16px;align-items:center;justify-content:space-between;box-shadow:0 2px 8px rgba(0,0,0,0.06)">
+  <a href="/landing" style="text-decoration:none;display:flex;align-items:center;gap:8px">
+    <div style="width:8px;height:8px;border-radius:50%;background:linear-gradient(135deg,#FF6B6B,#FF9A3C)"></div>
+    <span style="font-family:'Open Sans',serif;font-size:1.2rem;font-weight:600;color:#FF6B6B">Mirella</span>
+  </a>
+  <div id="mobileUserAvatar" style="width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,#FF6B6B,#FF9A3C);display:flex;align-items:center;justify-content:center;color:white;font-weight:700;font-size:0.8rem;cursor:pointer" onclick="showView('profile')"></div>
+</div>
 
   <!-- Sidebar -->
   <div class="sidebar" id="sidebar">
@@ -2403,6 +2411,9 @@ function switchLang(lang) {
       const plan = profile.plan || 'free';
       window.currentPlan = plan;
       localStorage.setItem('nutricare_profile', JSON.stringify(profile));
+      // Mettre à jour avatar mobile
+      const mobileAvatar = document.getElementById('mobileUserAvatar');
+      if (mobileAvatar) mobileAvatar.textContent = initials;
       const planLabels = { free: ' Gratuit', standard: '⭐ Standard', premium: ' Premium' };
 
       document.getElementById('sidebarAvatar').textContent = initials;
@@ -5169,6 +5180,10 @@ function closeMirellaNotif() {
 function initBottomNav() {
   if (window.innerWidth <= 768) {
     document.getElementById('bottomNav').style.display = 'block';
+    document.getElementById('mobileTopbar').style.display = 'flex';
+    // Ajouter padding top au contenu
+    const mainContent = document.getElementById('mainContent');
+    if (mainContent) mainContent.style.paddingTop = '60px';
   }
 }
 window.addEventListener('resize', initBottomNav);
