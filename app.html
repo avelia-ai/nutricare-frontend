@@ -5181,9 +5181,16 @@ function initBottomNav() {
   if (window.innerWidth <= 768) {
     document.getElementById('bottomNav').style.display = 'block';
     document.getElementById('mobileTopbar').style.display = 'flex';
-    // Ajouter padding top au contenu
+    // Ajouter padding top et bottom au contenu
     const mainContent = document.getElementById('mainContent');
-    if (mainContent) mainContent.style.paddingTop = '60px';
+    if (mainContent) {
+      mainContent.style.paddingTop = '60px';
+      mainContent.style.paddingBottom = '90px';
+    }
+    // Ajouter padding-bottom à toutes les vues
+    document.querySelectorAll('[id$="View"]').forEach(v => {
+      v.style.paddingBottom = '90px';
+    });
   }
 }
 window.addEventListener('resize', initBottomNav);
