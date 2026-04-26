@@ -252,6 +252,144 @@
   #oracle-comparaison > div { grid-template-columns: 1fr 30px 1fr !important; }
 }
 </style>
+<link rel="stylesheet" href="mirella-design.css">
+<style>
+/* ── APP v2 - Palette corail/orange ── */
+:root {
+  --coral: #FF6B6B;
+  --coral-dark: #E85555;
+  --accent: #FF9A3C;
+  --cream: #FFF5F0;
+  --charcoal: #2D2D2D;
+}
+
+/* Sidebar */
+.sidebar {
+  background: linear-gradient(180deg, #2D2D2D 0%, #1A1A1A 100%) !important;
+  border-right: none !important;
+}
+.sidebar-logo { color: #FF6B6B !important; }
+.sidebar-logo-dot { background: #FF6B6B !important; }
+.nav-item:hover, .nav-item.active {
+  background: rgba(255,107,107,0.15) !important;
+  color: #FF6B6B !important;
+  border-radius: 8px !important;
+}
+.nav-section { color: rgba(255,255,255,0.4) !important; }
+.nav-item { color: rgba(255,255,255,0.75) !important; }
+.sidebar-user-plan {
+  background: linear-gradient(135deg, #FF6B6B, #FF9A3C) !important;
+  border-radius: 20px !important;
+  padding: 3px 12px !important;
+  font-size: 0.7rem !important;
+  font-weight: 600 !important;
+}
+
+/* Main area */
+#appPage { background: #FFF5F0 !important; }
+
+/* Top bar mobile */
+.mobile-topbar {
+  background: white !important;
+  border-bottom: 1px solid rgba(255,107,107,0.1) !important;
+}
+
+/* Boutons principaux */
+button[style*="background:#021A35"],
+button[style*="background:#C9A84C"] {
+  border-radius: 24px !important;
+}
+
+/* Chat */
+.chat-bubble-ai {
+  background: white !important;
+  border-radius: 18px 18px 18px 4px !important;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06) !important;
+}
+.chat-bubble-user {
+  background: linear-gradient(135deg, #FF6B6B, #FF9A3C) !important;
+  border-radius: 18px 18px 4px 18px !important;
+}
+
+/* Input chat */
+#chatInput {
+  border-radius: 24px !important;
+  border: 2px solid rgba(255,107,107,0.2) !important;
+}
+#chatInput:focus { border-color: #FF6B6B !important; }
+
+/* Send button */
+#sendBtn {
+  background: linear-gradient(135deg, #FF6B6B, #FF9A3C) !important;
+  border-radius: 50% !important;
+  box-shadow: 0 4px 12px rgba(255,107,107,0.3) !important;
+}
+
+/* Dashboard cards */
+.stat-card {
+  border-radius: 16px !important;
+  border: none !important;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.06) !important;
+}
+
+/* Views background */
+#chatView, #dashboardView, #profileView,
+#menusView, #analysisView, #healthView,
+#proView, #protocolsView {
+  background: #FFF5F0 !important;
+}
+
+/* Bottom nav mobile */
+.bottom-nav {
+  display: none;
+  position: fixed;
+  bottom: 0; left: 0; right: 0;
+  background: white;
+  border-top: 1px solid rgba(255,107,107,0.1);
+  padding: 8px 0 20px;
+  z-index: 1000;
+  box-shadow: 0 -4px 20px rgba(0,0,0,0.08);
+}
+.bottom-nav-items {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
+.bottom-nav-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  padding: 4px 8px;
+  border: none;
+  background: none;
+  color: #999;
+  font-size: 0.6rem;
+  font-family: 'DM Sans', sans-serif;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+.bottom-nav-btn.active { color: #FF6B6B; }
+.bottom-nav-btn svg { width: 22px; height: 22px; }
+.bottom-nav-center {
+  width: 48px; height: 48px;
+  background: linear-gradient(135deg, #FF6B6B, #FF9A3C);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 16px rgba(255,107,107,0.4);
+  border: none;
+  cursor: pointer;
+  margin-top: -20px;
+}
+
+@media (max-width: 768px) {
+  .bottom-nav { display: block; }
+  .sidebar { display: none !important; }
+  #mainContent { padding-bottom: 80px !important; }
+}
+</style>
 </style>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
 <style>
