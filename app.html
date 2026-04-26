@@ -2125,6 +2125,11 @@ function switchLang(lang) {
   let isLoading = false;
 
   // ── INIT ──
+  // Corriger last_view si c'est oracle (ne doit jamais être la vue par défaut)
+  (function() {
+    const lv = localStorage.getItem('nutricare_last_view');
+    if (lv === 'oracle') localStorage.setItem('nutricare_last_view', 'chat');
+  })();
   window.onload = async () => {
     const urlParams = new URLSearchParams(window.location.search);
     const urlView = urlParams.get('view');
