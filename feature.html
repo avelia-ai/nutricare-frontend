@@ -23,14 +23,19 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:16px 40px;display:fl
 .btn-gold:hover{opacity:.9;transform:translateY(-1px)}
 
 /* HERO */
-.feature-hero{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:120px 40px 80px;position:relative;overflow:hidden;background:linear-gradient(135deg,#FF6B6B,#FF9A3C)}
-.feature-hero-bg{position:absolute;inset:0;opacity:.12;pointer-events:none}
-.feature-hero-badge{display:inline-flex;align-items:center;gap:8px;background:rgba(255,255,255,.2);border:1px solid rgba(255,255,255,.4);color:white;font-size:.75rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:6px 16px;border-radius:4px;margin-bottom:28px}
-.feature-hero h1{font-size:clamp(2.2rem,5vw,4rem);font-weight:700;color:white;line-height:1.1;margin-bottom:20px;max-width:800px}
-.feature-hero h1 em{color:white;font-style:italic;opacity:.85}
-.feature-hero-sub{font-size:1.05rem;color:rgba(255,255,255,.65);max-width:580px;line-height:1.75;margin-bottom:40px}
-.feature-hero-ctas{display:flex;gap:14px;justify-content:center;flex-wrap:wrap}
-.feature-hero-icon{width:80px;height:80px;background:rgba(201,168,76,.15);border:1px solid rgba(201,168,76,.25);border-radius:16px;display:flex;align-items:center;justify-content:center;margin:0 auto 32px}
+.feature-hero{display:flex;flex-direction:row;min-height:420px;margin-top:64px}
+.feature-hero-left{flex:1;background:#FFF5F0;display:flex;flex-direction:column;justify-content:center;padding:60px 48px}
+.feature-hero-right{width:380px;background:linear-gradient(135deg,#FF6B6B,#FF9A3C);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:48px 32px;text-align:center;flex-shrink:0}
+.feature-hero-bg{display:none}
+.feature-hero-badge{display:inline-flex;align-items:center;background:rgba(255,107,107,0.1);color:#FF6B6B;font-size:.72rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:4px 12px;border-radius:4px;margin-bottom:16px;width:fit-content}
+.feature-hero h1{font-size:clamp(1.8rem,3vw,2.8rem);font-weight:700;color:#2D2D2D;line-height:1.15;margin-bottom:16px}
+.feature-hero h1 em{font-style:italic;color:#FF6B6B}
+.feature-hero-sub{font-size:0.95rem;color:#888;line-height:1.75;margin-bottom:32px;max-width:480px}
+.feature-hero-ctas{display:flex;gap:12px;flex-wrap:wrap}
+.feature-hero-icon{width:72px;height:72px;background:rgba(255,255,255,0.2);border:1px solid rgba(255,255,255,0.3);border-radius:16px;display:flex;align-items:center;justify-content:center;margin:0 auto 24px}
+.feature-hero-right-title{font-size:1rem;font-weight:700;color:white;margin-bottom:8px}
+.feature-hero-right-sub{font-size:0.82rem;color:rgba(255,255,255,0.75);line-height:1.6}
+@media(max-width:768px){.feature-hero{flex-direction:column}.feature-hero-right{width:100%;padding:32px 24px}.feature-hero-left{padding:32px 24px}}
 
 /* BÉNÉFICES */
 .benefits{padding:80px 40px;background:var(--white);max-width:1100px;margin:0 auto}
@@ -90,14 +95,19 @@ footer{padding:32px 40px;text-align:center;border-top:1px solid #eee;font-size:.
 </nav>
 
 <section class="feature-hero" id="featureHero">
-  <svg class="feature-hero-bg" id="heroBg" viewBox="0 0 800 600" preserveAspectRatio="xMidYMid slice"></svg>
-  <div class="feature-hero-badge" id="heroPlan">Gratuit</div>
-  <div class="feature-hero-icon" id="heroIcon"></div>
-  <h1 id="heroTitle">Fonctionnalité</h1>
-  <p class="feature-hero-sub" id="heroSub">Description</p>
-  <div class="feature-hero-ctas">
-    <a href="app.html" class="btn-gold" id="heroCta1">Commencer gratuitement →</a>
-    <a href="index.html#tarifs" class="btn-ghost" style="color:white;border-color:rgba(255,255,255,.3)" id="heroCta2">Voir les tarifs</a>
+  <div class="feature-hero-left">
+    <div class="feature-hero-badge" id="heroPlan">Gratuit</div>
+    <h1 id="heroTitle">Fonctionnalité</h1>
+    <p class="feature-hero-sub" id="heroSub">Description</p>
+    <div class="feature-hero-ctas">
+      <a href="app.html" class="btn-gold" id="heroCta1">Commencer gratuitement →</a>
+      <a href="index.html#tarifs" class="btn-ghost" id="heroCta2">Voir les tarifs</a>
+    </div>
+  </div>
+  <div class="feature-hero-right">
+    <div class="feature-hero-icon" id="heroIcon"></div>
+    <div class="feature-hero-right-title" id="heroRightTitle">Mirella IA</div>
+    <div class="feature-hero-right-sub" id="heroRightSub">Personnalisé selon votre profil et vos pathologies</div>
   </div>
 </section>
 
