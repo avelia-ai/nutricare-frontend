@@ -216,6 +216,7 @@
   .plan-card .btn-plan:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(255,107,107,0.4); }
   .plan-card.dark .btn-plan { background: white; color: #2D2D2D; }
   .plan-card.gold .btn-plan { background: white; color: #FF6B6B; }
+  .btn-plan[disabled], .btn-plan.current { background: rgba(255,255,255,0.3) !important; color: white !important; box-shadow: none !important; cursor: default !important; }
   .plan-card.gold .btn-plan { background: white; color: #FF6B6B; box-shadow: 0 4px 16px rgba(0,0,0,0.1); }
   .plan-card.gold .btn-plan:hover { background: rgba(255,255,255,0.9); }
   .plan-card.dark .btn-plan { background: white; color: var(--charcoal); }
@@ -3860,7 +3861,11 @@ function switchLang(lang) {
     const btns = { free: 'freePlanBtn', standard: 'standardPlanBtn', premium: 'premiumPlanBtn' };
     plans.forEach(p => {
       const btn = document.getElementById(btns[p]);
-      if (btn) btn.textContent = p === plan ? ' Plan actuel' : (p === 'free' ? 'Choisir Gratuit' : `Choisir ${p.charAt(0).toUpperCase() + p.slice(1)}`);
+      if (btn) {
+        btn.textContent = p === plan ? ' Plan actuel' : (p === 'free' ? 'Choisir Gratuit' : \`Choisir \${p.charAt(0).toUpperCase() + p.slice(1)}\`);
+        if (p === plan) { btn.classList.add('current'); btn.disabled = true; }
+        else { btn.classList.remove('current'); btn.disabled = false; }
+      }
     });
   }
 
