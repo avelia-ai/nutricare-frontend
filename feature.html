@@ -404,13 +404,13 @@ function init() {
   // Plan badge
   const planEl = document.getElementById('heroPlan');
   planEl.textContent = f.plan;
-  planEl.className = 'plan-required ' + f.planClass;
+  planEl.className = 'feature-hero-badge ' + f.planClass;
 
   // SVG bg
   document.getElementById('heroBg').innerHTML = svgBgs[f.bgSvg] || '';
 
   // Icon
-  document.getElementById('heroIcon').innerHTML = '<svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#C9A84C" stroke-width="1.5" stroke-linecap="round">' + f.icon + '</svg>';
+  document.getElementById('heroIcon').innerHTML = '<svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#FF6B6B" stroke-width="1.5" stroke-linecap="round">' + f.icon + '</svg>';
 
   // Titre & sub
   document.getElementById('heroTitle').innerHTML = f.title;
@@ -422,7 +422,7 @@ function init() {
 
   if (f.plan === 'Gratuit') {
     document.getElementById('heroCta1').href = 'app.html';
-    document.getElementById('heroCta1').style.background = '#C9A84C';
+    document.getElementById('heroCta1').style.background = 'linear-gradient(135deg,#FF6B6B,#FF9A3C)';
   } else {
     document.getElementById('heroCta1').href = 'app.html?view=pricing';
   }
@@ -431,7 +431,7 @@ function init() {
   document.getElementById('benefitsTitle').textContent = 'Ce que vous obtenez avec ' + f.title.replace(/<em>|<\/em>/g,'');
   document.getElementById('benefitsGrid').innerHTML = f.benefits.map(b => `
     <div class="benefit-card">
-      <div class="benefit-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#C9A84C" stroke-width="1.5" stroke-linecap="round"><path d="${b.icon}"/></svg></div>
+      <div class="benefit-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#FF6B6B" stroke-width="1.5" stroke-linecap="round"><path d="${b.icon}"/></svg></div>
       <h3>${b.title}</h3>
       <p>${b.desc}</p>
     </div>`).join('');
