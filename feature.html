@@ -8,7 +8,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
-:root{--navy:#021A35;--gold:#C9A84C;--gold-light:#FAC775;--white:#fff;--gray:#f8f8f6}
+:root{--navy:#2D2D2D;--gold:#FF6B6B;--gold-light:#FF9A3C;--white:#fff;--gray:#FFF5F0}
 body{font-family:'Open Sans',sans-serif;color:var(--navy);background:var(--white)}
 
 /* NAV */
@@ -19,26 +19,26 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:16px 40px;display:fl
 .btn-ghost:hover{border-color:var(--navy)}
 .btn-dark{padding:10px 24px;background:var(--navy);color:white;border:none;border-radius:4px;font-size:.85rem;text-decoration:none;cursor:pointer;transition:all .2s}
 .btn-dark:hover{background:#0a2d52}
-.btn-gold{padding:10px 24px;background:var(--gold);color:var(--navy);border:none;border-radius:4px;font-size:.85rem;font-weight:700;text-decoration:none;cursor:pointer;transition:all .2s}
-.btn-gold:hover{background:var(--gold-light)}
+.btn-gold{padding:10px 24px;background:linear-gradient(135deg,#FF6B6B,#FF9A3C);color:white;border:none;border-radius:4px;font-size:.85rem;font-weight:700;text-decoration:none;cursor:pointer;transition:all .2s}
+.btn-gold:hover{opacity:.9;transform:translateY(-1px)}
 
 /* HERO */
-.feature-hero{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:120px 40px 80px;position:relative;overflow:hidden;background:var(--navy)}
+.feature-hero{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:120px 40px 80px;position:relative;overflow:hidden;background:linear-gradient(135deg,#FF6B6B,#FF9A3C)}
 .feature-hero-bg{position:absolute;inset:0;opacity:.12;pointer-events:none}
-.feature-hero-badge{display:inline-flex;align-items:center;gap:8px;background:rgba(201,168,76,.15);border:1px solid rgba(201,168,76,.3);color:var(--gold);font-size:.75rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:6px 16px;border-radius:4px;margin-bottom:28px}
+.feature-hero-badge{display:inline-flex;align-items:center;gap:8px;background:rgba(255,255,255,.2);border:1px solid rgba(255,255,255,.4);color:white;font-size:.75rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:6px 16px;border-radius:4px;margin-bottom:28px}
 .feature-hero h1{font-size:clamp(2.2rem,5vw,4rem);font-weight:700;color:white;line-height:1.1;margin-bottom:20px;max-width:800px}
-.feature-hero h1 em{color:var(--gold);font-style:normal}
+.feature-hero h1 em{color:white;font-style:italic;opacity:.85}
 .feature-hero-sub{font-size:1.05rem;color:rgba(255,255,255,.65);max-width:580px;line-height:1.75;margin-bottom:40px}
 .feature-hero-ctas{display:flex;gap:14px;justify-content:center;flex-wrap:wrap}
 .feature-hero-icon{width:80px;height:80px;background:rgba(201,168,76,.15);border:1px solid rgba(201,168,76,.25);border-radius:16px;display:flex;align-items:center;justify-content:center;margin:0 auto 32px}
 
 /* BÉNÉFICES */
 .benefits{padding:80px 40px;background:var(--white);max-width:1100px;margin:0 auto}
-.section-label{font-size:.75rem;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:var(--gold);margin-bottom:12px}
+.section-label{font-size:.75rem;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:#FF6B6B;margin-bottom:12px}
 .section-title{font-size:clamp(1.6rem,3vw,2.4rem);font-weight:700;color:var(--navy);margin-bottom:48px;max-width:600px}
 .benefits-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:24px}
 .benefit-card{padding:28px;border:1px solid #eee;border-radius:10px;transition:all .3s}
-.benefit-card:hover{border-color:var(--gold);box-shadow:0 8px 32px rgba(201,168,76,.1);transform:translateY(-4px)}
+.benefit-card:hover{border-color:#FF6B6B;box-shadow:0 8px 32px rgba(255,107,107,.12);transform:translateY(-4px)}
 .benefit-icon{width:44px;height:44px;background:#f8f8f6;border-radius:10px;display:flex;align-items:center;justify-content:center;margin-bottom:16px}
 .benefit-card h3{font-size:1rem;font-weight:700;color:var(--navy);margin-bottom:8px}
 .benefit-card p{font-size:.88rem;color:#666;line-height:1.65}
@@ -49,12 +49,12 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:16px 40px;display:fl
 .steps{display:flex;flex-direction:column;gap:0;margin-top:40px}
 .step{display:grid;grid-template-columns:60px 1fr;gap:24px;padding:28px 0;border-bottom:1px solid #eee;align-items:start}
 .step:last-child{border-bottom:none}
-.step-num{width:48px;height:48px;background:var(--navy);color:var(--gold);font-size:1.1rem;font-weight:700;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.step-num{width:48px;height:48px;background:linear-gradient(135deg,#FF6B6B,#FF9A3C);color:white;font-size:1.1rem;font-weight:700;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0}
 .step h3{font-size:1rem;font-weight:700;color:var(--navy);margin-bottom:6px}
 .step p{font-size:.88rem;color:#666;line-height:1.65}
 
 /* CTA FINAL */
-.cta-section{padding:100px 40px;background:var(--navy);text-align:center;position:relative;overflow:hidden}
+.cta-section{padding:100px 40px;background:linear-gradient(135deg,#FF6B6B,#FF9A3C);text-align:center;position:relative;overflow:hidden}
 .cta-section h2{font-size:clamp(1.8rem,4vw,3rem);font-weight:700;color:white;margin-bottom:16px}
 .cta-section p{font-size:1rem;color:rgba(255,255,255,.6);margin-bottom:40px;max-width:500px;margin-left:auto;margin-right:auto;line-height:1.7}
 .cta-section .btn-gold{font-size:1rem;padding:14px 36px}
@@ -63,7 +63,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:16px 40px;display:fl
 .plan-required{display:inline-flex;align-items:center;gap:6px;padding:4px 12px;border-radius:3px;font-size:.75rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;margin-bottom:16px}
 .plan-free{background:#E8F4FD;color:#0C447C}
 .plan-standard{background:#EDF7F2;color:#085041}
-.plan-premium{background:rgba(201,168,76,.15);color:var(--gold);border:1px solid rgba(201,168,76,.3)}
+.plan-premium{background:rgba(255,107,107,.1);color:#FF6B6B;border:1px solid rgba(255,107,107,.3)}
 .plan-entreprise{background:#EEEDFE;color:#3C3489}
 
 /* FOOTER */
