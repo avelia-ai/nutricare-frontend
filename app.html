@@ -93,6 +93,19 @@
   [id$="View"] > h2:nth-child(2) {
     margin-top: 24px;
   }
+
+  /* ── ALERTES INTERACTIONS ── */
+  .alertes-container { display: flex; flex-direction: column; gap: 10px; margin-bottom: 20px; }
+  .alerte-card { display: flex; gap: 12px; padding: 14px 16px; border-radius: 14px; background: white; border-left: 4px solid #ddd; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
+  .alerte-card.danger { border-left-color: #FF6B6B; background: rgba(255,107,107,0.04); }
+  .alerte-card.attention { border-left-color: #FF9A3C; background: rgba(255,154,60,0.04); }
+  .alerte-card.info { border-left-color: #85B7EB; background: rgba(133,183,235,0.04); }
+  .alerte-icon { font-size: 1.2rem; flex-shrink: 0; margin-top: 2px; }
+  .alerte-title { font-size: 0.82rem; font-weight: 700; color: #2D2D2D; margin-bottom: 4px; }
+  .alerte-card.danger .alerte-title { color: #FF6B6B; }
+  .alerte-card.attention .alerte-title { color: #FF9A3C; }
+  .alerte-msg { font-size: 0.8rem; color: #555; line-height: 1.5; margin-bottom: 4px; }
+  .alerte-conseil { font-size: 0.78rem; color: #888; font-style: italic; line-height: 1.4; }
   /* ── CHAT VIEW ── */
   #chatView { display: flex; flex-direction: column; height: 100vh; background: #FFF5F0; }
   .chat-header { padding: 16px 20px; border-bottom: 1px solid rgba(255,107,107,0.1); display: flex; align-items: center; justify-content: space-between; background: white; box-shadow: 0 2px 8px rgba(0,0,0,0.04); }
