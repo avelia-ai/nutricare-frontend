@@ -3862,7 +3862,7 @@ function switchLang(lang) {
     plans.forEach(p => {
       const btn = document.getElementById(btns[p]);
       if (btn) {
-        btn.textContent = p === plan ? ' Plan actuel' : (p === 'free' ? 'Choisir Gratuit' : \`Choisir \${p.charAt(0).toUpperCase() + p.slice(1)}\`);
+        btn.textContent = p === plan ? ' Plan actuel' : (p === 'free' ? 'Choisir Gratuit' : `Choisir ${p.charAt(0).toUpperCase() + p.slice(1)}`);
         if (p === plan) { btn.classList.add('current'); btn.disabled = true; }
         else { btn.classList.remove('current'); btn.disabled = false; }
       }
