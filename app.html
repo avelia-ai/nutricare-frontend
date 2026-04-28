@@ -3749,9 +3749,7 @@ function switchLang(lang) {
 
   async function loadGamification() {
     try {
-      const res = await fetch(`${BACKEND_URL}/api/gamification`, {
-        headers: { 'Authorization': `Bearer ${authToken}` }
-      });
+      const res = await fetchWithAuth(`${BACKEND_URL}/api/gamification`);
       if (res.status === 403) {
         document.getElementById('gamiFree').style.display = 'block';
         document.getElementById('gamiContent').style.display = 'none';
