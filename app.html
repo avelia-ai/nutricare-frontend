@@ -1896,27 +1896,28 @@ function switchLang(lang) {
 </div>
 </div>
 
-<div id="simulatorView"<div id="simulatorView" style="display:none;padding:32px;overflow-y:auto;background:#FFF5F0;width:100%">
+<div id="simulatorView" style="display:none;padding:32px;overflow-y:auto;background:#FFF5F0;width:100%">
   <div style="background:linear-gradient(135deg,#FF6B6B,#FF9A3C);margin:-32px -32px 32px -32px;padding:32px 32px 28px">
+    <div style="display:inline-block;font-size:0.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:white;background:rgba(255,255,255,0.2);padding:5px 14px;border-radius:20px;margin-bottom:12px">Jumeau Numérique Santé</div>
     <div style="font-family:'Open Sans',serif;font-size:2rem;font-weight:700;color:white;margin-bottom:6px">Simulez vos décisions</div>
-    <div style="font-size:0.85rem;color:rgba(255,255,255,0.85)">Testez l'impact de vos choix avant de les faire</div>
+    <div style="font-size:0.85rem;color:rgba(255,255,255,0.85)">Testez l'impact de vos choix sur votre santé avant de les faire</div>
   </div>
   <div style="max-width:800px;margin:0 auto">
-    <div style="display:inline-block;font-size:0.68rem;font-weight:600;text-transform:uppercase;letter-spacing:.12em;color:#FF6B6B;background:#FDF6E8;padding:5px 14px;border-radius: 4px;margin-bottom:12px">Jumeau Numérique Santé</div>
-    <div style="font-family:'Open Sans',serif;font-size:2rem;font-weight:400;color:#2D2D2D;margin-bottom:6px">Simulez vos décisions <em style="font-style:italic;color:#FF6B6B">avant de les prendre</em></div>
-    <div style="font-size:0.82rem;color:rgba(2,26,53,0.4);margin-bottom:28px">Projection personnalisée basée sur votre profil · Simulation indicative, pas un avis médical</div>
-
-    <div style="display:flex;gap:10px;margin-bottom:16px">
-      <input id="simInput" type="text" placeholder="Ex: Si je dors 5h pendant 3 jours..." style="flex:1;padding:12px 20px;border:1px solid rgba(255,107,107,0.15);border-radius: 4px;font-family:'DM Sans',sans-serif;font-size:0.88rem;color:#2D2D2D;outline:none"/>
-      <button onclick="runSimulation()" style="background:linear-gradient(135deg,#FF6B6B,#FF9A3C);color:#2D2D2D;border:none;border-radius: 4px;padding:12px 24px;font-family:'DM Sans',sans-serif;font-size:0.85rem;font-weight:600;cursor:pointer;white-space:nowrap">Simuler →</button>
-    </div>
-
-    <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:24px">
-      <div onclick="setSimQ(this)" style="font-size:0.75rem;padding:6px 14px;border-radius: 4px;border:1px solid rgba(255,107,107,0.15);color:rgba(2,26,53,0.6);cursor:pointer;background:#F0F6FF">Si je dors 5h pendant 3 jours ?</div>
-      <div onclick="setSimQ(this)" style="font-size:0.75rem;padding:6px 14px;border-radius: 4px;border:1px solid rgba(255,107,107,0.15);color:rgba(2,26,53,0.6);cursor:pointer;background:#F0F6FF">Si j'arrête le sucre 2 semaines ?</div>
-      <div onclick="setSimQ(this)" style="font-size:0.75rem;padding:6px 14px;border-radius: 4px;border:1px solid rgba(255,107,107,0.15);color:rgba(2,26,53,0.6);cursor:pointer;background:#F0F6FF">Si je marche 30min par jour ?</div>
-      <div onclick="setSimQ(this)" style="font-size:0.75rem;padding:6px 14px;border-radius: 4px;border:1px solid rgba(255,107,107,0.15);color:rgba(2,26,53,0.6);cursor:pointer;background:#F0F6FF">Si je bois 2L d'eau par jour ?</div>
-      <div onclick="setSimQ(this)" style="font-size:0.75rem;padding:6px 14px;border-radius: 4px;border:1px solid rgba(255,107,107,0.15);color:rgba(2,26,53,0.6);cursor:pointer;background:#F0F6FF">Si je saute le petit-déjeuner ?</div>
+    <div style="font-size:0.82rem;color:#999;margin-bottom:24px">Projection personnalisée · Simulation indicative, pas un avis médical</div>
+    <div style="background:white;border-radius:20px;padding:24px;box-shadow:0 4px 20px rgba(0,0,0,0.06);margin-bottom:20px">
+      <div style="font-size:0.78rem;font-weight:700;color:#FF9A3C;text-transform:uppercase;letter-spacing:.08em;margin-bottom:12px">Votre question</div>
+      <div style="display:flex;gap:10px;margin-bottom:16px">
+        <input id="simInput" type="text" placeholder="Ex: Si je dors 5h pendant 3 jours..." style="flex:1;padding:14px 18px;border:2px solid #F0F0F0;border-radius:14px;font-family:'DM Sans',sans-serif;font-size:0.9rem;color:#2D2D2D;outline:none;transition:border .2s" onfocus="this.style.borderColor='#FF6B6B'" onblur="this.style.borderColor='#F0F0F0'"/>
+        <button onclick="runSimulation()" style="background:linear-gradient(135deg,#FF6B6B,#FF9A3C);color:white;border:none;border-radius:14px;padding:14px 24px;font-family:'DM Sans',sans-serif;font-size:0.88rem;font-weight:600;cursor:pointer;white-space:nowrap;box-shadow:0 4px 12px rgba(255,107,107,0.3)">Simuler →</button>
+      </div>
+      <div style="font-size:0.75rem;font-weight:600;color:#bbb;text-transform:uppercase;letter-spacing:.06em;margin-bottom:10px">Exemples rapides</div>
+      <div style="display:flex;flex-wrap:wrap;gap:8px">
+        <div onclick="setSimQ(this)" style="font-size:0.78rem;padding:8px 14px;border-radius:20px;border:1.5px solid rgba(255,107,107,0.2);color:#FF6B6B;cursor:pointer;background:rgba(255,107,107,0.05);transition:all .2s">Si je dors 5h pendant 3 jours ?</div>
+        <div onclick="setSimQ(this)" style="font-size:0.78rem;padding:8px 14px;border-radius:20px;border:1.5px solid rgba(255,107,107,0.2);color:#FF6B6B;cursor:pointer;background:rgba(255,107,107,0.05);transition:all .2s">Si j'arrête le sucre 2 semaines ?</div>
+        <div onclick="setSimQ(this)" style="font-size:0.78rem;padding:8px 14px;border-radius:20px;border:1.5px solid rgba(255,107,107,0.2);color:#FF6B6B;cursor:pointer;background:rgba(255,107,107,0.05);transition:all .2s">Si je marche 30min par jour ?</div>
+        <div onclick="setSimQ(this)" style="font-size:0.78rem;padding:8px 14px;border-radius:20px;border:1.5px solid rgba(255,107,107,0.2);color:#FF6B6B;cursor:pointer;background:rgba(255,107,107,0.05);transition:all .2s">Si je bois 2L d'eau par jour ?</div>
+        <div onclick="setSimQ(this)" style="font-size:0.78rem;padding:8px 14px;border-radius:20px;border:1.5px solid rgba(255,107,107,0.2);color:#FF6B6B;cursor:pointer;background:rgba(255,107,107,0.05);transition:all .2s">Si je saute le petit-déjeuner ?</div>
+      </div>
     </div>
 
     <!-- Bloc Premium -->
