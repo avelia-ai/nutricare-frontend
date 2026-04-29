@@ -3,504 +3,271 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Mirella - Preinscription Early Bird</title>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<title>Mirella – Préinscription Early Bird</title>
+<link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,400;0,600;0,700;1,400&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
-*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
-:root { --gold: #C9A84C; --dark: #021A35; --blue: #85B7EB; --cream: #F8F5F0; --border: #B5D4F4; --light: #E6F1FB; }
-html { scroll-behavior: smooth; }
-body { background: white; color: var(--dark); font-family: 'DM Sans', sans-serif; overflow-x: hidden; }
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{--coral:#FF6B6B;--orange:#FF9A3C;--charcoal:#2D2D2D;--cream:#FFF5F0;--border:rgba(255,107,107,0.15)}
+html{scroll-behavior:smooth}
+body{background:white;color:var(--charcoal);font-family:'DM Sans',sans-serif;overflow-x:hidden}
 
-@keyframes fadeUp { from{opacity:0;transform:translateY(24px)} to{opacity:1;transform:translateY(0)} }
-@keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.4;transform:scale(.6)} }
-@keyframes blink { 50%{opacity:0} }
-@keyframes ticker { from{transform:translateX(0)} to{transform:translateX(-50%)} }
-@keyframes float { 0%{transform:translateY(0)} 50%{transform:translateY(-6px)} 100%{transform:translateY(0)} }
+@keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.4;transform:scale(.6)}}
+@keyframes blink{50%{opacity:0}}
+@keyframes spin{to{transform:rotate(360deg)}}
 
 /* NAV */
-nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; background: var(--dark); padding: 16px 48px; display: flex; justify-content: space-between; align-items: center; }
-.nav-logo img { height: 32px; filter: brightness(0) invert(1); }
-.nav-logo-txt { font-family: 'Playfair Display', serif; font-size: 1.3rem; color: var(--gold); }
-.nav-btn { background: var(--gold); color: var(--dark); padding: 10px 24px; border-radius: 4px; font-size: .85rem; font-weight: 600; text-decoration: none; transition: all .2s; }
-.nav-btn:hover { background: #d4af5c; }
+nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(255,255,255,.97);backdrop-filter:blur(10px);border-bottom:1px solid var(--border);padding:0 48px;display:flex;justify-content:space-between;align-items:center;height:64px}
+.nav-logo{font-family:'Open Sans',serif;font-size:1.3rem;font-weight:700;color:var(--charcoal);text-decoration:none;display:flex;align-items:center;gap:8px}
+.nav-dot{width:8px;height:8px;border-radius:50%;background:var(--coral)}
+.nav-btn{background:linear-gradient(135deg,var(--coral),var(--orange));color:white;padding:10px 24px;border-radius:4px;font-size:.85rem;font-weight:600;text-decoration:none;transition:all .2s}
+.nav-btn:hover{opacity:.9;transform:translateY(-1px)}
 
-/* HERO - fond blanc */
-.hero { background: rgba(255,255,255,.97); padding: 140px 24px 80px; text-align: center; position: relative; overflow: hidden; }
-.hero::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse 60% 40% at 50% 0%, rgba(181,212,244,.4) 0%, transparent 70%); pointer-events: none; }
-.hero-inner { position: relative; z-index: 1; max-width: 780px; margin: 0 auto; }
-.badge { display: inline-flex; align-items: center; gap: 8px; background: rgba(201,168,76,.1); border: 1px solid rgba(201,168,76,.4); border-radius: 100px; padding: 8px 20px; font-size: 11px; letter-spacing: .12em; text-transform: uppercase; color: #8B6914; margin-bottom: 32px; animation: fadeUp .8s ease both; }
-.badge-dot { width: 7px; height: 7px; background: var(--gold); border-radius: 50%; animation: pulse 1.5s ease-in-out infinite; }
-h1 { font-family: 'Playfair Display', serif; font-size: clamp(48px, 9vw, 90px); line-height: .95; font-weight: 900; letter-spacing: -.02em; color: var(--dark); margin-bottom: 8px; animation: fadeUp .8s .15s ease both; }
-h1 em { font-style: italic; color: var(--gold); display: block; }
-.hero-sub { font-family: 'Playfair Display', serif; font-size: clamp(14px, 2.5vw, 20px); color: rgba(2,26,53,.45); letter-spacing: .04em; margin-bottom: 40px; animation: fadeUp .8s .3s ease both; }
-.divider { width: 1px; height: 40px; background: linear-gradient(to bottom, transparent, var(--gold), transparent); margin: 0 auto 40px; animation: fadeUp .8s .35s ease both; }
-.hero-desc { font-size: 1.05rem; line-height: 1.75; color: rgba(2,26,53,.65); max-width: 560px; margin: 0 auto 48px; animation: fadeUp .8s .4s ease both; }
-.hero-desc strong { color: var(--dark); font-weight: 600; }
+/* HERO */
+.hero{background:var(--cream);padding:120px 24px 80px;text-align:center;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 60% 40% at 50% 0%,rgba(255,107,107,.08) 0%,transparent 70%);pointer-events:none}
+.hero-inner{position:relative;z-index:1;max-width:780px;margin:0 auto}
+.badge{display:inline-flex;align-items:center;gap:8px;background:rgba(255,107,107,.1);border:1px solid rgba(255,107,107,.25);border-radius:100px;padding:8px 20px;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--coral);margin-bottom:32px;animation:fadeUp .8s ease both}
+.badge-dot{width:7px;height:7px;background:var(--coral);border-radius:50%;animation:pulse 1.5s ease-in-out infinite}
+h1{font-family:'Open Sans',serif;font-size:clamp(2.4rem,6vw,4.5rem);line-height:1.05;font-weight:700;color:var(--charcoal);margin-bottom:16px;animation:fadeUp .8s .15s ease both}
+h1 em{font-style:italic;color:var(--coral)}
+.hero-sub{font-size:1.05rem;color:rgba(45,45,45,.55);line-height:1.75;max-width:560px;margin:0 auto 40px;animation:fadeUp .8s .3s ease both}
 
 /* OFFER BOX */
-.offer-box { background: var(--dark); color: white; border-radius: 16px; padding: 28px 52px; display: inline-block; margin-bottom: 28px; animation: fadeUp .8s .48s ease both; }
-.offer-tag { font-size: .68rem; letter-spacing: 2.5px; text-transform: uppercase; color: var(--gold); margin-bottom: 8px; }
-.offer-val { font-family: 'Playfair Display', serif; font-size: 3.5rem; font-weight: 900; color: var(--gold); line-height: 1; }
-.offer-det { font-size: .78rem; color: rgba(255,255,255,.45); margin-top: 8px; }
+.offer-box{background:var(--charcoal);color:white;border-radius:16px;padding:28px 52px;display:inline-block;margin-bottom:28px;animation:fadeUp .8s .4s ease both}
+.offer-tag{font-size:.68rem;letter-spacing:2.5px;text-transform:uppercase;color:var(--coral);margin-bottom:8px}
+.offer-val{font-family:'DM Mono',monospace;font-size:3.5rem;font-weight:500;background:linear-gradient(135deg,var(--coral),var(--orange));-webkit-background-clip:text;-webkit-text-fill-color:transparent;line-height:1}
+.offer-det{font-size:.78rem;color:rgba(255,255,255,.4);margin-top:8px}
 
-.spots { margin-bottom: 24px; animation: fadeUp .8s .52s ease both; }
-.spots-txt { font-size: .8rem; color: rgba(2,26,53,.6); margin-bottom: 8px; }
-.spots-txt strong { color: #E05C00; font-weight: 600; }
-.spots-bar { width: 280px; height: 5px; background: var(--border); border-radius: 3px; margin: 0 auto; overflow: hidden; }
-.spots-fill { height: 100%; width: 73%; background: var(--gold); border-radius: 3px; }
+/* SPOTS */
+.spots{margin-bottom:24px;animation:fadeUp .8s .48s ease both}
+.spots-txt{font-size:.8rem;color:rgba(45,45,45,.55);margin-bottom:8px}
+.spots-txt strong{color:var(--coral);font-weight:600}
+.spots-bar{width:280px;height:5px;background:rgba(255,107,107,.15);border-radius:3px;margin:0 auto;overflow:hidden}
+.spots-fill{height:100%;width:73%;background:linear-gradient(135deg,var(--coral),var(--orange));border-radius:3px}
 
-.countdown { display: flex; gap: 16px; justify-content: center; align-items: center; margin-bottom: 40px; animation: fadeUp .8s .56s ease both; }
-.cd-block { background: var(--dark); color: white; border-radius: 10px; padding: 14px 20px; text-align: center; min-width: 76px; }
-.cd-num { font-family: 'Playfair Display', serif; font-size: clamp(2rem, 5vw, 3rem); font-weight: 700; color: white; line-height: 1; display: block; }
-.cd-lbl { font-size: 10px; letter-spacing: .15em; text-transform: uppercase; color: rgba(255,255,255,.4); margin-top: 4px; display: block; }
-.cd-sep { font-family: 'Playfair Display', serif; font-size: 2rem; color: var(--gold); margin-bottom: 14px; animation: blink 1s step-end infinite; }
+/* COUNTDOWN */
+.countdown{display:flex;gap:16px;justify-content:center;align-items:center;margin-bottom:40px;animation:fadeUp .8s .52s ease both}
+.cd-block{background:var(--charcoal);color:white;border-radius:10px;padding:14px 20px;text-align:center;min-width:76px}
+.cd-num{font-family:'DM Mono',monospace;font-size:clamp(2rem,5vw,3rem);font-weight:500;color:white;line-height:1;display:block}
+.cd-lbl{font-size:10px;letter-spacing:.15em;text-transform:uppercase;color:rgba(255,255,255,.4);margin-top:4px;display:block}
+.cd-sep{font-size:2rem;color:var(--coral);margin-bottom:14px;animation:blink 1s step-end infinite}
 
-.form-wrap { max-width: 500px; margin: 0 auto 14px; animation: fadeUp .8s .62s ease both; }
-.form-row { display: flex; border-radius: 4px; overflow: hidden; box-shadow: 0 4px 20px rgba(2,26,53,.12); }
-.form-row input { flex: 1; background: white; border: 1.5px solid var(--border); border-right: none; color: var(--dark); padding: 16px 20px; font-size: .95rem; font-family: 'DM Sans', sans-serif; outline: none; }
-.form-row input::placeholder { color: rgba(2,26,53,.35); }
-.form-row input:focus { border-color: var(--dark); }
-.form-row button { background: var(--gold); color: var(--dark); border: none; padding: 16px 24px; font-size: .88rem; font-weight: 600; font-family: 'DM Sans', sans-serif; cursor: pointer; white-space: nowrap; transition: all .2s; }
-.form-row button:hover { background: #d4af5c; }
-.form-note { font-size: .72rem; color: rgba(2,26,53,.35); text-align: center; margin-top: 10px; }
-.success-msg { display: none; background: #EAF3DE; border: 1px solid #97C459; border-radius: 8px; padding: 14px; color: #3B6D11; font-size: .88rem; text-align: center; margin-top: 12px; }
+/* FORM */
+.form-wrap{max-width:500px;margin:0 auto 14px;animation:fadeUp .8s .58s ease both}
+.form-row{display:flex;border-radius:4px;overflow:hidden;box-shadow:0 4px 20px rgba(255,107,107,.12)}
+.form-row input{flex:1;background:white;border:1.5px solid var(--border);border-right:none;color:var(--charcoal);padding:16px 20px;font-size:.95rem;font-family:'DM Sans',sans-serif;outline:none}
+.form-row input::placeholder{color:rgba(45,45,45,.35)}
+.form-row input:focus{border-color:var(--coral)}
+.form-row button{background:linear-gradient(135deg,var(--coral),var(--orange));color:white;border:none;padding:16px 24px;font-size:.88rem;font-weight:600;font-family:'DM Sans',sans-serif;cursor:pointer;white-space:nowrap;transition:all .2s}
+.form-row button:hover{opacity:.9}
+.form-note{font-size:.72rem;color:rgba(45,45,45,.35);text-align:center;margin-top:10px}
+.success-msg{display:none;background:#EFF7F1;border:1px solid #9DC4A3;border-radius:8px;padding:14px;color:#3B6D11;font-size:.88rem;text-align:center;margin-top:12px}
 
-.social { display: flex; align-items: center; gap: 12px; justify-content: center; margin-top: 24px; animation: fadeUp .8s .68s ease both; }
-.avs { display: flex; }
-.av { width: 32px; height: 32px; border-radius: 50%; border: 2px solid white; display: flex; align-items: center; justify-content: center; font-size: .62rem; font-weight: 700; margin-left: -8px; color: white; }
-.av:first-child { margin-left: 0; }
-.soc-txt { font-size: .82rem; color: rgba(2,26,53,.5); }
-.soc-txt strong { color: var(--dark); }
+/* SOCIAL PROOF */
+.social{display:flex;align-items:center;gap:12px;justify-content:center;margin-top:24px;animation:fadeUp .8s .64s ease both}
+.avs{display:flex}
+.av{width:32px;height:32px;border-radius:50%;border:2px solid white;display:flex;align-items:center;justify-content:center;font-size:.62rem;font-weight:700;margin-left:-8px;color:white;background:linear-gradient(135deg,var(--coral),var(--orange))}
+.av:first-child{margin-left:0}
+.soc-txt{font-size:.82rem;color:rgba(45,45,45,.5)}
+.soc-txt strong{color:var(--charcoal)}
 
-/* STATS - fond bleu fonce */
-.stats-section { background: var(--dark); padding: 72px 48px; }
-.stats-inner { max-width: 1100px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(160px,1fr)); gap: 24px; text-align: center; }
-.stat-n { font-family: 'Playfair Display', serif; font-size: 2.8rem; font-weight: 700; color: var(--gold); line-height: 1; margin-bottom: 8px; }
-.stat-l { font-size: .82rem; color: rgba(255,255,255,.55); line-height: 1.5; }
+/* STATS */
+.stats-section{background:var(--charcoal);padding:72px 48px}
+.stats-inner{max-width:1100px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:24px;text-align:center}
+.stat-n{font-family:'DM Mono',monospace;font-size:2.8rem;font-weight:500;background:linear-gradient(135deg,var(--coral),var(--orange));-webkit-background-clip:text;-webkit-text-fill-color:transparent;line-height:1;margin-bottom:8px}
+.stat-l{font-size:.82rem;color:rgba(255,255,255,.55);line-height:1.5}
 
-/* CARDS - fond blanc */
-.cards-section { background: rgba(255,255,255,.97); padding: 100px 48px; }
-.cards-inner { max-width: 1100px; margin: 0 auto; }
-.section-header { text-align: center; max-width: 640px; margin: 0 auto 64px; }
-.section-tag { font-size: .7rem; letter-spacing: 2px; text-transform: uppercase; color: var(--gold); display: block; margin-bottom: 12px; }
-.section-title { font-family: 'Playfair Display', serif; font-size: clamp(1.8rem,4vw,2.8rem); color: var(--dark); font-weight: 400; }
-.section-title em { font-style: italic; color: var(--gold); }
-
-.cards-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
-@media(max-width:900px) { .cards-grid { grid-template-columns: repeat(2,1fr); } }
-@media(max-width:560px) { .cards-grid { grid-template-columns: 1fr; } }
-
-.card { background: var(--dark); border: 1px solid rgba(201,168,76,.2); border-radius: 8px; padding: 32px; text-align: left; transition: transform .3s, border-color .3s, box-shadow .3s; cursor: default; position: relative; overflow: hidden; }
-.card::before { content: ''; position: absolute; inset: 0; background: radial-gradient(circle at 20% 20%, rgba(201,168,76,.06) 0%, transparent 60%); pointer-events: none; }
-.card:hover { transform: translateY(-6px) rotateX(2deg); border-color: rgba(201,168,76,.5); box-shadow: 0 20px 60px rgba(2,26,53,.25), 0 0 30px rgba(201,168,76,.06); }
-.card-icon { font-size: 2rem; margin-bottom: 16px; display: block; }
-.card-title { font-size: 1rem; font-weight: 600; color: white; margin-bottom: 10px; }
-.card-desc { font-size: .82rem; color: rgba(255,255,255,.55); line-height: 1.65; margin-bottom: 16px; }
-.card-badge { display: inline-block; background: rgba(201,168,76,.1); border: 1px solid rgba(201,168,76,.25); color: #FAC775; font-size: .65rem; padding: 4px 12px; border-radius: 4px; }
+/* CARDS */
+.cards-section{padding:80px 24px;background:var(--cream)}
+.cards-inner{max-width:1100px;margin:0 auto}
+.section-label{font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:var(--coral);margin-bottom:12px}
+.section-title{font-family:'Open Sans',serif;font-size:clamp(1.6rem,3vw,2.4rem);font-weight:700;color:var(--charcoal);margin-bottom:48px}
+.cards-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:20px}
+.card{background:white;border-radius:16px;padding:28px;border:1px solid var(--border);transition:all .25s}
+.card:hover{transform:translateY(-4px);box-shadow:0 12px 40px rgba(255,107,107,.12);border-color:rgba(255,107,107,.3)}
+.card-icon{width:44px;height:44px;background:rgba(255,107,107,.08);border-radius:10px;display:flex;align-items:center;justify-content:center;margin-bottom:16px;font-size:1.2rem}
+.card h3{font-family:'Open Sans',serif;font-size:1rem;font-weight:700;color:var(--charcoal);margin-bottom:8px}
+.card p{font-size:.88rem;color:rgba(45,45,45,.6);line-height:1.65}
 
 /* GREY SECTION */
-.grey-section { background: rgba(247,247,247,.97); padding: 100px 48px; }
-.grey-inner { max-width: 1100px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: center; }
-@media(max-width:700px) { .grey-inner { grid-template-columns: 1fr; } }
-.grey-title { font-family: 'Playfair Display', serif; font-size: clamp(1.8rem,3vw,2.5rem); color: var(--dark); margin-bottom: 16px; }
-.grey-title em { font-style: italic; color: var(--gold); }
-.grey-desc { font-size: .95rem; color: rgba(2,26,53,.6); line-height: 1.75; margin-bottom: 32px; }
-.check-list { display: flex; flex-direction: column; gap: 14px; }
-.check-item { display: flex; align-items: center; gap: 12px; font-size: .9rem; color: rgba(2,26,53,.75); }
-.check-dot { width: 24px; height: 24px; border-radius: 50%; background: var(--light); border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; font-size: .65rem; color: #185FA5; flex-shrink: 0; font-weight: 700; }
-.phone-mockup { background: white; border-radius: 32px; border: 2px solid var(--border); overflow: hidden; box-shadow: 0 20px 60px rgba(2,26,53,.15); animation: float 5s ease-in-out infinite; max-width: 280px; margin: 0 auto; }
-.ph-top { background: var(--dark); padding: 14px 16px; display: flex; align-items: center; gap: 8px; }
-.ph-av { width: 28px; height: 28px; border-radius: 50%; background: #7A9E7E; display: flex; align-items: center; justify-content: center; font-size: .6rem; font-weight: 700; color: white; }
-.ph-name { font-size: .75rem; font-weight: 500; color: white; }
-.ph-status { font-size: .6rem; color: #7A9E7E; }
-.ph-dot { width: 6px; height: 6px; border-radius: 50%; background: #7A9E7E; margin-left: auto; }
-.ph-body { padding: 12px; background: var(--cream); }
-.msg-ai { background: white; border: 1px solid var(--border); border-radius: 12px 12px 12px 2px; padding: 10px 12px; font-size: .7rem; color: var(--dark); line-height: 1.5; margin-bottom: 8px; }
-.msg-user { background: var(--dark); border-radius: 12px 12px 2px 12px; padding: 10px 12px; font-size: .7rem; color: white; line-height: 1.5; margin-bottom: 8px; text-align: right; }
-.proto-card { background: white; border: 1px solid var(--border); border-radius: 8px; padding: 10px; }
-.proto-title { font-size: .68rem; font-weight: 600; color: var(--dark); margin-bottom: 5px; }
-.proto-item { font-size: .6rem; color: rgba(2,26,53,.55); padding: 2px 0; border-bottom: 1px solid var(--light); }
+.grey-section{padding:80px 24px;background:white}
+.grey-inner{max-width:1100px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:center}
+.grey-inner img{width:100%;border-radius:16px}
+.steps{display:flex;flex-direction:column;gap:24px;margin-top:32px}
+.step{display:grid;grid-template-columns:40px 1fr;gap:16px;align-items:start}
+.step-num{width:40px;height:40px;background:linear-gradient(135deg,var(--coral),var(--orange));color:white;font-size:.9rem;font-weight:700;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.step h3{font-size:.95rem;font-weight:700;color:var(--charcoal);margin-bottom:4px}
+.step p{font-size:.85rem;color:rgba(45,45,45,.6);line-height:1.6}
 
-/* CTA FINAL - fond bleu fonce */
-.cta-section { background: var(--dark); padding: 100px 24px; text-align: center; }
-.cta-inner { max-width: 580px; margin: 0 auto; }
-.cta-tag { font-size: .7rem; letter-spacing: 2px; text-transform: uppercase; color: var(--gold); display: block; margin-bottom: 16px; }
-.cta-h2 { font-family: 'Playfair Display', serif; font-size: clamp(2rem,4vw,3rem); color: white; margin-bottom: 16px; font-weight: 900; }
-.cta-h2 em { font-style: italic; color: var(--gold); }
-.cta-p { color: rgba(255,255,255,.5); font-size: .95rem; margin-bottom: 40px; line-height: 1.7; }
-.cta-section .form-row { border-radius: 4px; }
-.cta-section .form-row input { background: rgba(255,255,255,.08); border-color: rgba(255,255,255,.2); color: white; }
-.cta-section .form-row input::placeholder { color: rgba(255,255,255,.3); }
-.cta-section .form-row input:focus { border-color: var(--gold); }
-.cta-section .form-note { color: rgba(255,255,255,.25); }
-.cta-section .success-msg { background: rgba(122,158,126,.15); border-color: rgba(122,158,126,.3); color: #9fe1cb; }
+/* CTA SECTION */
+.cta-section{background:var(--charcoal);padding:100px 24px;text-align:center}
+.cta-inner{max-width:580px;margin:0 auto}
+.cta-tag{font-size:.7rem;letter-spacing:2px;text-transform:uppercase;color:var(--coral);display:block;margin-bottom:16px}
+.cta-h2{font-family:'Open Sans',serif;font-size:clamp(2rem,4vw,3rem);color:white;margin-bottom:16px;font-weight:700}
+.cta-h2 em{font-style:italic;color:var(--coral)}
+.cta-p{color:rgba(255,255,255,.5);font-size:.95rem;margin-bottom:40px;line-height:1.7}
+.cta-section .form-row input{background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.2);color:white}
+.cta-section .form-row input::placeholder{color:rgba(255,255,255,.3)}
+.cta-section .form-row input:focus{border-color:var(--coral)}
+.cta-section .form-note{color:rgba(255,255,255,.25)}
 
-/* TICKER */
-.ticker-wrap { position: fixed; bottom: 0; left: 0; right: 0; border-top: 1px solid rgba(255,255,255,.06); background: rgba(2,26,53,.95); backdrop-filter: blur(12px); padding: 12px 0; overflow: hidden; z-index: 100; }
-.ticker { display: flex; gap: 64px; white-space: nowrap; animation: ticker 25s linear infinite; }
-.ticker-item { font-size: 11px; letter-spacing: .15em; text-transform: uppercase; color: rgba(255,255,255,.3); flex-shrink: 0; display: flex; align-items: center; gap: 12px; }
-.ticker-item span { color: var(--gold); }
+/* FOOTER */
+footer{background:white;border-top:1px solid var(--border);padding:28px 48px;display:flex;justify-content:space-between;align-items:center;font-size:.75rem;color:rgba(45,45,45,.4);flex-wrap:wrap;gap:12px}
+footer a{color:var(--coral);text-decoration:none}
 
-.particles { position: fixed; inset: 0; pointer-events: none; z-index: 1; overflow: hidden; }
-.particle { position: absolute; background: #378ADD; border-radius: 50%; opacity: 0; animation: pfloat linear infinite; }
-@keyframes pfloat { 0%{transform:translateY(100vh);opacity:0} 10%{opacity:.7} 90%{opacity:.3} 100%{transform:translateY(-10vh) translateX(20px);opacity:0} }
-.card-icon { font-size: 2.5rem; margin-bottom: 16px; display: inline-block; animation: spin3d 6s ease-in-out infinite; transform-style: preserve-3d; filter: drop-shadow(0 4px 8px rgba(0,0,0,.3)); }
-.card:nth-child(1) .card-icon { animation-delay: 0s; }
-.card:nth-child(2) .card-icon { animation-delay: .5s; }
-.card:nth-child(3) .card-icon { animation-delay: 1s; }
-.card:nth-child(4) .card-icon { animation-delay: 1.5s; }
-.card:nth-child(5) .card-icon { animation-delay: 2s; }
-.card:nth-child(6) .card-icon { animation-delay: 2.5s; }
-.card:nth-child(7) .card-icon { animation-delay: 3s; }
-.card:nth-child(8) .card-icon { animation-delay: 3.5s; }
-.card:nth-child(9) .card-icon { animation-delay: 4s; }
-@keyframes spin3d { 0%{transform:rotateY(0deg) scale(1)} 25%{transform:rotateY(180deg) scale(1.1)} 50%{transform:rotateY(360deg) scale(1)} 75%{transform:rotateY(180deg) scale(1.05)} 100%{transform:rotateY(0deg) scale(1)} }
-footer { background: white; border-top: 1px solid var(--border); padding: 28px 48px 60px; display: flex; justify-content: space-between; align-items: center; font-size: .75rem; color: rgba(2,26,53,.35); flex-wrap: wrap; gap: 12px; }
-.footer-logo { font-family: 'Playfair Display', serif; color: var(--dark); font-size: 1.1rem; }
-@media(max-width:768px) { 
-  nav { padding: 16px 20px; } 
-  .cards-section, .grey-section, .stats-section, .cta-section { padding: 72px 24px; }
-  .countdown { gap: 8px; }
-  .cd-block { min-width: 60px; padding: 10px 12px; }
-  .cd-num { font-size: 1.6rem; }
-  .cd-lbl { font-size: 8px; }
-  .cd-sep { font-size: 1.4rem; margin-bottom: 10px; }
-  .offer-box { padding: 20px 24px; }
-  .offer-val { font-size: 2.5rem; }
-}
-@media(max-width:400px) {
-  .countdown { gap: 6px; }
-  .cd-block { min-width: 52px; padding: 8px 10px; }
-  .cd-num { font-size: 1.4rem; }
-  .cd-sep { font-size: 1.2rem; }
-}
-@media(max-width:600px) {
-  .form-row { flex-direction: column; border-radius: 8px; }
-  .form-row input { border-right: 1.5px solid var(--border); border-bottom: none; border-radius: 8px 8px 0 0; }
-  .form-row button { border-radius: 0 0 8px 8px; padding: 14px; text-align: center; }
-  .form-wrap { padding: 0 8px; }
+@media(max-width:768px){
+  nav{padding:0 20px}
+  .hero{padding:100px 20px 60px}
+  .offer-box{padding:20px 28px}
+  .stats-section{padding:48px 24px}
+  .grey-inner{grid-template-columns:1fr}
+  .grey-inner img{display:none}
+  footer{flex-direction:column;text-align:center}
 }
 </style>
 </head>
 <body>
 
-<div class="particles" id="particles"></div>
 <nav>
-  <div class="nav-logo">
-    <img src="mirella-logo.png" alt="Mirella" onerror="this.style.display='none';this.nextElementSibling.style.display='block'">
-    <span class="nav-logo-txt" style="display:none">Mirella</span>
-  </div>
-  <a href="#form" class="nav-btn">Reserver ma place</a>
+  <a class="nav-logo" href="index.html"><span class="nav-dot"></span> Mirella</a>
+  <a class="nav-btn" href="app.html">Commencer →</a>
 </nav>
 
-<!-- HERO BLANC -->
+<!-- HERO -->
 <section class="hero">
   <div class="hero-inner">
-    <div class="badge"><div class="badge-dot"></div>Lancement imminent - Early Bird</div>
-    <h1>Mirella<em>arrive.</em></h1>
-    <p class="hero-sub">La premiere assistante sante intelligente au monde</p>
-    <div class="divider"></div>
-    <p class="hero-desc">Votre coach nutrition IA, adapte a <strong>vos pathologies</strong>, disponible <strong>24h/24</strong>. Protocoles medicaux, menus personnalises, analyse de repas - accessible depuis votre smartphone, <strong>partout dans le monde</strong>.</p>
+    <div class="badge"><span class="badge-dot"></span> Early Bird · Offre limitée</div>
+    <h1>Votre santé mérite<br><em>mieux que Google.</em></h1>
+    <p class="hero-sub">Mirella est le premier coach nutritionnel IA adapté à vos pathologies. Préinscrivez-vous maintenant et bénéficiez de 50% de réduction à vie.</p>
+
     <div class="offer-box">
-      <div class="offer-tag">Offre Early Bird exclusive</div>
-      <div class="offer-val">-50% a vie</div>
-      <div class="offer-det">Pour les 500 premiers inscrits - Offre non renouvelable</div>
+      <div class="offer-tag">Offre Early Bird</div>
+      <div class="offer-val">-50%</div>
+      <div class="offer-det">à vie · sans engagement · annulable à tout moment</div>
     </div>
+
     <div class="spots">
-      <div class="spots-txt"><strong id="spotsLeft">134</strong> places restantes sur 500</div>
-      <div class="spots-bar"><div class="spots-fill" id="spotsFill"></div></div>
+      <div class="spots-txt"><strong>73 places</strong> sur 100 déjà réservées</div>
+      <div class="spots-bar"><div class="spots-fill"></div></div>
     </div>
-    <div class="countdown">
-      <div class="cd-block"><span class="cd-num" id="days">14</span><span class="cd-lbl">Jours</span></div>
-      <div class="cd-sep">:</div>
-      <div class="cd-block"><span class="cd-num" id="hours">00</span><span class="cd-lbl">Heures</span></div>
-      <div class="cd-sep">:</div>
-      <div class="cd-block"><span class="cd-num" id="minutes">00</span><span class="cd-lbl">Min</span></div>
-      <div class="cd-sep">:</div>
-      <div class="cd-block"><span class="cd-num" id="seconds">00</span><span class="cd-lbl">Sec</span></div>
+
+    <div class="countdown" id="countdown">
+      <div class="cd-block"><span class="cd-num" id="cd-j">--</span><span class="cd-lbl">Jours</span></div>
+      <span class="cd-sep">:</span>
+      <div class="cd-block"><span class="cd-num" id="cd-h">--</span><span class="cd-lbl">Heures</span></div>
+      <span class="cd-sep">:</span>
+      <div class="cd-block"><span class="cd-num" id="cd-m">--</span><span class="cd-lbl">Min</span></div>
+      <span class="cd-sep">:</span>
+      <div class="cd-block"><span class="cd-num" id="cd-s">--</span><span class="cd-lbl">Sec</span></div>
     </div>
-    <div class="form-wrap" id="form">
-      <div class="form-row" id="formRow1">
-        <input type="email" id="email1" placeholder="Votre adresse email">
-        <button onclick="sub('email1','formRow1','msg1')">Rejoindre la liste</button>
+
+    <div class="form-wrap">
+      <div class="form-row">
+        <input type="email" id="emailHero" placeholder="votre@email.com">
+        <button onclick="subscribe('emailHero','successHero')">Réserver ma place →</button>
       </div>
-      <div class="success-msg" id="msg1">Parfait ! Vous etes sur la liste early bird. Vous recevrez un email au lancement avec votre offre -50% a vie. 🎉</div>
-      <p class="form-note">100% gratuit - Sans carte bancaire - Desabonnement en 1 clic</p>
+      <div class="form-note">🔒 Sans carte bancaire · Annulable à tout moment</div>
+      <div class="success-msg" id="successHero">✅ Votre place est réservée ! Vous recevrez un email de confirmation.</div>
     </div>
+
     <div class="social">
       <div class="avs">
-        <div class="av" style="background:#7A9E7E">AS</div>
-        <div class="av" style="background:#C9A84C">ML</div>
-        <div class="av" style="background:#378ADD">SR</div>
-        <div class="av" style="background:#9E7A9E">LB</div>
-        <div class="av" style="background:#D85A30">JD</div>
+        <div class="av">MR</div><div class="av">SL</div><div class="av">JP</div><div class="av">AC</div>
       </div>
-      <div class="soc-txt"><strong id="inscrit">62</strong> personnes deja inscrites</div>
+      <div class="soc-txt"><strong>2 400+ patients</strong> nous font déjà confiance</div>
     </div>
   </div>
 </section>
 
-<!-- STATS BLEU FONCE -->
+<!-- STATS -->
 <section class="stats-section">
-  <div style="max-width:1100px;margin:0 auto;">
-    <div style="text-align:center;margin-bottom:56px;">
-      <span style="font-size:.7rem;letter-spacing:2px;text-transform:uppercase;color:var(--gold);display:block;margin-bottom:12px;">Resultats prouves</span>
-      <h2 style="font-family:'Playfair Display',serif;font-size:clamp(1.8rem,4vw,2.8rem);color:white;font-weight:400;">Ce que Mirella change <em style="font-style:italic;color:var(--gold);">concretement</em></h2>
-    </div>
-    <div class="stats-inner" style="margin-bottom:56px;">
-      <div class="stat"><div class="stat-n">96%</div><div class="stat-l">ameliorent leur energie en moins de 30 jours</div></div>
-      <div class="stat"><div class="stat-n">-4.6kg</div><div class="stat-l">perte de poids moyenne en 8 semaines</div></div>
-      <div class="stat"><div class="stat-n">98%</div><div class="stat-l">de satisfaction sur la qualite des conseils</div></div>
-      <div class="stat"><div class="stat-n">3 min</div><div class="stat-l">pour obtenir votre protocole sante complet</div></div>
-      <div class="stat"><div class="stat-n">50+</div><div class="stat-l">pathologies prises en charge</div></div>
-    </div>
-    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px;">
-      <div style="background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:8px;padding:20px 24px;display:flex;align-items:flex-start;gap:14px;">
-        <span style="font-size:1.4rem;flex-shrink:0;">⚡</span>
-        <div><div style="font-size:.9rem;font-weight:600;color:white;margin-bottom:4px;">Energie retrouvee</div><div style="font-size:.78rem;color:rgba(255,255,255,.5);line-height:1.5;">Protocoles anti-fatigue adaptes a vos carences et pathologies</div></div>
-      </div>
-      <div style="background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:8px;padding:20px 24px;display:flex;align-items:flex-start;gap:14px;">
-        <span style="font-size:1.4rem;flex-shrink:0;">⚖️</span>
-        <div><div style="font-size:.9rem;font-weight:600;color:white;margin-bottom:4px;">Poids equilibre</div><div style="font-size:.78rem;color:rgba(255,255,255,.5);line-height:1.5;">Menus calcules pour atteindre et maintenir votre poids ideal</div></div>
-      </div>
-      <div style="background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:8px;padding:20px 24px;display:flex;align-items:flex-start;gap:14px;">
-        <span style="font-size:1.4rem;flex-shrink:0;">🫀</span>
-        <div><div style="font-size:.9rem;font-weight:600;color:white;margin-bottom:4px;">Sante cardiovasculaire</div><div style="font-size:.78rem;color:rgba(255,255,255,.5);line-height:1.5;">Alimentation adaptee pour tension, cholesterol et arterites</div></div>
-      </div>
-      <div style="background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:8px;padding:20px 24px;display:flex;align-items:flex-start;gap:14px;">
-        <span style="font-size:1.4rem;flex-shrink:0;">🧠</span>
-        <div><div style="font-size:.9rem;font-weight:600;color:white;margin-bottom:4px;">Bien-etre mental</div><div style="font-size:.78rem;color:rgba(255,255,255,.5);line-height:1.5;">Nutrition anti-stress et anti-inflammatoire pour l esprit</div></div>
-      </div>
-    </div>
+  <div class="stats-inner">
+    <div><div class="stat-n">2 400+</div><div class="stat-l">Patients actifs</div></div>
+    <div><div class="stat-n">50+</div><div class="stat-l">Pathologies gérées</div></div>
+    <div><div class="stat-n">4.9/5</div><div class="stat-l">Note moyenne</div></div>
+    <div><div class="stat-n">24h/24</div><div class="stat-l">Disponible</div></div>
   </div>
 </section>
 
-<!-- CARDS BLANC -->
+<!-- CARDS -->
 <section class="cards-section">
   <div class="cards-inner">
-    <div class="section-header">
-      <span class="section-tag">Fonctionnalites exclusives</span>
-      <h2 class="section-title">Tout ce que Mirella fait <em>pour vous</em></h2>
-    </div>
+    <div class="section-label">Pourquoi Mirella</div>
+    <h2 class="section-title">Tout ce dont vous avez besoin</h2>
     <div class="cards-grid">
-      <div class="card">
-        <span class="card-icon">🧬</span>
-        <div class="card-title">Protocoles medicaux personnalises</div>
-        <div class="card-desc">Hypertension, diabete, cholesterol, SOPK... Un protocole precis adapte a vos medicaments et votre profil unique.</div>
-        <span class="card-badge">50+ pathologies</span>
-      </div>
-      <div class="card">
-        <span class="card-icon">🔮</span>
-        <div class="card-title">Oracle Sante predictif</div>
-        <div class="card-desc">Anticipe les risques avant qu ils n apparaissent. Score de vitalite, age biologique, alertes personnalisees.</div>
-        <span class="card-badge">IA exclusive</span>
-      </div>
-      <div class="card">
-        <span class="card-icon">🍽️</span>
-        <div class="card-title">Menus hebdomadaires sur mesure</div>
-        <div class="card-desc">7 jours de menus avec liste de courses, calories et temps de preparation. Adaptes a votre budget.</div>
-        <span class="card-badge">Gain 2h/semaine</span>
-      </div>
-      <div class="card">
-        <span class="card-icon">💬</span>
-        <div class="card-title">Chat IA illimite 24h/24</div>
-        <div class="card-desc">Posez toutes vos questions sante, nutrition et medicaments. Mirella repond en tenant compte de votre profil.</div>
-        <span class="card-badge">Disponible partout</span>
-      </div>
-      <div class="card">
-        <span class="card-icon">📸</span>
-        <div class="card-title">Analyse photo de vos repas</div>
-        <div class="card-desc">Photo de votre assiette analysee instantanement. Calories, nutriments, compatibilite avec vos objectifs.</div>
-        <span class="card-badge">Analyse en secondes</span>
-      </div>
-      <div class="card">
-        <span class="card-icon">💊</span>
-        <div class="card-title">Interactions medicamenteuses</div>
-        <div class="card-desc">Detection des interactions entre vos medicaments et votre alimentation pour eviter les risques.</div>
-        <span class="card-badge">Securite renforcee</span>
-      </div>
-      <div class="card">
-        <span class="card-icon">📊</span>
-        <div class="card-title">Suivi sante et progression</div>
-        <div class="card-desc">Suivez tension, glycemie, poids, energie. Mirella analyse vos tendances et ajuste ses conseils.</div>
-        <span class="card-badge">Temps reel</span>
-      </div>
-      <div class="card">
-        <span class="card-icon">🩸</span>
-        <div class="card-title">Analyse de bilan sanguin</div>
-        <div class="card-desc">Uploadez votre bilan sanguin. Mirella detecte les anomalies et propose un plan nutritionnel adapte.</div>
-        <span class="card-badge">Interpretation medicale</span>
-      </div>
-      <div class="card">
-        <span class="card-icon">🌍</span>
-        <div class="card-title">Accessible partout dans le monde</div>
-        <div class="card-desc">En francais et en anglais, sur mobile et desktop, 24h/24. Votre coach sante ne prend jamais de vacances.</div>
-        <span class="card-badge">FR - EN</span>
-      </div>
-      <div class="card">
-        <span class="card-icon">🌙</span>
-        <div class="card-title">Chrono-nutrition IA</div>
-        <div class="card-desc">Optimise vos repas selon votre rythme circadien. Horaires personnalises selon votre lever, coucher et horaires de travail.</div>
-        <span class="card-badge">Score circadien</span>
-      </div>
-      <div class="card">
-        <span class="card-icon">🔬</span>
-        <div class="card-title">Detection visuelle IA</div>
-        <div class="card-desc">Photo de votre peau, yeux ou ongles analysee par IA. Detection de 20+ signes de carences et pathologies.</div>
-        <span class="card-badge">20+ pathologies</span>
-      </div>
-      <div class="card">
-        <span class="card-icon">📋</span>
-        <div class="card-title">Passeport Sante Nutritionnel</div>
-        <div class="card-desc">Compte-rendu medical complet genere par IA, partageable avec votre medecin. Reference unique NC-XXXXXXX.</div>
-        <span class="card-badge">Partage medecin</span>
-      </div>
-      <div class="card">
-        <span class="card-icon">📄</span>
-        <div class="card-title">Scan ordonnance</div>
-        <div class="card-desc">Photographiez votre ordonnance. Mirella analyse vos medicaments et adapte tous ses conseils nutritionnels.</div>
-        <span class="card-badge">Analyse instant</span>
-      </div>
-      <div class="card">
-        <span class="card-icon">🧪</span>
-        <div class="card-title">Simulateur nutritionnel</div>
-        <div class="card-desc">Simulez l impact de votre alimentation sur votre sante. Previsions sur 30, 60, 90 jours avec recommandations.</div>
-        <span class="card-badge">Projections IA</span>
-      </div>
-      <div class="card">
-        <span class="card-icon">👨‍⚕️</span>
-        <div class="card-title">Espace Medecin</div>
-        <div class="card-desc">Partagez vos donnees de sante avec votre medecin en un clic. Rapports structures et lisibles pour les professionnels.</div>
-        <span class="card-badge">Suivi professionnel</span>
-      </div>
+      <div class="card"><div class="card-icon">🧠</div><h3>IA spécialisée en nutrition</h3><p>Conseils adaptés à vos pathologies, médicaments et allergies. Pas de conseils génériques.</p></div>
+      <div class="card"><div class="card-icon">📅</div><h3>Menus hebdomadaires</h3><p>7 jours de repas complets générés automatiquement selon votre profil et votre budget.</p></div>
+      <div class="card"><div class="card-icon">📸</div><h3>Analyse photo de repas</h3><p>Photographiez votre assiette et obtenez l'analyse nutritionnelle complète en 2 secondes.</p></div>
+      <div class="card"><div class="card-icon">🩸</div><h3>Bilan sanguin IA</h3><p>Uploadez votre prise de sang et obtenez une explication simple avec des conseils nutritionnels.</p></div>
+      <div class="card"><div class="card-icon">👁️</div><h3>Détection visuelle</h3><p>Analysez votre peau, yeux et ongles avec l'IA pour détecter des signes de carences.</p></div>
+      <div class="card"><div class="card-icon">🔮</div><h3>Oracle Santé</h3><p>Prédisez votre futur biologique sur 10 ans grâce à l'épigénétique et l'IA prédictive.</p></div>
     </div>
   </div>
 </section>
 
-<!-- MOCKUP GRIS -->
+<!-- HOW IT WORKS -->
 <section class="grey-section">
   <div class="grey-inner">
     <div>
-      <span class="section-tag">L appli en action</span>
-      <h2 class="grey-title">Votre coach sante <em>dans votre poche</em></h2>
-      <p class="grey-desc">Posez n importe quelle question sur votre sante. Mirella vous repond avec precision, en tenant compte de votre profil complet.</p>
-      <div class="check-list">
-        <div class="check-item"><div class="check-dot">v</div>Chat IA illimite avec memoire de votre profil</div>
-        <div class="check-item"><div class="check-dot">v</div>Protocoles nutritionnels generes en 3 minutes</div>
-        <div class="check-item"><div class="check-dot">v</div>Analyse de vos bilans sanguins</div>
-        <div class="check-item"><div class="check-dot">v</div>Suivi de progression et gamification sante</div>
+      <div class="section-label">Mode d'emploi</div>
+      <h2 class="section-title">Démarrez en 3 minutes</h2>
+      <div class="steps">
+        <div class="step"><div class="step-num">1</div><div><h3>Créez votre profil</h3><p>Renseignez vos pathologies, médicaments, allergies et objectifs en 3 minutes.</p></div></div>
+        <div class="step"><div class="step-num">2</div><div><h3>Posez vos questions</h3><p>Discutez avec Mirella comme avec un nutritionniste disponible 24h/24.</p></div></div>
+        <div class="step"><div class="step-num">3</div><div><h3>Transformez votre santé</h3><p>Suivez vos progrès, vos menus et vos analyses en temps réel.</p></div></div>
       </div>
     </div>
-    <div class="phone-mockup">
-      <div class="ph-top">
-        <div class="ph-av">M</div>
-        <div><div class="ph-name">Mirella</div><div class="ph-status">En ligne</div></div>
-        <div class="ph-dot"></div>
-      </div>
-      <div class="ph-body">
-        <div class="msg-ai">Bonjour ! Je suis Mirella, votre coach sante IA.</div>
-        <div class="msg-user">Quels aliments eviter avec hypertension ?</div>
-        <div class="msg-ai">Voici votre protocole :</div>
-        <div class="proto-card">
-          <div class="proto-title">Hypertension arterielle</div>
-          <div class="proto-item">Favoriser : Bananes, epinards</div>
-          <div class="proto-item">Favoriser : Poissons gras</div>
-          <div class="proto-item">Eviter : Sel, charcuteries</div>
-          <div class="proto-item">Eviter : Cafeine en exces</div>
-        </div>
-      </div>
-    </div>
+    <div></div>
   </div>
 </section>
 
-<!-- CTA FINAL BLEU FONCE -->
+<!-- CTA -->
 <section class="cta-section">
   <div class="cta-inner">
-    <span class="cta-tag">Rejoignez les early birds</span>
-    <h2 class="cta-h2">Seulement <em id="ctaSpots">134</em> places a -50% a vie</h2>
-    <p class="cta-p">Une fois les 500 places ecoulees, l offre disparait definitivement. Ne ratez pas cette opportunite unique.</p>
+    <span class="cta-tag">Offre limitée</span>
+    <h2 class="cta-h2">Prêt à transformer<br><em>votre santé ?</em></h2>
+    <p class="cta-p">Rejoignez 2 400+ patients. Réservez votre place Early Bird et bénéficiez de 50% de réduction à vie.</p>
     <div class="form-wrap">
-      <div class="form-row" id="formRow2">
-        <input type="email" id="email2" placeholder="Votre adresse email">
-        <button onclick="sub('email2','formRow2','msg2')">Reserver ma place</button>
+      <div class="form-row">
+        <input type="email" id="emailCta" placeholder="votre@email.com">
+        <button onclick="subscribe('emailCta','successCta')">Réserver →</button>
       </div>
-      <div class="success-msg" id="msg2">Vous etes sur la liste ! Vous recevrez un email au lancement avec votre offre -50% a vie. 🎉</div>
-      <p class="form-note">100% gratuit - Sans engagement - Desabonnement en 1 clic</p>
+      <div class="form-note">🔒 Sans carte bancaire · Annulable à tout moment</div>
+      <div class="success-msg" id="successCta">✅ Votre place est réservée !</div>
     </div>
   </div>
 </section>
 
-<div class="ticker-wrap"><div class="ticker" id="ticker"></div></div>
-
 <footer>
-  <span class="footer-logo">Mirella</span>
-  <span>2026 Mirella - Tous droits reserves</span>
-  <span>Mirella ne remplace pas un avis medical</span>
+  <span>© 2026 Mirella · Coach nutritionnel IA</span>
+  <span><a href="index.html">Accueil</a> · <a href="legal.html">Mentions légales</a></span>
 </footer>
 
 <script>
-const pc = document.getElementById('particles');
-for (let i = 0; i < 30; i++) {
-  const p = document.createElement('div'); p.className = 'particle';
-  p.style.cssText = 'left:' + (Math.random()*100) + '%;width:' + (1+Math.random()*3) + 'px;height:' + (1+Math.random()*3) + 'px;animation-duration:' + (8+Math.random()*12) + 's;animation-delay:' + (Math.random()*10) + 's;';
-  pc.appendChild(p);
+function subscribe(inputId, successId) {
+  const email = document.getElementById(inputId).value;
+  if (!email || !email.includes('@')) { alert('Veuillez entrer un email valide.'); return; }
+  document.getElementById(successId).style.display = 'block';
+  document.getElementById(inputId).value = '';
 }
-const launch = new Date(); launch.setDate(launch.getDate() + 14);
-function tick() {
-  const d = launch - new Date(); if (d <= 0) return;
-  document.getElementById('days').textContent = String(Math.floor(d/86400000)).padStart(2,'0');
-  document.getElementById('hours').textContent = String(Math.floor((d%86400000)/3600000)).padStart(2,'0');
-  document.getElementById('minutes').textContent = String(Math.floor((d%3600000)/60000)).padStart(2,'0');
-  document.getElementById('seconds').textContent = String(Math.floor((d%60000)/1000)).padStart(2,'0');
+
+function updateCountdown() {
+  const target = new Date('2026-05-31T23:59:59');
+  const now = new Date();
+  const diff = target - now;
+  if (diff <= 0) return;
+  const j = Math.floor(diff / 86400000);
+  const h = Math.floor((diff % 86400000) / 3600000);
+  const m = Math.floor((diff % 3600000) / 60000);
+  const s = Math.floor((diff % 60000) / 1000);
+  document.getElementById('cd-j').textContent = String(j).padStart(2,'0');
+  document.getElementById('cd-h').textContent = String(h).padStart(2,'0');
+  document.getElementById('cd-m').textContent = String(m).padStart(2,'0');
+  document.getElementById('cd-s').textContent = String(s).padStart(2,'0');
 }
-tick(); setInterval(tick, 1000);
-// Calcul du nombre d'inscrits : 112 de base + 1 toutes les 10 minutes depuis le lancement
-const baseCount = 62;
-const TEN_MINUTES = 10 * 60 * 1000;
-const now = Date.now();
-if (!localStorage.getItem('mirella_time')) {
-  localStorage.setItem('mirella_count', baseCount);
-  localStorage.setItem('mirella_time', now);
-}
-const lastCount = parseInt(localStorage.getItem('mirella_count'));
-const lastTime = parseInt(localStorage.getItem('mirella_time'));
-const toAdd = Math.floor((now - lastTime) / TEN_MINUTES);
-let count = lastCount + toAdd;
-if (toAdd > 0) {
-  localStorage.setItem('mirella_count', count);
-  localStorage.setItem('mirella_time', lastTime + toAdd * TEN_MINUTES);
-}
-function upd() {
-  document.getElementById('inscrit').textContent = count;
-  document.getElementById('ctaSpots').textContent = Math.max(0, 500-count);
-  document.getElementById('spotsLeft').textContent = Math.max(0, 500-count);
-  document.getElementById('spotsFill').style.width = Math.min(100, count/500*100) + '%';
-}
-upd();
-setInterval(() => { if (Math.random() > 0.65) { count++; localStorage.setItem('mc', count); upd(); } }, 7000);
-async function sub(eId, fId, mId) {
-  const e = document.getElementById(eId).value.trim();
-  if (!e || !e.includes('@')) { document.getElementById(eId).style.borderColor = '#E24B4A'; setTimeout(() => document.getElementById(eId).style.borderColor = '', 2000); return; }
-  const l = JSON.parse(localStorage.getItem('mw') || '[]');
-  if (!l.includes(e)) { l.push(e); localStorage.setItem('mw', JSON.stringify(l)); }
-  // Sauvegarder en Supabase via backend
-  try {
-    await fetch('https://nutricare-backend-production.up.railway.app/api/preinscription', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email: e, source: 'preinscription' })
-    });
-  } catch(err) { console.log('Erreur sauvegarde:', err); }
-  document.getElementById(fId).style.display = 'none';
-  document.getElementById(mId).style.display = 'block';
-  count++; localStorage.setItem('mc', count); upd();
-}
-document.getElementById('email1').addEventListener('keypress', e => { if (e.key === 'Enter') sub('email1','formRow1','msg1'); });
-document.getElementById('email2').addEventListener('keypress', e => { if (e.key === 'Enter') sub('email2','formRow2','msg2'); });
-const items = ['Lancement imminent','500 places Early Bird','IA Medicale personnalisee','24h/24 Disponible','Menus hebdomadaires IA','100% RGPD','Analyse photo des repas','50+ pathologies couvertes'];
-const doubled = [...items, ...items];
-const ticker = document.getElementById('ticker');
-doubled.forEach(t => { const el = document.createElement('div'); el.className = 'ticker-item'; el.innerHTML = '✦ ' + t; ticker.appendChild(el); });
+updateCountdown();
+setInterval(updateCountdown, 1000);
 </script>
 </body>
 </html>
