@@ -108,9 +108,9 @@ nav.scrolled{background:rgba(255,255,255,.96);backdrop-filter:blur(16px);border-
 .step p{font-size:.84rem;color:#888;line-height:1.6}
 
 /* PLANS */
-.plans-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;max-width:900px}
+.plans-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;max-width:960px;margin:0 auto}
 .plan{border-radius:20px;padding:28px;border:1.5px solid #f0f0f0;background:#fff;display:flex;flex-direction:column}
-.plan.featured{background:linear-gradient(135deg,#FF6B6B,#FF9A3C);border-color:transparent}
+.plan.featured{background:linear-gradient(135deg,#FF6B6B,#FF9A3C);border-color:transparent;transform:scale(1.04);box-shadow:0 20px 60px rgba(255,107,107,.3)}
 .plan-name{font-family:'Open Sans',sans-serif;font-size:1.2rem;font-weight:700;margin-bottom:8px;color:#111}
 .plan.featured .plan-name{color:#fff}
 .plan-price{font-family:'Open Sans',sans-serif;font-size:2.5rem;font-weight:700;color:#FF6B6B;line-height:1;margin-bottom:4px}
@@ -304,11 +304,12 @@ footer a{color:#FF6B6B;text-decoration:none}
 </section>
 
 <!-- PLANS -->
-<section class="section" style="background:#fff">
-  <div class="section-inner">
+<section class="section" style="background:#FFF5F0">
+  <div class="section-inner" style="text-align:center">
     <div class="section-tag">Tarifs Early Bird</div>
-    <h2 class="section-title">50% de réduction à vie</h2>
-    <div class="plans-grid">
+    <h2 class="section-title" style="max-width:500px;margin:0 auto 16px">Bénéficiez de <span style="color:#FF6B6B">50% de réduction</span> à vie</h2>
+    <p style="font-size:.95rem;color:#888;margin-bottom:48px">Sans carte bancaire · Annulable à tout moment · Offre limitée à 100 places</p>
+    <div class="plans-grid" style="margin:0 auto">
       <div class="plan">
         <div class="plan-name">Gratuit</div>
         <div class="plan-price">0€</div>
@@ -347,6 +348,7 @@ footer a{color:#FF6B6B;text-decoration:none}
         </ul>
         <a href="#emailHero" class="plan-btn plan-btn-outline" onclick="document.getElementById('emailHero').focus()">Réserver ce tarif →</a>
       </div>
+    </div>
     </div>
   </div>
 </section>
