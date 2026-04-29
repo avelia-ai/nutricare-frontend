@@ -3,13 +3,12 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Mirella – Préinscription Early Bird</title>
-<link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,400;0,600;0,700;1,400&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<title>Mirella — Préinscription Early Bird</title>
+<link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
-:root{--coral:#FF6B6B;--orange:#FF9A3C;--charcoal:#2D2D2D;--cream:#FFF5F0;--border:rgba(255,107,107,0.15)}
 html{scroll-behavior:smooth}
-body{background:white;color:var(--charcoal);font-family:'DM Sans',sans-serif;overflow-x:hidden}
+body{font-family:'DM Sans',sans-serif;background:#fff;color:#111;overflow-x:hidden}
 
 @keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
 @keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.4;transform:scale(.6)}}
@@ -17,226 +16,306 @@ body{background:white;color:var(--charcoal);font-family:'DM Sans',sans-serif;ove
 @keyframes spin{to{transform:rotate(360deg)}}
 
 /* NAV */
-nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(255,255,255,.97);backdrop-filter:blur(10px);border-bottom:1px solid var(--border);padding:0 48px;display:flex;justify-content:space-between;align-items:center;height:64px}
-.nav-logo{font-family:'Open Sans',serif;font-size:1.3rem;font-weight:700;color:var(--charcoal);text-decoration:none;display:flex;align-items:center;gap:8px}
-.nav-dot{width:8px;height:8px;border-radius:50%;background:var(--coral)}
-.nav-btn{background:linear-gradient(135deg,var(--coral),var(--orange));color:white;padding:10px 24px;border-radius:4px;font-size:.85rem;font-weight:600;text-decoration:none;transition:all .2s}
-.nav-btn:hover{opacity:.9;transform:translateY(-1px)}
+nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:20px 48px;transition:all .3s}
+nav.scrolled{background:rgba(255,255,255,.96);backdrop-filter:blur(16px);border-bottom:1px solid #eee;padding:14px 48px}
+.nav-logo{font-family:'Open Sans',sans-serif;font-size:1.3rem;font-weight:700;color:#111;text-decoration:none;display:flex;align-items:center;gap:8px}
+.nav-dot{width:8px;height:8px;border-radius:50%;background:#FF6B6B}
+.nav-ctas{display:flex;gap:12px;align-items:center}
+.btn-nav-ghost{font-size:.85rem;color:#111;text-decoration:none;padding:9px 22px;border-radius:4px;border:1.5px solid #ddd;transition:all .2s}
+.btn-nav-ghost:hover{border-color:#111}
+.btn-nav-cta{font-size:.85rem;color:#fff;background:linear-gradient(135deg,#FF6B6B,#FF9A3C);text-decoration:none;padding:10px 24px;border-radius:4px;transition:all .2s;font-weight:500}
+.btn-nav-cta:hover{opacity:.9;transform:translateY(-1px)}
 
 /* HERO */
-.hero{background:white;padding:120px 24px 80px;text-align:center;position:relative;overflow:hidden}
-.hero::before{display:none}
-.hero-inner{position:relative;z-index:1;max-width:780px;margin:0 auto}
-.badge{display:inline-flex;align-items:center;gap:8px;background:rgba(255,107,107,.1);border:1px solid rgba(255,107,107,.25);border-radius:100px;padding:8px 20px;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--coral);margin-bottom:32px;animation:fadeUp .8s ease both}
-.badge-dot{width:7px;height:7px;background:var(--coral);border-radius:50%;animation:pulse 1.5s ease-in-out infinite}
-h1{font-family:'Open Sans',serif;font-size:clamp(2.4rem,6vw,4.5rem);line-height:1.05;font-weight:700;color:var(--charcoal);margin-bottom:16px;animation:fadeUp .8s .15s ease both}
-h1 em{font-style:italic;color:var(--coral)}
-.hero-sub{font-size:1.05rem;color:rgba(45,45,45,.55);line-height:1.75;max-width:560px;margin:0 auto 40px;animation:fadeUp .8s .3s ease both}
+.hero{min-height:90vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:140px 48px 100px;position:relative;overflow:hidden;background:#fff}
+.hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 70% 50% at 50% -10%,rgba(255,107,107,.08) 0%,transparent 65%);pointer-events:none}
+.hero-tag{display:inline-flex;align-items:center;gap:8px;background:#f5f5f5;border:1px solid #e8e8e8;padding:6px 16px;border-radius:4px;font-size:.75rem;font-weight:500;color:#555;margin-bottom:32px;animation:fadeUp .8s ease both}
+.hero-tag-dot{width:6px;height:6px;border-radius:50%;background:#FF6B6B;animation:pulse 1.5s ease-in-out infinite}
+.hero h1{font-family:'Open Sans',sans-serif;font-size:clamp(2.8rem,7vw,5.5rem);font-weight:700;line-height:1.05;color:#111;margin-bottom:12px;animation:fadeUp .8s .1s ease both}
+.hero h1 em{font-style:italic;color:#FF6B6B}
+.hero-sub-italic{font-family:'Open Sans',sans-serif;font-size:clamp(1.1rem,2vw,1.5rem);color:#888;font-style:italic;margin-bottom:20px;animation:fadeUp .8s .2s ease both}
+.hero-desc{font-size:1rem;color:#666;max-width:540px;margin:0 auto 48px;line-height:1.75;animation:fadeUp .8s .3s ease both}
 
-/* OFFER BOX */
-.offer-box{background:var(--charcoal);color:white;border-radius:16px;padding:28px 52px;display:inline-block;margin-bottom:28px;animation:fadeUp .8s .4s ease both}
-.offer-tag{font-size:.68rem;letter-spacing:2.5px;text-transform:uppercase;color:var(--coral);margin-bottom:8px}
-.offer-val{font-family:'DM Mono',monospace;font-size:3.5rem;font-weight:500;background:linear-gradient(135deg,var(--coral),var(--orange));-webkit-background-clip:text;-webkit-text-fill-color:transparent;line-height:1}
-.offer-det{font-size:.78rem;color:rgba(255,255,255,.4);margin-top:8px}
+/* OFFER STRIP */
+.offer-strip{background:#111;border-radius:16px;padding:24px 48px;display:inline-flex;align-items:center;gap:40px;margin-bottom:32px;animation:fadeUp .8s .35s ease both;flex-wrap:wrap;justify-content:center}
+.offer-item{text-align:center}
+.offer-label{font-size:.65rem;font-weight:600;text-transform:uppercase;letter-spacing:.12em;color:#888;margin-bottom:4px}
+.offer-value{font-family:'Open Sans',sans-serif;font-size:2rem;font-weight:700;color:#FF6B6B;line-height:1}
+.offer-value.white{color:#fff}
+.offer-sep{width:1px;height:40px;background:rgba(255,255,255,.1)}
 
 /* SPOTS */
-.spots{margin-bottom:24px;animation:fadeUp .8s .48s ease both}
-.spots-txt{font-size:.8rem;color:rgba(45,45,45,.55);margin-bottom:8px}
-.spots-txt strong{color:var(--coral);font-weight:600}
-.spots-bar{width:280px;height:5px;background:rgba(255,107,107,.15);border-radius:3px;margin:0 auto;overflow:hidden}
-.spots-fill{height:100%;width:73%;background:linear-gradient(135deg,var(--coral),var(--orange));border-radius:3px}
+.spots{margin-bottom:24px;animation:fadeUp .8s .4s ease both}
+.spots-txt{font-size:.82rem;color:#888;margin-bottom:8px}
+.spots-txt strong{color:#FF6B6B}
+.spots-bar{width:320px;height:4px;background:#f0f0f0;border-radius:2px;margin:0 auto;overflow:hidden}
+.spots-fill{height:100%;width:73%;background:linear-gradient(135deg,#FF6B6B,#FF9A3C);border-radius:2px}
 
 /* COUNTDOWN */
-.countdown{display:flex;gap:16px;justify-content:center;align-items:center;margin-bottom:40px;animation:fadeUp .8s .52s ease both}
-.cd-block{background:var(--charcoal);color:white;border-radius:10px;padding:14px 20px;text-align:center;min-width:76px}
-.cd-num{font-family:'DM Mono',monospace;font-size:clamp(2rem,5vw,3rem);font-weight:500;color:white;line-height:1;display:block}
-.cd-lbl{font-size:10px;letter-spacing:.15em;text-transform:uppercase;color:rgba(255,255,255,.4);margin-top:4px;display:block}
-.cd-sep{font-size:2rem;color:var(--coral);margin-bottom:14px;animation:blink 1s step-end infinite}
+.countdown{display:flex;gap:12px;justify-content:center;align-items:center;margin-bottom:40px;animation:fadeUp .8s .45s ease both}
+.cd-block{background:#111;color:white;border-radius:8px;padding:12px 18px;text-align:center;min-width:70px}
+.cd-num{font-family:'Open Sans',sans-serif;font-size:2rem;font-weight:700;color:#fff;line-height:1;display:block}
+.cd-lbl{font-size:9px;letter-spacing:.15em;text-transform:uppercase;color:rgba(255,255,255,.4);margin-top:4px;display:block}
+.cd-sep{font-size:1.5rem;color:#FF6B6B;margin-bottom:10px;animation:blink 1s step-end infinite}
 
 /* FORM */
-.form-wrap{max-width:500px;margin:0 auto 14px;animation:fadeUp .8s .58s ease both}
-.form-row{display:flex;border-radius:4px;overflow:hidden;box-shadow:0 4px 20px rgba(255,107,107,.12)}
-.form-row input{flex:1;background:white;border:1.5px solid var(--border);border-right:none;color:var(--charcoal);padding:16px 20px;font-size:.95rem;font-family:'DM Sans',sans-serif;outline:none}
-.form-row input::placeholder{color:rgba(45,45,45,.35)}
-.form-row input:focus{border-color:var(--coral)}
-.form-row button{background:linear-gradient(135deg,var(--coral),var(--orange));color:white;border:none;padding:16px 24px;font-size:.88rem;font-weight:600;font-family:'DM Sans',sans-serif;cursor:pointer;white-space:nowrap;transition:all .2s}
+.form-wrap{max-width:480px;margin:0 auto 16px;animation:fadeUp .8s .5s ease both}
+.form-row{display:flex;border-radius:4px;overflow:hidden;box-shadow:0 4px 24px rgba(255,107,107,.12)}
+.form-row input{flex:1;background:#fff;border:1.5px solid #eee;border-right:none;color:#111;padding:15px 20px;font-size:.95rem;font-family:'DM Sans',sans-serif;outline:none;transition:border .2s}
+.form-row input:focus{border-color:#FF6B6B}
+.form-row input::placeholder{color:#bbb}
+.form-row button{background:linear-gradient(135deg,#FF6B6B,#FF9A3C);color:#fff;border:none;padding:15px 22px;font-size:.88rem;font-weight:600;font-family:'DM Sans',sans-serif;cursor:pointer;white-space:nowrap;transition:opacity .2s}
 .form-row button:hover{opacity:.9}
-.form-note{font-size:.72rem;color:rgba(45,45,45,.35);text-align:center;margin-top:10px}
-.success-msg{display:none;background:#EFF7F1;border:1px solid #9DC4A3;border-radius:8px;padding:14px;color:#3B6D11;font-size:.88rem;text-align:center;margin-top:12px}
+.form-note{font-size:.72rem;color:#bbb;text-align:center;margin-top:10px}
+.success-msg{display:none;background:#EFF7F1;border:1px solid #9DC4A3;border-radius:6px;padding:12px;color:#3B6D11;font-size:.88rem;text-align:center;margin-top:12px}
 
-/* SOCIAL PROOF */
-.social{display:flex;align-items:center;gap:12px;justify-content:center;margin-top:24px;animation:fadeUp .8s .64s ease both}
+/* SOCIAL */
+.social{display:flex;align-items:center;gap:12px;justify-content:center;margin-top:20px;animation:fadeUp .8s .55s ease both}
 .avs{display:flex}
-.av{width:32px;height:32px;border-radius:50%;border:2px solid white;display:flex;align-items:center;justify-content:center;font-size:.62rem;font-weight:700;margin-left:-8px;color:white;background:linear-gradient(135deg,var(--coral),var(--orange))}
+.av{width:30px;height:30px;border-radius:50%;border:2px solid #fff;display:flex;align-items:center;justify-content:center;font-size:.6rem;font-weight:700;margin-left:-8px;color:#fff;background:linear-gradient(135deg,#FF6B6B,#FF9A3C)}
 .av:first-child{margin-left:0}
-.soc-txt{font-size:.82rem;color:rgba(45,45,45,.5)}
-.soc-txt strong{color:var(--charcoal)}
+.soc-txt{font-size:.82rem;color:#888}
+.soc-txt strong{color:#111}
 
 /* STATS */
-.stats-section{background:var(--charcoal);padding:72px 48px}
+.stats-section{background:#111;padding:64px 48px}
 .stats-inner{max-width:1100px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:24px;text-align:center}
-.stat-n{font-family:'DM Mono',monospace;font-size:2.8rem;font-weight:500;background:linear-gradient(135deg,var(--coral),var(--orange));-webkit-background-clip:text;-webkit-text-fill-color:transparent;line-height:1;margin-bottom:8px}
-.stat-l{font-size:.82rem;color:rgba(255,255,255,.55);line-height:1.5}
+.stat-n{font-family:'Open Sans',sans-serif;font-size:3rem;font-weight:700;color:#fff;line-height:1;margin-bottom:8px}
+.stat-n span{color:#FF6B6B}
+.stat-l{font-size:.82rem;color:rgba(255,255,255,.45);line-height:1.5}
+
+/* SECTION COMMUNE */
+.section{padding:80px 48px}
+.section-inner{max-width:1100px;margin:0 auto}
+.section-tag{font-size:.72rem;font-weight:600;text-transform:uppercase;letter-spacing:.12em;color:#FF6B6B;margin-bottom:12px}
+.section-title{font-family:'Open Sans',sans-serif;font-size:clamp(1.8rem,3vw,2.6rem);font-weight:700;color:#111;margin-bottom:48px;line-height:1.2}
 
 /* CARDS */
-.cards-section{padding:80px 24px;background:var(--cream)}
-.cards-inner{max-width:1100px;margin:0 auto}
-.section-label{font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:var(--coral);margin-bottom:12px}
-.section-title{font-family:'Open Sans',serif;font-size:clamp(1.6rem,3vw,2.4rem);font-weight:700;color:var(--charcoal);margin-bottom:48px}
-.cards-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:20px}
-.card{background:white;border-radius:16px;padding:28px;border:1px solid var(--border);transition:all .25s}
-.card:hover{transform:translateY(-4px);box-shadow:0 12px 40px rgba(255,107,107,.12);border-color:rgba(255,107,107,.3)}
-.card-icon{width:44px;height:44px;background:rgba(255,107,107,.08);border-radius:10px;display:flex;align-items:center;justify-content:center;margin-bottom:16px;font-size:1.2rem}
-.card h3{font-family:'Open Sans',serif;font-size:1rem;font-weight:700;color:var(--charcoal);margin-bottom:8px}
-.card p{font-size:.88rem;color:rgba(45,45,45,.6);line-height:1.65}
+.cards-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px}
+.card{background:#fff;border-radius:12px;padding:24px;border:1px solid #f0f0f0;transition:all .25s}
+.card:hover{transform:translateY(-3px);box-shadow:0 12px 40px rgba(255,107,107,.1);border-color:rgba(255,107,107,.2)}
+.card-icon{width:40px;height:40px;background:#fff5f0;border-radius:8px;display:flex;align-items:center;justify-content:center;margin-bottom:14px;font-size:1.1rem}
+.card h3{font-family:'Open Sans',sans-serif;font-size:.95rem;font-weight:700;color:#111;margin-bottom:6px}
+.card p{font-size:.84rem;color:#888;line-height:1.6}
 
-/* GREY SECTION */
-.grey-section{padding:80px 24px;background:white}
-.grey-inner{max-width:1100px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:center}
-.grey-inner img{width:100%;border-radius:16px}
-.steps{display:flex;flex-direction:column;gap:24px;margin-top:32px}
-.step{display:grid;grid-template-columns:40px 1fr;gap:16px;align-items:start}
-.step-num{width:40px;height:40px;background:linear-gradient(135deg,var(--coral),var(--orange));color:white;font-size:.9rem;font-weight:700;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0}
-.step h3{font-size:.95rem;font-weight:700;color:var(--charcoal);margin-bottom:4px}
-.step p{font-size:.85rem;color:rgba(45,45,45,.6);line-height:1.6}
+/* HOW */
+.how-section{background:#fff5f0;padding:80px 48px}
+.steps{display:flex;flex-direction:column;gap:20px;margin-top:32px;max-width:600px}
+.step{display:grid;grid-template-columns:44px 1fr;gap:16px;align-items:start}
+.step-num{width:44px;height:44px;background:linear-gradient(135deg,#FF6B6B,#FF9A3C);color:#fff;font-size:.9rem;font-weight:700;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.step h3{font-family:'Open Sans',sans-serif;font-size:.95rem;font-weight:700;color:#111;margin-bottom:4px}
+.step p{font-size:.84rem;color:#888;line-height:1.6}
 
-/* CTA SECTION */
-.cta-section{background:var(--charcoal);padding:100px 24px;text-align:center}
+/* PLANS */
+.plans-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;max-width:900px}
+.plan{border-radius:20px;padding:28px;border:1.5px solid #f0f0f0;background:#fff;display:flex;flex-direction:column}
+.plan.featured{background:linear-gradient(135deg,#FF6B6B,#FF9A3C);border-color:transparent}
+.plan-name{font-family:'Open Sans',sans-serif;font-size:1.2rem;font-weight:700;margin-bottom:8px;color:#111}
+.plan.featured .plan-name{color:#fff}
+.plan-price{font-family:'Open Sans',sans-serif;font-size:2.5rem;font-weight:700;color:#FF6B6B;line-height:1;margin-bottom:4px}
+.plan.featured .plan-price{color:#fff}
+.plan-period{font-size:.78rem;color:#bbb;margin-bottom:20px}
+.plan.featured .plan-period{color:rgba(255,255,255,.6)}
+.plan-features{list-style:none;display:flex;flex-direction:column;gap:8px;flex:1;margin-bottom:20px}
+.plan-features li{font-size:.84rem;color:#555;display:flex;align-items:center;gap:8px}
+.plan.featured .plan-features li{color:rgba(255,255,255,.9)}
+.plan-features li::before{content:'✓';color:#FF6B6B;font-weight:700;flex-shrink:0}
+.plan.featured .plan-features li::before{color:#fff}
+.plan-btn{display:block;text-align:center;padding:12px;border-radius:10px;font-size:.88rem;font-weight:600;border:none;cursor:pointer;transition:all .2s;font-family:'DM Sans',sans-serif;text-decoration:none}
+.plan-btn-outline{background:#fff;color:#FF6B6B;border:1.5px solid rgba(255,107,107,.3)}
+.plan-btn-outline:hover{border-color:#FF6B6B}
+.plan-btn-white{background:#fff;color:#FF6B6B}
+.plan-btn-white:hover{opacity:.9}
+
+/* CTA */
+.cta-section{background:#111;padding:100px 48px;text-align:center}
 .cta-inner{max-width:580px;margin:0 auto}
-.cta-tag{font-size:.7rem;letter-spacing:2px;text-transform:uppercase;color:var(--coral);display:block;margin-bottom:16px}
-.cta-h2{font-family:'Open Sans',serif;font-size:clamp(2rem,4vw,3rem);color:white;margin-bottom:16px;font-weight:700}
-.cta-h2 em{font-style:italic;color:var(--coral)}
-.cta-p{color:rgba(255,255,255,.5);font-size:.95rem;margin-bottom:40px;line-height:1.7}
-.cta-section .form-row input{background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.2);color:white}
+.cta-tag{font-size:.7rem;letter-spacing:2px;text-transform:uppercase;color:#FF6B6B;display:block;margin-bottom:16px}
+.cta-h2{font-family:'Open Sans',sans-serif;font-size:clamp(2rem,4vw,3rem);color:#fff;margin-bottom:16px;font-weight:700;line-height:1.15}
+.cta-h2 em{font-style:italic;color:#FF6B6B}
+.cta-p{color:rgba(255,255,255,.45);font-size:.95rem;margin-bottom:40px;line-height:1.7}
+.cta-section .form-row input{background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.15);color:#fff}
 .cta-section .form-row input::placeholder{color:rgba(255,255,255,.3)}
-.cta-section .form-row input:focus{border-color:var(--coral)}
+.cta-section .form-row input:focus{border-color:#FF6B6B}
 .cta-section .form-note{color:rgba(255,255,255,.25)}
 
 /* FOOTER */
-footer{background:white;border-top:1px solid var(--border);padding:28px 48px;display:flex;justify-content:space-between;align-items:center;font-size:.75rem;color:rgba(45,45,45,.4);flex-wrap:wrap;gap:12px}
-footer a{color:var(--coral);text-decoration:none}
+footer{background:#fff;border-top:1px solid #f0f0f0;padding:28px 48px;display:flex;justify-content:space-between;align-items:center;font-size:.75rem;color:#bbb;flex-wrap:wrap;gap:12px}
+footer a{color:#FF6B6B;text-decoration:none}
 
 @media(max-width:768px){
   nav{padding:0 20px}
+  nav.scrolled{padding:0 20px}
   .hero{padding:100px 20px 60px}
-  .offer-box{padding:20px 28px}
+  .offer-strip{padding:20px;gap:20px}
+  .plans-grid{grid-template-columns:1fr}
+  .section{padding:60px 20px}
+  .how-section{padding:60px 20px}
   .stats-section{padding:48px 24px}
-  .grey-inner{grid-template-columns:1fr}
-  .grey-inner img{display:none}
+  .cta-section{padding:72px 24px}
   footer{flex-direction:column;text-align:center}
 }
 </style>
 </head>
 <body>
 
-<nav>
+<nav id="nav">
   <a class="nav-logo" href="index.html"><span class="nav-dot"></span> Mirella</a>
-  <a class="nav-btn" href="app.html">Commencer →</a>
+  <div class="nav-ctas">
+    <a href="index.html" class="btn-nav-ghost">Retour</a>
+    <a href="app.html" class="btn-nav-cta">Commencer →</a>
+  </div>
 </nav>
 
 <!-- HERO -->
 <section class="hero">
-  <div class="hero-inner"><div style="background:linear-gradient(135deg,#FF6B6B,#FF9A3C);border-radius:24px;padding:64px 80px 56px;margin-bottom:40px;display:inline-block;width:100%;max-width:1000px">
-    <div class="badge"><span class="badge-dot"></span> Early Bird · Offre limitée</div>
-    <h1>Mirella arrive.</h1><p style="font-family:'Open Sans',serif;font-size:clamp(1.2rem,2.5vw,1.8rem);color:rgba(45,45,45,.55);margin-bottom:24px;font-style:italic">Votre santé mérite mieux que Google.</p>
-    <p class="hero-sub">Mirella est le premier coach nutritionnel IA adapté à vos pathologies. Préinscrivez-vous maintenant et bénéficiez de 50% de réduction à vie.</p>
+  <div class="hero-tag"><span class="hero-tag-dot"></span> Early Bird · Offre limitée</div>
+  <h1>Mirella <em>arrive.</em></h1>
+  <p class="hero-sub-italic">Votre santé mérite mieux que Google.</p>
+  <p class="hero-desc">Mirella est le premier coach nutritionnel IA adapté à vos pathologies. Préinscrivez-vous maintenant et bénéficiez de <strong>50% de réduction à vie.</strong></p>
 
-    <div class="offer-box">
-      <div class="offer-tag">Offre Early Bird</div>
-      <div class="offer-val">-50%</div>
-      <div class="offer-det">à vie · sans engagement · annulable à tout moment</div>
-    </div>
+  <div class="offer-strip">
+    <div class="offer-item"><div class="offer-label">Réduction Early Bird</div><div class="offer-value">-50%</div></div>
+    <div class="offer-sep"></div>
+    <div class="offer-item"><div class="offer-label">Places restantes</div><div class="offer-value white">27</div></div>
+    <div class="offer-sep"></div>
+    <div class="offer-item"><div class="offer-label">Sans engagement</div><div class="offer-value white" style="font-size:1.2rem;padding-top:6px">À vie</div></div>
+  </div>
 
-    <div class="spots">
-      <div class="spots-txt"><strong>73 places</strong> sur 100 déjà réservées</div>
-      <div class="spots-bar"><div class="spots-fill"></div></div>
-    </div>
+  <div class="spots">
+    <div class="spots-txt"><strong>73 places</strong> sur 100 déjà réservées</div>
+    <div class="spots-bar"><div class="spots-fill"></div></div>
+  </div>
 
-    <div class="countdown" id="countdown">
-      <div class="cd-block"><span class="cd-num" id="cd-j">--</span><span class="cd-lbl">Jours</span></div>
-      <span class="cd-sep">:</span>
-      <div class="cd-block"><span class="cd-num" id="cd-h">--</span><span class="cd-lbl">Heures</span></div>
-      <span class="cd-sep">:</span>
-      <div class="cd-block"><span class="cd-num" id="cd-m">--</span><span class="cd-lbl">Min</span></div>
-      <span class="cd-sep">:</span>
-      <div class="cd-block"><span class="cd-num" id="cd-s">--</span><span class="cd-lbl">Sec</span></div>
-    </div>
+  <div class="countdown" id="countdown">
+    <div class="cd-block"><span class="cd-num" id="cd-j">--</span><span class="cd-lbl">Jours</span></div>
+    <span class="cd-sep">:</span>
+    <div class="cd-block"><span class="cd-num" id="cd-h">--</span><span class="cd-lbl">Heures</span></div>
+    <span class="cd-sep">:</span>
+    <div class="cd-block"><span class="cd-num" id="cd-m">--</span><span class="cd-lbl">Min</span></div>
+    <span class="cd-sep">:</span>
+    <div class="cd-block"><span class="cd-num" id="cd-s">--</span><span class="cd-lbl">Sec</span></div>
+  </div>
 
-    <div class="form-wrap">
-      <div class="form-row">
-        <input type="email" id="emailHero" placeholder="votre@email.com">
-        <button onclick="subscribe('emailHero','successHero')">Réserver ma place →</button>
-      </div>
-      <div class="form-note">🔒 Sans carte bancaire · Annulable à tout moment</div>
-      <div class="success-msg" id="successHero">✅ Votre place est réservée ! Vous recevrez un email de confirmation.</div>
+  <div class="form-wrap">
+    <div class="form-row">
+      <input type="email" id="emailHero" placeholder="votre@email.com">
+      <button onclick="subscribe('emailHero','successHero')">Réserver ma place →</button>
     </div>
+    <div class="form-note">🔒 Sans carte bancaire · Annulable à tout moment</div>
+    <div class="success-msg" id="successHero">✅ Votre place est réservée ! Vous recevrez un email de confirmation.</div>
+  </div>
 
-    <div class="social">
-      <div class="avs">
-        <div class="av">MR</div><div class="av">SL</div><div class="av">JP</div><div class="av">AC</div>
-      </div>
-      <div class="soc-txt"><strong>2 400+ patients</strong> nous font déjà confiance</div>
+  <div class="social">
+    <div class="avs">
+      <div class="av">MR</div><div class="av">SL</div><div class="av">JP</div><div class="av">AC</div>
     </div>
+    <div class="soc-txt"><strong>2 400+ patients</strong> nous font déjà confiance</div>
   </div>
 </section>
 
 <!-- STATS -->
 <section class="stats-section">
   <div class="stats-inner">
-    <div><div class="stat-n">2 400+</div><div class="stat-l">Patients actifs</div></div>
-    <div><div class="stat-n">50+</div><div class="stat-l">Pathologies gérées</div></div>
-    <div><div class="stat-n">4.9/5</div><div class="stat-l">Note moyenne</div></div>
-    <div><div class="stat-n">24h/24</div><div class="stat-l">Disponible</div></div>
+    <div><div class="stat-n">2 <span>400+</span></div><div class="stat-l">Patients actifs</div></div>
+    <div><div class="stat-n"><span>50+</span></div><div class="stat-l">Pathologies gérées</div></div>
+    <div><div class="stat-n">4.<span>9</span>/5</div><div class="stat-l">Note moyenne</div></div>
+    <div><div class="stat-n"><span>24h</span>/24</div><div class="stat-l">Disponible</div></div>
   </div>
 </section>
 
-<!-- CARDS -->
-<section class="cards-section">
-  <div class="cards-inner">
-    <div class="section-label">Pourquoi Mirella</div>
+<!-- FONCTIONNALITÉS -->
+<section class="section" style="background:#fff">
+  <div class="section-inner">
+    <div class="section-tag">Plateforme complète</div>
     <h2 class="section-title">Tout ce dont vous avez besoin</h2>
     <div class="cards-grid">
-        <div class="card"><div class="card-icon">💬</div><h3>Chat IA Nutritionnel</h3><p>Coach nutritionnel disponible 24h/24, adapté à vos pathologies et médicaments.</p></div>
-        <div class="card"><div class="card-icon">🦠</div><h3>50+ Pathologies</h3><p>Protocoles nutritionnels spécialisés pour diabète, hypertension, SOPK et bien plus.</p></div>
-        <div class="card"><div class="card-icon">📅</div><h3>Menus hebdomadaires IA</h3><p>7 jours de repas complets générés selon votre profil, budget et préférences.</p></div>
-        <div class="card"><div class="card-icon">📊</div><h3>Dashboard Santé</h3><p>Suivez votre glycémie, poids, sommeil et énergie avec des graphiques sur 30 jours.</p></div>
-        <div class="card"><div class="card-icon">👨‍⚕️</div><h3>Espace médecin</h3><p>Partagez vos données nutritionnelles avec votre médecin en un clic.</p></div>
-        <div class="card"><div class="card-icon">📸</div><h3>Analyse photo repas</h3><p>Photographiez votre assiette et obtenez l'analyse nutritionnelle complète en 2 secondes.</p></div>
-        <div class="card"><div class="card-icon">👁️</div><h3>Détection visuelle IA</h3><p>Analysez votre peau, yeux et ongles pour détecter des signes de carences.</p></div>
-        <div class="card"><div class="card-icon">🥗</div><h3>Protocoles nutritionnels</h3><p>Plus de 50 protocoles adaptés à chaque pathologie, mis à jour scientifiquement.</p></div>
-        <div class="card"><div class="card-icon">🌙</div><h3>Chrono-nutrition IA</h3><p>Optimisez vos horaires de repas selon votre rythme circadien et vos objectifs.</p></div>
-        <div class="card"><div class="card-icon">🔮</div><h3>Oracle Santé</h3><p>Prédisez votre futur biologique sur 10 ans grâce à l'épigénétique et l'IA prédictive.</p></div>
-        <div class="card"><div class="card-icon">🩸</div><h3>Bilan sanguin IA</h3><p>Uploadez votre prise de sang et obtenez une explication simple avec conseils nutritionnels.</p></div>
-        <div class="card"><div class="card-icon">💊</div><h3>Scan ordonnance</h3><p>Photographiez votre ordonnance pour extraire automatiquement vos médicaments.</p></div>
-        <div class="card"><div class="card-icon">🎯</div><h3>Simulateur décisions</h3><p>Simulez l'impact de vos choix alimentaires sur votre santé à court et long terme.</p></div>
-        <div class="card"><div class="card-icon">📄</div><h3>Passeport Santé</h3><p>Générez un document PDF complet de votre profil nutritionnel à partager.</p></div>
-        <div class="card"><div class="card-icon">🏢</div><h3>Dashboard RH</h3><p>Solution entreprise pour gérer le bien-être nutritionnel de vos équipes.</p></div>
-      </div>
+      <div class="card"><div class="card-icon">💬</div><h3>Chat IA Nutritionnel</h3><p>Coach disponible 24h/24, adapté à vos pathologies et médicaments.</p></div>
+      <div class="card"><div class="card-icon">🦠</div><h3>50+ Pathologies</h3><p>Protocoles spécialisés pour diabète, hypertension, SOPK et bien plus.</p></div>
+      <div class="card"><div class="card-icon">📅</div><h3>Menus hebdomadaires IA</h3><p>7 jours de repas complets générés selon votre profil et budget.</p></div>
+      <div class="card"><div class="card-icon">📊</div><h3>Dashboard Santé</h3><p>Glycémie, poids, sommeil, énergie — suivi continu sur 30 jours.</p></div>
+      <div class="card"><div class="card-icon">👨‍⚕️</div><h3>Espace médecin</h3><p>Partagez vos données nutritionnelles avec votre médecin en un clic.</p></div>
+      <div class="card"><div class="card-icon">📸</div><h3>Analyse photo repas</h3><p>Photographiez votre assiette, obtenez l'analyse nutritionnelle en 2s.</p></div>
+      <div class="card"><div class="card-icon">👁️</div><h3>Détection visuelle IA</h3><p>Analysez peau, yeux et ongles pour détecter des signes de carences.</p></div>
+      <div class="card"><div class="card-icon">🥗</div><h3>Protocoles nutritionnels</h3><p>50+ protocoles validés scientifiquement pour chaque pathologie.</p></div>
+      <div class="card"><div class="card-icon">🌙</div><h3>Chrono-nutrition IA</h3><p>Optimisez vos horaires de repas selon votre rythme circadien.</p></div>
+      <div class="card"><div class="card-icon">🔮</div><h3>Oracle Santé</h3><p>Prédisez votre futur biologique sur 10 ans avec l'IA prédictive.</p></div>
+      <div class="card"><div class="card-icon">🩸</div><h3>Bilan sanguin IA</h3><p>Uploadez votre prise de sang — résultats expliqués simplement.</p></div>
+      <div class="card"><div class="card-icon">💊</div><h3>Scan ordonnance</h3><p>Photographiez votre ordonnance pour extraire vos médicaments.</p></div>
+      <div class="card"><div class="card-icon">🎯</div><h3>Simulateur décisions</h3><p>Simulez l'impact de vos choix alimentaires sur votre santé.</p></div>
+      <div class="card"><div class="card-icon">📄</div><h3>Passeport Santé</h3><p>Générez un PDF complet de votre profil nutritionnel à partager.</p></div>
+      <div class="card"><div class="card-icon">🏢</div><h3>Dashboard RH</h3><p>Solution entreprise pour le bien-être nutritionnel de vos équipes.</p></div>
+    </div>
   </div>
 </section>
 
-<!-- HOW IT WORKS -->
-<section class="grey-section">
-  <div class="grey-inner">
-    <div>
-      <div class="section-label">Mode d'emploi</div>
-      <h2 class="section-title">Démarrez en 3 minutes</h2>
-      <div class="steps">
-        <div class="step"><div class="step-num">1</div><div><h3>Créez votre profil</h3><p>Renseignez vos pathologies, médicaments, allergies et objectifs en 3 minutes.</p></div></div>
-        <div class="step"><div class="step-num">2</div><div><h3>Posez vos questions</h3><p>Discutez avec Mirella comme avec un nutritionniste disponible 24h/24.</p></div></div>
-        <div class="step"><div class="step-num">3</div><div><h3>Transformez votre santé</h3><p>Suivez vos progrès, vos menus et vos analyses en temps réel.</p></div></div>
+<!-- COMMENT ÇA MARCHE -->
+<section class="how-section">
+  <div class="section-inner">
+    <div class="section-tag">Mode d'emploi</div>
+    <h2 class="section-title">Démarrez en 3 minutes</h2>
+    <div class="steps">
+      <div class="step"><div class="step-num">1</div><div><h3>Créez votre profil</h3><p>Renseignez vos pathologies, médicaments, allergies et objectifs en 3 minutes.</p></div></div>
+      <div class="step"><div class="step-num">2</div><div><h3>Discutez avec Mirella</h3><p>Posez vos questions nutritionnelles, obtenez des réponses personnalisées en 2 secondes.</p></div></div>
+      <div class="step"><div class="step-num">3</div><div><h3>Transformez votre santé</h3><p>Suivez vos progrès, vos menus et vos analyses en temps réel.</p></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- PLANS -->
+<section class="section" style="background:#fff">
+  <div class="section-inner">
+    <div class="section-tag">Tarifs Early Bird</div>
+    <h2 class="section-title">50% de réduction à vie</h2>
+    <div class="plans-grid">
+      <div class="plan">
+        <div class="plan-name">Gratuit</div>
+        <div class="plan-price">0€</div>
+        <div class="plan-period">pour toujours</div>
+        <ul class="plan-features">
+          <li>Chat IA nutritionnel</li>
+          <li>50+ pathologies</li>
+          <li>Profil de base</li>
+        </ul>
+        <a href="app.html" class="plan-btn plan-btn-outline">Commencer gratuitement</a>
+      </div>
+      <div class="plan featured">
+        <div class="plan-name">Standard Early Bird</div>
+        <div class="plan-price">4,99€</div>
+        <div class="plan-period">/ mois · au lieu de 9,99€ · à vie</div>
+        <ul class="plan-features">
+          <li>Tout le plan Gratuit</li>
+          <li>Menus hebdomadaires IA</li>
+          <li>Dashboard Santé</li>
+          <li>Espace médecin</li>
+          <li>Analyse photo repas</li>
+        </ul>
+        <a href="#emailHero" class="plan-btn plan-btn-white" onclick="document.getElementById('emailHero').focus()">Réserver ce tarif →</a>
+      </div>
+      <div class="plan">
+        <div class="plan-name">Premium Early Bird</div>
+        <div class="plan-price" style="color:#FF6B6B">9,99€</div>
+        <div class="plan-period">/ mois · au lieu de 19,99€ · à vie</div>
+        <ul class="plan-features">
+          <li>Tout le plan Standard</li>
+          <li>Oracle Santé</li>
+          <li>Bilan sanguin IA</li>
+          <li>Scan ordonnance</li>
+          <li>Simulateur décisions</li>
+          <li>Passeport Santé PDF</li>
+        </ul>
+        <a href="#emailHero" class="plan-btn plan-btn-outline" onclick="document.getElementById('emailHero').focus()">Réserver ce tarif →</a>
       </div>
     </div>
-    <div></div>
   </div>
 </section>
 
-<!-- CTA -->
+<!-- CTA FINAL -->
 <section class="cta-section">
   <div class="cta-inner">
-    <span class="cta-tag">Offre limitée</span>
+    <span class="cta-tag">Offre limitée · 27 places restantes</span>
     <h2 class="cta-h2">Prêt à transformer<br><em>votre santé ?</em></h2>
-    <p class="cta-p">Rejoignez 2 400+ patients. Réservez votre place Early Bird et bénéficiez de 50% de réduction à vie.</p>
+    <p class="cta-p">Rejoignez 2 400+ patients. Réservez votre place Early Bird et bénéficiez de 50% de réduction à vie — sans carte bancaire.</p>
     <div class="form-wrap">
       <div class="form-row">
         <input type="email" id="emailCta" placeholder="votre@email.com">
@@ -254,6 +333,10 @@ footer a{color:var(--coral);text-decoration:none}
 </footer>
 
 <script>
+window.addEventListener('scroll', () => {
+  document.getElementById('nav').classList.toggle('scrolled', window.scrollY > 20);
+});
+
 function subscribe(inputId, successId) {
   const email = document.getElementById(inputId).value;
   if (!email || !email.includes('@')) { alert('Veuillez entrer un email valide.'); return; }
