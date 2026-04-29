@@ -29,6 +29,7 @@ nav.scrolled{background:rgba(255,255,255,.96);backdrop-filter:blur(16px);border-
 /* HERO */
 .hero{min-height:90vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:80px 48px 40px;position:relative;overflow:hidden;background:#fff}
 .hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 70% 50% at 50% -10%,rgba(255,107,107,.08) 0%,transparent 65%);pointer-events:none}
+.hero-inner{width:100%;max-width:900px;margin:0 auto}
 .hero-tag{display:inline-flex;align-items:center;gap:8px;background:#f5f5f5;border:1px solid #e8e8e8;padding:6px 16px;border-radius:4px;font-size:.75rem;font-weight:500;color:#555;margin-bottom:32px;animation:fadeUp .8s ease both}
 .hero-tag-dot{width:6px;height:6px;border-radius:50%;background:#FF6B6B;animation:pulse 1.5s ease-in-out infinite}
 .hero h1{font-family:'Open Sans',sans-serif;font-size:clamp(2.8rem,7vw,5.5rem);font-weight:700;line-height:1.05;color:#111;margin-bottom:12px;animation:fadeUp .8s .1s ease both}
@@ -37,7 +38,7 @@ nav.scrolled{background:rgba(255,255,255,.96);backdrop-filter:blur(16px);border-
 .hero-desc{font-size:1rem;color:#666;max-width:540px;margin:0 auto 48px;line-height:1.75;animation:fadeUp .8s .3s ease both}
 
 /* OFFER STRIP */
-.offer-strip{background:linear-gradient(135deg,#FF6B6B,#FF9A3C);border-radius:20px;padding:48px 80px;display:flex;align-items:center;gap:60px;margin:0 auto 40px;animation:fadeUp .8s .35s ease both;flex-wrap:wrap;justify-content:center;width:100%;max-width:900px}
+.offer-strip{background:linear-gradient(135deg,#FF6B6B,#FF9A3C);border-radius:20px;padding:48px 80px;display:flex;align-items:center;gap:60px;margin:0 0 40px;animation:fadeUp .8s .35s ease both;flex-wrap:wrap;justify-content:center;width:100%}
 .offer-item{text-align:center}
 .offer-label{font-size:.75rem;font-weight:600;text-transform:uppercase;letter-spacing:.12em;color:rgba(255,255,255,.7);margin-bottom:8px}
 .offer-value{font-family:'Open Sans',sans-serif;font-size:3.5rem;font-weight:700;color:white;line-height:1}
@@ -48,7 +49,7 @@ nav.scrolled{background:rgba(255,255,255,.96);backdrop-filter:blur(16px);border-
 .spots{margin-bottom:24px;animation:fadeUp .8s .4s ease both}
 .spots-txt{font-size:1rem;color:#888;margin-bottom:10px}
 .spots-txt strong{color:#FF6B6B}
-.spots-bar{width:600px;height:6px;background:#f0f0f0;border-radius:3px;margin:0 auto;overflow:hidden}
+.spots-bar{width:100%;height:6px;background:#f0f0f0;border-radius:3px;margin:0 auto;overflow:hidden}
 .spots-fill{height:100%;width:73%;background:linear-gradient(135deg,#FF6B6B,#FF9A3C);border-radius:2px}
 
 /* COUNTDOWN */
@@ -59,7 +60,7 @@ nav.scrolled{background:rgba(255,255,255,.96);backdrop-filter:blur(16px);border-
 .cd-sep{font-size:2.5rem;color:#FF6B6B;margin-bottom:16px;animation:blink 1s step-end infinite}
 
 /* FORM */
-.form-wrap{max-width:900px;width:100%;margin:0 auto 16px;animation:fadeUp .8s .5s ease both}
+.form-wrap{width:100%;margin:0 0 16px;animation:fadeUp .8s .5s ease both}
 .form-row{display:flex;border-radius:4px;overflow:hidden;box-shadow:0 4px 24px rgba(255,107,107,.12)}
 .form-row input{flex:1;background:#fff;border:1.5px solid #eee;border-right:none;color:#111;padding:20px 24px;font-size:1.05rem;font-family:'DM Sans',sans-serif;outline:none;transition:border .2s}
 .form-row input:focus{border-color:#FF6B6B}
@@ -163,6 +164,7 @@ footer a{color:#FF6B6B;text-decoration:none}
 
 <!-- HERO -->
 <section class="hero">
+  <div class="hero-inner">
   <div class="hero-tag"><span class="hero-tag-dot"></span> Early Bird · Offre limitée</div>
   <h1>Mirella <em>arrive.</em></h1>
   <p class="hero-sub-italic">Votre santé mérite mieux que Google.</p>
