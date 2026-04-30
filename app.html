@@ -2500,6 +2500,7 @@ function switchLang(lang) {
       });
       if (res.ok) {
         document.getElementById('changePasswordModal').style.display = 'none';
+        localStorage.setItem('mirella_pwd_changed', '1');
         alert('✅ Mot de passe mis à jour avec succès !');
       } else {
         errEl.textContent = 'Erreur lors du changement. Réessayez.';
