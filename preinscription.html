@@ -486,7 +486,7 @@ async function subscribe(inputId, successId) {
 }
 
 function updateCountdown() {
-  const target = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
+  var t = localStorage.getItem('mirella_countdown'); if(!t){ t = (Date.now() + 7*24*60*60*1000).toString(); localStorage.setItem('mirella_countdown', t); } const target = new Date(parseInt(t));
   const now = new Date();
   const diff = target - now;
   if (diff <= 0) return;
@@ -505,7 +505,7 @@ setInterval(updateCountdown, 1000);
 // Compteur places dynamique
 (function() {
   var BASE = 30;
-  var START_TIME = new Date('2026-04-30T08:00:00').getTime();
+  var START_TIME = (function(){ var s = localStorage.getItem('mirella_start'); if(!s){ s = Date.now().toString(); localStorage.setItem('mirella_start', s); } return parseInt(s); })();
   var INTERVAL_MS = 5 * 60 * 1000; // 1 place toutes les 5 minutes
 
   function updateSpots() {
