@@ -2483,6 +2483,35 @@ function switchLang(lang) {
   }
 
   // ── APP ──
+
+  async function changePassword() {
+    const p1 = document.getElementById('newPassword1').value;
+    const p2 = document.getElementById('newPassword2').value;
+    const errEl = document.getElementById('pwdError');
+    if (p1.length < 6) { errEl.textContent = 'Le mot de passe doit faire au moins 6 caractères'; errEl.style.display = 'block'; return; }
+    if (p1 !== p2) { errEl.textContent = 'Les mots de passe ne correspondent pas'; errEl.style.display = 'block'; return; }
+    errEl.style.display = 'none';
+    try {
+      const res = await fetch(`${BACKEND_URL}/api/auth/change-password`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${authToken}` },
+        body: JSON.stringify({ password: p1 })
+      });
+      if (res.ok) {
+        document.getElementById('changePasswordModal').style.display = 'none';
+        alert('✅ Mot de passe mis à jour avec succès !');
+      } else {
+        errEl.textContent = 'Erreur lors du changement. Réessayez.';
+        errEl.style.display = 'block';
+      }
+    } catch(e) { errEl.textContent = 'Erreur réseau.'; errEl.style.display = 'block'; }
+  }
+
+  function showChangePasswordModal() {
+    const modal = document.getElementById('changePasswordModal');
+    if (modal) modal.style.display = 'flex';
+  }
+
   async function showApp() {
     document.getElementById('authPage').classList.remove('active');
     document.getElementById('appPage').classList.add('active');
@@ -2552,7 +2581,7 @@ function switchLang(lang) {
       if (document.getElementById('profileChronoGoal')) document.getElementById('profileChronoGoal').value = profile.chrono_goal || '';
       if (document.getElementById('profileObjectif')) document.getElementById('profileObjectif').value = profile.objectif_nutritionnel || '';
       updateMenu(profile.plan || 'free');
-      if (window.isTrial) setTimeout(showTrialBanner, 500);
+      if (window.isTrial) { setTimeout(showTrialBanner, 500); if (!localStorage.getItem("mirella_pwd_changed")) setTimeout(showChangePasswordModal, 1000); }
       // Score circadien dans le dashboard
       if (profile.wake_up || profile.sleep_time) {
         const wakeH = parseInt((profile.wake_up || '07:00').split(':')[0]);
@@ -5470,5 +5499,24 @@ function toggleQuickMenu() {
   menu.style.display = menu.style.display === 'none' ? 'flex' : 'none';
 }
 </script>
+
+<!-- MODALE CHANGEMENT MOT DE PASSE -->
+<div id="changePasswordModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:99999;align-items:center;justify-content:center">
+  <div style="background:white;border-radius:20px;padding:40px;max-width:440px;width:90%;box-shadow:0 20px 60px rgba(0,0,0,.2)">
+    <div style="text-align:center;margin-bottom:24px">
+      <div style="width:56px;height:56px;background:linear-gradient(135deg,#FF6B6B,#FF9A3C);border-radius:16px;display:flex;align-items:center;justify-content:center;margin:0 auto 16px;font-size:1.5rem">🔑</div>
+      <h2 style="font-family:'Open Sans',serif;font-size:1.3rem;font-weight:700;color:#2D2D2D;margin-bottom:8px">Personnalisez votre mot de passe</h2>
+      <p style="font-size:.85rem;color:#888;line-height:1.5">Vous utilisez un mot de passe temporaire. Créez-en un personnel pour sécuriser votre compte.</p>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:12px;margin-bottom:20px">
+      <input type="password" id="newPassword1" placeholder="Nouveau mot de passe" style="padding:14px 16px;border:1.5px solid #eee;border-radius:10px;font-size:.9rem;font-family:'DM Sans',sans-serif;outline:none;transition:border .2s" onfocus="this.style.borderColor='#FF6B6B'" onblur="this.style.borderColor='#eee'">
+      <input type="password" id="newPassword2" placeholder="Confirmer le mot de passe" style="padding:14px 16px;border:1.5px solid #eee;border-radius:10px;font-size:.9rem;font-family:'DM Sans',sans-serif;outline:none;transition:border .2s" onfocus="this.style.borderColor='#FF6B6B'" onblur="this.style.borderColor='#eee'">
+      <div id="pwdError" style="display:none;font-size:.8rem;color:#FF6B6B;text-align:center"></div>
+    </div>
+    <button onclick="changePassword()" style="width:100%;background:linear-gradient(135deg,#FF6B6B,#FF9A3C);color:white;border:none;border-radius:10px;padding:14px;font-size:.95rem;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;margin-bottom:10px">Enregistrer mon mot de passe →</button>
+    <button onclick="document.getElementById('changePasswordModal').style.display='none'" style="width:100%;background:none;border:none;color:#aaa;font-size:.82rem;cursor:pointer;font-family:'DM Sans',sans-serif">Plus tard</button>
+  </div>
+</div>
+
 </body>
 </html>
