@@ -2603,7 +2603,7 @@ function switchLang(lang) {
       if (document.getElementById('profileWorkEnd')) document.getElementById('profileWorkEnd').value = profile.work_end || '18:00';
       if (document.getElementById('profileChronoGoal')) document.getElementById('profileChronoGoal').value = profile.chrono_goal || '';
       if (document.getElementById('profileObjectif')) document.getElementById('profileObjectif').value = profile.objectif_nutritionnel || '';
-      updateMenu(profile.plan || 'free');
+      updateMenu(window.currentPlan || 'free');
       if (window.isTrial) { setTimeout(showTrialBanner, 500); if (!localStorage.getItem("mirella_pwd_changed")) setTimeout(showChangePasswordModal, 1000); }
       // Score circadien dans le dashboard
       if (profile.wake_up || profile.sleep_time) {
@@ -5038,7 +5038,7 @@ function updateMenu(plan) {
   } else if (plan === 'standard') {
     standard.style.display = 'block';
     premium.style.display = 'none';
-  } else if (plan === 'premium') {
+  } else if (plan === 'premium' || plan === 'trial') {
     standard.style.display = 'block';
     premium.style.display = 'block';
   }
