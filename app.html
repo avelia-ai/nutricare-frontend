@@ -3924,20 +3924,22 @@ function switchLang(lang) {
     const container = document.getElementById(containerId);
     if (!container) return;
     const existing = container.querySelector('.week-calendar');
-    if (existing) { renderCalendar(); return; }
+    if (existing) { renderCalendar(containerId); return; }
     const cal = document.createElement('div');
     cal.className = 'week-calendar';
     cal.id = 'cal_' + containerId;
+    const uid = containerId;
     cal.innerHTML = `
       <div class="week-calendar-header">
-        <div class="week-calendar-title" id="cal-month-label"></div>
+        <div class="week-calendar-title" id="cal-month-${uid}"></div>
         <div class="week-calendar-nav">
-          <button class="week-nav-btn" onclick="changeWeek(-1)">‹ Préc.</button>
-          <button class="week-nav-btn" onclick="changeWeek(0)">Aujourd'hui</button>
-          <button class="week-nav-btn" onclick="changeWeek(1)">Suiv. ›</button>
+          <button class="week-nav-btn" onclick="changeWeek(-1,'${uid}')">‹ Préc.</button>
+          <button class="week-nav-btn" onclick="changeWeek(0,'${uid}')">Aujourd'hui</button>
+          <button class="week-nav-btn" onclick="changeWeek(1,'${uid}')">Suiv. ›</button>
         </div>
       </div>
-      <div class="week-days" id="cal-days"></div>`;
+      <div class="week-days" id="cal-days-${uid}"></div>`;
+    renderCalendar(uid);
     const header = container.firstElementChild;
     if (header && header.nextElementSibling) {
       container.insertBefore(cal, header.nextElementSibling);
@@ -3949,15 +3951,22 @@ function switchLang(lang) {
     renderCalendar();
   }
 
-  function renderCalendar() {
+  function renderCalendar(uid) {
+    if (!uid) {
+      document.querySelectorAll('.week-calendar').forEach(cal => {
+        const id = cal.id.replace('cal_','');
+        renderCalendar(id);
+      });
+      return;
+    }
     const labels = ['L','M','M','J','V','S','D'];
     const today = new Date();
     const base = new Date(today);
     base.setDate(today.getDate() - ((today.getDay() + 6) % 7) + (calendarOffset * 7));
     const monthNames = ['Janvier','Février','Mars','Avril','Mai','Juin','Juillet','Août','Septembre','Octobre','Novembre','Décembre'];
-    const label = document.getElementById('cal-month-label');
+    const label = document.getElementById('cal-month-' + uid);
     if (label) label.textContent = monthNames[base.getMonth()] + ' ' + base.getFullYear();
-    const daysEl = document.getElementById('cal-days');
+    const daysEl = document.getElementById('cal-days-' + uid);
     if (!daysEl) return;
     daysEl.innerHTML = '';
     for (let i = 0; i < 7; i++) {
@@ -3969,20 +3978,20 @@ function switchLang(lang) {
       div.className = 'week-day' + (isToday ? ' today' : '') + (isSelected ? ' active' : '');
       div.innerHTML = '<span class="week-day-label">' + labels[i] + '</span><span class="week-day-num">' + d.getDate() + '</span><span class="week-day-dot"></span>';
       const dc = new Date(d);
-      div.onclick = () => { selectedDate = dc; renderCalendar(); };
+      div.onclick = () => { selectedDate = dc; renderCalendar(uid); };
       daysEl.appendChild(div);
     }
   }
 
-  function changeWeek(dir) {
+  function changeWeek(dir, uid) {
     if (dir === 0) { calendarOffset = 0; selectedDate = new Date(); }
     else calendarOffset += dir;
-    renderCalendar();
+    renderCalendar(uid);
   }
 
   async function showView(view, btn) {
     const calViews = ['dashboard','menus','health','chrono','simulator','gamification'];
-    if (calViews.includes(view)) setTimeout(() => { initCalendar(view + 'View'); renderCalendar(); }, 150);
+    if (calViews.includes(view)) setTimeout(() => { initCalendar(view + 'View'); }, 150);
   // Si plan pas encore chargé, attendre loadProfile
   if (window.currentPlan === 'free' && authToken) {
     const p = JSON.parse(localStorage.getItem('nutricare_profile') || '{}');
