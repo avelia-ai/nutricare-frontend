@@ -3925,7 +3925,9 @@ function switchLang(lang) {
     var cal = document.createElement('div');
     cal.className = 'wcal';
     cal.id = 'wcal_' + viewId;
-    container.insertAdjacentElement('afterbegin', cal);
+    var header = container.querySelector('.view-header');
+    if (header) header.insertAdjacentElement('afterend', cal);
+    else container.insertAdjacentElement('afterbegin', cal);
     wcalRender(viewId);
   }
 
