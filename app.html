@@ -485,6 +485,31 @@ button[style*="background:linear-gradient(135deg,#FF6B6B,#FF9A3C)"] {
   }
 }
 </style>
+<script>
+  // Détection token reset password Supabase
+  (function() {
+    const hash = window.location.hash;
+    if (hash && hash.includes('type=recovery')) {
+      const params = new URLSearchParams(hash.replace('#', ''));
+      const accessToken = params.get('access_token');
+      if (accessToken) {
+        // Stocker le token et afficher la modale de reset
+        localStorage.setItem('nutricare_token', accessToken);
+        window.addEventListener('DOMContentLoaded', function() {
+          setTimeout(function() {
+            const modal = document.getElementById('changePasswordModal');
+            if (modal) {
+              modal.style.display = 'flex';
+              // Modifier le titre
+              const title = modal.querySelector('h2');
+              if (title) title.textContent = 'Définissez votre mot de passe';
+            }
+          }, 1000);
+        });
+      }
+    }
+  })();
+</script>
 </head>
 <body>
 <script>
@@ -2694,7 +2719,32 @@ function switchLang(lang) {
     const w = window.open('', '_blank');
     w.document.write(`<!DOCTYPE html><html><head><title>Rapport RH — ${entreprise}</title>
     <style>body{font-family:Georgia,serif;max-width:800px;margin:40px auto;padding:40px;color:#2D2D2D}.header{border-bottom:2px solid #021A35;padding-bottom:20px;margin-bottom:28px;display:flex;justify-content:space-between}.logo{font-size:1.2rem;font-weight:600}.report{font-size:0.95rem;line-height:1.8;white-space:pre-wrap}.disclaimer{margin-top:40px;padding:16px;background:#FDF6E8;font-size:0.78rem;color:rgba(2,26,53,0.6)}@media print{body{margin:20px}}</style>
-    </head><body>
+    <script>
+  // Détection token reset password Supabase
+  (function() {
+    const hash = window.location.hash;
+    if (hash && hash.includes('type=recovery')) {
+      const params = new URLSearchParams(hash.replace('#', ''));
+      const accessToken = params.get('access_token');
+      if (accessToken) {
+        // Stocker le token et afficher la modale de reset
+        localStorage.setItem('nutricare_token', accessToken);
+        window.addEventListener('DOMContentLoaded', function() {
+          setTimeout(function() {
+            const modal = document.getElementById('changePasswordModal');
+            if (modal) {
+              modal.style.display = 'flex';
+              // Modifier le titre
+              const title = modal.querySelector('h2');
+              if (title) title.textContent = 'Définissez votre mot de passe';
+            }
+          }, 1000);
+        });
+      }
+    }
+  })();
+</script>
+</head><body>
     <div class="header"><div><div class="logo">● Mirella Entreprise</div><div style="font-size:0.78rem;color:rgba(2,26,53,0.4)">Rapport mensuel RH · Données anonymisées</div></div><div style="text-align:right;font-size:0.78rem;color:rgba(2,26,53,0.4)">${entreprise}<br>${new Date().toLocaleDateString('fr-FR',{month:'long',year:'numeric'})}</div></div>
     <div class="report">${rapport}</div>
     <div class="disclaimer">️ Données 100% anonymisées. Aucune information individuelle n'est présente dans ce rapport. Conformité RGPD garantie.</div>
@@ -3093,7 +3143,32 @@ function switchLang(lang) {
       .logo { font-size: 1.2rem; font-weight: 600; }
       .disclaimer { margin-top: 40px; padding: 16px; background: #FDF6E8; font-size: 0.78rem; color: rgba(2,26,53,0.6); line-height: 1.5; }
       @media print { body { margin: 20px; } }
-    </style></head><body>
+    </style><script>
+  // Détection token reset password Supabase
+  (function() {
+    const hash = window.location.hash;
+    if (hash && hash.includes('type=recovery')) {
+      const params = new URLSearchParams(hash.replace('#', ''));
+      const accessToken = params.get('access_token');
+      if (accessToken) {
+        // Stocker le token et afficher la modale de reset
+        localStorage.setItem('nutricare_token', accessToken);
+        window.addEventListener('DOMContentLoaded', function() {
+          setTimeout(function() {
+            const modal = document.getElementById('changePasswordModal');
+            if (modal) {
+              modal.style.display = 'flex';
+              // Modifier le titre
+              const title = modal.querySelector('h2');
+              if (title) title.textContent = 'Définissez votre mot de passe';
+            }
+          }, 1000);
+        });
+      }
+    }
+  })();
+</script>
+</head><body>
     <div class="header">
       <div><div class="logo">● Mirella</div><div style="font-size:0.78rem;color:rgba(2,26,53,0.4)">Passeport Santé Nutritionnel</div></div>
       <div style="text-align:right;font-size:0.78rem;color:rgba(2,26,53,0.4)">${date}<br>${id}</div>
@@ -3412,6 +3487,31 @@ function switchLang(lang) {
   #healthGrid>div:nth-child(5){grid-column:1/-1}
 }
 </style>
+<script>
+  // Détection token reset password Supabase
+  (function() {
+    const hash = window.location.hash;
+    if (hash && hash.includes('type=recovery')) {
+      const params = new URLSearchParams(hash.replace('#', ''));
+      const accessToken = params.get('access_token');
+      if (accessToken) {
+        // Stocker le token et afficher la modale de reset
+        localStorage.setItem('nutricare_token', accessToken);
+        window.addEventListener('DOMContentLoaded', function() {
+          setTimeout(function() {
+            const modal = document.getElementById('changePasswordModal');
+            if (modal) {
+              modal.style.display = 'flex';
+              // Modifier le titre
+              const title = modal.querySelector('h2');
+              if (title) title.textContent = 'Définissez votre mot de passe';
+            }
+          }, 1000);
+        });
+      }
+    }
+  })();
+</script>
 </head>
 <body>
 <div class="page">
