@@ -3938,7 +3938,11 @@ function switchLang(lang) {
       </div>
       <div class="week-days" id="cal-days"></div>`;
     const firstChild = container.firstElementChild;
-    container.insertBefore(cal, firstChild ? firstChild.nextSibling : null);
+    if (firstChild && firstChild.nextElementSibling) {
+      container.insertBefore(cal, firstChild.nextElementSibling);
+    } else {
+      container.appendChild(cal);
+    }
     renderCalendar();
   }
 
