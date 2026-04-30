@@ -78,7 +78,7 @@
 
 
   /* ── VIEW TITLES ── */
-  [id$="View"] > div:first-child,
+  [id$="View"] > div:first-child:not(.week-calendar),
   [id$="View"] > h2:first-child {
     background: linear-gradient(135deg, #FF6B6B, #FF9A3C);
     margin: -32px -32px 48px -32px;
@@ -90,7 +90,7 @@
     flex-direction: column;
     justify-content: flex-end;
   }
-  [id$="View"] > div:first-child *,
+  [id$="View"] > div:first-child:not(.week-calendar) *,
   [id$="View"] > h2:first-child * {
     color: white !important;
   }
@@ -3937,12 +3937,7 @@ function switchLang(lang) {
         </div>
       </div>
       <div class="week-days" id="cal-days"></div>`;
-    const firstChild = container.firstElementChild;
-    if (firstChild && firstChild.nextElementSibling) {
-      container.insertBefore(cal, firstChild.nextElementSibling);
-    } else {
-      container.appendChild(cal);
-    }
+    container.insertBefore(cal, container.firstElementChild);
     renderCalendar();
   }
 
