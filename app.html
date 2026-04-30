@@ -3923,7 +3923,8 @@ function switchLang(lang) {
   function initCalendar(containerId) {
     const container = document.getElementById(containerId);
     if (!container) return;
-    if (container.querySelector('.week-calendar')) return;
+    const existing = container.querySelector('.week-calendar');
+    if (existing) { renderCalendar(); return; }
     const cal = document.createElement('div');
     cal.className = 'week-calendar';
     cal.id = 'cal_' + containerId;
@@ -3981,7 +3982,7 @@ function switchLang(lang) {
 
   async function showView(view, btn) {
     const calViews = ['dashboard','menus','health','chrono','simulator','gamification'];
-    if (calViews.includes(view)) setTimeout(() => initCalendar(view + 'View'), 100);
+    if (calViews.includes(view)) setTimeout(() => { initCalendar(view + 'View'); renderCalendar(); }, 150);
   // Si plan pas encore chargé, attendre loadProfile
   if (window.currentPlan === 'free' && authToken) {
     const p = JSON.parse(localStorage.getItem('nutricare_profile') || '{}');
