@@ -2912,7 +2912,7 @@ function switchLang(lang) {
 
   function initBiologie() {
     const profile = JSON.parse(localStorage.getItem('nutricare_profile') || '{}');
-    if (profile.plan !== 'premium') {
+    if (window.currentPlan !== 'premium') {
       document.getElementById('bioFree').style.display = 'block';
       document.getElementById('bioContent').style.display = 'none';
     } else {
@@ -3141,7 +3141,7 @@ function switchLang(lang) {
     const name = profile.full_name || 'Patient';
     const plan = profile.plan || 'free';
 
-    if (plan !== 'premium') {
+    if (window.currentPlan !== 'premium') {
       document.getElementById('oracleView').innerHTML = `<div style="text-align:center;padding:60px;color:#a8c8e0"><div style="font-size:1.2rem;margin-bottom:8px;color:#5a9fc0">Oracle Santé · Premium</div><div style="font-size:0.88rem;color:#4a7a9a;margin-bottom:20px">Fonctionnalité réservée aux abonnés Premium.</div><button onclick="showView('pricing')" style="background:linear-gradient(135deg,#FF6B6B,#FF9A3C);color:#2D2D2D;border:none;border-radius:4px;padding:12px 28px;cursor:pointer">Voir les abonnements</button></div>`;
       return;
     }
@@ -3550,7 +3550,7 @@ function switchLang(lang) {
 
     // Vérification Premium
     const profile = JSON.parse(localStorage.getItem('nutricare_profile') || '{}');
-    if (profile.plan !== 'premium') {
+    if (window.currentPlan !== 'premium') {
       document.getElementById('simResult').style.display = 'none';
       document.getElementById('simPremium').style.display = 'block';
       return;
@@ -4110,7 +4110,7 @@ function switchLang(lang) {
   const plan = window.currentPlan;
   const premiumViews = ['oracle', 'simulator', 'biologie', 'ordonnance', 'programs', 'visual'];
   const standardViews = ['menus', 'protocols', 'analysis', 'health', 'gamification'];
-  if (premiumViews.includes(view) && plan !== 'premium') {
+  if (premiumViews.includes(view) && window.currentPlan !== 'premium') {
     showUpgradeModal('premium');
     return;
   }
@@ -4169,7 +4169,7 @@ document.getElementById('analysisView').style.display = view === 'analysis' ? 'b
 if (view === 'analysis') loadAnalysis();
   }
   async function loadAnalysis() {
-  let isPaid = window.currentPlan === 'standard' || window.currentPlan === 'premium';
+  let isPaid = window.currentPlan === 'standard' || window.currentPlan === 'premium' || window.isTrial;
   if (!isPaid && authToken) {
     try {
       const pr = await fetchWithAuth(`${BACKEND_URL}/api/profile`);
@@ -4257,7 +4257,7 @@ async function loadAnalysisHistory() {
 }
   async function loadMenus() {
   // Lire le plan directement depuis le profil API
-  let isPaid = window.currentPlan === 'standard' || window.currentPlan === 'premium';
+  let isPaid = window.currentPlan === 'standard' || window.currentPlan === 'premium' || window.isTrial;
   if (!isPaid && authToken) {
     try {
       const pr = await fetchWithAuth(`${BACKEND_URL}/api/profile`);
@@ -5125,7 +5125,7 @@ async function loadProtocols() {
   }
 }
   async function loadProfessionals() {
-  let isPaid = window.currentPlan === 'standard' || window.currentPlan === 'premium';
+  let isPaid = window.currentPlan === 'standard' || window.currentPlan === 'premium' || window.isTrial;
   if (!isPaid && authToken) {
     try {
       const pr = await fetchWithAuth(`${BACKEND_URL}/api/profile`);
