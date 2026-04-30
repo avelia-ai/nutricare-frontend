@@ -2500,8 +2500,27 @@ function switchLang(lang) {
 
       const name = profile.full_name || currentUser?.email?.split('@')[0] || 'Utilisateur';
       const initials = name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2);
-      const plan = profile.plan || 'free';
-      window.currentPlan = plan;
+      let plan = profile.plan || 'free';
+      // Gestion du trial
+      if (plan === 'trial') {
+        const trialEnd = profile.trial_end_date ? new Date(profile.trial_end_date) : null;
+        if (trialEnd && trialEnd > new Date()) {
+          // Trial encore valide → accès premium
+          window.currentPlan = 'premium';
+          window.isTrial = true;
+          window.trialEnd = trialEnd;
+          plan = 'premium';
+        } else {
+          // Trial expiré → free + banner upgrade
+          window.currentPlan = 'free';
+          window.isTrial = false;
+          plan = 'free';
+          showTrialExpiredBanner();
+        }
+      } else {
+        window.currentPlan = plan;
+        window.isTrial = false;
+      }
       localStorage.setItem('nutricare_profile', JSON.stringify(profile));
       // Mettre à jour avatar mobile
       const mobileAvatar = document.getElementById('mobileUserAvatar');
@@ -2533,6 +2552,7 @@ function switchLang(lang) {
       if (document.getElementById('profileChronoGoal')) document.getElementById('profileChronoGoal').value = profile.chrono_goal || '';
       if (document.getElementById('profileObjectif')) document.getElementById('profileObjectif').value = profile.objectif_nutritionnel || '';
       updateMenu(profile.plan || 'free');
+      if (window.isTrial) setTimeout(showTrialBanner, 500);
       // Score circadien dans le dashboard
       if (profile.wake_up || profile.sleep_time) {
         const wakeH = parseInt((profile.wake_up || '07:00').split(':')[0]);
@@ -3981,6 +4001,36 @@ function switchLang(lang) {
     if (dir === 0) { wcalOffset = 0; wcalSelected = new Date(); }
     else wcalOffset += dir;
     wcalViews.forEach(function(v) { wcalRender(v); });
+  }
+
+
+  function showTrialExpiredBanner() {
+    const existing = document.getElementById('trialExpiredBanner');
+    if (existing) return;
+    const banner = document.createElement('div');
+    banner.id = 'trialExpiredBanner';
+    banner.style.cssText = 'position:fixed;top:0;left:0;right:0;z-index:9999;background:linear-gradient(135deg,#FF6B6B,#FF9A3C);padding:14px 24px;display:flex;align-items:center;justify-content:space-between;box-shadow:0 4px 20px rgba(255,107,107,.3)';
+    banner.innerHTML = `
+      <div style="color:white;font-size:.88rem;font-weight:500">⏰ Votre essai gratuit de 3 jours est terminé — Abonnez-vous pour continuer à profiter de Mirella</div>
+      <button onclick="showView('pricing')" style="background:white;color:#FF6B6B;border:none;border-radius:6px;padding:8px 20px;font-size:.85rem;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif;white-space:nowrap;margin-left:16px">Voir les offres -50% →</button>
+    `;
+    document.body.insertBefore(banner, document.body.firstChild);
+  }
+
+  function showTrialBanner() {
+    if (!window.isTrial || !window.trialEnd) return;
+    const existing = document.getElementById('trialActiveBanner');
+    if (existing) return;
+    const daysLeft = Math.ceil((window.trialEnd - new Date()) / (1000 * 60 * 60 * 24));
+    const banner = document.createElement('div');
+    banner.id = 'trialActiveBanner';
+    banner.style.cssText = 'background:#FFF5F0;border-bottom:1px solid rgba(255,107,107,.2);padding:10px 24px;display:flex;align-items:center;justify-content:space-between;font-size:.82rem';
+    banner.innerHTML = `
+      <span style="color:#FF6B6B;font-weight:500">🎁 Essai gratuit — <strong>${daysLeft} jour${daysLeft > 1 ? 's' : ''} restant${daysLeft > 1 ? 's' : ''}</strong> · Abonnez-vous à -50% à vie</span>
+      <button onclick="showView('pricing')" style="background:linear-gradient(135deg,#FF6B6B,#FF9A3C);color:white;border:none;border-radius:6px;padding:6px 16px;font-size:.78rem;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif">Voir les offres →</button>
+    `;
+    const mainContent = document.querySelector('.main-content') || document.getElementById('appPage');
+    if (mainContent) mainContent.insertBefore(banner, mainContent.firstChild);
   }
 
   async function showView(view, btn) {
