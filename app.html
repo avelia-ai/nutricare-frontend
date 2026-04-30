@@ -130,26 +130,7 @@
     }
   }
 
-  /* ── WEEK CALENDAR ── */
-  .week-calendar { background:white!important; border-radius:16px!important; padding:16px 20px!important; margin:0 0 20px 0!important; box-shadow:0 2px 12px rgba(0,0,0,.06)!important; border:1px solid #f0f0f0!important; color:#2D2D2D!important; }
-  .week-calendar-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:14px; padding-bottom:12px; border-bottom:1px solid #f5f5f5; }
-  .week-calendar-title { font-family:'Open Sans',serif; font-size:.88rem; font-weight:600; color:#888; text-transform:uppercase; letter-spacing:.08em; }
-  .week-calendar-nav { display:flex; gap:8px; }
-  .week-nav-btn { background:none; border:1px solid #eee; border-radius:6px; padding:3px 10px; cursor:pointer; font-size:0.75rem; color:#aaa; transition:all .2s; }
-  .week-nav-btn:hover { border-color:#FF6B6B; color:#FF6B6B; }
-  .week-days { display:flex; gap:4px; }
-  .week-day { flex:1; text-align:center; padding:8px 2px; border-radius:10px; cursor:pointer; transition:background .2s; border:none; outline:none; background:none; }
-  .week-day:hover { background:#FFF5F0; }
-  .week-day.active { background:linear-gradient(135deg,#FF6B6B,#FF9A3C); border-radius:10px; }
-  .week-day.today .week-day-num { color:#FF6B6B; }
-  .week-day-label { font-size:0.6rem; font-weight:600; text-transform:uppercase; letter-spacing:0; color:#999; line-height:1; white-space:nowrap; }
-  .week-day.active .week-day-label { color:rgba(255,255,255,.8); }
-  .week-day-num { font-size:1rem; font-weight:700; color:#2D2D2D; line-height:1.2; }
-  .week-day.active .week-day-num { color:white; }
-  .week-day.today:not(.active) .week-day-num { color:#FF6B6B; }
-  .week-day-dot { width:4px; height:4px; border-radius:50%; background:#FF6B6B; opacity:0; transition:opacity .2s; }
-  .week-day.has-data .week-day-dot { opacity:1; }
-  .week-day.active .week-day-dot { background:rgba(255,255,255,.6); }
+
   /* ── CHAT VIEW ── */
   #chatView { display: flex; flex-direction: column; height: 100vh; background: #FFF5F0; }
   .chat-header { padding: 16px 20px; border-bottom: 1px solid rgba(255,107,107,0.1); display: flex; align-items: center; justify-content: space-between; background: white; box-shadow: 0 2px 8px rgba(0,0,0,0.04); }
@@ -3916,82 +3897,11 @@ function switchLang(lang) {
   // ── VIEWS ──
   // Détection paramètres URL
 
-  // ── WEEK CALENDAR ──
-  let calendarOffset = 0;
-  let selectedDate = new Date();
 
-  function initCalendar(containerId) {
-    const container = document.getElementById(containerId);
-    if (!container) return;
-    const existing = container.querySelector('.week-calendar');
-    if (existing) { renderCalendar(containerId); return; }
-    const cal = document.createElement('div');
-    cal.className = 'week-calendar';
-    cal.id = 'cal_' + containerId;
-    const uid = containerId;
-    cal.innerHTML = `
-      <div class="week-calendar-header">
-        <div class="week-calendar-title" id="cal-month-${uid}"></div>
-        <div class="week-calendar-nav">
-          <button class="week-nav-btn" onclick="changeWeek(-1,'${uid}')">‹ Préc.</button>
-          <button class="week-nav-btn" onclick="changeWeek(0,'${uid}')">Aujourd'hui</button>
-          <button class="week-nav-btn" onclick="changeWeek(1,'${uid}')">Suiv. ›</button>
-        </div>
-      </div>
-      <div class="week-days" id="cal-days-${uid}"></div>`;
-    renderCalendar(uid);
-    const header = container.firstElementChild;
-    if (header && header.nextElementSibling) {
-      container.insertBefore(cal, header.nextElementSibling);
-    } else if (header) {
-      header.insertAdjacentElement('afterend', cal);
-    } else {
-      container.appendChild(cal);
-    }
-    renderCalendar();
-  }
-
-  function renderCalendar(uid) {
-    if (!uid) {
-      document.querySelectorAll('.week-calendar').forEach(cal => {
-        const id = cal.id.replace('cal_','');
-        renderCalendar(id);
-      });
-      return;
-    }
-    const labels = ['Lun','Mar','Mer','Jeu','Ven','Sam','Dim'];
-    const today = new Date();
-    const base = new Date(today);
-    base.setDate(today.getDate() - ((today.getDay() + 6) % 7) + (calendarOffset * 7));
-    const monthNames = ['Janvier','Février','Mars','Avril','Mai','Juin','Juillet','Août','Septembre','Octobre','Novembre','Décembre'];
-    const label = document.getElementById('cal-month-' + uid);
-    if (label) label.textContent = monthNames[base.getMonth()] + ' ' + base.getFullYear();
-    const daysEl = document.getElementById('cal-days-' + uid);
-    if (!daysEl) return;
-    daysEl.innerHTML = '';
-    for (let i = 0; i < 7; i++) {
-      const d = new Date(base);
-      d.setDate(base.getDate() + i);
-      const isToday = d.toDateString() === today.toDateString();
-      const isSelected = d.toDateString() === selectedDate.toDateString();
-      const div = document.createElement('div');
-      div.className = 'week-day' + (isToday ? ' today' : '') + (isSelected ? ' active' : '');
-      div.innerHTML = '<p style="margin:0;font-size:0.6rem;font-weight:600;color:inherit;opacity:.7">' + labels[i] + '</p><p style="margin:4px 0 0;font-size:1.1rem;font-weight:700;color:inherit">' + d.getDate() + '</p>';
-      const dc = new Date(d);
-      div.onclick = () => { selectedDate = dc; renderCalendar(uid); };
-      daysEl.appendChild(div);
-    }
-  }
-
-  function changeWeek(dir, uid) {
-    if (dir === 0) { calendarOffset = 0; selectedDate = new Date(); }
-    else calendarOffset += dir;
-    renderCalendar(uid);
   }
 
   async function showView(view, btn) {
-    const calViews = ['dashboard','menus','health','chrono','simulator','gamification'];
-    if (calViews.includes(view)) setTimeout(() => { initCalendar(view + 'View'); }, 150);
+
   // Si plan pas encore chargé, attendre loadProfile
   if (window.currentPlan === 'free' && authToken) {
     const p = JSON.parse(localStorage.getItem('nutricare_profile') || '{}');
