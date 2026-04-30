@@ -1175,7 +1175,8 @@ function switchLang(lang) {
 </div>
 <div id="healthView" style="display:none;padding:16px;overflow-y:auto;background:#FFF5F0;width:100%;box-sizing:border-box;overflow-x:hidden">
   <div class="view-header" style="font-family:'Open Sans',serif;font-size:2rem;font-weight:700;margin-bottom:6px;color:#2D2D2D">Mon suivi santé</div>
-  <div style="font-size:0.85rem;color:#FF9A3C;margin-bottom:28px">Saisissez vos indicateurs quotidiens</div>
+  <div style="font-size:0.85rem;color:#FF9A3C;margin-bottom:8px">Saisissez vos indicateurs quotidiens</div>
+  <div id="healthDateIndicator" style="display:none;font-size:0.82rem;background:rgba(255,107,107,.08);color:#FF6B6B;padding:6px 12px;border-radius:6px;margin-bottom:16px;font-weight:500"></div>
 
   <!-- Formulaire saisie -->
   <div style="background:white;border-radius: 4px;padding:24px;border:1px solid rgba(255,107,107,0.15);margin-bottom:24px">
@@ -3969,6 +3970,11 @@ function switchLang(lang) {
   function wcalSelect(ts, viewId) {
     wcalSelected = new Date(ts);
     wcalViews.forEach(function(v) { wcalRender(v); });
+    // Recharger les données de la view active selon la date
+    var dateStr = wcalSelected.toISOString().split('T')[0];
+    if (viewId === 'health') loadHealthForDate(dateStr);
+    else if (viewId === 'menus') loadMenusForDate(dateStr);
+    else if (viewId === 'dashboard') loadDashboardForDate(dateStr);
   }
 
   function wcalWeek(dir, viewId) {
@@ -4578,6 +4584,55 @@ async function loadHealthDashboard() {
   } catch(e) { console.error(e); }
 }
 
+
+async function loadHealthForDate(dateStr) {
+  if (!authToken) return;
+  try {
+    const res = await fetch(`${BACKEND_URL}/api/health/logs?days=90`, {
+      headers: { 'Authorization': `Bearer ${authToken}` }
+    });
+    if (!res.ok) return;
+    const data = await res.json();
+    const logs = data.logs || data || [];
+    const log = logs.find(l => l.date && l.date.startsWith(dateStr));
+    if (log) {
+      if (log.glycemia) document.getElementById('hGlycemia').value = log.glycemia;
+      if (log.weight) document.getElementById('hWeight').value = log.weight;
+      if (log.energy_level) document.getElementById('hEnergy').value = log.energy_level;
+      if (log.sleep_hours) document.getElementById('hSleep').value = log.sleep_hours;
+      if (log.hydration_liters) document.getElementById('hHydration').value = log.hydration_liters;
+      if (log.notes) document.getElementById('hNotes').value = log.notes;
+      // Afficher un indicateur de date
+      const indicator = document.getElementById('healthDateIndicator');
+      if (indicator) {
+        const d = new Date(dateStr);
+        indicator.textContent = 'Données du ' + d.toLocaleDateString('fr-FR', {weekday:'long', day:'numeric', month:'long'});
+        indicator.style.display = 'block';
+      }
+    } else {
+      // Vider les champs si pas de données pour cette date
+      ['hGlycemia','hWeight','hEnergy','hSleep','hHydration','hNotes'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.value = '';
+      });
+      const indicator = document.getElementById('healthDateIndicator');
+      if (indicator) {
+        const d = new Date(dateStr);
+        indicator.textContent = 'Aucune donnée pour le ' + d.toLocaleDateString('fr-FR', {weekday:'long', day:'numeric', month:'long'});
+        indicator.style.display = 'block';
+      }
+    }
+  } catch(e) { console.error('loadHealthForDate', e); }
+}
+
+async function loadMenusForDate(dateStr) {
+  // À implémenter selon l'API menus
+  console.log('Chargement menus pour', dateStr);
+}
+
+async function loadDashboardForDate(dateStr) {
+  console.log('Chargement dashboard pour', dateStr);
+}
 async function saveHealthLog() {
   const data = {
     glycemia: parseFloat(document.getElementById('hGlycemia').value) || null,
