@@ -131,6 +131,23 @@
   }
 
 
+  /* ── WEEK CALENDAR ── */
+  .wcal{background:white;border-radius:16px;padding:14px 20px;margin-bottom:20px;border:1px solid #f0f0f0;box-shadow:0 2px 8px rgba(0,0,0,.04)}
+  .wcal-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+  .wcal-month{font-size:.78rem;font-weight:600;color:#aaa;text-transform:uppercase;letter-spacing:.06em}
+  .wcal-nav{display:flex;gap:6px}
+  .wcal-btn{background:none;border:1px solid #eee;border-radius:6px;padding:3px 10px;cursor:pointer;font-size:.72rem;color:#aaa;font-family:'DM Sans',sans-serif}
+  .wcal-btn:hover{border-color:#FF6B6B;color:#FF6B6B}
+  .wcal-days{display:flex;gap:4px}
+  .wcal-day{flex:1;border:none;background:none;cursor:pointer;border-radius:8px;padding:6px 2px;font-family:'DM Sans',sans-serif}
+  .wcal-day:hover{background:#FFF5F0}
+  .wcal-day.wactive{background:linear-gradient(135deg,#FF6B6B,#FF9A3C)}
+  .wcal-lbl{display:block;font-size:.6rem;font-weight:600;color:#aaa;text-align:center;margin-bottom:4px}
+  .wcal-day.wactive .wcal-lbl{color:rgba(255,255,255,.8)}
+  .wcal-num{display:block;font-size:1rem;font-weight:700;color:#2D2D2D;text-align:center}
+  .wcal-day.wactive .wcal-num{color:white}
+  .wcal-day.wtoday .wcal-num{color:#FF6B6B}
+  .wcal-day.wactive.wtoday .wcal-num{color:white}
   /* ── CHAT VIEW ── */
   #chatView { display: flex; flex-direction: column; height: 100vh; background: #FFF5F0; }
   .chat-header { padding: 16px 20px; border-bottom: 1px solid rgba(255,107,107,0.1); display: flex; align-items: center; justify-content: space-between; background: white; box-shadow: 0 2px 8px rgba(0,0,0,0.04); }
@@ -3900,7 +3917,71 @@ function switchLang(lang) {
 
   }
 
+
+  // ── WEEK CALENDAR ──
+  var wcalOffset = 0;
+  var wcalSelected = new Date();
+  var wcalViews = ['dashboard','menus','health','chrono','simulator','gamification'];
+
+  function wcalInit(viewId) {
+    var container = document.getElementById(viewId + 'View');
+    if (!container) return;
+    if (container.querySelector('.wcal')) return;
+    var cal = document.createElement('div');
+    cal.className = 'wcal';
+    cal.id = 'wcal_' + viewId;
+    container.insertAdjacentElement('afterbegin', cal);
+    wcalRender(viewId);
+  }
+
+  function wcalRender(viewId) {
+    var cal = document.getElementById('wcal_' + viewId);
+    if (!cal) return;
+    var months = ['Janvier','Février','Mars','Avril','Mai','Juin','Juillet','Août','Septembre','Octobre','Novembre','Décembre'];
+    var days = ['Lun','Mar','Mer','Jeu','Ven','Sam','Dim'];
+    var today = new Date();
+    var base = new Date(today);
+    var dow = today.getDay();
+    var diff = (dow === 0) ? -6 : 1 - dow;
+    base.setDate(today.getDate() + diff + wcalOffset * 7);
+    var html = '<div class="wcal-top">';
+    html += '<span class="wcal-month">' + months[base.getMonth()] + ' ' + base.getFullYear() + '</span>';
+    html += '<div class="wcal-nav">';
+    html += '<button class="wcal-btn" onclick="wcalWeek(-1,'' + viewId + '')">‹ Préc.</button>';
+    html += '<button class="wcal-btn" onclick="wcalWeek(0,'' + viewId + '')">Auj.</button>';
+    html += '<button class="wcal-btn" onclick="wcalWeek(1,'' + viewId + '')">Suiv. ›</button>';
+    html += '</div></div><div class="wcal-days">';
+    for (var i = 0; i < 7; i++) {
+      var d = new Date(base);
+      d.setDate(base.getDate() + i);
+      var isToday = d.toDateString() === today.toDateString();
+      var isSel = d.toDateString() === wcalSelected.toDateString();
+      var cls = 'wcal-day';
+      if (isSel) cls += ' wactive';
+      if (isToday) cls += ' wtoday';
+      var ts = d.getTime();
+      html += '<button class="' + cls + '" onclick="wcalSelect(' + ts + ','' + viewId + '')">';
+      html += '<span class="wcal-lbl">' + days[i] + '</span>';
+      html += '<span class="wcal-num">' + d.getDate() + '</span>';
+      html += '</button>';
+    }
+    html += '</div>';
+    cal.innerHTML = html;
+  }
+
+  function wcalSelect(ts, viewId) {
+    wcalSelected = new Date(ts);
+    wcalViews.forEach(function(v) { wcalRender(v); });
+  }
+
+  function wcalWeek(dir, viewId) {
+    if (dir === 0) { wcalOffset = 0; wcalSelected = new Date(); }
+    else wcalOffset += dir;
+    wcalViews.forEach(function(v) { wcalRender(v); });
+  }
+
   async function showView(view, btn) {
+    if (wcalViews.includes(view)) setTimeout(function(){ wcalInit(view); }, 50);
 
   // Si plan pas encore chargé, attendre loadProfile
   if (window.currentPlan === 'free' && authToken) {
