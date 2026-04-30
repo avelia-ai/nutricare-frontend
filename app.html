@@ -138,7 +138,7 @@
   .week-nav-btn { background:none; border:1px solid #eee; border-radius:6px; padding:3px 10px; cursor:pointer; font-size:0.75rem; color:#aaa; transition:all .2s; }
   .week-nav-btn:hover { border-color:#FF6B6B; color:#FF6B6B; }
   .week-days { display:flex; gap:6px; justify-content:space-between; align-items:stretch; }
-  .week-day { flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:2px; padding:8px 4px; border-radius:10px; cursor:pointer; transition:all .2s; border:1.5px solid transparent; min-width:0; box-sizing:border-box; }
+  .week-day { flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:0; padding:6px 4px; border-radius:10px; cursor:pointer; transition:all .2s; border:1.5px solid transparent; min-width:0; box-sizing:border-box; height:56px; }
   .week-day:hover { background:#FFF5F0; border-color:rgba(255,107,107,.2); }
   .week-day.active { background:linear-gradient(135deg,#FF6B6B,#FF9A3C); border-color:transparent; }
   .week-day.today { border-color:#FF6B6B; }
@@ -3976,7 +3976,7 @@ function switchLang(lang) {
       const isSelected = d.toDateString() === selectedDate.toDateString();
       const div = document.createElement('div');
       div.className = 'week-day' + (isToday ? ' today' : '') + (isSelected ? ' active' : '');
-      div.innerHTML = '<span class="week-day-label">' + labels[i] + '</span><span class="week-day-num">' + d.getDate() + '</span><span class="week-day-dot"></span>';
+      div.innerHTML = '<div style="font-size:0.6rem;font-weight:600;color:#999;height:14px;display:flex;align-items:center;justify-content:center">' + labels[i] + '</div><div style="font-size:1rem;font-weight:700;height:24px;display:flex;align-items:center;justify-content:center">' + d.getDate() + '</div><div style="width:4px;height:4px;border-radius:50%;background:#FF6B6B;opacity:0;margin-top:2px"></div>';
       const dc = new Date(d);
       div.onclick = () => { selectedDate = dc; renderCalendar(uid); };
       daysEl.appendChild(div);
