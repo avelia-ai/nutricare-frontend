@@ -137,11 +137,11 @@
   .week-calendar-nav { display:flex; gap:8px; }
   .week-nav-btn { background:none; border:1px solid #eee; border-radius:6px; padding:3px 10px; cursor:pointer; font-size:0.75rem; color:#aaa; transition:all .2s; }
   .week-nav-btn:hover { border-color:#FF6B6B; color:#FF6B6B; }
-  .week-days { display:grid; grid-template-columns:repeat(7,1fr); gap:4px; height:64px; }
-  .week-day { display:grid; grid-template-rows:20px 28px; align-items:center; justify-items:center; padding:4px; border-radius:10px; cursor:pointer; transition:all .2s; border:1.5px solid transparent; box-sizing:border-box; }
-  .week-day:hover { background:#FFF5F0; border-color:rgba(255,107,107,.2); }
-  .week-day.active { background:linear-gradient(135deg,#FF6B6B,#FF9A3C); border-color:transparent; }
-  .week-day.today { border-color:#FF6B6B; }
+  .week-days { display:flex; gap:4px; }
+  .week-day { flex:1; text-align:center; padding:8px 2px; border-radius:10px; cursor:pointer; transition:background .2s; border:none; outline:none; background:none; }
+  .week-day:hover { background:#FFF5F0; }
+  .week-day.active { background:linear-gradient(135deg,#FF6B6B,#FF9A3C); border-radius:10px; }
+  .week-day.today .week-day-num { color:#FF6B6B; }
   .week-day-label { font-size:0.6rem; font-weight:600; text-transform:uppercase; letter-spacing:0; color:#999; line-height:1; white-space:nowrap; }
   .week-day.active .week-day-label { color:rgba(255,255,255,.8); }
   .week-day-num { font-size:1rem; font-weight:700; color:#2D2D2D; line-height:1.2; }
@@ -3976,7 +3976,7 @@ function switchLang(lang) {
       const isSelected = d.toDateString() === selectedDate.toDateString();
       const div = document.createElement('div');
       div.className = 'week-day' + (isToday ? ' today' : '') + (isSelected ? ' active' : '');
-      div.innerHTML = '<span style="font-size:0.6rem;font-weight:600;line-height:20px;display:block;text-align:center">' + labels[i] + '</span><span style="font-size:1rem;font-weight:700;line-height:28px;display:block;text-align:center">' + d.getDate() + '</span>';
+      div.innerHTML = '<p style="margin:0;font-size:0.6rem;font-weight:600;color:inherit;opacity:.7">' + labels[i] + '</p><p style="margin:4px 0 0;font-size:1.1rem;font-weight:700;color:inherit">' + d.getDate() + '</p>';
       const dc = new Date(d);
       div.onclick = () => { selectedDate = dc; renderCalendar(uid); };
       daysEl.appendChild(div);
