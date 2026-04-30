@@ -78,7 +78,7 @@
 
 
   /* ── VIEW TITLES ── */
-  [id$="View"] > div:first-child:not(.week-calendar),
+  [id$="View"] > div.view-header,
   [id$="View"] > h2:first-child {
     background: linear-gradient(135deg, #FF6B6B, #FF9A3C);
     margin: -32px -32px 48px -32px;
@@ -90,7 +90,7 @@
     flex-direction: column;
     justify-content: flex-end;
   }
-  [id$="View"] > div:first-child:not(.week-calendar) *,
+  [id$="View"] > div.view-header *,
   [id$="View"] > h2:first-child * {
     color: white !important;
   }
@@ -116,16 +116,16 @@
     [id$="View"] {
       padding: 16px !important;
     }
-    [id$="View"] > div:first-child {
+    [id$="View"] > div.view-header {
       margin: -16px -16px 20px -16px !important;
       padding: 80px 16px 20px !important;
     }
-    [id$="View"] > div:first-child div[style*="font-size:2rem"],
-    [id$="View"] > div:first-child div[style*="font-size: 2rem"] {
+    [id$="View"] > div.view-header div[style*="font-size:2rem"],
+    [id$="View"] > div.view-header div[style*="font-size: 2rem"] {
       font-size: 1.4rem !important;
       line-height: 1.2 !important;
     }
-    [id$="View"] > div:first-child div[style*="font-size:1"] {
+    [id$="View"] > div.view-header div[style*="font-size:1"] {
       font-size: 0.82rem !important;
     }
   }
@@ -748,7 +748,7 @@ function switchLang(lang) {
     <!-- DASHBOARD VIEW -->
     <div id="dashboardView">
       <!-- Header avec dégradé -->
-      <div style="background:linear-gradient(135deg,#FF6B6B,#FF9A3C);border-radius:20px;padding:24px;margin-bottom:20px;color:white">
+      <div class="view-header" style="background:linear-gradient(135deg,#FF6B6B,#FF9A3C);border-radius:20px;padding:24px;margin-bottom:20px;color:white">
         <div style="font-size:0.82rem;opacity:0.8;margin-bottom:4px">Bonjour 👋</div>
         <div style="font-family:'Open Sans',serif;font-size:1.6rem;font-weight:700;margin-bottom:4px"><span id="dashName">!</span></div>
         <div style="font-size:0.85rem;opacity:0.75">Votre tableau de bord santé du jour</div>
@@ -819,7 +819,7 @@ function switchLang(lang) {
 
     <!-- PROFILE VIEW -->
     <div id="profileView">
-      <div class="profile-title">Mon profil de santé</div>
+      <div class="view-header" class="profile-title">Mon profil de santé</div>
       <div class="profile-sub">Ces informations permettent à Mirella de personnaliser ses conseils</div>
       <div class="profile-card">
         <div class="profile-section-title">Informations personnelles</div>
@@ -930,7 +930,7 @@ function switchLang(lang) {
 
     <!-- PRICING VIEW -->
     <div id="pricingView">
-      <div class="pricing-title">Choisissez votre plan</div>
+      <div class="view-header" class="pricing-title">Choisissez votre plan</div>
       <div class="pricing-sub">Commencez gratuitement. Évoluez quand vous êtes prêt.</div>
       <div class="pricing-grid">
         <div class="plan-card">
@@ -988,7 +988,7 @@ function switchLang(lang) {
      <!-- MENUS VIEW -->
       <!-- ANALYSIS VIEW -->
 <div id="analysisView" style="display:none;padding:32px;overflow-y:auto;background:#FFF5F0;width:100%">
-  <div style="font-family:'Open Sans',serif;font-size:2rem;font-weight:700;margin-bottom:6px;color:#2D2D2D">Analyse photo de repas</div>
+  <div class="view-header" style="font-family:'Open Sans',serif;font-size:2rem;font-weight:700;margin-bottom:6px;color:#2D2D2D">Analyse photo de repas</div>
   <div style="font-size:0.85rem;color:#FF9A3C;margin-bottom:28px">Photographiez votre repas pour une analyse nutritionnelle instantanée</div>
 
   <div id="analysisPlanRequired" style="display:none;background:white;border-radius: 4px;padding:28px;border:1px solid rgba(255,107,107,0.15);text-align:center;margin-bottom:24px">
@@ -1070,7 +1070,7 @@ function switchLang(lang) {
   </div>
 </div>
 <div id="menusView" style="display:none;padding:32px;overflow-y:auto;background:#FFF5F0;width:100%">
-  <div style="font-family:'Open Sans',serif;font-size:2rem;font-weight:700;margin-bottom:6px;color:#2D2D2D">Mes menus de la semaine</div>
+  <div class="view-header" style="font-family:'Open Sans',serif;font-size:2rem;font-weight:700;margin-bottom:6px;color:#2D2D2D">Mes menus de la semaine</div>
   <div style="font-size:0.85rem;color:#FF9A3C;margin-bottom:28px">Menus personnalisés selon votre pathologie et vos préférences</div>
 
   <!-- Plan requis -->
@@ -1176,7 +1176,7 @@ function switchLang(lang) {
   </div>
 </div>
 <div id="healthView" style="display:none;padding:16px;overflow-y:auto;background:#FFF5F0;width:100%;box-sizing:border-box;overflow-x:hidden">
-  <div style="font-family:'Open Sans',serif;font-size:2rem;font-weight:700;margin-bottom:6px;color:#2D2D2D">Mon suivi santé</div>
+  <div class="view-header" style="font-family:'Open Sans',serif;font-size:2rem;font-weight:700;margin-bottom:6px;color:#2D2D2D">Mon suivi santé</div>
   <div style="font-size:0.85rem;color:#FF9A3C;margin-bottom:28px">Saisissez vos indicateurs quotidiens</div>
 
   <!-- Formulaire saisie -->
@@ -1232,12 +1232,12 @@ function switchLang(lang) {
   </div>
 </div>
 <div id="protocolsView" style="display:none;padding:32px;overflow-y:auto;background:#FFF5F0;width:100%">
-  <div style="font-family:'Open Sans',serif;font-size:2rem;font-weight:700;margin-bottom:6px;color:#2D2D2D">Mes protocoles nutritionnels</div>
+  <div class="view-header" style="font-family:'Open Sans',serif;font-size:2rem;font-weight:700;margin-bottom:6px;color:#2D2D2D">Mes protocoles nutritionnels</div>
   <div style="font-size:0.85rem;color:#FF9A3C;margin-bottom:32px;margin-top:24px">Protocoles adaptés à vos pathologies</div>
   <div id="protocolsList" style="display:flex;flex-direction:column;gap:20px"></div>
 </div>
 <div id="chronoView" style="display:none;padding:32px;overflow-y:auto;background:#FFF5F0;width:100%">
-  <div style="background:linear-gradient(135deg,#FF6B6B,#FF9A3C);margin:-32px -32px 32px -32px;padding:32px 32px 28px">
+  <div class="view-header" style="background:linear-gradient(135deg,#FF6B6B,#FF9A3C);margin:-32px -32px 32px -32px;padding:32px 32px 28px">
     <div style="font-family:'Open Sans',serif;font-size:2rem;font-weight:700;color:white;margin-bottom:6px">Mon rythme circadien</div>
     <div style="font-size:0.85rem;color:rgba(255,255,255,0.85)">Optimisez votre alimentation selon votre horloge biologique</div>
   </div>
@@ -1289,7 +1289,7 @@ function switchLang(lang) {
   </div>
 </div>
 <div id="visualView" style="display:none;padding:32px;overflow-y:auto;background:#FFF5F0;width:100%">
-  <div style="background:linear-gradient(135deg,#FF6B6B,#FF9A3C);margin:-32px -32px 32px -32px;padding:32px 32px 28px">
+  <div class="view-header" style="background:linear-gradient(135deg,#FF6B6B,#FF9A3C);margin:-32px -32px 32px -32px;padding:32px 32px 28px">
     <div style="font-family:'Open Sans',serif;font-size:2rem;font-weight:700;color:white;margin-bottom:6px">Detection et analyse visuelle</div>
     <div style="font-size:0.85rem;color:rgba(255,255,255,0.85)">Analysez votre peau, yeux et ongles avec l'IA</div>
   </div>
@@ -1356,7 +1356,7 @@ function switchLang(lang) {
   </div>
 </div>
 <div id="entrepriseView" style="display:none;padding:32px;overflow-y:auto;background:#FFF5F0;width:100%">
-  <div style="background:linear-gradient(135deg,#FF6B6B,#FF9A3C);margin:-32px -32px 32px -32px;padding:32px 32px 28px">
+  <div class="view-header" style="background:linear-gradient(135deg,#FF6B6B,#FF9A3C);margin:-32px -32px 32px -32px;padding:32px 32px 28px">
     <div style="font-family:'Open Sans',serif;font-size:2rem;font-weight:700;color:white;margin-bottom:6px">Mon entreprise</div>
     <div style="font-size:0.85rem;color:rgba(255,255,255,0.85)">Gérez votre espace entreprise et vos équipes</div>
   </div>
@@ -1528,7 +1528,7 @@ function switchLang(lang) {
 </div>
 
 <div id="biologieView" style="display:none;padding:32px;overflow-y:auto;background:#FFF5F0;width:100%">
-  <div style="background:linear-gradient(135deg,#FF6B6B,#FF9A3C);margin:-32px -32px 32px -32px;padding:32px 32px 28px">
+  <div class="view-header" style="background:linear-gradient(135deg,#FF6B6B,#FF9A3C);margin:-32px -32px 32px -32px;padding:32px 32px 28px">
     <div style="display:inline-block;font-size:0.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:white;background:rgba(255,255,255,0.2);padding:5px 14px;border-radius:20px;margin-bottom:12px">Premium</div>
     <div style="font-family:'Open Sans',serif;font-size:2rem;font-weight:700;color:white">Analyse de votre bilan sanguin</div>
   </div>
@@ -1613,7 +1613,7 @@ function switchLang(lang) {
 </div>
 
 <div id="passeportView" style="display:none;padding:32px;overflow-y:auto;background:#FFF5F0;width:100%">
-  <div style="background:linear-gradient(135deg,#FF6B6B,#FF9A3C);margin:-32px -32px 32px -32px;padding:32px 32px 28px">
+  <div class="view-header" style="background:linear-gradient(135deg,#FF6B6B,#FF9A3C);margin:-32px -32px 32px -32px;padding:32px 32px 28px">
     <div style="font-family:'Open Sans',serif;font-size:2rem;font-weight:700;color:white;margin-bottom:6px">Passeport Santé Nutritionnel</div>
     <div style="font-size:0.85rem;color:rgba(255,255,255,0.85)">Votre document de santé complet et partageable</div>
   </div>
@@ -1968,7 +1968,7 @@ function switchLang(lang) {
 </div>
 
 <div id="simulatorView" style="display:none;padding:32px;overflow-y:auto;background:#FFF5F0;width:100%">
-  <div style="background:linear-gradient(135deg,#FF6B6B,#FF9A3C);margin:-32px -32px 32px -32px;padding:32px 32px 28px">
+  <div class="view-header" style="background:linear-gradient(135deg,#FF6B6B,#FF9A3C);margin:-32px -32px 32px -32px;padding:32px 32px 28px">
     <div style="display:inline-block;font-size:0.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:white;background:rgba(255,255,255,0.2);padding:5px 14px;border-radius:20px;margin-bottom:12px">Jumeau Numérique Santé</div>
     <div style="font-family:'Open Sans',serif;font-size:2rem;font-weight:700;color:white;margin-bottom:6px">Simulez vos décisions</div>
     <div style="font-size:0.85rem;color:rgba(255,255,255,0.85)">Testez l'impact de vos choix sur votre santé avant de les faire</div>
@@ -2056,7 +2056,7 @@ function switchLang(lang) {
 </div>
 
 <div id="insightsView" style="display:none;padding:32px;overflow-y:auto;background:#FFF5F0;width:100%">
-  <div style="background:linear-gradient(135deg,#FF6B6B,#FF9A3C);margin:-32px -32px 32px -32px;padding:32px 32px 28px">
+  <div class="view-header" style="background:linear-gradient(135deg,#FF6B6B,#FF9A3C);margin:-32px -32px 32px -32px;padding:32px 32px 28px">
     <div style="font-family:'Open Sans',serif;font-size:2rem;font-weight:700;color:white;margin-bottom:6px">Santé nutritionnelle en temps réel</div>
     <div style="font-size:0.85rem;color:rgba(255,255,255,0.85)">Données agrégées et anonymisées de notre communauté</div>
   </div>
@@ -2099,7 +2099,7 @@ function switchLang(lang) {
 </div>
 
 <div id="scanproduitView" style="display:none;padding:32px;overflow-y:auto;background:#FFF5F0;width:100%">
-  <div style="font-family:'Open Sans',serif;font-size:2rem;font-weight:700;margin-bottom:6px;color:#2D2D2D">🔍 Scan produit</div>
+  <div class="view-header" style="font-family:'Open Sans',serif;font-size:2rem;font-weight:700;margin-bottom:6px;color:#2D2D2D">🔍 Scan produit</div>
   <div style="font-size:0.85rem;color:#FF9A3C;margin-bottom:28px">Photographiez un produit alimentaire pour analyser ses apports et compatibilité avec votre profil</div>
   <div style="background:white;border-radius:12px;padding:24px;border:1px solid #E6F1FB;margin-bottom:20px">
     <div style="font-weight:600;font-size:1rem;color:#2D2D2D;margin-bottom:16px">📸 Importer un produit</div>
@@ -2128,7 +2128,7 @@ function switchLang(lang) {
 </div>
 
 <div id="ordonnanceView" style="display:none;padding:32px;overflow-y:auto;background:#FFF5F0;width:100%">
-  <div style="font-family:'Open Sans',serif;font-size:2rem;font-weight:700;margin-bottom:6px;color:var(--charcoal)">Scan ordonnance </div>
+  <div class="view-header" style="font-family:'Open Sans',serif;font-size:2rem;font-weight:700;margin-bottom:6px;color:var(--charcoal)">Scan ordonnance </div>
   <div style="font-size:0.85rem;color:rgba(0,0,0,0.5);margin-bottom:28px">Photographiez votre ordonnance pour extraire automatiquement vos médicaments</div>
 
   <div id="ordoFree" style="display:none;background:white;border-radius: 4px;padding:40px;text-align:center;border:1px solid var(--border)">
@@ -2173,7 +2173,7 @@ function switchLang(lang) {
 </div>
 
 <div id="programsView" style="display:none;padding:32px;overflow-y:auto;background:#FFF5F0;width:100%">
-  <div style="font-family:'Open Sans',serif;font-size:2rem;font-weight:700;margin-bottom:6px;color:var(--charcoal)">Programmes de coaching </div>
+  <div class="view-header" style="font-family:'Open Sans',serif;font-size:2rem;font-weight:700;margin-bottom:6px;color:var(--charcoal)">Programmes de coaching </div>
   <div style="font-size:0.85rem;color:rgba(0,0,0,0.5);margin-bottom:28px">Transformez votre santé avec un accompagnement intensif personnalisé</div>
 
   <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:24px;max-width:800px">
@@ -2224,7 +2224,7 @@ function switchLang(lang) {
 </div>
 
 <div id="gamificationView" style="display:none;padding:32px;overflow-y:auto;background:#FFF5F0;width:100%">
-  <div style="font-family:'Open Sans',serif;font-size:2rem;font-weight:700;margin-bottom:6px;color:var(--charcoal)">Ma progression </div>
+  <div class="view-header" style="font-family:'Open Sans',serif;font-size:2rem;font-weight:700;margin-bottom:6px;color:var(--charcoal)">Ma progression </div>
   <div style="font-size:0.85rem;color:rgba(0,0,0,0.5);margin-bottom:28px">Vos objectifs, badges et niveau nutritionnel</div>
 
   <!-- Plan requis -->
