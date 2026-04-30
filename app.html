@@ -3915,7 +3915,67 @@ function switchLang(lang) {
 
   // ── VIEWS ──
   // Détection paramètres URL
+
+  // ── WEEK CALENDAR ──
+  let calendarOffset = 0;
+  let selectedDate = new Date();
+
+  function initCalendar(containerId) {
+    const container = document.getElementById(containerId);
+    if (!container) return;
+    if (container.querySelector('.week-calendar')) return;
+    const cal = document.createElement('div');
+    cal.className = 'week-calendar';
+    cal.id = 'cal_' + containerId;
+    cal.innerHTML = `
+      <div class="week-calendar-header">
+        <div class="week-calendar-title" id="cal-month-label"></div>
+        <div class="week-calendar-nav">
+          <button class="week-nav-btn" onclick="changeWeek(-1)">‹ Préc.</button>
+          <button class="week-nav-btn" onclick="changeWeek(0)">Aujourd'hui</button>
+          <button class="week-nav-btn" onclick="changeWeek(1)">Suiv. ›</button>
+        </div>
+      </div>
+      <div class="week-days" id="cal-days"></div>`;
+    const firstChild = container.firstElementChild;
+    container.insertBefore(cal, firstChild ? firstChild.nextSibling : null);
+    renderCalendar();
+  }
+
+  function renderCalendar() {
+    const labels = ['L','M','M','J','V','S','D'];
+    const today = new Date();
+    const base = new Date(today);
+    base.setDate(today.getDate() - ((today.getDay() + 6) % 7) + (calendarOffset * 7));
+    const monthNames = ['Janvier','Février','Mars','Avril','Mai','Juin','Juillet','Août','Septembre','Octobre','Novembre','Décembre'];
+    const label = document.getElementById('cal-month-label');
+    if (label) label.textContent = monthNames[base.getMonth()] + ' ' + base.getFullYear();
+    const daysEl = document.getElementById('cal-days');
+    if (!daysEl) return;
+    daysEl.innerHTML = '';
+    for (let i = 0; i < 7; i++) {
+      const d = new Date(base);
+      d.setDate(base.getDate() + i);
+      const isToday = d.toDateString() === today.toDateString();
+      const isSelected = d.toDateString() === selectedDate.toDateString();
+      const div = document.createElement('div');
+      div.className = 'week-day' + (isToday ? ' today' : '') + (isSelected ? ' active' : '');
+      div.innerHTML = '<span class="week-day-label">' + labels[i] + '</span><span class="week-day-num">' + d.getDate() + '</span><span class="week-day-dot"></span>';
+      const dc = new Date(d);
+      div.onclick = () => { selectedDate = dc; renderCalendar(); };
+      daysEl.appendChild(div);
+    }
+  }
+
+  function changeWeek(dir) {
+    if (dir === 0) { calendarOffset = 0; selectedDate = new Date(); }
+    else calendarOffset += dir;
+    renderCalendar();
+  }
+
   async function showView(view, btn) {
+    const calViews = ['dashboard','menus','health','chrono','simulator','gamification'];
+    if (calViews.includes(view)) setTimeout(() => initCalendar(view + 'View'), 100);
   // Si plan pas encore chargé, attendre loadProfile
   if (window.currentPlan === 'free' && authToken) {
     const p = JSON.parse(localStorage.getItem('nutricare_profile') || '{}');
