@@ -137,8 +137,8 @@
   .week-calendar-nav { display:flex; gap:8px; }
   .week-nav-btn { background:none; border:1px solid #eee; border-radius:6px; padding:3px 10px; cursor:pointer; font-size:0.75rem; color:#aaa; transition:all .2s; }
   .week-nav-btn:hover { border-color:#FF6B6B; color:#FF6B6B; }
-  .week-days { display:grid; grid-template-columns:repeat(7,1fr); gap:6px; }
-  .week-day { display:flex; flex-direction:column; align-items:center; justify-content:center; gap:0; padding:6px 4px; border-radius:10px; cursor:pointer; transition:all .2s; border:1.5px solid transparent; box-sizing:border-box; height:56px; overflow:hidden; }
+  .week-days { display:grid; grid-template-columns:repeat(7,1fr); gap:4px; height:64px; }
+  .week-day { display:grid; grid-template-rows:20px 28px; align-items:center; justify-items:center; padding:4px; border-radius:10px; cursor:pointer; transition:all .2s; border:1.5px solid transparent; box-sizing:border-box; }
   .week-day:hover { background:#FFF5F0; border-color:rgba(255,107,107,.2); }
   .week-day.active { background:linear-gradient(135deg,#FF6B6B,#FF9A3C); border-color:transparent; }
   .week-day.today { border-color:#FF6B6B; }
@@ -3976,7 +3976,7 @@ function switchLang(lang) {
       const isSelected = d.toDateString() === selectedDate.toDateString();
       const div = document.createElement('div');
       div.className = 'week-day' + (isToday ? ' today' : '') + (isSelected ? ' active' : '');
-      div.innerHTML = '<table style="width:100%;border-collapse:collapse"><tr><td style="text-align:center;font-size:0.6rem;font-weight:600;height:16px;vertical-align:middle">' + labels[i] + '</td></tr><tr><td style="text-align:center;font-size:1rem;font-weight:700;height:28px;vertical-align:middle">' + d.getDate() + '</td></tr></table>';
+      div.innerHTML = '<span style="font-size:0.6rem;font-weight:600;line-height:20px;display:block;text-align:center">' + labels[i] + '</span><span style="font-size:1rem;font-weight:700;line-height:28px;display:block;text-align:center">' + d.getDate() + '</span>';
       const dc = new Date(d);
       div.onclick = () => { selectedDate = dc; renderCalendar(uid); };
       daysEl.appendChild(div);
