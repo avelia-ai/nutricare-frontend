@@ -4504,11 +4504,15 @@ async function showRecipeModal(btn) {
   const r = JSON.parse(btn.getAttribute('data-recipe').replace(/&quot;/g,'"'));
   document.getElementById('recipeModalTitle').textContent = r.nom;
   document.getElementById('recipeModalImg').src = unsplashUrl(r.nom);
-  document.getElementById('recipeModalMacros').innerHTML = `
-    <span style="background:#FDF6E8;color:#B8860B;padding:4px 12px;border-radius:20px;font-size:0.78rem;font-weight:700">${r.calories||0} kcal</span>
-    <span style="background:#E6F1FB;color:#378ADD;padding:4px 12px;border-radius:20px;font-size:0.78rem">🥑 ${r.lipides||'—'}g lip.</span>
-    <span style="background:#E6F1FB;color:#378ADD;padding:4px 12px;border-radius:20px;font-size:0.78rem">🌾 ${r.glucides||'—'}g gluc.</span>
-    <span style="background:#E6F1FB;color:#378ADD;padding:4px 12px;border-radius:20px;font-size:0.78rem">💪 ${r.proteines||'—'}g prot.</span>`;
+  document.getElementById('recipeModalMacros').innerHTML =
+    '<div style="background:white;border-radius:16px;padding:20px;text-align:center;border:1px solid #eee;margin-bottom:4px">' +
+    '<div style="font-size:2.5rem;font-weight:700;color:#2D2D2D;line-height:1">' + (r.calories||0) + '</div>' +
+    '<div style="font-size:0.85rem;color:#999;margin-bottom:16px">Kcal</div>' +
+    '<div style="display:grid;grid-template-columns:repeat(3,1fr);border-top:1px solid #eee;padding-top:14px;gap:0">' +
+    '<div style="text-align:center;border-right:1px solid #eee"><div style="font-size:1.3rem">🥑</div><div style="font-size:0.75rem;color:#999;margin:2px 0">Lipides</div><div style="font-size:1rem;font-weight:700;color:#2D2D2D">' + (r.lipides||0) + 'g</div></div>' +
+    '<div style="text-align:center;border-right:1px solid #eee"><div style="font-size:1.3rem">🌾</div><div style="font-size:0.75rem;color:#999;margin:2px 0">Glucides</div><div style="font-size:1rem;font-weight:700;color:#2D2D2D">' + (r.glucides||0) + 'g</div></div>' +
+    '<div style="text-align:center"><div style="font-size:1.3rem">🍗</div><div style="font-size:0.75rem;color:#999;margin:2px 0">Protéines</div><div style="font-size:1rem;font-weight:700;color:#2D2D2D">' + (r.proteines||0) + 'g</div></div>' +
+    '</div></div>';
   // Les ingrédients sont gérés par changePortions() après initialisation de _recipeBase
   document.getElementById('recipeModalEtapes').innerHTML = '<div style="color:#FF9A3C;font-size:0.85rem;padding:16px 0">⏳ Génération de la recette en cours...</div>';
   document.getElementById('recipeModal').style.display = 'flex';
