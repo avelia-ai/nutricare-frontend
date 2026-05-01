@@ -4125,6 +4125,7 @@ function switchLang(lang) {
   }
 
   async function showView(view, btn) {
+    if (view === 'menus') setTimeout(buildWeekSelector, 50);
     if (wcalViews.includes(view)) setTimeout(function(){ wcalInit(view); }, 50);
 
   // Si plan pas encore chargé, attendre loadProfile
