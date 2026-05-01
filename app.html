@@ -1082,7 +1082,10 @@ function switchLang(lang) {
   <!-- Contenu menus -->
   <div id="menusContent" style="display:none">
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:24px">
-      <div style="font-size:0.85rem;color:#FF9A3C" id="menusWeekLabel">Semaine en cours</div>
+      <div id="menusWeekSelectorWrap" style="overflow-x:auto;padding-bottom:8px;margin-bottom:8px">
+        <div id="menusWeekSelector" style="display:flex;gap:10px;min-width:max-content"></div>
+      </div>
+      <div style="font-size:0.85rem;color:#FF9A3C;display:none" id="menusWeekLabel">Semaine en cours</div>
       <button onclick="generateMenu()" id="generateMenuBtn" style="background:#2D2D2D;color:white;padding:10px 24px;border:none;border-radius: 4px;font-size:0.88rem;cursor:pointer;font-family:'DM Sans',sans-serif;display:flex;align-items:center;gap:8px">
          Générer mon menu IA
       </button>
@@ -3991,7 +3994,7 @@ function switchLang(lang) {
   // ── WEEK CALENDAR ──
   var wcalOffset = 0;
   var wcalSelected = new Date();
-  var wcalViews = ['dashboard','menus','health','chrono','simulator','gamification'];
+  var wcalViews = ['dashboard','health','chrono','simulator','gamification'];
 
   function wcalInit(viewId) {
     var container = document.getElementById(viewId + 'View');
@@ -4069,6 +4072,40 @@ function switchLang(lang) {
       <button onclick="showView('pricing')" style="background:white;color:#FF6B6B;border:none;border-radius:6px;padding:8px 20px;font-size:.85rem;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif;white-space:nowrap;margin-left:16px">Voir les offres -50% →</button>
     `;
     document.body.insertBefore(banner, document.body.firstChild);
+  }
+
+
+  function buildWeekSelector() {
+    const container = document.getElementById('menusWeekSelector');
+    if (!container) return;
+    container.innerHTML = '';
+    const today = new Date();
+    const currentWeekStart = new Date(today);
+    currentWeekStart.setDate(today.getDate() - today.getDay() + 1);
+    for (let i = -2; i <= 3; i++) {
+      const weekStart = new Date(currentWeekStart);
+      weekStart.setDate(currentWeekStart.getDate() + i * 7);
+      const weekEnd = new Date(weekStart);
+      weekEnd.setDate(weekStart.getDate() + 6);
+      const isCurrentWeek = i === 0;
+      const fmt = function(d) {
+        return d.toLocaleDateString('fr-FR', {day:'2-digit', month:'2-digit'});
+      };
+      const btn = document.createElement('div');
+      btn.style.cssText = 'min-width:65px;text-align:center;padding:10px 12px;border-radius:14px;cursor:pointer;flex-shrink:0;transition:all 0.2s;' + (isCurrentWeek ? 'background:linear-gradient(135deg,#FF6B6B,#FF9A3C);color:white;' : 'background:#F8F4F0;color:#2D2D2D;');
+      btn.innerHTML = '<div style="font-size:0.95rem;font-weight:700">' + fmt(weekStart) + '</div><div style="font-size:0.75rem;opacity:0.8">' + fmt(weekEnd) + '</div>';
+      btn.onclick = (function(ws, el) {
+        return function() {
+          container.querySelectorAll('div').forEach(function(b) {
+            b.style.background = '#F8F4F0';
+            b.style.color = '#2D2D2D';
+          });
+          el.style.background = 'linear-gradient(135deg,#FF6B6B,#FF9A3C)';
+          el.style.color = 'white';
+        };
+      })(weekStart, btn);
+      container.appendChild(btn);
+    }
   }
 
   function showTrialBanner() {
