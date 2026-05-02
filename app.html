@@ -4247,55 +4247,38 @@ function switchLang(lang) {
     const file = input.files[0];
     if (!file) return;
     const reader = new FileReader();
-    reader.onload = async function(e) {
-      const base64 = e.target.result.split(',')[1];
+    reader.onload = function(e) {
+      const photos = JSON.parse(localStorage.getItem('evolution_photos') || '[]');
       const date = (typeof wcalSelected !== 'undefined' ? wcalSelected : new Date()).toISOString().split('T')[0];
-      const gallery = document.getElementById('evolutionGallery');
-      if (gallery) gallery.innerHTML = '<div style="grid-column:span 3;text-align:center;color:#FF9A3C;padding:20px">⏳ Upload en cours...</div>';
-      try {
-        const res = await fetch(BACKEND_URL + '/api/evolution/upload', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + authToken },
-          body: JSON.stringify({ imageBase64: base64, date: date, mimeType: file.type })
-        });
-        if (res.ok) renderEvolutionGallery();
-        else { const err = await res.json(); alert('Erreur upload: ' + err.error); }
-      } catch(e) { alert('Erreur réseau: ' + e.message); }
+      photos.unshift({ date: date, src: e.target.result });
+      if (photos.length > 20) photos.pop();
+      localStorage.setItem('evolution_photos', JSON.stringify(photos));
+      renderEvolutionGallery();
     };
     reader.readAsDataURL(file);
   }
 
-  async function renderEvolutionGallery() {
+  function renderEvolutionGallery() {
     const gallery = document.getElementById('evolutionGallery');
     if (!gallery) return;
-    gallery.innerHTML = '<div style="grid-column:span 3;text-align:center;color:#ccc;padding:20px;font-size:0.85rem">⏳ Chargement...</div>';
-    try {
-      const res = await fetch(BACKEND_URL + '/api/evolution/list', {
-        headers: { 'Authorization': 'Bearer ' + authToken }
-      });
-      if (!res.ok) { gallery.innerHTML = '<div style="grid-column:span 3;text-align:center;color:#ccc;padding:20px">Erreur de chargement</div>'; return; }
-      const data = await res.json();
-      const photos = data.photos || [];
-      if (!photos.length) {
-        gallery.innerHTML = '<div style="grid-column:span 3;text-align:center;color:#ccc;padding:20px;font-size:0.85rem">Aucune photo encore ajoutée</div>';
-        return;
-      }
-      gallery.innerHTML = photos.map(function(p) {
-        return '<div style="position:relative;aspect-ratio:1;border-radius:10px;overflow:hidden">' +
-          '<img src="' + p.signedUrl + '" style="width:100%;height:100%;object-fit:cover">' +
-          '<div style="position:absolute;bottom:0;left:0;right:0;background:rgba(0,0,0,0.5);color:white;font-size:0.65rem;padding:4px;text-align:center">' + new Date(p.date).toLocaleDateString('fr-FR', {day:'numeric', month:'short'}) + '</div>' +
-          '<button onclick="deleteEvolutionPhoto('' + p.id + '')" style="position:absolute;top:4px;right:4px;background:rgba(255,0,0,0.7);color:white;border:none;border-radius:50%;width:20px;height:20px;font-size:0.65rem;cursor:pointer;line-height:1">✕</button>' +
-          '</div>';
-      }).join('');
-    } catch(e) { gallery.innerHTML = '<div style="grid-column:span 3;text-align:center;color:#ccc;padding:20px">Erreur</div>'; }
+    const photos = JSON.parse(localStorage.getItem('evolution_photos') || '[]');
+    if (!photos.length) {
+      gallery.innerHTML = '<div style="grid-column:span 3;text-align:center;color:#ccc;padding:20px;font-size:0.85rem">Aucune photo encore ajoutée</div>';
+      return;
+    }
+    gallery.innerHTML = photos.map(function(p, i) {
+      return '<div style="position:relative;aspect-ratio:1;border-radius:10px;overflow:hidden">' +
+        '<img src="' + p.src + '" style="width:100%;height:100%;object-fit:cover">' +
+        '<div style="position:absolute;bottom:0;left:0;right:0;background:rgba(0,0,0,0.5);color:white;font-size:0.65rem;padding:4px;text-align:center">' + new Date(p.date).toLocaleDateString('fr-FR', {day:'numeric', month:'short'}) + '</div>' +
+        '<button onclick="deleteEvolutionPhoto(' + i + ')" style="position:absolute;top:4px;right:4px;background:rgba(255,0,0,0.7);color:white;border:none;border-radius:50%;width:20px;height:20px;font-size:0.65rem;cursor:pointer;line-height:1">✕</button>' +
+        '</div>';
+    }).join('');
   }
 
-  async function deleteEvolutionPhoto(id) {
-    if (!confirm('Supprimer cette photo ?')) return;
-    await fetch(BACKEND_URL + '/api/evolution/' + id, {
-      method: 'DELETE',
-      headers: { 'Authorization': 'Bearer ' + authToken }
-    });
+  function deleteEvolutionPhoto(idx) {
+    const photos = JSON.parse(localStorage.getItem('evolution_photos') || '[]');
+    photos.splice(idx, 1);
+    localStorage.setItem('evolution_photos', JSON.stringify(photos));
     renderEvolutionGallery();
   }
 
