@@ -4887,7 +4887,7 @@ async function loadHealthForDate(dateStr) {
       if (log.weight) document.getElementById('hWeight').value = log.weight;
       if (log.energy_level) document.getElementById('hEnergy').value = log.energy_level;
       if (log.sleep_hours) document.getElementById('hSleep').value = log.sleep_hours;
-      if (log.hydration_liters) document.getElementById('hHydration').value = log.hydration_liters;
+      if (log.hydration_liters) { document.getElementById('hHydration').value = log.hydration_liters; _hydrationMl = Math.round(log.hydration_liters * 1000); if(typeof updateHydrationDisplay==='function') updateHydrationDisplay(); }
       if (log.notes) document.getElementById('hNotes').value = log.notes;
       // Afficher un indicateur de date
       const indicator = document.getElementById('healthDateIndicator');
@@ -4902,6 +4902,7 @@ async function loadHealthForDate(dateStr) {
         const el = document.getElementById(id);
         if (el) el.value = '';
       });
+      _hydrationMl = 0; if(typeof updateHydrationDisplay==='function') updateHydrationDisplay();
       const indicator = document.getElementById('healthDateIndicator');
       if (indicator) {
         const d = new Date(dateStr);
