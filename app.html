@@ -4397,7 +4397,14 @@ function changePortions(delta) {
     const adapted = ing.replace(/(\d+(?:[.,]\d+)?)\s*(g|kg|ml|l|cl|cs|cc|cuillère|tasse|verre|tranche|unité|pièce)/gi, (match, num, unit) => {
       return Math.round(parseFloat(num.replace(',','.')) * _portions) + unit;
     });
-    return `<li style="font-size:0.85rem;color:#2D2D2D;padding:4px 0;border-bottom:1px solid #E6F1FB">• ${adapted}</li>`;
+    const words = adapted.split(' ');
+    const searchWord = words.slice(-2).join(' ');
+    return '<li style="display:flex;flex-direction:column;align-items:center;text-align:center;gap:6px">' +
+      '<div style="width:72px;height:72px;border-radius:14px;overflow:hidden;background:#F8F4F0;display:flex;align-items:center;justify-content:center">' +
+      '<img src="https://source.unsplash.com/80x80/?' + encodeURIComponent(searchWord) + ',food" style="width:100%;height:100%;object-fit:cover" onerror="this.style.display=\'none\'">' +
+      '</div>' +
+      '<div style="font-size:0.72rem;color:#2D2D2D;font-weight:500;line-height:1.3">✓ ' + adapted + '</div>' +
+      '</li>';
   }).join('');
 }
 
