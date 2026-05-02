@@ -193,6 +193,7 @@
   .stat-card-trend { font-size: 0.72rem; color: #bbb; margin-top: 4px; }
   .dashboard-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
   @media(max-width:768px) { .dashboard-grid { grid-template-columns: 1fr; } }
+  @media(max-width:768px) { .health-grid { grid-template-columns: repeat(2,1fr) !important; } }
   .dash-card { background: white; border-radius: 16px; padding: 20px; box-shadow: 0 4px 16px rgba(0,0,0,0.06); border: none; }
   .dash-card-title { font-size: 0.88rem; font-weight: 700; color: #2D2D2D; margin-bottom: 16px; }
   .meal-row { display: flex; align-items: center; gap: 10px; padding: 10px 0; border-bottom: 1px solid var(--border); }
@@ -1170,7 +1171,7 @@ function switchLang(lang) {
   <!-- Formulaire saisie -->
   <div style="background:white;border-radius:20px;padding:24px;box-shadow:0 2px 12px rgba(0,0,0,0.06);margin-bottom:24px">
     <div style="font-size:0.75rem;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:#FF9A3C;margin-bottom:20px">📋 Saisie du jour</div>
-    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:16px" id="healthGrid">
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:16px" id="healthGrid" class="health-grid">
       <div style="background:#FFF5F0;border-radius:14px;padding:14px">
         <div style="font-size:1.4rem;margin-bottom:6px">🩸</div>
         <div style="font-size:0.7rem;color:#FF9A3C;font-weight:600;margin-bottom:6px">GLYCÉMIE</div>
