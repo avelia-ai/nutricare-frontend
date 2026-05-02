@@ -879,45 +879,7 @@ function switchLang(lang) {
           </div>
         </div>
 
-        <!-- CHRONO-NUTRITION -->
-        <div style="margin-top:28px;padding:20px 24px;background:linear-gradient(135deg,rgba(201,168,76,.08),rgba(133,183,235,.06));border:1px solid rgba(201,168,76,.25);border-radius:8px;">
-          <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px;">
-            <span style="font-size:1.2rem;">🌙</span>
-            <div style="font-size:0.88rem;font-weight:600;color:var(--charcoal)">Chrono-nutrition IA</div>
-            <span style="background:linear-gradient(135deg,#FF6B6B,#FF9A3C);color:#2D2D2D;font-size:0.6rem;font-weight:700;padding:2px 8px;border-radius:100px;letter-spacing:1px">EXCLUSIF</span>
-          </div>
-          <p style="font-size:0.78rem;color:var(--soft);margin-bottom:16px;line-height:1.5;">Mirella analyse votre rythme circadien pour adapter les horaires de vos repas et optimiser votre énergie, sommeil et métabolisme.</p>
-          <div class="profile-grid" style="gap:12px;">
-            <div class="profile-field">
-              <label class="profile-label">🌅 Heure de lever</label>
-              <input type="time" class="profile-input" id="profileWakeUp" value="07:00">
-            </div>
-            <div class="profile-field">
-              <label class="profile-label">🌙 Heure de coucher</label>
-              <input type="time" class="profile-input" id="profileSleep" value="23:00">
-            </div>
-            <div class="profile-field">
-              <label class="profile-label">💼 Début de travail</label>
-              <input type="time" class="profile-input" id="profileWorkStart" value="09:00">
-            </div>
-            <div class="profile-field">
-              <label class="profile-label">🏠 Fin de travail</label>
-              <input type="time" class="profile-input" id="profileWorkEnd" value="18:00">
-            </div>
-            <div class="profile-field" style="grid-column:span 2">
-              <label class="profile-label">⚡ Objectif chronobiologique</label>
-              <select class="profile-input" id="profileChronoGoal">
-                <option value="">Choisir un objectif...</option>
-                <option value="energy">Maximiser mon énergie dans la journée</option>
-                <option value="sleep">Améliorer la qualité de mon sommeil</option>
-                <option value="weight">Optimiser ma perte de poids</option>
-                <option value="focus">Améliorer ma concentration au travail</option>
-                <option value="digestion">Améliorer ma digestion</option>
-                <option value="sport">Optimiser mes performances sportives</option>
-              </select>
-            </div>
-          </div>
-        </div>
+
         <div style="margin-top:20px;display:flex;align-items:stretch;gap:12px;flex-wrap:wrap">
           <button class="btn-save" style="flex:1;min-width:140px" onclick="saveProfile()">Sauvegarder le profil</button>
           <button class="btn-save" style="flex:1;min-width:140px;background:linear-gradient(135deg,#FF6B6B,#FF9A3C);color:#2D2D2D" onclick="showView('passeport')">Passeport Santé</button>
@@ -1244,6 +1206,42 @@ function switchLang(lang) {
     <div style="font-size:0.85rem;color:rgba(255,255,255,0.85)">Optimisez votre alimentation selon votre horloge biologique</div>
   </div>
   <div style="">
+    <!-- Paramètres chrono -->
+    <div style="background:white;border-radius:12px;padding:24px;border:1px solid rgba(255,107,107,0.15);margin-bottom:24px;">
+      <div style="font-size:0.75rem;font-weight:600;text-transform:uppercase;letter-spacing:1px;color:#FF9A3C;margin-bottom:20px;">⚙️ Mes horaires</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:16px">
+        <div>
+          <label style="font-size:0.75rem;color:#FF9A3C;display:block;margin-bottom:4px">🌅 Heure de lever</label>
+          <input type="time" id="profileWakeUp" value="07:00" style="width:100%;padding:10px;border:1.5px solid rgba(255,107,107,0.2);border-radius:8px;font-size:0.88rem;font-family:'DM Sans',sans-serif">
+        </div>
+        <div>
+          <label style="font-size:0.75rem;color:#FF9A3C;display:block;margin-bottom:4px">🌙 Heure de coucher</label>
+          <input type="time" id="profileSleep" value="23:00" style="width:100%;padding:10px;border:1.5px solid rgba(255,107,107,0.2);border-radius:8px;font-size:0.88rem;font-family:'DM Sans',sans-serif">
+        </div>
+        <div>
+          <label style="font-size:0.75rem;color:#FF9A3C;display:block;margin-bottom:4px">💼 Début de travail</label>
+          <input type="time" id="profileWorkStart" value="09:00" style="width:100%;padding:10px;border:1.5px solid rgba(255,107,107,0.2);border-radius:8px;font-size:0.88rem;font-family:'DM Sans',sans-serif">
+        </div>
+        <div>
+          <label style="font-size:0.75rem;color:#FF9A3C;display:block;margin-bottom:4px">🏠 Fin de travail</label>
+          <input type="time" id="profileWorkEnd" value="18:00" style="width:100%;padding:10px;border:1.5px solid rgba(255,107,107,0.2);border-radius:8px;font-size:0.88rem;font-family:'DM Sans',sans-serif">
+        </div>
+      </div>
+      <div style="margin-bottom:16px">
+        <label style="font-size:0.75rem;color:#FF9A3C;display:block;margin-bottom:4px">⚡ Objectif chronobiologique</label>
+        <select id="profileChronoGoal" style="width:100%;padding:10px;border:1.5px solid rgba(255,107,107,0.2);border-radius:8px;font-size:0.88rem;font-family:'DM Sans',sans-serif">
+          <option value="">Choisir un objectif...</option>
+          <option value="energy">Maximiser mon énergie dans la journée</option>
+          <option value="sleep">Améliorer la qualité de mon sommeil</option>
+          <option value="weight">Optimiser ma perte de poids</option>
+          <option value="focus">Améliorer ma concentration au travail</option>
+          <option value="digestion">Améliorer ma digestion</option>
+          <option value="sport">Optimiser mes performances sportives</option>
+        </select>
+      </div>
+      <button onclick="saveProfile()" style="background:linear-gradient(135deg,#FF6B6B,#FF9A3C);color:white;padding:10px 24px;border:none;border-radius:8px;font-size:0.88rem;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif">Sauvegarder mes horaires</button>
+      <span id="chronoSaveSuccess" style="font-size:0.78rem;color:#28C840;margin-left:12px;display:none">✅ Sauvegardé !</span>
+    </div>
     <div style="font-size:0.85rem;color:#999;margin-bottom:24px">Horaires optimaux selon votre profil chronobiologique</div>
     <div style="background:#2D2D2D;border-radius:8px;padding:28px;margin-bottom:24px;display:flex;align-items:center;gap:32px;flex-wrap:wrap;">
       <div style="text-align:center;">
