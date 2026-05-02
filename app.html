@@ -1163,17 +1163,7 @@ function switchLang(lang) {
       <span style="font-size:1rem;color:rgba(255,255,255,0.8)"> ml</span>
     </div>
     <div style="font-size:0.82rem;color:rgba(255,255,255,0.8);margin-bottom:16px">Objectif du jour : <span id="hydrationGoal">2.0</span> L</div>
-    <div id="hydrationBtns" style="display:flex;gap:8px;flex-wrap:wrap">
-      <button onclick="addHydration(250)" style="width:44px;height:44px;background:rgba(255,255,255,0.25);border:none;border-radius:10px;color:white;font-size:1.2rem;cursor:pointer">+</button>
-      <button onclick="addHydration(250)" style="width:44px;height:44px;background:rgba(255,255,255,0.25);border:none;border-radius:10px;color:white;font-size:1.2rem;cursor:pointer">+</button>
-      <button onclick="addHydration(250)" style="width:44px;height:44px;background:rgba(255,255,255,0.25);border:none;border-radius:10px;color:white;font-size:1.2rem;cursor:pointer">+</button>
-      <button onclick="addHydration(250)" style="width:44px;height:44px;background:rgba(255,255,255,0.25);border:none;border-radius:10px;color:white;font-size:1.2rem;cursor:pointer">+</button>
-      <button onclick="addHydration(250)" style="width:44px;height:44px;background:rgba(255,255,255,0.25);border:none;border-radius:10px;color:white;font-size:1.2rem;cursor:pointer">+</button>
-      <button onclick="addHydration(250)" style="width:44px;height:44px;background:rgba(255,255,255,0.25);border:none;border-radius:10px;color:white;font-size:1.2rem;cursor:pointer">+</button>
-      <button onclick="addHydration(250)" style="width:44px;height:44px;background:rgba(255,255,255,0.25);border:none;border-radius:10px;color:white;font-size:1.2rem;cursor:pointer">+</button>
-      <button onclick="addHydration(250)" style="width:44px;height:44px;background:rgba(255,255,255,0.25);border:none;border-radius:10px;color:white;font-size:1.2rem;cursor:pointer">+</button>
-    </div>
-    <div id="hydrationCups" style="display:flex;gap:8px;flex-wrap:wrap;margin-top:12px"></div>
+    <div id="hydrationCups" style="display:flex;gap:10px;flex-wrap:wrap;margin-top:8px"></div>
   </div>
 
   <!-- Formulaire saisie -->
@@ -4171,18 +4161,31 @@ function switchLang(lang) {
     if (input) input.value = (_hydrationMl / 1000).toFixed(1);
   }
 
+  const HYDRATION_TOTAL = 8;
   function updateHydrationDisplay() {
     const el = document.getElementById('hydrationMl');
     if (el) el.textContent = _hydrationMl;
     const cups = document.getElementById('hydrationCups');
     if (!cups) return;
-    const nbCups = Math.floor(_hydrationMl / 250);
+    const filled = Math.min(Math.floor(_hydrationMl / 250), HYDRATION_TOTAL);
     cups.innerHTML = '';
-    for (let i = 0; i < Math.min(nbCups, 10); i++) {
-      const c = document.createElement('div');
-      c.style.cssText = 'width:44px;height:44px;background:rgba(255,255,255,0.5);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1.2rem';
-      c.textContent = '💧';
-      cups.appendChild(c);
+    for (let i = 0; i < HYDRATION_TOTAL; i++) {
+      const isFilled = i < filled;
+      const btn = document.createElement('button');
+      btn.style.cssText = 'width:48px;height:48px;border:none;border-radius:12px;cursor:pointer;font-size:1.4rem;transition:all 0.2s;' + (isFilled ? 'background:rgba(255,255,255,0.5);' : 'background:rgba(255,255,255,0.15);filter:grayscale(0.8);opacity:0.6;');
+      btn.textContent = '🥤';
+      const idx = i;
+      btn.onclick = function() {
+        if (idx < filled) {
+          _hydrationMl = idx * 250;
+        } else {
+          _hydrationMl = (idx + 1) * 250;
+        }
+        updateHydrationDisplay();
+        const input = document.getElementById('hHydration');
+        if (input) input.value = (_hydrationMl / 1000).toFixed(1);
+      };
+      cups.appendChild(btn);
     }
   }
 
