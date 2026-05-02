@@ -4508,6 +4508,18 @@ async function scanProduit(input) {
 async function showRecipeModal(btn) {
   const r = JSON.parse(btn.getAttribute('data-recipe').replace(/&quot;/g,'"'));
   document.getElementById('recipeModalTitle').textContent = r.nom;
+  // Titre sur la photo
+  const titlePhoto = document.getElementById('recipeModalTitlePhoto');
+  if (titlePhoto) titlePhoto.textContent = r.nom;
+  // Badges sur la photo
+  const badges = document.getElementById('recipeModalBadges');
+  if (badges) {
+    const badgeList = [];
+    if (r.prep_minutes) badgeList.push('⏱ ' + r.prep_minutes + ' min');
+    if (r.cout_estime) badgeList.push('💰 ' + r.cout_estime.toFixed(2) + '€');
+    if (r.calories) badgeList.push('🔥 ' + r.calories + ' kcal');
+    badges.innerHTML = badgeList.map(b => '<span style="background:rgba(255,255,255,0.2);backdrop-filter:blur(4px);color:white;padding:5px 12px;border-radius:20px;font-size:0.75rem;font-weight:600;border:1px solid rgba(255,255,255,0.3)">' + b + '</span>').join('');
+  }
   document.getElementById('recipeModalImg').src = unsplashUrl(r.nom);
   document.getElementById('recipeModalMacros').innerHTML =
     '<div style="background:white;border-radius:16px;padding:20px;text-align:center;border:1px solid #eee;margin-bottom:4px">' +
