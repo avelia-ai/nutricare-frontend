@@ -4132,6 +4132,53 @@ function switchLang(lang) {
     }
   }
 
+
+  // Info du jour
+  const infosDuJour = [
+    'Boire un verre d\'eau dès le réveil aide à relancer votre métabolisme et à réhydrater votre corps après la nuit.',
+    'Les protéines au petit-déjeuner réduisent les fringales de la journée et stabilisent votre glycémie.',
+    'Manger lentement et bien mâcher améliore la digestion et aide à ressentir la satiété plus rapidement.',
+    'Les légumes verts à feuilles sont riches en fer, calcium et vitamines — essayez d\'en inclure à chaque repas.',
+    'Une collation de 16h riche en protéines évite les hypoglycémies et réduit l\'appétit au dîner.',
+    'Le magnésium améliore la qualité du sommeil — on le trouve dans les noix, légumineuses et chocolat noir.',
+    'Varier les couleurs dans votre assiette garantit un apport en micronutriments variés et essentiels.'
+  ];
+
+  function loadInfoDuJour() {
+    const el = document.getElementById('infoDuJourTexte');
+    const titre = document.getElementById('infoDuJourTitre');
+    if (!el) return;
+    const dayOfYear = Math.floor((new Date() - new Date(new Date().getFullYear(), 0, 0)) / 86400000);
+    const info = infosDuJour[dayOfYear % infosDuJour.length];
+    const jour = dayOfYear % 30 + 1;
+    if (titre) titre.textContent = 'Jour ' + jour + ' — L\'info du jour';
+    el.textContent = info;
+  }
+
+  // Hydratation
+  let _hydrationMl = 0;
+  function addHydration(ml) {
+    _hydrationMl += ml;
+    updateHydrationDisplay();
+    const input = document.getElementById('hHydration');
+    if (input) input.value = (_hydrationMl / 1000).toFixed(1);
+  }
+
+  function updateHydrationDisplay() {
+    const el = document.getElementById('hydrationMl');
+    if (el) el.textContent = _hydrationMl;
+    const cups = document.getElementById('hydrationCups');
+    if (!cups) return;
+    const nbCups = Math.floor(_hydrationMl / 250);
+    cups.innerHTML = '';
+    for (let i = 0; i < Math.min(nbCups, 10); i++) {
+      const c = document.createElement('div');
+      c.style.cssText = 'width:44px;height:44px;background:rgba(255,255,255,0.5);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1.2rem';
+      c.textContent = '💧';
+      cups.appendChild(c);
+    }
+  }
+
   function showTrialBanner() {
     if (!window.isTrial || !window.trialEnd) return;
     const existing = document.getElementById('trialActiveBanner');
@@ -4150,6 +4197,7 @@ function switchLang(lang) {
 
   async function showView(view, btn) {
     if (view === 'menus') setTimeout(buildWeekSelector, 50);
+    if (view === 'health') { loadInfoDuJour(); updateHydrationDisplay(); }
     if (wcalViews.includes(view)) setTimeout(function(){ wcalInit(view); }, 50);
 
   // Si plan pas encore chargé, attendre loadProfile
