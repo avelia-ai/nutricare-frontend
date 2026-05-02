@@ -1164,10 +1164,7 @@ function switchLang(lang) {
     </div>
     <div style="font-size:0.82rem;color:rgba(255,255,255,0.8);margin-bottom:16px">Objectif du jour : <span id="hydrationGoal">2.0</span> L</div>
     <div id="hydrationCups" style="display:flex;gap:10px;flex-wrap:wrap;margin-top:8px"></div>
-    <div style="margin-top:14px;display:flex;align-items:center;gap:12px">
-      <button onclick="saveHydration()" style="background:rgba(255,255,255,0.25);color:white;border:1px solid rgba(255,255,255,0.4);border-radius:10px;padding:8px 20px;font-size:0.85rem;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif">Enregistrer 💧</button>
-      <span id="hydrationSaveMsg" style="font-size:0.8rem;color:rgba(255,255,255,0.9);display:none">✅ Sauvegardé !</span>
-    </div>
+
   </div>
 
   <!-- Formulaire saisie -->
@@ -4203,7 +4200,7 @@ function switchLang(lang) {
         }
         updateHydrationDisplay();
         const input = document.getElementById('hHydration');
-        if (input) input.value = (_hydrationMl / 1000).toFixed(1);
+        if (input) { input.value = (_hydrationMl / 1000).toFixed(1); }
       };
       cups.appendChild(btn);
     }
