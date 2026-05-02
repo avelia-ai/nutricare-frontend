@@ -865,19 +865,7 @@ function switchLang(lang) {
             <label class="profile-label">Budget alimentaire mensuel</label>
             <input type="text" class="profile-input" id="profileBudget" placeholder="ex: 200€/mois">
           </div>
-          <div class="profile-field">
-            <label class="profile-label">Objectif nutritionnel</label>
-            <select class="profile-input" id="profileObjectif">
-              <option value="">-- Choisir un objectif --</option>
-              <option value="perte_de_poids">Perte de poids</option>
-              <option value="prise_de_masse">Prise de masse musculaire</option>
-              <option value="seche">Sèche (maintien musculaire, perte de graisse)</option>
-              <option value="maintenance">Maintien du poids</option>
-              <option value="performance">Performance sportive</option>
-              <option value="sante">Amélioration santé générale</option>
-              <option value="autre">Autre</option>
-            </select>
-          </div>
+
         </div>
 
 
@@ -1049,9 +1037,20 @@ function switchLang(lang) {
   <!-- Contenu menus -->
   <div id="menusContent" style="display:none">
     <div style="display:flex;justify-content:flex-end;align-items:center;margin-bottom:24px">
-      <button onclick="generateMenu()" id="generateMenuBtn" style="background:#2D2D2D;color:white;padding:10px 24px;border:none;border-radius: 4px;font-size:0.88rem;cursor:pointer;font-family:'DM Sans',sans-serif;display:flex;align-items:center;gap:8px">
-         Générer mon menu IA
-      </button>
+      <div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap">
+        <select id="menuObjectif" style="padding:10px 16px;border:1.5px solid rgba(255,107,107,0.3);border-radius:8px;font-size:0.88rem;font-family:'DM Sans',sans-serif;background:white;color:#2D2D2D;cursor:pointer">
+          <option value="">🎯 Objectif nutritionnel</option>
+          <option value="perte_de_poids">⚖️ Perte de poids</option>
+          <option value="prise_de_masse">💪 Prise de masse</option>
+          <option value="seche">🔥 Sèche</option>
+          <option value="maintenance">⚖️ Maintien du poids</option>
+          <option value="performance">🏃 Performance sportive</option>
+          <option value="sante">❤️ Santé générale</option>
+        </select>
+        <button onclick="generateMenu()" id="generateMenuBtn" style="background:#2D2D2D;color:white;padding:10px 24px;border:none;border-radius:8px;font-size:0.88rem;cursor:pointer;font-family:'DM Sans',sans-serif;display:flex;align-items:center;gap:8px">
+          🤖 Générer mon menu IA
+        </button>
+      </div>
     </div>
 
     <!-- Loading -->
@@ -2650,7 +2649,6 @@ function switchLang(lang) {
       if (document.getElementById('profileWorkStart')) document.getElementById('profileWorkStart').value = profile.work_start || '09:00';
       if (document.getElementById('profileWorkEnd')) document.getElementById('profileWorkEnd').value = profile.work_end || '18:00';
       if (document.getElementById('profileChronoGoal')) document.getElementById('profileChronoGoal').value = profile.chrono_goal || '';
-      if (document.getElementById('profileObjectif')) document.getElementById('profileObjectif').value = profile.objectif_nutritionnel || '';
       updateMenu(window.currentPlan || 'free');
       if (window.isTrial) { setTimeout(showTrialBanner, 500); if (!localStorage.getItem("mirella_pwd_changed")) setTimeout(showChangePasswordModal, 1000); }
       // Score circadien dans le dashboard
@@ -5617,7 +5615,7 @@ async function deleteProfessional(id) {
       medications: document.getElementById('profileMedications').value.split(',').map(s => s.trim()).filter(Boolean),
       cultural_constraints: document.getElementById('profileCultural').value.trim(),
       budget_alimentaire: document.getElementById('profileBudget').value.trim(),
-        objectif_nutritionnel: document.getElementById('profileObjectif')?.value || '',
+        objectif_nutritionnel: document.getElementById('menuObjectif')?.value || document.getElementById('profileObjectif')?.value || '',
       ethnicity: document.getElementById('profileEthnicity')?.value || '',
       wake_up: document.getElementById('profileWakeUp')?.value || '',
       sleep_time: document.getElementById('profileSleep')?.value || '',
