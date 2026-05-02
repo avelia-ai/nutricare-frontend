@@ -4986,11 +4986,22 @@ function renderHealthChart(logs) {
     data: {
       labels,
       datasets: [
-        { label: 'Poids (kg)', data: logs.map(l => l.weight), borderColor: '#378ADD', backgroundColor: 'rgba(55,138,221,0.1)', tension: 0.4, fill: true },
-        { label: 'Énergie (/10)', data: logs.map(l => l.energy_level), borderColor: '#C9A84C', backgroundColor: 'rgba(201,168,76,0.1)', tension: 0.4, fill: false }
+        { label: 'Poids (kg)', data: logs.map(l => l.weight), borderColor: '#378ADD', backgroundColor: 'rgba(55,138,221,0.08)', tension: 0.4, fill: true, yAxisID: 'y' },
+        { label: 'Énergie (/10)', data: logs.map(l => l.energy_level), borderColor: '#C9A84C', backgroundColor: 'rgba(201,168,76,0.08)', tension: 0.4, fill: false, yAxisID: 'y2' },
+        { label: 'Sommeil (h)', data: logs.map(l => l.sleep_hours), borderColor: '#845EC2', backgroundColor: 'rgba(132,94,194,0.08)', tension: 0.4, fill: false, yAxisID: 'y2' },
+        { label: 'Hydratation (L)', data: logs.map(l => l.hydration_liters), borderColor: '#00C9A7', backgroundColor: 'rgba(0,201,167,0.08)', tension: 0.4, fill: false, yAxisID: 'y2' },
+        { label: 'Glycémie (mmol/L)', data: logs.map(l => l.glycemia), borderColor: '#FF6B6B', backgroundColor: 'rgba(255,107,107,0.08)', tension: 0.4, fill: false, yAxisID: 'y2' }
       ]
     },
-    options: { responsive: true, plugins: { legend: { position: 'bottom' } }, scales: { y: { beginAtZero: false } } }
+    options: {
+      responsive: true,
+      interaction: { mode: 'index', intersect: false },
+      plugins: { legend: { position: 'bottom', labels: { boxWidth: 12, font: { size: 11 } } } },
+      scales: {
+        y: { type: 'linear', position: 'left', title: { display: true, text: 'Poids (kg)', font: { size: 10 } }, beginAtZero: false },
+        y2: { type: 'linear', position: 'right', title: { display: true, text: 'Autres', font: { size: 10 } }, beginAtZero: true, grid: { drawOnChartArea: false } }
+      }
+    }
   });
 }
 
