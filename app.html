@@ -1164,6 +1164,10 @@ function switchLang(lang) {
     </div>
     <div style="font-size:0.82rem;color:rgba(255,255,255,0.8);margin-bottom:16px">Objectif du jour : <span id="hydrationGoal">2.0</span> L</div>
     <div id="hydrationCups" style="display:flex;gap:10px;flex-wrap:wrap;margin-top:8px"></div>
+    <div style="margin-top:14px;display:flex;align-items:center;gap:12px">
+      <button onclick="saveHydration()" style="background:rgba(255,255,255,0.25);color:white;border:1px solid rgba(255,255,255,0.4);border-radius:10px;padding:8px 20px;font-size:0.85rem;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif">Enregistrer 💧</button>
+      <span id="hydrationSaveMsg" style="font-size:0.8rem;color:rgba(255,255,255,0.9);display:none">✅ Sauvegardé !</span>
+    </div>
   </div>
 
   <!-- Formulaire saisie -->
@@ -4141,6 +4145,22 @@ function switchLang(lang) {
     'Varier les couleurs dans votre assiette garantit un apport en micronutriments variés et essentiels.'
   ];
 
+  function saveHydration() {
+    const input = document.getElementById('hHydration');
+    if (input) input.value = (_hydrationMl / 1000).toFixed(1);
+    // Sauvegarder via saveHealthLog si disponible
+    const msg = document.getElementById('hydrationSaveMsg');
+    fetch(BACKEND_URL + '/api/health', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + authToken },
+      body: JSON.stringify({ date: new Date().toISOString().split('T')[0], hydratation: _hydrationMl / 1000 })
+    }).then(() => {
+      if (msg) { msg.style.display = 'inline'; setTimeout(() => msg.style.display = 'none', 2000); }
+    }).catch(() => {
+      if (msg) { msg.style.display = 'inline'; setTimeout(() => msg.style.display = 'none', 2000); }
+    });
+  }
+
   function loadInfoDuJour() {
     const el = document.getElementById('infoDuJourTexte');
     const titre = document.getElementById('infoDuJourTitre');
@@ -4161,7 +4181,7 @@ function switchLang(lang) {
     if (input) input.value = (_hydrationMl / 1000).toFixed(1);
   }
 
-  const HYDRATION_TOTAL = 8;
+  const HYDRATION_TOTAL = 12;
   function updateHydrationDisplay() {
     const el = document.getElementById('hydrationMl');
     if (el) el.textContent = _hydrationMl;
