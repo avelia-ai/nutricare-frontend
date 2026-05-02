@@ -1143,6 +1143,32 @@ function switchLang(lang) {
   <div style="font-size:0.85rem;color:#FF9A3C;margin-bottom:8px">Saisissez vos indicateurs quotidiens</div>
   <div id="healthDateIndicator" style="display:none;font-size:0.82rem;background:rgba(255,107,107,.08);color:#FF6B6B;padding:6px 12px;border-radius:6px;margin-bottom:16px;font-weight:500"></div>
 
+  <!-- Info du jour -->
+  <div style="background:white;border-radius:16px;padding:20px;margin-bottom:16px;box-shadow:0 2px 8px rgba(0,0,0,0.06)">
+    <div style="display:flex;align-items:center;gap:12px;margin-bottom:10px">
+      <span style="font-size:1.5rem">💡</span>
+      <div style="font-size:1rem;font-weight:700;color:#2D2D2D" id="infoDuJourTitre">L'info du jour</div>
+    </div>
+    <div id="infoDuJourTexte" style="font-size:0.88rem;color:#555;line-height:1.6">Chargement...</div>
+  </div>
+
+  <!-- Hydratation -->
+  <div style="background:linear-gradient(135deg,#5B9BD5,#7EC8E3);border-radius:16px;padding:20px;margin-bottom:16px;box-shadow:0 2px 8px rgba(0,0,0,0.1)">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
+      <div style="font-size:0.88rem;font-weight:600;color:white;opacity:0.9">Hydratation</div>
+      <div style="width:28px;height:28px;background:rgba(255,255,255,0.2);border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer">›</div>
+    </div>
+    <div style="margin-bottom:4px">
+      <span id="hydrationMl" style="font-size:2.5rem;font-weight:700;color:white">0</span>
+      <span style="font-size:1rem;color:rgba(255,255,255,0.8)"> ml</span>
+    </div>
+    <div style="font-size:0.82rem;color:rgba(255,255,255,0.8);margin-bottom:16px">Objectif du jour : <span id="hydrationGoal">2.0</span> L</div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap">
+      ${Array.from({length:10}).map((_,i) => '<button onclick="addHydration(250)" style="width:44px;height:44px;background:rgba(255,255,255,0.25);border:none;border-radius:10px;color:white;font-size:1.2rem;cursor:pointer;display:flex;align-items:center;justify-content:center">+</button>').join('')}
+    </div>
+    <div id="hydrationCups" style="display:flex;gap:8px;flex-wrap:wrap;margin-top:12px"></div>
+  </div>
+
   <!-- Formulaire saisie -->
   <div style="background:white;border-radius: 4px;padding:24px;border:1px solid rgba(255,107,107,0.15);margin-bottom:24px">
     <div style="font-size:0.72rem;font-weight:600;text-transform:uppercase;letter-spacing:1.5px;color:#FF9A3C;margin-bottom:18px">SAISIE DU JOUR</div>
