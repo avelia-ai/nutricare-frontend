@@ -4518,6 +4518,8 @@ async function showRecipeModal(btn) {
     if (r.prep_minutes) badgeList.push('⏱ ' + r.prep_minutes + ' min');
     if (r.cout_estime) badgeList.push('💰 ' + r.cout_estime.toFixed(2) + '€');
     if (r.calories) badgeList.push('🔥 ' + r.calories + ' kcal');
+    const tagEmojis = {'végétarien':'🥦','vegan':'🌱','sans gluten':'🌾','sans lactose':'🥛','sans oeuf':'🥚','sans porc':'🐷','riche en protéines':'💪','faible en calories':'⚡'};
+    if (r.tags && r.tags.length) r.tags.forEach(function(t){ badgeList.push((tagEmojis[t]||'✓') + ' ' + t); });
     badges.innerHTML = badgeList.map(b => '<span style="background:rgba(255,255,255,0.2);backdrop-filter:blur(4px);color:white;padding:5px 12px;border-radius:20px;font-size:0.75rem;font-weight:600;border:1px solid rgba(255,255,255,0.3)">' + b + '</span>').join('');
   }
   document.getElementById('recipeModalImg').src = unsplashUrl(r.nom);
