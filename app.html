@@ -4921,7 +4921,12 @@ async function loadDashboardForDate(dateStr) {
   console.log('Chargement dashboard pour', dateStr);
 }
 async function saveHealthLog() {
+  const selectedDate = (typeof wcalSelected !== 'undefined' ? wcalSelected : new Date()).toISOString().split('T')[0];
+  // Sync hydratation
+  const hydInput = document.getElementById('hHydration');
+  if (hydInput && _hydrationMl > 0 && !hydInput.value) hydInput.value = (_hydrationMl / 1000).toFixed(1);
   const data = {
+    date: selectedDate,
     glycemia: parseFloat(document.getElementById('hGlycemia').value) || null,
     weight: parseFloat(document.getElementById('hWeight').value) || null,
     energy_level: parseInt(document.getElementById('hEnergy').value) || null,
