@@ -4582,11 +4582,11 @@ function changePortions(delta) {
   }).join('');
   // Charger les photos pour chaque ingrédient
   setTimeout(() => {
-    document.querySelectorAll('[data-ingredient]').forEach(img => {
+    document.querySelectorAll('#recipeModalIngredients [data-ingredient]').forEach(img => {
       const q = img.getAttribute('data-ingredient');
       if (q) loadMealPhoto(q, q, img);
     });
-  }, 50);
+  }, 300);
 }
 
 async function scanProduit(input) {
