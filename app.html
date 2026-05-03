@@ -528,12 +528,18 @@ async function refreshAuthToken() {
   return false;
 }
 
-// Vérifier et rafraîchir token toutes les 30 minutes
+// Vérifier et rafraîchir token toutes les 4 minutes
 setInterval(async () => {
   const expiresAt = parseInt(localStorage.getItem('nutricare_expires_at') || '0');
   const now = Math.floor(Date.now() / 1000);
-  if (expiresAt && expiresAt - now < 300) await refreshAuthToken();
-}, 30 * 60 * 1000);
+  if (expiresAt && expiresAt - now < 600) await refreshAuthToken();
+}, 4 * 60 * 1000);
+// Rafraîchir immédiatement au chargement si besoin
+(async () => {
+  const expiresAt = parseInt(localStorage.getItem('nutricare_expires_at') || '0');
+  const now = Math.floor(Date.now() / 1000);
+  if (expiresAt && expiresAt - now < 3600) await refreshAuthToken();
+})();
 
 var token = localStorage.getItem('nutricare_token');
   var user = localStorage.getItem('nutricare_user');
