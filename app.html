@@ -1232,8 +1232,13 @@ function switchLang(lang) {
     </div>
   <!-- Section évolution photos -->
   <div style="background:white;border-radius:16px;padding:22px;box-shadow:0 2px 8px rgba(0,0,0,0.06);margin-top:16px;margin-bottom:100px">
-    <div style="font-size:0.72rem;font-weight:600;text-transform:uppercase;letter-spacing:1.5px;color:#FF9A3C;margin-bottom:16px">📸 MON ÉVOLUTION CORPORELLE</div>
+    <div style="font-size:0.72rem;font-weight:600;text-transform:uppercase;letter-spacing:1.5px;color:#FF9A3C;margin-bottom:4px">📸 MON ÉVOLUTION CORPORELLE</div>
     <div style="font-size:0.82rem;color:#999;margin-bottom:16px">Prenez une photo régulièrement pour suivre votre évolution visuelle.</div>
+
+    <!-- Badges -->
+    <div id="evolutionBadges" style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px"></div>
+
+    <!-- Boutons ajout -->
     <div style="display:flex;gap:12px;margin-bottom:16px;flex-wrap:wrap">
       <label style="flex:1;min-width:120px;background:linear-gradient(135deg,#FF6B6B,#FF9A3C);color:white;border-radius:12px;padding:12px;text-align:center;cursor:pointer;font-size:0.85rem;font-weight:600">
         📷 Prendre une photo
@@ -1244,7 +1249,48 @@ function switchLang(lang) {
         <input type="file" accept="image/*" style="display:none" onchange="addEvolutionPhoto(this)">
       </label>
     </div>
-    <div id="evolutionGallery" style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px"></div>
+
+    <!-- Tabs -->
+    <div style="display:flex;gap:8px;margin-bottom:16px;border-bottom:1px solid #f0f0f0;padding-bottom:12px">
+      <button onclick="setEvolutionTab('timeline')" id="tabTimeline" style="font-size:0.78rem;padding:6px 14px;border-radius:20px;border:none;background:#2D2D2D;color:white;cursor:pointer;font-family:'DM Sans',sans-serif">📅 Timeline</button>
+      <button onclick="setEvolutionTab('compare')" id="tabCompare" style="font-size:0.78rem;padding:6px 14px;border-radius:20px;border:none;background:#F8F4F0;color:#2D2D2D;cursor:pointer;font-family:'DM Sans',sans-serif">⚖️ Comparer</button>
+      <button onclick="setEvolutionTab('mirella')" id="tabMirella" style="font-size:0.78rem;padding:6px 14px;border-radius:20px;border:none;background:#F8F4F0;color:#2D2D2D;cursor:pointer;font-family:'DM Sans',sans-serif">🤖 Analyse Mirella</button>
+    </div>
+
+    <!-- Tab Timeline -->
+    <div id="tabContentTimeline">
+      <div id="evolutionGallery" style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px"></div>
+    </div>
+
+    <!-- Tab Comparer -->
+    <div id="tabContentCompare" style="display:none">
+      <div style="font-size:0.82rem;color:#999;margin-bottom:12px">Sélectionnez 2 photos pour les comparer côte à côte.</div>
+      <div id="compareGallery" style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:16px"></div>
+      <div id="compareResult" style="display:none">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px">
+          <div style="text-align:center">
+            <img id="compareImgA" style="width:100%;border-radius:12px;aspect-ratio:1;object-fit:cover">
+            <div id="compareLabelA" style="font-size:0.75rem;color:#999;margin-top:4px"></div>
+          </div>
+          <div style="text-align:center">
+            <img id="compareImgB" style="width:100%;border-radius:12px;aspect-ratio:1;object-fit:cover">
+            <div id="compareLabelB" style="font-size:0.75rem;color:#999;margin-top:4px"></div>
+          </div>
+        </div>
+        <div id="compareDiff" style="text-align:center;font-size:0.88rem;font-weight:600;color:#28C840;padding:8px;background:#F0FFF4;border-radius:8px"></div>
+      </div>
+    </div>
+
+    <!-- Tab Mirella -->
+    <div id="tabContentMirella" style="display:none">
+      <div style="font-size:0.82rem;color:#999;margin-bottom:12px">Sélectionnez 2 photos pour que Mirella analyse votre progression.</div>
+      <div id="mirellaGallery" style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:16px"></div>
+      <button onclick="analyzeEvolution()" id="analyzeBtn" style="display:none;width:100%;background:#2D2D2D;color:white;border:none;border-radius:12px;padding:12px;font-size:0.85rem;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;margin-bottom:12px">🤖 Analyser ma progression avec Mirella</button>
+      <div id="mirellaAnalysisResult" style="display:none;background:#FFF5F0;border-radius:12px;padding:16px;border-left:3px solid #FF9A3C">
+        <div style="font-size:0.75rem;font-weight:600;color:#FF9A3C;margin-bottom:8px">Mirella</div>
+        <div id="mirellaAnalysisText" style="font-size:0.85rem;color:#2D2D2D;line-height:1.6"></div>
+      </div>
+    </div>
   </div>
   </div>
 </div>
@@ -4247,19 +4293,32 @@ function switchLang(lang) {
   }
 
 
+  let _evoCompareA = null, _evoCompareB = null, _evoMirellaA = null, _evoMirellaB = null;
+
   function addEvolutionPhoto(input) {
     const file = input.files[0];
     if (!file) return;
     const reader = new FileReader();
     reader.onload = function(e) {
       const photos = JSON.parse(localStorage.getItem('evolution_photos') || '[]');
-      const date = (typeof wcalSelected !== 'undefined' ? wcalSelected : new Date()).toISOString().split('T')[0];
+      const date = new Date().toISOString().split('T')[0];
       photos.unshift({ date: date, src: e.target.result });
-      if (photos.length > 20) photos.pop();
+      if (photos.length > 30) photos.pop();
       localStorage.setItem('evolution_photos', JSON.stringify(photos));
       renderEvolutionGallery();
+      renderEvolutionBadges();
     };
     reader.readAsDataURL(file);
+  }
+
+  function setEvolutionTab(tab) {
+    ['timeline','compare','mirella'].forEach(function(t) {
+      document.getElementById('tabContent' + t.charAt(0).toUpperCase() + t.slice(1)).style.display = t === tab ? 'block' : 'none';
+      const btn = document.getElementById('tab' + t.charAt(0).toUpperCase() + t.slice(1));
+      if (btn) { btn.style.background = t === tab ? '#2D2D2D' : '#F8F4F0'; btn.style.color = t === tab ? 'white' : '#2D2D2D'; }
+    });
+    if (tab === 'compare') renderCompareGallery();
+    if (tab === 'mirella') renderMirellaGallery();
   }
 
   function renderEvolutionGallery() {
@@ -4279,11 +4338,137 @@ function switchLang(lang) {
     }).join('');
   }
 
+  function renderCompareGallery() {
+    const gallery = document.getElementById('compareGallery');
+    if (!gallery) return;
+    const photos = JSON.parse(localStorage.getItem('evolution_photos') || '[]');
+    _evoCompareA = null; _evoCompareB = null;
+    document.getElementById('compareResult').style.display = 'none';
+    if (!photos.length) { gallery.innerHTML = '<div style="grid-column:span 3;text-align:center;color:#ccc;padding:20px;font-size:0.85rem">Aucune photo disponible</div>'; return; }
+    gallery.innerHTML = photos.map(function(p, i) {
+      return '<div id="cmpThumb' + i + '" onclick="selectComparePhoto(' + i + ')" style="position:relative;aspect-ratio:1;border-radius:10px;overflow:hidden;cursor:pointer;border:2px solid transparent">' +
+        '<img src="' + p.src + '" style="width:100%;height:100%;object-fit:cover">' +
+        '<div style="position:absolute;bottom:0;left:0;right:0;background:rgba(0,0,0,0.5);color:white;font-size:0.65rem;padding:4px;text-align:center">' + new Date(p.date).toLocaleDateString('fr-FR', {day:'numeric', month:'short'}) + '</div>' +
+        '</div>';
+    }).join('');
+  }
+
+  function selectComparePhoto(idx) {
+    const photos = JSON.parse(localStorage.getItem('evolution_photos') || '[]');
+    if (_evoCompareA === null) {
+      _evoCompareA = idx;
+      document.getElementById('cmpThumb' + idx).style.border = '2px solid #FF6B6B';
+    } else if (_evoCompareB === null && idx !== _evoCompareA) {
+      _evoCompareB = idx;
+      document.getElementById('cmpThumb' + idx).style.border = '2px solid #378ADD';
+      showCompareResult(photos);
+    } else {
+      document.querySelectorAll('[id^=cmpThumb]').forEach(function(el) { el.style.border = '2px solid transparent'; });
+      _evoCompareA = idx; _evoCompareB = null;
+      document.getElementById('cmpThumb' + idx).style.border = '2px solid #FF6B6B';
+      document.getElementById('compareResult').style.display = 'none';
+    }
+  }
+
+  function showCompareResult(photos) {
+    const a = photos[_evoCompareA], b = photos[_evoCompareB];
+    const earlier = new Date(a.date) > new Date(b.date) ? b : a;
+    const later = new Date(a.date) > new Date(b.date) ? a : b;
+    document.getElementById('compareImgA').src = earlier.src;
+    document.getElementById('compareImgB').src = later.src;
+    document.getElementById('compareLabelA').textContent = 'Avant · ' + new Date(earlier.date).toLocaleDateString('fr-FR', {day:'numeric', month:'short'});
+    document.getElementById('compareLabelB').textContent = 'Après · ' + new Date(later.date).toLocaleDateString('fr-FR', {day:'numeric', month:'short'});
+    const days = Math.abs(Math.round((new Date(later.date) - new Date(earlier.date)) / 86400000));
+    document.getElementById('compareDiff').textContent = days + ' jours de progression';
+    document.getElementById('compareResult').style.display = 'block';
+  }
+
+  function renderMirellaGallery() {
+    const gallery = document.getElementById('mirellaGallery');
+    if (!gallery) return;
+    const photos = JSON.parse(localStorage.getItem('evolution_photos') || '[]');
+    _evoMirellaA = null; _evoMirellaB = null;
+    document.getElementById('analyzeBtn').style.display = 'none';
+    document.getElementById('mirellaAnalysisResult').style.display = 'none';
+    if (!photos.length) { gallery.innerHTML = '<div style="grid-column:span 3;text-align:center;color:#ccc;padding:20px;font-size:0.85rem">Aucune photo disponible</div>'; return; }
+    gallery.innerHTML = photos.map(function(p, i) {
+      return '<div id="mirThumb' + i + '" onclick="selectMirellaPhoto(' + i + ')" style="position:relative;aspect-ratio:1;border-radius:10px;overflow:hidden;cursor:pointer;border:2px solid transparent">' +
+        '<img src="' + p.src + '" style="width:100%;height:100%;object-fit:cover">' +
+        '<div style="position:absolute;bottom:0;left:0;right:0;background:rgba(0,0,0,0.5);color:white;font-size:0.65rem;padding:4px;text-align:center">' + new Date(p.date).toLocaleDateString('fr-FR', {day:'numeric', month:'short'}) + '</div>' +
+        '</div>';
+    }).join('');
+  }
+
+  function selectMirellaPhoto(idx) {
+    if (_evoMirellaA === null) {
+      _evoMirellaA = idx;
+      document.getElementById('mirThumb' + idx).style.border = '2px solid #FF6B6B';
+    } else if (_evoMirellaB === null && idx !== _evoMirellaA) {
+      _evoMirellaB = idx;
+      document.getElementById('mirThumb' + idx).style.border = '2px solid #378ADD';
+      document.getElementById('analyzeBtn').style.display = 'block';
+    } else {
+      document.querySelectorAll('[id^=mirThumb]').forEach(function(el) { el.style.border = '2px solid transparent'; });
+      _evoMirellaA = idx; _evoMirellaB = null;
+      document.getElementById('mirThumb' + idx).style.border = '2px solid #FF6B6B';
+      document.getElementById('analyzeBtn').style.display = 'none';
+      document.getElementById('mirellaAnalysisResult').style.display = 'none';
+    }
+  }
+
+  async function analyzeEvolution() {
+    const photos = JSON.parse(localStorage.getItem('evolution_photos') || '[]');
+    const a = photos[_evoMirellaA], b = photos[_evoMirellaB];
+    if (!a || !b) return;
+    const earlier = new Date(a.date) > new Date(b.date) ? b : a;
+    const later = new Date(a.date) > new Date(b.date) ? a : b;
+    const days = Math.abs(Math.round((new Date(later.date) - new Date(earlier.date)) / 86400000));
+    const btn = document.getElementById('analyzeBtn');
+    btn.textContent = '⏳ Analyse en cours...'; btn.disabled = true;
+    document.getElementById('mirellaAnalysisResult').style.display = 'none';
+    try {
+      const res = await fetch(BACKEND_URL + '/api/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + authToken },
+        body: JSON.stringify({ message: 'Tu es Mirella, coach nutrition bienveillante. L utilisateur te partage 2 photos de son évolution corporelle espacées de ' + days + ' jours. Sans voir les photos, génère un message d encouragement chaleureux et motivant de 3-4 phrases sur la régularité du suivi et les bénéfices visibles possibles après ' + days + ' jours d effort. Sois très personnelle et positive. Commence directement sans formule de politesse.' })
+      });
+      const data = await res.json();
+      document.getElementById('mirellaAnalysisText').textContent = data.response || data.message || 'Analyse générée !';
+      document.getElementById('mirellaAnalysisResult').style.display = 'block';
+    } catch(e) {
+      document.getElementById('mirellaAnalysisText').textContent = 'Erreur de connexion. Réessayez.';
+      document.getElementById('mirellaAnalysisResult').style.display = 'block';
+    }
+    btn.textContent = '🤖 Analyser ma progression avec Mirella'; btn.disabled = false;
+  }
+
+  function renderEvolutionBadges() {
+    const badges = document.getElementById('evolutionBadges');
+    if (!badges) return;
+    const photos = JSON.parse(localStorage.getItem('evolution_photos') || '[]');
+    const n = photos.length;
+    const list = [];
+    if (n >= 1) list.push({ label: '1ère photo', color: '#FAEEDA', text: '#854F0B' });
+    if (n >= 5) list.push({ label: '5 photos', color: '#E1F5EE', text: '#0F6E56' });
+    if (n >= 10) list.push({ label: '10 photos', color: '#E6F1FB', text: '#185FA5' });
+    if (n >= 20) list.push({ label: 'Champion', color: '#EEEDFE', text: '#3C3489' });
+    if (photos.length >= 2) {
+      const days = Math.abs(Math.round((new Date(photos[0].date) - new Date(photos[photos.length-1].date)) / 86400000));
+      if (days >= 30) list.push({ label: '1 mois de suivi', color: '#E1F5EE', text: '#0F6E56' });
+      if (days >= 90) list.push({ label: '3 mois de suivi', color: '#EEEDFE', text: '#3C3489' });
+    }
+    if (!list.length) { badges.innerHTML = ''; return; }
+    badges.innerHTML = list.map(function(b) {
+      return '<span style="background:' + b.color + ';color:' + b.text + ';font-size:0.72rem;padding:4px 10px;border-radius:20px;font-weight:600">' + b.label + '</span>';
+    }).join('');
+  }
+
   function deleteEvolutionPhoto(idx) {
     const photos = JSON.parse(localStorage.getItem('evolution_photos') || '[]');
     photos.splice(idx, 1);
     localStorage.setItem('evolution_photos', JSON.stringify(photos));
     renderEvolutionGallery();
+    renderEvolutionBadges();
   }
 
   function showTrialBanner() {
