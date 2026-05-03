@@ -486,7 +486,7 @@ async function subscribe(inputId, successId) {
   const email = document.getElementById(inputId).value;
   if (!email || !email.includes('@')) { alert('Veuillez entrer un email valide.'); return; }
   try {
-    const res = await fetch('/api/subscribe', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email }) });
+    const res = await fetch('https://nutricare-backend-production.up.railway.app/api/preinscription', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email, source: 'preinscription' }) });
     if (res.ok) { document.getElementById(successId).style.display = 'block'; document.getElementById(inputId).value = ''; }
     else { alert('Une erreur est survenue. Réessayez.'); }
   } catch(e) { alert('Une erreur est survenue. Réessayez.'); }
