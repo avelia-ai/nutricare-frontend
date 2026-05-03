@@ -4571,12 +4571,22 @@ function changePortions(delta) {
       return Math.round(parseFloat(num.replace(',','.')) * _portions) + unit;
     });
     const words = adapted.split(' ');
-    const searchWord = words.slice(-2).join(' ');
+    const searchWord = words.filter(w => w.length > 3).slice(-2).join(' ') || words.slice(-2).join(' ');
+    const imgId = 'ing-img-' + Math.random().toString(36).slice(2,8);
     return '<li style="display:flex;flex-direction:column;align-items:center;text-align:center;gap:6px">' +
-      '<div style="width:72px;height:72px;border-radius:14px;background:#F8F4F0;display:flex;align-items:center;justify-content:center;font-size:1.8rem">🥘</div>' +
+      '<div style="width:72px;height:72px;border-radius:14px;background:#F8F4F0;overflow:hidden;display:flex;align-items:center;justify-content:center">' +
+      '<img id="' + imgId + '" data-ingredient="' + searchWord.replace(/"/g,"'") + '" src="" alt="" style="width:100%;height:100%;object-fit:cover" onerror="this.style.display=\'none\'" />' +
+      '</div>' +
       '<div style="font-size:0.72rem;color:#2D2D2D;font-weight:500;line-height:1.3">✓ ' + adapted + '</div>' +
       '</li>';
   }).join('');
+  // Charger les photos pour chaque ingrédient
+  setTimeout(() => {
+    document.querySelectorAll('[data-ingredient]').forEach(img => {
+      const q = img.getAttribute('data-ingredient');
+      if (q) loadMealPhoto(q, q, img);
+    });
+  }, 50);
 }
 
 async function scanProduit(input) {
