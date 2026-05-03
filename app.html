@@ -4536,7 +4536,7 @@ async function loadMealPhoto(nom, keyword, imgEl) {
   }
 }
 function unsplashUrl(nom, keyword) {
-  return 'https://images.unsplash.com/photo-1498837167922-ddd27525d352?w=400&h=300&q=80&fit=crop';
+  return '';
 }
 let _recipeBase = {};
 let _portions = 1;
@@ -4712,7 +4712,7 @@ async function showRecipeModal(btn) {
     if (r.tags && r.tags.length) r.tags.forEach(function(t){ badgeList.push((tagEmojis[t]||'✓') + ' ' + t); });
     badges.innerHTML = badgeList.map(b => '<span style="background:rgba(255,255,255,0.2);backdrop-filter:blur(4px);color:white;padding:5px 12px;border-radius:20px;font-size:0.75rem;font-weight:600;border:1px solid rgba(255,255,255,0.3)">' + b + '</span>').join('');
   }
-  document.getElementById('recipeModalImg').src = unsplashUrl(r.nom);
+  document.getElementById('recipeModalImg').src = '';
   document.getElementById('recipeModalMacros').innerHTML =
     '<div style="background:white;border-radius:16px;padding:20px;text-align:center;border:1px solid #eee;margin-bottom:4px">' +
     '<div style="font-size:2.5rem;font-weight:700;color:#2D2D2D;line-height:1">' + (r.calories||0) + '</div>' +
