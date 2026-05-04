@@ -4448,16 +4448,74 @@ function switchLang(lang) {
     document.getElementById('mirellaAnalysisResult').style.display = 'none';
     try {
       const token = authToken || localStorage.getItem('nutricare_token') || '';
-      const res = await fetch(BACKEND_URL + '/api/chat/message', {
+      const profile = JSON.parse(localStorage.getItem('nutricare_profile') || '{}');
+      const pathologies = (profile.pathologies || []).join(', ') || 'aucune';
+      const objectif = profile.objectif || 'non défini';
+      const poids = profile.weight || profile.poids || 'non renseigné';
+      const taille = profile.height || profile.taille || 'non renseignée';
+      const prompt = `Tu es Mirella, coach nutrition et santé expert en composition corporelle. 
+Analyse ces 2 photos corporelles prises à ${days} jours d'intervalle.
+
+PROFIL UTILISATEUR:
+- Pathologies: ${pathologies}
+- Objectif: ${objectif}  
+- Poids actuel: ${poids} kg
+- Taille: ${taille} cm
+
+INSTRUCTIONS:
+1. Analyse visuellement la composition corporelle sur chaque photo
+2. Estime le pourcentage de masse grasse (%) et masse musculaire (%) visible
+3. Note les zones d'évolution entre les 2 photos
+4. Donne un score de progression de 0 à 100
+5. Adapte tes conseils aux pathologies et objectifs
+
+Réponds UNIQUEMENT en JSON valide avec cette structure exacte:
+{
+  "masse_grasse_avant": 25,
+  "masse_grasse_apres": 23,
+  "masse_musculaire_avant": 35,
+  "masse_musculaire_apres": 37,
+  "score_progression": 72,
+  "zones_evolution": "Affinement visible au niveau abdominal, épaules plus définies",
+  "analyse": "Message d'analyse personnalisé de 3-4 phrases chaleureux et motivant",
+  "conseils": "2-3 conseils nutritionnels adaptés au profil"
+}`;
+
+      const res = await fetch(BACKEND_URL + '/api/vision/analyze-evolution', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
-        body: JSON.stringify({ message: 'Tu es Mirella, coach nutrition bienveillante. L utilisateur te partage 2 photos de son evolution corporelle espacees de ' + days + ' jours. Sans voir les photos, genere un message d encouragement chaleureux et motivant de 3-4 phrases sur la regularite du suivi et les benefices visibles possibles apres ' + days + ' jours d effort. Sois tres personnelle et positive. Commence directement sans formule de politesse.' })
+        body: JSON.stringify({ 
+          image_avant: earlier.src,
+          image_apres: later.src,
+          prompt: prompt
+        })
       });
       const data = await res.json();
-      document.getElementById('mirellaAnalysisText').textContent = data.reply || data.response || data.message || 'Analyse generee !';
+      if (data.result) {
+        try {
+          const r = JSON.parse(data.result.replace(/```json|```/g, '').trim());
+          document.getElementById('mirellaAnalysisText').innerHTML = 
+            '<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px">' +
+            '<div style="background:white;border-radius:10px;padding:12px;text-align:center"><div style="font-size:0.72rem;color:#999;margin-bottom:4px">Masse grasse</div><div style="font-size:1.1rem;font-weight:700;color:#FF6B6B">' + r.masse_grasse_avant + '% → ' + r.masse_grasse_apres + '%</div></div>' +
+            '<div style="background:white;border-radius:10px;padding:12px;text-align:center"><div style="font-size:0.72rem;color:#999;margin-bottom:4px">Masse musculaire</div><div style="font-size:1.1rem;font-weight:700;color:#28C840">' + r.masse_musculaire_avant + '% → ' + r.masse_musculaire_apres + '%</div></div>' +
+            '</div>' +
+            '<div style="background:white;border-radius:10px;padding:12px;margin-bottom:10px">' +
+            '<div style="font-size:0.72rem;color:#999;margin-bottom:6px">Score de progression</div>' +
+            '<div style="height:8px;background:#f0f0f0;border-radius:4px;margin-bottom:4px"><div style="height:100%;width:' + r.score_progression + '%;background:linear-gradient(90deg,#FF6B6B,#FF9A3C);border-radius:4px"></div></div>' +
+            '<div style="font-size:0.85rem;font-weight:700;color:#FF9A3C">' + r.score_progression + '/100</div>' +
+            '</div>' +
+            '<div style="font-size:0.82rem;color:#2D2D2D;margin-bottom:10px;line-height:1.6"><strong>Zones d'évolution :</strong> ' + r.zones_evolution + '</div>' +
+            '<div style="font-size:0.85rem;color:#2D2D2D;line-height:1.6;margin-bottom:10px">' + r.analyse + '</div>' +
+            '<div style="background:white;border-radius:10px;padding:12px;font-size:0.82rem;color:#378ADD;line-height:1.6"><strong>Conseils :</strong> ' + r.conseils + '</div>';
+        } catch(parseErr) {
+          document.getElementById('mirellaAnalysisText').textContent = data.result;
+        }
+      } else {
+        document.getElementById('mirellaAnalysisText').textContent = data.reply || data.error || 'Analyse générée !';
+      }
       document.getElementById('mirellaAnalysisResult').style.display = 'block';
     } catch(e) {
-      document.getElementById('mirellaAnalysisText').textContent = 'Erreur de connexion. Verifiez votre connexion et reessayez.';
+      document.getElementById('mirellaAnalysisText').textContent = 'Erreur de connexion. Vérifiez votre connexion et réessayez.';
       document.getElementById('mirellaAnalysisResult').style.display = 'block';
     }
     btn.textContent = '🤖 Analyser ma progression avec Mirella'; btn.disabled = false;
