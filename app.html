@@ -4682,8 +4682,7 @@ Réponds UNIQUEMENT en JSON valide avec cette structure exacte:
       const tagColors = {'Jambes':'#C62828','Jambes/Fessiers':'#C62828','Fessiers':'#880E4F','Cardio':'#1565C0','Abdominaux':'#2E7D32','Dos':'#283593','Pectoraux':'#E65100','Bras':'#6A1B9A','Épaules':'#006064'};
       const muscles = (ex.muscles || []);
       return '<div style="background:white;border-radius:16px;overflow:hidden;margin-bottom:12px;border:1px solid #f5f5f5">' +
-      return "<div style="background:white;border-radius:16px;overflow:hidden;margin-bottom:12px;border:1px solid #f5f5f5">" +
-        "<div style="background:#1a1a2e;height:140px;position:relative;display:flex;align-items:center;justify-content:center;cursor:pointer" data-ytid="" + (ex.youtube_id||"") + "" data-nom="" + ex.nom.replace(/"/g,"") + "" data-desc="" + (ex.description||"").substring(0,80).replace(/"/g,"") + "" onclick="var e=this;openFitnessVideo(e.dataset.ytid,e.dataset.nom,e.dataset.desc)">" +
+        '<div style="background:#1a1a2e;height:140px;position:relative;display:flex;align-items:center;justify-content:center;cursor:pointer" ' + 'data-ytid="' + (ex.youtube_id||'') + '" data-nom="' + ex.nom.replace(/["']/g,'') + '" data-desc="' + (ex.description||'').substring(0,80).replace(/["']/g,'') + '" onclick="var e=this;openFitnessVideo(e.dataset.ytid,e.dataset.nom,e.dataset.desc)">' +
         '<div style="position:absolute;inset:0;background:linear-gradient(135deg,#1a1a2e,#16213e)"></div>' +
         '<div style="position:relative;text-align:center">' +
         '<div style="width:56px;height:56px;border-radius:50%;background:' + color + ';display:flex;align-items:center;justify-content:center;margin:0 auto 8px;cursor:pointer">' +
