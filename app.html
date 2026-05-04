@@ -2827,489 +2827,6 @@ function switchLang(lang) {
 
 `);
     w.document.close();
-
-<!-- Vue Fitness -->
-<div id="fitnessView" style="display:none;padding:24px;overflow-y:auto;background:#FFF5F0;width:100%;min-height:100vh">
-  <div style="max-width:600px;margin:0 auto">
-
-    <!-- Header -->
-    <div style="display:flex;align-items:center;gap:12px;margin-bottom:20px">
-      <div style="width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,#FF6B6B,#FF9A3C);display:flex;align-items:center;justify-content:center;font-size:22px">💪</div>
-      <div>
-        <div style="font-size:1.3rem;font-weight:700;color:#2D2D2D">Mon programme fitness</div>
-        <div style="font-size:0.78rem;color:#aaa">Généré par Mirella · Adapté à votre profil</div>
-      </div>
-    </div>
-
-    <!-- Plan requis -->
-    <div id="fitnessPlanRequired" style="display:none;background:white;border-radius:16px;padding:28px;text-align:center;margin-bottom:20px;border:1px solid rgba(255,107,107,0.15)">
-      <div style="font-size:2rem;margin-bottom:12px">🔒</div>
-      <div style="font-size:1rem;font-weight:700;color:#2D2D2D;margin-bottom:8px">Fonctionnalité Premium</div>
-      <div style="font-size:0.85rem;color:#aaa;margin-bottom:16px">Accédez à votre programme fitness personnalisé avec le plan Premium.</div>
-      <button onclick="showView('pricing')" style="background:linear-gradient(135deg,#FF6B6B,#FF9A3C);color:white;border:none;border-radius:12px;padding:12px 28px;font-size:0.88rem;font-weight:700;cursor:pointer">Voir les offres →</button>
-    </div>
-
-    <!-- Contenu fitness -->
-    <div id="fitnessContent">
-
-      <!-- Jours de la semaine -->
-      <div style="display:flex;gap:8px;overflow-x:auto;padding-bottom:8px;margin-bottom:16px">
-        <button onclick="selectFitnessDay(0)" id="fd-0" class="fd-btn" style="flex-shrink:0;padding:8px 14px;border-radius:20px;border:none;background:#2D2D2D;color:white;font-size:0.75rem;font-weight:700;cursor:pointer">Lun</button>
-        <button onclick="selectFitnessDay(1)" id="fd-1" class="fd-btn" style="flex-shrink:0;padding:8px 14px;border-radius:20px;border:none;background:#f5f5f5;color:#aaa;font-size:0.75rem;font-weight:700;cursor:pointer">Mar</button>
-        <button onclick="selectFitnessDay(2)" id="fd-2" class="fd-btn" style="flex-shrink:0;padding:8px 14px;border-radius:20px;border:none;background:#f5f5f5;color:#aaa;font-size:0.75rem;font-weight:700;cursor:pointer">Mer</button>
-        <button onclick="selectFitnessDay(3)" id="fd-3" class="fd-btn" style="flex-shrink:0;padding:8px 14px;border-radius:20px;border:none;background:#f5f5f5;color:#aaa;font-size:0.75rem;font-weight:700;cursor:pointer">Jeu</button>
-        <button onclick="selectFitnessDay(4)" id="fd-4" class="fd-btn" style="flex-shrink:0;padding:8px 14px;border-radius:20px;border:none;background:#f5f5f5;color:#aaa;font-size:0.75rem;font-weight:700;cursor:pointer">Ven</button>
-        <button onclick="selectFitnessDay(5)" id="fd-5" class="fd-btn" style="flex-shrink:0;padding:8px 14px;border-radius:20px;border:none;background:#f5f5f5;color:#aaa;font-size:0.75rem;font-weight:700;cursor:pointer">Sam</button>
-        <button onclick="selectFitnessDay(6)" id="fd-6" class="fd-btn" style="flex-shrink:0;padding:8px 14px;border-radius:20px;border:none;background:#f5f5f5;color:#aaa;font-size:0.75rem;font-weight:700;cursor:pointer">Dim</button>
-      </div>
-
-      <!-- Stats séance -->
-      <div id="fitnessStats" style="background:white;border-radius:16px;padding:16px;margin-bottom:16px;display:flex;justify-content:space-between;align-items:center">
-        <div>
-          <div style="font-size:0.75rem;color:#aaa;margin-bottom:2px">Séance du jour</div>
-          <div id="fitnessSessionName" style="font-size:1rem;font-weight:700;color:#2D2D2D">—</div>
-        </div>
-        <div style="display:flex;gap:16px">
-          <div style="text-align:center"><div id="fitnessExCount" style="font-size:1.1rem;font-weight:700;color:#FF6B6B">—</div><div style="font-size:0.65rem;color:#aaa">exercices</div></div>
-          <div style="text-align:center"><div id="fitnessDuration" style="font-size:1.1rem;font-weight:700;color:#FF9A3C">—</div><div style="font-size:0.65rem;color:#aaa">minutes</div></div>
-          <div style="text-align:center"><div id="fitnessKcal" style="font-size:1.1rem;font-weight:700;color:#1D9E75">—</div><div style="font-size:0.65rem;color:#aaa">kcal</div></div>
-        </div>
-      </div>
-
-      <!-- Loading -->
-      <div id="fitnessLoading" style="display:none;text-align:center;padding:48px">
-        <div style="font-size:2rem;margin-bottom:12px">⏳</div>
-        <div style="font-size:0.95rem;color:#2D2D2D;font-weight:600">Mirella génère votre programme...</div>
-        <div style="font-size:0.8rem;color:#aaa;margin-top:4px">Adapté à votre profil et pathologies</div>
-      </div>
-
-      <!-- Liste exercices -->
-      <div id="fitnessExercises"></div>
-
-      <!-- Bouton générer -->
-      <button onclick="generateFitnessProgram()" id="generateFitnessBtn" style="width:100%;background:#2D2D2D;color:white;border:none;border-radius:16px;padding:16px;font-size:0.9rem;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif;margin-top:8px">
-        🤖 Générer mon programme fitness IA
-      </button>
-
-    </div>
-  </div>
-</div>
-
-<!-- Modal vidéo exercice -->
-<div id="fitnessVideoModal" style="display:none;position:fixed;inset:0;z-index:99999;background:rgba(0,0,0,0.9);align-items:center;justify-content:center;padding:20px" onclick="closeFitnessVideo()">
-  <div onclick="event.stopPropagation()" style="width:100%;max-width:560px;background:#000;border-radius:16px;overflow:hidden">
-    <div style="display:flex;justify-content:space-between;align-items:center;padding:12px 16px;background:#1a1a1a">
-      <div id="fitnessVideoTitle" style="font-size:0.9rem;font-weight:700;color:white"></div>
-      <button onclick="closeFitnessVideo()" style="background:none;border:none;color:white;font-size:1.5rem;cursor:pointer">✕</button>
-    </div>
-    <div style="position:relative;padding-bottom:56.25%;height:0">
-      <iframe id="fitnessVideoFrame" src="" style="position:absolute;top:0;left:0;width:100%;height:100%" frameborder="0" allow="autoplay;encrypted-media" allowfullscreen></iframe>
-    </div>
-    <div id="fitnessVideoDesc" style="padding:16px;color:#aaa;font-size:0.82rem;line-height:1.6;background:#1a1a1a"></div>
-  </div>
-</div>
-
-    w.print();
-  }
-
-  async function sendInvites() {
-    const emailsText = document.getElementById('inviteEmails').value.trim();
-    if (!emailsText) return;
-    const emails = emailsText.split(',').map(e => e.trim()).filter(e => e.includes('@'));
-    if (!emails.length) return;
-    try {
-      const res = await fetch(`${BACKEND_URL}/api/entreprise/invite`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${authToken}` },
-        body: JSON.stringify({ emails })
-      });
-      const data = await res.json();
-      const resultEl = document.getElementById('inviteResult');
-      resultEl.style.display = 'block';
-      if (res.ok) {
-        const code = document.getElementById('adminCode').textContent.trim();
-        const link = `${window.location.origin}/invitation?code=${code}`;
-        resultEl.innerHTML = ` ${emails.length} invitation(s) préparée(s) !<br><strong>Lien à partager :</strong> <a href="${link}" target="_blank" style="color:#2D2D2D">${link}</a><br><span style="font-size:0.72rem;opacity:0.7">En production, les emails seront envoyés automatiquement via SendGrid.</span>`;
-        document.getElementById('inviteEmails').value = '';
-      } else {
-        resultEl.style.background = '#FEE';
-        resultEl.style.color = '#C55';
-        resultEl.textContent = data.error || 'Erreur lors de l\'envoi';
-      }
-    } catch(e) {
-      console.error('Erreur invitations:', e);
-    }
-  }
-
-  function copyInviteLink() {
-    const code = document.getElementById('adminCode').textContent.trim();
-    const link = `${window.location.origin}/invitation?code=${code}`;
-    navigator.clipboard.writeText(link).then(() => {
-      alert('Lien d\'invitation copié ! Partagez-le à vos salariés.');
-    });
-  }
-
-  async function joinEntreprise() {
-    const code = document.getElementById('entCode').value.trim();
-    if (!code) return;
-    try {
-      const res = await fetch(`${BACKEND_URL}/api/entreprise/join`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${authToken}` },
-        body: JSON.stringify({ code })
-      });
-      const data = await res.json();
-      if (!res.ok) {
-        document.getElementById('entJoinError').style.display = 'block';
-        document.getElementById('entJoinError').textContent = data.error;
-        return;
-      }
-      initEntreprise();
-    } catch(e) {
-      document.getElementById('entJoinError').style.display = 'block';
-      document.getElementById('entJoinError').textContent = 'Erreur de connexion';
-    }
-  }
-
-  async function createEntreprise() {
-    const nom = document.getElementById('entNom').value.trim();
-    const nb_licences = +document.getElementById('entLicences').value || 50;
-    if (!nom) return;
-    try {
-      const res = await fetch(`${BACKEND_URL}/api/entreprise/create`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${authToken}` },
-        body: JSON.stringify({ nom, nb_licences })
-      });
-      const data = await res.json();
-      if (!res.ok) {
-        document.getElementById('entCreateError').style.display = 'block';
-        document.getElementById('entCreateError').textContent = data.error;
-        return;
-      }
-      initEntreprise();
-    } catch(e) {
-      document.getElementById('entCreateError').style.display = 'block';
-      document.getElementById('entCreateError').textContent = 'Erreur de connexion';
-    }
-  }
-
-  async function loadProgression() {
-    try {
-      const res = await fetch(`${BACKEND_URL}/api/entreprise/progression`, {
-        headers: { 'Authorization': `Bearer ${authToken}` }
-      });
-      const data = await res.json();
-      if (!res.ok) return;
-
-      // Barre progression
-      const pct = data.score;
-      document.getElementById('entProgressPct').textContent = pct + '%';
-      setTimeout(() => document.getElementById('entProgressBar').style.width = pct + '%', 100);
-
-      // Paliers
-      const palierEls = ['palier1', 'palier2', 'palier3'];
-      const seuils = [40, 70, 100];
-      palierEls.forEach((id, i) => {
-        const el = document.getElementById(id);
-        if (pct >= seuils[i]) {
-          el.style.background = '#EAF3DE';
-          el.style.border = '1px solid #C0DD97';
-          el.innerHTML += '<div style="font-size:0.65rem;color:#3B6D11;font-weight:600;margin-top:4px"> Débloqué !</div>';
-        }
-      });
-
-      // Critères
-      const criteresEl = document.getElementById('entCriteres');
-      criteresEl.innerHTML = data.criteres.map(c => `
-        <div style="display:flex;align-items:center;gap:8px;padding:6px 0;border-bottom:1px solid rgba(2,26,53,0.05)">
-          <div style="width:18px;height:18px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:0.7rem;${c.done ? 'background:#EAF3DE;color:#3B6D11' : 'background:#E6F1FB;color:#FF9A3C'}">${c.done ? '' : '○'}</div>
-          <div style="flex:1;font-size:0.78rem;color:${c.done ? 'rgba(2,26,53,0.4)' : '#021A35'};text-decoration:${c.done ? 'line-through' : 'none'}">${c.label}</div>
-          <div style="font-size:0.7rem;color:#FF6B6B;font-weight:600">+${c.points}pts</div>
-        </div>`).join('');
-
-      // Prochain palier
-      if (data.prochain_palier) {
-        const next = data.prochain_palier;
-        const pts_needed = Math.round((next.seuil - pct) * data.max_points / 100);
-        document.getElementById('entNextPalier').style.display = 'block';
-        document.getElementById('entNextPalierText').textContent = `${next.icon} Plus que ${next.seuil - pct}% pour débloquer le palier ${next.label} — ${next.desc} !`;
-      }
-
-    } catch(e) { console.error('Erreur progression:', e); }
-  }
-
-  async function loadEntrepriseDashboard() {
-    try {
-      const res = await fetch(`${BACKEND_URL}/api/entreprise/dashboard`, {
-        headers: { 'Authorization': `Bearer ${authToken}` }
-      });
-      const data = await res.json();
-      if (!res.ok) return;
-
-      // Stats
-      const s = data.stats;
-      document.getElementById('adminStats').innerHTML = [
-        { label: 'Salariés actifs', val: s.total_membres, trend: `+${s.new_this_month} ce mois` },
-        { label: 'Taux engagement', val: s.engagement + '%', trend: `${s.actifs} actifs` },
-        { label: 'Streak moyen', val: s.avg_streak + ' jours', trend: 'consécutifs' },
-        { label: 'Messages IA', val: s.total_messages.toLocaleString('fr-FR'), trend: 'consultations totales' },
-      ].map(st => `
-        <div style="background:#F0F6FF;border-radius:4px;padding:16px;border:1px solid rgba(255,107,107,0.15)">
-          <div style="font-size:0.68rem;color:#FF9A3C;text-transform:uppercase;letter-spacing:.08em;font-weight:600;margin-bottom:6px">${st.label}</div>
-          <div style="font-family:'Open Sans',serif;font-size:1.6rem;font-weight:600;color:#2D2D2D">${st.val}</div>
-          <div style="font-size:0.7rem;color:rgba(2,26,53,0.4);margin-top:2px">${st.trend}</div>
-        </div>`).join('');
-
-      // Insight IA
-      if (data.ai_insight) {
-        document.getElementById('adminInsight').style.display = 'block';
-        document.getElementById('adminInsightText').textContent = data.ai_insight;
-      }
-
-      // Pathologies
-      const colors = ['#021A35','#185FA5','#C9A84C','#378ADD','#0C447C'];
-      document.getElementById('adminPathos').innerHTML = (data.top_pathologies || []).map((p, i) => `
-        <div style="display:flex;align-items:center;gap:8px;margin-bottom:9px">
-          <div style="font-size:0.75rem;color:rgba(2,26,53,0.55);min-width:110px;text-transform:capitalize;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${p.name}</div>
-          <div style="flex:1;height:6px;background:#E6F1FB;border-radius:2px;overflow:hidden">
-            <div style="height:100%;border-radius:2px;background:${colors[i%5]};width:${p.pct}%"></div>
-          </div>
-          <div style="font-size:0.72rem;color:rgba(2,26,53,0.35);min-width:28px;text-align:right">${p.pct}%</div>
-        </div>`).join('');
-
-      // Santé moyenne
-      const h = data.health_averages;
-      document.getElementById('adminHealth').innerHTML = [
-        { icon: '', label: 'Glycémie moyenne', val: h.glycemie ? h.glycemie + ' mmol/L' : '—' },
-        { icon: '', label: 'Énergie moyenne', val: h.energie ? h.energie + '/10' : '—' },
-        { icon: '', label: 'Sommeil moyen', val: h.sommeil ? h.sommeil + 'h' : '—' },
-      ].map(it => `
-        <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid rgba(2,26,53,0.06)">
-          <div style="display:flex;align-items:center;gap:8px;font-size:0.82rem;color:rgba(2,26,53,0.6)">${it.icon} ${it.label}</div>
-          <div style="font-size:0.88rem;font-weight:600;color:#2D2D2D">${it.val}</div>
-        </div>`).join('');
-
-    } catch(e) { console.error('Erreur dashboard RH:', e); }
-  }
-
-  function initBiologie() {
-    const profile = JSON.parse(localStorage.getItem('nutricare_profile') || '{}');
-    if (window.currentPlan !== 'premium') {
-      document.getElementById('bioFree').style.display = 'block';
-      document.getElementById('bioContent').style.display = 'none';
-    } else {
-      document.getElementById('bioFree').style.display = 'none';
-      document.getElementById('bioContent').style.display = 'block';
-    }
-  }
-
-  async function analyzeBiologie(input) {
-    const file = input.files[0];
-    if (!file) return;
-    const reader = new FileReader();
-    reader.onload = async (e) => {
-      const base64 = e.target.result.split(',')[1];
-      const mediaType = file.type;
-      document.getElementById('bioPreview').style.display = 'block';
-      document.getElementById('bioImg').src = e.target.result;
-      document.getElementById('bioLoading').style.display = 'block';
-      document.getElementById('bioResult').style.display = 'none';
-      document.getElementById('bioError').style.display = 'none';
-
-      const msgs = ['Lecture de vos résultats biologiques...','Extraction des valeurs...','Analyse clinique en cours...','Personnalisation selon votre profil...','Rédaction des explications...'];
-      let idx = 0;
-      const interval = setInterval(() => {
-        idx = (idx+1) % msgs.length;
-        const el = document.getElementById('bioLoadingMsg');
-        if (el) el.textContent = msgs[idx];
-      }, 2000);
-
-      try {
-        const res = await fetch(`${BACKEND_URL}/api/biologie/analyze`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${authToken}` },
-          body: JSON.stringify({ image_base64: base64, media_type: mediaType })
-        });
-        const data = await res.json();
-        clearInterval(interval);
-        document.getElementById('bioLoading').style.display = 'none';
-
-        if (!res.ok || !data.valide) {
-          document.getElementById('bioError').style.display = 'block';
-          document.getElementById('bioError').textContent = data.message || data.error || 'Document non reconnu comme bilan sanguin.';
-          return;
-        }
-
-        // Résumé
-        document.getElementById('bioResume').textContent = data.resume_global || '';
-
-        // Points positifs
-        document.getElementById('bioPositifs').innerHTML = (data.points_positifs || []).map(p =>
-          `<div style="font-size:0.82rem;color:#3B6D11;display:flex;gap:6px"><span></span>${p}</div>`).join('');
-
-        // Points attention
-        document.getElementById('bioAttention').innerHTML = (data.points_attention || []).map(p =>
-          `<div style="font-size:0.82rem;color:#854F0B;display:flex;gap:6px"><span></span>${p}</div>`).join('');
-
-        // Marqueurs
-        const urgenceColors = { normal: '#EAF3DE', attention: '#FDF6E8', urgent: '#FEE' };
-        const urgenceBorders = { normal: '#C0DD97', attention: '#FAC775', urgent: '#FCC' };
-        const urgenceLabels = { normal: ' Normal', attention: ' À surveiller', urgent: ' Urgent' };
-        const urgenceTextColors = { normal: '#3B6D11', attention: '#854F0B', urgent: '#C55' };
-
-        document.getElementById('bioMarqueurs').innerHTML = (data.marqueurs || []).map(m => {
-          const u = m.urgence || 'normal';
-          const isHigh = m.statut === 'eleve';
-          const isLow = m.statut === 'bas';
-          const statusColor = isHigh ? '#E24B4A' : isLow ? '#378ADD' : '#639922';
-          return `<div style="background:white;border-radius:4px;padding:20px;border:1px solid rgba(255,107,107,0.15)">
-            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;flex-wrap:wrap;gap:8px">
-              <div style="display:flex;align-items:center;gap:10px">
-                <div style="font-weight:600;font-size:0.95rem;color:#2D2D2D">${m.nom}</div>
-                <div style="font-family:'DM Mono',monospace;font-size:0.88rem;font-weight:700;color:${statusColor}">${m.valeur} ${m.unite}</div>
-              </div>
-              <div style="display:flex;align-items:center;gap:8px">
-                <div style="font-size:0.72rem;color:rgba(2,26,53,0.4)">Norme: ${m.norme_min}–${m.norme_max} ${m.unite}</div>
-                <div style="font-size:0.72rem;font-weight:600;padding:3px 10px;border-radius:4px;background:${urgenceColors[u]};color:${urgenceTextColors[u]};border:1px solid ${urgenceBorders[u]}">${urgenceLabels[u]}</div>
-              </div>
-            </div>
-            <div style="background:#F0F6FF;border-radius:4px;padding:12px;margin-bottom:10px">
-              <div style="font-size:0.72rem;text-transform:uppercase;letter-spacing:.06em;color:#FF9A3C;font-weight:600;margin-bottom:4px">Ce que ça signifie</div>
-              <div style="font-size:0.82rem;color:rgba(2,26,53,0.7);line-height:1.5">${m.explication_simple}</div>
-            </div>
-            <div style="font-size:0.82rem;color:rgba(2,26,53,0.65);line-height:1.5;margin-bottom:8px">${m.impact_sante}</div>
-            <div style="background:#FDF6E8;border-radius:4px;padding:10px 14px;font-size:0.8rem;color:#854F0B;line-height:1.5"> ${m.conseil_nutritionnel}</div>
-          </div>`;
-        }).join('');
-
-        // Recommandations
-        document.getElementById('bioReco').innerHTML = (data.recommandations_nutritionnelles || []).map((r, i) =>
-          `<div style="display:flex;gap:10px;align-items:flex-start">
-            <div style="background:#2D2D2D;color:#FF6B6B;border-radius:50%;width:22px;height:22px;display:flex;align-items:center;justify-content:center;font-size:0.72rem;font-weight:700;flex-shrink:0">${i+1}</div>
-            <div style="font-size:0.82rem;color:rgba(2,26,53,0.7);line-height:1.5;padding-top:2px">${r}</div>
-          </div>`).join('');
-
-        // Suivi
-        document.getElementById('bioSuivi').textContent = data.suivi_recommande || '';
-
-        document.getElementById('bioResult').style.display = 'block';
-      } catch(e) {
-        clearInterval(interval);
-        document.getElementById('bioLoading').style.display = 'none';
-        document.getElementById('bioError').style.display = 'block';
-        document.getElementById('bioError').textContent = 'Erreur de connexion au serveur.';
-      }
-    };
-    reader.readAsDataURL(file);
-  }
-
-  async function initPasseport() {
-    const profile = JSON.parse(localStorage.getItem('nutricare_profile') || '{}');
-    const plan = profile.plan || 'free';
-    if (plan === 'free') {
-      document.getElementById('passeportFree').style.display = 'block';
-      document.getElementById('passeportContent').style.display = 'none';
-      return;
-    }
-    document.getElementById('passeportFree').style.display = 'none';
-    if (!document.getElementById('ppReport').textContent) {
-      generatePasseport();
-    } else {
-      document.getElementById('passeportContent').style.display = 'block';
-    }
-  }
-
-  async function generatePasseport() {
-    document.getElementById('passeportContent').style.display = 'none';
-    document.getElementById('passeportLoading').style.display = 'block';
-
-    const loadingMsgs = [
-      'Analyse de vos données de santé...',
-      'Récupération de votre historique...',
-      'Génération du compte-rendu médical...',
-      'Rédaction des recommandations...',
-      'Finalisation du passeport...',
-    ];
-    let msgIdx = 0;
-    const interval = setInterval(() => {
-      msgIdx = (msgIdx + 1) % loadingMsgs.length;
-      const el = document.getElementById('ppLoadingMsg');
-      if (el) el.textContent = loadingMsgs[msgIdx];
-    }, 2000);
-
-    try {
-      const res = await fetch(`${BACKEND_URL}/api/passeport/generate`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${authToken}` }
-      });
-      const data = await res.json();
-      clearInterval(interval);
-
-      if (!res.ok) throw new Error(data.error);
-
-      const m = data.metadata;
-      const initials = (m.patient || 'U').split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2);
-      document.getElementById('ppAvatar').textContent = initials;
-      document.getElementById('ppName').textContent = m.patient;
-      document.getElementById('ppDate').textContent = 'Rapport du ' + m.date;
-      document.getElementById('ppId').textContent = 'Réf. ' + m.id;
-
-      document.getElementById('ppStats').innerHTML = [
-        { label: 'Entrées suivi', val: m.health_entries || '0', sub: '30 derniers jours' },
-        { label: 'Glycémie moy.', val: m.avg_glycemie ? m.avg_glycemie + ' mmol/L' : '—', sub: 'Moyenne mensuelle' },
-        { label: 'Poids moyen', val: m.avg_poids ? m.avg_poids + ' kg' : '—', sub: 'Moyenne mensuelle' },
-        { label: 'Énergie moy.', val: m.avg_energie ? m.avg_energie + '/10' : '—', sub: 'Moyenne mensuelle' },
-      ].map(s => `
-        <div style="background:#F0F6FF;border-radius:4px;padding:16px;border:1px solid rgba(255,107,107,0.15)">
-          <div style="font-size:0.68rem;color:#FF9A3C;text-transform:uppercase;letter-spacing:.08em;font-weight:600;margin-bottom:6px">${s.label}</div>
-          <div style="font-family:'Open Sans',serif;font-size:1.6rem;font-weight:600;color:#2D2D2D">${s.val}</div>
-          <div style="font-size:0.7rem;color:rgba(2,26,53,0.4);margin-top:2px">${s.sub}</div>
-        </div>`).join('');
-
-      document.getElementById('ppReport').innerHTML = data.report
-        .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
-        .replace(/^# (.+)$/mg, '<h2>$1</h2>')
-        .replace(/^## (.+)$/mg, '<h3>$1</h3>')
-        .replace(/^### (.+)$/mg, '<h4>$1</h4>')
-        .replace(/\n/g, '<br>');
-      document.getElementById('passeportLoading').style.display = 'none';
-      document.getElementById('passeportContent').style.display = 'block';
-
-    } catch(e) {
-      clearInterval(interval);
-      document.getElementById('passeportLoading').style.display = 'none';
-      console.error('Erreur passeport:', e);
-    }
-  }
-
-  function printPasseport() {
-    const report = document.getElementById('ppReport').textContent;
-    const name = document.getElementById('ppName').textContent;
-    const date = document.getElementById('ppDate').textContent;
-    const id = document.getElementById('ppId').textContent;
-    const w = window.open('', '_blank');
-    w.document.write(`<!DOCTYPE html><html><head><title>Passeport Santé — ${name}</title>
-    <style>
-      body { font-family: Georgia, serif; max-width: 800px; margin: 40px auto; padding: 40px; color: #2D2D2D; }
-      h1 { font-size: 2rem; font-weight: 400; margin-bottom: 8px; }
-      .meta { font-size: 0.85rem; color: rgba(2,26,53,0.5); margin-bottom: 32px; }
-      .report { font-size: 0.95rem; line-height: 1.8; white-space: pre-wrap; }
-      .header { border-bottom: 2px solid #021A35; padding-bottom: 20px; margin-bottom: 28px; display: flex; justify-content: space-between; align-items: flex-end; }
-      .logo { font-size: 1.2rem; font-weight: 600; }
-      .disclaimer { margin-top: 40px; padding: 16px; background: #FDF6E8; font-size: 0.78rem; color: rgba(2,26,53,0.6); line-height: 1.5; }
-      @media print { body { margin: 20px; } }
-    </style>
-</head><body>
-    <div class="header">
-      <div><div class="logo">● Mirella</div><div style="font-size:0.78rem;color:rgba(2,26,53,0.4)">Passeport Santé Nutritionnel</div></div>
-      <div style="text-align:right;font-size:0.78rem;color:rgba(2,26,53,0.4)">${date}<br>${id}</div>
-    </div>
-    <h1>${name}</h1>
-    <div class="meta">Compte-rendu médical nutritionnel généré par Mirella</div>
-    <div class="report">${report}</div>
-    <div class="disclaimer">️ Ce document est généré par intelligence artificielle. Il ne remplace pas un avis médical professionnel. Document généré le ${date}.</div>
-    
 <!-- Modal Recette -->
 
 `);
@@ -6195,6 +5712,69 @@ async function deleteProfessional(id) {
   }
 </script>
 <script src="translations.js?v=2"></script>
+
+
+<!-- Vue Fitness -->
+<div id="fitnessView" style="display:none;padding:24px;overflow-y:auto;background:#FFF5F0;width:100%;min-height:100vh">
+  <div style="max-width:600px;margin:0 auto">
+    <div style="display:flex;align-items:center;gap:12px;margin-bottom:20px">
+      <div style="width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,#FF6B6B,#FF9A3C);display:flex;align-items:center;justify-content:center;font-size:22px">&#x1F4AA;</div>
+      <div>
+        <div style="font-size:1.3rem;font-weight:700;color:#2D2D2D">Mon programme fitness</div>
+        <div style="font-size:0.78rem;color:#aaa">Generé par Mirella - Adapté à votre profil</div>
+      </div>
+    </div>
+    <div id="fitnessPlanRequired" style="display:none;background:white;border-radius:16px;padding:28px;text-align:center;margin-bottom:20px;border:1px solid rgba(255,107,107,0.15)">
+      <div style="font-size:2rem;margin-bottom:12px">&#x1F512;</div>
+      <div style="font-size:1rem;font-weight:700;color:#2D2D2D;margin-bottom:8px">Fonctionnalité Premium</div>
+      <div style="font-size:0.85rem;color:#aaa;margin-bottom:16px">Accédez à votre programme fitness personnalisé avec le plan Premium.</div>
+      <button onclick="showView('pricing')" style="background:linear-gradient(135deg,#FF6B6B,#FF9A3C);color:white;border:none;border-radius:12px;padding:12px 28px;font-size:0.88rem;font-weight:700;cursor:pointer">Voir les offres</button>
+    </div>
+    <div id="fitnessContent">
+      <div style="display:flex;gap:8px;overflow-x:auto;padding-bottom:8px;margin-bottom:16px">
+        <button onclick="selectFitnessDay(0)" id="fd-0" class="fd-btn" style="flex-shrink:0;padding:8px 14px;border-radius:20px;border:none;background:#2D2D2D;color:white;font-size:0.75rem;font-weight:700;cursor:pointer">Lun</button>
+        <button onclick="selectFitnessDay(1)" id="fd-1" class="fd-btn" style="flex-shrink:0;padding:8px 14px;border-radius:20px;border:none;background:#f5f5f5;color:#aaa;font-size:0.75rem;font-weight:700;cursor:pointer">Mar</button>
+        <button onclick="selectFitnessDay(2)" id="fd-2" class="fd-btn" style="flex-shrink:0;padding:8px 14px;border-radius:20px;border:none;background:#f5f5f5;color:#aaa;font-size:0.75rem;font-weight:700;cursor:pointer">Mer</button>
+        <button onclick="selectFitnessDay(3)" id="fd-3" class="fd-btn" style="flex-shrink:0;padding:8px 14px;border-radius:20px;border:none;background:#f5f5f5;color:#aaa;font-size:0.75rem;font-weight:700;cursor:pointer">Jeu</button>
+        <button onclick="selectFitnessDay(4)" id="fd-4" class="fd-btn" style="flex-shrink:0;padding:8px 14px;border-radius:20px;border:none;background:#f5f5f5;color:#aaa;font-size:0.75rem;font-weight:700;cursor:pointer">Ven</button>
+        <button onclick="selectFitnessDay(5)" id="fd-5" class="fd-btn" style="flex-shrink:0;padding:8px 14px;border-radius:20px;border:none;background:#f5f5f5;color:#aaa;font-size:0.75rem;font-weight:700;cursor:pointer">Sam</button>
+        <button onclick="selectFitnessDay(6)" id="fd-6" class="fd-btn" style="flex-shrink:0;padding:8px 14px;border-radius:20px;border:none;background:#f5f5f5;color:#aaa;font-size:0.75rem;font-weight:700;cursor:pointer">Dim</button>
+      </div>
+      <div id="fitnessStats" style="background:white;border-radius:16px;padding:16px;margin-bottom:16px;display:flex;justify-content:space-between;align-items:center">
+        <div>
+          <div style="font-size:0.75rem;color:#aaa;margin-bottom:2px">Séance du jour</div>
+          <div id="fitnessSessionName" style="font-size:1rem;font-weight:700;color:#2D2D2D">-</div>
+        </div>
+        <div style="display:flex;gap:16px">
+          <div style="text-align:center"><div id="fitnessExCount" style="font-size:1.1rem;font-weight:700;color:#FF6B6B">-</div><div style="font-size:0.65rem;color:#aaa">exercices</div></div>
+          <div style="text-align:center"><div id="fitnessDuration" style="font-size:1.1rem;font-weight:700;color:#FF9A3C">-</div><div style="font-size:0.65rem;color:#aaa">minutes</div></div>
+          <div style="text-align:center"><div id="fitnessKcal" style="font-size:1.1rem;font-weight:700;color:#1D9E75">-</div><div style="font-size:0.65rem;color:#aaa">kcal</div></div>
+        </div>
+      </div>
+      <div id="fitnessLoading" style="display:none;text-align:center;padding:48px">
+        <div style="font-size:2rem;margin-bottom:12px">&#x23F3;</div>
+        <div style="font-size:0.95rem;color:#2D2D2D;font-weight:600">Mirella génère votre programme...</div>
+      </div>
+      <div id="fitnessExercises"></div>
+      <button onclick="generateFitnessProgram()" id="generateFitnessBtn" style="width:100%;background:#2D2D2D;color:white;border:none;border-radius:16px;padding:16px;font-size:0.9rem;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif;margin-top:8px">
+        &#x1F916; Générer mon programme fitness IA
+      </button>
+    </div>
+  </div>
+</div>
+
+<div id="fitnessVideoModal" style="display:none;position:fixed;inset:0;z-index:99999;background:rgba(0,0,0,0.9);align-items:center;justify-content:center;padding:20px" onclick="closeFitnessVideo()">
+  <div onclick="event.stopPropagation()" style="width:100%;max-width:560px;background:#000;border-radius:16px;overflow:hidden">
+    <div style="display:flex;justify-content:space-between;align-items:center;padding:12px 16px;background:#1a1a1a">
+      <div id="fitnessVideoTitle" style="font-size:0.9rem;font-weight:700;color:white"></div>
+      <button onclick="closeFitnessVideo()" style="background:none;border:none;color:white;font-size:1.5rem;cursor:pointer">X</button>
+    </div>
+    <div style="position:relative;padding-bottom:56.25%;height:0">
+      <iframe id="fitnessVideoFrame" src="" style="position:absolute;top:0;left:0;width:100%;height:100%" frameborder="0" allow="autoplay;encrypted-media" allowfullscreen></iframe>
+    </div>
+    <div id="fitnessVideoDesc" style="padding:16px;color:#aaa;font-size:0.82rem;line-height:1.6;background:#1a1a1a"></div>
+  </div>
+</div>
 
 <!-- Modal Recette -->
 <div id="recipeModal" style="display:none;position:fixed;inset:0;z-index:99999;background:rgba(0,0,0,0.7);align-items:center;justify-content:center;padding:20px" onclick="if(event.target===this)this.style.display='none'">
