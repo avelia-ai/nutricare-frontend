@@ -4881,6 +4881,8 @@ Réponds UNIQUEMENT en JSON valide avec cette structure exacte:
     if (view === 'chrono') setTimeout(loadChrono, 300);
     document.getElementById('healthView').style.display = view === 'health' ? 'block' : 'none';
     if (view === 'health') loadHealthDashboard();
+    if (document.getElementById('fitnessView')) document.getElementById('fitnessView').style.display = view === 'fitness' ? 'block' : 'none';
+    if (view === 'fitness') loadFitnessView();
     document.getElementById('menusView').style.display = view === 'menus' ? 'block' : 'none';
 if (view === 'menus') loadMenus();
 document.getElementById('analysisView').style.display = view === 'analysis' ? 'block' : 'none';
