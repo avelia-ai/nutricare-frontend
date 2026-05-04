@@ -4492,19 +4492,46 @@ Réponds UNIQUEMENT en JSON valide avec cette structure exacte:
       if (data.reply) {
         try {
           const r = JSON.parse(data.reply.replace(/```json|```/g, '').trim());
-          document.getElementById('mirellaAnalysisText').innerHTML = 
-            '<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px">' +
-            '<div style="background:white;border-radius:10px;padding:12px;text-align:center"><div style="font-size:0.72rem;color:#999;margin-bottom:4px">Masse grasse</div><div style="font-size:1.1rem;font-weight:700;color:#FF6B6B">' + r.masse_grasse_avant + '% → ' + r.masse_grasse_apres + '%</div></div>' +
-            '<div style="background:white;border-radius:10px;padding:12px;text-align:center"><div style="font-size:0.72rem;color:#999;margin-bottom:4px">Masse musculaire</div><div style="font-size:1.1rem;font-weight:700;color:#28C840">' + r.masse_musculaire_avant + '% → ' + r.masse_musculaire_apres + '%</div></div>' +
+          const mgDiff = r.masse_grasse_avant - r.masse_grasse_apres;
+          const mmDiff = r.masse_musculaire_apres - r.masse_musculaire_avant;
+          document.getElementById('mirellaAnalysisText').innerHTML =
+            '<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px">' +
+            '<div style="background:white;border-radius:12px;padding:14px;text-align:center;border:1px solid #f5f5f5">' +
+            '<div style="font-size:0.7rem;color:#aaa;margin-bottom:6px;text-transform:uppercase;letter-spacing:0.5px">Masse grasse</div>' +
+            '<div style="display:flex;align-items:center;justify-content:center;gap:4px">' +
+            '<span style="font-size:1.3rem;font-weight:700;color:#FF6B6B">' + r.masse_grasse_avant + '%</span>' +
+            '<span style="font-size:0.9rem;color:#ccc">→</span>' +
+            '<span style="font-size:1.3rem;font-weight:700;color:#1D9E75">' + r.masse_grasse_apres + '%</span></div>' +
+            '<div style="font-size:0.7rem;color:' + (mgDiff > 0 ? '#1D9E75' : '#FF6B6B') + ';font-weight:600;margin-top:4px">' + (mgDiff > 0 ? '-' + mgDiff : '+' + Math.abs(mgDiff)) + '% sur la période</div>' +
+            '<div style="height:6px;background:#f5f5f5;border-radius:3px;margin-top:8px;overflow:hidden"><div style="height:100%;width:' + Math.min(r.masse_grasse_apres*2,100) + '%;background:linear-gradient(90deg,#FF6B6B,#FF9A3C);border-radius:3px"></div></div>' +
             '</div>' +
-            '<div style="background:white;border-radius:10px;padding:12px;margin-bottom:10px">' +
-            '<div style="font-size:0.72rem;color:#999;margin-bottom:6px">Score de progression</div>' +
-            '<div style="height:8px;background:#f0f0f0;border-radius:4px;margin-bottom:4px"><div style="height:100%;width:' + r.score_progression + '%;background:linear-gradient(90deg,#FF6B6B,#FF9A3C);border-radius:4px"></div></div>' +
-            '<div style="font-size:0.85rem;font-weight:700;color:#FF9A3C">' + r.score_progression + '/100</div>' +
-            '</div>' +
-            '<div style="font-size:0.82rem;color:#2D2D2D;margin-bottom:10px;line-height:1.6"><strong>Zones d&#39;évolution :</strong> ' + r.zones_evolution + '</div>' +
-            '<div style="font-size:0.85rem;color:#2D2D2D;line-height:1.6;margin-bottom:10px">' + r.analyse + '</div>' +
-            '<div style="background:white;border-radius:10px;padding:12px;font-size:0.82rem;color:#378ADD;line-height:1.6"><strong>Conseils :</strong> ' + r.conseils + '</div>';
+            '<div style="background:white;border-radius:12px;padding:14px;text-align:center;border:1px solid #f5f5f5">' +
+            '<div style="font-size:0.7rem;color:#aaa;margin-bottom:6px;text-transform:uppercase;letter-spacing:0.5px">Masse musculaire</div>' +
+            '<div style="display:flex;align-items:center;justify-content:center;gap:4px">' +
+            '<span style="font-size:1.3rem;font-weight:700;color:#378ADD">' + r.masse_musculaire_avant + '%</span>' +
+            '<span style="font-size:0.9rem;color:#ccc">→</span>' +
+            '<span style="font-size:1.3rem;font-weight:700;color:#1D9E75">' + r.masse_musculaire_apres + '%</span></div>' +
+            '<div style="font-size:0.7rem;color:' + (mmDiff > 0 ? '#1D9E75' : '#FF6B6B') + ';font-weight:600;margin-top:4px">' + (mmDiff > 0 ? '+' + mmDiff : '-' + Math.abs(mmDiff)) + '% sur la période</div>' +
+            '<div style="height:6px;background:#f5f5f5;border-radius:3px;margin-top:8px;overflow:hidden"><div style="height:100%;width:' + Math.min(r.masse_musculaire_apres*2,100) + '%;background:linear-gradient(90deg,#378ADD,#1D9E75);border-radius:3px"></div></div>' +
+            '</div></div>' +
+            '<div style="background:white;border-radius:12px;padding:14px;margin-bottom:10px;border:1px solid #f5f5f5">' +
+            '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">' +
+            '<div style="font-size:0.75rem;font-weight:600;color:#2D2D2D;text-transform:uppercase;letter-spacing:0.5px">Score de progression</div>' +
+            '<div style="font-size:1.3rem;font-weight:700;color:#FF9A3C">' + r.score_progression + '<span style="font-size:0.75rem;color:#aaa">/100</span></div></div>' +
+            '<div style="height:10px;background:#f5f5f5;border-radius:5px;overflow:hidden">' +
+            '<div style="height:100%;width:' + r.score_progression + '%;background:linear-gradient(90deg,#FF6B6B,#FF9A3C,#28C840);border-radius:5px;transition:width 1s ease"></div></div>' +
+            '<div style="display:flex;justify-content:space-between;margin-top:4px">' +
+            '<span style="font-size:0.65rem;color:#ccc">Débutant</span><span style="font-size:0.65rem;color:#ccc">Expert</span></div></div>' +
+            '<div style="background:white;border-radius:12px;padding:14px;margin-bottom:10px;border-left:3px solid #FF9A3C;border-radius:0 12px 12px 0">' +
+            '<div style="font-size:0.7rem;font-weight:700;color:#FF9A3C;margin-bottom:6px;text-transform:uppercase;letter-spacing:0.5px">Zones d amelioration</div>' +
+            '<div style="font-size:0.82rem;color:#2D2D2D;line-height:1.6">' + r.zones_evolution + '</div></div>' +
+            '<div style="background:#FFF8E1;border-radius:12px;padding:14px;margin-bottom:10px">' +
+            '<div style="font-size:0.7rem;font-weight:700;color:#F57F17;margin-bottom:6px;text-transform:uppercase;letter-spacing:0.5px">Mirella vous dit</div>' +
+            '<div style="font-size:0.85rem;color:#2D2D2D;line-height:1.6">' + r.analyse + '</div></div>' +
+            '<div style="background:#E8F5E9;border-radius:12px;padding:14px">' +
+            '<div style="font-size:0.7rem;font-weight:700;color:#2E7D32;margin-bottom:8px;text-transform:uppercase;letter-spacing:0.5px">Conseils personnalisés</div>' +
+            r.conseils.split('.').filter(function(s){return s.trim().length>5;}).map(function(s){return '<div style="display:flex;gap:8px;align-items:flex-start;margin-bottom:6px"><span style="color:#2E7D32;font-size:14px;flex-shrink:0">→</span><span style="font-size:0.82rem;color:#1B5E20;line-height:1.5">' + s.trim() + '</span></div>';}).join('') +
+            '</div>';
         } catch(parseErr) {
           document.getElementById('mirellaAnalysisText').textContent = data.result;
         }
