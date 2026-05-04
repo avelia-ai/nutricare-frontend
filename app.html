@@ -4280,7 +4280,8 @@ Réponds UNIQUEMENT en JSON valide avec cette structure exacte:
       btn.style.display = 'none';
     } catch(e) {
       btn.textContent = '🤖 Générer mon programme fitness IA';
-      alert('Erreur lors de la génération. Réessayez.');
+      console.error('FITNESS ERROR:', e);
+      alert('Erreur: ' + e.message);
     }
     btn.disabled = false;
     document.getElementById('fitnessLoading').style.display = 'none';
