@@ -4256,24 +4256,14 @@ Réponds UNIQUEMENT en JSON valide avec cette structure exacte:
       const taille = profile.height || profile.taille || '';
       const imc = poids && taille ? (parseFloat(poids) / Math.pow(parseFloat(taille)/100, 2)).toFixed(1) : null;
       const prompt = 'Genere un programme fitness 7 jours pour: pathologies=' + pathologies + ', objectif=' + objectif + ', IMC=' + (imc||'normal') + '. Reponds UNIQUEMENT avec un tableau JSON de 7 objets sans texte ni markdown. Format: [{"jour":"Lundi","nom":"Full body","duree":30,"kcal":220,"exercices":[{"nom":"Squats","series":3,"repetitions":"15 reps","repos":60,"muscles":["Jambes"],"conseil":"Adapte aux pathologies","youtube_id":""}]},{"jour":"Mardi","nom":"Repos","duree":0,"kcal":0,"exercices":[]},...]';
-      const res = await fetch(BACKEND_URL + '/api/chat/message', {
+      const res = await fetch(BACKEND_URL + '/api/fitness/generate', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
-        body: JSON.stringify({ message: prompt })
+        body: JSON.stringify({ pathologies, objectif, imc: imc||'normal' })
       });
       const data = await res.json();
-      const text = data.reply || '';
-      let json = text.trim();
-      if (json.includes('```')) json = json.replace(/```json/g,'').replace(/```/g,'').trim();
-      const firstBracket = json.indexOf('[');
-      const lastBracket = json.lastIndexOf(']');
-      if (firstBracket !== -1 && lastBracket !== -1) json = json.substring(firstBracket, lastBracket+1);
-      json = json.replace(/[\u0000-\u001F\u007F-\u009F]/g, ' ');
-      try { _fitnessProgram = JSON.parse(json); }
-      catch(jsonErr) {
-        json = json.replace(/'/g, '').replace(/[""]/g, '"');
-        _fitnessProgram = JSON.parse(json);
-      }
+      if (data.error) throw new Error(data.error);
+      _fitnessProgram = data.program;
       // Normaliser les exercices (string -> objet)
       _fitnessProgram = _fitnessProgram.map(function(day) {
         if (day.exercices && day.exercices.length && typeof day.exercices[0] === 'string') {
