@@ -4316,6 +4316,58 @@ Réponds UNIQUEMENT en JSON valide avec cette structure exacte:
     setTimeout(initFitnessImgs, 200);
   }
 
+  function switchFitnessTab(tab) {
+    document.getElementById('fitnessLibrary').style.display = tab === 'library' ? 'block' : 'none';
+    document.getElementById('fitnessProgramTab').style.display = tab === 'program' ? 'block' : 'none';
+    document.getElementById('ftab-library').style.color = tab === 'library' ? '#FF6B6B' : '#aaa';
+    document.getElementById('ftab-library').style.borderBottom = tab === 'library' ? '2px solid #FF6B6B' : '2px solid transparent';
+    document.getElementById('ftab-program').style.color = tab === 'program' ? '#FF6B6B' : '#aaa';
+    document.getElementById('ftab-program').style.borderBottom = tab === 'program' ? '2px solid #FF6B6B' : '2px solid transparent';
+  }
+
+  async function loadFitnessCategory(btn, title, query) {
+    document.querySelectorAll('.fcat-btn').forEach(function(b) {
+      b.style.background = '#f5f5f5'; b.style.color = '#666';
+    });
+    btn.style.background = '#2D2D2D'; btn.style.color = 'white';
+    document.getElementById('fitnessCategoryTitle').textContent = title;
+    document.getElementById('fitnessCategoryLoading').style.display = 'block';
+    document.getElementById('fitnessGrid').innerHTML = '';
+    try {
+      const res = await fetch(BACKEND_URL + '/api/fitness-video/category?query=' + encodeURIComponent(query));
+      const data = await res.json();
+      document.getElementById('fitnessCategoryLoading').style.display = 'none';
+      if (!data.videos || !data.videos.length) {
+        document.getElementById('fitnessGrid').innerHTML = '<div style="color:#aaa;text-align:center;padding:40px">Aucune vidéo trouvée</div>';
+        return;
+      }
+      document.getElementById('fitnessGrid').innerHTML = data.videos.map(function(v) {
+        return '<div style="background:white;border-radius:12px;overflow:hidden;cursor:pointer;border:1px solid #f0f0f0;transition:transform 0.2s" onmouseover="this.style.transform='scale(1.02)'" onmouseout="this.style.transform='scale(1)'" onclick="openFitnessLibVideo('' + v.videoUrl.replace(/'/g, '') + '','' + v.title.replace(/'/g, '').substring(0,40) + '')">' +
+          '<div style="position:relative;height:160px;background:#1a1a2e;overflow:hidden">' +
+          '<img src="' + v.thumbnail + '" style="width:100%;height:100%;object-fit:cover" onerror="this.style.display='none'">' +
+          '<div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center">' +
+          '<div style="width:48px;height:48px;border-radius:50%;background:rgba(255,107,107,0.9);display:flex;align-items:center;justify-content:center">' +
+          '<div style="width:0;height:0;border-top:10px solid transparent;border-bottom:10px solid transparent;border-left:16px solid white;margin-left:4px"></div></div></div></div>' +
+          '<div style="padding:12px"><div style="font-size:0.82rem;font-weight:600;color:#2D2D2D;line-height:1.3">' + v.title.substring(0,50) + '</div>' +
+          '<div style="font-size:0.72rem;color:#aaa;margin-top:4px">' + (v.duration || '') + '</div></div></div>';
+      }).join('');
+    } catch(e) {
+      document.getElementById('fitnessCategoryLoading').style.display = 'none';
+      document.getElementById('fitnessGrid').innerHTML = '<div style="color:#aaa;text-align:center;padding:40px">Erreur de chargement</div>';
+    }
+  }
+
+  function openFitnessLibVideo(url, title) {
+    document.getElementById('fitnessLibVideoTitle').textContent = title;
+    document.getElementById('fitnessLibVideoPlayer').src = url;
+    document.getElementById('fitnessVideoModal').style.display = 'flex';
+  }
+
+  function closeFitnessLibVideo() {
+    document.getElementById('fitnessLibVideoPlayer').src = '';
+    document.getElementById('fitnessVideoModal').style.display = 'none';
+  }
+
   function getFitnessEmoji(nom) {
     if (/pompe|push/.test(nom)) return '💪';
     if (/fente|lunge/.test(nom)) return '🦵';
@@ -5852,49 +5904,96 @@ async function deleteProfessional(id) {
 <!-- Vue Fitness -->
 <div id="fitnessView" style="display:none;padding:24px;overflow-y:auto;background:#FFF5F0;width:100%;min-height:100vh">
   <div style="max-width:1100px;margin:0 auto;width:100%">
+
+    <!-- Header -->
     <div style="display:flex;align-items:center;gap:12px;margin-bottom:20px">
       <div style="width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,#FF6B6B,#FF9A3C);display:flex;align-items:center;justify-content:center;font-size:22px">&#x1F4AA;</div>
       <div>
-        <div style="font-size:1.3rem;font-weight:700;color:#2D2D2D">Mon programme fitness</div>
-        <div style="font-size:0.78rem;color:#aaa">Generé par Mirella - Adapté à votre profil</div>
+        <div style="font-size:1.3rem;font-weight:700;color:#2D2D2D">Fitness</div>
+        <div style="font-size:0.78rem;color:#aaa">Bibliothèque d'exercices & programme personnalisé</div>
       </div>
     </div>
-    <div id="fitnessPlanRequired" style="display:none;background:white;border-radius:16px;padding:28px;text-align:center;margin-bottom:20px;border:1px solid rgba(255,107,107,0.15)">
-      <div style="font-size:2rem;margin-bottom:12px">&#x1F512;</div>
-      <div style="font-size:1rem;font-weight:700;color:#2D2D2D;margin-bottom:8px">Fonctionnalité Premium</div>
-      <div style="font-size:0.85rem;color:#aaa;margin-bottom:16px">Accédez à votre programme fitness personnalisé avec le plan Premium.</div>
-      <button onclick="showView('pricing')" style="background:linear-gradient(135deg,#FF6B6B,#FF9A3C);color:white;border:none;border-radius:12px;padding:12px 28px;font-size:0.88rem;font-weight:700;cursor:pointer">Voir les offres</button>
+
+    <!-- Onglets -->
+    <div style="display:flex;gap:8px;margin-bottom:24px;border-bottom:2px solid #f0f0f0;padding-bottom:0">
+      <button onclick="switchFitnessTab('library')" id="ftab-library" style="padding:10px 20px;border:none;background:none;font-size:0.88rem;font-weight:700;color:#FF6B6B;border-bottom:2px solid #FF6B6B;margin-bottom:-2px;cursor:pointer;font-family:'DM Sans',sans-serif">&#x1F3CB; Bibliothèque</button>
+      <button onclick="switchFitnessTab('program')" id="ftab-program" style="padding:10px 20px;border:none;background:none;font-size:0.88rem;font-weight:700;color:#aaa;border-bottom:2px solid transparent;margin-bottom:-2px;cursor:pointer;font-family:'DM Sans',sans-serif">&#x1F916; Mon programme IA</button>
     </div>
-    <div id="fitnessContent">
-      <div style="display:flex;gap:8px;overflow-x:auto;padding-bottom:8px;margin-bottom:16px">
-        <button onclick="selectFitnessDay(0)" id="fd-0" class="fd-btn" style="flex-shrink:0;padding:8px 14px;border-radius:20px;border:none;background:#2D2D2D;color:white;font-size:0.75rem;font-weight:700;cursor:pointer">Lun</button>
-        <button onclick="selectFitnessDay(1)" id="fd-1" class="fd-btn" style="flex-shrink:0;padding:8px 14px;border-radius:20px;border:none;background:#f5f5f5;color:#aaa;font-size:0.75rem;font-weight:700;cursor:pointer">Mar</button>
-        <button onclick="selectFitnessDay(2)" id="fd-2" class="fd-btn" style="flex-shrink:0;padding:8px 14px;border-radius:20px;border:none;background:#f5f5f5;color:#aaa;font-size:0.75rem;font-weight:700;cursor:pointer">Mer</button>
-        <button onclick="selectFitnessDay(3)" id="fd-3" class="fd-btn" style="flex-shrink:0;padding:8px 14px;border-radius:20px;border:none;background:#f5f5f5;color:#aaa;font-size:0.75rem;font-weight:700;cursor:pointer">Jeu</button>
-        <button onclick="selectFitnessDay(4)" id="fd-4" class="fd-btn" style="flex-shrink:0;padding:8px 14px;border-radius:20px;border:none;background:#f5f5f5;color:#aaa;font-size:0.75rem;font-weight:700;cursor:pointer">Ven</button>
-        <button onclick="selectFitnessDay(5)" id="fd-5" class="fd-btn" style="flex-shrink:0;padding:8px 14px;border-radius:20px;border:none;background:#f5f5f5;color:#aaa;font-size:0.75rem;font-weight:700;cursor:pointer">Sam</button>
-        <button onclick="selectFitnessDay(6)" id="fd-6" class="fd-btn" style="flex-shrink:0;padding:8px 14px;border-radius:20px;border:none;background:#f5f5f5;color:#aaa;font-size:0.75rem;font-weight:700;cursor:pointer">Dim</button>
+
+    <!-- TAB: Bibliothèque -->
+    <div id="fitnessLibrary">
+      <!-- Catégories -->
+      <div style="display:flex;gap:8px;overflow-x:auto;padding-bottom:12px;margin-bottom:20px">
+        <button onclick="loadFitnessCategory(this,'Jambes & Fessiers','squats lunges glutes workout')" class="fcat-btn" style="flex-shrink:0;padding:8px 16px;border-radius:20px;border:none;background:#2D2D2D;color:white;font-size:0.75rem;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif">🦵 Jambes & Fessiers</button>
+        <button onclick="loadFitnessCategory(this,'Pectoraux & Bras','push ups chest arms workout')" class="fcat-btn" style="flex-shrink:0;padding:8px 16px;border-radius:20px;border:none;background:#f5f5f5;color:#666;font-size:0.75rem;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif">💪 Pectoraux & Bras</button>
+        <button onclick="loadFitnessCategory(this,'Abdominaux & Core','abs core workout crunches')" class="fcat-btn" style="flex-shrink:0;padding:8px 16px;border-radius:20px;border:none;background:#f5f5f5;color:#666;font-size:0.75rem;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif">🔥 Abdominaux & Core</button>
+        <button onclick="loadFitnessCategory(this,'Dos & Épaules','back shoulders workout rowing')" class="fcat-btn" style="flex-shrink:0;padding:8px 16px;border-radius:20px;border:none;background:#f5f5f5;color:#666;font-size:0.75rem;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif">🏋️ Dos & Épaules</button>
+        <button onclick="loadFitnessCategory(this,'Cardio & HIIT','cardio hiit workout jumping')" class="fcat-btn" style="flex-shrink:0;padding:8px 16px;border-radius:20px;border:none;background:#f5f5f5;color:#666;font-size:0.75rem;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif">⚡ Cardio & HIIT</button>
+        <button onclick="loadFitnessCategory(this,'Full Body','full body workout fitness')" class="fcat-btn" style="flex-shrink:0;padding:8px 16px;border-radius:20px;border:none;background:#f5f5f5;color:#666;font-size:0.75rem;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif">🏃 Full Body</button>
+        <button onclick="loadFitnessCategory(this,'Mobilité & Étirements','stretching flexibility yoga workout')" class="fcat-btn" style="flex-shrink:0;padding:8px 16px;border-radius:20px;border:none;background:#f5f5f5;color:#666;font-size:0.75rem;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif">🧘 Mobilité & Étirements</button>
+        <button onclick="loadFitnessCategory(this,'Yoga & Récupération','yoga recovery relaxation workout')" class="fcat-btn" style="flex-shrink:0;padding:8px 16px;border-radius:20px;border:none;background:#f5f5f5;color:#666;font-size:0.75rem;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif">☯️ Yoga & Récupération</button>
+        <button onclick="loadFitnessCategory(this,'Débutant','beginner easy workout fitness')" class="fcat-btn" style="flex-shrink:0;padding:8px 16px;border-radius:20px;border:none;background:#f5f5f5;color:#666;font-size:0.75rem;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif">⭐ Débutant</button>
       </div>
-      <div id="fitnessStats" style="background:white;border-radius:16px;padding:16px;margin-bottom:16px;display:flex;justify-content:space-between;align-items:center">
-        <div>
-          <div style="font-size:0.75rem;color:#aaa;margin-bottom:2px">Séance du jour</div>
-          <div id="fitnessSessionName" style="font-size:1rem;font-weight:700;color:#2D2D2D">-</div>
+
+      <!-- Grille vidéos -->
+      <div id="fitnessCategoryTitle" style="font-size:1rem;font-weight:700;color:#2D2D2D;margin-bottom:14px">🦵 Jambes & Fessiers</div>
+      <div id="fitnessCategoryLoading" style="display:none;text-align:center;padding:40px;color:#aaa">
+        <div style="font-size:1.5rem;margin-bottom:8px">⏳</div>Chargement des vidéos...
+      </div>
+      <div id="fitnessGrid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px"></div>
+    </div>
+
+    <!-- TAB: Programme IA -->
+    <div id="fitnessProgramTab" style="display:none">
+      <div id="fitnessPlanRequired" style="display:none;background:white;border-radius:16px;padding:28px;text-align:center;margin-bottom:20px;border:1px solid rgba(255,107,107,0.15)">
+        <div style="font-size:2rem;margin-bottom:12px">&#x1F512;</div>
+        <div style="font-size:1rem;font-weight:700;color:#2D2D2D;margin-bottom:8px">Fonctionnalité Premium</div>
+        <div style="font-size:0.85rem;color:#aaa;margin-bottom:16px">Accédez à votre programme fitness personnalisé avec le plan Premium.</div>
+        <button onclick="showView('pricing')" style="background:linear-gradient(135deg,#FF6B6B,#FF9A3C);color:white;border:none;border-radius:12px;padding:12px 28px;font-size:0.88rem;font-weight:700;cursor:pointer">Voir les offres</button>
+      </div>
+      <div id="fitnessContent">
+        <div style="display:flex;gap:8px;overflow-x:auto;padding-bottom:8px;margin-bottom:16px">
+          <button onclick="selectFitnessDay(0)" id="fd-0" class="fd-btn" style="flex-shrink:0;padding:8px 14px;border-radius:20px;border:none;background:#2D2D2D;color:white;font-size:0.75rem;font-weight:700;cursor:pointer">Lun</button>
+          <button onclick="selectFitnessDay(1)" id="fd-1" class="fd-btn" style="flex-shrink:0;padding:8px 14px;border-radius:20px;border:none;background:#f5f5f5;color:#aaa;font-size:0.75rem;font-weight:700;cursor:pointer">Mar</button>
+          <button onclick="selectFitnessDay(2)" id="fd-2" class="fd-btn" style="flex-shrink:0;padding:8px 14px;border-radius:20px;border:none;background:#f5f5f5;color:#aaa;font-size:0.75rem;font-weight:700;cursor:pointer">Mer</button>
+          <button onclick="selectFitnessDay(3)" id="fd-3" class="fd-btn" style="flex-shrink:0;padding:8px 14px;border-radius:20px;border:none;background:#f5f5f5;color:#aaa;font-size:0.75rem;font-weight:700;cursor:pointer">Jeu</button>
+          <button onclick="selectFitnessDay(4)" id="fd-4" class="fd-btn" style="flex-shrink:0;padding:8px 14px;border-radius:20px;border:none;background:#f5f5f5;color:#aaa;font-size:0.75rem;font-weight:700;cursor:pointer">Ven</button>
+          <button onclick="selectFitnessDay(5)" id="fd-5" class="fd-btn" style="flex-shrink:0;padding:8px 14px;border-radius:20px;border:none;background:#f5f5f5;color:#aaa;font-size:0.75rem;font-weight:700;cursor:pointer">Sam</button>
+          <button onclick="selectFitnessDay(6)" id="fd-6" class="fd-btn" style="flex-shrink:0;padding:8px 14px;border-radius:20px;border:none;background:#f5f5f5;color:#aaa;font-size:0.75rem;font-weight:700;cursor:pointer">Dim</button>
         </div>
-        <div style="display:flex;gap:16px">
-          <div style="text-align:center"><div id="fitnessExCount" style="font-size:1.1rem;font-weight:700;color:#FF6B6B">-</div><div style="font-size:0.65rem;color:#aaa">exercices</div></div>
-          <div style="text-align:center"><div id="fitnessDuration" style="font-size:1.1rem;font-weight:700;color:#FF9A3C">-</div><div style="font-size:0.65rem;color:#aaa">minutes</div></div>
-          <div style="text-align:center"><div id="fitnessKcal" style="font-size:1.1rem;font-weight:700;color:#1D9E75">-</div><div style="font-size:0.65rem;color:#aaa">kcal</div></div>
+        <div id="fitnessStats" style="background:white;border-radius:16px;padding:16px;margin-bottom:16px;display:flex;justify-content:space-between;align-items:center">
+          <div>
+            <div style="font-size:0.75rem;color:#aaa;margin-bottom:2px">Séance du jour</div>
+            <div id="fitnessSessionName" style="font-size:1rem;font-weight:700;color:#2D2D2D">-</div>
+          </div>
+          <div style="display:flex;gap:16px">
+            <div style="text-align:center"><div id="fitnessExCount" style="font-size:1.1rem;font-weight:700;color:#FF6B6B">-</div><div style="font-size:0.65rem;color:#aaa">exercices</div></div>
+            <div style="text-align:center"><div id="fitnessDuration" style="font-size:1.1rem;font-weight:700;color:#FF9A3C">-</div><div style="font-size:0.65rem;color:#aaa">minutes</div></div>
+            <div style="text-align:center"><div id="fitnessKcal" style="font-size:1.1rem;font-weight:700;color:#1D9E75">-</div><div style="font-size:0.65rem;color:#aaa">kcal</div></div>
+          </div>
         </div>
+        <div id="fitnessLoading" style="display:none;text-align:center;padding:48px">
+          <div style="font-size:2rem;margin-bottom:12px">&#x23F3;</div>
+          <div style="font-size:0.95rem;color:#2D2D2D;font-weight:600">Mirella génère votre programme...</div>
+        </div>
+        <div id="fitnessExercises"></div>
+        <button onclick="generateFitnessProgram()" id="generateFitnessBtn" style="width:100%;background:#2D2D2D;color:white;border:none;border-radius:16px;padding:16px;font-size:0.9rem;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif;margin-top:8px">
+          &#x1F916; Générer mon programme fitness IA
+        </button>
       </div>
-      <div id="fitnessLoading" style="display:none;text-align:center;padding:48px">
-        <div style="font-size:2rem;margin-bottom:12px">&#x23F3;</div>
-        <div style="font-size:0.95rem;color:#2D2D2D;font-weight:600">Mirella génère votre programme...</div>
-      </div>
-      <div id="fitnessExercises"></div>
-      <button onclick="generateFitnessProgram()" id="generateFitnessBtn" style="width:100%;background:#2D2D2D;color:white;border:none;border-radius:16px;padding:16px;font-size:0.9rem;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif;margin-top:8px">
-        &#x1F916; Générer mon programme fitness IA
-      </button>
     </div>
+
+    <!-- Modal vidéo plein écran -->
+    <div id="fitnessVideoModal" style="display:none;position:fixed;inset:0;z-index:99999;background:rgba(0,0,0,0.92);align-items:center;justify-content:center;padding:20px" onclick="closeFitnessLibVideo()">
+      <div onclick="event.stopPropagation()" style="width:100%;max-width:900px;background:#000;border-radius:16px;overflow:hidden">
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:12px 16px;background:#111">
+          <div id="fitnessLibVideoTitle" style="font-size:0.9rem;font-weight:700;color:white"></div>
+          <button onclick="closeFitnessLibVideo()" style="background:none;border:none;color:white;font-size:1.2rem;cursor:pointer">✕</button>
+        </div>
+        <video id="fitnessLibVideoPlayer" autoplay muted loop playsinline style="width:100%;max-height:70vh;object-fit:contain;background:#000"></video>
+      </div>
+    </div>
+
   </div>
 </div>
 
