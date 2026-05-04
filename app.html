@@ -4481,19 +4481,17 @@ Réponds UNIQUEMENT en JSON valide avec cette structure exacte:
   "conseils": "2-3 conseils nutritionnels adaptés au profil"
 }`;
 
-      const res = await fetch(BACKEND_URL + '/api/vision/analyze-evolution', {
+      const imc = poids && taille ? (parseFloat(poids) / Math.pow(parseFloat(taille)/100, 2)).toFixed(1) : null;
+      const msgPrompt = 'Tu es Mirella, coach nutrition expert. Genere une analyse de composition corporelle pour un utilisateur qui suit son evolution depuis ' + days + ' jours. Profil: pathologies=' + pathologies + ', objectif=' + objectif + ', poids=' + poids + 'kg, taille=' + taille + 'cm, IMC=' + (imc||'inconnu') + '. Base-toi sur ces donnees pour estimer la composition corporelle et genere des conseils tres personnalises. Reponds UNIQUEMENT en JSON strict sans backticks: {"masse_grasse_avant":25,"masse_grasse_apres":23,"masse_musculaire_avant":35,"masse_musculaire_apres":37,"score_progression":72,"zones_evolution":"description zones amelioration selon objectif et duree","analyse":"message chaleureux motivant 3-4 phrases base sur profil duree et efforts","conseils":"2-3 conseils nutritionnels precis adaptes pathologies et objectif"}';
+      const res = await fetch(BACKEND_URL + '/api/chat/message', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
-        body: JSON.stringify({ 
-          image_avant: earlier.src,
-          image_apres: later.src,
-          prompt: prompt
-        })
+        body: JSON.stringify({ message: msgPrompt })
       });
       const data = await res.json();
-      if (data.result) {
+      if (data.reply) {
         try {
-          const r = JSON.parse(data.result.replace(/```json|```/g, '').trim());
+          const r = JSON.parse(data.reply.replace(/```json|```/g, '').trim());
           document.getElementById('mirellaAnalysisText').innerHTML = 
             '<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px">' +
             '<div style="background:white;border-radius:10px;padding:12px;text-align:center"><div style="font-size:0.72rem;color:#999;margin-bottom:4px">Masse grasse</div><div style="font-size:1.1rem;font-weight:700;color:#FF6B6B">' + r.masse_grasse_avant + '% → ' + r.masse_grasse_apres + '%</div></div>' +
@@ -4511,7 +4509,7 @@ Réponds UNIQUEMENT en JSON valide avec cette structure exacte:
           document.getElementById('mirellaAnalysisText').textContent = data.result;
         }
       } else {
-        document.getElementById('mirellaAnalysisText').textContent = data.reply || data.error || 'Analyse générée !';
+        document.getElementById('mirellaAnalysisText').textContent = data.reply || data.error || 'Analyse generee !';
       }
       document.getElementById('mirellaAnalysisResult').style.display = 'block';
     } catch(e) {
