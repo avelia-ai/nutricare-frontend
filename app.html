@@ -4640,14 +4640,17 @@ Réponds UNIQUEMENT en JSON valide avec cette structure exacte:
   };
 
   async function loadFitnessView() {
+    const planReq = document.getElementById('fitnessPlanRequired');
+    const planContent = document.getElementById('fitnessContent');
+    if (!planReq || !planContent) return;
     const plan = window.currentPlan || 'free';
     if (plan === 'free') {
-      document.getElementById('fitnessPlanRequired').style.display = 'block';
-      document.getElementById('fitnessContent').style.display = 'none';
+      planReq.style.display = 'block';
+      planContent.style.display = 'none';
       return;
     }
-    document.getElementById('fitnessPlanRequired').style.display = 'none';
-    document.getElementById('fitnessContent').style.display = 'block';
+    planReq.style.display = 'none';
+    planContent.style.display = 'block';
     const saved = localStorage.getItem('fitness_program');
     if (saved) {
       _fitnessProgram = JSON.parse(saved);
