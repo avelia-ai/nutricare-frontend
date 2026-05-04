@@ -4248,9 +4248,15 @@ Réponds UNIQUEMENT en JSON valide avec cette structure exacte:
           return '<span style="display:inline-block;font-size:0.65rem;padding:2px 8px;border-radius:10px;font-weight:600;margin-right:4px;background:' + (tagBgs[m]||'#f5f5f5') + ';color:' + (tagColors[m]||'#555') + '">' + m + '</span>';
         }).join('') + '</div>' +
         '<div style="font-size:0.78rem;color:#666;line-height:1.5;margin-bottom:10px">' + (ex.conseil||'') + '</div>' +
-        '<button onclick="this.style.background='#E8F5E9';this.style.color='#2E7D32';this.textContent='✓ Exercice terminé'" style="width:100%;background:#2D2D2D;color:white;border:none;border-radius:10px;padding:10px;font-size:0.78rem;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif">Marquer comme fait</button>' +
+        '<button onclick="markFitDone(this)" style="width:100%;background:#2D2D2D;color:white;border:none;border-radius:10px;padding:10px;font-size:0.78rem;font-weight:700;cursor:pointer;font-family:sans-serif">Marquer comme fait</button>' +
         '</div></div>';
     }).join('');
+  }
+
+  function markFitDone(btn) {
+    btn.style.background = '#E8F5E9';
+    btn.style.color = '#2E7D32';
+    btn.textContent = '✓ Exercice terminé';
   }
 
   function markExDone(btn) {
