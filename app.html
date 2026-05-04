@@ -4312,7 +4312,7 @@ function switchLang(lang) {
         const compressed = canvas.toDataURL('image/jpeg', 0.6);
         try {
           const photos = JSON.parse(localStorage.getItem('evolution_photos') || '[]');
-          const date = new Date().toISOString().split('T')[0];
+          const date = (typeof wcalSelected !== 'undefined' ? wcalSelected : new Date()).toISOString().split('T')[0];
           photos.unshift({ date: date, src: compressed });
           if (photos.length > 30) photos.pop();
           localStorage.setItem('evolution_photos', JSON.stringify(photos));
@@ -4340,16 +4340,20 @@ function switchLang(lang) {
   function renderEvolutionGallery() {
     const gallery = document.getElementById('evolutionGallery');
     if (!gallery) return;
-    const photos = JSON.parse(localStorage.getItem('evolution_photos') || '[]');
+    const allPhotos = JSON.parse(localStorage.getItem('evolution_photos') || '[]');
+    const selectedDate = (typeof wcalSelected !== 'undefined' ? wcalSelected : new Date()).toISOString().split('T')[0];
+    const photos = allPhotos.filter(function(p) { return p.date === selectedDate; });
+    const dateLabel = new Date(selectedDate).toLocaleDateString('fr-FR', {day:'numeric', month:'long', year:'numeric'});
     if (!photos.length) {
-      gallery.innerHTML = '<div style="grid-column:span 3;text-align:center;color:#ccc;padding:20px;font-size:0.85rem">Aucune photo encore ajoutée</div>';
+      gallery.innerHTML = '<div style="grid-column:span 3;text-align:center;color:#ccc;padding:20px;font-size:0.85rem">Aucune photo pour le ' + dateLabel + '</div>';
       return;
     }
     gallery.innerHTML = photos.map(function(p, i) {
+      const realIdx = allPhotos.indexOf(p);
       return '<div style="position:relative;aspect-ratio:1;border-radius:10px;overflow:hidden">' +
         '<img src="' + p.src + '" style="width:100%;height:100%;object-fit:cover">' +
         '<div style="position:absolute;bottom:0;left:0;right:0;background:rgba(0,0,0,0.5);color:white;font-size:0.65rem;padding:4px;text-align:center">' + new Date(p.date).toLocaleDateString('fr-FR', {day:'numeric', month:'short'}) + '</div>' +
-        '<button onclick="deleteEvolutionPhoto(' + i + ')" style="position:absolute;top:4px;right:4px;background:rgba(255,0,0,0.7);color:white;border:none;border-radius:50%;width:20px;height:20px;font-size:0.65rem;cursor:pointer;line-height:1">✕</button>' +
+        '<button onclick="deleteEvolutionPhoto(' + realIdx + ')" style="position:absolute;top:4px;right:4px;background:rgba(255,0,0,0.7);color:white;border:none;border-radius:50%;width:20px;height:20px;font-size:0.65rem;cursor:pointer;line-height:1">✕</button>' +
         '</div>';
     }).join('');
   }
@@ -5208,6 +5212,7 @@ async function loadHealthForDate(dateStr) {
       }
     }
   } catch(e) { console.error('loadHealthForDate', e); }
+  renderEvolutionGallery();
 }
 
 async function loadMenusForDate(dateStr) {
