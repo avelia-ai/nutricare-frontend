@@ -4448,7 +4448,7 @@ function switchLang(lang) {
     document.getElementById('mirellaAnalysisResult').style.display = 'none';
     try {
       const token = authToken || localStorage.getItem('nutricare_token') || '';
-      const res = await fetch(BACKEND_URL + '/api/chat', {
+      const res = await fetch(BACKEND_URL + '/api/chat/message', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
         body: JSON.stringify({ message: 'Tu es Mirella, coach nutrition bienveillante. L utilisateur te partage 2 photos de son evolution corporelle espacees de ' + days + ' jours. Sans voir les photos, genere un message d encouragement chaleureux et motivant de 3-4 phrases sur la regularite du suivi et les benefices visibles possibles apres ' + days + ' jours d effort. Sois tres personnelle et positive. Commence directement sans formule de politesse.' })
