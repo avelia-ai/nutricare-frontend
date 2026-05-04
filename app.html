@@ -4700,8 +4700,7 @@ Réponds UNIQUEMENT en JSON valide avec cette structure exacte:
         }).join('') + '</div>' +
         '<div style="font-size:0.78rem;color:#666;line-height:1.5;margin-bottom:10px">' + (ex.conseil||'') + '</div>' +
         '<div style="display:flex;gap:8px">' +
-        '<button onclick="openFitnessVideo('' + (ex.youtube_id||'') + '','' + ex.nom.replace(/'/g,"\'") + '','' + (ex.description||'').replace(/'/g,"\'").substring(0,100) + '')" style="flex:1;background:linear-gradient(135deg,#FF6B6B,#FF9A3C);color:white;border:none;border-radius:10px;padding:10px;font-size:0.78rem;font-weight:700;cursor:pointer">▶ Voir le tuto YouTube</button>' +
-        "<button onclick="var e=this.parentNode.parentNode.parentNode.querySelector(\"[data-ytid]\");openFitnessVideo(e.dataset.ytid,e.dataset.nom,e.dataset.desc)" style="flex:1;background:linear-gradient(135deg,#FF6B6B,#FF9A3C);color:white;border:none;border-radius:10px;padding:10px;font-size:0.78rem;font-weight:700;cursor:pointer">▶ Voir le tuto YouTube</button>" +
+        '<button onclick="var e=this.closest(\"[data-ytid]\");if(!e)e=this.parentNode.parentNode.querySelector(\"[data-ytid]\");openFitnessVideo(e.dataset.ytid,e.dataset.nom,e.dataset.desc)" style="flex:1;background:linear-gradient(135deg,#FF6B6B,#FF9A3C);color:white;border:none;border-radius:10px;padding:10px;font-size:0.78rem;font-weight:700;cursor:pointer">&#9654; Voir le tuto YouTube</button>' +
         '</div></div></div>';
     }).join('');
   }
