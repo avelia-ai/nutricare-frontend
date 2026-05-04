@@ -4720,11 +4720,10 @@ async function loadMealPhoto(nom, keyword, imgEl) {
     const q = keyword || nom.split(' ').slice(0,3).join(' ');
     const res = await fetch(`${BACKEND_URL}/api/photos/search?q=${encodeURIComponent(q)}`);
     const data = await res.json();
-    if (data.url) imgEl.src = data.url;
-    else imgEl.src = 'https://images.unsplash.com/photo-1498837167922-ddd27525d352?w=400&h=300&q=80&fit=crop';
-  } catch(e) {
-    imgEl.src = 'https://images.unsplash.com/photo-1498837167922-ddd27525d352?w=400&h=300&q=80&fit=crop';
-  }
+    if (data.url) {
+      imgEl.src = `${BACKEND_URL}/api/photos/proxy?url=${encodeURIComponent(data.url)}`;
+    }
+  } catch(e) {}
 }
 function unsplashUrl(nom, keyword) {
   return '';
