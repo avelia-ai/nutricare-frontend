@@ -4293,12 +4293,19 @@ Réponds UNIQUEMENT en JSON valide avec cette structure exacte:
       var img0 = EXERCISE_IMG_BASE + imgId + '/0.jpg';
       var img1 = EXERCISE_IMG_BASE + imgId + '/1.jpg';
       var imgElId = 'eximg_' + i + '_' + Date.now();
+      var anatSvg = getMuscleAnatomy(ex.muscles || [], i);
       return '<div style="background:white;border-radius:16px;overflow:hidden;margin-bottom:12px;border:1px solid #f5f5f5">' +
-        '<div style="background:linear-gradient(135deg,#1a1a2e,#16213e);padding:12px 14px 0;display:flex;justify-content:space-between;align-items:center">' +
+        '<div style="background:linear-gradient(135deg,#1a1a2e,#16213e);padding:12px 14px;display:flex;justify-content:space-between;align-items:center">' +
         '<div style="background:' + color + ';color:white;font-size:0.65rem;font-weight:700;padding:3px 10px;border-radius:6px">EXERCICE ' + (i+1) + '/' + day.exercices.length + '</div>' +
         '<div style="color:rgba(255,255,255,0.35);font-size:0.65rem">' + ex.series + ' séries</div></div>' +
-        '<div style="background:linear-gradient(135deg,#1a1a2e,#16213e);display:flex;justify-content:center;align-items:center;height:200px;overflow:hidden;position:relative">' +
-        '<video data-exname="' + ex.nom + '" autoplay muted loop playsinline style="width:100%;height:auto;display:none;max-height:400px"></video>' +
+        '<div style="display:grid;grid-template-columns:1fr 1fr;min-height:180px">' +
+        '<div style="background:linear-gradient(135deg,#1a1a2e,#16213e);display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden">' +
+        '<video data-exname="' + ex.nom + '" autoplay muted loop playsinline style="width:100%;height:100%;object-fit:cover;display:none;position:absolute;inset:0"></video>' +
+        '<div style="position:relative;z-index:1;text-align:center;color:rgba(255,255,255,0.3);font-size:0.7rem">Chargement...</div>' +
+        '</div>' +
+        '<div style="background:#12121f;display:flex;align-items:center;justify-content:center;gap:4px;padding:8px">' +
+        anatSvg +
+        '</div>' +
         '</div>' +
         '<div style="padding:14px">' +
         '<div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px">' +
@@ -4314,6 +4321,102 @@ Réponds UNIQUEMENT en JSON valide avec cette structure exacte:
         '</div></div>';
     }).join('');
     setTimeout(initFitnessImgs, 200);
+  }
+
+  function getMuscleAnatomy(muscles, idx) {
+    var m = muscles.map(function(s){ return s.toLowerCase(); });
+    var front = { primary: [], secondary: [] };
+    var back = { primary: [], secondary: [] };
+
+    var isQuad = m.some(function(s){ return /jambe|quad|fente|squat/.test(s); });
+    var isGlute = m.some(function(s){ return /fessier|glute/.test(s); });
+    var isHam = m.some(function(s){ return /ischio|hamstring/.test(s); });
+    var isChest = m.some(function(s){ return /pectoral|chest|pompe/.test(s); });
+    var isTri = m.some(function(s){ return /tricep/.test(s); });
+    var isBi = m.some(function(s){ return /bicep|curl/.test(s); });
+    var isShoulder = m.some(function(s){ return /epaule|shoulder/.test(s); });
+    var isAbs = m.some(function(s){ return /abdo|core|gainage|crunch/.test(s); });
+    var isBack = m.some(function(s){ return /dos|back|lat/.test(s); });
+    var isCardio = m.some(function(s){ return /cardio|jumping/.test(s); });
+
+    if (isCardio) { isQuad=true; isShoulder=true; isAbs=true; }
+
+    var P = '#FF4040', S = '#FF9A3C', N = '#2a2a3e';
+    var PS = '#FF6060', SS = '#FFB060', NS = '#3a3a5e';
+
+    function bodyFront(qL,qR,chL,chR,shL,shR,abArr,biL,biR) {
+      return '<svg width="55" height="150" viewBox="0 0 58 155">' +
+        '<text x="29" y="151" text-anchor="middle" font-size="6" fill="#444">FACE</text>' +
+        '<ellipse cx="29" cy="9" rx="8" ry="9" fill="' + N + '" stroke="' + NS + '" stroke-width="0.8"/>' +
+        '<rect x="25" y="17" width="8" height="7" rx="3" fill="' + N + '" stroke="' + NS + '" stroke-width="0.8"/>' +
+        '<path d="M16 24 Q12 34 14 50 Q18 54 29 54 Q40 54 44 50 Q46 34 42 24 Z" fill="' + N + '" stroke="' + NS + '" stroke-width="0.8"/>' +
+        '<ellipse cx="12" cy="28" rx="7" ry="6" fill="' + shL + '" stroke="' + (shL===P?PS:NS) + '" stroke-width="0.8"/>' +
+        '<ellipse cx="46" cy="28" rx="7" ry="6" fill="' + shR + '" stroke="' + (shR===P?PS:NS) + '" stroke-width="0.8"/>' +
+        '<rect x="5" y="32" width="10" height="22" rx="5" fill="' + biL + '" stroke="' + (biL===P?PS:NS) + '" stroke-width="0.8"/>' +
+        '<rect x="43" y="32" width="10" height="22" rx="5" fill="' + biR + '" stroke="' + (biR===P?PS:NS) + '" stroke-width="0.8"/>' +
+        '<rect x="6" y="53" width="9" height="20" rx="4" fill="' + N + '" stroke="' + NS + '" stroke-width="0.8"/>' +
+        '<rect x="43" y="53" width="9" height="20" rx="4" fill="' + N + '" stroke="' + NS + '" stroke-width="0.8"/>' +
+        '<ellipse cx="21" cy="36" rx="7" ry="6" fill="' + chL + '" stroke="' + (chL===P?PS:NS) + '" stroke-width="0.8"/>' +
+        '<ellipse cx="37" cy="36" rx="7" ry="6" fill="' + chR + '" stroke="' + (chR===P?PS:NS) + '" stroke-width="0.8"/>' +
+        '<rect x="22" y="43" width="6" height="5" rx="2" fill="' + abArr[0] + '" stroke="' + (abArr[0]===P?PS:NS) + '" stroke-width="0.8"/>' +
+        '<rect x="30" y="43" width="6" height="5" rx="2" fill="' + abArr[1] + '" stroke="' + (abArr[1]===P?PS:NS) + '" stroke-width="0.8"/>' +
+        '<rect x="22" y="49" width="6" height="5" rx="2" fill="' + abArr[2] + '" stroke="' + (abArr[2]===P?PS:NS) + '" stroke-width="0.8"/>' +
+        '<rect x="30" y="49" width="6" height="5" rx="2" fill="' + abArr[3] + '" stroke="' + (abArr[3]===P?PS:NS) + '" stroke-width="0.8"/>' +
+        '<path d="M16 53 Q15 60 17 66 Q23 68 29 68 Q35 68 41 66 Q43 60 42 53 Z" fill="' + N + '" stroke="' + NS + '" stroke-width="0.8"/>' +
+        '<rect x="17" y="66" width="11" height="28" rx="5.5" fill="' + qL + '" stroke="' + (qL===P?PS:NS) + '" stroke-width="0.8"/>' +
+        '<rect x="30" y="66" width="11" height="28" rx="5.5" fill="' + qR + '" stroke="' + (qR===P?PS:NS) + '" stroke-width="0.8"/>' +
+        '<rect x="18" y="93" width="10" height="24" rx="5" fill="' + N + '" stroke="' + NS + '" stroke-width="0.8"/>' +
+        '<rect x="30" y="93" width="10" height="24" rx="5" fill="' + N + '" stroke="' + NS + '" stroke-width="0.8"/>' +
+        '<ellipse cx="23" cy="118" rx="8" ry="3" fill="' + N + '" stroke="' + NS + '" stroke-width="0.8"/>' +
+        '<ellipse cx="37" cy="118" rx="8" ry="3" fill="' + N + '" stroke="' + NS + '" stroke-width="0.8"/>' +
+        '</svg>';
+    }
+
+    function bodyBack(gL,gR,hamL,hamR,latL,latR,triL,triR,trapL,trapR) {
+      return '<svg width="55" height="150" viewBox="0 0 58 155">' +
+        '<text x="29" y="151" text-anchor="middle" font-size="6" fill="#444">DOS</text>' +
+        '<ellipse cx="29" cy="9" rx="8" ry="9" fill="' + N + '" stroke="' + NS + '" stroke-width="0.8"/>' +
+        '<rect x="25" y="17" width="8" height="7" rx="3" fill="' + N + '" stroke="' + NS + '" stroke-width="0.8"/>' +
+        '<path d="M16 24 Q12 34 14 50 Q18 54 29 54 Q40 54 44 50 Q46 34 42 24 Z" fill="' + N + '" stroke="' + NS + '" stroke-width="0.8"/>' +
+        '<ellipse cx="12" cy="28" rx="7" ry="6" fill="' + trapL + '" stroke="' + (trapL===P?PS:NS) + '" stroke-width="0.8"/>' +
+        '<ellipse cx="46" cy="28" rx="7" ry="6" fill="' + trapR + '" stroke="' + (trapR===P?PS:NS) + '" stroke-width="0.8"/>' +
+        '<rect x="5" y="32" width="10" height="22" rx="5" fill="' + triL + '" stroke="' + (triL===P?PS:NS) + '" stroke-width="0.8"/>' +
+        '<rect x="43" y="32" width="10" height="22" rx="5" fill="' + triR + '" stroke="' + (triR===P?PS:NS) + '" stroke-width="0.8"/>' +
+        '<rect x="6" y="53" width="9" height="20" rx="4" fill="' + N + '" stroke="' + NS + '" stroke-width="0.8"/>' +
+        '<rect x="43" y="53" width="9" height="20" rx="4" fill="' + N + '" stroke="' + NS + '" stroke-width="0.8"/>' +
+        '<ellipse cx="21" cy="38" rx="8" ry="12" fill="' + latL + '" stroke="' + (latL===P?PS:NS) + '" stroke-width="0.8"/>' +
+        '<ellipse cx="37" cy="38" rx="8" ry="12" fill="' + latR + '" stroke="' + (latR===P?PS:NS) + '" stroke-width="0.8"/>' +
+        '<rect x="22" y="46" width="14" height="8" rx="3" fill="' + N + '" stroke="' + NS + '" stroke-width="0.8"/>' +
+        '<path d="M16 53 Q15 60 17 66 Q23 68 29 68 Q35 68 41 66 Q43 60 42 53 Z" fill="' + N + '" stroke="' + NS + '" stroke-width="0.8"/>' +
+        '<ellipse cx="22" cy="62" rx="8" ry="7" fill="' + gL + '" stroke="' + (gL===P?PS:NS) + '" stroke-width="0.8"/>' +
+        '<ellipse cx="36" cy="62" rx="8" ry="7" fill="' + gR + '" stroke="' + (gR===P?PS:NS) + '" stroke-width="0.8"/>' +
+        '<rect x="17" y="66" width="11" height="28" rx="5.5" fill="' + hamL + '" stroke="' + (hamL===P?PS:NS) + '" stroke-width="0.8"/>' +
+        '<rect x="30" y="66" width="11" height="28" rx="5.5" fill="' + hamR + '" stroke="' + (hamR===P?PS:NS) + '" stroke-width="0.8"/>' +
+        '<rect x="18" y="93" width="10" height="24" rx="5" fill="' + N + '" stroke="' + NS + '" stroke-width="0.8"/>' +
+        '<rect x="30" y="93" width="10" height="24" rx="5" fill="' + N + '" stroke="' + NS + '" stroke-width="0.8"/>' +
+        '<ellipse cx="23" cy="118" rx="8" ry="3" fill="' + N + '" stroke="' + NS + '" stroke-width="0.8"/>' +
+        '<ellipse cx="37" cy="118" rx="8" ry="3" fill="' + N + '" stroke="' + NS + '" stroke-width="0.8"/>' +
+        '</svg>';
+    }
+
+    var qL=N,qR=N,chL=N,chR=N,shL=N,shR=N,biL=N,biR=N;
+    var abArr=[N,N,N,N];
+    var gL=N,gR=N,hamL=N,hamR=N,latL=N,latR=N,triL=N,triR=N,trapL=N,trapR=N;
+
+    if (isQuad) { qL=P; qR=P; }
+    if (isGlute) { gL=P; gR=P; }
+    if (isHam) { hamL=isGlute?S:P; hamR=isGlute?S:P; }
+    if (isChest) { chL=P; chR=P; }
+    if (isTri) { triL=P; triR=P; }
+    if (isBi) { biL=P; biR=P; }
+    if (isShoulder) { shL=isChest?S:P; shR=isChest?S:P; trapL=S; trapR=S; }
+    if (isAbs) { abArr=[P,P,P,P]; }
+    if (isBack) { latL=P; latR=P; }
+    if (isQuad && !isGlute) { gL=S; gR=S; }
+    if (isChest && !isBack) { latL=S; latR=S; }
+
+    return bodyFront(qL,qR,chL,chR,shL,shR,abArr,biL,biR) +
+           bodyBack(gL,gR,hamL,hamR,latL,latR,triL,triR,trapL,trapR);
   }
 
   function switchFitnessTab(tab) {
