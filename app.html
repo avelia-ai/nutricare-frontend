@@ -4259,8 +4259,21 @@ Réponds UNIQUEMENT en JSON valide avec cette structure exacte:
       });
       const data = await res.json();
       const text = data.reply || '';
-      const json = text.replace(/```json|```/g, '').trim();
+      let json = text.trim();
+      if (json.includes('```')) json = json.replace(/```json/g,'').replace(/```/g,'').trim();
+      const firstBracket = json.indexOf('[');
+      const lastBracket = json.lastIndexOf(']');
+      if (firstBracket !== -1 && lastBracket !== -1) json = json.substring(firstBracket, lastBracket+1);
       _fitnessProgram = JSON.parse(json);
+      // Normaliser les exercices (string -> objet)
+      _fitnessProgram = _fitnessProgram.map(function(day) {
+        if (day.exercices && day.exercices.length && typeof day.exercices[0] === 'string') {
+          day.exercices = day.exercices.map(function(e, i) {
+            return { nom: e, series: 3, repetitions: '12 reps', repos: 60, muscles: ['Full body'], conseil: '', youtube_id: '' };
+          });
+        }
+        return day;
+      });
       localStorage.setItem('fitness_program', JSON.stringify(_fitnessProgram));
       selectFitnessDay(_fitnessDayIdx);
       btn.style.display = 'none';
