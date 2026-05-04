@@ -4682,7 +4682,8 @@ Réponds UNIQUEMENT en JSON valide avec cette structure exacte:
       const tagColors = {'Jambes':'#C62828','Jambes/Fessiers':'#C62828','Fessiers':'#880E4F','Cardio':'#1565C0','Abdominaux':'#2E7D32','Dos':'#283593','Pectoraux':'#E65100','Bras':'#6A1B9A','Épaules':'#006064'};
       const muscles = (ex.muscles || []);
       return '<div style="background:white;border-radius:16px;overflow:hidden;margin-bottom:12px;border:1px solid #f5f5f5">' +
-        '<div style="background:#1a1a2e;height:140px;position:relative;display:flex;align-items:center;justify-content:center;cursor:pointer" onclick="openFitnessVideo('' + (ex.youtube_id||'') + '','' + ex.nom.replace(/'/g,"\'") + '','' + (ex.description||'').replace(/'/g,"\'").substring(0,100) + '')">' +
+      return "<div style="background:white;border-radius:16px;overflow:hidden;margin-bottom:12px;border:1px solid #f5f5f5">" +
+        "<div style="background:#1a1a2e;height:140px;position:relative;display:flex;align-items:center;justify-content:center;cursor:pointer" data-ytid="" + (ex.youtube_id||"") + "" data-nom="" + ex.nom.replace(/"/g,"") + "" data-desc="" + (ex.description||"").substring(0,80).replace(/"/g,"") + "" onclick="var e=this;openFitnessVideo(e.dataset.ytid,e.dataset.nom,e.dataset.desc)">" +
         '<div style="position:absolute;inset:0;background:linear-gradient(135deg,#1a1a2e,#16213e)"></div>' +
         '<div style="position:relative;text-align:center">' +
         '<div style="width:56px;height:56px;border-radius:50%;background:' + color + ';display:flex;align-items:center;justify-content:center;margin:0 auto 8px;cursor:pointer">' +
@@ -4701,7 +4702,7 @@ Réponds UNIQUEMENT en JSON valide avec cette structure exacte:
         '<div style="font-size:0.78rem;color:#666;line-height:1.5;margin-bottom:10px">' + (ex.conseil||'') + '</div>' +
         '<div style="display:flex;gap:8px">' +
         '<button onclick="openFitnessVideo('' + (ex.youtube_id||'') + '','' + ex.nom.replace(/'/g,"\'") + '','' + (ex.description||'').replace(/'/g,"\'").substring(0,100) + '')" style="flex:1;background:linear-gradient(135deg,#FF6B6B,#FF9A3C);color:white;border:none;border-radius:10px;padding:10px;font-size:0.78rem;font-weight:700;cursor:pointer">▶ Voir le tuto YouTube</button>' +
-        '<button onclick="markExDone(this)" style="background:#f5f5f5;color:#2D2D2D;border:none;border-radius:10px;padding:10px 14px;font-size:0.78rem;cursor:pointer">✓</button>' +
+        "<button onclick="var e=this.parentNode.parentNode.parentNode.querySelector(\"[data-ytid]\");openFitnessVideo(e.dataset.ytid,e.dataset.nom,e.dataset.desc)" style="flex:1;background:linear-gradient(135deg,#FF6B6B,#FF9A3C);color:white;border:none;border-radius:10px;padding:10px;font-size:0.78rem;font-weight:700;cursor:pointer">▶ Voir le tuto YouTube</button>" +
         '</div></div></div>';
     }).join('');
   }
