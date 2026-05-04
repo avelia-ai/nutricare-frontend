@@ -4181,6 +4181,41 @@ Réponds UNIQUEMENT en JSON valide avec cette structure exacte:
     if (_fitnessProgram && _fitnessProgram[idx]) renderFitnessDay(_fitnessProgram[idx]);
   }
 
+  function getFitnessSVG(nomEx, color, idx) {
+    var nom = (nomEx || '').toLowerCase();
+    var c = color || '#FF6B6B';
+    var uid = 'ex' + idx + '_' + Math.floor(Math.random()*9999);
+    var skin = '#E8C49A';
+    var type = 'generic';
+    if (/squat|accroupi|plie|sumo/.test(nom)) type = 'squat';
+    else if (/pompe|push|pectoral|push-up/.test(nom)) type = 'pushup';
+    else if (/fente|lunge/.test(nom)) type = 'lunge';
+    else if (/planche|gainage|plank/.test(nom)) type = 'plank';
+    else if (/burpee/.test(nom)) type = 'burpee';
+    else if (/jumping|saut|cardio|corde/.test(nom)) type = 'jump';
+    else if (/curl|bicep|tricep/.test(nom)) type = 'curl';
+    else if (/press|shoulder|epaule/.test(nom)) type = 'press';
+    else if (/abdo|crunch|sit.up/.test(nom)) type = 'crunch';
+    else if (/deadlift|souleve|romanian/.test(nom)) type = 'deadlift';
+    else if (/repos|rest|recup/.test(nom)) type = 'rest';
+
+    var bodies = {
+      squat: '<style>@keyframes sqB'+uid+'{0%,100%{transform:translateY(0)}50%{transform:translateY(26px)}}@keyframes sqLL'+uid+'{0%,100%{transform:rotate(0)}50%{transform:rotate(32deg)}}@keyframes sqLR'+uid+'{0%,100%{transform:rotate(0)}50%{transform:rotate(-32deg)}}@keyframes sqAL'+uid+'{0%,100%{transform:rotate(-10deg)}50%{transform:rotate(-44deg)}}@keyframes sqAR'+uid+'{0%,100%{transform:rotate(10deg)}50%{transform:rotate(44deg)}}.sqB'+uid+'{animation:sqB'+uid+' 1.7s ease-in-out infinite;transform-origin:80px 175px}.sqLL'+uid+'{animation:sqLL'+uid+' 1.7s ease-in-out infinite;transform-origin:74px 150px}.sqLR'+uid+'{animation:sqLR'+uid+' 1.7s ease-in-out infinite;transform-origin:86px 150px}.sqAL'+uid+'{animation:sqAL'+uid+' 1.7s ease-in-out infinite;transform-origin:68px 112px}.sqAR'+uid+'{animation:sqAR'+uid+' 1.7s ease-in-out infinite;transform-origin:92px 112px}</style><ellipse cx="80" cy="207" rx="28" ry="4" fill="rgba(0,0,0,0.25)"/><g class="sqB'+uid+'"><rect x="66" y="100" width="28" height="46" rx="9" fill="'+c+'" opacity=".95"/><rect class="sqAL'+uid+'" x="51" y="104" width="13" height="30" rx="6" fill="'+skin+'"/><rect class="sqAR'+uid+'" x="96" y="104" width="13" height="30" rx="6" fill="'+skin+'"/></g><g class="sqLL'+uid+'"><rect x="63" y="146" width="14" height="44" rx="7" fill="'+c+'" opacity=".75"/></g><g class="sqLR'+uid+'"><rect x="83" y="146" width="14" height="44" rx="7" fill="'+c+'" opacity=".75"/></g><circle class="sqB'+uid+'" cx="80" cy="86" r="20" fill="'+skin+'"/><line x1="30" y1="207" x2="130" y2="207" stroke="rgba(255,255,255,0.12)" stroke-width="1.5"/>',
+      pushup: '<style>@keyframes puB'+uid+'{0%,100%{transform:translateY(0)}50%{transform:translateY(16px)}}.puB'+uid+'{animation:puB'+uid+' 1.5s ease-in-out infinite}</style><ellipse cx="80" cy="177" rx="52" ry="4" fill="rgba(0,0,0,0.25)"/><g class="puB'+uid+'"><rect x="18" y="130" width="104" height="20" rx="10" fill="'+c+'" opacity=".95"/><circle cx="130" cy="122" r="15" fill="'+skin+'"/><rect x="24" y="148" width="12" height="24" rx="6" fill="'+skin+'"/><rect x="72" y="148" width="12" height="24" rx="6" fill="'+skin+'"/><rect x="14" y="146" width="18" height="12" rx="6" fill="'+c+'" opacity=".7"/></g><line x1="10" y1="175" x2="150" y2="175" stroke="rgba(255,255,255,0.12)" stroke-width="1.5"/>',
+      lunge: '<style>@keyframes luT'+uid+'{0%,100%{transform:translateY(0)}50%{transform:translateY(16px)}}@keyframes luFL'+uid+'{0%,100%{transform:rotate(0)}50%{transform:rotate(28deg)}}@keyframes luBL'+uid+'{0%,100%{transform:rotate(0)}50%{transform:rotate(-18deg)}}.luT'+uid+'{animation:luT'+uid+' 1.9s ease-in-out infinite}.luFL'+uid+'{animation:luFL'+uid+' 1.9s ease-in-out infinite;transform-origin:74px 148px}.luBL'+uid+'{animation:luBL'+uid+' 1.9s ease-in-out infinite;transform-origin:88px 148px}</style><ellipse cx="80" cy="207" rx="32" ry="4" fill="rgba(0,0,0,0.25)"/><g class="luT'+uid+'"><rect x="64" y="96" width="28" height="46" rx="9" fill="'+c+'" opacity=".95"/><rect x="49" y="100" width="12" height="28" rx="6" fill="'+skin+'"/><rect x="99" y="100" width="12" height="28" rx="6" fill="'+skin+'"/><circle cx="78" cy="82" r="18" fill="'+skin+'"/></g><g class="luFL'+uid+'"><rect x="62" y="142" width="14" height="48" rx="7" fill="'+c+'" opacity=".8"/></g><g class="luBL'+uid+'"><rect x="84" y="142" width="14" height="48" rx="7" fill="'+c+'" opacity=".6"/></g><line x1="30" y1="206" x2="130" y2="206" stroke="rgba(255,255,255,0.12)" stroke-width="1.5"/>',
+      plank: '<style>@keyframes plG'+uid+'{0%,100%{opacity:1}50%{opacity:.55}}.plG'+uid+'{animation:plG'+uid+' 2.2s ease-in-out infinite}</style><ellipse cx="75" cy="179" rx="56" ry="4" fill="rgba(0,0,0,0.25)"/><g class="plG'+uid+'"><rect x="16" y="132" width="110" height="20" rx="10" fill="'+c+'" opacity=".95"/><circle cx="136" cy="124" r="14" fill="'+skin+'"/><rect x="20" y="150" width="13" height="24" rx="6" fill="'+skin+'"/><rect x="68" y="150" width="13" height="24" rx="6" fill="'+skin+'"/><rect x="10" y="148" width="20" height="12" rx="6" fill="'+c+'" opacity=".65"/><line x1="18" y1="131" x2="142" y2="131" stroke="rgba(255,255,255,0.3)" stroke-width="1" stroke-dasharray="5,3"/></g><line x1="8" y1="177" x2="148" y2="177" stroke="rgba(255,255,255,0.12)" stroke-width="1.5"/>',
+      jump: '<style>@keyframes jpB'+uid+'{0%,100%{transform:translateY(0)}40%,60%{transform:translateY(-30px)}}@keyframes jpAL'+uid+'{0%,100%{transform:rotate(-15deg)}40%,60%{transform:rotate(-80deg)}}@keyframes jpAR'+uid+'{0%,100%{transform:rotate(15deg)}40%,60%{transform:rotate(80deg)}}@keyframes jpLL'+uid+'{0%,100%{transform:rotate(0)}40%,60%{transform:rotate(-22deg)}}@keyframes jpLR'+uid+'{0%,100%{transform:rotate(0)}40%,60%{transform:rotate(22deg)}}.jpB'+uid+'{animation:jpB'+uid+' 1.2s ease-in-out infinite}.jpAL'+uid+'{animation:jpAL'+uid+' 1.2s ease-in-out infinite;transform-origin:68px 112px}.jpAR'+uid+'{animation:jpAR'+uid+' 1.2s ease-in-out infinite;transform-origin:92px 112px}.jpLL'+uid+'{animation:jpLL'+uid+' 1.2s ease-in-out infinite;transform-origin:74px 148px}.jpLR'+uid+'{animation:jpLR'+uid+' 1.2s ease-in-out infinite;transform-origin:86px 148px}</style><ellipse cx="80" cy="207" rx="24" ry="3" fill="rgba(0,0,0,0.2)"/><g class="jpB'+uid+'"><circle cx="80" cy="82" r="20" fill="'+skin+'"/><rect x="65" y="100" width="30" height="46" rx="9" fill="'+c+'" opacity=".95"/><rect class="jpAL'+uid+'" x="50" y="104" width="13" height="32" rx="6" fill="'+skin+'"/><rect class="jpAR'+uid+'" x="97" y="104" width="13" height="32" rx="6" fill="'+skin+'"/><rect class="jpLL'+uid+'" x="63" y="146" width="14" height="44" rx="7" fill="'+c+'" opacity=".75"/><rect class="jpLR'+uid+'" x="83" y="146" width="14" height="44" rx="7" fill="'+c+'" opacity=".75"/></g><line x1="30" y1="206" x2="130" y2="206" stroke="rgba(255,255,255,0.12)" stroke-width="1.5"/>',
+      crunch: '<style>@keyframes crU'+uid+'{0%,100%{transform:rotate(0)}50%{transform:rotate(-32deg)}}@keyframes crL'+uid+'{0%,100%{transform:rotate(0)}50%{transform:rotate(-10deg)}}.crU'+uid+'{animation:crU'+uid+' 1.6s ease-in-out infinite;transform-origin:80px 158px}.crL'+uid+'{animation:crL'+uid+' 1.6s ease-in-out infinite;transform-origin:80px 162px}</style><ellipse cx="80" cy="197" rx="50" ry="4" fill="rgba(0,0,0,0.2)"/><g class="crL'+uid+'"><rect x="58" y="158" width="20" height="44" rx="10" fill="'+c+'" opacity=".65"/><rect x="82" y="158" width="20" height="44" rx="10" fill="'+c+'" opacity=".65"/></g><g class="crU'+uid+'"><rect x="60" y="118" width="40" height="44" rx="12" fill="'+c+'" opacity=".95"/><circle cx="80" cy="100" r="18" fill="'+skin+'"/><rect x="44" y="128" width="14" height="24" rx="7" fill="'+skin+'"/><rect x="102" y="128" width="14" height="24" rx="7" fill="'+skin+'"/></g><line x1="20" y1="195" x2="140" y2="195" stroke="rgba(255,255,255,0.12)" stroke-width="1.5"/>',
+      curl: '<style>@keyframes cuA'+uid+'{0%,100%{transform:rotate(0)}50%{transform:rotate(-70deg)}}.cuA'+uid+'{animation:cuA'+uid+' 1.4s ease-in-out infinite;transform-origin:56px 130px}</style><ellipse cx="80" cy="207" rx="22" ry="3" fill="rgba(0,0,0,0.2)"/><circle cx="80" cy="84" r="20" fill="'+skin+'"/><rect x="66" y="102" width="28" height="50" rx="9" fill="'+c+'" opacity=".95"/><rect x="63" y="148" width="14" height="46" rx="7" fill="'+c+'" opacity=".7"/><rect x="83" y="148" width="14" height="46" rx="7" fill="'+c+'" opacity=".7"/><rect x="50" y="115" width="13" height="16" rx="6" fill="'+skin+'"/><g class="cuA'+uid+'"><rect x="50" y="130" width="13" height="34" rx="6" fill="'+skin+'"/><ellipse cx="56" cy="166" rx="9" ry="7" fill="'+c+'" opacity=".8"/></g><rect x="97" y="115" width="13" height="46" rx="6" fill="'+skin+'"/><line x1="40" y1="206" x2="120" y2="206" stroke="rgba(255,255,255,0.12)" stroke-width="1.5"/>',
+      press: '<style>@keyframes prA'+uid+'{0%,100%{transform:translateY(0)}50%{transform:translateY(-22px)}}.prA'+uid+'{animation:prA'+uid+' 1.6s ease-in-out infinite}</style><ellipse cx="80" cy="207" rx="22" ry="3" fill="rgba(0,0,0,0.2)"/><circle cx="80" cy="92" r="20" fill="'+skin+'"/><rect x="66" y="110" width="28" height="46" rx="9" fill="'+c+'" opacity=".95"/><rect x="63" y="154" width="14" height="44" rx="7" fill="'+c+'" opacity=".7"/><rect x="83" y="154" width="14" height="44" rx="7" fill="'+c+'" opacity=".7"/><g class="prA'+uid+'"><rect x="42" y="104" width="13" height="36" rx="6" fill="'+skin+'"/><rect x="105" y="104" width="13" height="36" rx="6" fill="'+skin+'"/><ellipse cx="48" cy="104" rx="10" ry="6" fill="'+c+'" opacity=".8"/><ellipse cx="112" cy="104" rx="10" ry="6" fill="'+c+'" opacity=".8"/></g><line x1="40" y1="206" x2="120" y2="206" stroke="rgba(255,255,255,0.12)" stroke-width="1.5"/>',
+      burpee: '<style>@keyframes buP'+uid+'{0%{transform:translateY(0) scaleY(1)}25%{transform:translateY(20px) scaleY(0.7)}50%{transform:translateY(40px) scaleY(0.45)}75%{transform:translateY(20px) scaleY(0.7)}100%{transform:translateY(0) scaleY(1)}}.buP'+uid+'{animation:buP'+uid+' 2s ease-in-out infinite;transform-origin:80px 155px}</style><ellipse cx="80" cy="207" rx="28" ry="4" fill="rgba(0,0,0,0.25)"/><g class="buP'+uid+'"><circle cx="80" cy="78" r="20" fill="'+skin+'"/><rect x="65" y="96" width="30" height="52" rx="10" fill="'+c+'" opacity=".95"/><rect x="48" y="102" width="14" height="34" rx="7" fill="'+skin+'"/><rect x="98" y="102" width="14" height="34" rx="7" fill="'+skin+'"/><rect x="63" y="146" width="14" height="46" rx="7" fill="'+c+'" opacity=".75"/><rect x="83" y="146" width="14" height="46" rx="7" fill="'+c+'" opacity=".75"/></g><line x1="30" y1="206" x2="130" y2="206" stroke="rgba(255,255,255,0.12)" stroke-width="1.5"/>',
+      deadlift: '<style>@keyframes dlB'+uid+'{0%,100%{transform:rotate(0)}50%{transform:rotate(30deg)}}.dlB'+uid+'{animation:dlB'+uid+' 1.8s ease-in-out infinite;transform-origin:80px 155px}</style><ellipse cx="80" cy="207" rx="28" ry="4" fill="rgba(0,0,0,0.25)"/><g class="dlB'+uid+'"><circle cx="80" cy="78" r="20" fill="'+skin+'"/><rect x="65" y="96" width="30" height="54" rx="10" fill="'+c+'" opacity=".95"/><rect x="46" y="108" width="16" height="46" rx="7" fill="'+skin+'"/><rect x="98" y="108" width="16" height="46" rx="7" fill="'+skin+'"/></g><rect x="63" y="155" width="14" height="46" rx="7" fill="'+c+'" opacity=".75"/><rect x="83" y="155" width="14" height="46" rx="7" fill="'+c+'" opacity=".75"/><rect x="28" y="154" width="104" height="8" rx="4" fill="#2D2D2D" opacity=".6"/><line x1="30" y1="206" x2="130" y2="206" stroke="rgba(255,255,255,0.12)" stroke-width="1.5"/>',
+      rest: '<style>@keyframes zz'+uid+'{0%,100%{opacity:0;transform:translateY(0)}50%{opacity:1;transform:translateY(-12px)}}.zz1'+uid+'{animation:zz'+uid+' 2s ease-in-out infinite}.zz2'+uid+'{animation:zz'+uid+' 2s ease-in-out 0.65s infinite}.zz3'+uid+'{animation:zz'+uid+' 2s ease-in-out 1.3s infinite}</style><circle cx="80" cy="125" r="52" fill="rgba(255,255,255,0.04)"/><circle cx="80" cy="86" r="24" fill="'+skin+'"/><rect x="50" y="108" width="60" height="68" rx="30" fill="'+c+'" opacity=".25"/><text class="zz1'+uid+'" x="108" y="88" fill="'+c+'" font-size="18" font-weight="700" font-family="sans-serif">z</text><text class="zz2'+uid+'" x="118" y="72" fill="'+c+'" font-size="22" font-weight="700" font-family="sans-serif">z</text><text class="zz3'+uid+'" x="130" y="54" fill="'+c+'" font-size="26" font-weight="700" font-family="sans-serif">z</text>',
+      generic: '<style>@keyframes gnB'+uid+'{0%,100%{transform:translateY(0)}50%{transform:translateY(-12px)}}@keyframes gnAL'+uid+'{0%,100%{transform:rotate(-15deg)}50%{transform:rotate(-60deg)}}@keyframes gnAR'+uid+'{0%,100%{transform:rotate(15deg)}50%{transform:rotate(60deg)}}.gnB'+uid+'{animation:gnB'+uid+' 1.5s ease-in-out infinite}.gnAL'+uid+'{animation:gnAL'+uid+' 1.5s ease-in-out infinite;transform-origin:68px 112px}.gnAR'+uid+'{animation:gnAR'+uid+' 1.5s ease-in-out infinite;transform-origin:92px 112px}</style><ellipse cx="80" cy="207" rx="24" ry="3" fill="rgba(0,0,0,0.2)"/><g class="gnB'+uid+'"><circle cx="80" cy="82" r="20" fill="'+skin+'"/><rect x="65" y="100" width="30" height="48" rx="10" fill="'+c+'" opacity=".95"/><rect class="gnAL'+uid+'" x="50" y="104" width="13" height="32" rx="6" fill="'+skin+'"/><rect class="gnAR'+uid+'" x="97" y="104" width="13" height="32" rx="6" fill="'+skin+'"/><rect x="63" y="146" width="14" height="46" rx="7" fill="'+c+'" opacity=".75"/><rect x="83" y="146" width="14" height="46" rx="7" fill="'+c+'" opacity=".75"/></g><line x1="30" y1="206" x2="130" y2="206" stroke="rgba(255,255,255,0.12)" stroke-width="1.5"/>'
+    };
+    return '<svg width="160" height="215" viewBox="0 0 160 215" xmlns="http://www.w3.org/2000/svg">' + (bodies[type] || bodies.generic) + '</svg>';
+  }
+
   function renderFitnessDay(day) {
     document.getElementById('fitnessSessionName').textContent = day.nom || 'Repos';
     document.getElementById('fitnessExCount').textContent = (day.exercices || []).length;
@@ -4191,33 +4226,30 @@ Réponds UNIQUEMENT en JSON valide avec cette structure exacte:
       container.innerHTML = '<div style="background:white;border-radius:16px;padding:32px;text-align:center;color:#aaa"><div style="font-size:2rem;margin-bottom:8px">😴</div><div style="font-weight:600">Jour de repos</div><div style="font-size:0.82rem;margin-top:4px">Récupération active recommandée</div></div>';
       return;
     }
+    var colors = ['#FF6B6B','#378ADD','#1D9E75','#FF9A3C','#9C27B0'];
+    var tagBgs = {'Jambes':'#FFEBEE','Jambes/Fessiers':'#FFEBEE','Fessiers':'#FCE4EC','Cardio':'#E3F2FD','Abdominaux':'#E8F5E9','Dos':'#E8EAF6','Pectoraux':'#FFF3E0','Bras':'#F3E5F5','Épaules':'#E0F7FA'};
+    var tagColors = {'Jambes':'#C62828','Jambes/Fessiers':'#C62828','Fessiers':'#880E4F','Cardio':'#1565C0','Abdominaux':'#2E7D32','Dos':'#283593','Pectoraux':'#E65100','Bras':'#6A1B9A','Épaules':'#006064'};
     container.innerHTML = day.exercices.map(function(ex, i) {
-      const colors = ['#FF6B6B','#378ADD','#1D9E75','#FF9A3C','#9C27B0'];
-      const color = colors[i % colors.length];
-      const tagBgs = {'Jambes':'#FFEBEE','Jambes/Fessiers':'#FFEBEE','Fessiers':'#FCE4EC','Cardio':'#E3F2FD','Abdominaux':'#E8F5E9','Dos':'#E8EAF6','Pectoraux':'#FFF3E0','Bras':'#F3E5F5','Épaules':'#E0F7FA'};
-      const tagColors = {'Jambes':'#C62828','Jambes/Fessiers':'#C62828','Fessiers':'#880E4F','Cardio':'#1565C0','Abdominaux':'#2E7D32','Dos':'#283593','Pectoraux':'#E65100','Bras':'#6A1B9A','Épaules':'#006064'};
-      const muscles = (ex.muscles || []);
+      var color = colors[i % colors.length];
+      var muscles = (ex.muscles || []);
+      var svgAnim = getFitnessSVG(ex.nom, color, i);
       return '<div style="background:white;border-radius:16px;overflow:hidden;margin-bottom:12px;border:1px solid #f5f5f5">' +
-        '<div style="background:#1a1a2e;height:140px;position:relative;display:flex;align-items:center;justify-content:center;cursor:pointer" ' + 'data-ytid="' + (ex.youtube_id||'') + '" data-nom="' + ex.nom.replace(/["']/g,'') + '" data-desc="' + (ex.description||'').substring(0,80).replace(/["']/g,'') + '" onclick="var e=this;openFitnessVideo(e.dataset.ytid,e.dataset.nom,e.dataset.desc)">' +
-        '<div style="position:absolute;inset:0;background:linear-gradient(135deg,#1a1a2e,#16213e)"></div>' +
-        '<div style="position:relative;text-align:center">' +
-        '<div style="width:56px;height:56px;border-radius:50%;background:' + color + ';display:flex;align-items:center;justify-content:center;margin:0 auto 8px;cursor:pointer">' +
-        '<div style="width:0;height:0;border-top:10px solid transparent;border-bottom:10px solid transparent;border-left:16px solid white;margin-left:4px"></div></div>' +
-        '<div style="color:white;font-size:0.75rem;opacity:0.8">Voir la démonstration</div></div>' +
-        '<div style="position:absolute;top:10px;left:10px;background:' + color + ';color:white;font-size:0.65rem;font-weight:700;padding:3px 8px;border-radius:6px">EXERCICE ' + (i+1) + '/' + day.exercices.length + '</div></div>' +
+        '<div style="background:linear-gradient(135deg,#1a1a2e,#16213e);padding:12px 14px 0;display:flex;justify-content:space-between;align-items:center">' +
+        '<div style="background:' + color + ';color:white;font-size:0.65rem;font-weight:700;padding:3px 10px;border-radius:6px">EXERCICE ' + (i+1) + '/' + day.exercices.length + '</div>' +
+        '<div style="color:rgba(255,255,255,0.35);font-size:0.65rem">' + ex.series + ' séries</div></div>' +
+        '<div style="background:linear-gradient(135deg,#1a1a2e,#16213e);display:flex;justify-content:center;padding:8px 0 14px">' + svgAnim + '</div>' +
         '<div style="padding:14px">' +
         '<div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px">' +
         '<div><div style="font-size:0.95rem;font-weight:700;color:#2D2D2D">' + ex.nom + '</div>' +
         '<div style="font-size:0.75rem;color:#aaa;margin-top:2px">' + ex.series + ' séries · ' + ex.repetitions + ' · ' + ex.repos + 's repos</div></div>' +
         '<div style="background:#FFF5F0;border-radius:8px;padding:6px 10px;text-align:center;flex-shrink:0">' +
-        '<div style="font-size:0.85rem;font-weight:700;color:' + color + '">' + ex.series + '×' + ex.repetitions + '</div></div></div>' +
+        '<div style="font-size:0.85rem;font-weight:700;color:' + color + '">' + ex.series + 'x' + ex.repetitions + '</div></div></div>' +
         '<div style="margin-bottom:8px">' + muscles.map(function(m) {
           return '<span style="display:inline-block;font-size:0.65rem;padding:2px 8px;border-radius:10px;font-weight:600;margin-right:4px;background:' + (tagBgs[m]||'#f5f5f5') + ';color:' + (tagColors[m]||'#555') + '">' + m + '</span>';
         }).join('') + '</div>' +
         '<div style="font-size:0.78rem;color:#666;line-height:1.5;margin-bottom:10px">' + (ex.conseil||'') + '</div>' +
-        '<div style="display:flex;gap:8px">' +
-        '<button onclick="var e=this.closest(\"[data-ytid]\");if(!e)e=this.parentNode.parentNode.querySelector(\"[data-ytid]\");openFitnessVideo(e.dataset.ytid,e.dataset.nom,e.dataset.desc)" style="flex:1;background:linear-gradient(135deg,#FF6B6B,#FF9A3C);color:white;border:none;border-radius:10px;padding:10px;font-size:0.78rem;font-weight:700;cursor:pointer">&#9654; Voir le tuto YouTube</button>' +
-        '</div></div></div>';
+        '<button onclick="this.style.background='#E8F5E9';this.style.color='#2E7D32';this.textContent='✓ Exercice terminé'" style="width:100%;background:#2D2D2D;color:white;border:none;border-radius:10px;padding:10px;font-size:0.78rem;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif">Marquer comme fait</button>' +
+        '</div></div>';
     }).join('');
   }
 
@@ -4227,18 +4259,8 @@ Réponds UNIQUEMENT en JSON valide avec cette structure exacte:
     btn.textContent = '✓ Fait';
   }
 
-  function openFitnessVideo(youtubeId, nom, desc) {
-    document.getElementById('fitnessVideoTitle').textContent = nom;
-    document.getElementById('fitnessVideoDesc').textContent = desc;
-    const searchQuery = encodeURIComponent(nom + ' exercice tutoriel francais débutant');
-    document.getElementById('fitnessVideoFrame').src = youtubeId ? 
-      'https://www.youtube.com/embed/' + youtubeId + '?autoplay=1' :
-      'https://www.youtube.com/results?search_query=' + searchQuery;
-    document.getElementById('fitnessVideoModal').style.display = 'flex';
-  }
-
+  function openFitnessVideo() {}
   function closeFitnessVideo() {
-    document.getElementById('fitnessVideoFrame').src = '';
     document.getElementById('fitnessVideoModal').style.display = 'none';
   }
 
