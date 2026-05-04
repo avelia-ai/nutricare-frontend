@@ -3628,7 +3628,7 @@ function switchLang(lang) {
   async function generateOracleAI() {
     const profile = JSON.parse(localStorage.getItem('nutricare_profile') || '{}');
     try {
-      const res = await fetch(BACKEND_URL + '/api/chat', {
+      const res = await fetch(BACKEND_URL + '/api/chat/message', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + authToken },
         body: JSON.stringify({ message: 'Génère une analyse Oracle Santé complète pour ce profil: pathologies: ' + (profile.pathologies||[]).join(', ') + ', médicaments: ' + (profile.medications||[]).join(', ') + '. Donne un score de vitalité 0-100, un âge biologique estimé, les 3 principales alertes, et les 3 actions prioritaires. Sois concis et médical.' })
