@@ -4252,6 +4252,7 @@ Réponds UNIQUEMENT en JSON valide avec cette structure exacte:
       const profile = JSON.parse(localStorage.getItem('nutricare_profile') || '{}');
       const pathologies = (profile.pathologies || []).join(', ') || 'aucune';
       const objectif = profile.objectif || 'forme generale';
+      const imc = poids && taille ? (parseFloat(poids) / Math.pow(parseFloat(taille)/100, 2)).toFixed(1) : null;
       const prompt = 'Genere un programme fitness 7 jours pour: pathologies=' + pathologies + ', objectif=' + objectif + ', IMC=' + (imc||'normal') + '. Reponds UNIQUEMENT avec un tableau JSON de 7 objets sans texte ni markdown. Format: [{"jour":"Lundi","nom":"Full body","duree":30,"kcal":220,"exercices":[{"nom":"Squats","series":3,"repetitions":"15 reps","repos":60,"muscles":["Jambes"],"conseil":"Adapte aux pathologies","youtube_id":""}]},{"jour":"Mardi","nom":"Repos","duree":0,"kcal":0,"exercices":[]},...]';
       const res = await fetch(BACKEND_URL + '/api/chat/message', {
         method: 'POST',
