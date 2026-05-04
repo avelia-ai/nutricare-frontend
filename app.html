@@ -680,6 +680,7 @@ function switchLang(lang) {
       <div id="menuPremium" style="display:none">
         <div class="nav-label">Premium</div>
         <button class="nav-item" onclick="showView('chrono', this)">🌙 Chrono-nutrition</button>
+        <button class="nav-item" onclick="showView('fitness', this)">💪 Fitness</button>
         <button class="nav-item" onclick="showView('programs', this)">Programmes</button>
         <button class="nav-item" onclick="showView('ordonnance', this)">Scan ordonnance</button>
         <button class="nav-item" onclick="showView('scanproduit', this)">🔍 Scan produit</button>
@@ -2821,6 +2822,88 @@ function switchLang(lang) {
     <div class="report">${rapport}</div>
     <div class="disclaimer">️ Données 100% anonymisées. Aucune information individuelle n'est présente dans ce rapport. Conformité RGPD garantie.</div>
     
+
+<!-- Vue Fitness -->
+<div id="fitnessView" style="display:none;padding:24px;overflow-y:auto;background:#FFF5F0;width:100%;min-height:100vh">
+  <div style="max-width:600px;margin:0 auto">
+
+    <!-- Header -->
+    <div style="display:flex;align-items:center;gap:12px;margin-bottom:20px">
+      <div style="width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,#FF6B6B,#FF9A3C);display:flex;align-items:center;justify-content:center;font-size:22px">💪</div>
+      <div>
+        <div style="font-size:1.3rem;font-weight:700;color:#2D2D2D">Mon programme fitness</div>
+        <div style="font-size:0.78rem;color:#aaa">Généré par Mirella · Adapté à votre profil</div>
+      </div>
+    </div>
+
+    <!-- Plan requis -->
+    <div id="fitnessPlanRequired" style="display:none;background:white;border-radius:16px;padding:28px;text-align:center;margin-bottom:20px;border:1px solid rgba(255,107,107,0.15)">
+      <div style="font-size:2rem;margin-bottom:12px">🔒</div>
+      <div style="font-size:1rem;font-weight:700;color:#2D2D2D;margin-bottom:8px">Fonctionnalité Premium</div>
+      <div style="font-size:0.85rem;color:#aaa;margin-bottom:16px">Accédez à votre programme fitness personnalisé avec le plan Premium.</div>
+      <button onclick="showView('pricing')" style="background:linear-gradient(135deg,#FF6B6B,#FF9A3C);color:white;border:none;border-radius:12px;padding:12px 28px;font-size:0.88rem;font-weight:700;cursor:pointer">Voir les offres →</button>
+    </div>
+
+    <!-- Contenu fitness -->
+    <div id="fitnessContent">
+
+      <!-- Jours de la semaine -->
+      <div style="display:flex;gap:8px;overflow-x:auto;padding-bottom:8px;margin-bottom:16px">
+        <button onclick="selectFitnessDay(0)" id="fd-0" class="fd-btn" style="flex-shrink:0;padding:8px 14px;border-radius:20px;border:none;background:#2D2D2D;color:white;font-size:0.75rem;font-weight:700;cursor:pointer">Lun</button>
+        <button onclick="selectFitnessDay(1)" id="fd-1" class="fd-btn" style="flex-shrink:0;padding:8px 14px;border-radius:20px;border:none;background:#f5f5f5;color:#aaa;font-size:0.75rem;font-weight:700;cursor:pointer">Mar</button>
+        <button onclick="selectFitnessDay(2)" id="fd-2" class="fd-btn" style="flex-shrink:0;padding:8px 14px;border-radius:20px;border:none;background:#f5f5f5;color:#aaa;font-size:0.75rem;font-weight:700;cursor:pointer">Mer</button>
+        <button onclick="selectFitnessDay(3)" id="fd-3" class="fd-btn" style="flex-shrink:0;padding:8px 14px;border-radius:20px;border:none;background:#f5f5f5;color:#aaa;font-size:0.75rem;font-weight:700;cursor:pointer">Jeu</button>
+        <button onclick="selectFitnessDay(4)" id="fd-4" class="fd-btn" style="flex-shrink:0;padding:8px 14px;border-radius:20px;border:none;background:#f5f5f5;color:#aaa;font-size:0.75rem;font-weight:700;cursor:pointer">Ven</button>
+        <button onclick="selectFitnessDay(5)" id="fd-5" class="fd-btn" style="flex-shrink:0;padding:8px 14px;border-radius:20px;border:none;background:#f5f5f5;color:#aaa;font-size:0.75rem;font-weight:700;cursor:pointer">Sam</button>
+        <button onclick="selectFitnessDay(6)" id="fd-6" class="fd-btn" style="flex-shrink:0;padding:8px 14px;border-radius:20px;border:none;background:#f5f5f5;color:#aaa;font-size:0.75rem;font-weight:700;cursor:pointer">Dim</button>
+      </div>
+
+      <!-- Stats séance -->
+      <div id="fitnessStats" style="background:white;border-radius:16px;padding:16px;margin-bottom:16px;display:flex;justify-content:space-between;align-items:center">
+        <div>
+          <div style="font-size:0.75rem;color:#aaa;margin-bottom:2px">Séance du jour</div>
+          <div id="fitnessSessionName" style="font-size:1rem;font-weight:700;color:#2D2D2D">—</div>
+        </div>
+        <div style="display:flex;gap:16px">
+          <div style="text-align:center"><div id="fitnessExCount" style="font-size:1.1rem;font-weight:700;color:#FF6B6B">—</div><div style="font-size:0.65rem;color:#aaa">exercices</div></div>
+          <div style="text-align:center"><div id="fitnessDuration" style="font-size:1.1rem;font-weight:700;color:#FF9A3C">—</div><div style="font-size:0.65rem;color:#aaa">minutes</div></div>
+          <div style="text-align:center"><div id="fitnessKcal" style="font-size:1.1rem;font-weight:700;color:#1D9E75">—</div><div style="font-size:0.65rem;color:#aaa">kcal</div></div>
+        </div>
+      </div>
+
+      <!-- Loading -->
+      <div id="fitnessLoading" style="display:none;text-align:center;padding:48px">
+        <div style="font-size:2rem;margin-bottom:12px">⏳</div>
+        <div style="font-size:0.95rem;color:#2D2D2D;font-weight:600">Mirella génère votre programme...</div>
+        <div style="font-size:0.8rem;color:#aaa;margin-top:4px">Adapté à votre profil et pathologies</div>
+      </div>
+
+      <!-- Liste exercices -->
+      <div id="fitnessExercises"></div>
+
+      <!-- Bouton générer -->
+      <button onclick="generateFitnessProgram()" id="generateFitnessBtn" style="width:100%;background:#2D2D2D;color:white;border:none;border-radius:16px;padding:16px;font-size:0.9rem;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif;margin-top:8px">
+        🤖 Générer mon programme fitness IA
+      </button>
+
+    </div>
+  </div>
+</div>
+
+<!-- Modal vidéo exercice -->
+<div id="fitnessVideoModal" style="display:none;position:fixed;inset:0;z-index:99999;background:rgba(0,0,0,0.9);align-items:center;justify-content:center;padding:20px" onclick="closeFitnessVideo()">
+  <div onclick="event.stopPropagation()" style="width:100%;max-width:560px;background:#000;border-radius:16px;overflow:hidden">
+    <div style="display:flex;justify-content:space-between;align-items:center;padding:12px 16px;background:#1a1a1a">
+      <div id="fitnessVideoTitle" style="font-size:0.9rem;font-weight:700;color:white"></div>
+      <button onclick="closeFitnessVideo()" style="background:none;border:none;color:white;font-size:1.5rem;cursor:pointer">✕</button>
+    </div>
+    <div style="position:relative;padding-bottom:56.25%;height:0">
+      <iframe id="fitnessVideoFrame" src="" style="position:absolute;top:0;left:0;width:100%;height:100%" frameborder="0" allow="autoplay;encrypted-media" allowfullscreen></iframe>
+    </div>
+    <div id="fitnessVideoDesc" style="padding:16px;color:#aaa;font-size:0.82rem;line-height:1.6;background:#1a1a1a"></div>
+  </div>
+</div>
+
 <!-- Modal Recette -->
 
 `);
@@ -4546,6 +4629,135 @@ Réponds UNIQUEMENT en JSON valide avec cette structure exacte:
     btn.textContent = '🤖 Analyser ma progression avec Mirella'; btn.disabled = false;
   }
 
+
+  // ===== FITNESS =====
+  let _fitnessProgram = null;
+  let _fitnessDayIdx = new Date().getDay() === 0 ? 6 : new Date().getDay() - 1;
+
+  const YOUTUBE_QUERIES = {
+    'squats': 'dQw4w9WgXcQ', 'pompes': 'dQw4w9WgXcQ', 'gainage': 'dQw4w9WgXcQ',
+    'fentes': 'dQw4w9WgXcQ', 'burpees': 'dQw4w9WgXcQ', 'abdominaux': 'dQw4w9WgXcQ'
+  };
+
+  async function loadFitnessView() {
+    const plan = window.currentPlan || 'free';
+    if (plan === 'free') {
+      document.getElementById('fitnessPlanRequired').style.display = 'block';
+      document.getElementById('fitnessContent').style.display = 'none';
+      return;
+    }
+    document.getElementById('fitnessPlanRequired').style.display = 'none';
+    document.getElementById('fitnessContent').style.display = 'block';
+    const saved = localStorage.getItem('fitness_program');
+    if (saved) {
+      _fitnessProgram = JSON.parse(saved);
+      selectFitnessDay(_fitnessDayIdx);
+      document.getElementById('generateFitnessBtn').style.display = 'none';
+    }
+  }
+
+  function selectFitnessDay(idx) {
+    _fitnessDayIdx = idx;
+    document.querySelectorAll('.fd-btn').forEach(function(b, i) {
+      b.style.background = i === idx ? '#2D2D2D' : '#f5f5f5';
+      b.style.color = i === idx ? 'white' : '#aaa';
+    });
+    if (_fitnessProgram && _fitnessProgram[idx]) renderFitnessDay(_fitnessProgram[idx]);
+  }
+
+  function renderFitnessDay(day) {
+    document.getElementById('fitnessSessionName').textContent = day.nom || 'Repos';
+    document.getElementById('fitnessExCount').textContent = (day.exercices || []).length;
+    document.getElementById('fitnessDuration').textContent = day.duree || '—';
+    document.getElementById('fitnessKcal').textContent = day.kcal || '—';
+    const container = document.getElementById('fitnessExercises');
+    if (!day.exercices || !day.exercices.length) {
+      container.innerHTML = '<div style="background:white;border-radius:16px;padding:32px;text-align:center;color:#aaa"><div style="font-size:2rem;margin-bottom:8px">😴</div><div style="font-weight:600">Jour de repos</div><div style="font-size:0.82rem;margin-top:4px">Récupération active recommandée</div></div>';
+      return;
+    }
+    container.innerHTML = day.exercices.map(function(ex, i) {
+      const colors = ['#FF6B6B','#378ADD','#1D9E75','#FF9A3C','#9C27B0'];
+      const color = colors[i % colors.length];
+      const tagBgs = {'Jambes':'#FFEBEE','Jambes/Fessiers':'#FFEBEE','Fessiers':'#FCE4EC','Cardio':'#E3F2FD','Abdominaux':'#E8F5E9','Dos':'#E8EAF6','Pectoraux':'#FFF3E0','Bras':'#F3E5F5','Épaules':'#E0F7FA'};
+      const tagColors = {'Jambes':'#C62828','Jambes/Fessiers':'#C62828','Fessiers':'#880E4F','Cardio':'#1565C0','Abdominaux':'#2E7D32','Dos':'#283593','Pectoraux':'#E65100','Bras':'#6A1B9A','Épaules':'#006064'};
+      const muscles = (ex.muscles || []);
+      return '<div style="background:white;border-radius:16px;overflow:hidden;margin-bottom:12px;border:1px solid #f5f5f5">' +
+        '<div style="background:#1a1a2e;height:140px;position:relative;display:flex;align-items:center;justify-content:center;cursor:pointer" onclick="openFitnessVideo('' + (ex.youtube_id||'') + '','' + ex.nom.replace(/'/g,"\'") + '','' + (ex.description||'').replace(/'/g,"\'").substring(0,100) + '')">' +
+        '<div style="position:absolute;inset:0;background:linear-gradient(135deg,#1a1a2e,#16213e)"></div>' +
+        '<div style="position:relative;text-align:center">' +
+        '<div style="width:56px;height:56px;border-radius:50%;background:' + color + ';display:flex;align-items:center;justify-content:center;margin:0 auto 8px;cursor:pointer">' +
+        '<div style="width:0;height:0;border-top:10px solid transparent;border-bottom:10px solid transparent;border-left:16px solid white;margin-left:4px"></div></div>' +
+        '<div style="color:white;font-size:0.75rem;opacity:0.8">Voir la démonstration</div></div>' +
+        '<div style="position:absolute;top:10px;left:10px;background:' + color + ';color:white;font-size:0.65rem;font-weight:700;padding:3px 8px;border-radius:6px">EXERCICE ' + (i+1) + '/' + day.exercices.length + '</div></div>' +
+        '<div style="padding:14px">' +
+        '<div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px">' +
+        '<div><div style="font-size:0.95rem;font-weight:700;color:#2D2D2D">' + ex.nom + '</div>' +
+        '<div style="font-size:0.75rem;color:#aaa;margin-top:2px">' + ex.series + ' séries · ' + ex.repetitions + ' · ' + ex.repos + 's repos</div></div>' +
+        '<div style="background:#FFF5F0;border-radius:8px;padding:6px 10px;text-align:center;flex-shrink:0">' +
+        '<div style="font-size:0.85rem;font-weight:700;color:' + color + '">' + ex.series + '×' + ex.repetitions + '</div></div></div>' +
+        '<div style="margin-bottom:8px">' + muscles.map(function(m) {
+          return '<span style="display:inline-block;font-size:0.65rem;padding:2px 8px;border-radius:10px;font-weight:600;margin-right:4px;background:' + (tagBgs[m]||'#f5f5f5') + ';color:' + (tagColors[m]||'#555') + '">' + m + '</span>';
+        }).join('') + '</div>' +
+        '<div style="font-size:0.78rem;color:#666;line-height:1.5;margin-bottom:10px">' + (ex.conseil||'') + '</div>' +
+        '<div style="display:flex;gap:8px">' +
+        '<button onclick="openFitnessVideo('' + (ex.youtube_id||'') + '','' + ex.nom.replace(/'/g,"\'") + '','' + (ex.description||'').replace(/'/g,"\'").substring(0,100) + '')" style="flex:1;background:linear-gradient(135deg,#FF6B6B,#FF9A3C);color:white;border:none;border-radius:10px;padding:10px;font-size:0.78rem;font-weight:700;cursor:pointer">▶ Voir le tuto YouTube</button>' +
+        '<button onclick="markExDone(this)" style="background:#f5f5f5;color:#2D2D2D;border:none;border-radius:10px;padding:10px 14px;font-size:0.78rem;cursor:pointer">✓</button>' +
+        '</div></div></div>';
+    }).join('');
+  }
+
+  function markExDone(btn) {
+    btn.style.background = '#E8F5E9';
+    btn.style.color = '#2E7D32';
+    btn.textContent = '✓ Fait';
+  }
+
+  function openFitnessVideo(youtubeId, nom, desc) {
+    document.getElementById('fitnessVideoTitle').textContent = nom;
+    document.getElementById('fitnessVideoDesc').textContent = desc;
+    const searchQuery = encodeURIComponent(nom + ' exercice tutoriel francais débutant');
+    document.getElementById('fitnessVideoFrame').src = youtubeId ? 
+      'https://www.youtube.com/embed/' + youtubeId + '?autoplay=1' :
+      'https://www.youtube.com/results?search_query=' + searchQuery;
+    document.getElementById('fitnessVideoModal').style.display = 'flex';
+  }
+
+  function closeFitnessVideo() {
+    document.getElementById('fitnessVideoFrame').src = '';
+    document.getElementById('fitnessVideoModal').style.display = 'none';
+  }
+
+  async function generateFitnessProgram() {
+    const btn = document.getElementById('generateFitnessBtn');
+    btn.disabled = true; btn.textContent = '⏳ Génération en cours...';
+    document.getElementById('fitnessLoading').style.display = 'block';
+    document.getElementById('fitnessExercises').innerHTML = '';
+    try {
+      const token = authToken || localStorage.getItem('nutricare_token') || '';
+      const profile = JSON.parse(localStorage.getItem('nutricare_profile') || '{}');
+      const pathologies = (profile.pathologies || []).join(', ') || 'aucune';
+      const objectif = profile.objectif || 'forme generale';
+      const prompt = 'Tu es Mirella, coach fitness expert. Genere un programme fitness hebdomadaire personnalise pour 7 jours. Profil: pathologies=' + pathologies + ', objectif=' + objectif + '. Reponds UNIQUEMENT en JSON strict: [{"jour":"Lundi","nom":"Full body","duree":30,"kcal":220,"exercices":[{"nom":"Squats","series":3,"repetitions":"15 reps","repos":60,"muscles":["Jambes","Fessiers"],"conseil":"Conseil adapte aux pathologies","youtube_id":"","description":"Description courte"}]},{"jour":"Mardi","nom":"Repos","duree":0,"kcal":0,"exercices":[]},{"jour":"Mercredi","nom":"Cardio","duree":25,"kcal":200,"exercices":[...]},{"jour":"Jeudi","nom":"Repos","duree":0,"kcal":0,"exercices":[]},{"jour":"Vendredi","nom":"Upper body","duree":30,"kcal":180,"exercices":[...]},{"jour":"Samedi","nom":"Stretching","duree":20,"kcal":80,"exercices":[...]},{"jour":"Dimanche","nom":"Repos","duree":0,"kcal":0,"exercices":[]}]. Adapte les exercices aux pathologies. 3-4 exercices par jour actif.';
+      const res = await fetch(BACKEND_URL + '/api/chat/message', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
+        body: JSON.stringify({ message: prompt })
+      });
+      const data = await res.json();
+      const text = data.reply || '';
+      const json = text.replace(/```json|```/g, '').trim();
+      _fitnessProgram = JSON.parse(json);
+      localStorage.setItem('fitness_program', JSON.stringify(_fitnessProgram));
+      selectFitnessDay(_fitnessDayIdx);
+      btn.style.display = 'none';
+    } catch(e) {
+      btn.textContent = '🤖 Générer mon programme fitness IA';
+      alert('Erreur lors de la génération. Réessayez.');
+    }
+    btn.disabled = false;
+    document.getElementById('fitnessLoading').style.display = 'none';
+  }
+
   function renderEvolutionBadges() {
     const badges = document.getElementById('evolutionBadges');
     if (!badges) return;
@@ -4594,6 +4806,7 @@ Réponds UNIQUEMENT en JSON valide avec cette structure exacte:
   async function showView(view, btn) {
     if (view === 'menus') setTimeout(buildWeekSelector, 50);
     if (view === 'health') { loadInfoDuJour(); loadHydrationFromStorage(); setTimeout(renderEvolutionGallery, 100); }
+    if (view === 'fitness') { loadFitnessView(); }
     if (wcalViews.includes(view)) setTimeout(function(){ wcalInit(view); }, 50);
 
   // Si plan pas encore chargé, attendre loadProfile
@@ -6068,9 +6281,9 @@ function closeMirellaNotif() {
     <button onclick="toggleQuickMenu()" style="width:48px;height:48px;background:linear-gradient(135deg,#FF6B6B,#FF9A3C);border-radius:50%;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 16px rgba(255,107,107,0.4);border:none;cursor:pointer;margin-top:-20px">
       <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
     </button>
-    <button onclick="showView('dashboard',this)" style="display:flex;flex-direction:column;align-items:center;gap:3px;padding:4px 8px;border:none;background:none;color:#999;font-size:0.6rem;font-family:'DM Sans',sans-serif;cursor:pointer" class="bn-btn" id="bn-dashboard">
-      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
-      Dashboard
+    <button onclick="showView('fitness',this)" style="display:flex;flex-direction:column;align-items:center;gap:3px;padding:4px 8px;border:none;background:none;color:#999;font-size:0.6rem;font-family:'DM Sans',sans-serif;cursor:pointer" class="bn-btn" id="bn-fitness">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 4v16M18 4v16M4 8h4M16 8h4M4 16h4M16 16h4"/></svg>
+      Fitness
     </button>
     <button onclick="showView('profile',this)" style="display:flex;flex-direction:column;align-items:center;gap:3px;padding:4px 8px;border:none;background:none;color:#999;font-size:0.6rem;font-family:'DM Sans',sans-serif;cursor:pointer" class="bn-btn" id="bn-profile">
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
@@ -6094,6 +6307,7 @@ function closeMirellaNotif() {
       <button onclick="toggleQuickMenu();showView('biologie')" style="display:flex;align-items:center;gap:8px;padding:12px;background:#FFF5F0;border:none;border-radius:12px;font-size:0.82rem;font-weight:600;color:#2D2D2D;cursor:pointer">🧬 Bilan sanguin</button>
       <button onclick="toggleQuickMenu();showView('ordonnance')" style="display:flex;align-items:center;gap:8px;padding:12px;background:#FFF5F0;border:none;border-radius:12px;font-size:0.82rem;font-weight:600;color:#2D2D2D;cursor:pointer">📋 Scan ordonnance</button>
       <button onclick="toggleQuickMenu();showView('simulator')" style="display:flex;align-items:center;gap:8px;padding:12px;background:#FFF5F0;border:none;border-radius:12px;font-size:0.82rem;font-weight:600;color:#2D2D2D;cursor:pointer">⚡ Simulateur</button>
+      <button onclick="toggleQuickMenu();showView('fitness')" style="display:flex;align-items:center;gap:8px;padding:12px;background:linear-gradient(135deg,#FF6B6B,#FF9A3C);border:none;border-radius:12px;font-size:0.82rem;font-weight:600;color:white;cursor:pointer">💪 Fitness</button>
       <button onclick="toggleQuickMenu();showView('programs')" style="display:flex;align-items:center;gap:8px;padding:12px;background:#FFF5F0;border:none;border-radius:12px;font-size:0.82rem;font-weight:600;color:#2D2D2D;cursor:pointer">🎯 Programmes</button>
       <button onclick="toggleQuickMenu();showView('passeport')" style="display:flex;align-items:center;gap:8px;padding:12px;background:#FFF5F0;border:none;border-radius:12px;font-size:0.82rem;font-weight:600;color:#2D2D2D;cursor:pointer">📄 Passeport santé</button>
       <button onclick="toggleQuickMenu();showView('pricing')" style="display:flex;align-items:center;gap:8px;padding:12px;background:#FFF5F0;border:none;border-radius:12px;font-size:0.82rem;font-weight:600;color:#2D2D2D;cursor:pointer">⭐ Abonnements</button>
