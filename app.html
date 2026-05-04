@@ -4181,6 +4181,63 @@ Réponds UNIQUEMENT en JSON valide avec cette structure exacte:
     if (_fitnessProgram && _fitnessProgram[idx]) renderFitnessDay(_fitnessProgram[idx]);
   }
 
+  const EXERCISE_IMG_BASE = 'https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/';
+  const EXERCISE_MAP = {
+    'squat': 'Bodyweight_Squat',
+    'squats': 'Bodyweight_Squat',
+    'squat legers': 'Chair_Squat',
+    'squat leger': 'Chair_Squat',
+    'squat sumo': 'Barbell_Full_Squat',
+    'fente': 'Bodyweight_Walking_Lunge',
+    'fentes': 'Bodyweight_Walking_Lunge',
+    'fente avant': 'Bodyweight_Walking_Lunge',
+    'fentes avant': 'Bodyweight_Walking_Lunge',
+    'pompe': 'Decline_Push-Up',
+    'pompes': 'Decline_Push-Up',
+    'pompe murale': 'Decline_Push-Up',
+    'pompes murales': 'Decline_Push-Up',
+    'push-up': 'Decline_Push-Up',
+    'push up': 'Decline_Push-Up',
+    'gainage': 'Elbow_Plank',
+    'planche': 'Elbow_Plank',
+    'plank': 'Elbow_Plank',
+    'crunch': 'Crunches',
+    'crunchs': 'Crunches',
+    'crunch abdominal': 'Crunches',
+    'abdominaux': 'Crunches',
+    'jumping jack': 'Jumping_Jacks',
+    'jumping jacks': 'Jumping_Jacks',
+    'burpee': 'Burpees',
+    'burpees': 'Burpees',
+    'curl biceps': 'Dumbbell_Alternate_Bicep_Curl',
+    'curl': 'Dumbbell_Alternate_Bicep_Curl',
+    'biceps': 'Dumbbell_Alternate_Bicep_Curl',
+    'triceps': 'Tricep_Dumbbell_Kickback',
+    'developpe': 'Barbell_Bench_Press_-_Medium_Grip',
+    'soulevé de terre': 'Romanian_Deadlift',
+    'deadlift': 'Romanian_Deadlift',
+    'hip thrust': 'Barbell_Hip_Thrust',
+    'pont fessier': 'Glute_Bridge',
+    'mountain climber': 'Mountain_Climber',
+    'gainage lateral': 'Side_Plank',
+    'rotation': 'Russian_Twist',
+    'russe': 'Russian_Twist',
+    'superman': 'Superman',
+    'step up': 'Dumbbell_Step_Ups',
+    'étirement': 'Standing_Hamstring_Stretch',
+    'etirement': 'Standing_Hamstring_Stretch',
+    'marche': 'Walking_Lunge',
+  };
+
+  function getExerciseImgId(nomEx) {
+    const nom = (nomEx || '').toLowerCase().trim();
+    if (EXERCISE_MAP[nom]) return EXERCISE_MAP[nom];
+    for (const key of Object.keys(EXERCISE_MAP)) {
+      if (nom.includes(key) || key.includes(nom.split(' ')[0])) return EXERCISE_MAP[key];
+    }
+    return 'Bodyweight_Squat';
+  }
+
   function getFitnessSVG(nomEx, color, idx) {
     var nom = (nomEx || '').toLowerCase();
     var c = color || '#FF6B6B';
@@ -4232,12 +4289,17 @@ Réponds UNIQUEMENT en JSON valide avec cette structure exacte:
     container.innerHTML = day.exercices.map(function(ex, i) {
       var color = colors[i % colors.length];
       var muscles = (ex.muscles || []);
-      var svgAnim = getFitnessSVG(ex.nom, color, i);
+      var imgId = getExerciseImgId(ex.nom);
+      var img0 = EXERCISE_IMG_BASE + imgId + '/0.jpg';
+      var img1 = EXERCISE_IMG_BASE + imgId + '/1.jpg';
+      var imgElId = 'eximg_' + i + '_' + Date.now();
       return '<div style="background:white;border-radius:16px;overflow:hidden;margin-bottom:12px;border:1px solid #f5f5f5">' +
         '<div style="background:linear-gradient(135deg,#1a1a2e,#16213e);padding:12px 14px 0;display:flex;justify-content:space-between;align-items:center">' +
         '<div style="background:' + color + ';color:white;font-size:0.65rem;font-weight:700;padding:3px 10px;border-radius:6px">EXERCICE ' + (i+1) + '/' + day.exercices.length + '</div>' +
         '<div style="color:rgba(255,255,255,0.35);font-size:0.65rem">' + ex.series + ' séries</div></div>' +
-        '<div style="background:linear-gradient(135deg,#1a1a2e,#16213e);display:flex;justify-content:center;padding:8px 0 14px">' + svgAnim + '</div>' +
+        '<div style="background:linear-gradient(135deg,#1a1a2e,#16213e);display:flex;justify-content:center;align-items:center;height:200px;overflow:hidden;position:relative">' +
+        '<img id="' + imgElId + '" src="' + img0 + '" style="height:200px;width:100%;object-fit:cover;object-position:top;transition:opacity 0.4s" onerror="this.style.display='none'" onload="(function(el,a,b){var s=0;setInterval(function(){s=1-s;el.style.opacity=0;setTimeout(function(){el.src=s?b:a;el.style.opacity=1},400)},2000)})(this,'' + img0 + '','' + img1 + '')">' +
+        '</div>' +
         '<div style="padding:14px">' +
         '<div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px">' +
         '<div><div style="font-size:0.95rem;font-weight:700;color:#2D2D2D">' + ex.nom + '</div>' +
