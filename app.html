@@ -4268,7 +4268,12 @@ Réponds UNIQUEMENT en JSON valide avec cette structure exacte:
       const firstBracket = json.indexOf('[');
       const lastBracket = json.lastIndexOf(']');
       if (firstBracket !== -1 && lastBracket !== -1) json = json.substring(firstBracket, lastBracket+1);
-      _fitnessProgram = JSON.parse(json);
+      json = json.replace(/[\u0000-\u001F\u007F-\u009F]/g, ' ');
+      try { _fitnessProgram = JSON.parse(json); }
+      catch(jsonErr) {
+        json = json.replace(/'/g, '').replace(/[""]/g, '"');
+        _fitnessProgram = JSON.parse(json);
+      }
       // Normaliser les exercices (string -> objet)
       _fitnessProgram = _fitnessProgram.map(function(day) {
         if (day.exercices && day.exercices.length && typeof day.exercices[0] === 'string') {
