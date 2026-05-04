@@ -4447,16 +4447,17 @@ function switchLang(lang) {
     btn.textContent = '⏳ Analyse en cours...'; btn.disabled = true;
     document.getElementById('mirellaAnalysisResult').style.display = 'none';
     try {
+      const token = authToken || localStorage.getItem('nutricare_token') || '';
       const res = await fetch(BACKEND_URL + '/api/chat', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + authToken },
-        body: JSON.stringify({ message: 'Tu es Mirella, coach nutrition bienveillante. L utilisateur te partage 2 photos de son évolution corporelle espacées de ' + days + ' jours. Sans voir les photos, génère un message d encouragement chaleureux et motivant de 3-4 phrases sur la régularité du suivi et les bénéfices visibles possibles après ' + days + ' jours d effort. Sois très personnelle et positive. Commence directement sans formule de politesse.' })
+        headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
+        body: JSON.stringify({ message: 'Tu es Mirella, coach nutrition bienveillante. L utilisateur te partage 2 photos de son evolution corporelle espacees de ' + days + ' jours. Sans voir les photos, genere un message d encouragement chaleureux et motivant de 3-4 phrases sur la regularite du suivi et les benefices visibles possibles apres ' + days + ' jours d effort. Sois tres personnelle et positive. Commence directement sans formule de politesse.' })
       });
       const data = await res.json();
-      document.getElementById('mirellaAnalysisText').textContent = data.response || data.message || 'Analyse générée !';
+      document.getElementById('mirellaAnalysisText').textContent = data.response || data.message || 'Analyse generee !';
       document.getElementById('mirellaAnalysisResult').style.display = 'block';
     } catch(e) {
-      document.getElementById('mirellaAnalysisText').textContent = 'Erreur de connexion. Réessayez.';
+      document.getElementById('mirellaAnalysisText').textContent = 'Erreur de connexion. Verifiez votre connexion et reessayez.';
       document.getElementById('mirellaAnalysisResult').style.display = 'block';
     }
     btn.textContent = '🤖 Analyser ma progression avec Mirella'; btn.disabled = false;
