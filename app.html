@@ -4419,6 +4419,61 @@ Réponds UNIQUEMENT en JSON valide avec cette structure exacte:
            bodyBack(gL,gR,hamL,hamR,latL,latR,triL,triR,trapL,trapR);
   }
 
+  function getMusclesForCategory(cat) {
+    cat = cat.toLowerCase();
+    if (cat.includes('jambe') || cat.includes('fessier')) return {primary:['Quadriceps','Fessiers'],secondary:['Ischio']};
+    if (cat.includes('pectoral') || cat.includes('bras')) return {primary:['Pectoraux','Triceps'],secondary:['Épaules']};
+    if (cat.includes('abdo') || cat.includes('core')) return {primary:['Abdominaux','Core'],secondary:[]};
+    if (cat.includes('dos') || cat.includes('épaule')) return {primary:['Dos','Épaules'],secondary:['Biceps']};
+    if (cat.includes('cardio') || cat.includes('hiit')) return {primary:['Cardio','Jambes'],secondary:['Core']};
+    if (cat.includes('full') || cat.includes('body')) return {primary:['Full body'],secondary:['Core']};
+    if (cat.includes('mobil') || cat.includes('étirement')) return {primary:['Mobilité'],secondary:['Flexibilité']};
+    if (cat.includes('yoga') || cat.includes('récup')) return {primary:['Récupération'],secondary:['Mobilité']};
+    if (cat.includes('débutant')) return {primary:['Full body'],secondary:['Core']};
+    return {primary:['Muscles'],secondary:[]};
+  }
+
+  function getMiniAnatomy(muscles) {
+    var P='#FF4040',S='#FF9A3C',N='#2a2a3e',PS='#FF6060',NS='#3a3a5e';
+    var isPrim = muscles.primary.join('').toLowerCase();
+    var qc = isPrim.includes('quad')||isPrim.includes('jambe') ? P : N;
+    var gc = isPrim.includes('fessier')||isPrim.includes('glute') ? P : N;
+    var cc = isPrim.includes('pectoral') ? P : N;
+    var ac = isPrim.includes('abdo')||isPrim.includes('core') ? P : N;
+    var bc = isPrim.includes('dos')||isPrim.includes('lat') ? P : N;
+    var front = '<svg width="22" height="58" viewBox="0 0 32 82">' +
+      '<text x="16" y="79" text-anchor="middle" font-size="5" fill="#444">F</text>' +
+      '<ellipse cx="16" cy="6" rx="5" ry="5" fill="' + N + '" stroke="' + NS + '" stroke-width="0.5"/>' +
+      '<path d="M9 14 Q7 20 8 30 Q11 33 16 33 Q21 33 24 30 Q25 20 23 14 Z" fill="' + N + '" stroke="' + NS + '" stroke-width="0.5"/>' +
+      '<ellipse cx="12" cy="22" rx="4" ry="4" fill="' + cc + '" stroke="' + (cc===P?PS:NS) + '" stroke-width="0.5"/>' +
+      '<ellipse cx="20" cy="22" rx="4" ry="4" fill="' + cc + '" stroke="' + (cc===P?PS:NS) + '" stroke-width="0.5"/>' +
+      '<rect x="22" y="43" width="6" height="5" rx="2" fill="' + ac + '" stroke="' + (ac===P?PS:NS) + '" stroke-width="0.5"/>' +
+      '<rect x="22" y="49" width="6" height="5" rx="2" fill="' + ac + '" stroke="' + (ac===P?PS:NS) + '" stroke-width="0.5"/>' +
+      '<rect x="30" y="43" width="6" height="5" rx="2" fill="' + ac + '" stroke="' + (ac===P?PS:NS) + '" stroke-width="0.5"/>' +
+      '<rect x="30" y="49" width="6" height="5" rx="2" fill="' + ac + '" stroke="' + (ac===P?PS:NS) + '" stroke-width="0.5"/>' +
+      '<path d="M9 32 Q8 37 10 41 Q14 43 16 43 Q18 43 22 41 Q24 37 23 32 Z" fill="' + N + '" stroke="' + NS + '" stroke-width="0.5"/>' +
+      '<rect x="9" y="40" width="7" height="18" rx="3.5" fill="' + qc + '" stroke="' + (qc===P?PS:NS) + '" stroke-width="0.5"/>' +
+      '<rect x="16" y="40" width="7" height="18" rx="3.5" fill="' + qc + '" stroke="' + (qc===P?PS:NS) + '" stroke-width="0.5"/>' +
+      '<rect x="10" y="57" width="6" height="14" rx="3" fill="' + N + '" stroke="' + NS + '" stroke-width="0.5"/>' +
+      '<rect x="16" y="57" width="6" height="14" rx="3" fill="' + N + '" stroke="' + NS + '" stroke-width="0.5"/>' +
+      '</svg>';
+    var back = '<svg width="22" height="58" viewBox="0 0 32 82">' +
+      '<text x="16" y="79" text-anchor="middle" font-size="5" fill="#444">D</text>' +
+      '<ellipse cx="16" cy="6" rx="5" ry="5" fill="' + N + '" stroke="' + NS + '" stroke-width="0.5"/>' +
+      '<path d="M9 14 Q7 20 8 30 Q11 33 16 33 Q21 33 24 30 Q25 20 23 14 Z" fill="' + N + '" stroke="' + NS + '" stroke-width="0.5"/>' +
+      '<ellipse cx="12" cy="23" rx="5" ry="7" fill="' + bc + '" stroke="' + (bc===P?PS:NS) + '" stroke-width="0.5"/>' +
+      '<ellipse cx="20" cy="23" rx="5" ry="7" fill="' + bc + '" stroke="' + (bc===P?PS:NS) + '" stroke-width="0.5"/>' +
+      '<path d="M9 32 Q8 37 10 41 Q14 43 16 43 Q18 43 22 41 Q24 37 23 32 Z" fill="' + N + '" stroke="' + NS + '" stroke-width="0.5"/>' +
+      '<ellipse cx="12" cy="38" rx="5" ry="5" fill="' + gc + '" stroke="' + (gc===P?PS:NS) + '" stroke-width="0.5"/>' +
+      '<ellipse cx="20" cy="38" rx="5" ry="5" fill="' + gc + '" stroke="' + (gc===P?PS:NS) + '" stroke-width="0.5"/>' +
+      '<rect x="9" y="40" width="7" height="18" rx="3.5" fill="' + N + '" stroke="' + NS + '" stroke-width="0.5"/>' +
+      '<rect x="16" y="40" width="7" height="18" rx="3.5" fill="' + N + '" stroke="' + NS + '" stroke-width="0.5"/>' +
+      '<rect x="10" y="57" width="6" height="14" rx="3" fill="' + N + '" stroke="' + NS + '" stroke-width="0.5"/>' +
+      '<rect x="16" y="57" width="6" height="14" rx="3" fill="' + N + '" stroke="' + NS + '" stroke-width="0.5"/>' +
+      '</svg>';
+    return front + back;
+  }
+
   function switchFitnessTab(tab) {
     document.getElementById('fitnessLibrary').style.display = tab === 'library' ? 'block' : 'none';
     document.getElementById('fitnessProgramTab').style.display = tab === 'program' ? 'block' : 'none';
@@ -4444,15 +4499,50 @@ Réponds UNIQUEMENT en JSON valide avec cette structure exacte:
         document.getElementById('fitnessGrid').innerHTML = '<div style="color:#aaa;text-align:center;padding:40px">Aucune vidéo trouvée</div>';
         return;
       }
-      document.getElementById('fitnessGrid').innerHTML = data.videos.map(function(v) {
-        return '<div style="background:white;border-radius:12px;overflow:hidden;cursor:pointer;border:1px solid #f0f0f0;transition:transform 0.2s" onmouseover="this.style.transform=&quot;scale(1.02)&quot;" onmouseout="this.style.transform=&quot;scale(1)&quot;" onclick="openFitnessLibVideo(this.dataset.url,this.dataset.title)" data-url="' + v.videoUrl.replace(/"/g, "") + '" data-title="' + v.title.replace(/"/g, "").substring(0,40) + '">' +
-          '<div style="position:relative;height:160px;background:#1a1a2e;overflow:hidden">' +
-          '<img src="' + v.thumbnail + '" style="width:100%;height:100%;object-fit:cover" onerror="this.style.display=&quot;none&quot;">' +
-          '<div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center">' +
-          '<div style="width:48px;height:48px;border-radius:50%;background:rgba(255,107,107,0.9);display:flex;align-items:center;justify-content:center">' +
-          '<div style="width:0;height:0;border-top:10px solid transparent;border-bottom:10px solid transparent;border-left:16px solid white;margin-left:4px"></div></div></div></div>' +
-          '<div style="padding:12px"><div style="font-size:0.82rem;font-weight:600;color:#2D2D2D;line-height:1.3">' + v.title.substring(0,50) + '</div>' +
-          '<div style="font-size:0.72rem;color:#aaa;margin-top:4px">' + (v.duration || '') + '</div></div></div>';
+      var catTitle = document.getElementById('fitnessCategoryTitle').textContent.replace(/^[^\w]+/, '').trim();
+      var levels = ['Débutant','Débutant','Intermédiaire','Débutant','Intermédiaire','Avancé','Débutant','Intermédiaire','Intermédiaire','Avancé','Débutant','Intermédiaire'];
+      var levelColors = {'Débutant':'#1D9E75','Intermédiaire':'#FF9A3C','Avancé':'#FF6B6B'};
+      var exerciseNames = {
+        'Jambes': ['Squat classique','Fente avant','Hip thrust','Sumo squat','Leg press','Romanian deadlift','Bulgarian split','Box squat','Goblet squat','Leg curl'],
+        'Pectoraux': ['Pompe classique','Pompe inclinée','Pompe déclinée','Dips','Fly haltères','Développé couché','Pompe diamant','Pompe large','Push-up planche','Chest press'],
+        'Abdominaux': ['Crunch classique','Planche','Crunch oblique','Leg raise','Russian twist','Mountain climber','Bicycle crunch','Hollow body','Dragon flag','Ab wheel'],
+        'Dos': ['Rowing haltère','Pull-up','Lat pulldown','Seated row','Superman','Face pull','Deadlift','Shrug','Bent-over row','Reverse fly'],
+        'Cardio': ['Jumping jack','Burpee','High knees','Jump squat','Box jump','Skipping','Sprint','Mountain climber','Jump lunge','Star jump'],
+        'Full': ['Full body circuit','Complexe haltères','Tabata','AMRAP','EMOM','Flow cardio','Total body','Power circuit','Athletic training','Functional'],
+        'Mobilité': ['Étirement hip flexor','Yoga flow','Pigeon pose','Cat-cow','World greatest stretch','Foam rolling','Hip 90/90','Thoracic rotation','Hamstring stretch','Quad stretch'],
+        'Yoga': ['Sun salutation','Warrior flow','Yin yoga','Restorative','Breathwork','Meditation flow','Vinyasa','Power yoga','Hatha','Nidra'],
+        'Débutant': ['Squat débutant','Pompe murale','Planche genoux','Marche rapide','Jumping jack doux','Fente statique','Bridge','Superman doux','Crunch doux','Side plank genoux']
+      };
+      function getExName(catTitle, idx) {
+        for (var k of Object.keys(exerciseNames)) {
+          if (catTitle.toLowerCase().includes(k.toLowerCase())) return exerciseNames[k][idx % exerciseNames[k].length];
+        }
+        return 'Exercice ' + (idx+1);
+      }
+      document.getElementById('fitnessGrid').innerHTML = data.videos.map(function(v, idx) {
+        var exName = getExName(catTitle, idx);
+        var level = levels[idx % levels.length];
+        var lvlColor = levelColors[level];
+        var muscles = getMusclesForCategory(catTitle);
+        var anatSvgMini = getMiniAnatomy(muscles);
+        return '<div style="background:white;border-radius:14px;overflow:hidden;cursor:pointer;border:1px solid #f0f0f0" onclick="openFitnessLibVideo(this.dataset.url,this.dataset.title)" data-url="' + v.videoUrl.replace(/"/g,'') + '" data-title="' + exName + '">' +
+          '<div style="position:relative;height:150px;background:#1a1a2e;overflow:hidden">' +
+          '<img src="' + v.thumbnail + '" style="width:100%;height:100%;object-fit:cover">' +
+          '<div style="position:absolute;inset:0;background:rgba(0,0,0,0.2);display:flex;align-items:center;justify-content:center">' +
+          '<div style="width:40px;height:40px;border-radius:50%;background:rgba(255,107,107,0.9);display:flex;align-items:center;justify-content:center">' +
+          '<div style="width:0;height:0;border-top:8px solid transparent;border-bottom:8px solid transparent;border-left:13px solid white;margin-left:3px"></div></div></div>' +
+          '<div style="position:absolute;top:8px;left:8px;background:' + lvlColor + ';color:white;font-size:0.58rem;font-weight:700;padding:2px 7px;border-radius:10px">' + level + '</div>' +
+          '<div style="position:absolute;bottom:6px;right:8px;background:rgba(0,0,0,0.7);color:white;font-size:0.6rem;font-weight:600;padding:2px 6px;border-radius:4px">' + (v.duration||'') + '</div>' +
+          '</div>' +
+          '<div style="padding:10px 12px 12px">' +
+          '<div style="display:flex;gap:8px;align-items:flex-start">' +
+          '<div style="background:#0f0f1a;border-radius:6px;padding:3px;display:flex;gap:2px;flex-shrink:0">' + anatSvgMini + '</div>' +
+          '<div style="flex:1;min-width:0">' +
+          '<div style="font-size:0.82rem;font-weight:700;color:#2D2D2D;margin-bottom:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">' + exName + '</div>' +
+          '<div style="font-size:0.68rem;color:#aaa;margin-bottom:6px">Cliquez pour voir la démo</div>' +
+          '<div style="display:flex;gap:4px;flex-wrap:wrap">' + muscles.primary.map(function(m){ return '<span style="background:#FFEBEE;color:#C62828;font-size:0.58rem;font-weight:700;padding:1px 6px;border-radius:8px">' + m + '</span>'; }).join('') +
+          muscles.secondary.map(function(m){ return '<span style="background:#FFF3E0;color:#E65100;font-size:0.58rem;font-weight:600;padding:1px 6px;border-radius:8px">' + m + '</span>'; }).join('') +
+          '</div></div></div></div></div>';
       }).join('');
     } catch(e) {
       document.getElementById('fitnessCategoryLoading').style.display = 'none';
