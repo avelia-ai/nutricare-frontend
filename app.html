@@ -1067,6 +1067,9 @@ function switchLang(lang) {
       <div style="font-size:0.85rem;color:#FF9A3C">Adaptation à vos pathologies et préférences en cours</div>
     </div>
 
+    <!-- Conseils Mirella en haut -->
+    <div id="menusConseils" style="display:none;background:linear-gradient(135deg,rgba(201,168,76,0.08),rgba(255,107,107,0.06));border:1px solid rgba(201,168,76,0.25);border-radius:12px;padding:16px 20px;margin-bottom:20px;font-size:0.85rem;color:#2D2D2D;line-height:1.6"></div>
+
     <!-- Résumé nutritionnel du jour -->
     <div id="menusNutritionPanel" style="display:none;background:white;border-radius:12px;border:1px solid #E6F1FB;padding:24px;margin-bottom:24px;box-shadow:0 2px 8px rgba(2,26,53,0.06)">
       <div id="menusBudgetBar" style="display:none;background:#F0F7FF;border-radius:8px;padding:10px 16px;margin-bottom:16px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px">
@@ -1141,7 +1144,7 @@ function switchLang(lang) {
         <button onclick="copyShoppingList()" style="background:#E6F1FB;color:#2D2D2D;border:none;border-radius: 4px;padding:5px 14px;font-size:0.75rem;cursor:pointer;font-family:'DM Sans',sans-serif"> Copier</button>
       </div>
       <div id="shoppingListContent" style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px"></div>
-      <div style="margin-top:16px;padding:14px;background:#E6F1FB;border-radius: 4px;font-size:0.85rem;color:#2D2D2D" id="menusConseils"></div>
+
     </div>
   </div>
 </div>
@@ -5341,7 +5344,9 @@ function renderMenu(menu) {
       </div>`;
     }).join('');
     if (menu.conseils_semaine) {
-      document.getElementById('menusConseils').textContent = '💡 ' + menu.conseils_semaine;
+      var el = document.getElementById('menusConseils');
+      el.innerHTML = '<span style="font-size:1rem;margin-right:8px">💡</span>' + menu.conseils_semaine;
+      el.style.display = 'block';
     }
   }
 }
