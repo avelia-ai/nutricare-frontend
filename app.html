@@ -3504,6 +3504,7 @@ function switchLang(lang) {
           return;
         }
         document.getElementById('ordoResult').style.display = 'block';
+        if (window.innerWidth <= 768) { document.getElementById('ordonnanceView').style.paddingBottom = '300px'; }
         showMirellaNotif('💊 Ordonnance analysée ! J\'ai extrait vos médicaments et vérifié les interactions. Vos conseils nutritionnels sont maintenant adaptés.');
         let infos = '';
         if (data.prescripteur) infos += 'Prescripteur : ' + data.prescripteur + ' · ';
