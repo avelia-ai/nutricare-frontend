@@ -4477,6 +4477,23 @@ Réponds UNIQUEMENT en JSON valide avec cette structure exacte:
     return front + back;
   }
 
+  function showFitnessCategory(title, query) {
+    var sections = document.querySelectorAll('#fitnessLibrary .flib-section');
+    sections.forEach(function(s){ s.style.display='none'; });
+    var detail = document.getElementById('fitnessCategoryDetail');
+    detail.style.display = 'block';
+    document.getElementById('fitnessCategoryTitle').textContent = title;
+    var fakeBtn = { style: {} };
+    loadFitnessCategory(fakeBtn, title, query);
+  }
+
+  function hideFitnessCategory() {
+    var sections = document.querySelectorAll('#fitnessLibrary .flib-section');
+    sections.forEach(function(s){ s.style.display='block'; });
+    document.getElementById('fitnessCategoryDetail').style.display = 'none';
+    document.getElementById('fitnessGrid').innerHTML = '';
+  }
+
   function switchFitnessTab(tab) {
     document.getElementById('fitnessLibrary').style.display = tab === 'library' ? 'block' : 'none';
     document.getElementById('fitnessProgramTab').style.display = tab === 'program' ? 'block' : 'none';
@@ -6120,25 +6137,138 @@ async function deleteProfessional(id) {
 
     <!-- TAB: Bibliothèque -->
     <div id="fitnessLibrary">
-      <!-- Catégories -->
-      <div style="display:flex;gap:8px;overflow-x:auto;padding-bottom:12px;margin-bottom:20px">
-        <button onclick="loadFitnessCategory(this,'Jambes & Fessiers','squats lunges glutes workout')" class="fcat-btn" style="flex-shrink:0;padding:8px 16px;border-radius:20px;border:none;background:#2D2D2D;color:white;font-size:0.75rem;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif">🦵 Jambes & Fessiers</button>
-        <button onclick="loadFitnessCategory(this,'Pectoraux & Bras','push ups chest arms workout')" class="fcat-btn" style="flex-shrink:0;padding:8px 16px;border-radius:20px;border:none;background:#f5f5f5;color:#666;font-size:0.75rem;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif">💪 Pectoraux & Bras</button>
-        <button onclick="loadFitnessCategory(this,'Abdominaux & Core','abs core workout crunches')" class="fcat-btn" style="flex-shrink:0;padding:8px 16px;border-radius:20px;border:none;background:#f5f5f5;color:#666;font-size:0.75rem;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif">🔥 Abdominaux & Core</button>
-        <button onclick="loadFitnessCategory(this,'Dos & Épaules','back shoulders workout rowing')" class="fcat-btn" style="flex-shrink:0;padding:8px 16px;border-radius:20px;border:none;background:#f5f5f5;color:#666;font-size:0.75rem;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif">🏋️ Dos & Épaules</button>
-        <button onclick="loadFitnessCategory(this,'Cardio & HIIT','cardio hiit workout jumping')" class="fcat-btn" style="flex-shrink:0;padding:8px 16px;border-radius:20px;border:none;background:#f5f5f5;color:#666;font-size:0.75rem;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif">⚡ Cardio & HIIT</button>
-        <button onclick="loadFitnessCategory(this,'Full Body','full body workout fitness')" class="fcat-btn" style="flex-shrink:0;padding:8px 16px;border-radius:20px;border:none;background:#f5f5f5;color:#666;font-size:0.75rem;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif">🏃 Full Body</button>
-        <button onclick="loadFitnessCategory(this,'Mobilité & Étirements','stretching flexibility yoga workout')" class="fcat-btn" style="flex-shrink:0;padding:8px 16px;border-radius:20px;border:none;background:#f5f5f5;color:#666;font-size:0.75rem;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif">🧘 Mobilité & Étirements</button>
-        <button onclick="loadFitnessCategory(this,'Yoga & Récupération','yoga recovery relaxation workout')" class="fcat-btn" style="flex-shrink:0;padding:8px 16px;border-radius:20px;border:none;background:#f5f5f5;color:#666;font-size:0.75rem;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif">☯️ Yoga & Récupération</button>
-        <button onclick="loadFitnessCategory(this,'Débutant','beginner easy workout fitness')" class="fcat-btn" style="flex-shrink:0;padding:8px 16px;border-radius:20px;border:none;background:#f5f5f5;color:#666;font-size:0.75rem;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif">⭐ Débutant</button>
+      <style>
+        .flib-card{position:relative;border-radius:16px;overflow:hidden;cursor:pointer;flex-shrink:0;background:#1a1a2e}
+        .flib-card img{width:100%;height:100%;object-fit:cover;display:block;transition:transform 0.3s}
+        .flib-card:hover img{transform:scale(1.05)}
+        .flib-card-overlay{position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,0.75) 0%,rgba(0,0,0,0.1) 60%)}
+        .flib-card-label{position:absolute;bottom:0;left:0;right:0;padding:14px 16px}
+        .flib-card-badge{position:absolute;top:10px;left:10px;background:#FF6B6B;color:white;font-size:0.6rem;font-weight:800;padding:3px 8px;border-radius:6px;text-transform:uppercase;letter-spacing:0.5px}
+        .flib-section{margin-bottom:28px}
+        .flib-section-title{font-size:1rem;font-weight:700;color:#2D2D2D;margin-bottom:14px}
+        .flib-row{display:flex;gap:12px;overflow-x:auto;padding-bottom:8px;scrollbar-width:none}
+        .flib-row::-webkit-scrollbar{display:none}
+        .flib-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px}
+      </style>
+
+      <!-- Section Type d'entraînement -->
+      <div class="flib-section">
+        <div class="flib-section-title">Type d'entraînement</div>
+        <div class="flib-row">
+          <div class="flib-card" style="width:200px;height:140px" onclick="showFitnessCategory('Jambes & Fessiers','squats lunges glutes workout')">
+            <img src="https://images.pexels.com/photos/3822356/pexels-photo-3822356.jpeg?auto=compress&cs=tinysrgb&w=400" onerror="this.style.display='none'">
+            <div class="flib-card-overlay"></div>
+            <div class="flib-card-label"><div style="color:white;font-size:0.82rem;font-weight:800;text-transform:uppercase;letter-spacing:0.5px">JAMBES & FESSIERS</div></div>
+          </div>
+          <div class="flib-card" style="width:200px;height:140px" onclick="showFitnessCategory('Cardio & HIIT','cardio hiit workout jumping')">
+            <img src="https://images.pexels.com/photos/4753987/pexels-photo-4753987.jpeg?auto=compress&cs=tinysrgb&w=400" onerror="this.style.display='none'">
+            <div class="flib-card-overlay"></div>
+            <div class="flib-card-badge">Populaire</div>
+            <div class="flib-card-label"><div style="color:white;font-size:0.82rem;font-weight:800;text-transform:uppercase;letter-spacing:0.5px">CARDIO & HIIT</div></div>
+          </div>
+          <div class="flib-card" style="width:200px;height:140px" onclick="showFitnessCategory('Pectoraux & Bras','push ups chest arms workout')">
+            <img src="https://images.pexels.com/photos/3837757/pexels-photo-3837757.jpeg?auto=compress&cs=tinysrgb&w=400" onerror="this.style.display='none'">
+            <div class="flib-card-overlay"></div>
+            <div class="flib-card-label"><div style="color:white;font-size:0.82rem;font-weight:800;text-transform:uppercase;letter-spacing:0.5px">PECTORAUX & BRAS</div></div>
+          </div>
+          <div class="flib-card" style="width:200px;height:140px" onclick="showFitnessCategory('Abdominaux & Core','abs core workout crunches')">
+            <img src="https://images.pexels.com/photos/3822622/pexels-photo-3822622.jpeg?auto=compress&cs=tinysrgb&w=400" onerror="this.style.display='none'">
+            <div class="flib-card-overlay"></div>
+            <div class="flib-card-label"><div style="color:white;font-size:0.82rem;font-weight:800;text-transform:uppercase;letter-spacing:0.5px">ABDOMINAUX & CORE</div></div>
+          </div>
+          <div class="flib-card" style="width:200px;height:140px" onclick="showFitnessCategory('Dos & Épaules','back shoulders workout rowing')">
+            <img src="https://images.pexels.com/photos/4164761/pexels-photo-4164761.jpeg?auto=compress&cs=tinysrgb&w=400" onerror="this.style.display='none'">
+            <div class="flib-card-overlay"></div>
+            <div class="flib-card-label"><div style="color:white;font-size:0.82rem;font-weight:800;text-transform:uppercase;letter-spacing:0.5px">DOS & ÉPAULES</div></div>
+          </div>
+          <div class="flib-card" style="width:200px;height:140px" onclick="showFitnessCategory('Full Body','full body workout fitness')">
+            <img src="https://images.pexels.com/photos/1552242/pexels-photo-1552242.jpeg?auto=compress&cs=tinysrgb&w=400" onerror="this.style.display='none'">
+            <div class="flib-card-overlay"></div>
+            <div class="flib-card-label"><div style="color:white;font-size:0.82rem;font-weight:800;text-transform:uppercase;letter-spacing:0.5px">FULL BODY</div></div>
+          </div>
+        </div>
       </div>
 
-      <!-- Grille vidéos -->
-      <div id="fitnessCategoryTitle" style="font-size:1rem;font-weight:700;color:#2D2D2D;margin-bottom:14px">🦵 Jambes & Fessiers</div>
-      <div id="fitnessCategoryLoading" style="display:none;text-align:center;padding:40px;color:#aaa">
-        <div style="font-size:1.5rem;margin-bottom:8px">⏳</div>Chargement des vidéos...
+      <!-- Section Par niveau -->
+      <div class="flib-section">
+        <div class="flib-section-title">Par niveau</div>
+        <div class="flib-row">
+          <div class="flib-card" style="width:180px;height:200px" onclick="showFitnessCategory('Débutant','beginner easy fitness workout')">
+            <img src="https://images.pexels.com/photos/3775566/pexels-photo-3775566.jpeg?auto=compress&cs=tinysrgb&w=400" onerror="this.style.display='none'">
+            <div class="flib-card-overlay"></div>
+            <div class="flib-card-label">
+              <div style="color:white;font-size:0.82rem;font-weight:800;text-transform:uppercase;letter-spacing:0.5px">DÉBUTANT</div>
+              <div style="color:rgba(255,255,255,0.7);font-size:0.65rem;margin-top:2px">Idéal pour commencer</div>
+            </div>
+          </div>
+          <div class="flib-card" style="width:180px;height:200px" onclick="showFitnessCategory('Intermédiaire','intermediate fitness workout')">
+            <img src="https://images.pexels.com/photos/2827392/pexels-photo-2827392.jpeg?auto=compress&cs=tinysrgb&w=400" onerror="this.style.display='none'">
+            <div class="flib-card-overlay"></div>
+            <div class="flib-card-badge">Populaire</div>
+            <div class="flib-card-label">
+              <div style="color:white;font-size:0.82rem;font-weight:800;text-transform:uppercase;letter-spacing:0.5px">INTERMÉDIAIRE</div>
+              <div style="color:rgba(255,255,255,0.7);font-size:0.65rem;margin-top:2px">Passez au niveau supérieur</div>
+            </div>
+          </div>
+          <div class="flib-card" style="width:180px;height:200px" onclick="showFitnessCategory('Avancé','advanced fitness workout intense')">
+            <img src="https://images.pexels.com/photos/1229356/pexels-photo-1229356.jpeg?auto=compress&cs=tinysrgb&w=400" onerror="this.style.display='none'">
+            <div class="flib-card-overlay"></div>
+            <div class="flib-card-label">
+              <div style="color:white;font-size:0.82rem;font-weight:800;text-transform:uppercase;letter-spacing:0.5px">AVANCÉ</div>
+              <div style="color:rgba(255,255,255,0.7);font-size:0.65rem;margin-top:2px">Pour les plus motivés</div>
+            </div>
+          </div>
+        </div>
       </div>
-      <div id="fitnessGrid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px"></div>
+
+      <!-- Section Objectif -->
+      <div class="flib-section">
+        <div class="flib-section-title">Objectif</div>
+        <div class="flib-grid">
+          <div class="flib-card" style="height:160px" onclick="showFitnessCategory('Perte de poids','weight loss cardio workout fat burn')">
+            <img src="https://images.pexels.com/photos/4397840/pexels-photo-4397840.jpeg?auto=compress&cs=tinysrgb&w=400" onerror="this.style.display='none'">
+            <div class="flib-card-overlay"></div>
+            <div class="flib-card-label"><div style="color:white;font-size:0.82rem;font-weight:800;text-transform:uppercase;letter-spacing:0.5px">PERTE DE POIDS</div></div>
+          </div>
+          <div class="flib-card" style="height:160px" onclick="showFitnessCategory('Tonification','toning workout sculpt body')">
+            <img src="https://images.pexels.com/photos/3823038/pexels-photo-3823038.jpeg?auto=compress&cs=tinysrgb&w=400" onerror="this.style.display='none'">
+            <div class="flib-card-overlay"></div>
+            <div class="flib-card-label"><div style="color:white;font-size:0.82rem;font-weight:800;text-transform:uppercase;letter-spacing:0.5px">TONIFICATION</div></div>
+          </div>
+          <div class="flib-card" style="height:160px" onclick="showFitnessCategory('Prise de masse','muscle building strength workout')">
+            <img src="https://images.pexels.com/photos/1547248/pexels-photo-1547248.jpeg?auto=compress&cs=tinysrgb&w=400" onerror="this.style.display='none'">
+            <div class="flib-card-overlay"></div>
+            <div class="flib-card-label"><div style="color:white;font-size:0.82rem;font-weight:800;text-transform:uppercase;letter-spacing:0.5px">PRISE DE MASSE</div></div>
+          </div>
+          <div class="flib-card" style="height:160px" onclick="showFitnessCategory('Mobilité & Étirements','stretching flexibility yoga workout')">
+            <img src="https://images.pexels.com/photos/3822906/pexels-photo-3822906.jpeg?auto=compress&cs=tinysrgb&w=400" onerror="this.style.display='none'">
+            <div class="flib-card-overlay"></div>
+            <div class="flib-card-label"><div style="color:white;font-size:0.82rem;font-weight:800;text-transform:uppercase;letter-spacing:0.5px">MOBILITÉ</div></div>
+          </div>
+          <div class="flib-card" style="height:160px" onclick="showFitnessCategory('Vitalité','yoga wellness energy workout')">
+            <img src="https://images.pexels.com/photos/3822864/pexels-photo-3822864.jpeg?auto=compress&cs=tinysrgb&w=400" onerror="this.style.display='none'">
+            <div class="flib-card-overlay"></div>
+            <div class="flib-card-label"><div style="color:white;font-size:0.82rem;font-weight:800;text-transform:uppercase;letter-spacing:0.5px">VITALITÉ</div></div>
+          </div>
+          <div class="flib-card" style="height:160px" onclick="showFitnessCategory('Récupération','recovery yoga stretching relaxation')">
+            <img src="https://images.pexels.com/photos/3759657/pexels-photo-3759657.jpeg?auto=compress&cs=tinysrgb&w=400" onerror="this.style.display='none'">
+            <div class="flib-card-overlay"></div>
+            <div class="flib-card-label"><div style="color:white;font-size:0.82rem;font-weight:800;text-transform:uppercase;letter-spacing:0.5px">RÉCUPÉRATION</div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Vue détail catégorie -->
+      <div id="fitnessCategoryDetail" style="display:none">
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:20px">
+          <button onclick="hideFitnessCategory()" style="background:#f5f5f5;border:none;border-radius:10px;padding:8px 14px;font-size:0.8rem;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif">← Retour</button>
+          <div id="fitnessCategoryTitle" style="font-size:1rem;font-weight:700;color:#2D2D2D"></div>
+        </div>
+        <div id="fitnessCategoryLoading" style="display:none;text-align:center;padding:40px;color:#aaa">
+          <div style="font-size:1.5rem;margin-bottom:8px">⏳</div>Chargement des vidéos...
+        </div>
+        <div id="fitnessGrid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:14px"></div>
+      </div>
     </div>
 
     <!-- TAB: Programme IA -->
