@@ -963,6 +963,11 @@ function switchLang(lang) {
         <div style="font-size:0.82rem;color:#FF9A3C">Cliquez ici ou glissez une photo de votre repas</div>
       </div>
       <input type="file" id="analysisFileInput" accept="image/*" capture="environment" style="display:none" onchange="previewAndAnalyze(event)">
+      <input type="file" id="analysisGalleryInput" accept="image/*" style="display:none" onchange="previewAndAnalyze(event)">
+      <div style="display:flex;gap:10px;margin-top:16px;justify-content:center">
+        <button onclick="document.getElementById('analysisFileInput').click()" style="background:#2D2D2D;color:white;border:none;border-radius:8px;padding:10px 20px;font-size:0.85rem;cursor:pointer;font-family:'DM Sans',sans-serif;display:flex;align-items:center;gap:6px">📷 Prendre une photo</button>
+        <button onclick="document.getElementById('analysisGalleryInput').click()" style="background:white;color:#2D2D2D;border:1.5px solid #E6F1FB;border-radius:8px;padding:10px 20px;font-size:0.85rem;cursor:pointer;font-family:'DM Sans',sans-serif;display:flex;align-items:center;gap:6px">🖼️ Choisir depuis la galerie</button>
+      </div>
       <img id="analysisPreview" style="display:none;max-width:300px;max-height:300px;border-radius: 4px;margin-top:16px;object-fit:cover">
     </div>
 
