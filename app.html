@@ -4545,7 +4545,7 @@ Réponds UNIQUEMENT en JSON valide avec cette structure exacte:
       const res = await fetch(BACKEND_URL + '/api/fitness-video/category?query=' + encodeURIComponent(query) + '&title=' + encodeURIComponent(title));
       const data = await res.json();
       document.getElementById('fitnessCategoryLoading').style.display = 'none';
-      if (!data.videos || !data.videos.length) {
+      if ((!data.videos || !data.videos.length) && (!data.exercises || !data.exercises.length)) {
         document.getElementById('fitnessGrid').innerHTML = '<div style="color:#aaa;text-align:center;padding:40px">Aucune vidéo trouvée</div>';
         return;
       }
