@@ -4569,13 +4569,20 @@ Réponds UNIQUEMENT en JSON valide avec cette structure exacte:
         }
         return 'Exercice ' + (idx+1);
       }
-      document.getElementById('fitnessGrid').innerHTML = data.videos.map(function(v, idx) {
+      // Support GIFs exercisedb + vidéos Pexels
+      var items = data.exercises || data.videos || [];
+      document.getElementById('fitnessGrid').innerHTML = items.map(function(v, idx) {
+        v.isGif = !!v.gifUrl;
+        v.videoUrl = v.videoUrl || null;
+        v.thumbnail = v.gifUrl || v.thumbnail || '';
+        v.title = v.name || v.title || '';
+        v.duration = v.duration || '';
         var exName = getExName(catTitle, idx);
         var level = levels[idx % levels.length];
         var lvlColor = levelColors[level];
         var muscles = getMusclesForCategory(catTitle);
         var anatSvgMini = getMiniAnatomy(muscles);
-        return '<div style="background:white;border-radius:14px;overflow:hidden;cursor:pointer;border:1px solid #f0f0f0" onclick="openFitnessLibVideo(this.dataset.url,this.dataset.title)" data-url="' + v.videoUrl.replace(/"/g,'') + '" data-title="' + exName + '">' +
+        return '<div style="background:white;border-radius:14px;overflow:hidden;cursor:pointer;border:1px solid #f0f0f0" onclick="openFitnessLibVideo('' + (v.gifUrl||v.videoUrl||'').replace(/'/g,'') + '','' + exName.replace(/'/g,'') + '','' + (v.gifUrl?'gif':'video') + '')" data-url="' + (v.gifUrl||v.videoUrl||'').replace(/"/g,'') + '" data-title="' + exName + '">' +
           '<div style="position:relative;height:150px;background:#1a1a2e;overflow:hidden">' +
           '<img src="' + v.thumbnail + '" style="width:100%;height:100%;object-fit:cover">' +
           '<div style="position:absolute;inset:0;background:rgba(0,0,0,0.2);display:flex;align-items:center;justify-content:center">' +
