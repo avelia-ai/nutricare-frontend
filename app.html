@@ -4582,7 +4582,9 @@ Réponds UNIQUEMENT en JSON valide avec cette structure exacte:
         var lvlColor = levelColors[level];
         var muscles = getMusclesForCategory(catTitle);
         var anatSvgMini = getMiniAnatomy(muscles);
-        return '<div style="background:white;border-radius:14px;overflow:hidden;cursor:pointer;border:1px solid #f0f0f0" onclick="openFitnessLibVideo('' + (v.gifUrl||v.videoUrl||'').replace(/'/g,'') + '','' + exName.replace(/'/g,'') + '','' + (v.gifUrl?'gif':'video') + '')" data-url="' + (v.gifUrl||v.videoUrl||'').replace(/"/g,'') + '" data-title="' + exName + '">' +
+        var mediaUrl = (v.gifUrl||v.videoUrl||'').replace(/"/g,'');
+        var mediaType = v.gifUrl ? 'gif' : 'video';
+        return '<div style="background:white;border-radius:14px;overflow:hidden;cursor:pointer;border:1px solid #f0f0f0" onclick="openFitnessLibVideo(this.dataset.url,this.dataset.title,this.dataset.type)" data-url="' + mediaUrl + '" data-title="' + exName + '" data-type="' + mediaType + '">' +
           '<div style="position:relative;height:150px;background:#1a1a2e;overflow:hidden">' +
           '<img src="' + v.thumbnail + '" style="width:100%;height:100%;object-fit:cover">' +
           '<div style="position:absolute;inset:0;background:rgba(0,0,0,0.2);display:flex;align-items:center;justify-content:center">' +
