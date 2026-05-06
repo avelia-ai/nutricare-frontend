@@ -3763,16 +3763,37 @@ function switchLang(lang) {
 
 
   function showTrialExpiredBanner() {
-    const existing = document.getElementById('trialExpiredBanner');
+    const existing = document.getElementById('trialExpiredModal');
     if (existing) return;
-    const banner = document.createElement('div');
-    banner.id = 'trialExpiredBanner';
-    banner.style.cssText = 'position:fixed;top:0;left:0;right:0;z-index:9999;background:linear-gradient(135deg,#FF6B6B,#FF9A3C);padding:14px 24px;display:flex;align-items:center;justify-content:space-between;box-shadow:0 4px 20px rgba(255,107,107,.3)';
-    banner.innerHTML = `
-      <div style="color:white;font-size:.88rem;font-weight:500">⏰ Votre essai gratuit de 3 jours est terminé — Abonnez-vous pour continuer à profiter de Mirella</div>
-      <button onclick="showView('pricing')" style="background:white;color:#FF6B6B;border:none;border-radius:6px;padding:8px 20px;font-size:.85rem;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif;white-space:nowrap;margin-left:16px">Voir les offres -50% →</button>
+    const modal = document.createElement('div');
+    modal.id = 'trialExpiredModal';
+    modal.style.cssText = 'position:fixed;inset:0;z-index:99999;background:rgba(0,0,0,0.7);display:flex;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(4px)';
+    modal.innerHTML = `
+      <div style="background:white;border-radius:24px;padding:40px 32px;max-width:480px;width:100%;text-align:center;position:relative;box-shadow:0 24px 60px rgba(0,0,0,0.3)">
+        <div style="font-size:2.5rem;margin-bottom:16px">⏰</div>
+        <div style="font-size:1.4rem;font-weight:800;color:#1a1a1a;margin-bottom:8px;font-family:'DM Sans',sans-serif">Votre essai gratuit est terminé</div>
+        <div style="font-size:0.92rem;color:#666;margin-bottom:28px;line-height:1.6">Vous avez découvert Mirella pendant 3 jours.<br>Passez à un plan payant pour continuer à profiter de toutes les fonctionnalités.</div>
+        <div style="background:linear-gradient(135deg,rgba(255,107,107,0.06),rgba(255,154,60,0.06));border-radius:14px;padding:16px;margin-bottom:24px;border:1px solid rgba(255,107,107,0.15)">
+          <div style="font-size:0.7rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#FF9A3C;margin-bottom:12px">Offre Early Access · -50% à vie</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+            <div style="background:white;border-radius:10px;padding:14px;border:1.5px solid #f0f0f0">
+              <div style="font-size:0.72rem;font-weight:700;color:#888;text-transform:uppercase;margin-bottom:4px">Standard</div>
+              <div style="font-size:1.5rem;font-weight:800;color:#1a1a1a">4,95€<span style="font-size:0.75rem;font-weight:400;color:#aaa">/mois</span></div>
+              <div style="font-size:0.68rem;color:#aaa;text-decoration:line-through">9,90€/mois</div>
+            </div>
+            <div style="background:linear-gradient(135deg,#FF6B6B,#FF9A3C);border-radius:10px;padding:14px;position:relative">
+              <div style="position:absolute;top:-8px;left:50%;transform:translateX(-50%);background:#1a1a1a;color:white;font-size:0.6rem;font-weight:700;padding:2px 10px;border-radius:10px;white-space:nowrap">⭐ POPULAIRE</div>
+              <div style="font-size:0.72rem;font-weight:700;color:rgba(255,255,255,0.85);text-transform:uppercase;margin-bottom:4px">Premium</div>
+              <div style="font-size:1.5rem;font-weight:800;color:white">9,95€<span style="font-size:0.75rem;font-weight:400;color:rgba(255,255,255,0.7)">/mois</span></div>
+              <div style="font-size:0.68rem;color:rgba(255,255,255,0.6);text-decoration:line-through">19,90€/mois</div>
+            </div>
+          </div>
+        </div>
+        <button onclick="document.getElementById('trialExpiredModal').remove();showView('pricing')" style="width:100%;background:linear-gradient(135deg,#FF6B6B,#FF9A3C);color:white;border:none;border-radius:12px;padding:14px;font-size:0.95rem;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif;margin-bottom:10px">Voir les offres -50% →</button>
+        <button onclick="document.getElementById('trialExpiredModal').remove()" style="width:100%;background:none;border:none;color:#aaa;font-size:0.82rem;cursor:pointer;font-family:'DM Sans',sans-serif;padding:6px">Continuer en accès limité</button>
+      </div>
     `;
-    document.body.insertBefore(banner, document.body.firstChild);
+    document.body.appendChild(modal);
   }
 
 
