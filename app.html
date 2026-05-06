@@ -4542,7 +4542,7 @@ Réponds UNIQUEMENT en JSON valide avec cette structure exacte:
     document.getElementById('fitnessCategoryLoading').style.display = 'block';
     document.getElementById('fitnessGrid').innerHTML = '';
     try {
-      const res = await fetch(BACKEND_URL + '/api/fitness-video/category?query=' + encodeURIComponent(query));
+      const res = await fetch(BACKEND_URL + '/api/fitness-video/category?query=' + encodeURIComponent(query) + '&title=' + encodeURIComponent(title));
       const data = await res.json();
       document.getElementById('fitnessCategoryLoading').style.display = 'none';
       if (!data.videos || !data.videos.length) {
