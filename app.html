@@ -4609,9 +4609,27 @@ Réponds UNIQUEMENT en JSON valide avec cette structure exacte:
     }
   }
 
-  function openFitnessLibVideo(url, title) {
+  function openFitnessLibVideo(url, title, type) {
     document.getElementById('fitnessLibVideoTitle').textContent = title;
-    document.getElementById('fitnessLibVideoPlayer').src = url;
+    var player = document.getElementById('fitnessLibVideoPlayer');
+    var gifContainer = document.getElementById('fitnessLibGifContainer');
+    if (type === 'gif' || (url && url.includes('.gif'))) {
+      player.style.display = 'none';
+      player.src = '';
+      if (!gifContainer) {
+        var gc = document.createElement('img');
+        gc.id = 'fitnessLibGifContainer';
+        gc.style.cssText = 'max-width:100%;max-height:70vh;border-radius:12px;object-fit:contain';
+        player.parentNode.insertBefore(gc, player);
+        gifContainer = gc;
+      }
+      gifContainer.src = url;
+      gifContainer.style.display = 'block';
+    } else {
+      if (gifContainer) gifContainer.style.display = 'none';
+      player.style.display = 'block';
+      player.src = url;
+    }
     document.getElementById('fitnessVideoModal').style.display = 'flex';
   }
 
