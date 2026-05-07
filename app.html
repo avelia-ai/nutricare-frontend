@@ -4584,7 +4584,9 @@ Réponds UNIQUEMENT en JSON valide avec cette structure exacte:
         var anatSvgMini = getMiniAnatomy(muscles);
         var mediaUrl = (v.gifUrl||v.videoUrl||'').replace(/"/g,'');
         var mediaType = v.gifUrl ? 'gif' : 'video';
-        return '<div style="background:white;border-radius:14px;overflow:hidden;cursor:pointer;border:1px solid #f0f0f0" onclick="openFitnessLibVideo(this.dataset.url,this.dataset.title,this.dataset.type)" data-url="' + mediaUrl + '" data-title="' + exName + '" data-type="' + mediaType + '">' +
+        var vMuscles = encodeURIComponent(JSON.stringify(v.secondaryMuscles ? [v.target].concat(v.secondaryMuscles) : [v.target||'']));
+        var vEquip = encodeURIComponent(v.equipment||v.bodyPart||'');
+        return '<div style="background:white;border-radius:14px;overflow:hidden;cursor:pointer;border:1px solid #f0f0f0" onclick="openFitnessLibVideo(this.dataset.url,this.dataset.title,this.dataset.type,JSON.parse(decodeURIComponent(this.dataset.muscles)),decodeURIComponent(this.dataset.equip))" data-url="' + mediaUrl + '" data-title="' + exName + '" data-type="' + mediaType + '" data-muscles="' + vMuscles + '" data-equip="' + vEquip + '">' +
           '<div style="position:relative;height:150px;background:#1a1a2e;overflow:hidden">' +
           '<img src="' + v.thumbnail + '" style="width:100%;height:100%;object-fit:cover">' +
           '<div style="position:absolute;inset:0;background:rgba(0,0,0,0.2);display:flex;align-items:center;justify-content:center">' +
@@ -4609,27 +4611,59 @@ Réponds UNIQUEMENT en JSON valide avec cette structure exacte:
     }
   }
 
-  function openFitnessLibVideo(url, title, type) {
-    document.getElementById('fitnessLibVideoTitle').textContent = title;
+  function openFitnessLibVideo(url, title, type, muscles, equipment, instructions) {
+    document.getElementById('fitnessLibVideoTitle').textContent = title || 'Exercice';
     var player = document.getElementById('fitnessLibVideoPlayer');
     var gifContainer = document.getElementById('fitnessLibGifContainer');
+    var loading = document.getElementById('fitnessLibMediaLoading');
+
+    // Reset
+    player.style.display = 'none';
+    player.src = '';
+    gifContainer.style.display = 'none';
+    if (loading) loading.style.display = 'block';
+
     if (type === 'gif' || (url && url.includes('.gif'))) {
-      player.style.display = 'none';
-      player.src = '';
-      if (!gifContainer) {
-        var gc = document.createElement('img');
-        gc.id = 'fitnessLibGifContainer';
-        gc.style.cssText = 'max-width:100%;max-height:70vh;border-radius:12px;object-fit:contain';
-        player.parentNode.insertBefore(gc, player);
-        gifContainer = gc;
-      }
+      gifContainer.onload = function() { if (loading) loading.style.display = 'none'; };
       gifContainer.src = url;
       gifContainer.style.display = 'block';
-    } else {
-      if (gifContainer) gifContainer.style.display = 'none';
-      player.style.display = 'block';
+    } else if (url) {
       player.src = url;
+      player.style.display = 'block';
+      if (loading) loading.style.display = 'none';
     }
+
+    // Muscles
+    var musclesEl = document.getElementById('fitnessLibMuscles');
+    if (musclesEl && muscles) {
+      var mList = Array.isArray(muscles) ? muscles : muscles.split(',').map(function(m){ return m.trim(); });
+      musclesEl.innerHTML = mList.map(function(m, i) {
+        var color = i === 0 ? '#FF4040' : '#FF9A3C';
+        var bg = i === 0 ? 'rgba(255,64,64,0.15)' : 'rgba(255,154,60,0.15)';
+        return '<span style="background:' + bg + ';color:' + color + ';font-size:0.7rem;font-weight:700;padding:3px 10px;border-radius:20px;font-family:sans-serif">' + m + '</span>';
+      }).join('');
+    }
+
+    // Equipment
+    var equipEl = document.getElementById('fitnessLibEquipment');
+    if (equipEl) equipEl.textContent = equipment ? 'Équipement : ' + equipment : '';
+
+    // Instructions
+    var instrEl = document.getElementById('fitnessLibInstructions');
+    if (instrEl && instructions) {
+      var steps = Array.isArray(instructions) ? instructions : [instructions];
+      instrEl.innerHTML = steps.map(function(s, i) {
+        return '<div style="margin-bottom:8px"><span style="color:#FF6B6B;font-weight:700">' + (i+1) + '.</span> ' + s + '</div>';
+      }).join('');
+    }
+
+    // Anatomie SVG
+    var anatEl = document.getElementById('fitnessLibAnatomy');
+    if (anatEl) {
+      var mArr = muscles ? (Array.isArray(muscles) ? muscles : muscles.split(',').map(function(m){ return m.trim(); })) : [];
+      anatEl.innerHTML = getMuscleAnatomy(mArr, 0);
+    }
+
     document.getElementById('fitnessVideoModal').style.display = 'flex';
   }
 
@@ -6407,13 +6441,25 @@ async function deleteProfessional(id) {
     </div>
 
     <!-- Modal vidéo plein écran -->
-    <div id="fitnessVideoModal" style="display:none;position:fixed;inset:0;z-index:99999;background:rgba(0,0,0,0.92);align-items:center;justify-content:center;padding:20px" onclick="closeFitnessLibVideo()">
-      <div onclick="event.stopPropagation()" style="width:100%;max-width:900px;background:#000;border-radius:16px;overflow:hidden">
-        <div style="display:flex;justify-content:space-between;align-items:center;padding:12px 16px;background:#111">
-          <div id="fitnessLibVideoTitle" style="font-size:0.9rem;font-weight:700;color:white"></div>
-          <button onclick="closeFitnessLibVideo()" style="background:none;border:none;color:white;font-size:1.2rem;cursor:pointer">✕</button>
+    <div id="fitnessVideoModal" style="display:none;position:fixed;inset:0;z-index:99999;background:rgba(0,0,0,0.85);align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(4px)" onclick="closeFitnessLibVideo()">
+      <div onclick="event.stopPropagation()" style="width:100%;max-width:860px;background:#1a1a2e;border-radius:20px;overflow:hidden;display:grid;grid-template-columns:1fr 1fr">
+        <!-- Gauche : GIF/Vidéo -->
+        <div style="background:#13131f;display:flex;align-items:center;justify-content:center;min-height:400px;position:relative">
+          <video id="fitnessLibVideoPlayer" autoplay muted loop playsinline style="width:100%;height:100%;object-fit:contain;display:none"></video>
+          <img id="fitnessLibGifContainer" style="width:100%;height:100%;object-fit:contain;display:none;max-height:400px" alt="">
+          <div id="fitnessLibMediaLoading" style="color:rgba(255,255,255,0.4);font-size:0.8rem;font-family:sans-serif">Chargement...</div>
         </div>
-        <video id="fitnessLibVideoPlayer" autoplay muted loop playsinline style="width:100%;max-height:70vh;object-fit:contain;background:#000"></video>
+        <!-- Droite : Infos -->
+        <div style="padding:28px;display:flex;flex-direction:column;gap:16px">
+          <div style="display:flex;justify-content:space-between;align-items:flex-start">
+            <div id="fitnessLibVideoTitle" style="font-size:1.2rem;font-weight:800;color:white;font-family:sans-serif;line-height:1.3;flex:1;margin-right:12px"></div>
+            <button onclick="closeFitnessLibVideo()" style="background:rgba(255,255,255,0.1);border:none;color:white;width:32px;height:32px;border-radius:50%;font-size:1rem;cursor:pointer;flex-shrink:0;display:flex;align-items:center;justify-content:center">✕</button>
+          </div>
+          <div id="fitnessLibMuscles" style="display:flex;flex-wrap:wrap;gap:6px"></div>
+          <div id="fitnessLibEquipment" style="font-size:0.78rem;color:rgba(255,255,255,0.5);font-family:sans-serif"></div>
+          <div id="fitnessLibInstructions" style="font-size:0.82rem;color:rgba(255,255,255,0.75);line-height:1.7;font-family:sans-serif;flex:1;overflow-y:auto;max-height:220px"></div>
+          <div id="fitnessLibAnatomy" style="display:flex;gap:8px;justify-content:center;background:#0f0f1a;border-radius:10px;padding:10px"></div>
+        </div>
       </div>
     </div>
 
