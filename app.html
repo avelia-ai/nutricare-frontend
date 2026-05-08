@@ -505,8 +505,6 @@ button[style*="background:linear-gradient(135deg,#FF6B6B,#FF9A3C)"] {
   sessionStorage.removeItem('transfer_profile');
   sessionStorage.removeItem('transfer_view');
 })();
-function switchLang(lang) {
-  // Refresh token automatique
 async function refreshAuthToken() {
   const refreshToken = localStorage.getItem('nutricare_refresh_token');
   if (!refreshToken) return false;
@@ -5083,7 +5081,7 @@ var activeMenuFilters = new Set();
     const res = await fetch(`${BACKEND_URL}/api/menus/generate`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${authToken}` },
-      body: JSON.stringify({ lang: currentLang || 'fr', menu_filters: Array.from(activeMenuFilters || []) }),
+      body: JSON.stringify({ lang: 'fr', menu_filters: Array.from(activeMenuFilters || []) }),
       signal: controller.signal
     });
     clearTimeout(timeoutId);
