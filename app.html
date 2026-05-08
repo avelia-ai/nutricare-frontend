@@ -5081,7 +5081,7 @@ var activeMenuFilters = new Set();
     const res = await fetch(`${BACKEND_URL}/api/menus/generate`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${authToken}` },
-      body: JSON.stringify({ lang: 'fr', menu_filters: Array.from(activeMenuFilters || []) }),
+      body: JSON.stringify({ lang: 'fr', menu_filters: Array.from(activeMenuFilters || []), objectif_nutritionnel: document.getElementById('menuObjectif')?.value || '' }),
       signal: controller.signal
     });
     clearTimeout(timeoutId);
