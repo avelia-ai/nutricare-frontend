@@ -5079,7 +5079,7 @@ var activeMenuFilters = new Set();
 
   try {
     const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 120000);
+    const timeoutId = setTimeout(() => controller.abort(), 180000);
     const res = await fetch(`${BACKEND_URL}/api/menus/generate`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${authToken}` },
@@ -5091,7 +5091,7 @@ var activeMenuFilters = new Set();
     if (res.ok) { renderMenu(menu); showMirellaNotif('🍽️ Votre menu de la semaine est prêt ! J\'ai adapté chaque repas à votre objectif et votre profil santé. Bonne dégustation !'); }
     else alert(menu.error || 'Erreur lors de la génération');
   } catch(e) {
-    if (e.name === 'AbortError') alert('Génération trop longue, réessayez');
+    if (e.name === 'AbortError') alert('La génération prend plus de temps que prévu. Désactivez certains filtres et réessayez.');
     else alert('Erreur de connexion: ' + e.message);
   } finally {
     btn.disabled = false;
