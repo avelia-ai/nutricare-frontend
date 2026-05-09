@@ -786,15 +786,20 @@ async function subscribe(inputId, successId) {
   } catch(e) { alert('Une erreur est survenue. Réessayez.'); }
 }
 
+// Date de lancement fixe identique pour tous les visiteurs
+var LAUNCH_DATE = new Date('2025-06-15T23:59:59');
+
 function updateCountdown() {
-  var t = localStorage.getItem('mirella_countdown5'); if(!t){ t = (Date.now() + 4*24*60*60*1000).toString(); localStorage.setItem('mirella_countdown5', t); } const target = new Date(parseInt(t));
-  const now = new Date();
-  const diff = target - now;
-  if (diff <= 0) return;
-  const j = Math.floor(diff / 86400000);
-  const h = Math.floor((diff % 86400000) / 3600000);
-  const m = Math.floor((diff % 3600000) / 60000);
-  const s = Math.floor((diff % 60000) / 1000);
+  var now = new Date();
+  var diff = LAUNCH_DATE - now;
+  if (diff <= 0) {
+    ['cd-j','cd-h','cd-m','cd-s'].forEach(function(id){ document.getElementById(id).textContent = '00'; });
+    return;
+  }
+  var j = Math.floor(diff / 86400000);
+  var h = Math.floor((diff % 86400000) / 3600000);
+  var m = Math.floor((diff % 3600000) / 60000);
+  var s = Math.floor((diff % 60000) / 1000);
   document.getElementById('cd-j').textContent = String(j).padStart(2,'0');
   document.getElementById('cd-h').textContent = String(h).padStart(2,'0');
   document.getElementById('cd-m').textContent = String(m).padStart(2,'0');
@@ -803,15 +808,13 @@ function updateCountdown() {
 updateCountdown();
 setInterval(updateCountdown, 1000);
 
-// Compteur places dynamique
+// Compteur inscrits — date de référence fixe commune à tous
 (function() {
+  var REF_DATE = new Date('2025-04-01T00:00:00').getTime();
   var BASE = 30;
-  var START_TIME = (function(){ var s = localStorage.getItem('mirella_start5'); if(!s){ s = Date.now().toString(); localStorage.setItem('mirella_start5', s); } return parseInt(s); })();
-  var INTERVAL_MS = 5 * 60 * 1000; // 1 place toutes les 5 minutes
-
+  var INTERVAL_MS = 5 * 60 * 1000;
   function updateSpots() {
-    var now = Date.now();
-    var elapsed = now - START_TIME;
+    var elapsed = Date.now() - REF_DATE;
     var added = Math.floor(elapsed / INTERVAL_MS);
     var count = Math.min(BASE + added, 999);
     var pct = (count / 1000 * 100).toFixed(1);
@@ -820,7 +823,6 @@ setInterval(updateCountdown, 1000);
     var bar = document.querySelector('.spots-fill');
     if (bar) bar.style.width = pct + '%';
   }
-
   updateSpots();
   setInterval(updateSpots, 60000);
 })();
