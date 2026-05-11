@@ -2875,10 +2875,19 @@ function switchLang(lang) {
 
   let oracleData = null;
 
-  function initBiologie() {
-    const isPaid = currentUser?.plan === 'standard' || currentUser?.plan === 'premium';
-    const premiumOnly = currentUser?.plan === 'premium';
-    document.getElementById('bioContent').style.display = premiumOnly ? 'block' : 'none';
+  async function initBiologie() {
+    let isPremium = window.currentPlan === 'premium' || window.isTrial;
+    if (!isPremium && authToken) {
+      try {
+        const pr = await fetch(`${BACKEND_URL}/api/auth/profile`, { headers: { 'Authorization': `Bearer ${authToken}` } });
+        if (pr.ok) { const pd = await pr.json(); window.currentPlan = pd.plan || 'free'; isPremium = pd.plan === 'premium'; }
+      } catch(e) {}
+    }
+    const bioGate = document.getElementById('bioPlanRequired');
+    const bioContent = document.getElementById('bioContent');
+    const bioFree = document.getElementById('bioFree');
+    if (bioFree) bioFree.style.display = isPremium ? 'none' : 'block';
+    if (bioContent) bioContent.style.display = isPremium ? 'block' : 'none';
   }
 
   async function analyzeBiologie(input) {
