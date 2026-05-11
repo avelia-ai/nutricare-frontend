@@ -257,7 +257,7 @@ footer a{color:#FF6B6B;text-decoration:none}
       <div style="font-size:1.15rem;font-weight:700;color:#2D2D2D;margin-top:6px">Voyez Mirella en 3 minutes</div>
     </div>
     <!-- Vignette cliquable -->
-    <div onclick="document.getElementById('videoModal').style.display='flex'" 
+    <div onclick="openVideoModal()" 
       style="position:relative;cursor:pointer;border-radius:20px;overflow:hidden;box-shadow:0 12px 40px rgba(255,107,107,0.2);background:#1a1a2e">
       <img src="https://img.youtube.com/vi/qFoiT9SYvfM/maxresdefault.jpg" 
         alt="Démo Mirella" 
@@ -277,10 +277,10 @@ footer a{color:#FF6B6B;text-decoration:none}
   </div>
 
   <!-- Modal vidéo -->
-  <div id="videoModal" onclick="if(event.target===this){this.style.display='none';document.getElementById('videoFrame').src=''}" 
+  <div id="videoModal" onclick="if(event.target===this)closeVideoModal()" 
     style="display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.92);z-index:9999;align-items:center;justify-content:center;padding:20px">
     <div style="position:relative;width:100%;max-width:860px">
-      <button onclick="document.getElementById('videoModal').style.display='none';document.getElementById('videoFrame').src=''" 
+      <button onclick="closeVideoModal()" 
         style="position:absolute;top:-44px;right:0;background:none;border:none;color:white;font-size:1.8rem;cursor:pointer;line-height:1">✕</button>
       <div style="position:relative;padding-bottom:56.25%;height:0;border-radius:12px;overflow:hidden">
         <iframe id="videoFrame" src=""
@@ -292,10 +292,17 @@ footer a{color:#FF6B6B;text-decoration:none}
     </div>
   </div>
   <script>
-    document.querySelector('[onclick*="videoModal"]')?.addEventListener('click', function() {
+    function openVideoModal() {
+      document.getElementById('videoModal').style.display = 'flex';
       const frame = document.getElementById('videoFrame');
-      if (!frame.src) frame.src = frame.dataset.src;
-    });
+      if (!frame.src || frame.src === window.location.href) {
+        frame.src = frame.dataset.src;
+      }
+    }
+    function closeVideoModal() {
+      document.getElementById('videoModal').style.display = 'none';
+      document.getElementById('videoFrame').src = '';
+    }
   </script>
 
   <div class="spots">
