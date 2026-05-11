@@ -174,7 +174,7 @@
   .typing-dot:nth-child(3){animation:bounce .8s .3s infinite}
   @keyframes bounce{0%,80%,100%{transform:translateY(0)}40%{transform:translateY(-6px)}}
   .limit-banner { background: #FFF3E0; border: 1px solid #FFB74D; border-radius: 12px; padding: 12px 16px; font-size: 0.82rem; color: #E65100; display: flex; align-items: center; gap: 10px; margin: 0 16px; }
-  .chat-input-area { padding: 12px 16px 16px; border-top: 1px solid rgba(255,107,107,0.1); background: white; display: flex; gap: 10px; align-items: flex-end; }
+  .chat-input-area { padding: 12px 16px 16px; border-top: 1px solid rgba(255,107,107,0.1); background: white; display: flex; gap: 10px; align-items: flex-end; position: sticky; bottom: 0; z-index: 10; }
   .chat-input { flex: 1; border: 2px solid #F0F0F0; border-radius: 20px; padding: 11px 16px; font-size: 0.9rem; font-family: 'DM Sans', sans-serif; outline: none; resize: none; max-height: 120px; transition: all .2s; background: #FAFAFA; }
   .chat-input:focus { border-color: #FF6B6B; background: white; box-shadow: 0 0 0 4px rgba(255,107,107,0.08); }
   .btn-send { background: linear-gradient(135deg, #FF6B6B, #FF9A3C); border: none; border-radius: 50%; width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all .2s; flex-shrink: 0; color: white; font-size: 1.1rem; box-shadow: 0 4px 12px rgba(255,107,107,0.35); }
@@ -445,6 +445,8 @@ button[style*="background:linear-gradient(135deg,#FF6B6B,#FF9A3C)"] {
 
 @media (max-width: 768px) {
   .bottom-nav { display: block; }
+  #chatView { padding-bottom: 80px !important; }
+  .chat-input-area { position: fixed !important; bottom: 72px !important; left: 0; right: 0; z-index: 100 !important; }
   .sidebar { display: none !important; }
   #mainContent { padding-bottom: 80px !important; }
 }
