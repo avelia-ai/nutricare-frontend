@@ -739,7 +739,7 @@ footer a{color:#FF6B6B;text-decoration:none}
 
 <!-- Modal vidéo -->
 <div id="videoModal" onclick="if(event.target===this)closeVideoModal()" 
-  style="display:none;position:fixed;top:0;left:0;right:0;bottom:0;width:100%;height:100%;background:rgba(0,0,0,0.92);z-index:99999;align-items:center;justify-content:center;padding:20px">
+  style="visibility:hidden;opacity:0;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.92);z-index:99999;display:flex;align-items:center;justify-content:center;padding:20px;transition:opacity 0.2s">
   <div style="position:relative;width:100%;max-width:860px">
     <button onclick="closeVideoModal()" 
       style="position:absolute;top:-44px;right:0;background:none;border:none;color:white;font-size:1.8rem;cursor:pointer;line-height:1">✕</button>
@@ -816,14 +816,18 @@ setInterval(updateCountdown, 1000);
 
 <script>
 function openVideoModal() {
-  document.getElementById('videoModal').style.display = 'flex';
+  const modal = document.getElementById('videoModal');
+  modal.style.visibility = 'visible';
+  modal.style.opacity = '1';
   const frame = document.getElementById('videoFrame');
   if (!frame.src || frame.src === window.location.href || frame.src === '') {
     frame.src = frame.getAttribute('data-src');
   }
 }
 function closeVideoModal() {
-  document.getElementById('videoModal').style.display = 'none';
+  const modal = document.getElementById('videoModal');
+  modal.style.visibility = 'hidden';
+  modal.style.opacity = '0';
   document.getElementById('videoFrame').src = '';
 }
 </script>
