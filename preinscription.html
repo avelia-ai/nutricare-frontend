@@ -302,19 +302,7 @@ footer a{color:#FF6B6B;text-decoration:none}
       </div>
     </div>
   </div>
-  <script>
-    function openVideoModal() {
-      document.getElementById('videoModal').style.display = 'flex';
-      const frame = document.getElementById('videoFrame');
-      if (!frame.src || frame.src === window.location.href) {
-        frame.src = frame.dataset.src;
-      }
-    }
-    function closeVideoModal() {
-      document.getElementById('videoModal').style.display = 'none';
-      document.getElementById('videoFrame').src = '';
-    }
-  </script>
+
 
 
 
@@ -823,5 +811,18 @@ setInterval(updateCountdown, 1000);
 
 </script>
 
+<script>
+function openVideoModal() {
+  document.getElementById('videoModal').style.display = 'flex';
+  const frame = document.getElementById('videoFrame');
+  if (!frame.src || frame.src === window.location.href || frame.src === '') {
+    frame.src = frame.getAttribute('data-src');
+  }
+}
+function closeVideoModal() {
+  document.getElementById('videoModal').style.display = 'none';
+  document.getElementById('videoFrame').src = '';
+}
+</script>
 </body>
 </html>
