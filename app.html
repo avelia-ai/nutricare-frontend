@@ -2939,6 +2939,47 @@ function switchLang(lang) {
     }
   }
 
+  function renderBiologie(data) {
+    document.getElementById('bioResult').style.display = 'block';
+    document.getElementById('bioResume').textContent = data.resume_global || '';
+    // Points positifs
+    const pos = document.getElementById('bioPositifs');
+    pos.innerHTML = (data.points_positifs || []).map(p => `<div style="font-size:0.82rem;color:#3B6D11;display:flex;gap:6px"><span>✓</span>${p}</div>`).join('');
+    // Points attention
+    const att = document.getElementById('bioAttention');
+    att.innerHTML = (data.points_attention || []).map(p => `<div style="font-size:0.82rem;color:#854F0B;display:flex;gap:6px"><span>⚠</span>${p}</div>`).join('');
+    // Marqueurs
+    const marqueurs = document.getElementById('bioMarqueurs');
+    marqueurs.innerHTML = (data.marqueurs || []).map(m => {
+      const colors = { normal: '#EAF3DE', eleve: '#FDF6E8', bas: '#FEE8E8' };
+      const borders = { normal: '#C0DD97', eleve: '#FAC775', bas: '#FCC' };
+      const labels = { normal: '✓ Normal', eleve: '↑ Élevé', bas: '↓ Bas' };
+      const bg = colors[m.statut] || '#F5F5F5';
+      const border = borders[m.statut] || '#DDD';
+      const label = labels[m.statut] || m.statut;
+      return `<div style="background:${bg};border:1px solid ${border};border-radius:4px;padding:16px">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;flex-wrap:wrap;gap:8px">
+          <div style="font-weight:700;font-size:0.9rem;color:#2D2D2D">${m.nom}</div>
+          <div style="display:flex;gap:12px;align-items:center">
+            <span style="font-weight:700;font-size:1rem;color:#2D2D2D">${m.valeur} ${m.unite||''}</span>
+            <span style="font-size:0.72rem;font-weight:600;padding:2px 8px;border-radius:10px;background:rgba(0,0,0,0.08)">${label}</span>
+          </div>
+        </div>
+        <div style="font-size:0.78rem;color:rgba(2,26,53,0.5);margin-bottom:6px">Norme : ${m.norme_min||'?'} – ${m.norme_max||'?'} ${m.unite||''}</div>
+        <div style="font-size:0.82rem;color:#2D2D2D;line-height:1.6;margin-bottom:6px">${m.explication_simple||''}</div>
+        ${m.conseil_nutritionnel ? `<div style="font-size:0.78rem;color:#FF6B6B;font-weight:500">💡 ${m.conseil_nutritionnel}</div>` : ''}
+      </div>`;
+    }).join('');
+    // Recommandations
+    const reco = document.getElementById('bioReco');
+    reco.innerHTML = (data.recommandations_nutritionnelles || []).map((r,i) => `
+      <div style="display:flex;gap:10px;font-size:0.85rem;color:#2D2D2D;padding:8px 0;border-bottom:1px solid rgba(255,107,107,0.1)">
+        <span style="color:#FF9A3C;font-weight:700;flex-shrink:0">${i+1}.</span>${r}
+      </div>`).join('');
+    // Suivi
+    document.getElementById('bioSuivi').textContent = data.suivi_recommande || '';
+  }
+
   async function initOracle() {
     const profile = JSON.parse(localStorage.getItem('nutricare_profile') || '{}');
     const name = profile.full_name || 'Patient';
