@@ -2875,6 +2875,61 @@ function switchLang(lang) {
 
   let oracleData = null;
 
+  function initBiologie() {
+    const isPaid = currentUser?.plan === 'standard' || currentUser?.plan === 'premium';
+    const premiumOnly = currentUser?.plan === 'premium';
+    document.getElementById('bioContent').style.display = premiumOnly ? 'block' : 'none';
+  }
+
+  async function analyzeBiologie(input) {
+    const file = input.files[0];
+    if (!file) return;
+    // Compression image
+    const compressImage = (file) => new Promise((resolve) => {
+      const canvas = document.createElement('canvas');
+      const img = new Image();
+      const url = URL.createObjectURL(file);
+      img.onload = () => {
+        let w = img.width, h = img.height;
+        const maxDim = 1920;
+        if (w > maxDim || h > maxDim) {
+          if (w > h) { h = Math.round(h * maxDim / w); w = maxDim; }
+          else { w = Math.round(w * maxDim / h); h = maxDim; }
+        }
+        canvas.width = w; canvas.height = h;
+        canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+        URL.revokeObjectURL(url);
+        resolve(canvas.toDataURL('image/jpeg', 0.82));
+      };
+      img.src = url;
+    });
+    const compressed = await compressImage(file);
+    const base64 = compressed.split(',')[1];
+    // Préview
+    document.getElementById('bioImg').src = compressed;
+    document.getElementById('bioPreview').style.display = 'block';
+    document.getElementById('bioLoading').style.display = 'block';
+    document.getElementById('bioResult').style.display = 'none';
+    try {
+      const res = await fetch(`${BACKEND_URL}/api/biologie/analyze`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${authToken}` },
+        body: JSON.stringify({ image_base64: base64, media_type: 'image/jpeg' })
+      });
+      const data = await res.json();
+      if (res.ok) {
+        renderBiologie(data);
+        showMirellaNotif('🧬 Analyse de votre bilan terminée ! Consultez les résultats ci-dessous.');
+      } else {
+        alert(data.error || 'Erreur lors de l\'analyse');
+      }
+    } catch(e) {
+      alert('Erreur de connexion: ' + e.message);
+    } finally {
+      document.getElementById('bioLoading').style.display = 'none';
+    }
+  }
+
   async function initOracle() {
     const profile = JSON.parse(localStorage.getItem('nutricare_profile') || '{}');
     const name = profile.full_name || 'Patient';
