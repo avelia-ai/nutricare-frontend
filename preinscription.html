@@ -753,7 +753,8 @@ footer a{color:#FF6B6B;text-decoration:none}
 
 <script>
 window.addEventListener('scroll', () => {
-  document.getElementById('nav').classList.toggle('scrolled', window.scrollY > 20);
+  const nav = document.getElementById('nav');
+  if (nav) nav.classList.toggle('scrolled', window.scrollY > 20);
 });
 
 async function subscribe(inputId, successId) {
