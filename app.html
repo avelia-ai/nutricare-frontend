@@ -4954,10 +4954,30 @@ if (view === 'analysis') loadAnalysis();
 async function previewAndAnalyze(event) {
   const file = event.target.files[0];
   if (!file) return;
+  // Compression image avant envoi (max 4MB)
+  const compressImage = (file) => new Promise((resolve) => {
+    const canvas = document.createElement('canvas');
+    const img = new Image();
+    const url = URL.createObjectURL(file);
+    img.onload = () => {
+      let w = img.width, h = img.height;
+      const maxDim = 1920;
+      if (w > maxDim || h > maxDim) {
+        if (w > h) { h = Math.round(h * maxDim / w); w = maxDim; }
+        else { w = Math.round(w * maxDim / h); h = maxDim; }
+      }
+      canvas.width = w; canvas.height = h;
+      canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+      URL.revokeObjectURL(url);
+      resolve(canvas.toDataURL('image/jpeg', 0.82));
+    };
+    img.src = url;
+  });
   const reader = new FileReader();
   reader.onload = async (e) => {
-    const base64 = e.target.result.split(',')[1];
-    const mediaType = file.type;
+    const compressed = await compressImage(file);
+    const base64 = compressed.split(',')[1];
+    const mediaType = 'image/jpeg';
     document.getElementById('analysisPreview').src = e.target.result;
     document.getElementById('analysisPreview').style.display = 'block';
     document.getElementById('analysisLoading').style.display = 'block';
