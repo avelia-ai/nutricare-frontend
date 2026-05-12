@@ -214,7 +214,7 @@ footer a{color:#FF6B6B;text-decoration:none}
 
 
 <!-- HERO -->
-<section style="min-height:100vh;position:relative;overflow:hidden;background:#5bc8f0">
+<section id="heroSection" style="min-height:100vh;position:relative;overflow:hidden;background:#5bc8f0">
 
   <!-- Fond gouttes -->
   <div id="hero-bg" style="position:absolute;inset:0;background:url('fond4k.png') center top/cover no-repeat;background-size:cover"></div>
@@ -341,89 +341,95 @@ footer a{color:#FF6B6B;text-decoration:none}
     </div>
 
   </div>
-  <!-- Hero mobile uniquement -->
-  <div class="hero-mobile-content" style="display:none;flex-direction:column;align-items:center;text-align:center;padding:20px 16px;width:100%;box-sizing:border-box">
+
+</section>
+
+<!-- HERO MOBILE -->
+<section id="heroMobile" style="display:none;min-height:100vh;position:relative;overflow:hidden;background:#a8d8f0">
+  <div style="position:absolute;inset:0;background:url('fondsmart2.png') center/cover no-repeat"></div>
+  <div style="position:absolute;inset:0;background:rgba(255,255,255,0.3)"></div>
+  <div style="position:relative;z-index:2;padding:30px 20px;display:flex;flex-direction:column;align-items:center;text-align:center">
     
-    <!-- Logo -->
-    <img src="logo2.png" alt="Mirella" style="width:70px;height:70px;border-radius:16px;margin-bottom:16px;box-shadow:0 4px 16px rgba(0,0,0,0.15)">
-
-    <!-- Titre style Grity -->
-    <div style="margin-bottom:16px;line-height:1.1">
-      <div style="font-family:'Open Sans',sans-serif;font-size:3rem;font-weight:900;color:#1a1a1a;font-style:italic;text-transform:uppercase;text-shadow:none">PROMO</div>
-      <div style="display:inline-block;background:#FF6B6B;padding:4px 16px;margin:4px 0;transform:skew(-3deg)">
-        <span style="font-family:'Open Sans',sans-serif;font-size:2.5rem;font-weight:900;color:white;font-style:italic;text-transform:uppercase;display:inline-block;transform:skew(3deg)">EXCEPTIONNELLE</span>
+    <img src="logo2.png" style="width:65px;height:65px;border-radius:14px;margin-bottom:16px;box-shadow:0 4px 12px rgba(0,0,0,0.15)">
+    
+    <div style="margin-bottom:16px">
+      <div style="font-size:2.8rem;font-weight:900;color:#1a1a1a;font-style:italic;text-transform:uppercase;line-height:1">PROMO</div>
+      <div style="background:#FF6B6B;padding:6px 20px;margin:6px 0;display:inline-block;transform:skew(-3deg)">
+        <span style="font-size:2.2rem;font-weight:900;color:white;font-style:italic;text-transform:uppercase;display:inline-block;transform:skew(3deg)">EXCEPTIONNELLE</span>
       </div>
-      <div style="font-family:'Open Sans',sans-serif;font-size:1.2rem;font-weight:800;color:#1a1a1a;font-style:italic;text-transform:uppercase">-50% À VIE SUR MIRELLA</div>
+      <div style="font-size:1.1rem;font-weight:800;color:#1a1a1a;font-style:italic;text-transform:uppercase">-50% À VIE SUR MIRELLA</div>
     </div>
 
-    <!-- Countdown rouge style Grity -->
-    <div style="margin-bottom:16px;width:100%">
-      <div style="font-size:0.78rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:#1a1a1a;margin-bottom:10px">🚨 FIN DE L'OFFRE EARLY BIRD DANS 🚨</div>
-      <div style="display:flex;gap:8px;justify-content:center">
-        <div style="background:#FF6B6B;border-radius:12px;padding:12px 14px;text-align:center;min-width:60px">
-          <span style="font-size:2rem;font-weight:800;color:white;display:block;line-height:1" id="cd-j-m">--</span>
-          <span style="font-size:0.6rem;text-transform:uppercase;color:rgba(255,255,255,0.8)">Jours</span>
-        </div>
-        <div style="background:#FF6B6B;border-radius:12px;padding:12px 14px;text-align:center;min-width:60px">
-          <span style="font-size:2rem;font-weight:800;color:white;display:block;line-height:1" id="cd-h-m">--</span>
-          <span style="font-size:0.6rem;text-transform:uppercase;color:rgba(255,255,255,0.8)">Heures</span>
-        </div>
-        <div style="background:#FF6B6B;border-radius:12px;padding:12px 14px;text-align:center;min-width:60px">
-          <span style="font-size:2rem;font-weight:800;color:white;display:block;line-height:1" id="cd-m-m">--</span>
-          <span style="font-size:0.6rem;text-transform:uppercase;color:rgba(255,255,255,0.8)">Min</span>
-        </div>
-        <div style="background:#FF6B6B;border-radius:12px;padding:12px 14px;text-align:center;min-width:60px">
-          <span style="font-size:2rem;font-weight:800;color:white;display:block;line-height:1" id="cd-s-m">--</span>
-          <span style="font-size:0.6rem;text-transform:uppercase;color:rgba(255,255,255,0.8)">Sec</span>
-        </div>
-      </div>
-    </div>
-
-    <!-- Photos carousel swipe -->
-    <div style="width:100%;overflow-x:auto;display:flex;gap:10px;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;scrollbar-width:none;margin-bottom:16px;padding:4px 0">
-      <img src="avant_apres6.png" style="min-width:70vw;height:220px;object-fit:cover;border-radius:16px;scroll-snap-align:start;box-shadow:0 4px 16px rgba(0,0,0,0.2)">
-      <img src="avant_apres7.png" style="min-width:70vw;height:220px;object-fit:cover;border-radius:16px;scroll-snap-align:start;box-shadow:0 4px 16px rgba(0,0,0,0.2)">
-      <img src="avant_apres8.png" style="min-width:70vw;height:220px;object-fit:cover;border-radius:16px;scroll-snap-align:start;box-shadow:0 4px 16px rgba(0,0,0,0.2)">
-      <img src="avant_apres9.png" style="min-width:70vw;height:220px;object-fit:cover;border-radius:16px;scroll-snap-align:start;box-shadow:0 4px 16px rgba(0,0,0,0.2)">
-      <img src="avant_apres10.png" style="min-width:70vw;height:220px;object-fit:cover;border-radius:16px;scroll-snap-align:start;box-shadow:0 4px 16px rgba(0,0,0,0.2)">
-      <img src="avant_apres11.png" style="min-width:70vw;height:220px;object-fit:cover;border-radius:16px;scroll-snap-align:start;box-shadow:0 4px 16px rgba(0,0,0,0.2)">
-    </div>
-    <div style="font-size:0.72rem;color:#555;margin-bottom:16px">← Glissez pour voir les résultats →</div>
-
-    <!-- Note -->
     <div style="display:flex;align-items:center;gap:6px;margin-bottom:16px">
       <span style="color:#FF9A3C;font-size:1rem">★★★★★</span>
       <span style="font-weight:700;color:#1a1a1a">4,9</span>
       <span style="color:#555;font-size:0.8rem">(retours early access)</span>
     </div>
 
+    <div style="margin-bottom:20px;width:100%">
+      <div style="font-size:0.75rem;font-weight:700;text-transform:uppercase;color:#1a1a1a;margin-bottom:8px">🚨 FIN DE L'OFFRE EARLY BIRD DANS</div>
+      <div style="display:flex;gap:8px;justify-content:center">
+        <div style="background:#FF6B6B;border-radius:10px;padding:10px 12px;text-align:center;min-width:55px">
+          <div style="font-size:1.8rem;font-weight:800;color:white;line-height:1" id="cdm-j">--</div>
+          <div style="font-size:0.55rem;color:rgba(255,255,255,0.8);text-transform:uppercase">Jours</div>
+        </div>
+        <div style="background:#FF6B6B;border-radius:10px;padding:10px 12px;text-align:center;min-width:55px">
+          <div style="font-size:1.8rem;font-weight:800;color:white;line-height:1" id="cdm-h">--</div>
+          <div style="font-size:0.55rem;color:rgba(255,255,255,0.8);text-transform:uppercase">Heures</div>
+        </div>
+        <div style="background:#FF6B6B;border-radius:10px;padding:10px 12px;text-align:center;min-width:55px">
+          <div style="font-size:1.8rem;font-weight:800;color:white;line-height:1" id="cdm-m">--</div>
+          <div style="font-size:0.55rem;color:rgba(255,255,255,0.8);text-transform:uppercase">Min</div>
+        </div>
+        <div style="background:#FF6B6B;border-radius:10px;padding:10px 12px;text-align:center;min-width:55px">
+          <div style="font-size:1.8rem;font-weight:800;color:white;line-height:1" id="cdm-s">--</div>
+          <div style="font-size:0.55rem;color:rgba(255,255,255,0.8);text-transform:uppercase">Sec</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Photos swipe -->
+    <div style="width:calc(100% + 40px);margin-left:-20px;overflow-x:auto;display:flex;gap:10px;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;scrollbar-width:none;padding:0 20px 4px;margin-bottom:16px">
+      <img src="avant_apres6.png" style="min-width:75vw;height:240px;object-fit:cover;border-radius:14px;scroll-snap-align:start;box-shadow:0 4px 16px rgba(0,0,0,0.2)">
+      <img src="avant_apres7.png" style="min-width:75vw;height:240px;object-fit:cover;border-radius:14px;scroll-snap-align:start;box-shadow:0 4px 16px rgba(0,0,0,0.2)">
+      <img src="avant_apres8.png" style="min-width:75vw;height:240px;object-fit:cover;border-radius:14px;scroll-snap-align:start;box-shadow:0 4px 16px rgba(0,0,0,0.2)">
+      <img src="avant_apres9.png" style="min-width:75vw;height:240px;object-fit:cover;border-radius:14px;scroll-snap-align:start;box-shadow:0 4px 16px rgba(0,0,0,0.2)">
+      <img src="avant_apres10.png" style="min-width:75vw;height:240px;object-fit:cover;border-radius:14px;scroll-snap-align:start;box-shadow:0 4px 16px rgba(0,0,0,0.2)">
+      <img src="avant_apres11.png" style="min-width:75vw;height:240px;object-fit:cover;border-radius:14px;scroll-snap-align:start;box-shadow:0 4px 16px rgba(0,0,0,0.2)">
+    </div>
+    <div style="font-size:0.72rem;color:#555;margin-bottom:20px">← Glissez pour voir les résultats →</div>
+
     <!-- CTA -->
-    <div style="width:100%;max-width:400px;margin-bottom:10px;border-radius:10px;overflow:hidden;box-shadow:0 4px 20px rgba(0,0,0,0.2)">
-      <input type="email" id="emailHeroMobile" placeholder="votre@email.com"
-        style="width:100%;padding:14px 16px;font-size:1rem;border:none;outline:none;font-family:'DM Sans',sans-serif;box-sizing:border-box">
-      <button onclick="subscribe('emailHeroMobile','successHeroMobile')"
-        style="width:100%;background:linear-gradient(135deg,#FF6B6B,#FF9A3C);color:white;border:none;padding:14px;font-size:1rem;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif">
+    <div style="width:100%;border-radius:10px;overflow:hidden;box-shadow:0 4px 20px rgba(0,0,0,0.15);margin-bottom:8px">
+      <input type="email" id="emailMobile" placeholder="votre@email.com"
+        style="width:100%;padding:14px 16px;font-size:1rem;border:none;outline:none;font-family:'DM Sans',sans-serif;box-sizing:border-box;display:block">
+      <button onclick="subscribe('emailMobile','successMobile')"
+        style="width:100%;background:linear-gradient(135deg,#FF6B6B,#FF9A3C);color:white;border:none;padding:14px;font-size:1rem;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif;display:block">
         S'inscrire gratuitement →
       </button>
     </div>
-    <div class="success-msg" id="successHeroMobile">✅ Compte créé ! <a href="https://mirella-ai.fr/app" style="color:#3B6D11;font-weight:700">Accéder →</a></div>
+    <div class="success-msg" id="successMobile">✅ <a href="https://mirella-ai.fr/app" style="color:#3B6D11;font-weight:700">Accéder à Mirella →</a></div>
     <div style="font-size:0.72rem;color:#555;margin-top:8px">🔒 Sans carte bancaire · 3 jours gratuits</div>
   </div>
-
-  <!-- Carousel mobile uniquement -->
-  <div class="hero-mobile-carousel" style="padding:0 20px 30px;overflow:hidden">
-    <div style="overflow-x:auto;display:flex;gap:12px;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;scrollbar-width:none">
-      <img src="avant_apres6.png" style="min-width:75vw;height:200px;object-fit:cover;border-radius:16px;scroll-snap-align:start;box-shadow:0 4px 16px rgba(0,0,0,0.15)">
-      <img src="avant_apres7.png" style="min-width:75vw;height:200px;object-fit:cover;border-radius:16px;scroll-snap-align:start;box-shadow:0 4px 16px rgba(0,0,0,0.15)">
-      <img src="avant_apres8.png" style="min-width:75vw;height:200px;object-fit:cover;border-radius:16px;scroll-snap-align:start;box-shadow:0 4px 16px rgba(0,0,0,0.15)">
-      <img src="avant_apres9.png" style="min-width:75vw;height:200px;object-fit:cover;border-radius:16px;scroll-snap-align:start;box-shadow:0 4px 16px rgba(0,0,0,0.15)">
-      <img src="avant_apres10.png" style="min-width:75vw;height:200px;object-fit:cover;border-radius:16px;scroll-snap-align:start;box-shadow:0 4px 16px rgba(0,0,0,0.15)">
-      <img src="avant_apres11.png" style="min-width:75vw;height:200px;object-fit:cover;border-radius:16px;scroll-snap-align:start;box-shadow:0 4px 16px rgba(0,0,0,0.15)">
-    </div>
-    <div style="text-align:center;font-size:0.75rem;color:#555;margin-top:8px">← Glissez pour voir plus →</div>
-  </div>
-
 </section>
+
+<script>
+// Afficher hero mobile ou desktop
+(function(){
+  var isMobile = window.innerWidth <= 768;
+  document.getElementById('heroSection').style.display = isMobile ? 'none' : 'block';
+  document.getElementById('heroMobile').style.display = isMobile ? 'block' : 'none';
+  // Sync countdown mobile
+  var origUpdate = window.updateCountdown;
+  setInterval(function(){
+    ['j','h','m','s'].forEach(function(u){
+      var src = document.getElementById('cd-'+u);
+      var dst = document.getElementById('cdm-'+u);
+      if(src && dst) dst.textContent = src.textContent;
+    });
+  }, 500);
+})();
+</script>
 
 <!-- STATS -->
 <section class="stats-section">
