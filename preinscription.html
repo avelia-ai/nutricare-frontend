@@ -409,20 +409,43 @@ footer a{color:#FF6B6B;text-decoration:none}
 
 
 
-    <!-- Photos swipe -->
-    <div style="width:calc(100% + 40px);margin-left:-20px;overflow-x:auto;display:flex;gap:10px;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;scrollbar-width:none;padding:0 20px 4px;margin-bottom:8px">
-      <img src="avant_apres6.png" style="min-width:75vw;height:240px;object-fit:cover;border-radius:14px;scroll-snap-align:start;box-shadow:0 4px 16px rgba(0,0,0,0.2)">
-      <img src="avant_apres7.png" style="min-width:75vw;height:240px;object-fit:cover;border-radius:14px;scroll-snap-align:start;box-shadow:0 4px 16px rgba(0,0,0,0.2)">
-      <img src="avant_apres8.png" style="min-width:75vw;height:240px;object-fit:cover;border-radius:14px;scroll-snap-align:start;box-shadow:0 4px 16px rgba(0,0,0,0.2)">
-      <img src="avant_apres9.png" style="min-width:75vw;height:240px;object-fit:cover;border-radius:14px;scroll-snap-align:start;box-shadow:0 4px 16px rgba(0,0,0,0.2)">
-      <img src="avant_apres10.png" style="min-width:75vw;height:240px;object-fit:cover;border-radius:14px;scroll-snap-align:start;box-shadow:0 4px 16px rgba(0,0,0,0.2)">
-      <img src="avant_apres11.png" style="min-width:75vw;height:240px;object-fit:cover;border-radius:14px;scroll-snap-align:start;box-shadow:0 4px 16px rgba(0,0,0,0.2)">
+    <!-- Photos carousel auto mobile -->
+    <div style="width:calc(100% + 40px);margin-left:-20px;overflow:hidden;margin-bottom:8px;position:relative">
+      <div id="mobileCarousel" style="display:flex;transition:transform 0.5s ease">
+        <img src="avant_apres6.png" style="min-width:80vw;height:240px;object-fit:cover;border-radius:14px;box-shadow:0 4px 16px rgba(0,0,0,0.2);margin-right:10px">
+        <img src="avant_apres7.png" style="min-width:80vw;height:240px;object-fit:cover;border-radius:14px;box-shadow:0 4px 16px rgba(0,0,0,0.2);margin-right:10px">
+        <img src="avant_apres8.png" style="min-width:80vw;height:240px;object-fit:cover;border-radius:14px;box-shadow:0 4px 16px rgba(0,0,0,0.2);margin-right:10px">
+        <img src="avant_apres9.png" style="min-width:80vw;height:240px;object-fit:cover;border-radius:14px;box-shadow:0 4px 16px rgba(0,0,0,0.2);margin-right:10px">
+        <img src="avant_apres10.png" style="min-width:80vw;height:240px;object-fit:cover;border-radius:14px;box-shadow:0 4px 16px rgba(0,0,0,0.2);margin-right:10px">
+        <img src="avant_apres11.png" style="min-width:80vw;height:240px;object-fit:cover;border-radius:14px;box-shadow:0 4px 16px rgba(0,0,0,0.2);margin-right:10px">
+      </div>
+      <!-- Indicateurs -->
+      <div style="display:flex;justify-content:center;gap:5px;margin-top:8px" id="mobileCarouselDots">
+        <div class="mcdot" style="width:6px;height:6px;border-radius:50%;background:#FF6B6B;opacity:1;transition:opacity .3s"></div>
+        <div class="mcdot" style="width:6px;height:6px;border-radius:50%;background:#FF6B6B;opacity:0.3;transition:opacity .3s"></div>
+        <div class="mcdot" style="width:6px;height:6px;border-radius:50%;background:#FF6B6B;opacity:0.3;transition:opacity .3s"></div>
+        <div class="mcdot" style="width:6px;height:6px;border-radius:50%;background:#FF6B6B;opacity:0.3;transition:opacity .3s"></div>
+        <div class="mcdot" style="width:6px;height:6px;border-radius:50%;background:#FF6B6B;opacity:0.3;transition:opacity .3s"></div>
+        <div class="mcdot" style="width:6px;height:6px;border-radius:50%;background:#FF6B6B;opacity:0.3;transition:opacity .3s"></div>
+      </div>
     </div>
-    <div style="font-size:0.72rem;color:#555;margin-bottom:16px">← Glissez pour voir les résultats →</div>
   </div>
 </section>
 
 <script>
+// Carousel mobile auto
+let mobileCarouselIdx = 0;
+const mobileCarouselTotal = 6;
+function mobileCarouselGoTo(idx) {
+  mobileCarouselIdx = (idx + mobileCarouselTotal) % mobileCarouselTotal;
+  const el = document.getElementById('mobileCarousel');
+  if(!el) return;
+  const slideW = el.children[0].offsetWidth + 10;
+  el.style.transform = `translateX(-${mobileCarouselIdx * slideW}px)`;
+  document.querySelectorAll('.mcdot').forEach((d,i) => d.style.opacity = i===mobileCarouselIdx ? '1' : '0.3');
+}
+setInterval(() => mobileCarouselGoTo(mobileCarouselIdx + 1), 3000);
+
 // Afficher hero mobile ou desktop
 (function(){
   var isMobile = window.innerWidth <= 768;
