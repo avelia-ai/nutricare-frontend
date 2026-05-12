@@ -317,25 +317,30 @@ footer a{color:#FF6B6B;text-decoration:none}
         <span style="font-size:1.3rem;font-weight:900;color:#FF6B6B;line-height:1.1">-50%</span>
       </div>
 
-      <!-- Carousel une photo pleine largeur -->
-      <div style="position:relative;border-radius:20px;overflow:hidden;box-shadow:0 16px 48px rgba(0,0,0,0.2)">
-        <div id="heroCarousel" style="display:flex;transition:transform 0.5s ease">
-          <img src="avant_apres6.png" style="min-width:100%;height:480px;object-fit:cover">
-          <img src="avant_apres7.png" style="min-width:100%;height:480px;object-fit:cover">
-          <img src="avant_apres8.png" style="min-width:100%;height:480px;object-fit:cover">
-          <img src="avant_apres9.png" style="min-width:100%;height:480px;object-fit:cover">
-          <img src="avant_apres10.png" style="min-width:100%;height:480px;object-fit:cover">
-          <img src="avant_apres11.png" style="min-width:100%;height:480px;object-fit:cover">
+      <!-- Carousel 4 photos style Grity -->
+      <div style="position:relative">
+        <!-- Badge -->
+        <div style="position:absolute;top:-20px;right:-10px;z-index:10;background:white;border-radius:50%;width:76px;height:76px;display:flex;flex-direction:column;align-items:center;justify-content:center;box-shadow:0 4px 16px rgba(0,0,0,0.2);transform:rotate(10deg)">
+          <span style="font-size:0.5rem;font-weight:800;color:#FF6B6B;text-transform:uppercase">Jusqu'à</span>
+          <span style="font-size:1.2rem;font-weight:900;color:#FF6B6B;line-height:1.1">-50%</span>
         </div>
-        <!-- Points indicateurs -->
-        <div style="position:absolute;bottom:12px;left:50%;transform:translateX(-50%);display:flex;gap:6px" id="carouselDots">
-          <div class="cdot" style="width:8px;height:8px;border-radius:50%;background:white;opacity:1;transition:opacity .3s"></div>
-          <div class="cdot" style="width:8px;height:8px;border-radius:50%;background:white;opacity:0.4;transition:opacity .3s"></div>
-          <div class="cdot" style="width:8px;height:8px;border-radius:50%;background:white;opacity:0.4;transition:opacity .3s"></div>
-          <div class="cdot" style="width:8px;height:8px;border-radius:50%;background:white;opacity:0.4;transition:opacity .3s"></div>
-          <div class="cdot" style="width:8px;height:8px;border-radius:50%;background:white;opacity:0.4;transition:opacity .3s"></div>
-          <div class="cdot" style="width:8px;height:8px;border-radius:50%;background:white;opacity:0.4;transition:opacity .3s"></div>
+        <!-- 4 photos côte à côte -->
+        <div id="heroCarousel" style="display:flex;gap:6px;align-items:center;transition:transform 0.5s ease">
+          <div style="flex:1;border-radius:14px;overflow:hidden;box-shadow:0 8px 24px rgba(0,0,0,0.2)">
+            <img id="cimg_1" src="avant_apres6.png" style="width:100%;height:320px;object-fit:cover;display:block">
+          </div>
+          <div style="flex:1.1;border-radius:14px;overflow:hidden;box-shadow:0 12px 32px rgba(0,0,0,0.25)">
+            <img id="cimg_2" src="avant_apres7.png" style="width:100%;height:340px;object-fit:cover;display:block">
+          </div>
+          <div style="flex:1.1;border-radius:14px;overflow:hidden;box-shadow:0 12px 32px rgba(0,0,0,0.25)">
+            <img id="cimg_3" src="avant_apres8.png" style="width:100%;height:340px;object-fit:cover;display:block">
+          </div>
+          <div style="flex:1;border-radius:14px;overflow:hidden;box-shadow:0 8px 24px rgba(0,0,0,0.2)">
+            <img id="cimg_4" src="avant_apres9.png" style="width:100%;height:320px;object-fit:cover;display:block">
+          </div>
         </div>
+        <!-- Surface réfléchissante -->
+        <div style="height:30px;background:linear-gradient(to bottom,rgba(91,200,240,0.5),transparent);margin:0 10px;filter:blur(3px);border-radius:0 0 10px 10px"></div>
       </div>
 
       <!-- Reflet eau -->
@@ -967,14 +972,20 @@ setInterval(updateCountdown, 1000);
 </script>
 
 <script>
-// Carousel pleine largeur
+// Carousel 4 photos style Grity
+const allImgs = ['avant_apres6.png','avant_apres7.png','avant_apres8.png','avant_apres9.png','avant_apres10.png','avant_apres11.png'];
 let carouselIdx = 0;
-const carouselTotal = 6;
 function carouselGoTo(idx) {
-  carouselIdx = (idx + carouselTotal) % carouselTotal;
-  const el = document.getElementById('heroCarousel');
-  if(el) el.style.transform = `translateX(-${carouselIdx * 100}%)`;
-  document.querySelectorAll('.cdot').forEach((d,i) => d.style.opacity = i===carouselIdx ? '1' : '0.4');
+  carouselIdx = (idx + allImgs.length) % allImgs.length;
+  const get = (o) => allImgs[(carouselIdx + o) % allImgs.length];
+  const c1 = document.getElementById('cimg_1');
+  const c2 = document.getElementById('cimg_2');
+  const c3 = document.getElementById('cimg_3');
+  const c4 = document.getElementById('cimg_4');
+  if(c1) c1.src = get(0);
+  if(c2) c2.src = get(1);
+  if(c3) c3.src = get(2);
+  if(c4) c4.src = get(3);
 }
 function carouselNext() { carouselGoTo(carouselIdx + 1); }
 function carouselPrev() { carouselGoTo(carouselIdx - 1); }
