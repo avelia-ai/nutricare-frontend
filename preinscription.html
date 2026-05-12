@@ -317,16 +317,24 @@ footer a{color:#FF6B6B;text-decoration:none}
         <span style="font-size:1.3rem;font-weight:900;color:#FF6B6B;line-height:1.1">-50%</span>
       </div>
 
-      <!-- Photos 3 côte à côte -->
-      <div style="display:flex;gap:10px;align-items:center;height:440px">
-        <div style="flex:1;border-radius:16px;overflow:hidden;height:88%;box-shadow:0 8px 24px rgba(0,0,0,0.15)">
-          <img id="cimg_l" src="avant_apres6.png" style="width:100%;height:100%;object-fit:cover;object-position:center center">
+      <!-- Carousel une photo pleine largeur -->
+      <div style="position:relative;border-radius:20px;overflow:hidden;box-shadow:0 16px 48px rgba(0,0,0,0.2)">
+        <div id="heroCarousel" style="display:flex;transition:transform 0.5s ease">
+          <img src="avant_apres6.png" style="min-width:100%;height:480px;object-fit:cover">
+          <img src="avant_apres7.png" style="min-width:100%;height:480px;object-fit:cover">
+          <img src="avant_apres8.png" style="min-width:100%;height:480px;object-fit:cover">
+          <img src="avant_apres9.png" style="min-width:100%;height:480px;object-fit:cover">
+          <img src="avant_apres10.png" style="min-width:100%;height:480px;object-fit:cover">
+          <img src="avant_apres11.png" style="min-width:100%;height:480px;object-fit:cover">
         </div>
-        <div style="flex:1.2;border-radius:16px;overflow:hidden;height:100%;box-shadow:0 12px 32px rgba(0,0,0,0.2)">
-          <img id="cimg_c" src="avant_apres7.png" style="width:100%;height:100%;object-fit:cover;object-position:center center">
-        </div>
-        <div style="flex:1;border-radius:16px;overflow:hidden;height:88%;box-shadow:0 8px 24px rgba(0,0,0,0.15)">
-          <img id="cimg_r" src="avant_apres8.png" style="width:100%;height:100%;object-fit:cover;object-position:center center">
+        <!-- Points indicateurs -->
+        <div style="position:absolute;bottom:12px;left:50%;transform:translateX(-50%);display:flex;gap:6px" id="carouselDots">
+          <div class="cdot" style="width:8px;height:8px;border-radius:50%;background:white;opacity:1;transition:opacity .3s"></div>
+          <div class="cdot" style="width:8px;height:8px;border-radius:50%;background:white;opacity:0.4;transition:opacity .3s"></div>
+          <div class="cdot" style="width:8px;height:8px;border-radius:50%;background:white;opacity:0.4;transition:opacity .3s"></div>
+          <div class="cdot" style="width:8px;height:8px;border-radius:50%;background:white;opacity:0.4;transition:opacity .3s"></div>
+          <div class="cdot" style="width:8px;height:8px;border-radius:50%;background:white;opacity:0.4;transition:opacity .3s"></div>
+          <div class="cdot" style="width:8px;height:8px;border-radius:50%;background:white;opacity:0.4;transition:opacity .3s"></div>
         </div>
       </div>
 
@@ -959,15 +967,14 @@ setInterval(updateCountdown, 1000);
 </script>
 
 <script>
-// Carousel 6 photos
-const cImgs = ['avant_apres6.png','avant_apres7.png','avant_apres8.png','avant_apres9.png','avant_apres10.png','avant_apres11.png'];
+// Carousel pleine largeur
 let carouselIdx = 0;
+const carouselTotal = 6;
 function carouselGoTo(idx) {
-  carouselIdx = (idx + cImgs.length) % cImgs.length;
-  const get = (offset) => cImgs[(carouselIdx + offset + cImgs.length) % cImgs.length];
-  document.getElementById('cimg_c').src = get(0);
-  document.getElementById('cimg_l').src = get(-1);
-  document.getElementById('cimg_r').src = get(1);
+  carouselIdx = (idx + carouselTotal) % carouselTotal;
+  const el = document.getElementById('heroCarousel');
+  if(el) el.style.transform = `translateX(-${carouselIdx * 100}%)`;
+  document.querySelectorAll('.cdot').forEach((d,i) => d.style.opacity = i===carouselIdx ? '1' : '0.4');
 }
 function carouselNext() { carouselGoTo(carouselIdx + 1); }
 function carouselPrev() { carouselGoTo(carouselIdx - 1); }
