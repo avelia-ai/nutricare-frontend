@@ -303,28 +303,31 @@ footer a{color:#FF6B6B;text-decoration:none}
         <span style="font-size:1.2rem;font-weight:900;color:#FF6B6B;line-height:1.1">-50%</span>
       </div>
 
-      <!-- Carousel principal -->
-      <div style="position:relative;overflow:hidden;border-radius:20px;box-shadow:0 20px 60px rgba(0,0,0,0.35);transform:perspective(1000px) rotateY(-8deg) rotateX(3deg);transition:transform 0.3s ease" onmouseover="this.style.transform='perspective(1000px) rotateY(0deg) rotateX(0deg)'" onmouseout="this.style.transform='perspective(1000px) rotateY(-8deg) rotateX(3deg)'">
-        <div id="heroCarousel" style="display:flex;transition:transform 0.5s cubic-bezier(.4,0,.2,1)">
-          <img src="avant_apres1.png" style="min-width:100%;height:280px;object-fit:cover;object-position:center top">
-          <img src="avant_apres2.png" style="min-width:100%;height:280px;object-fit:cover;object-position:center top">
-          <img src="avant_apres3.png" style="min-width:100%;height:280px;object-fit:cover;object-position:center top">
-          <img src="avant_apres4.png" style="min-width:100%;height:280px;object-fit:cover;object-position:center top">
-          <img src="avant_apres5.png" style="min-width:100%;height:280px;object-fit:cover;object-position:center top">
+      <!-- Carousel éventail style Grity -->
+      <div style="position:relative;height:400px">
+        <!-- Photo gauche loin -->
+        <div style="position:absolute;left:-20px;top:40px;width:30%;z-index:1;transform:perspective(600px) rotateY(20deg);opacity:0.65;transition:all 0.5s ease">
+          <img id="cimg_ll" src="portrait_avant_apres5.jpg" style="width:100%;height:320px;object-fit:cover;object-position:top;border-radius:14px;box-shadow:0 8px 24px rgba(0,0,0,0.3)">
         </div>
-        <!-- Overlay dégradé bas -->
-        <div style="position:absolute;bottom:0;left:0;right:0;height:70px;background:linear-gradient(transparent,rgba(0,0,0,0.35))"></div>
-        <!-- Indicateurs -->
-        <div style="position:absolute;bottom:12px;left:50%;transform:translateX(-50%);display:flex;gap:5px">
-          <div class="cdot" style="width:7px;height:7px;border-radius:50%;background:white;opacity:1;transition:opacity .3s"></div>
-          <div class="cdot" style="width:7px;height:7px;border-radius:50%;background:white;opacity:0.35;transition:opacity .3s"></div>
-          <div class="cdot" style="width:7px;height:7px;border-radius:50%;background:white;opacity:0.35;transition:opacity .3s"></div>
-          <div class="cdot" style="width:7px;height:7px;border-radius:50%;background:white;opacity:0.35;transition:opacity .3s"></div>
-          <div class="cdot" style="width:7px;height:7px;border-radius:50%;background:white;opacity:0.35;transition:opacity .3s"></div>
+        <!-- Photo gauche proche -->
+        <div style="position:absolute;left:14%;top:20px;width:32%;z-index:2;transform:perspective(600px) rotateY(10deg);opacity:0.82;transition:all 0.5s ease">
+          <img id="cimg_l" src="portrait_avant_apres4.jpg" style="width:100%;height:350px;object-fit:cover;object-position:top;border-radius:16px;box-shadow:0 12px 36px rgba(0,0,0,0.35)">
+        </div>
+        <!-- Photo centrale -->
+        <div style="position:absolute;left:50%;transform:translateX(-50%);top:0;width:36%;z-index:4;transition:all 0.5s ease">
+          <img id="cimg_c" src="portrait_avant_apres1.jpg" style="width:100%;height:390px;object-fit:cover;object-position:top;border-radius:18px;box-shadow:0 20px 50px rgba(0,0,0,0.45)">
+        </div>
+        <!-- Photo droite proche -->
+        <div style="position:absolute;right:14%;top:20px;width:32%;z-index:2;transform:perspective(600px) rotateY(-10deg);opacity:0.82;transition:all 0.5s ease">
+          <img id="cimg_r" src="portrait_avant_apres2.jpg" style="width:100%;height:350px;object-fit:cover;object-position:top;border-radius:16px;box-shadow:0 12px 36px rgba(0,0,0,0.35)">
+        </div>
+        <!-- Photo droite loin -->
+        <div style="position:absolute;right:-20px;top:40px;width:30%;z-index:1;transform:perspective(600px) rotateY(-20deg);opacity:0.65;transition:all 0.5s ease">
+          <img id="cimg_rr" src="portrait_avant_apres3.jpg" style="width:100%;height:320px;object-fit:cover;object-position:top;border-radius:14px;box-shadow:0 8px 24px rgba(0,0,0,0.3)">
         </div>
         <!-- Flèches -->
-        <button onclick="carouselPrev()" style="position:absolute;left:10px;top:50%;transform:translateY(-50%);background:rgba(255,255,255,0.25);backdrop-filter:blur(4px);border:none;color:white;width:36px;height:36px;border-radius:50%;font-size:1.1rem;cursor:pointer">‹</button>
-        <button onclick="carouselNext()" style="position:absolute;right:10px;top:50%;transform:translateY(-50%);background:rgba(255,255,255,0.25);backdrop-filter:blur(4px);border:none;color:white;width:36px;height:36px;border-radius:50%;font-size:1.1rem;cursor:pointer">›</button>
+        <button onclick="carouselPrev()" style="position:absolute;left:0;top:50%;transform:translateY(-50%);background:rgba(255,255,255,0.2);backdrop-filter:blur(4px);border:none;color:white;width:36px;height:36px;border-radius:50%;font-size:1.2rem;cursor:pointer;z-index:10">‹</button>
+        <button onclick="carouselNext()" style="position:absolute;right:0;top:50%;transform:translateY(-50%);background:rgba(255,255,255,0.2);backdrop-filter:blur(4px);border:none;color:white;width:36px;height:36px;border-radius:50%;font-size:1.2rem;cursor:pointer;z-index:10">›</button>
       </div>
 
       <!-- Surface réfléchissante -->
@@ -862,13 +865,17 @@ setInterval(updateCountdown, 1000);
 </script>
 
 <script>
-// Carousel paysage
+// Carousel éventail Grity
+const cImgs = ['portrait_avant_apres1.jpg','portrait_avant_apres2.jpg','portrait_avant_apres3.jpg','portrait_avant_apres4.jpg','portrait_avant_apres5.jpg'];
 let carouselIdx = 0;
-const carouselTotal = 5;
 function carouselGoTo(idx) {
-  carouselIdx = (idx + carouselTotal) % carouselTotal;
-  document.getElementById('heroCarousel').style.transform = `translateX(-${carouselIdx * 100}%)`;
-  document.querySelectorAll('.cdot').forEach((d, i) => d.style.opacity = i === carouselIdx ? '1' : '0.35');
+  carouselIdx = (idx + cImgs.length) % cImgs.length;
+  const get = (offset) => cImgs[(carouselIdx + offset + cImgs.length) % cImgs.length];
+  document.getElementById('cimg_c').src  = get(0);
+  document.getElementById('cimg_l').src  = get(-1);
+  document.getElementById('cimg_ll').src = get(-2);
+  document.getElementById('cimg_r').src  = get(1);
+  document.getElementById('cimg_rr').src = get(2);
 }
 function carouselNext() { carouselGoTo(carouselIdx + 1); }
 function carouselPrev() { carouselGoTo(carouselIdx - 1); }
