@@ -324,25 +324,21 @@ footer a{color:#FF6B6B;text-decoration:none}
           <span style="font-size:0.5rem;font-weight:800;color:#FF6B6B;text-transform:uppercase">Jusqu'à</span>
           <span style="font-size:1.2rem;font-weight:900;color:#FF6B6B;line-height:1.1">-50%</span>
         </div>
-        <!-- Photos horizontales style Grity -->
-        <div style="position:relative;border-radius:20px;overflow:hidden;box-shadow:0 16px 48px rgba(0,0,0,0.25)">
-          <div id="heroCarousel" style="display:flex;transition:transform 0.5s ease">
-            <img src="avant_apres6.png" style="min-width:100%;height:320px;object-fit:cover;object-position:center 20%">
-            <img src="avant_apres7.png" style="min-width:100%;height:320px;object-fit:cover;object-position:center 20%">
-            <img src="avant_apres8.png" style="min-width:100%;height:320px;object-fit:cover;object-position:center 20%">
-            <img src="avant_apres9.png" style="min-width:100%;height:320px;object-fit:cover;object-position:center 20%">
-            <img src="avant_apres10.png" style="min-width:100%;height:320px;object-fit:cover;object-position:center 20%">
-            <img src="avant_apres11.png" style="min-width:100%;height:320px;object-fit:cover;object-position:center 20%">
+        <!-- Carousel style Grity avec photos côtés visibles -->
+        <div style="position:relative;overflow:hidden;padding:10px 0 20px">
+          <div id="heroCarousel" style="display:flex;gap:10px;transition:transform 0.5s ease;will-change:transform">
+            <div class="cslide" style="min-width:65%;border-radius:18px;overflow:hidden;box-shadow:0 12px 36px rgba(0,0,0,0.25);transform:scale(0.88);opacity:0.6;transition:all 0.5s ease;flex-shrink:0">
+              <img src="avant_apres11.png" style="width:100%;height:300px;object-fit:cover;object-position:center 20%">
+            </div>
+            <div class="cslide active" style="min-width:65%;border-radius:18px;overflow:hidden;box-shadow:0 16px 48px rgba(0,0,0,0.35);transform:scale(1);opacity:1;transition:all 0.5s ease;flex-shrink:0">
+              <img id="cimg_main" src="avant_apres6.png" style="width:100%;height:300px;object-fit:cover;object-position:center 20%">
+            </div>
+            <div class="cslide" style="min-width:65%;border-radius:18px;overflow:hidden;box-shadow:0 12px 36px rgba(0,0,0,0.25);transform:scale(0.88);opacity:0.6;transition:all 0.5s ease;flex-shrink:0">
+              <img src="avant_apres7.png" style="width:100%;height:300px;object-fit:cover;object-position:center 20%">
+            </div>
           </div>
-          <!-- Indicateurs -->
-          <div style="position:absolute;bottom:12px;left:50%;transform:translateX(-50%);display:flex;gap:6px">
-            <div class="cdot" style="width:8px;height:8px;border-radius:50%;background:white;opacity:1;transition:opacity .3s"></div>
-            <div class="cdot" style="width:8px;height:8px;border-radius:50%;background:white;opacity:0.4;transition:opacity .3s"></div>
-            <div class="cdot" style="width:8px;height:8px;border-radius:50%;background:white;opacity:0.4;transition:opacity .3s"></div>
-            <div class="cdot" style="width:8px;height:8px;border-radius:50%;background:white;opacity:0.4;transition:opacity .3s"></div>
-            <div class="cdot" style="width:8px;height:8px;border-radius:50%;background:white;opacity:0.4;transition:opacity .3s"></div>
-            <div class="cdot" style="width:8px;height:8px;border-radius:50%;background:white;opacity:0.4;transition:opacity .3s"></div>
-          </div>
+          <!-- Surface réfléchissante -->
+          <div style="position:absolute;bottom:0;left:0;right:0;height:20px;background:linear-gradient(to bottom,rgba(91,200,240,0.4),transparent);filter:blur(3px)"></div>
         </div>
         <!-- Surface réfléchissante -->
         <div style="height:30px;background:linear-gradient(to bottom,rgba(91,200,240,0.5),transparent);margin:0 10px;filter:blur(3px);border-radius:0 0 10px 10px"></div>
@@ -977,17 +973,34 @@ setInterval(updateCountdown, 1000);
 </script>
 
 <script>
-// Carousel horizontal
+// Carousel style Grity
+const gImgs = ['avant_apres6.png','avant_apres7.png','avant_apres8.png','avant_apres9.png','avant_apres10.png','avant_apres11.png'];
 let carouselIdx = 0;
-const carouselTotal = 6;
 function carouselGoTo(idx) {
-  carouselIdx = (idx + carouselTotal) % carouselTotal;
-  const el = document.getElementById('heroCarousel');
-  if(el) el.style.transform = `translateX(-${carouselIdx * 100}%)`;
-  document.querySelectorAll('.cdot').forEach((d,i) => d.style.opacity = i===carouselIdx ? '1' : '0.4');
+  carouselIdx = (idx + gImgs.length) % gImgs.length;
+  const prev = (carouselIdx - 1 + gImgs.length) % gImgs.length;
+  const next = (carouselIdx + 1) % gImgs.length;
+  const slides = document.querySelectorAll('.cslide img');
+  if(slides[0]) slides[0].src = gImgs[prev];
+  if(slides[1]) slides[1].src = gImgs[carouselIdx];
+  if(slides[2]) slides[2].src = gImgs[next];
+  // Centrer sur la slide active
+  const carousel = document.getElementById('heroCarousel');
+  if(carousel) {
+    const slideW = carousel.children[0].offsetWidth + 10;
+    carousel.style.transform = `translateX(calc(50% - ${slideW * 1.5}px + ${slideW * 0}px))`;
+  }
 }
 function carouselNext() { carouselGoTo(carouselIdx + 1); }
 function carouselPrev() { carouselGoTo(carouselIdx - 1); }
+// Init centrage
+window.addEventListener('load', function() {
+  const carousel = document.getElementById('heroCarousel');
+  if(carousel) {
+    const slideW = carousel.children[0]?.offsetWidth || 0;
+    carousel.style.transform = `translateX(calc(-${slideW + 10}px + 17.5%))`;
+  }
+});
 setInterval(carouselNext, 3500);
 </script>
 
