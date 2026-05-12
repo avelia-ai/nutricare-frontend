@@ -206,80 +206,111 @@ footer a{color:#FF6B6B;text-decoration:none}
 
 
 <!-- HERO -->
-<section class="hero">
-  <div class="hero-inner">
-  <div class="hero-tag"><span class="hero-tag-dot"></span> Early Bird · Offre limitée</div>
-  <div style="background:linear-gradient(135deg,#FF6B6B,#FF9A3C);color:white;font-size:0.82rem;font-weight:700;padding:8px 20px;border-radius:6px;display:inline-block;margin-bottom:16px;animation:fadeUp .8s ease both">
-    🔥 Offre -50% à vie valable jusqu'au <strong>lundi 18 mai à 14h00</strong> — Plus que <strong id="spots-remaining">850</strong> places
-  </div>
-  <h1>Votre santé,<br><em>enfin comprise.</em></h1>
-  <p class="hero-sub-italic">Mirella — l'assistante santé IA la plus personnalisée au monde.</p>
-  <div class="form-wrap" style="margin:28px auto 0;max-width:520px">
-    <div class="form-row">
-      <input type="email" id="emailHero2" placeholder="votre@email.com">
-      <button onclick="subscribe('emailHero2','successHero2')" style="white-space:nowrap">S'inscrire gratuitement →</button>
-    </div>
-    <div class="form-note">🔒 Sans carte bancaire · Accès immédiat</div>
-    <div class="success-msg" id="successHero2">✅ Compte créé ! <a href="https://mirella-ai.fr/app" style="color:#3B6D11;font-weight:700">Accéder à Mirella →</a></div>
-  </div>
-  <div style="max-width:640px;margin:32px auto 0;background:white;border-radius:16px;padding:20px 24px;display:flex;gap:16px;align-items:center;box-shadow:0 2px 16px rgba(0,0,0,0.07);border:1px solid #f0f0f0">
-    <img src="PhotoRoom-20230302_113020.png" alt="Geeyom" style="width:56px;height:56px;border-radius:50%;object-fit:cover;border:2px solid #FF6B6B;flex-shrink:0" onerror="this.style.display='none'">
-    <div style="flex:1">
-      <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:4px">
-        <span style="font-size:1rem;font-weight:800;color:#2D2D2D;font-family:'DM Sans',sans-serif">Geeyom</span>
-        <span style="background:linear-gradient(135deg,#FF6B6B,#FF9A3C);color:white;font-size:0.62rem;font-weight:800;padding:3px 10px;border-radius:20px;text-transform:uppercase;letter-spacing:0.5px">1,5M abonnés TikTok</span>
+<section style="min-height:100vh;position:relative;overflow:hidden;display:flex;align-items:center;background:#1a1a1a">
+
+  <!-- Fond dégradé coral -->
+  <div style="position:absolute;inset:0;background:linear-gradient(135deg,#FF6B6B 0%,#FF9A3C 50%,#FF6B6B 100%);opacity:0.92"></div>
+  
+  <!-- Cercles déco -->
+  <div style="position:absolute;top:-100px;right:-100px;width:500px;height:500px;border-radius:50%;background:rgba(255,255,255,0.06)"></div>
+  <div style="position:absolute;bottom:-150px;left:-80px;width:400px;height:400px;border-radius:50%;background:rgba(255,255,255,0.04)"></div>
+
+  <!-- Contenu -->
+  <div style="position:relative;z-index:2;width:100%;max-width:1200px;margin:0 auto;padding:80px 40px 60px;display:flex;gap:60px;align-items:center;flex-wrap:wrap">
+    
+    <!-- Colonne gauche -->
+    <div style="flex:1;min-width:300px">
+      <!-- Badge -->
+      <div style="display:inline-flex;align-items:center;gap:8px;background:rgba(255,255,255,0.2);border:1px solid rgba(255,255,255,0.3);padding:6px 16px;border-radius:30px;margin-bottom:24px">
+        <span style="width:8px;height:8px;border-radius:50%;background:white;animation:pulse 1.5s infinite"></span>
+        <span style="font-size:0.75rem;font-weight:700;color:white;text-transform:uppercase;letter-spacing:.1em">Early Bird · Offre limitée</span>
       </div>
-      <p style="font-size:0.82rem;color:#555;margin:0;line-height:1.5"><em>"J'ai moi-même de l'hypertension et des problèmes de coagulation. Chaque repas, je me demandais si j'allais faire une erreur avec mes médicaments. J'ai créé Mirella parce que j'en avais assez de naviguer seul — et je sais que des millions de gens vivent la même chose."</em></p>
+
+      <!-- Titre -->
+      <h1 style="font-family:'Open Sans',sans-serif;font-size:clamp(2.8rem,5vw,4.5rem);font-weight:800;color:white;line-height:1.05;margin-bottom:16px">
+        Votre santé,<br><em style="font-style:italic;opacity:0.9">enfin comprise.</em>
+      </h1>
+      
+      <p style="font-size:1.1rem;color:rgba(255,255,255,0.85);margin-bottom:32px;line-height:1.6;max-width:480px">
+        Mirella — l'assistante santé IA qui adapte nutrition, médicaments et bilans à votre profil unique.
+      </p>
+
+      <!-- Bandeau urgence -->
+      <div style="background:rgba(0,0,0,0.25);border:1px solid rgba(255,255,255,0.2);border-radius:10px;padding:10px 16px;margin-bottom:20px;display:inline-block">
+        <span style="font-size:0.85rem;font-weight:700;color:white">🔥 Offre -50% à vie · Jusqu'au <strong>18 mai à 14h00</strong> · Plus que <strong id="spots-remaining">850</strong> places</span>
+      </div>
+
+      <!-- Formulaire CTA -->
+      <div style="display:flex;gap:0;max-width:480px;margin-bottom:12px;border-radius:12px;overflow:hidden;box-shadow:0 8px 32px rgba(0,0,0,0.2)">
+        <input type="email" id="emailHero2" placeholder="votre@email.com" 
+          style="flex:1;padding:16px 20px;font-size:1rem;border:none;outline:none;font-family:'DM Sans',sans-serif;background:white;color:#2D2D2D">
+        <button onclick="subscribe('emailHero2','successHero2')" 
+          style="background:#2D2D2D;color:white;border:none;padding:16px 24px;font-size:0.95rem;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif;white-space:nowrap">
+          S'inscrire →
+        </button>
+      </div>
+      <div style="font-size:0.75rem;color:rgba(255,255,255,0.7);margin-bottom:28px">🔒 Sans carte bancaire · Accès immédiat · 3 jours gratuits</div>
+      <div class="success-msg" id="successHero2" style="margin-bottom:16px">✅ Compte créé ! <a href="https://mirella-ai.fr/app" style="color:#3B6D11;font-weight:700">Accéder à Mirella →</a></div>
+
+      <!-- Geeyom -->
+      <div style="display:flex;align-items:center;gap:14px;background:rgba(255,255,255,0.15);border-radius:14px;padding:14px 18px;max-width:480px">
+        <img src="PhotoRoom-20230302_113020.png" alt="Geeyom" style="width:48px;height:48px;border-radius:50%;object-fit:cover;border:2px solid white;flex-shrink:0" onerror="this.style.display='none'">
+        <div>
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:3px">
+            <span style="font-weight:800;color:white;font-size:0.9rem">Geeyom</span>
+            <span style="background:white;color:#FF6B6B;font-size:0.6rem;font-weight:800;padding:2px 8px;border-radius:20px;text-transform:uppercase">1,5M TikTok</span>
+          </div>
+          <p style="font-size:0.78rem;color:rgba(255,255,255,0.85);margin:0;line-height:1.4;font-style:italic">"J'ai créé Mirella parce que j'en avais assez de naviguer seul avec mes médicaments."</p>
+        </div>
+      </div>
+
+      <!-- Countdown -->
+      <div style="margin-top:28px">
+        <div style="font-size:0.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:rgba(255,255,255,0.6);margin-bottom:10px;text-align:center">⏳ Fin de l'offre Early Bird dans</div>
+        <div style="display:flex;gap:8px;justify-content:center" id="countdown">
+          <div style="background:rgba(0,0,0,0.3);border-radius:10px;padding:12px 16px;text-align:center;min-width:64px">
+            <span style="font-size:2rem;font-weight:800;color:white;display:block;line-height:1" id="cd-j">--</span>
+            <span style="font-size:0.6rem;text-transform:uppercase;letter-spacing:.1em;color:rgba(255,255,255,0.5)">Jours</span>
+          </div>
+          <div style="background:rgba(0,0,0,0.3);border-radius:10px;padding:12px 16px;text-align:center;min-width:64px">
+            <span style="font-size:2rem;font-weight:800;color:white;display:block;line-height:1" id="cd-h">--</span>
+            <span style="font-size:0.6rem;text-transform:uppercase;letter-spacing:.1em;color:rgba(255,255,255,0.5)">Heures</span>
+          </div>
+          <div style="background:rgba(0,0,0,0.3);border-radius:10px;padding:12px 16px;text-align:center;min-width:64px">
+            <span style="font-size:2rem;font-weight:800;color:white;display:block;line-height:1" id="cd-m">--</span>
+            <span style="font-size:0.6rem;text-transform:uppercase;letter-spacing:.1em;color:rgba(255,255,255,0.5)">Min</span>
+          </div>
+          <div style="background:rgba(0,0,0,0.3);border-radius:10px;padding:12px 16px;text-align:center;min-width:64px">
+            <span style="font-size:2rem;font-weight:800;color:white;display:block;line-height:1" id="cd-s">--</span>
+            <span style="font-size:0.6rem;text-transform:uppercase;letter-spacing:.1em;color:rgba(255,255,255,0.5)">Sec</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Compteur places -->
+      <div style="margin-top:20px;text-align:center">
+        <div style="font-size:0.88rem;color:rgba(255,255,255,0.8);margin-bottom:8px"><strong id="spots-count">150</strong> places sur 1000 déjà réservées</div>
+        <div style="height:6px;background:rgba(255,255,255,0.2);border-radius:3px;overflow:hidden">
+          <div class="spots-fill" style="height:100%;background:white;border-radius:3px;transition:width 1s ease"></div>
+        </div>
+      </div>
     </div>
-  </div>
-  <div style="height:32px"></div>
 
-
-  <div class="offer-strip" style="flex-direction:column;gap:0;padding:32px 24px">
-    <div style="display:flex;gap:0;justify-content:center;align-items:flex-start;width:100%;flex-wrap:wrap">
-      <div class="offer-item"><div class="offer-label">Étape 1 — Dès aujourd'hui</div><div class="offer-value">GRATUIT</div><div style="font-size:.85rem;color:rgba(255,255,255,.85);margin-top:6px">3 jours d'accès complet</div></div>
-      <div class="offer-sep" style="margin:0 40px"></div>
-      <div class="offer-item"><div class="offer-label">Étape 2 — Si vous aimez</div><div class="offer-value white">-50%</div><div style="font-size:.85rem;color:rgba(255,255,255,.85);margin-top:6px">à vie · sans engagement</div></div>
+    <!-- Colonne droite : photos avant/après -->
+    <div style="flex:1;min-width:280px;max-width:480px;display:grid;grid-template-columns:1fr 1fr;gap:10px">
+      <img src="avant_apres1.png" alt="Résultat 1" style="width:100%;border-radius:16px;object-fit:cover;height:200px;box-shadow:0 8px 24px rgba(0,0,0,0.3)">
+      <img src="avant_apres2.png" alt="Résultat 2" style="width:100%;border-radius:16px;object-fit:cover;height:200px;box-shadow:0 8px 24px rgba(0,0,0,0.3);margin-top:24px">
+      <img src="avant_apres3.png" alt="Résultat 3" style="width:100%;border-radius:16px;object-fit:cover;height:200px;box-shadow:0 8px 24px rgba(0,0,0,0.3)">
+      <img src="avant_apres4.png" alt="Résultat 4" style="width:100%;border-radius:16px;object-fit:cover;height:200px;box-shadow:0 8px 24px rgba(0,0,0,0.3);margin-top:24px">
+      <!-- Badge note -->
+      <div style="grid-column:1/-1;display:flex;align-items:center;justify-content:center;gap:10px;background:rgba(255,255,255,0.15);border-radius:12px;padding:12px">
+        <span style="color:#FFD700;font-size:1.1rem">★★★★★</span>
+        <span style="color:white;font-weight:800;font-size:1rem">4,9/5</span>
+        <span style="color:rgba(255,255,255,0.6);font-size:0.78rem">· basé sur les retours early access</span>
+      </div>
     </div>
-    <div style="width:80%;height:1px;background:rgba(255,255,255,.2);margin:24px auto"></div>
-    <div style="text-align:center"><div style="font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:rgba(255,255,255,.7)">Sans carte bancaire · Sans engagement · Annulable à tout moment</div></div>
+
   </div>
-
-
-
-  <div class="spots">
-    <div class="spots-txt"><strong id="spots-count">150</strong> places sur 1000 déjà réservées</div>
-    <div class="spots-bar"><div class="spots-fill"></div></div>
-  </div>
-  <div class="countdown" id="countdown">
-    <div class="cd-block"><span class="cd-num" id="cd-j">--</span><span class="cd-lbl">Jours</span></div>
-    <span class="cd-sep">:</span>
-    <div class="cd-block"><span class="cd-num" id="cd-h">--</span><span class="cd-lbl">Heures</span></div>
-    <span class="cd-sep">:</span>
-    <div class="cd-block"><span class="cd-num" id="cd-m">--</span><span class="cd-lbl">Min</span></div>
-    <span class="cd-sep">:</span>
-    <div class="cd-block"><span class="cd-num" id="cd-s">--</span><span class="cd-lbl">Sec</span></div>
-  </div>
-
-  <!-- Vidéo démo -->
-  <div style="max-width:580px;margin:32px auto 40px;text-align:center">
-    <div style="margin-bottom:16px">
-      <span style="font-size:0.75rem;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:#FF6B6B">▶ Démo produit</span>
-      <div style="font-size:1.15rem;font-weight:700;color:#2D2D2D;margin-top:6px">Voyez Mirella en 3 minutes</div>
-    </div>
-    <div style="position:relative;padding-bottom:56.25%;height:0;border-radius:20px;overflow:hidden;box-shadow:0 12px 40px rgba(255,107,107,0.2)">
-      <iframe src="https://www.youtube.com/embed/qFoiT9SYvfM?rel=0&modestbranding=1"
-        style="position:absolute;top:0;left:0;width:100%;height:100%;border:none"
-        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-        allowfullscreen></iframe>
-    </div>
-  </div>
-
-
-
-
-
-
 </section>
 
 <!-- STATS -->
