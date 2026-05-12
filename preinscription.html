@@ -210,62 +210,7 @@ footer a{color:#FF6B6B;text-decoration:none}
 
   <!-- Fond gouttes -->
   <div style="position:absolute;inset:0;background:url('fond.png') center/cover no-repeat"></div>
-  <!-- Gouttes condensation -->
-  <canvas id="rainCanvas" style="position:absolute;inset:0;width:100%;height:100%;pointer-events:none"></canvas>
-  <script>
-  (function(){
-    const c = document.getElementById('rainCanvas');
-    if(!c) return;
-    const ctx = c.getContext('2d');
-    c.width = window.innerWidth;
-    c.height = window.innerHeight;
 
-    function drawDrop(x, y, rx, ry) {
-      ctx.save();
-      // Corps translucide
-      const grad = ctx.createRadialGradient(x-rx*0.25, y-ry*0.3, 0, x, y, Math.max(rx,ry));
-      grad.addColorStop(0, 'rgba(255,255,255,0.55)');
-      grad.addColorStop(0.5, 'rgba(180,225,250,0.25)');
-      grad.addColorStop(1, 'rgba(100,190,230,0.08)');
-      ctx.beginPath();
-      ctx.ellipse(x, y, rx, ry, 0, 0, Math.PI*2);
-      ctx.fillStyle = grad;
-      ctx.fill();
-      // Contour léger
-      ctx.strokeStyle = 'rgba(255,255,255,0.3)';
-      ctx.lineWidth = 0.5;
-      ctx.stroke();
-      // Reflet
-      ctx.beginPath();
-      ctx.ellipse(x-rx*0.22, y-ry*0.28, rx*0.32, ry*0.22, -0.2, 0, Math.PI*2);
-      ctx.fillStyle = 'rgba(255,255,255,0.75)';
-      ctx.fill();
-      ctx.restore();
-    }
-
-    // Petites gouttes
-    for(let i=0;i<300;i++){
-      const x = Math.random()*c.width;
-      const y = Math.random()*c.height;
-      const r = Math.random()*3+1.5;
-      drawDrop(x, y, r, r*1.2);
-    }
-    // Moyennes
-    for(let i=0;i<80;i++){
-      const x = Math.random()*c.width;
-      const y = Math.random()*c.height;
-      const r = Math.random()*5+3;
-      drawDrop(x, y, r, r*1.3);
-    }
-    // Grosses
-    for(let i=0;i<25;i++){
-      const x = Math.random()*c.width;
-      const y = Math.random()*c.height;
-      const r = Math.random()*7+5;
-      drawDrop(x, y, r, r*1.25);
-    }
-  })();
-  </script>
   <!-- Soleil haut droite -->
   <div style="position:absolute;top:-60px;right:-60px;width:300px;height:300px;border-radius:50%;background:radial-gradient(circle,rgba(255,220,100,0.3) 0%,transparent 70%)"></div>
   <!-- Eau / piscine bas -->
