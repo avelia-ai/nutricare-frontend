@@ -210,33 +210,47 @@ footer a{color:#FF6B6B;text-decoration:none}
 
   <!-- Fond bleu ciel style Grity -->
   <div style="position:absolute;inset:0;background:linear-gradient(180deg,#c8e8f5 0%,#a8d8f0 30%,#7ec8e8 60%,#5ab8e0 80%,#8dd4e8 100%)"></div>
-  <!-- Gouttes Canvas -->
-  <canvas id="rainCanvas" style="position:absolute;inset:0;width:100%;height:100%;pointer-events:none;opacity:0.4"></canvas>
+  <!-- Gouttes condensation -->
+  <canvas id="rainCanvas" style="position:absolute;inset:0;width:100%;height:100%;pointer-events:none;opacity:0.55"></canvas>
   <script>
   (function(){
     const c = document.getElementById('rainCanvas');
     if(!c) return;
     const ctx = c.getContext('2d');
-    let drops = [];
-    function resize(){ c.width = c.offsetWidth; c.height = c.offsetHeight; }
-    resize();
-    window.addEventListener('resize', resize);
-    for(let i=0;i<120;i++) drops.push({x:Math.random()*c.width,y:Math.random()*c.height,len:Math.random()*15+8,speed:Math.random()*3+2,width:Math.random()*1.5+0.5});
-    function draw(){
-      ctx.clearRect(0,0,c.width,c.height);
-      ctx.strokeStyle='rgba(255,255,255,0.6)';
-      drops.forEach(d=>{
-        ctx.lineWidth=d.width;
-        ctx.beginPath();
-        ctx.moveTo(d.x,d.y);
-        ctx.lineTo(d.x-1,d.y+d.len);
-        ctx.stroke();
-        d.y+=d.speed;
-        if(d.y>c.height){d.y=-d.len;d.x=Math.random()*c.width;}
+    c.width = window.innerWidth;
+    c.height = window.innerHeight;
+    const drops = [];
+    for(let i=0;i<80;i++){
+      const r = Math.random()*8+3;
+      drops.push({
+        x: Math.random()*c.width,
+        y: Math.random()*c.height,
+        r: r,
+        ry: r*1.4,
+        alpha: Math.random()*0.35+0.1,
+        blur: Math.random()*2
       });
-      requestAnimationFrame(draw);
     }
-    draw();
+    drops.forEach(d=>{
+      ctx.save();
+      ctx.globalAlpha = d.alpha;
+      ctx.filter = `blur(${d.blur}px)`;
+      const grad = ctx.createRadialGradient(d.x-d.r*0.3, d.y-d.ry*0.3, 0, d.x, d.y, d.r*1.2);
+      grad.addColorStop(0,'rgba(255,255,255,0.9)');
+      grad.addColorStop(0.4,'rgba(255,255,255,0.4)');
+      grad.addColorStop(1,'rgba(200,235,255,0.1)');
+      ctx.beginPath();
+      ctx.ellipse(d.x, d.y, d.r, d.ry, 0, 0, Math.PI*2);
+      ctx.fillStyle = grad;
+      ctx.fill();
+      // Reflet
+      ctx.globalAlpha = d.alpha*0.6;
+      ctx.beginPath();
+      ctx.ellipse(d.x-d.r*0.25, d.y-d.ry*0.3, d.r*0.4, d.ry*0.3, -0.3, 0, Math.PI*2);
+      ctx.fillStyle = 'rgba(255,255,255,0.8)';
+      ctx.fill();
+      ctx.restore();
+    });
   })();
   </script>
   <!-- Soleil haut droite -->
