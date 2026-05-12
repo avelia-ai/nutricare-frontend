@@ -294,17 +294,38 @@ footer a{color:#FF6B6B;text-decoration:none}
       </div>
     </div>
 
-    <!-- Colonne droite : photos avant/après -->
-    <div style="flex:1;min-width:280px;max-width:480px;display:grid;grid-template-columns:1fr 1fr;gap:10px">
-      <img src="avant_apres1.png" alt="Résultat 1" style="width:100%;border-radius:16px;object-fit:cover;height:200px;box-shadow:0 8px 24px rgba(0,0,0,0.3)">
-      <img src="avant_apres2.png" alt="Résultat 2" style="width:100%;border-radius:16px;object-fit:cover;height:200px;box-shadow:0 8px 24px rgba(0,0,0,0.3);margin-top:24px">
-      <img src="avant_apres3.png" alt="Résultat 3" style="width:100%;border-radius:16px;object-fit:cover;height:200px;box-shadow:0 8px 24px rgba(0,0,0,0.3)">
-      <img src="avant_apres4.png" alt="Résultat 4" style="width:100%;border-radius:16px;object-fit:cover;height:200px;box-shadow:0 8px 24px rgba(0,0,0,0.3);margin-top:24px">
+    <!-- Colonne droite : carousel avant/après -->
+    <div style="flex:1;min-width:280px;max-width:420px">
       <!-- Badge note -->
-      <div style="grid-column:1/-1;display:flex;align-items:center;justify-content:center;gap:10px;background:rgba(255,255,255,0.15);border-radius:12px;padding:12px">
-        <span style="color:#FFD700;font-size:1.1rem">★★★★★</span>
-        <span style="color:white;font-weight:800;font-size:1rem">4,9/5</span>
-        <span style="color:rgba(255,255,255,0.6);font-size:0.78rem">· basé sur les retours early access</span>
+      <div style="display:flex;align-items:center;justify-content:center;gap:10px;background:rgba(255,255,255,0.15);border-radius:12px;padding:10px 16px;margin-bottom:16px">
+        <span style="color:#FFD700;font-size:1rem">★★★★★</span>
+        <span style="color:white;font-weight:800;font-size:0.95rem">4,9/5</span>
+        <span style="color:rgba(255,255,255,0.6);font-size:0.75rem">· retours early access</span>
+      </div>
+      <!-- Carousel -->
+      <div style="position:relative;overflow:hidden;border-radius:20px;box-shadow:0 20px 60px rgba(0,0,0,0.4)">
+        <div id="heroCarousel" style="display:flex;transition:transform 0.6s ease;will-change:transform">
+          <img src="avant_apres1.png" alt="Résultat 1" style="min-width:100%;height:420px;object-fit:cover">
+          <img src="avant_apres2.png" alt="Résultat 2" style="min-width:100%;height:420px;object-fit:cover">
+          <img src="avant_apres3.png" alt="Résultat 3" style="min-width:100%;height:420px;object-fit:cover">
+          <img src="avant_apres4.png" alt="Résultat 4" style="min-width:100%;height:420px;object-fit:cover">
+          <img src="avant_apres5.png" alt="Résultat 5" style="min-width:100%;height:420px;object-fit:cover">
+        </div>
+        <!-- Indicateurs -->
+        <div style="position:absolute;bottom:14px;left:50%;transform:translateX(-50%);display:flex;gap:6px" id="carouselDots">
+          <div class="cdot active" style="width:8px;height:8px;border-radius:50%;background:white;opacity:1;transition:opacity .3s"></div>
+          <div class="cdot" style="width:8px;height:8px;border-radius:50%;background:white;opacity:0.4;transition:opacity .3s"></div>
+          <div class="cdot" style="width:8px;height:8px;border-radius:50%;background:white;opacity:0.4;transition:opacity .3s"></div>
+          <div class="cdot" style="width:8px;height:8px;border-radius:50%;background:white;opacity:0.4;transition:opacity .3s"></div>
+          <div class="cdot" style="width:8px;height:8px;border-radius:50%;background:white;opacity:0.4;transition:opacity .3s"></div>
+        </div>
+        <!-- Overlay dégradé bas -->
+        <div style="position:absolute;bottom:0;left:0;right:0;height:80px;background:linear-gradient(transparent,rgba(0,0,0,0.4))"></div>
+      </div>
+      <!-- Flèches -->
+      <div style="display:flex;justify-content:center;gap:12px;margin-top:14px">
+        <button onclick="carouselPrev()" style="background:rgba(255,255,255,0.2);border:none;color:white;width:40px;height:40px;border-radius:50%;font-size:1.1rem;cursor:pointer">‹</button>
+        <button onclick="carouselNext()" style="background:rgba(255,255,255,0.2);border:none;color:white;width:40px;height:40px;border-radius:50%;font-size:1.1rem;cursor:pointer">›</button>
       </div>
     </div>
 
@@ -829,6 +850,25 @@ setInterval(updateCountdown, 1000);
   setInterval(updateSpots, 60000);
 })();
 
+</script>
+
+<script>
+// Carousel avant/après
+let carouselIdx = 0;
+const carouselTotal = 5;
+
+function carouselGoTo(idx) {
+  carouselIdx = (idx + carouselTotal) % carouselTotal;
+  document.getElementById('heroCarousel').style.transform = `translateX(-${carouselIdx * 100}%)`;
+  document.querySelectorAll('.cdot').forEach((d, i) => {
+    d.style.opacity = i === carouselIdx ? '1' : '0.4';
+  });
+}
+function carouselNext() { carouselGoTo(carouselIdx + 1); }
+function carouselPrev() { carouselGoTo(carouselIdx - 1); }
+
+// Auto-défilement toutes les 3 secondes
+setInterval(carouselNext, 3000);
 </script>
 
 <script>
