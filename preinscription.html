@@ -305,25 +305,17 @@ footer a{color:#FF6B6B;text-decoration:none}
 
       <!-- Carousel éventail style Grity -->
       <div style="position:relative;height:400px">
-        <!-- Photo gauche loin -->
-        <div style="position:absolute;left:-20px;top:40px;width:30%;z-index:1;transform:perspective(600px) rotateY(20deg);opacity:0.65;transition:all 0.5s ease">
-          <img id="cimg_ll" src="portrait_avant_apres5.jpg" style="width:100%;height:320px;object-fit:cover;object-position:top;border-radius:14px;box-shadow:0 8px 24px rgba(0,0,0,0.3)">
-        </div>
-        <!-- Photo gauche proche -->
-        <div style="position:absolute;left:14%;top:20px;width:32%;z-index:2;transform:perspective(600px) rotateY(10deg);opacity:0.82;transition:all 0.5s ease">
-          <img id="cimg_l" src="portrait_avant_apres4.jpg" style="width:100%;height:350px;object-fit:cover;object-position:top;border-radius:16px;box-shadow:0 12px 36px rgba(0,0,0,0.35)">
+        <!-- Photo gauche -->
+        <div style="position:absolute;left:-10px;top:30px;width:33%;z-index:1;transform:perspective(600px) rotateY(18deg) scale(0.88);opacity:0.75;transition:all 0.5s ease">
+          <img id="cimg_l" src="portrait_avant_apres4.jpg" style="width:100%;height:340px;object-fit:cover;object-position:top center;border-radius:16px;box-shadow:0 10px 30px rgba(0,0,0,0.35)">
         </div>
         <!-- Photo centrale -->
-        <div style="position:absolute;left:50%;transform:translateX(-50%);top:0;width:36%;z-index:4;transition:all 0.5s ease">
-          <img id="cimg_c" src="portrait_avant_apres1.jpg" style="width:100%;height:390px;object-fit:cover;object-position:top;border-radius:18px;box-shadow:0 20px 50px rgba(0,0,0,0.45)">
+        <div style="position:absolute;left:50%;transform:translateX(-50%);top:0;width:38%;z-index:3;transition:all 0.5s ease">
+          <img id="cimg_c" src="portrait_avant_apres1.jpg" style="width:100%;height:390px;object-fit:cover;object-position:top center;border-radius:18px;box-shadow:0 20px 50px rgba(0,0,0,0.45)">
         </div>
-        <!-- Photo droite proche -->
-        <div style="position:absolute;right:14%;top:20px;width:32%;z-index:2;transform:perspective(600px) rotateY(-10deg);opacity:0.82;transition:all 0.5s ease">
-          <img id="cimg_r" src="portrait_avant_apres2.jpg" style="width:100%;height:350px;object-fit:cover;object-position:top;border-radius:16px;box-shadow:0 12px 36px rgba(0,0,0,0.35)">
-        </div>
-        <!-- Photo droite loin -->
-        <div style="position:absolute;right:-20px;top:40px;width:30%;z-index:1;transform:perspective(600px) rotateY(-20deg);opacity:0.65;transition:all 0.5s ease">
-          <img id="cimg_rr" src="portrait_avant_apres3.jpg" style="width:100%;height:320px;object-fit:cover;object-position:top;border-radius:14px;box-shadow:0 8px 24px rgba(0,0,0,0.3)">
+        <!-- Photo droite -->
+        <div style="position:absolute;right:-10px;top:30px;width:33%;z-index:1;transform:perspective(600px) rotateY(-18deg) scale(0.88);opacity:0.75;transition:all 0.5s ease">
+          <img id="cimg_r" src="portrait_avant_apres2.jpg" style="width:100%;height:340px;object-fit:cover;object-position:top center;border-radius:16px;box-shadow:0 10px 30px rgba(0,0,0,0.35)">
         </div>
         <!-- Flèches -->
         <button onclick="carouselPrev()" style="position:absolute;left:0;top:50%;transform:translateY(-50%);background:rgba(255,255,255,0.2);backdrop-filter:blur(4px);border:none;color:white;width:36px;height:36px;border-radius:50%;font-size:1.2rem;cursor:pointer;z-index:10">‹</button>
@@ -865,17 +857,15 @@ setInterval(updateCountdown, 1000);
 </script>
 
 <script>
-// Carousel éventail Grity
+// Carousel éventail 3 photos
 const cImgs = ['portrait_avant_apres1.jpg','portrait_avant_apres2.jpg','portrait_avant_apres3.jpg','portrait_avant_apres4.jpg','portrait_avant_apres5.jpg'];
 let carouselIdx = 0;
 function carouselGoTo(idx) {
   carouselIdx = (idx + cImgs.length) % cImgs.length;
   const get = (offset) => cImgs[(carouselIdx + offset + cImgs.length) % cImgs.length];
-  document.getElementById('cimg_c').src  = get(0);
-  document.getElementById('cimg_l').src  = get(-1);
-  document.getElementById('cimg_ll').src = get(-2);
-  document.getElementById('cimg_r').src  = get(1);
-  document.getElementById('cimg_rr').src = get(2);
+  document.getElementById('cimg_c').src = get(0);
+  document.getElementById('cimg_l').src = get(-1);
+  document.getElementById('cimg_r').src = get(1);
 }
 function carouselNext() { carouselGoTo(carouselIdx + 1); }
 function carouselPrev() { carouselGoTo(carouselIdx - 1); }
