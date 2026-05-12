@@ -324,19 +324,16 @@ footer a{color:#FF6B6B;text-decoration:none}
           <span style="font-size:0.5rem;font-weight:800;color:#FF6B6B;text-transform:uppercase">Jusqu'à</span>
           <span style="font-size:1.2rem;font-weight:900;color:#FF6B6B;line-height:1.1">-50%</span>
         </div>
-        <!-- 4 photos côte à côte -->
-        <div id="heroCarousel" style="display:flex;gap:6px;align-items:center;transition:transform 0.5s ease">
-          <div style="flex:1;border-radius:14px;overflow:hidden;box-shadow:0 8px 24px rgba(0,0,0,0.2)">
-            <img id="cimg_1" src="avant_apres6.png" style="width:100%;height:320px;object-fit:cover;display:block">
+        <!-- 3 photos côte à côte -->
+        <div id="heroCarousel" style="display:flex;gap:8px;align-items:center;transition:transform 0.5s ease">
+          <div style="flex:1;border-radius:16px;overflow:hidden;box-shadow:0 8px 24px rgba(0,0,0,0.2)">
+            <img id="cimg_1" src="avant_apres6.png" style="width:100%;height:360px;object-fit:cover;display:block">
           </div>
-          <div style="flex:1.1;border-radius:14px;overflow:hidden;box-shadow:0 12px 32px rgba(0,0,0,0.25)">
-            <img id="cimg_2" src="avant_apres7.png" style="width:100%;height:340px;object-fit:cover;display:block">
+          <div style="flex:1.15;border-radius:16px;overflow:hidden;box-shadow:0 14px 36px rgba(0,0,0,0.28)">
+            <img id="cimg_2" src="avant_apres7.png" style="width:100%;height:400px;object-fit:cover;display:block">
           </div>
-          <div style="flex:1.1;border-radius:14px;overflow:hidden;box-shadow:0 12px 32px rgba(0,0,0,0.25)">
-            <img id="cimg_3" src="avant_apres8.png" style="width:100%;height:340px;object-fit:cover;display:block">
-          </div>
-          <div style="flex:1;border-radius:14px;overflow:hidden;box-shadow:0 8px 24px rgba(0,0,0,0.2)">
-            <img id="cimg_4" src="avant_apres9.png" style="width:100%;height:320px;object-fit:cover;display:block">
+          <div style="flex:1;border-radius:16px;overflow:hidden;box-shadow:0 8px 24px rgba(0,0,0,0.2)">
+            <img id="cimg_3" src="avant_apres8.png" style="width:100%;height:360px;object-fit:cover;display:block">
           </div>
         </div>
         <!-- Surface réfléchissante -->
@@ -972,7 +969,7 @@ setInterval(updateCountdown, 1000);
 </script>
 
 <script>
-// Carousel 4 photos style Grity
+// Carousel 3 photos style Grity
 const allImgs = ['avant_apres6.png','avant_apres7.png','avant_apres8.png','avant_apres9.png','avant_apres10.png','avant_apres11.png'];
 let carouselIdx = 0;
 function carouselGoTo(idx) {
@@ -981,11 +978,9 @@ function carouselGoTo(idx) {
   const c1 = document.getElementById('cimg_1');
   const c2 = document.getElementById('cimg_2');
   const c3 = document.getElementById('cimg_3');
-  const c4 = document.getElementById('cimg_4');
   if(c1) c1.src = get(0);
   if(c2) c2.src = get(1);
   if(c3) c3.src = get(2);
-  if(c4) c4.src = get(3);
 }
 function carouselNext() { carouselGoTo(carouselIdx + 1); }
 function carouselPrev() { carouselGoTo(carouselIdx - 1); }
