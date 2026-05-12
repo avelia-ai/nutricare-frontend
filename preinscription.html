@@ -206,83 +206,81 @@ footer a{color:#FF6B6B;text-decoration:none}
 
 
 <!-- HERO -->
-<section style="min-height:100vh;position:relative;overflow:hidden;display:flex;align-items:center;background:url('fond2.png') center/cover no-repeat">
+<section style="min-height:100vh;position:relative;overflow:hidden;display:flex;flex-direction:column;justify-content:center;background:#5bc8f0">
 
-  <!-- Gouttes subtiles CSS -->
-  <style>
-  .wdrop{position:absolute;border-radius:50%;background:radial-gradient(circle at 35% 35%,rgba(255,255,255,0.9),rgba(200,235,255,0.3));border:1px solid rgba(255,255,255,0.6);box-shadow:inset 0 1px 3px rgba(255,255,255,0.8),0 2px 4px rgba(100,180,220,0.2)}
-  </style>
-  <div style="position:absolute;inset:0;pointer-events:none;overflow:hidden">
-    <div class="wdrop" style="width:18px;height:22px;top:8%;left:3%"></div>
-    <div class="wdrop" style="width:10px;height:13px;top:15%;left:8%"></div>
-    <div class="wdrop" style="width:25px;height:30px;top:5%;left:15%"></div>
-    <div class="wdrop" style="width:12px;height:15px;top:22%;left:22%"></div>
-    <div class="wdrop" style="width:8px;height:10px;top:12%;left:30%"></div>
-    <div class="wdrop" style="width:20px;height:24px;top:6%;left:38%"></div>
-    <div class="wdrop" style="width:14px;height:17px;top:18%;left:45%"></div>
-    <div class="wdrop" style="width:9px;height:11px;top:9%;left:52%"></div>
-    <div class="wdrop" style="width:22px;height:27px;top:4%;left:60%"></div>
-    <div class="wdrop" style="width:11px;height:14px;top:20%;left:68%"></div>
-    <div class="wdrop" style="width:16px;height:20px;top:7%;left:75%"></div>
-    <div class="wdrop" style="width:8px;height:10px;top:16%;left:82%"></div>
-    <div class="wdrop" style="width:19px;height:23px;top:3%;left:88%"></div>
-    <div class="wdrop" style="width:13px;height:16px;top:25%;left:93%"></div>
-    <div class="wdrop" style="width:7px;height:9px;top:30%;left:6%"></div>
-    <div class="wdrop" style="width:15px;height:18px;top:35%;left:12%"></div>
-    <div class="wdrop" style="width:10px;height:12px;top:28%;left:25%"></div>
-    <div class="wdrop" style="width:18px;height:22px;top:32%;left:40%"></div>
-    <div class="wdrop" style="width:12px;height:15px;top:38%;left:55%"></div>
-    <div class="wdrop" style="width:20px;height:25px;top:26%;left:70%"></div>
-    <div class="wdrop" style="width:9px;height:11px;top:34%;left:85%"></div>
-    <div class="wdrop" style="width:14px;height:17px;top:42%;left:95%"></div>
-  </div>
+  <!-- Fond gouttes -->
+  <div style="position:absolute;inset:0;background:url('fond2.png') center/cover no-repeat"></div>
+  <!-- Overlay blanc pour lisibilité -->
+  <div style="position:absolute;inset:0;background:rgba(255,255,255,0.45)"></div>
 
   <!-- Contenu -->
-  <div style="position:relative;z-index:2;width:100%;max-width:1200px;margin:0 auto;padding:80px 40px 60px;display:flex;gap:60px;align-items:center;flex-wrap:wrap">
+  <div style="position:relative;z-index:2;width:100%;max-width:1200px;margin:0 auto;padding:100px 40px 60px;display:flex;gap:60px;align-items:center;flex-wrap:wrap">
     
     <!-- Colonne gauche -->
-    <div style="flex:1;min-width:300px">
-      <!-- Badge -->
-      <div style="display:inline-flex;align-items:center;gap:8px;background:rgba(255,255,255,0.7);border:1px solid rgba(100,180,220,0.3);padding:6px 16px;border-radius:30px;margin-bottom:24px;backdrop-filter:blur(4px)">
-        <span style="width:8px;height:8px;border-radius:50%;background:#FF6B6B;animation:pulse 1.5s infinite"></span>
-        <span style="font-size:0.75rem;font-weight:700;color:#2D2D2D;text-transform:uppercase;letter-spacing:.1em">Early Bird · Offre limitée</span>
-      </div>
+    <div style="flex:1;min-width:300px;max-width:580px">
 
       <!-- Titre -->
-      <h1 style="font-family:'Open Sans',sans-serif;font-size:clamp(2.8rem,5vw,4.5rem);font-weight:800;color:#1a1a1a;line-height:1.05;margin-bottom:16px">
+      <h1 style="font-family:'Open Sans',sans-serif;font-size:clamp(2.5rem,4.5vw,4rem);font-weight:800;color:#1a1a1a;line-height:1.05;margin-bottom:16px">
         Votre santé,<br><em style="font-style:italic;color:#FF6B6B">enfin comprise.</em>
       </h1>
-      
-      <p style="font-size:1.05rem;color:#444;margin-bottom:28px;line-height:1.6;max-width:480px">
-        Mirella — l'assistante santé IA qui adapte nutrition, médicaments et bilans à votre profil unique.
-      </p>
 
-      <!-- Bandeau urgence -->
-      <div style="background:rgba(255,107,107,0.1);border:1px solid rgba(255,107,107,0.3);border-radius:10px;padding:10px 16px;margin-bottom:20px;display:inline-block">
-        <span style="font-size:0.85rem;font-weight:700;color:#FF6B6B">🔥 Offre -50% à vie · Jusqu'au <strong>18 mai à 14h00</strong> · Plus que <strong id="spots-remaining">850</strong> places</span>
+      <!-- Note -->
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:20px">
+        <span style="color:#FF9A3C;font-size:1.1rem">★★★★★</span>
+        <span style="font-weight:700;color:#1a1a1a">4,9</span>
+        <span style="color:#555;font-size:0.85rem">(Note moyenne sur les retours early access)</span>
       </div>
 
-      <!-- Formulaire CTA -->
-      <div style="display:flex;gap:0;max-width:480px;margin-bottom:12px;border-radius:12px;overflow:hidden;box-shadow:0 4px 20px rgba(0,0,0,0.12)">
+      <!-- Countdown -->
+      <div style="margin-bottom:20px">
+        <div style="font-size:0.78rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:#555;margin-bottom:8px">🎁 FIN DE L'OFFRE EARLY BIRD DANS</div>
+        <div style="display:flex;gap:8px" id="countdown">
+          <div style="background:#2D2D2D;border-radius:10px;padding:10px 14px;text-align:center;min-width:58px">
+            <span style="font-size:1.8rem;font-weight:800;color:white;display:block;line-height:1" id="cd-j">--</span>
+            <span style="font-size:0.58rem;text-transform:uppercase;color:rgba(255,255,255,0.5)">Jours</span>
+          </div>
+          <div style="background:#2D2D2D;border-radius:10px;padding:10px 14px;text-align:center;min-width:58px">
+            <span style="font-size:1.8rem;font-weight:800;color:white;display:block;line-height:1" id="cd-h">--</span>
+            <span style="font-size:0.58rem;text-transform:uppercase;color:rgba(255,255,255,0.5)">Heures</span>
+          </div>
+          <div style="background:#2D2D2D;border-radius:10px;padding:10px 14px;text-align:center;min-width:58px">
+            <span style="font-size:1.8rem;font-weight:800;color:white;display:block;line-height:1" id="cd-m">--</span>
+            <span style="font-size:0.58rem;text-transform:uppercase;color:rgba(255,255,255,0.5)">Min</span>
+          </div>
+          <div style="background:#2D2D2D;border-radius:10px;padding:10px 14px;text-align:center;min-width:58px">
+            <span style="font-size:1.8rem;font-weight:800;color:white;display:block;line-height:1" id="cd-s">--</span>
+            <span style="font-size:0.58rem;text-transform:uppercase;color:rgba(255,255,255,0.5)">Sec</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Sous-titre -->
+      <p style="font-size:1.1rem;font-weight:600;color:#1a1a1a;margin-bottom:24px;line-height:1.5">
+        La meilleure app santé IA pour prendre soin de vous<br>selon votre profil médical unique !
+      </p>
+
+      <!-- CTA -->
+      <div style="display:flex;gap:0;max-width:480px;margin-bottom:10px;border-radius:10px;overflow:hidden;box-shadow:0 4px 20px rgba(0,0,0,0.15)">
         <input type="email" id="emailHero2" placeholder="votre@email.com" 
           style="flex:1;padding:16px 20px;font-size:1rem;border:none;outline:none;font-family:'DM Sans',sans-serif;background:white;color:#2D2D2D">
         <button onclick="subscribe('emailHero2','successHero2')" 
           style="background:linear-gradient(135deg,#FF6B6B,#FF9A3C);color:white;border:none;padding:16px 24px;font-size:0.95rem;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif;white-space:nowrap">
-          S'inscrire →
+          S'inscrire gratuitement →
         </button>
       </div>
-      <div style="font-size:0.75rem;color:#888;margin-bottom:28px">🔒 Sans carte bancaire · Accès immédiat · 3 jours gratuits</div>
+      <div style="font-size:0.75rem;color:#666;margin-bottom:20px">🔒 Sans carte bancaire · Accès immédiat · 3 jours gratuits</div>
       <div class="success-msg" id="successHero2" style="margin-bottom:16px">✅ Compte créé ! <a href="https://mirella-ai.fr/app" style="color:#3B6D11;font-weight:700">Accéder à Mirella →</a></div>
 
-      <!-- Note -->
-      <div style="display:flex;align-items:center;gap:8px;margin-bottom:20px">
-        <span style="color:#FF9A3C;font-size:1rem">★★★★★</span>
-        <span style="font-weight:700;color:#1a1a1a;font-size:0.9rem">4,9</span>
-        <span style="color:#888;font-size:0.82rem">(Note moyenne sur les retours early access)</span>
+      <!-- Compteur places -->
+      <div style="margin-bottom:20px">
+        <div style="font-size:0.88rem;color:#444;margin-bottom:6px"><strong id="spots-count">150</strong> places sur 1000 déjà réservées</div>
+        <div style="height:8px;background:rgba(0,0,0,0.1);border-radius:4px;overflow:hidden;max-width:480px">
+          <div class="spots-fill" style="height:100%;background:linear-gradient(135deg,#FF6B6B,#FF9A3C);border-radius:4px"></div>
+        </div>
       </div>
 
       <!-- Geeyom -->
-      <div style="display:flex;align-items:center;gap:14px;background:rgba(255,255,255,0.7);border-radius:14px;padding:14px 18px;max-width:480px;backdrop-filter:blur(4px);border:1px solid rgba(255,255,255,0.8)">
+      <div style="display:flex;align-items:center;gap:14px;background:rgba(255,255,255,0.8);border-radius:14px;padding:14px 18px;max-width:480px;backdrop-filter:blur(4px)">
         <img src="PhotoRoom-20230302_113020.png" alt="Geeyom" style="width:48px;height:48px;border-radius:50%;object-fit:cover;border:2px solid #FF6B6B;flex-shrink:0" onerror="this.style.display='none'">
         <div>
           <div style="display:flex;align-items:center;gap:8px;margin-bottom:3px">
@@ -292,67 +290,36 @@ footer a{color:#FF6B6B;text-decoration:none}
           <p style="font-size:0.78rem;color:#555;margin:0;line-height:1.4;font-style:italic">"J'ai créé Mirella parce que j'en avais assez de naviguer seul avec mes médicaments."</p>
         </div>
       </div>
-
-      <!-- Countdown -->
-      <div style="margin-top:28px">
-        <div style="font-size:0.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:#888;margin-bottom:10px">⏳ Fin de l'offre Early Bird dans</div>
-        <div style="display:flex;gap:8px" id="countdown">
-          <div style="background:#2D2D2D;border-radius:10px;padding:12px 16px;text-align:center;min-width:64px">
-            <span style="font-size:2rem;font-weight:800;color:white;display:block;line-height:1" id="cd-j">--</span>
-            <span style="font-size:0.6rem;text-transform:uppercase;letter-spacing:.1em;color:rgba(255,255,255,0.5)">Jours</span>
-          </div>
-          <div style="background:#2D2D2D;border-radius:10px;padding:12px 16px;text-align:center;min-width:64px">
-            <span style="font-size:2rem;font-weight:800;color:white;display:block;line-height:1" id="cd-h">--</span>
-            <span style="font-size:0.6rem;text-transform:uppercase;letter-spacing:.1em;color:rgba(255,255,255,0.5)">Heures</span>
-          </div>
-          <div style="background:#2D2D2D;border-radius:10px;padding:12px 16px;text-align:center;min-width:64px">
-            <span style="font-size:2rem;font-weight:800;color:white;display:block;line-height:1" id="cd-m">--</span>
-            <span style="font-size:0.6rem;text-transform:uppercase;letter-spacing:.1em;color:rgba(255,255,255,0.5)">Min</span>
-          </div>
-          <div style="background:#2D2D2D;border-radius:10px;padding:12px 16px;text-align:center;min-width:64px">
-            <span style="font-size:2rem;font-weight:800;color:white;display:block;line-height:1" id="cd-s">--</span>
-            <span style="font-size:0.6rem;text-transform:uppercase;letter-spacing:.1em;color:rgba(255,255,255,0.5)">Sec</span>
-          </div>
-        </div>
-      </div>
-
-      <!-- Compteur places -->
-      <div style="margin-top:20px">
-        <div style="font-size:0.88rem;color:#555;margin-bottom:8px"><strong id="spots-count">150</strong> places sur 1000 déjà réservées</div>
-        <div style="height:6px;background:rgba(0,0,0,0.1);border-radius:3px;overflow:hidden">
-          <div class="spots-fill" style="height:100%;background:linear-gradient(135deg,#FF6B6B,#FF9A3C);border-radius:3px;transition:width 1s ease"></div>
-        </div>
-      </div>
     </div>
 
-    <!-- Colonne droite : photos -->
-    <div style="flex:1;min-width:300px;max-width:520px;position:relative">
+    <!-- Colonne droite : photos style Grity -->
+    <div style="flex:1;min-width:280px;max-width:500px;position:relative">
       <!-- Badge promo -->
-      <div style="position:absolute;top:-16px;right:10px;z-index:10;background:white;border-radius:50%;width:76px;height:76px;display:flex;flex-direction:column;align-items:center;justify-content:center;box-shadow:0 4px 20px rgba(0,0,0,0.15);transform:rotate(12deg)">
+      <div style="position:absolute;top:-10px;right:0;z-index:10;background:white;border-radius:50%;width:80px;height:80px;display:flex;flex-direction:column;align-items:center;justify-content:center;box-shadow:0 4px 20px rgba(0,0,0,0.15);transform:rotate(10deg)">
         <span style="font-size:0.5rem;font-weight:800;color:#FF6B6B;text-transform:uppercase">Jusqu'à</span>
-        <span style="font-size:1.2rem;font-weight:900;color:#FF6B6B;line-height:1.1">-50%</span>
+        <span style="font-size:1.3rem;font-weight:900;color:#FF6B6B;line-height:1.1">-50%</span>
       </div>
 
-      <!-- Photos côte à côte style Grity -->
-      <div style="display:flex;gap:8px;align-items:flex-end;height:420px">
-        <div id="cimg_l_wrap" style="flex:1;border-radius:16px;overflow:hidden;height:85%;box-shadow:0 10px 30px rgba(0,0,0,0.15)">
-          <img id="cimg_l" src="portrait_avant_apres4.jpg" style="width:100%;height:100%;object-fit:cover;object-position:top">
+      <!-- Photos 3 côte à côte -->
+      <div style="display:flex;gap:8px;align-items:flex-end;height:400px">
+        <div style="flex:1;border-radius:16px;overflow:hidden;height:82%;box-shadow:0 8px 24px rgba(0,0,0,0.15)">
+          <img id="cimg_l" src="portrait_avant_apres4.jpg" style="width:100%;height:100%;object-fit:cover;object-position:center top">
         </div>
-        <div id="cimg_c_wrap" style="flex:1.2;border-radius:16px;overflow:hidden;height:100%;box-shadow:0 15px 40px rgba(0,0,0,0.2)">
-          <img id="cimg_c" src="portrait_avant_apres1.jpg" style="width:100%;height:100%;object-fit:cover;object-position:top">
+        <div style="flex:1.3;border-radius:16px;overflow:hidden;height:100%;box-shadow:0 12px 32px rgba(0,0,0,0.2)">
+          <img id="cimg_c" src="portrait_avant_apres1.jpg" style="width:100%;height:100%;object-fit:cover;object-position:center top">
         </div>
-        <div id="cimg_r_wrap" style="flex:1;border-radius:16px;overflow:hidden;height:85%;box-shadow:0 10px 30px rgba(0,0,0,0.15)">
-          <img id="cimg_r" src="portrait_avant_apres2.jpg" style="width:100%;height:100%;object-fit:cover;object-position:top">
+        <div style="flex:1;border-radius:16px;overflow:hidden;height:82%;box-shadow:0 8px 24px rgba(0,0,0,0.15)">
+          <img id="cimg_r" src="portrait_avant_apres2.jpg" style="width:100%;height:100%;object-fit:cover;object-position:center top">
         </div>
       </div>
 
-      <!-- Surface eau bas -->
-      <div style="height:40px;background:linear-gradient(to bottom,rgba(135,206,235,0.4),transparent);margin:0 10px;border-radius:0 0 20px 20px;filter:blur(3px)"></div>
+      <!-- Reflet eau -->
+      <div style="height:35px;background:linear-gradient(to bottom,rgba(91,200,240,0.4),transparent);margin:0 8px;border-radius:0 0 16px 16px;filter:blur(4px)"></div>
 
       <!-- Flèches -->
-      <div style="display:flex;justify-content:center;gap:10px;margin-top:8px">
-        <button onclick="carouselPrev()" style="background:white;border:1px solid #eee;color:#2D2D2D;width:36px;height:36px;border-radius:50%;font-size:1.1rem;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,0.1)">‹</button>
-        <button onclick="carouselNext()" style="background:white;border:1px solid #eee;color:#2D2D2D;width:36px;height:36px;border-radius:50%;font-size:1.1rem;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,0.1)">›</button>
+      <div style="display:flex;justify-content:center;gap:8px;margin-top:10px">
+        <button onclick="carouselPrev()" style="background:white;border:none;color:#2D2D2D;width:36px;height:36px;border-radius:50%;font-size:1.1rem;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,0.12)">‹</button>
+        <button onclick="carouselNext()" style="background:white;border:none;color:#2D2D2D;width:36px;height:36px;border-radius:50%;font-size:1.1rem;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,0.12)">›</button>
       </div>
     </div>
 
