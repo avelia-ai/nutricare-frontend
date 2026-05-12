@@ -201,8 +201,6 @@ footer a{color:#FF6B6B;text-decoration:none}
 }
 @media (max-width: 768px) {
   #hero-bg { background-image: url('fondsmart2.png') !important; }
-  .hero-photos { display: none !important; }
-  .hero-mobile-carousel { display: block !important; }
 }
 </style>
 </head>
@@ -887,6 +885,19 @@ function carouselGoTo(idx) {
 function carouselNext() { carouselGoTo(carouselIdx + 1); }
 function carouselPrev() { carouselGoTo(carouselIdx - 1); }
 setInterval(carouselNext, 3500);
+</script>
+
+<script>
+// Affichage responsive carousel/photos
+function heroResponsive() {
+  const isMobile = window.innerWidth <= 768;
+  const photos = document.querySelector('.hero-photos');
+  const mobileCarousel = document.querySelector('.hero-mobile-carousel');
+  if (photos) photos.style.display = isMobile ? 'none' : 'block';
+  if (mobileCarousel) mobileCarousel.style.display = isMobile ? 'block' : 'none';
+}
+heroResponsive();
+window.addEventListener('resize', heroResponsive);
 </script>
 
 <script>
