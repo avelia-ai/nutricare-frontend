@@ -3961,13 +3961,33 @@ function switchLang(lang) {
       btn.style.cssText = 'min-width:65px;text-align:center;padding:10px 12px;border-radius:14px;cursor:pointer;flex-shrink:0;transition:all 0.2s;' + (isCurrentWeek ? 'background:linear-gradient(135deg,#FF6B6B,#FF9A3C);color:white;' : 'background:#F8F4F0;color:#2D2D2D;');
       btn.innerHTML = '<div style="font-size:0.95rem;font-weight:700">' + fmt(weekStart) + '</div><div style="font-size:0.75rem;opacity:0.8">' + fmt(weekEnd) + '</div>';
       btn.onclick = (function(ws, el) {
-        return function() {
+        return async function() {
           container.querySelectorAll('div').forEach(function(b) {
             b.style.background = '#F8F4F0';
             b.style.color = '#2D2D2D';
           });
           el.style.background = 'linear-gradient(135deg,#FF6B6B,#FF9A3C)';
           el.style.color = 'white';
+          const weekKey = ws.toISOString().split('T')[0];
+          document.getElementById('menusDays').innerHTML = '';
+          document.getElementById('menusLoading').style.display = 'block';
+          document.getElementById('menusShoppingList').style.display = 'none';
+          try {
+            const res = await fetch(BACKEND_URL + '/api/menus/current?week_start=' + weekKey, {
+              headers: { 'Authorization': 'Bearer ' + authToken }
+            });
+            const menu = await res.json();
+            document.getElementById('menusLoading').style.display = 'none';
+            if (menu && menu.semaine) {
+              document.getElementById('menusContent').style.display = 'block';
+              renderMenu(menu);
+            } else {
+              document.getElementById('menusDays').innerHTML = '<div style="text-align:center;padding:32px;color:#999;font-size:0.9rem">Aucun menu pour cette semaine.<br>Cliquez sur \"Générer mon menu IA\" pour en créer un.</div>';
+            }
+          } catch(e) {
+            document.getElementById('menusLoading').style.display = 'none';
+            console.error(e);
+          }
         };
       })(weekStart, btn);
       container.appendChild(btn);
