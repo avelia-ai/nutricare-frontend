@@ -948,11 +948,23 @@ setInterval(() => mobileCarouselGoTo(mobileCarouselIdx + 1), 3000);
 
 <!-- Modal vidéo -->
 <div id="videoModal" onclick="if(event.target===this)closeVideoModal()" 
-  style="visibility:hidden;opacity:0;position:fixed;top:0;left:0;right:0;bottom:0;background:#000000ee;z-index:99999;display:flex;align-items:center;justify-content:center;padding:20px;transition:opacity 0.2s">
-  <div style="position:relative;width:100%;max-width:860px">
-    <button onclick="closeVideoModal()" 
-      style="position:absolute;top:-44px;right:0;background:none;border:none;color:white;font-size:1.8rem;cursor:pointer;line-height:1">✕</button>
-    <div style="position:relative;padding-bottom:56.25%;height:0;border-radius:12px;overflow:hidden">
+  style="visibility:hidden;opacity:0;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.92);z-index:99999;display:flex;align-items:center;justify-content:center;padding:24px;transition:opacity 0.35s ease,transform 0.35s ease;backdrop-filter:blur(8px)">
+  <div style="position:relative;width:100%;max-width:900px;transform:scale(0.92);transition:transform 0.35s ease" id="videoModalInner">
+    
+    <!-- Header modal -->
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
+      <div style="display:flex;align-items:center;gap:10px">
+        <div style="width:8px;height:8px;border-radius:50%;background:linear-gradient(135deg,#FF6B6B,#FF9A3C);box-shadow:0 0 8px rgba(255,107,107,0.6)"></div>
+        <span style="color:white;font-family:'Open Sans',sans-serif;font-size:0.85rem;font-weight:600;letter-spacing:.05em">Vidéo de présentation Mirella</span>
+      </div>
+      <button onclick="closeVideoModal()" 
+        style="width:40px;height:40px;border-radius:50%;background:rgba(255,255,255,0.1);border:1.5px solid rgba(255,255,255,0.2);color:white;font-size:1.1rem;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.2s;backdrop-filter:blur(4px)"
+        onmouseover="this.style.background='rgba(255,107,107,0.3)';this.style.borderColor='#FF6B6B'"
+        onmouseout="this.style.background='rgba(255,255,255,0.1)';this.style.borderColor='rgba(255,255,255,0.2)'">✕</button>
+    </div>
+
+    <!-- Vidéo avec bordure corail -->
+    <div style="border-radius:20px;overflow:hidden;box-shadow:0 0 0 2px rgba(255,107,107,0.5),0 32px 80px rgba(0,0,0,0.6);position:relative;padding-bottom:56.25%;height:0;background:#000">
       <iframe id="videoFrame" src=""
         data-src="https://www.youtube.com/embed/qFoiT9SYvfM?rel=0&modestbranding=1&autoplay=1"
         style="position:absolute;top:0;left:0;width:100%;height:100%;border:none"
@@ -1052,14 +1064,22 @@ function openVideoModal() {
   const modal = document.getElementById('videoModal');
   modal.style.visibility = 'visible';
   modal.style.opacity = '1';
+  const inner = document.getElementById('videoModalInner');
+  if (inner) setTimeout(() => inner.style.transform = 'scale(1)', 10);
+  document.body.style.overflow = 'hidden';
   const frame = document.getElementById('videoFrame');
   frame.src = 'https://www.youtube.com/embed/qFoiT9SYvfM?rel=0&modestbranding=1&autoplay=1';
 }
 function closeVideoModal() {
   const modal = document.getElementById('videoModal');
-  modal.style.visibility = 'hidden';
   modal.style.opacity = '0';
-  document.getElementById('videoFrame').src = '';
+  const inner = document.getElementById('videoModalInner');
+  if (inner) inner.style.transform = 'scale(0.92)';
+  document.body.style.overflow = '';
+  setTimeout(() => {
+    modal.style.visibility = 'hidden';
+    document.getElementById('videoFrame').src = '';
+  }, 350);
 }
 </script>
 </body>
