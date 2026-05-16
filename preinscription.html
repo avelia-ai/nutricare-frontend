@@ -964,7 +964,7 @@ setInterval(() => mobileCarouselGoTo(mobileCarouselIdx + 1), 3000);
     </div>
 
     <!-- Vidéo avec bordure corail -->
-    <div style="border-radius:20px;overflow:hidden;box-shadow:0 0 0 2px rgba(255,107,107,0.5),0 32px 80px rgba(0,0,0,0.6);position:relative;padding-bottom:56.25%;height:0;background:#000">
+    <div id="videoWrapper" style="border-radius:20px;overflow:hidden;box-shadow:0 0 0 2px rgba(255,107,107,0.5),0 32px 80px rgba(0,0,0,0.6);position:relative;padding-bottom:56.25%;height:0;background:#000">
       <iframe id="videoFrame" src=""
         data-src="https://drive.google.com/file/d/1Q1D1yMU7Isy666BAZ9h3OvvLCX6-S3p9/preview"
         style="position:absolute;top:0;left:0;width:100%;height:100%;border:none"
@@ -1060,7 +1060,18 @@ setInterval(carouselNext, 3500);
 </script>
 
 <script>
+function adjustVideoFormat() {
+  const wrapper = document.getElementById('videoWrapper');
+  if (!wrapper) return;
+  if (window.innerWidth < 600) {
+    wrapper.style.paddingBottom = '177.77%'; // 9:16 portrait
+  } else {
+    wrapper.style.paddingBottom = '56.25%'; // 16:9 paysage
+  }
+}
+
 function openVideoModal() {
+  adjustVideoFormat();
   const modal = document.getElementById('videoModal');
   modal.style.visibility = 'visible';
   modal.style.opacity = '1';
