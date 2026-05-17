@@ -150,7 +150,7 @@
   .wcal-day.wactive.wtoday .wcal-num{color:white}
   /* ── CHAT VIEW ── */
   #chatView { display: flex; flex-direction: column; height: 100vh; background: #FFF5F0; }
-  .chat-header { padding: 16px 20px; border-bottom: 1px solid rgba(255,107,107,0.1); display: flex; align-items: center; justify-content: space-between; background: white; box-shadow: 0 2px 8px rgba(0,0,0,0.04); padding-top: max(16px, env(safe-area-inset-top, 16px)); }
+  .chat-header { padding: 16px 20px; border-bottom: 1px solid rgba(255,107,107,0.1); display: flex; align-items: center; justify-content: space-between; background: white; box-shadow: 0 2px 8px rgba(0,0,0,0.04); }
   .chat-header-info h2 { font-size: 1rem; font-weight: 700; color: #2D2D2D; }
   .chat-header-info p { font-size: 0.75rem; color: #999; margin-top: 2px; }
   .status-pill { display: flex; align-items: center; gap: 6px; background: rgba(255,107,107,0.08); padding: 6px 14px; border-radius: 20px; font-size: 0.72rem; color: #FF6B6B; font-weight: 600; }
@@ -290,7 +290,6 @@
   .main-content {
     margin-left: 0 !important;
     width: 100% !important;
-    padding-top: 57px !important;
   }
   
 }
@@ -447,6 +446,7 @@ button[style*="background:linear-gradient(135deg,#FF6B6B,#FF9A3C)"] {
 @media (max-width: 768px) {
   .bottom-nav { display: block; }
   #chatView { padding-bottom: 0 !important; display: flex; flex-direction: column; height: calc(100vh - 72px) !important; }
+  #chatView .chat-header { padding-top: 57px !important; }
   #chatView .chat-messages { flex: 1; overflow-y: auto; padding-bottom: 16px !important; }
   .chat-input-area { position: relative !important; bottom: auto !important; flex-shrink: 0; padding-bottom: 8px !important; }
   .sidebar { display: none !important; }
