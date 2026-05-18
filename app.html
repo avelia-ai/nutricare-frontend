@@ -6857,6 +6857,10 @@ function closeMirellaNotif() {
 // Bottom nav visibility
 function initBottomNav() {
   if (window.innerWidth <= 768) {
+    // Masquer la topbar si on est dans Capacitor (app native)
+    if (window.Capacitor && window.Capacitor.isNativePlatform()) {
+      document.getElementById('mobileTopbar').style.display = 'none !important';
+    }
     document.getElementById('bottomNav').style.display = 'block';
     document.getElementById('mobileTopbar').style.display = 'flex';
     // Ajouter padding top et bottom au contenu
