@@ -33,7 +33,9 @@ jobs:
 
       - name: Decode Keystore
         run: |
-          echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 -d > android/app/mirella.keystore
+          echo "${{ secrets.KEYSTORE_BASE64 }}" > /tmp/keystore.b64
+          base64 -d /tmp/keystore.b64 > android/app/mirella.keystore
+          ls -la android/app/mirella.keystore
 
       - name: Build Release APK
         run: |
