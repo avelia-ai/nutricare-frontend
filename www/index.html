@@ -661,7 +661,7 @@ window.renderPlanning = function renderPlanning() {
         eventsHtml += '<div style="font-size:1.2rem">' + e.emoji + '</div>';
         eventsHtml += '<div style="flex:1"><div style="font-size:0.85rem;font-weight:600;color:#1a1a1a">' + e.title + '</div>';
         eventsHtml += '<div style="font-size:0.75rem;color:#888">' + e.time + (e.recurrence !== 'none' ? ' · 🔁 ' + (e.recurrence === 'daily' ? 'Quotidien' : e.recurrence === 'weekly' ? 'Hebdo' : 'Mensuel') : '') + '</div></div>';
-        eventsHtml += '<button onclick="deleteEvent('' + e.id + '')" style="background:none;border:none;color:#ccc;font-size:1.1rem;cursor:pointer;padding:4px">✕</button>';
+        eventsHtml += '<button onclick="window.delEvt(\'' + e.id + '\')" style="background:none;border:none;color:#ccc;font-size:1.1rem;cursor:pointer;padding:4px">✕</button>';
         eventsHtml += '</div>';
       });
     }
@@ -812,14 +812,6 @@ var token = localStorage.getItem('nutricare_token');
   var user = localStorage.getItem('nutricare_user');
   var profile = localStorage.getItem('nutricare_profile');
   var view = localStorage.getItem('nutricare_last_view') || 'chat';
-  sessionStorage.setItem('transfer_token', token || '');
-  sessionStorage.setItem('transfer_user', user || '');
-  sessionStorage.setItem('transfer_profile', profile || '');
-  sessionStorage.setItem('transfer_view', view);
-  localStorage.setItem('nutricare_lang', lang);
-  if (lang === 'fr') window.location.href = '/app';
-  else window.location.href = 'app-' + lang + '.html';
-}
 // Détecter la langue courante depuis l'URL
 (function() {
   var page = window.location.pathname.split('/').pop();
