@@ -583,11 +583,12 @@ window.renderScoreHisto = function() {
     var d = new Date(h.date);
     var jours = ['Dim','Lun','Mar','Mer','Jeu','Ven','Sam'];
     var c = h.score>=80?'#22c55e':h.score>=60?'#FF9A3C':'#FF6B6B';
+    var barH = Math.max(4, Math.round(h.score * 0.8));
     html += '<div style="flex:1;text-align:center">';
-    html += '<div style="font-size:0.7rem;color:#888;margin-bottom:4px">'+jours[d.getDay()]+'</div>';
+    html += '<div style="font-size:0.65rem;color:#888;margin-bottom:4px">'+jours[d.getDay()]+'</div>';
     html += '<div style="height:80px;display:flex;align-items:flex-end;justify-content:center">';
-    html += '<div style="width:28px;background:'+c+';border-radius:6px 6px 0 0;height:'+h.score+'%;min-height:4px"></div></div>';
-    html += '<div style="font-size:0.75rem;font-weight:700;color:'+c+'">'+h.score+'</div></div>';
+    html += '<div style="width:24px;background:'+c+';border-radius:6px 6px 0 0;height:'+barH+'px"></div></div>';
+    html += '<div style="font-size:0.72rem;font-weight:700;color:'+c+'">'+h.score+'</div></div>';
   });
   el.innerHTML = html;
 };
@@ -1701,7 +1702,7 @@ function switchLang(lang) {
   <div style="font-size:0.85rem;color:#FF9A3C;margin-bottom:32px;margin-top:24px">Protocoles adaptés à vos pathologies</div>
   <div id="protocolsList" style="display:flex;flex-direction:column;gap:20px"></div>
 </div>
-<div id="chronoView" style="display:none;padding:0;overflow-y:auto;background:#FFF5F0;width:100%;padding-bottom:80px">
+<div id="chronoView" style="display:none;padding:0;overflow-y:auto;background:#FFF5F0;width:100%">
   <!-- Header -->
   <div class="view-header" style="background:linear-gradient(135deg,#FF6B6B,#FF9A3C);padding:32px 32px 28px">
     <div style="font-size:1.6rem;font-weight:700;color:white;font-family:'Open Sans',sans-serif">Score de Santé</div>
@@ -1790,7 +1791,7 @@ function switchLang(lang) {
     </div>
 
     <!-- Historique 7 jours -->
-    <div style="background:white;border-radius:20px;padding:24px;box-shadow:0 2px 12px rgba(0,0,0,0.06)">
+    <div style="background:white;border-radius:20px;padding:24px;box-shadow:0 2px 12px rgba(0,0,0,0.06);margin-bottom:100px">
       <div style="font-size:1rem;font-weight:700;color:#1a1a1a;margin-bottom:16px">Historique 7 jours</div>
       <div id="scoreHistorique" style="display:flex;gap:8px;align-items:flex-end;justify-content:space-between"></div>
     </div>
