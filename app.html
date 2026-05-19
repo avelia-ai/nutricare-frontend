@@ -6677,6 +6677,104 @@ async function deleteProfessional(id) {
       alert('Erreur lors de la création du paiement. Réessayez.');
     }
   }
+
+// ── PLANNING ──
+window.planningWeekOffset = 0;
+window.planningEvents = [];
+try { window.planningEvents = JSON.parse(localStorage.getItem('mirella_planning')||'[]'); } catch(x){ window.planningEvents=[]; }
+
+window.renderPlanning = function() {
+  var grid = document.getElementById('planningGrid');
+  var lbl = document.getElementById('planningWeekLabel');
+  if (!grid) return;
+  var today = new Date();
+  var dow = today.getDay() === 0 ? 6 : today.getDay() - 1;
+  var mon = new Date(today);
+  mon.setDate(today.getDate() - dow + window.planningWeekOffset*7);
+  mon.setHours(0,0,0,0);
+  var mois = ['jan','fev','mar','avr','mai','jun','jul','aou','sep','oct','nov','dec'];
+  var fmt = function(d) { return d.getDate()+' '+mois[d.getMonth()]; };
+  if(lbl) lbl.textContent = fmt(mon)+' - '+fmt(new Date(mon.getTime()+6*86400000));
+  var jours = ['Lun','Mar','Mer','Jeu','Ven','Sam','Dim'];
+  var colors = {repas:'#FFF5F0',medicament:'#F0F4FF',sport:'#F0FFF5',rappel:'#FFFBF0',rdv:'#FDF0FF'};
+  var html = '';
+  for(var i=0;i<7;i++){
+    var d = new Date(mon.getTime()+i*86400000);
+    var ds = d.toISOString().split('T')[0];
+    var isT = ds === today.toISOString().split('T')[0];
+    var evts = window.planningEvents.filter(function(e){
+      if(e.date===ds) return true;
+      if(e.rec==='daily') return true;
+      if(e.rec==='weekly' && new Date(e.date).getDay()===d.getDay()) return true;
+      return false;
+    });
+    evts.sort(function(a,b){return a.time.localeCompare(b.time);});
+    html += '<div style="background:white;border-radius:14px;overflow:hidden;margin-bottom:8px'+(isT?';border:2px solid #FF6B6B':'')+'">';
+    html += '<div style="padding:10px 14px;background:'+(isT?'linear-gradient(135deg,#FF6B6B,#FF9A3C)':'#f9f9f9')+';font-weight:700;font-size:0.88rem;color:'+(isT?'white':'#1a1a1a')+'">'+jours[i]+' '+d.getDate()+'</div>';
+    if(evts.length===0){
+      html += '<div style="padding:10px 14px;font-size:0.8rem;color:#ccc">Aucun evenement</div>';
+    } else {
+      evts.forEach(function(e){
+        var bg = colors[e.type]||'#FFF5F0';
+        html += '<div style="display:flex;align-items:center;gap:10px;padding:10px 14px;border-top:1px solid #f5f5f5;background:'+bg+'">';
+        html += '<span style="font-size:1.2rem">'+e.ico+'</span>';
+        html += '<div style="flex:1"><div style="font-size:0.85rem;font-weight:600;color:#1a1a1a">'+e.title+'</div>';
+        html += '<div style="font-size:0.75rem;color:#888">'+e.time+'</div></div>';
+        html += '<button onclick="window.delEvt(\'' + e.id + '\')" style="background:none;border:none;color:#ccc;cursor:pointer;font-size:1rem;padding:4px">x</button>';
+        html += '</div>';
+      });
+    }
+    html += '</div>';
+  }
+  grid.innerHTML = html;
+};
+
+window.delEvt = function(id) {
+  window.planningEvents = window.planningEvents.filter(function(e){return e.id!==id;});
+  localStorage.setItem('mirella_planning', JSON.stringify(window.planningEvents));
+  window.renderPlanning();
+};
+
+window.openAddEvent = function() {
+  var m = document.getElementById('planningModal');
+  if(m){
+    document.getElementById('eventDate').value = new Date().toISOString().split('T')[0];
+    document.getElementById('eventTime').value = '08:00';
+    document.getElementById('eventTitle').value = '';
+    m.style.display = 'flex';
+  }
+};
+
+window.closePlanningModal = function() {
+  var m = document.getElementById('planningModal');
+  if(m) m.style.display = 'none';
+};
+
+window._evtType = 'repas';
+window._evtIco = '?';
+
+window.selectEventType = function(t, ico) {
+  window._evtType = t;
+  window._evtIco = ico;
+  document.querySelectorAll('.evt-type-btn').forEach(function(b){
+    b.style.borderColor = b.dataset.type===t ? '#FF6B6B' : '#eee';
+    b.style.background = b.dataset.type===t ? '#FFF5F0' : 'white';
+  });
+};
+
+window.saveEvent = function() {
+  var title = document.getElementById('eventTitle').value.trim();
+  var date = document.getElementById('eventDate').value;
+  var time = document.getElementById('eventTime').value;
+  var rec = document.getElementById('eventRecurrence').value;
+  if(!title||!date||!time){ alert('Remplissez tous les champs'); return; }
+  var evt = {id:Date.now().toString(), type:window._evtType, ico:window._evtIco, title:title, date:date, time:time, rec:rec};
+  window.planningEvents.push(evt);
+  localStorage.setItem('mirella_planning', JSON.stringify(window.planningEvents));
+  window.closePlanningModal();
+  window.renderPlanning();
+};
+
 </script>
 <script src="translations.js?v=2"></script>
 
