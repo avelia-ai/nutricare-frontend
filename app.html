@@ -5037,6 +5037,7 @@ Réponds UNIQUEMENT en JSON valide avec cette structure exacte:
     document.getElementById('insightsView').style.display = view === 'insights' ? 'block' : 'none';
     document.getElementById('simulatorView').style.display = view === 'simulator' ? 'block' : 'none';
     document.getElementById('oracleView').style.display = view === 'oracle' ? 'flex' : 'none';
+    var pv = document.getElementById('planningView'); if(pv) { pv.style.display = view === 'planning' ? 'block' : 'none'; if(view === 'planning') initPlanning(); }
     if (view === 'oracle') initOracle();
     document.getElementById('historyView').style.display = view === 'history' ? 'block' : 'none';
     if (view === 'history') loadHistory();
@@ -6848,6 +6849,7 @@ function closeMirellaNotif() {
       <button onclick="toggleQuickMenu();showView('programs')" style="display:flex;align-items:center;gap:8px;padding:12px;background:#FFF5F0;border:none;border-radius:12px;font-size:0.82rem;font-weight:600;color:#2D2D2D;cursor:pointer">🎯 Programmes</button>
       <button onclick="toggleQuickMenu();showView('passeport')" style="display:flex;align-items:center;gap:8px;padding:12px;background:#FFF5F0;border:none;border-radius:12px;font-size:0.82rem;font-weight:600;color:#2D2D2D;cursor:pointer">📄 Passeport santé</button>
       <button onclick="toggleQuickMenu();showView('pricing')" style="display:flex;align-items:center;gap:8px;padding:12px;background:#FFF5F0;border:none;border-radius:12px;font-size:0.82rem;font-weight:600;color:#2D2D2D;cursor:pointer">⭐ Abonnements</button>
+      <button onclick="toggleQuickMenu();showView('planning')" style="display:flex;align-items:center;gap:8px;padding:12px;background:#FFF5F0;border:none;border-radius:12px;font-size:0.82rem;font-weight:600;color:#2D2D2D;cursor:pointer">📅 Mon planning</button>
       <button onclick="toggleQuickMenu();showView('gamification')" style="display:flex;align-items:center;gap:8px;padding:12px;background:#FFF5F0;border:none;border-radius:12px;font-size:0.82rem;font-weight:600;color:#2D2D2D;cursor:pointer">🏆 Progression</button>
     </div>
   </div>
@@ -6904,5 +6906,257 @@ function toggleQuickMenu() {
     <button onclick="localStorage.setItem('mirella_pwd_changed','1');document.getElementById('changePasswordModal').style.display='none'" style="width:100%;background:none;border:none;color:#aaa;font-size:.82rem;cursor:pointer;font-family:'DM Sans',sans-serif">Plus tard</button>
   </div>
 </div>
+
+
+<!-- PLANNING VIEW -->
+<div id="planningView" style="display:none;padding:0;overflow-y:auto;background:#FFF5F0;width:100%;min-height:100vh">
+  <div class="view-header" style="background:linear-gradient(135deg,#FF6B6B,#FF9A3C);margin:0;padding:32px 32px 28px">
+    <div style="display:flex;align-items:center;justify-content:space-between">
+      <div>
+        <div style="font-size:1.6rem;font-weight:700;color:white;font-family:'Open Sans',sans-serif">Mon Planning</div>
+        <div style="font-size:0.9rem;color:rgba(255,255,255,0.8);margin-top:4px">Repas · Médicaments · Sport · Rappels</div>
+      </div>
+      <button onclick="openAddEvent()" style="background:rgba(255,255,255,0.2);border:none;border-radius:12px;padding:10px 16px;color:white;font-size:0.85rem;font-weight:600;cursor:pointer">+ Ajouter</button>
+    </div>
+  </div>
+
+  <div style="padding:20px">
+    <!-- Sélecteur de semaine -->
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px">
+      <button onclick="planningWeekOffset--;renderPlanning()" style="background:white;border:1px solid #eee;border-radius:10px;padding:8px 14px;font-size:1rem;cursor:pointer">‹</button>
+      <div id="planningWeekLabel" style="font-weight:700;font-size:1rem;color:#1a1a1a"></div>
+      <button onclick="planningWeekOffset++;renderPlanning()" style="background:white;border:1px solid #eee;border-radius:10px;padding:8px 14px;font-size:1rem;cursor:pointer">›</button>
+    </div>
+
+    <!-- Grille 7 jours -->
+    <div id="planningGrid" style="display:flex;flex-direction:column;gap:12px"></div>
+  </div>
+
+  <!-- Modal ajout événement -->
+  <div id="planningModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:9999;align-items:flex-end;justify-content:center">
+    <div style="background:white;border-radius:24px 24px 0 0;padding:24px;width:100%;max-width:600px;max-height:85vh;overflow-y:auto">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px">
+        <div style="font-size:1.1rem;font-weight:700;color:#1a1a1a">Nouvel événement</div>
+        <button onclick="closePlanningModal()" style="background:#f5f5f5;border:none;border-radius:50%;width:32px;height:32px;font-size:1.1rem;cursor:pointer">✕</button>
+      </div>
+
+      <!-- Type -->
+      <div style="margin-bottom:16px">
+        <div style="font-size:0.8rem;font-weight:600;color:#666;margin-bottom:8px;text-transform:uppercase;letter-spacing:.05em">Type</div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap" id="eventTypeSelector">
+          <button onclick="selectEventType('repas','🍽️')" class="evt-type-btn" data-type="repas" style="padding:8px 14px;border-radius:10px;border:2px solid #eee;background:white;font-size:0.82rem;font-weight:600;cursor:pointer">🍽️ Repas</button>
+          <button onclick="selectEventType('medicament','💊')" class="evt-type-btn" data-type="medicament" style="padding:8px 14px;border-radius:10px;border:2px solid #eee;background:white;font-size:0.82rem;font-weight:600;cursor:pointer">💊 Médicament</button>
+          <button onclick="selectEventType('sport','💪')" class="evt-type-btn" data-type="sport" style="padding:8px 14px;border-radius:10px;border:2px solid #eee;background:white;font-size:0.82rem;font-weight:600;cursor:pointer">💪 Sport</button>
+          <button onclick="selectEventType('rappel','🔔')" class="evt-type-btn" data-type="rappel" style="padding:8px 14px;border-radius:10px;border:2px solid #eee;background:white;font-size:0.82rem;font-weight:600;cursor:pointer">🔔 Rappel</button>
+          <button onclick="selectEventType('rdv','👨‍⚕️')" class="evt-type-btn" data-type="rdv" style="padding:8px 14px;border-radius:10px;border:2px solid #eee;background:white;font-size:0.82rem;font-weight:600;cursor:pointer">👨‍⚕️ RDV médecin</button>
+        </div>
+      </div>
+
+      <!-- Titre -->
+      <div style="margin-bottom:16px">
+        <div style="font-size:0.8rem;font-weight:600;color:#666;margin-bottom:8px;text-transform:uppercase;letter-spacing:.05em">Titre</div>
+        <input id="eventTitle" type="text" placeholder="Ex: Petit-déjeuner, Metformine 500mg..." style="width:100%;padding:12px;border:1px solid #eee;border-radius:10px;font-size:0.9rem;box-sizing:border-box">
+      </div>
+
+      <!-- Date et heure -->
+      <div style="display:flex;gap:12px;margin-bottom:16px">
+        <div style="flex:1">
+          <div style="font-size:0.8rem;font-weight:600;color:#666;margin-bottom:8px;text-transform:uppercase;letter-spacing:.05em">Date</div>
+          <input id="eventDate" type="date" style="width:100%;padding:12px;border:1px solid #eee;border-radius:10px;font-size:0.9rem;box-sizing:border-box">
+        </div>
+        <div style="flex:1">
+          <div style="font-size:0.8rem;font-weight:600;color:#666;margin-bottom:8px;text-transform:uppercase;letter-spacing:.05em">Heure</div>
+          <input id="eventTime" type="time" style="width:100%;padding:12px;border:1px solid #eee;border-radius:10px;font-size:0.9rem;box-sizing:border-box">
+        </div>
+      </div>
+
+      <!-- Récurrence -->
+      <div style="margin-bottom:16px">
+        <div style="font-size:0.8rem;font-weight:600;color:#666;margin-bottom:8px;text-transform:uppercase;letter-spacing:.05em">Récurrence</div>
+        <select id="eventRecurrence" style="width:100%;padding:12px;border:1px solid #eee;border-radius:10px;font-size:0.9rem;background:white">
+          <option value="none">Aucune</option>
+          <option value="daily">Tous les jours</option>
+          <option value="weekly">Toutes les semaines</option>
+          <option value="monthly">Tous les mois</option>
+        </select>
+      </div>
+
+      <!-- Notification -->
+      <div style="margin-bottom:24px;display:flex;align-items:center;justify-content:space-between;background:#FFF5F0;border-radius:12px;padding:14px">
+        <div>
+          <div style="font-size:0.9rem;font-weight:600;color:#1a1a1a">Notification</div>
+          <div style="font-size:0.78rem;color:#888;margin-top:2px">Recevoir un rappel</div>
+        </div>
+        <label style="position:relative;display:inline-block;width:44px;height:24px">
+          <input type="checkbox" id="eventNotif" checked style="opacity:0;width:0;height:0">
+          <span onclick="document.getElementById('eventNotif').click()" style="position:absolute;cursor:pointer;inset:0;background:#FF6B6B;border-radius:24px;transition:.3s"></span>
+        </label>
+      </div>
+
+      <button onclick="saveEvent()" style="width:100%;background:linear-gradient(135deg,#FF6B6B,#FF9A3C);color:white;border:none;border-radius:14px;padding:16px;font-size:1rem;font-weight:700;cursor:pointer">Enregistrer</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ── PLANNING ──
+var planningWeekOffset = 0;
+var planningEvents = JSON.parse(localStorage.getItem('mirella_planning') || '[]');
+var selectedEventType = 'repas';
+var selectedEventEmoji = '🍽️';
+
+function initPlanning() {
+  renderPlanning();
+  schedulePlanningNotifications();
+}
+
+function renderPlanning() {
+  var today = new Date();
+  var monday = new Date(today);
+  monday.setDate(today.getDate() - today.getDay() + 1 + planningWeekOffset * 7);
+  monday.setHours(0,0,0,0);
+
+  var sunday = new Date(monday);
+  sunday.setDate(monday.getDate() + 6);
+
+  var fmt = function(d) { return d.toLocaleDateString('fr-FR', {day:'2-digit', month:'short'}); };
+  document.getElementById('planningWeekLabel').textContent = fmt(monday) + ' — ' + fmt(sunday);
+
+  var grid = document.getElementById('planningGrid');
+  grid.innerHTML = '';
+
+  var days = ['Lun','Mar','Mer','Jeu','Ven','Sam','Dim'];
+  for (var i = 0; i < 7; i++) {
+    var day = new Date(monday);
+    day.setDate(monday.getDate() + i);
+    var dateStr = day.toISOString().split('T')[0];
+    var isToday = dateStr === today.toISOString().split('T')[0];
+
+    var dayEvents = planningEvents.filter(function(e) {
+      if (e.date === dateStr) return true;
+      if (e.recurrence === 'daily') return true;
+      if (e.recurrence === 'weekly') {
+        var eDay = new Date(e.date);
+        return eDay.getDay() === day.getDay();
+      }
+      return false;
+    }).sort(function(a,b) { return a.time.localeCompare(b.time); });
+
+    var dayDiv = document.createElement('div');
+    dayDiv.style.cssText = 'background:white;border-radius:16px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,0.06)' + (isToday ? ';border:2px solid #FF6B6B' : '');
+
+    var header = '<div style="display:flex;align-items:center;justify-content:space-between;padding:12px 16px;background:' + (isToday ? 'linear-gradient(135deg,#FF6B6B,#FF9A3C)' : '#f9f9f9') + '">';
+    header += '<div style="font-weight:700;font-size:0.9rem;color:' + (isToday ? 'white' : '#1a1a1a') + '">' + days[i] + ' ' + day.getDate() + '</div>';
+    if (isToday) header += '<div style="font-size:0.7rem;color:rgba(255,255,255,0.8);background:rgba(255,255,255,0.2);padding:2px 8px;border-radius:10px">Aujourd'hui</div>';
+    header += '</div>';
+
+    var eventsHtml = '';
+    if (dayEvents.length === 0) {
+      eventsHtml = '<div style="padding:12px 16px;font-size:0.82rem;color:#bbb;text-align:center">Aucun événement</div>';
+    } else {
+      dayEvents.forEach(function(e) {
+        var colors = {repas:'#FFF5F0',medicament:'#F0F4FF',sport:'#F0FFF5',rappel:'#FFFBF0',rdv:'#FDF0FF'};
+        var bg = colors[e.type] || '#FFF5F0';
+        eventsHtml += '<div style="display:flex;align-items:center;gap:10px;padding:10px 16px;border-bottom:1px solid #f5f5f5;background:' + bg + '">';
+        eventsHtml += '<div style="font-size:1.2rem">' + e.emoji + '</div>';
+        eventsHtml += '<div style="flex:1"><div style="font-size:0.85rem;font-weight:600;color:#1a1a1a">' + e.title + '</div>';
+        eventsHtml += '<div style="font-size:0.75rem;color:#888">' + e.time + (e.recurrence !== 'none' ? ' · 🔁 ' + (e.recurrence === 'daily' ? 'Quotidien' : e.recurrence === 'weekly' ? 'Hebdo' : 'Mensuel') : '') + '</div></div>';
+        eventsHtml += '<button onclick="deleteEvent('' + e.id + '')" style="background:none;border:none;color:#ccc;font-size:1.1rem;cursor:pointer;padding:4px">✕</button>';
+        eventsHtml += '</div>';
+      });
+    }
+
+    dayDiv.innerHTML = header + eventsHtml;
+    grid.appendChild(dayDiv);
+  }
+}
+
+function openAddEvent() {
+  var today = new Date().toISOString().split('T')[0];
+  document.getElementById('eventDate').value = today;
+  document.getElementById('eventTime').value = '08:00';
+  document.getElementById('eventTitle').value = '';
+  document.getElementById('planningModal').style.display = 'flex';
+}
+
+function closePlanningModal() {
+  document.getElementById('planningModal').style.display = 'none';
+}
+
+function selectEventType(type, emoji) {
+  selectedEventType = type;
+  selectedEventEmoji = emoji;
+  document.querySelectorAll('.evt-type-btn').forEach(function(b) {
+    b.style.borderColor = b.dataset.type === type ? '#FF6B6B' : '#eee';
+    b.style.background = b.dataset.type === type ? '#FFF5F0' : 'white';
+  });
+}
+
+function saveEvent() {
+  var title = document.getElementById('eventTitle').value.trim();
+  var date = document.getElementById('eventDate').value;
+  var time = document.getElementById('eventTime').value;
+  var recurrence = document.getElementById('eventRecurrence').value;
+  var notif = document.getElementById('eventNotif').checked;
+
+  if (!title || !date || !time) {
+    alert('Veuillez remplir tous les champs');
+    return;
+  }
+
+  var event = {
+    id: Date.now().toString(),
+    type: selectedEventType,
+    emoji: selectedEventEmoji,
+    title: title,
+    date: date,
+    time: time,
+    recurrence: recurrence,
+    notif: notif
+  };
+
+  planningEvents.push(event);
+  localStorage.setItem('mirella_planning', JSON.stringify(planningEvents));
+
+  if (notif) scheduleNotification(event);
+
+  closePlanningModal();
+  renderPlanning();
+}
+
+function deleteEvent(id) {
+  planningEvents = planningEvents.filter(function(e) { return e.id !== id; });
+  localStorage.setItem('mirella_planning', JSON.stringify(planningEvents));
+  renderPlanning();
+}
+
+async function scheduleNotification(event) {
+  if (!window.Capacitor || !window.Capacitor.isNativePlatform()) return;
+  try {
+    var { LocalNotifications } = Capacitor.Plugins;
+    await LocalNotifications.requestPermissions();
+    var dt = new Date(event.date + 'T' + event.time + ':00');
+    if (dt > new Date()) {
+      await LocalNotifications.schedule({
+        notifications: [{
+          id: parseInt(event.id) % 2147483647,
+          title: event.emoji + ' ' + event.title,
+          body: 'Rappel Mirella : ' + event.title,
+          schedule: { at: dt },
+          sound: null,
+          actionTypeId: '',
+          extra: null
+        }]
+      });
+    }
+  } catch(e) { console.error('Notif error:', e); }
+}
+
+async function schedulePlanningNotifications() {
+  if (!window.Capacitor || !window.Capacitor.isNativePlatform()) return;
+  planningEvents.filter(function(e) { return e.notif; }).forEach(scheduleNotification);
+}
+</script>
+<!-- FIN PLANNING VIEW -->
 
 </body>
