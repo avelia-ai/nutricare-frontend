@@ -5037,7 +5037,7 @@ Réponds UNIQUEMENT en JSON valide avec cette structure exacte:
     document.getElementById('insightsView').style.display = view === 'insights' ? 'block' : 'none';
     document.getElementById('simulatorView').style.display = view === 'simulator' ? 'block' : 'none';
     document.getElementById('oracleView').style.display = view === 'oracle' ? 'flex' : 'none';
-    var pv = document.getElementById('planningView'); if(pv) { pv.style.display = view === 'planning' ? 'block' : 'none'; if(view === 'planning') initPlanning(); }
+    var pv = document.getElementById('planningView'); if(pv) { pv.style.display = view === 'planning' ? 'block' : 'none'; if(view === 'planning') { setTimeout(function(){ if(typeof initPlanning === 'function') initPlanning(); }, 100); } }
     if (view === 'oracle') initOracle();
     document.getElementById('historyView').style.display = view === 'history' ? 'block' : 'none';
     if (view === 'history') loadHistory();
@@ -6923,9 +6923,9 @@ function toggleQuickMenu() {
   <div style="padding:20px">
     <!-- Sélecteur de semaine -->
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px">
-      <button onclick="planningWeekOffset--;renderPlanning()" style="background:white;border:1px solid #eee;border-radius:10px;padding:8px 14px;font-size:1rem;cursor:pointer">‹</button>
+      <button onclick="window.planningWeekOffset--;renderPlanning()" style="background:white;border:1px solid #eee;border-radius:10px;padding:8px 14px;font-size:1rem;cursor:pointer">‹</button>
       <div id="planningWeekLabel" style="font-weight:700;font-size:1rem;color:#1a1a1a"></div>
-      <button onclick="planningWeekOffset++;renderPlanning()" style="background:white;border:1px solid #eee;border-radius:10px;padding:8px 14px;font-size:1rem;cursor:pointer">›</button>
+      <button onclick="window.planningWeekOffset++;renderPlanning()" style="background:white;border:1px solid #eee;border-radius:10px;padding:8px 14px;font-size:1rem;cursor:pointer">›</button>
     </div>
 
     <!-- Grille 7 jours -->
@@ -7000,7 +7000,7 @@ function toggleQuickMenu() {
 
 <script>
 // ── PLANNING ──
-var planningWeekOffset = 0;
+window.planningWeekOffset = 0;
 var planningEvents = JSON.parse(localStorage.getItem('mirella_planning') || '[]');
 var selectedEventType = 'repas';
 var selectedEventEmoji = '🍽️';
@@ -7076,7 +7076,7 @@ function openAddEvent() {
   document.getElementById('eventDate').value = today;
   document.getElementById('eventTime').value = '08:00';
   document.getElementById('eventTitle').value = '';
-  document.getElementById('planningModal').style.display = 'flex';
+  var pm = document.getElementById('planningModal'); if(pm){ pm.style.display='flex'; }
 }
 
 function closePlanningModal() {
