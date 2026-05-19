@@ -759,7 +759,7 @@ function switchLang(lang) {
 
     <!-- DASHBOARD VIEW -->
     <!-- PLANNING VIEW -->
-<div id="planningView" style="display:none;padding:0;overflow-y:auto;background:#FFF5F0;width:100%;min-height:100vh">
+<div id="planningView" style="display:none;padding:0;overflow-y:auto;background:#FFF5F0;width:100%;height:100%;">
   <div class="view-header" style="background:linear-gradient(135deg,#FF6B6B,#FF9A3C);margin:0;padding:32px 32px 28px">
     <div style="display:flex;align-items:center;justify-content:space-between">
       <div>
@@ -5287,7 +5287,7 @@ Réponds UNIQUEMENT en JSON valide avec cette structure exacte:
     document.getElementById('insightsView').style.display = view === 'insights' ? 'block' : 'none';
     document.getElementById('simulatorView').style.display = view === 'simulator' ? 'block' : 'none';
     document.getElementById('oracleView').style.display = view === 'oracle' ? 'flex' : 'none';
-    var pv = document.getElementById('planningView'); if(pv) { pv.style.display = view === 'planning' ? 'block' : 'none'; if(view === 'planning') { setTimeout(function(){ if(typeof initPlanning === 'function') initPlanning(); }, 100); } }
+    var pv = document.getElementById('planningView'); if(pv) { pv.style.display = view === 'planning' ? 'block' : 'none'; var mc = document.querySelector('.main-content'); if(mc) mc.style.overflow = view === 'planning' ? 'auto' : 'hidden'; if(view === 'planning') { setTimeout(function(){ if(typeof initPlanning === 'function') initPlanning(); }, 100); } }
     if (view === 'oracle') initOracle();
     document.getElementById('historyView').style.display = view === 'history' ? 'block' : 'none';
     if (view === 'history') loadHistory();
