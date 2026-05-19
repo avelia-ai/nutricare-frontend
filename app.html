@@ -7005,12 +7005,12 @@ var planningEvents = JSON.parse(localStorage.getItem('mirella_planning') || '[]'
 var selectedEventType = 'repas';
 var selectedEventEmoji = '🍽️';
 
-function initPlanning() {
+window.initPlanning = function initPlanning() {
   renderPlanning();
   schedulePlanningNotifications();
 }
 
-function renderPlanning() {
+window.renderPlanning = function renderPlanning() {
   var today = new Date();
   var monday = new Date(today);
   monday.setDate(today.getDate() - today.getDay() + 1 + planningWeekOffset * 7);
@@ -7071,7 +7071,7 @@ function renderPlanning() {
   }
 }
 
-function openAddEvent() {
+window.openAddEvent = function openAddEvent() {
   var today = new Date().toISOString().split('T')[0];
   document.getElementById('eventDate').value = today;
   document.getElementById('eventTime').value = '08:00';
@@ -7079,11 +7079,11 @@ function openAddEvent() {
   var pm = document.getElementById('planningModal'); if(pm){ pm.style.display='flex'; }
 }
 
-function closePlanningModal() {
+window.closePlanningModal = function closePlanningModal() {
   document.getElementById('planningModal').style.display = 'none';
 }
 
-function selectEventType(type, emoji) {
+window.selectEventType = function selectEventType(type, emoji) {
   selectedEventType = type;
   selectedEventEmoji = emoji;
   document.querySelectorAll('.evt-type-btn').forEach(function(b) {
@@ -7092,7 +7092,7 @@ function selectEventType(type, emoji) {
   });
 }
 
-function saveEvent() {
+window.saveEvent = function saveEvent() {
   var title = document.getElementById('eventTitle').value.trim();
   var date = document.getElementById('eventDate').value;
   var time = document.getElementById('eventTime').value;
@@ -7124,7 +7124,7 @@ function saveEvent() {
   renderPlanning();
 }
 
-function deleteEvent(id) {
+window.deleteEvent = function deleteEvent(id) {
   planningEvents = planningEvents.filter(function(e) { return e.id !== id; });
   localStorage.setItem('mirella_planning', JSON.stringify(planningEvents));
   renderPlanning();
