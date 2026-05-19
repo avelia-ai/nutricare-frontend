@@ -494,6 +494,104 @@ button[style*="background:linear-gradient(135deg,#FF6B6B,#FF9A3C)"] {
 </head>
 <body>
 <script>
+
+// ── SCORE SANTE ──
+window._scoreData = {forme:0, aliment:0, sport:0};
+
+window.setScore = function(cat, val, btn) {
+  window._scoreData[cat] = val;
+  var parent = btn.parentElement;
+  parent.querySelectorAll('button').forEach(function(b){
+    b.style.borderColor = '#eee';
+    b.style.background = 'white';
+  });
+  btn.style.borderColor = '#FF6B6B';
+  btn.style.background = '#FFF5F0';
+  window.calcScore();
+};
+
+window.calcScore = function() {
+  var forme = window._scoreData.forme || 0;
+  var aliment = window._scoreData.aliment || 0;
+  var sport = window._scoreData.sport || 0;
+  var sommeil = parseFloat(document.getElementById('sommeilSlider').value) || 7;
+  var hydra = parseFloat(document.getElementById('hydraSlider').value) || 1.5;
+  if(forme === 0 && aliment === 0) return;
+  var s = 0;
+  s += (forme/5) * 25;
+  s += (aliment/5) * 25;
+  s += Math.min(sport/4, 1) * 20;
+  s += Math.min(sommeil/8, 1) * 15;
+  s += Math.min(hydra/2, 1) * 15;
+  var score = Math.round(s);
+  document.getElementById('scoreValue').textContent = score;
+  document.getElementById('scoreBar').style.width = score + '%';
+  var lbl = score >= 80 ? 'Excellente journee !' : score >= 60 ? 'Bonne journee' : score >= 40 ? 'Journee correcte' : 'Journee difficile';
+  document.getElementById('scoreLabel').textContent = lbl;
+  var c = score >= 80 ? '#22c55e' : score >= 60 ? '#FF9A3C' : '#FF6B6B';
+  document.getElementById('scoreValue').style.color = c;
+  return score;
+};
+
+window.analyseScore = function() {
+  var score = window.calcScore();
+  if(!score){ alert('Remplissez le formulaire avant d\'analyser'); return; }
+  var btn = document.getElementById('analyseBtn');
+  btn.textContent = 'Analyse en cours...';
+  btn.disabled = true;
+  var forme = window._scoreData.forme;
+  var aliment = window._scoreData.aliment;
+  var sport = window._scoreData.sport;
+  var sommeil = document.getElementById('sommeilSlider').value;
+  var hydra = document.getElementById('hydraSlider').value;
+  var profile = localStorage.getItem('nutricare_profile') || '{}';
+  var prompt = 'Tu es Mirella, coach sante IA. Analyse cette journee (score ' + score + '/100) et donne un commentaire personnalise en 2-3 phrases courtes en francais, avec un conseil actionnable pour demain. Donnees: forme=' + forme + '/5, alimentation=' + aliment + '/5, sport=' + sport + '/4, sommeil=' + sommeil + 'h, hydratation=' + hydra + 'L. Profil patient: ' + profile.substring(0,200) + '. Reponds uniquement avec le commentaire, sans titre.';
+  fetch('https://api.anthropic.com/v1/messages', {
+    method: 'POST',
+    headers: {'Content-Type':'application/json'},
+    body: JSON.stringify({model:'claude-haiku-4-5-20251001', max_tokens:200, messages:[{role:'user',content:prompt}]})
+  }).then(function(r){return r.json();}).then(function(d){
+    var comment = d.content && d.content[0] ? d.content[0].text : 'Bonne journee ! Continuez vos efforts.';
+    document.getElementById('scoreComment').textContent = comment;
+    document.getElementById('scoreComment').style.display = 'block';
+    var today = new Date().toISOString().split('T')[0];
+    var hist = JSON.parse(localStorage.getItem('mirella_scores')||'[]');
+    hist = hist.filter(function(h){return h.date!==today;});
+    hist.push({date:today, score:score});
+    hist = hist.slice(-7);
+    localStorage.setItem('mirella_scores', JSON.stringify(hist));
+    window.renderScoreHisto();
+    btn.textContent = 'Analyser ma journee avec Mirella';
+    btn.disabled = false;
+  }).catch(function(){
+    btn.textContent = 'Analyser ma journee avec Mirella';
+    btn.disabled = false;
+  });
+};
+
+window.renderScoreHisto = function() {
+  var hist = JSON.parse(localStorage.getItem('mirella_scores')||'[]');
+  var el = document.getElementById('scoreHistorique');
+  if(!el) return;
+  if(hist.length === 0){ el.innerHTML = '<div style="font-size:0.82rem;color:#ccc;text-align:center;width:100%">Aucun historique</div>'; return; }
+  var html = '';
+  hist.forEach(function(h){
+    var d = new Date(h.date);
+    var jours = ['Dim','Lun','Mar','Mer','Jeu','Ven','Sam'];
+    var c = h.score>=80?'#22c55e':h.score>=60?'#FF9A3C':'#FF6B6B';
+    html += '<div style="flex:1;text-align:center">';
+    html += '<div style="font-size:0.7rem;color:#888;margin-bottom:4px">'+jours[d.getDay()]+'</div>';
+    html += '<div style="height:80px;display:flex;align-items:flex-end;justify-content:center">';
+    html += '<div style="width:28px;background:'+c+';border-radius:6px 6px 0 0;height:'+h.score+'%;min-height:4px"></div></div>';
+    html += '<div style="font-size:0.75rem;font-weight:700;color:'+c+'">'+h.score+'</div></div>';
+  });
+  el.innerHTML = html;
+};
+
+window.initScoreSante = function() {
+  window.renderScoreHisto();
+};
+
 // ── PLANNING ──
 try {
 window.planningWeekOffset = 0;
@@ -1607,92 +1705,94 @@ function switchLang(lang) {
   <div style="font-size:0.85rem;color:#FF9A3C;margin-bottom:32px;margin-top:24px">Protocoles adaptés à vos pathologies</div>
   <div id="protocolsList" style="display:flex;flex-direction:column;gap:20px"></div>
 </div>
-<div id="chronoView" style="display:none;padding:32px;overflow-y:auto;background:#FFF5F0;width:100%">
-  <div class="view-header" style="background:linear-gradient(135deg,#FF6B6B,#FF9A3C);margin:-32px -32px 32px -32px;padding:32px 32px 28px">
-    <div style="font-family:'Open Sans',serif;font-size:2rem;font-weight:700;color:white;margin-bottom:6px">Mon rythme circadien</div>
-    <div style="font-size:0.85rem;color:rgba(255,255,255,0.85)">Optimisez votre alimentation selon votre horloge biologique</div>
+<div id="chronoView" style="display:none;padding:0;overflow-y:auto;background:#FFF5F0;width:100%">
+  <!-- Header -->
+  <div class="view-header" style="background:linear-gradient(135deg,#FF6B6B,#FF9A3C);padding:32px 32px 28px">
+    <div style="font-size:1.6rem;font-weight:700;color:white;font-family:'Open Sans',sans-serif">Score de Santé</div>
+    <div style="font-size:0.9rem;color:rgba(255,255,255,0.8);margin-top:4px">Évaluez votre journée · Suivi quotidien</div>
   </div>
-  <div style="">
-    <!-- Paramètres chrono -->
-    <div style="background:white;border-radius:12px;padding:24px;border:1px solid rgba(255,107,107,0.15);margin-bottom:24px;">
-      <div style="font-size:0.75rem;font-weight:600;text-transform:uppercase;letter-spacing:1px;color:#FF9A3C;margin-bottom:20px;">⚙️ Mes horaires</div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:16px">
-        <div>
-          <label style="font-size:0.75rem;color:#FF9A3C;display:block;margin-bottom:4px">🌅 Heure de lever</label>
-          <input type="time" id="profileWakeUp" value="07:00" style="width:100%;padding:10px;border:1.5px solid rgba(255,107,107,0.2);border-radius:8px;font-size:0.88rem;font-family:'DM Sans',sans-serif">
+
+  <div style="padding:20px">
+
+    <!-- Score du jour -->
+    <div id="scoreDisplay" style="background:white;border-radius:20px;padding:24px;margin-bottom:20px;text-align:center;box-shadow:0 2px 12px rgba(0,0,0,0.06)">
+      <div style="font-size:0.8rem;font-weight:600;text-transform:uppercase;letter-spacing:.1em;color:#888;margin-bottom:12px">Score du jour</div>
+      <div id="scoreValue" style="font-size:4rem;font-weight:800;color:#FF6B6B;line-height:1">--</div>
+      <div id="scoreLabel" style="font-size:1rem;font-weight:600;color:#444;margin-top:8px">Remplissez le formulaire</div>
+      <div style="margin-top:16px;background:#f5f5f5;border-radius:20px;height:12px;overflow:hidden">
+        <div id="scoreBar" style="height:100%;width:0%;background:linear-gradient(135deg,#FF6B6B,#FF9A3C);border-radius:20px;transition:width 0.8s ease"></div>
+      </div>
+      <div id="scoreComment" style="font-size:0.85rem;color:#666;margin-top:12px;line-height:1.5;display:none"></div>
+    </div>
+
+    <!-- Formulaire quotidien -->
+    <div style="background:white;border-radius:20px;padding:24px;margin-bottom:20px;box-shadow:0 2px 12px rgba(0,0,0,0.06)">
+      <div style="font-size:1rem;font-weight:700;color:#1a1a1a;margin-bottom:20px">Comment s'est passée votre journée ?</div>
+
+      <!-- Forme générale -->
+      <div style="margin-bottom:20px">
+        <div style="font-size:0.82rem;font-weight:600;color:#555;margin-bottom:10px">Forme générale</div>
+        <div style="display:flex;gap:8px;justify-content:space-between" id="formeSelector">
+          <button onclick="setScore('forme',1,this)" data-val="1" style="flex:1;padding:10px 4px;border-radius:12px;border:2px solid #eee;background:white;font-size:1.2rem;cursor:pointer" title="Très mauvaise">😴</button>
+          <button onclick="setScore('forme',2,this)" data-val="2" style="flex:1;padding:10px 4px;border-radius:12px;border:2px solid #eee;background:white;font-size:1.2rem;cursor:pointer" title="Mauvaise">😕</button>
+          <button onclick="setScore('forme',3,this)" data-val="3" style="flex:1;padding:10px 4px;border-radius:12px;border:2px solid #eee;background:white;font-size:1.2rem;cursor:pointer" title="Moyenne">😐</button>
+          <button onclick="setScore('forme',4,this)" data-val="4" style="flex:1;padding:10px 4px;border-radius:12px;border:2px solid #eee;background:white;font-size:1.2rem;cursor:pointer" title="Bonne">🙂</button>
+          <button onclick="setScore('forme',5,this)" data-val="5" style="flex:1;padding:10px 4px;border-radius:12px;border:2px solid #eee;background:white;font-size:1.2rem;cursor:pointer" title="Excellente">😄</button>
         </div>
-        <div>
-          <label style="font-size:0.75rem;color:#FF9A3C;display:block;margin-bottom:4px">🌙 Heure de coucher</label>
-          <input type="time" id="profileSleep" value="23:00" style="width:100%;padding:10px;border:1.5px solid rgba(255,107,107,0.2);border-radius:8px;font-size:0.88rem;font-family:'DM Sans',sans-serif">
+      </div>
+
+      <!-- Alimentation -->
+      <div style="margin-bottom:20px">
+        <div style="font-size:0.82rem;font-weight:600;color:#555;margin-bottom:10px">Alimentation</div>
+        <div style="display:flex;gap:8px;justify-content:space-between" id="alimentSelector">
+          <button onclick="setScore('aliment',1,this)" data-val="1" style="flex:1;padding:10px 4px;border-radius:12px;border:2px solid #eee;background:white;font-size:1.2rem;cursor:pointer">🍔</button>
+          <button onclick="setScore('aliment',2,this)" data-val="2" style="flex:1;padding:10px 4px;border-radius:12px;border:2px solid #eee;background:white;font-size:1.2rem;cursor:pointer">🥐</button>
+          <button onclick="setScore('aliment',3,this)" data-val="3" style="flex:1;padding:10px 4px;border-radius:12px;border:2px solid #eee;background:white;font-size:1.2rem;cursor:pointer">🥗</button>
+          <button onclick="setScore('aliment',4,this)" data-val="4" style="flex:1;padding:10px 4px;border-radius:12px;border:2px solid #eee;background:white;font-size:1.2rem;cursor:pointer">🥦</button>
+          <button onclick="setScore('aliment',5,this)" data-val="5" style="flex:1;padding:10px 4px;border-radius:12px;border:2px solid #eee;background:white;font-size:1.2rem;cursor:pointer">🌟</button>
         </div>
-        <div>
-          <label style="font-size:0.75rem;color:#FF9A3C;display:block;margin-bottom:4px">💼 Début de travail</label>
-          <input type="time" id="profileWorkStart" value="09:00" style="width:100%;padding:10px;border:1.5px solid rgba(255,107,107,0.2);border-radius:8px;font-size:0.88rem;font-family:'DM Sans',sans-serif">
+      </div>
+
+      <!-- Sommeil -->
+      <div style="margin-bottom:20px">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+          <div style="font-size:0.82rem;font-weight:600;color:#555">Sommeil (heures)</div>
+          <div id="sommeilVal" style="font-size:0.9rem;font-weight:700;color:#FF6B6B">7h</div>
         </div>
-        <div>
-          <label style="font-size:0.75rem;color:#FF9A3C;display:block;margin-bottom:4px">🏠 Fin de travail</label>
-          <input type="time" id="profileWorkEnd" value="18:00" style="width:100%;padding:10px;border:1.5px solid rgba(255,107,107,0.2);border-radius:8px;font-size:0.88rem;font-family:'DM Sans',sans-serif">
+        <input type="range" min="3" max="12" value="7" id="sommeilSlider" oninput="document.getElementById('sommeilVal').textContent=this.value+'h';calcScore()" style="width:100%;accent-color:#FF6B6B">
+      </div>
+
+      <!-- Hydratation -->
+      <div style="margin-bottom:20px">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+          <div style="font-size:0.82rem;font-weight:600;color:#555">Hydratation (litres)</div>
+          <div id="hydraVal" style="font-size:0.9rem;font-weight:700;color:#FF6B6B">1.5L</div>
+        </div>
+        <input type="range" min="0" max="4" step="0.5" value="1.5" id="hydraSlider" oninput="document.getElementById('hydraVal').textContent=this.value+'L';calcScore()" style="width:100%;accent-color:#FF6B6B">
+      </div>
+
+      <!-- Activité physique -->
+      <div style="margin-bottom:24px">
+        <div style="font-size:0.82rem;font-weight:600;color:#555;margin-bottom:10px">Activité physique</div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap" id="sportSelector">
+          <button onclick="setScore('sport',0,this)" data-val="0" style="padding:8px 14px;border-radius:10px;border:2px solid #eee;background:white;font-size:0.8rem;font-weight:600;cursor:pointer">Aucune</button>
+          <button onclick="setScore('sport',2,this)" data-val="2" style="padding:8px 14px;border-radius:10px;border:2px solid #eee;background:white;font-size:0.8rem;font-weight:600;cursor:pointer">Marche</button>
+          <button onclick="setScore('sport',3,this)" data-val="3" style="padding:8px 14px;border-radius:10px;border:2px solid #eee;background:white;font-size:0.8rem;font-weight:600;cursor:pointer">30 min</button>
+          <button onclick="setScore('sport',4,this)" data-val="4" style="padding:8px 14px;border-radius:10px;border:2px solid #eee;background:white;font-size:0.8rem;font-weight:600;cursor:pointer">1h+</button>
         </div>
       </div>
-      <div style="margin-bottom:16px">
-        <label style="font-size:0.75rem;color:#FF9A3C;display:block;margin-bottom:4px">⚡ Objectif chronobiologique</label>
-        <select id="profileChronoGoal" style="width:100%;padding:10px;border:1.5px solid rgba(255,107,107,0.2);border-radius:8px;font-size:0.88rem;font-family:'DM Sans',sans-serif">
-          <option value="">Choisir un objectif...</option>
-          <option value="energy">Maximiser mon énergie dans la journée</option>
-          <option value="sleep">Améliorer la qualité de mon sommeil</option>
-          <option value="weight">Optimiser ma perte de poids</option>
-          <option value="focus">Améliorer ma concentration au travail</option>
-          <option value="digestion">Améliorer ma digestion</option>
-          <option value="sport">Optimiser mes performances sportives</option>
-        </select>
-      </div>
-      <button onclick="saveProfile()" style="background:linear-gradient(135deg,#FF6B6B,#FF9A3C);color:white;padding:10px 24px;border:none;border-radius:8px;font-size:0.88rem;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif">Sauvegarder mes horaires</button>
-      <span id="chronoSaveSuccess" style="font-size:0.78rem;color:#28C840;margin-left:12px;display:none">✅ Sauvegardé !</span>
+
+      <button onclick="analyseScore()" id="analyseBtn" style="width:100%;background:linear-gradient(135deg,#FF6B6B,#FF9A3C);color:white;border:none;border-radius:14px;padding:16px;font-size:1rem;font-weight:700;cursor:pointer">
+        Analyser ma journée avec Mirella ✨
+      </button>
     </div>
-    <div style="font-size:0.85rem;color:#999;margin-bottom:24px">Horaires optimaux selon votre profil chronobiologique</div>
-    <div style="background:#2D2D2D;border-radius:8px;padding:28px;margin-bottom:24px;display:flex;align-items:center;gap:32px;flex-wrap:wrap;">
-      <div style="text-align:center;">
-        <div style="font-family:'Open Sans',serif;font-size:3.5rem;font-weight:700;color:#FF6B6B;line-height:1;" id="chronoScore">--</div>
-        <div style="font-size:0.75rem;color:rgba(255,255,255,.5);margin-top:4px;text-transform:uppercase;letter-spacing:1px;">Score circadien</div>
-      </div>
-      <div style="flex:1;min-width:200px;">
-        <div style="font-size:1rem;font-weight:500;color:white;margin-bottom:8px;" id="chronoScoreLabel">Chargement...</div>
-        <div style="font-size:0.82rem;color:rgba(255,255,255,.55);line-height:1.6;" id="chronoScoreDesc"></div>
-      </div>
+
+    <!-- Historique 7 jours -->
+    <div style="background:white;border-radius:20px;padding:24px;box-shadow:0 2px 12px rgba(0,0,0,0.06)">
+      <div style="font-size:1rem;font-weight:700;color:#1a1a1a;margin-bottom:16px">Historique 7 jours</div>
+      <div id="scoreHistorique" style="display:flex;gap:8px;align-items:flex-end;justify-content:space-between"></div>
     </div>
-    <div style="background:white;border-radius:8px;padding:28px;border:1px solid rgba(255,107,107,0.15);margin-bottom:24px;">
-      <div style="font-size:0.75rem;font-weight:600;text-transform:uppercase;letter-spacing:1px;color:#FF9A3C;margin-bottom:20px;">Horaires optimaux de vos repas</div>
-      <div id="chronoTimeline" style="display:flex;flex-direction:column;gap:16px;"></div>
-    </div>
-    <div style="background:white;border-radius:8px;padding:28px;border:1px solid rgba(255,107,107,0.15);margin-bottom:24px;">
-      <div style="font-size:0.75rem;font-weight:600;text-transform:uppercase;letter-spacing:1px;color:#FF9A3C;margin-bottom:20px;">Conseils chronobiologiques personnalises</div>
-      <div id="chronoAdvice" style="display:flex;flex-direction:column;gap:12px;"></div>
-    </div>
-    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;margin-bottom:24px;">
-      <div style="background:white;border-radius:8px;padding:20px;border:1px solid rgba(255,107,107,0.15);">
-        <div style="font-size:1.2rem;margin-bottom:8px;">&#127749;</div>
-        <div style="font-size:0.82rem;font-weight:600;color:#2D2D2D;margin-bottom:8px;">Matin - Energie</div>
-        <div style="font-size:0.75rem;color:rgba(2,26,53,.6);line-height:1.6;">Proteines, oeufs, fromage blanc, fruits rouges, avoine. Evitez les sucres rapides.</div>
-      </div>
-      <div style="background:white;border-radius:8px;padding:20px;border:1px solid rgba(255,107,107,0.15);">
-        <div style="font-size:1.2rem;margin-bottom:8px;">&#9728;</div>
-        <div style="font-size:0.82rem;font-weight:600;color:#2D2D2D;margin-bottom:8px;">Midi - Repas principal</div>
-        <div style="font-size:0.75rem;color:rgba(2,26,53,.6);line-height:1.6;">Repas le plus complet. Proteines + legumes + feculents. Tolerance glucidique maximale.</div>
-      </div>
-      <div style="background:white;border-radius:8px;padding:20px;border:1px solid rgba(255,107,107,0.15);">
-        <div style="font-size:1.2rem;margin-bottom:8px;">&#127974;</div>
-        <div style="font-size:0.82rem;font-weight:600;color:#2D2D2D;margin-bottom:8px;">Apres-midi - Collation</div>
-        <div style="font-size:0.75rem;color:rgba(2,26,53,.6);line-height:1.6;">Fruits, oleagineux, yaourt. Evitez les excitants apres 15h pour preserver le sommeil.</div>
-      </div>
-      <div style="background:white;border-radius:8px;padding:20px;border:1px solid rgba(255,107,107,0.15);">
-        <div style="font-size:1.2rem;margin-bottom:8px;">&#127769;</div>
-        <div style="font-size:0.82rem;font-weight:600;color:#2D2D2D;margin-bottom:8px;">Soir - Legerete</div>
-        <div style="font-size:0.75rem;color:rgba(2,26,53,.6);line-height:1.6;">Repas leger 2-3h avant le coucher. Legumes, poisson blanc, tryptophane pour le sommeil.</div>
-      </div>
-    </div>
-    <div style="text-align:center;">
-      <button onclick="showView('profile')" style="background:#2D2D2D;color:white;padding:12px 28px;border:none;border-radius:4px;font-size:0.88rem;cursor:pointer;font-family:'DM Sans',sans-serif;">Modifier mes horaires</button>
-    </div>
+
   </div>
 </div>
 <div id="visualView" style="display:none;padding:32px;overflow-y:auto;background:#FFF5F0;width:100%">
@@ -5287,7 +5387,7 @@ Réponds UNIQUEMENT en JSON valide avec cette structure exacte:
     document.getElementById('proView').style.display = view === 'pro' ? 'block' : 'none';
     if (view === 'pro') loadProfessionals();
     document.getElementById('protocolsView').style.display = view === 'protocols' ? 'block' : 'none';
-    document.getElementById('chronoView').style.display = view === 'chrono' ? 'block' : 'none';
+    document.getElementById('chronoView').style.display = view === 'chrono' ? 'block' : 'none'; if(view==='chrono' && window.initScoreSante) window.initScoreSante();
     if (document.getElementById('visualView')) document.getElementById('visualView').style.display = view === 'visual' ? 'block' : 'none';
     document.getElementById('gamificationView').style.display = view === 'gamification' ? 'block' : 'none';
     document.getElementById('programsView').style.display = view === 'programs' ? 'block' : 'none';
