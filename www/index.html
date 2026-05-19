@@ -545,7 +545,7 @@ window.analyseScore = function() {
   var sommeil = document.getElementById('sommeilSlider').value;
   var hydra = document.getElementById('hydraSlider').value;
   var profile = localStorage.getItem('nutricare_profile') || '{}';
-  var prompt = 'Tu es Mirella, coach sante IA. Analyse cette journee (score ' + score + '/100) et donne un commentaire personnalise en 2-3 phrases courtes en francais, avec un conseil actionnable pour demain. Donnees: forme=' + forme + '/5, alimentation=' + aliment + '/5, sport=' + sport + '/4, sommeil=' + sommeil + 'h, hydratation=' + hydra + 'L. Profil patient: ' + profile.substring(0,200) + '. Reponds uniquement avec le commentaire, sans titre.';
+  var ressenti = document.getElementById('ressentiText') ? document.getElementById('ressentiText').value : ''; var prompt = 'Tu es Mirella, coach sante IA. Analyse cette journee (score ' + score + '/100) et donne un commentaire personnalise en 2-3 phrases courtes en francais, avec un conseil actionnable pour demain. Donnees: forme=' + forme + '/5, alimentation=' + aliment + '/5, sport=' + sport + '/4, sommeil=' + sommeil + 'h, hydratation=' + hydra + 'L. Ressenti: ' + (ressenti||'non renseigne') + '. Profil patient: ' + profile.substring(0,200) + '. Reponds uniquement avec le commentaire, sans titre.';
   fetch('https://api.anthropic.com/v1/messages', {
     method: 'POST',
     headers: {'Content-Type':'application/json'},
@@ -1705,7 +1705,7 @@ function switchLang(lang) {
   <div style="font-size:0.85rem;color:#FF9A3C;margin-bottom:32px;margin-top:24px">Protocoles adaptés à vos pathologies</div>
   <div id="protocolsList" style="display:flex;flex-direction:column;gap:20px"></div>
 </div>
-<div id="chronoView" style="display:none;padding:0;overflow-y:auto;background:#FFF5F0;width:100%">
+<div id="chronoView" style="display:none;padding:0;overflow-y:auto;background:#FFF5F0;width:100%;padding-bottom:80px">
   <!-- Header -->
   <div class="view-header" style="background:linear-gradient(135deg,#FF6B6B,#FF9A3C);padding:32px 32px 28px">
     <div style="font-size:1.6rem;font-weight:700;color:white;font-family:'Open Sans',sans-serif">Score de Santé</div>
@@ -1733,11 +1733,11 @@ function switchLang(lang) {
       <div style="margin-bottom:20px">
         <div style="font-size:0.82rem;font-weight:600;color:#555;margin-bottom:10px">Forme générale</div>
         <div style="display:flex;gap:8px;justify-content:space-between" id="formeSelector">
-          <button onclick="setScore('forme',1,this)" data-val="1" style="flex:1;padding:10px 4px;border-radius:12px;border:2px solid #eee;background:white;font-size:1.2rem;cursor:pointer" title="Très mauvaise">😴</button>
-          <button onclick="setScore('forme',2,this)" data-val="2" style="flex:1;padding:10px 4px;border-radius:12px;border:2px solid #eee;background:white;font-size:1.2rem;cursor:pointer" title="Mauvaise">😕</button>
-          <button onclick="setScore('forme',3,this)" data-val="3" style="flex:1;padding:10px 4px;border-radius:12px;border:2px solid #eee;background:white;font-size:1.2rem;cursor:pointer" title="Moyenne">😐</button>
-          <button onclick="setScore('forme',4,this)" data-val="4" style="flex:1;padding:10px 4px;border-radius:12px;border:2px solid #eee;background:white;font-size:1.2rem;cursor:pointer" title="Bonne">🙂</button>
-          <button onclick="setScore('forme',5,this)" data-val="5" style="flex:1;padding:10px 4px;border-radius:12px;border:2px solid #eee;background:white;font-size:1.2rem;cursor:pointer" title="Excellente">😄</button>
+          <button onclick="window.setScore('forme',1,this)" data-val="1" style="flex:1;padding:10px 4px;border-radius:12px;border:2px solid #eee;background:white;font-size:1.2rem;cursor:pointer" title="Très mauvaise">😴</button>
+          <button onclick="window.setScore('forme',2,this)" data-val="2" style="flex:1;padding:10px 4px;border-radius:12px;border:2px solid #eee;background:white;font-size:1.2rem;cursor:pointer" title="Mauvaise">😕</button>
+          <button onclick="window.setScore('forme',3,this)" data-val="3" style="flex:1;padding:10px 4px;border-radius:12px;border:2px solid #eee;background:white;font-size:1.2rem;cursor:pointer" title="Moyenne">😐</button>
+          <button onclick="window.setScore('forme',4,this)" data-val="4" style="flex:1;padding:10px 4px;border-radius:12px;border:2px solid #eee;background:white;font-size:1.2rem;cursor:pointer" title="Bonne">🙂</button>
+          <button onclick="window.setScore('forme',5,this)" data-val="5" style="flex:1;padding:10px 4px;border-radius:12px;border:2px solid #eee;background:white;font-size:1.2rem;cursor:pointer" title="Excellente">😄</button>
         </div>
       </div>
 
@@ -1745,11 +1745,11 @@ function switchLang(lang) {
       <div style="margin-bottom:20px">
         <div style="font-size:0.82rem;font-weight:600;color:#555;margin-bottom:10px">Alimentation</div>
         <div style="display:flex;gap:8px;justify-content:space-between" id="alimentSelector">
-          <button onclick="setScore('aliment',1,this)" data-val="1" style="flex:1;padding:10px 4px;border-radius:12px;border:2px solid #eee;background:white;font-size:1.2rem;cursor:pointer">🍔</button>
-          <button onclick="setScore('aliment',2,this)" data-val="2" style="flex:1;padding:10px 4px;border-radius:12px;border:2px solid #eee;background:white;font-size:1.2rem;cursor:pointer">🥐</button>
-          <button onclick="setScore('aliment',3,this)" data-val="3" style="flex:1;padding:10px 4px;border-radius:12px;border:2px solid #eee;background:white;font-size:1.2rem;cursor:pointer">🥗</button>
-          <button onclick="setScore('aliment',4,this)" data-val="4" style="flex:1;padding:10px 4px;border-radius:12px;border:2px solid #eee;background:white;font-size:1.2rem;cursor:pointer">🥦</button>
-          <button onclick="setScore('aliment',5,this)" data-val="5" style="flex:1;padding:10px 4px;border-radius:12px;border:2px solid #eee;background:white;font-size:1.2rem;cursor:pointer">🌟</button>
+          <button onclick="window.setScore('aliment',1,this)" data-val="1" style="flex:1;padding:10px 4px;border-radius:12px;border:2px solid #eee;background:white;font-size:1.2rem;cursor:pointer">🍔</button>
+          <button onclick="window.setScore('aliment',2,this)" data-val="2" style="flex:1;padding:10px 4px;border-radius:12px;border:2px solid #eee;background:white;font-size:1.2rem;cursor:pointer">🥐</button>
+          <button onclick="window.setScore('aliment',3,this)" data-val="3" style="flex:1;padding:10px 4px;border-radius:12px;border:2px solid #eee;background:white;font-size:1.2rem;cursor:pointer">🥗</button>
+          <button onclick="window.setScore('aliment',4,this)" data-val="4" style="flex:1;padding:10px 4px;border-radius:12px;border:2px solid #eee;background:white;font-size:1.2rem;cursor:pointer">🥦</button>
+          <button onclick="window.setScore('aliment',5,this)" data-val="5" style="flex:1;padding:10px 4px;border-radius:12px;border:2px solid #eee;background:white;font-size:1.2rem;cursor:pointer">🌟</button>
         </div>
       </div>
 
@@ -1775,14 +1775,20 @@ function switchLang(lang) {
       <div style="margin-bottom:24px">
         <div style="font-size:0.82rem;font-weight:600;color:#555;margin-bottom:10px">Activité physique</div>
         <div style="display:flex;gap:8px;flex-wrap:wrap" id="sportSelector">
-          <button onclick="setScore('sport',0,this)" data-val="0" style="padding:8px 14px;border-radius:10px;border:2px solid #eee;background:white;font-size:0.8rem;font-weight:600;cursor:pointer">Aucune</button>
-          <button onclick="setScore('sport',2,this)" data-val="2" style="padding:8px 14px;border-radius:10px;border:2px solid #eee;background:white;font-size:0.8rem;font-weight:600;cursor:pointer">Marche</button>
-          <button onclick="setScore('sport',3,this)" data-val="3" style="padding:8px 14px;border-radius:10px;border:2px solid #eee;background:white;font-size:0.8rem;font-weight:600;cursor:pointer">30 min</button>
-          <button onclick="setScore('sport',4,this)" data-val="4" style="padding:8px 14px;border-radius:10px;border:2px solid #eee;background:white;font-size:0.8rem;font-weight:600;cursor:pointer">1h+</button>
+          <button onclick="window.setScore('sport',0,this)" data-val="0" style="padding:8px 14px;border-radius:10px;border:2px solid #eee;background:white;font-size:0.8rem;font-weight:600;cursor:pointer">Aucune</button>
+          <button onclick="window.setScore('sport',2,this)" data-val="2" style="padding:8px 14px;border-radius:10px;border:2px solid #eee;background:white;font-size:0.8rem;font-weight:600;cursor:pointer">Marche</button>
+          <button onclick="window.setScore('sport',3,this)" data-val="3" style="padding:8px 14px;border-radius:10px;border:2px solid #eee;background:white;font-size:0.8rem;font-weight:600;cursor:pointer">30 min</button>
+          <button onclick="window.setScore('sport',4,this)" data-val="4" style="padding:8px 14px;border-radius:10px;border:2px solid #eee;background:white;font-size:0.8rem;font-weight:600;cursor:pointer">1h+</button>
         </div>
       </div>
 
-      <button onclick="analyseScore()" id="analyseBtn" style="width:100%;background:linear-gradient(135deg,#FF6B6B,#FF9A3C);color:white;border:none;border-radius:14px;padding:16px;font-size:1rem;font-weight:700;cursor:pointer">
+      <!-- Ressenti -->
+      <div style="margin-bottom:20px">
+        <div style="font-size:0.82rem;font-weight:600;color:#555;margin-bottom:8px">Comment vous sentez-vous ? (facultatif)</div>
+        <textarea id="ressentiText" placeholder="Ex: J'ai bien dormi mais j'ai eu du mal à me concentrer, j'ai mangé équilibré mais grignote en soirée..." style="width:100%;padding:12px;border:1.5px solid #eee;border-radius:12px;font-size:0.85rem;font-family:'DM Sans',sans-serif;resize:none;height:80px;box-sizing:border-box;outline:none" onfocus="this.style.borderColor='#FF6B6B'" onblur="this.style.borderColor='#eee'"></textarea>
+      </div>
+
+      <button onclick="window.analyseScore()" id="analyseBtn" style="width:100%;background:linear-gradient(135deg,#FF6B6B,#FF9A3C);color:white;border:none;border-radius:14px;padding:16px;font-size:1rem;font-weight:700;cursor:pointer">
         Analyser ma journée avec Mirella ✨
       </button>
     </div>
