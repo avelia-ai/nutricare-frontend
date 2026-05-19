@@ -856,23 +856,29 @@ var selectedEventType = 'repas';
 var selectedEventEmoji = '🍽️';
 
 window.initPlanning = function initPlanning() {
-  renderPlanning();
-  schedulePlanningNotifications();
+  try { window.renderPlanning(); } catch(e) { console.error('initPlanning error:', e); }
 }
 
 window.renderPlanning = function renderPlanning() {
+  try {
   var today = new Date();
+  var offset = window.planningWeekOffset || 0;
+  var dayOfWeek = today.getDay();
+  var diff = dayOfWeek === 0 ? -6 : 1 - dayOfWeek;
   var monday = new Date(today);
-  monday.setDate(today.getDate() - today.getDay() + 1 + planningWeekOffset * 7);
+  monday.setDate(today.getDate() + diff + offset * 7);
   monday.setHours(0,0,0,0);
 
   var sunday = new Date(monday);
   sunday.setDate(monday.getDate() + 6);
 
-  var fmt = function(d) { return d.toLocaleDateString('fr-FR', {day:'2-digit', month:'short'}); };
-  document.getElementById('planningWeekLabel').textContent = fmt(monday) + ' — ' + fmt(sunday);
+  var months = ['jan','fév','mar','avr','mai','jun','jul','aoû','sep','oct','nov','déc'];
+  var fmt = function(d) { return d.getDate() + ' ' + months[d.getMonth()]; };
+  var lbl = document.getElementById('planningWeekLabel');
+  if(lbl) lbl.textContent = fmt(monday) + ' — ' + fmt(sunday);
 
   var grid = document.getElementById('planningGrid');
+  if(!grid) return;
   grid.innerHTML = '';
 
   var days = ['Lun','Mar','Mer','Jeu','Ven','Sam','Dim'];
@@ -919,6 +925,7 @@ window.renderPlanning = function renderPlanning() {
     dayDiv.innerHTML = header + eventsHtml;
     grid.appendChild(dayDiv);
   }
+  } catch(e) { console.error('renderPlanning error:', e); document.getElementById('planningGrid').innerHTML = '<div style="padding:20px;color:red">Erreur: ' + e.message + '</div>'; }
 }
 
 window.openAddEvent = function openAddEvent() {
