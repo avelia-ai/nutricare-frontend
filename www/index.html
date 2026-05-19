@@ -494,71 +494,172 @@ button[style*="background:linear-gradient(135deg,#FF6B6B,#FF9A3C)"] {
 </head>
 <body>
 <script>
+// ── PLANNING ──
+try {
 window.planningWeekOffset = 0;
-window.planningEvents = [];
-try { window.planningEvents = JSON.parse(localStorage.getItem('mirella_planning')||'[]'); } catch(x){}
+var planningEvents = []; try { planningEvents = JSON.parse(localStorage.getItem('mirella_planning') || '[]'); } catch(e) { planningEvents = []; }
+var selectedEventType = 'repas';
+var selectedEventEmoji = '🍽';
 
-window.renderPlanning = function() {
-  var grid = document.getElementById('planningGrid');
-  var lbl = document.getElementById('planningWeekLabel');
-  if (!grid) return;
+window.initPlanning = function initPlanning() {
+  try { window.renderPlanning(); } catch(e) { console.error('initPlanning error:', e); }
+}
+
+window.renderPlanning = function renderPlanning() {
+  try {
   var today = new Date();
-  var dow = today.getDay() === 0 ? 6 : today.getDay() - 1;
-  var mon = new Date(today); mon.setDate(today.getDate() - dow + window.planningWeekOffset*7); mon.setHours(0,0,0,0);
-  var mois = ['jan','fev','mar','avr','mai','jun','jul','aou','sep','oct','nov','dec'];
-  if(lbl) lbl.textContent = mon.getDate()+' '+mois[mon.getMonth()]+' — '+new Date(mon.getTime()+6*86400000).getDate()+' '+mois[new Date(mon.getTime()+6*86400000).getMonth()];
-  var jours = ['Lun','Mar','Mer','Jeu','Ven','Sam','Dim'];
-  var html = '';
-  for(var i=0;i<7;i++){
-    var d = new Date(mon.getTime()+i*86400000);
-    var ds = d.toISOString().split('T')[0];
-    var isT = ds === today.toISOString().split('T')[0];
-    var evts = window.planningEvents.filter(function(e){ return e.date===ds || e.rec==='daily' || (e.rec==='weekly'&&new Date(e.date).getDay()===d.getDay()); });
-    evts.sort(function(a,b){return a.time.localeCompare(b.time);});
-    html += '<div style="background:white;border-radius:14px;overflow:hidden;margin-bottom:8px'+(isT?';border:2px solid #FF6B6B':'')+'">';
-    html += '<div style="padding:10px 14px;background:'+(isT?'linear-gradient(135deg,#FF6B6B,#FF9A3C)':'#f9f9f9')+';font-weight:700;font-size:0.88rem;color:'+(isT?'white':'#1a1a1a')+'">'+jours[i]+' '+d.getDate()+'</div>';
-    if(evts.length===0){ html += '<div style="padding:10px 14px;font-size:0.8rem;color:#ccc">Aucun evenement</div>'; }
-    evts.forEach(function(e){
-      html += '<div style="display:flex;align-items:center;gap:10px;padding:10px 14px;border-top:1px solid #f5f5f5">';
-      html += '<span>'+e.ico+'</span><div style="flex:1"><div style="font-size:0.85rem;font-weight:600">'+e.title+'</div><div style="font-size:0.75rem;color:#888">'+e.time+'</div></div>';
-      html += '<button onclick="window.delEvt(''+e.id+'')" style="background:none;border:none;color:#ccc;cursor:pointer;font-size:1rem">x</button></div>';
-    });
-    html += '</div>';
+  var offset = window.planningWeekOffset || 0;
+  var dayOfWeek = today.getDay();
+  var diff = dayOfWeek === 0 ? -6 : 1 - dayOfWeek;
+  var monday = new Date(today);
+  monday.setDate(today.getDate() + diff + offset * 7);
+  monday.setHours(0,0,0,0);
+
+  var sunday = new Date(monday);
+  sunday.setDate(monday.getDate() + 6);
+
+  var months = ['jan','fév','mar','avr','mai','jun','jul','aoû','sep','oct','nov','déc'];
+  var fmt = function(d) { return d.getDate() + ' ' + months[d.getMonth()]; };
+  var lbl = document.getElementById('planningWeekLabel');
+  if(lbl) lbl.textContent = fmt(monday) + ' — ' + fmt(sunday);
+
+  var grid = document.getElementById('planningGrid');
+  if(!grid) return;
+  grid.innerHTML = '';
+
+  var days = ['Lun','Mar','Mer','Jeu','Ven','Sam','Dim'];
+  for (var i = 0; i < 7; i++) {
+    var day = new Date(monday);
+    day.setDate(monday.getDate() + i);
+    var dateStr = day.toISOString().split('T')[0];
+    var isToday = dateStr === today.toISOString().split('T')[0];
+
+    var dayEvents = planningEvents.filter(function(e) {
+      if (e.date === dateStr) return true;
+      if (e.recurrence === 'daily') return true;
+      if (e.recurrence === 'weekly') {
+        var eDay = new Date(e.date);
+        return eDay.getDay() === day.getDay();
+      }
+      return false;
+    }).sort(function(a,b) { return a.time.localeCompare(b.time); });
+
+    var dayDiv = document.createElement('div');
+    dayDiv.style.cssText = 'background:white;border-radius:16px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,0.06)' + (isToday ? ';border:2px solid #FF6B6B' : '');
+
+    var header = '<div style="display:flex;align-items:center;justify-content:space-between;padding:12px 16px;background:' + (isToday ? 'linear-gradient(135deg,#FF6B6B,#FF9A3C)' : '#f9f9f9') + '">';
+    header += '<div style="font-weight:700;font-size:0.9rem;color:' + (isToday ? 'white' : '#1a1a1a') + '">' + days[i] + ' ' + day.getDate() + '</div>';
+    if (isToday) header += '<div style="font-size:0.7rem;color:rgba(255,255,255,0.8);background:rgba(255,255,255,0.2);padding:2px 8px;border-radius:10px">Aujourd'hui</div>';
+    header += '</div>';
+
+    var eventsHtml = '';
+    if (dayEvents.length === 0) {
+      eventsHtml = '<div style="padding:12px 16px;font-size:0.82rem;color:#bbb;text-align:center">Aucun événement</div>';
+    } else {
+      dayEvents.forEach(function(e) {
+        var colors = {repas:'#FFF5F0',medicament:'#F0F4FF',sport:'#F0FFF5',rappel:'#FFFBF0',rdv:'#FDF0FF'};
+        var bg = colors[e.type] || '#FFF5F0';
+        eventsHtml += '<div style="display:flex;align-items:center;gap:10px;padding:10px 16px;border-bottom:1px solid #f5f5f5;background:' + bg + '">';
+        eventsHtml += '<div style="font-size:1.2rem">' + e.emoji + '</div>';
+        eventsHtml += '<div style="flex:1"><div style="font-size:0.85rem;font-weight:600;color:#1a1a1a">' + e.title + '</div>';
+        eventsHtml += '<div style="font-size:0.75rem;color:#888">' + e.time + (e.recurrence !== 'none' ? ' · 🔁 ' + (e.recurrence === 'daily' ? 'Quotidien' : e.recurrence === 'weekly' ? 'Hebdo' : 'Mensuel') : '') + '</div></div>';
+        eventsHtml += '<button onclick="deleteEvent('' + e.id + '')" style="background:none;border:none;color:#ccc;font-size:1.1rem;cursor:pointer;padding:4px">✕</button>';
+        eventsHtml += '</div>';
+      });
+    }
+
+    dayDiv.innerHTML = header + eventsHtml;
+    grid.appendChild(dayDiv);
   }
-  grid.innerHTML = html;
-};
+  } catch(e) { console.error('renderPlanning error:', e); document.getElementById('planningGrid').innerHTML = '<div style="padding:20px;color:red">Erreur: ' + e.message + '</div>'; }
+}
 
-window.delEvt = function(id) {
-  window.planningEvents = window.planningEvents.filter(function(e){return e.id!==id;});
-  localStorage.setItem('mirella_planning', JSON.stringify(window.planningEvents));
-  window.renderPlanning();
-};
+window.openAddEvent = function openAddEvent() {
+  var today = new Date().toISOString().split('T')[0];
+  document.getElementById('eventDate').value = today;
+  document.getElementById('eventTime').value = '08:00';
+  document.getElementById('eventTitle').value = '';
+  var pm = document.getElementById('planningModal'); if(pm){ pm.style.display='flex'; }
+}
 
-window.openAddEvent = function() {
-  var m = document.getElementById('planningModal');
-  if(m){ document.getElementById('eventDate').value=new Date().toISOString().split('T')[0]; document.getElementById('eventTime').value='08:00'; document.getElementById('eventTitle').value=''; m.style.display='flex'; }
-};
+window.closePlanningModal = function closePlanningModal() {
+  document.getElementById('planningModal').style.display = 'none';
+}
 
-window.closePlanningModal = function() { document.getElementById('planningModal').style.display='none'; };
+window.selectEventType = function selectEventType(type, emoji) {
+  selectedEventType = type;
+  selectedEventEmoji = emoji;
+  document.querySelectorAll('.evt-type-btn').forEach(function(b) {
+    b.style.borderColor = b.dataset.type === type ? '#FF6B6B' : '#eee';
+    b.style.background = b.dataset.type === type ? '#FFF5F0' : 'white';
+  });
+}
 
-window.selectEventType = function(t,ico) {
-  window._evtType=t; window._evtIco=ico;
-  document.querySelectorAll('.evt-type-btn').forEach(function(b){ b.style.borderColor=b.dataset.type===t?'#FF6B6B':'#eee'; b.style.background=b.dataset.type===t?'#FFF5F0':'white'; });
-};
+window.saveEvent = function saveEvent() {
+  var title = document.getElementById('eventTitle').value.trim();
+  var date = document.getElementById('eventDate').value;
+  var time = document.getElementById('eventTime').value;
+  var recurrence = document.getElementById('eventRecurrence').value;
+  var notif = document.getElementById('eventNotif').checked;
 
-window.saveEvent = function() {
-  var title=document.getElementById('eventTitle').value.trim();
-  var date=document.getElementById('eventDate').value;
-  var time=document.getElementById('eventTime').value;
-  var rec=document.getElementById('eventRecurrence').value;
-  if(!title||!date||!time){alert('Remplissez tous les champs');return;}
-  var evt={id:Date.now().toString(),type:window._evtType||'repas',ico:window._evtIco||'X',title:title,date:date,time:time,rec:rec};
-  window.planningEvents.push(evt);
-  localStorage.setItem('mirella_planning',JSON.stringify(window.planningEvents));
-  window.closePlanningModal();
-  window.renderPlanning();
-};
-</script>
+  if (!title || !date || !time) {
+    alert('Veuillez remplir tous les champs');
+    return;
+  }
+
+  var event = {
+    id: Date.now().toString(),
+    type: selectedEventType,
+    emoji: selectedEventEmoji,
+    title: title,
+    date: date,
+    time: time,
+    recurrence: recurrence,
+    notif: notif
+  };
+
+  planningEvents.push(event);
+  localStorage.setItem('mirella_planning', JSON.stringify(planningEvents));
+
+  if (notif) scheduleNotification(event);
+
+  closePlanningModal();
+  renderPlanning();
+}
+
+window.deleteEvent = function deleteEvent(id) {
+  planningEvents = planningEvents.filter(function(e) { return e.id !== id; });
+  localStorage.setItem('mirella_planning', JSON.stringify(planningEvents));
+  renderPlanning();
+}
+
+async function scheduleNotification(event) {
+  if (!window.Capacitor || !window.Capacitor.isNativePlatform()) return;
+  try {
+    var { LocalNotifications } = Capacitor.Plugins;
+    await LocalNotifications.requestPermissions();
+    var dt = new Date(event.date + 'T' + event.time + ':00');
+    if (dt > new Date()) {
+      await LocalNotifications.schedule({
+        notifications: [{
+          id: parseInt(event.id) % 2147483647,
+          title: event.emoji + ' ' + event.title,
+          body: 'Rappel Mirella : ' + event.title,
+          schedule: { at: dt },
+          sound: null,
+          actionTypeId: '',
+          extra: null
+        }]
+      });
+    }
+  } catch(e) { console.error('Notif error:', e); }
+}
+
+async function schedulePlanningNotifications() {
+  if (!window.Capacitor || !window.Capacitor.isNativePlatform()) return;
+  planningEvents.filter(function(e) { return e.notif; }).forEach(scheduleNotification);
+}
+} catch(e) { console.error("Planning script error:", e); }
 
 (function() {
   var token = sessionStorage.getItem('transfer_token');
