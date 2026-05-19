@@ -499,7 +499,7 @@ button[style*="background:linear-gradient(135deg,#FF6B6B,#FF9A3C)"] {
 window._scoreData = {forme:0, aliment:0, sport:0};
 
 window.setScore = function(cat, val, btn) {
-  window._scoreData[cat] = val;
+  window._scoreData[cat] = val; setTimeout(window.saveScoreForm, 100);
   var parent = btn.parentElement;
   parent.querySelectorAll('button').forEach(function(b){
     b.style.borderColor = '#eee';
@@ -559,7 +559,7 @@ window.analyseScore = function() {
     var today = new Date().toISOString().split('T')[0];
     var hist = JSON.parse(localStorage.getItem('mirella_scores')||'[]');
     hist = hist.filter(function(h){return h.date!==today;});
-    hist.push({date:today, score:score});
+    var analyseText = document.getElementById('scoreComment') ? document.getElementById('scoreComment').textContent : ''; hist.push({date:today, score:score, analyse:analyseText});
     hist = hist.slice(-7);
     localStorage.setItem('mirella_scores', JSON.stringify(hist));
     window.renderScoreHisto();
@@ -593,8 +593,73 @@ window.renderScoreHisto = function() {
   el.innerHTML = html;
 };
 
+window.saveScoreForm = function() {
+  var data = {
+    forme: window._scoreData.forme,
+    aliment: window._scoreData.aliment,
+    sport: window._scoreData.sport,
+    sommeil: document.getElementById('sommeilSlider') ? document.getElementById('sommeilSlider').value : 7,
+    hydra: document.getElementById('hydraSlider') ? document.getElementById('hydraSlider').value : 1.5,
+    ressenti: document.getElementById('ressentiText') ? document.getElementById('ressentiText').value : '',
+    date: new Date().toISOString().split('T')[0]
+  };
+  localStorage.setItem('mirella_score_form', JSON.stringify(data));
+};
+
 window.initScoreSante = function() {
   window.renderScoreHisto();
+  // Restaurer le formulaire si c'est le même jour
+  try {
+    var saved = JSON.parse(localStorage.getItem('mirella_score_form') || '{}');
+    var today = new Date().toISOString().split('T')[0];
+    if (saved.date === today) {
+      // Restaurer forme
+      if (saved.forme) {
+        var formeBtn = document.querySelector('#formeSelector button[data-val="'+saved.forme+'"]');
+        if (formeBtn) window.setScore('forme', saved.forme, formeBtn);
+      }
+      // Restaurer aliment
+      if (saved.aliment) {
+        var alimentBtn = document.querySelector('#alimentSelector button[data-val="'+saved.aliment+'"]');
+        if (alimentBtn) window.setScore('aliment', saved.aliment, alimentBtn);
+      }
+      // Restaurer sport
+      if (saved.sport !== undefined) {
+        var sportBtn = document.querySelector('#sportSelector button[data-val="'+saved.sport+'"]');
+        if (sportBtn) window.setScore('sport', saved.sport, sportBtn);
+      }
+      // Restaurer sliders
+      if (saved.sommeil) {
+        var sl = document.getElementById('sommeilSlider');
+        if (sl) { sl.value = saved.sommeil; document.getElementById('sommeilVal').textContent = saved.sommeil+'h'; }
+      }
+      if (saved.hydra) {
+        var hl = document.getElementById('hydraSlider');
+        if (hl) { hl.value = saved.hydra; document.getElementById('hydraVal').textContent = saved.hydra+'L'; }
+      }
+      // Restaurer ressenti
+      if (saved.ressenti) {
+        var rt = document.getElementById('ressentiText');
+        if (rt) rt.value = saved.ressenti;
+      }
+      // Restaurer le commentaire d'analyse si présent
+      var scores = JSON.parse(localStorage.getItem('mirella_scores') || '[]');
+      var todayScore = scores.find(function(s){ return s.date === today; });
+      if (todayScore) {
+        document.getElementById('scoreValue').textContent = todayScore.score;
+        document.getElementById('scoreBar').style.width = todayScore.score + '%';
+        var lbl = todayScore.score >= 80 ? 'Excellente journee !' : todayScore.score >= 60 ? 'Bonne journee' : todayScore.score >= 40 ? 'Journee correcte' : 'Journee difficile';
+        document.getElementById('scoreLabel').textContent = lbl;
+        var c = todayScore.score >= 80 ? '#22c55e' : todayScore.score >= 60 ? '#FF9A3C' : '#FF6B6B';
+        document.getElementById('scoreValue').style.color = c;
+        if (todayScore.analyse) {
+          var el = document.getElementById('scoreComment');
+          el.textContent = todayScore.analyse;
+          el.style.display = 'block';
+        }
+      }
+    }
+  } catch(e) { console.error(e); }
 };
 
 // ── PLANNING ──
@@ -1756,7 +1821,7 @@ function switchLang(lang) {
           <div style="font-size:0.82rem;font-weight:600;color:#555">Sommeil (heures)</div>
           <div id="sommeilVal" style="font-size:0.9rem;font-weight:700;color:#FF6B6B">7h</div>
         </div>
-        <input type="range" min="3" max="12" value="7" id="sommeilSlider" oninput="document.getElementById('sommeilVal').textContent=this.value+'h';calcScore()" style="width:100%;accent-color:#FF6B6B">
+        <input type="range" min="3" max="12" value="7" id="sommeilSlider" oninput="document.getElementById('sommeilVal').textContent=this.value+'h';calcScore();window.saveScoreForm()" style="width:100%;accent-color:#FF6B6B">
       </div>
 
       <!-- Hydratation -->
@@ -1765,7 +1830,7 @@ function switchLang(lang) {
           <div style="font-size:0.82rem;font-weight:600;color:#555">Hydratation (litres)</div>
           <div id="hydraVal" style="font-size:0.9rem;font-weight:700;color:#FF6B6B">1.5L</div>
         </div>
-        <input type="range" min="0" max="4" step="0.5" value="1.5" id="hydraSlider" oninput="document.getElementById('hydraVal').textContent=this.value+'L';calcScore()" style="width:100%;accent-color:#FF6B6B">
+        <input type="range" min="0" max="4" step="0.5" value="1.5" id="hydraSlider" oninput="document.getElementById('hydraVal').textContent=this.value+'L';calcScore();window.saveScoreForm()" style="width:100%;accent-color:#FF6B6B">
       </div>
 
       <!-- Activité physique -->
