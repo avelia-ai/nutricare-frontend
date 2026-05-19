@@ -535,7 +535,7 @@ window.calcScore = function() {
 
 window.analyseScore = function() {
   var score = window.calcScore();
-  if(!score){ alert('Remplissez le formulaire avant d\'analyser'); return; }
+  if(!score){ alert('Veuillez remplir au moins la forme et l\'alimentation'); return; }
   var btn = document.getElementById('analyseBtn');
   btn.textContent = 'Analyse en cours...';
   btn.disabled = true;
@@ -544,16 +544,18 @@ window.analyseScore = function() {
   var sport = window._scoreData.sport;
   var sommeil = document.getElementById('sommeilSlider').value;
   var hydra = document.getElementById('hydraSlider').value;
-  var profile = localStorage.getItem('nutricare_profile') || '{}';
-  var ressenti = document.getElementById('ressentiText') ? document.getElementById('ressentiText').value : ''; var prompt = 'Tu es Mirella, coach sante IA. Analyse cette journee (score ' + score + '/100) et donne un commentaire personnalise en 2-3 phrases courtes en francais, avec un conseil actionnable pour demain. Donnees: forme=' + forme + '/5, alimentation=' + aliment + '/5, sport=' + sport + '/4, sommeil=' + sommeil + 'h, hydratation=' + hydra + 'L. Ressenti: ' + (ressenti||'non renseigne') + '. Profil patient: ' + profile.substring(0,200) + '. Reponds uniquement avec le commentaire, sans titre.';
-  fetch('https://api.anthropic.com/v1/messages', {
+  var ressenti = document.getElementById('ressentiText') ? document.getElementById('ressentiText').value : '';
+  var token = localStorage.getItem('nutricare_token');
+  fetch(BACKEND_URL + '/api/score/analyse', {
     method: 'POST',
-    headers: {'Content-Type':'application/json'},
-    body: JSON.stringify({model:'claude-haiku-4-5-20251001', max_tokens:200, messages:[{role:'user',content:prompt}]})
+    headers: {'Content-Type':'application/json', 'Authorization': 'Bearer ' + token},
+    body: JSON.stringify({forme:forme, aliment:aliment, sport:sport, sommeil:sommeil, hydra:hydra, ressenti:ressenti, score:score})
   }).then(function(r){return r.json();}).then(function(d){
-    var comment = d.content && d.content[0] ? d.content[0].text : 'Bonne journee ! Continuez vos efforts.';
-    document.getElementById('scoreComment').textContent = comment;
-    document.getElementById('scoreComment').style.display = 'block';
+    var comment = d.analyse || 'Bonne journee ! Continuez vos efforts.';
+    var el = document.getElementById('scoreComment');
+    el.style.whiteSpace = 'pre-wrap';
+    el.textContent = comment;
+    el.style.display = 'block';
     var today = new Date().toISOString().split('T')[0];
     var hist = JSON.parse(localStorage.getItem('mirella_scores')||'[]');
     hist = hist.filter(function(h){return h.date!==today;});
@@ -563,9 +565,11 @@ window.analyseScore = function() {
     window.renderScoreHisto();
     btn.textContent = 'Analyser ma journee avec Mirella';
     btn.disabled = false;
-  }).catch(function(){
+  }).catch(function(e){
+    console.error(e);
     btn.textContent = 'Analyser ma journee avec Mirella';
     btn.disabled = false;
+    alert('Erreur lors de l\'analyse. Verifez votre connexion.');
   });
 };
 
