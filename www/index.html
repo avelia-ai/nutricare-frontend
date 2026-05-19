@@ -495,10 +495,11 @@ button[style*="background:linear-gradient(135deg,#FF6B6B,#FF9A3C)"] {
 <body>
 <script>
 // ── PLANNING ──
+try {
 window.planningWeekOffset = 0;
-var planningEvents = JSON.parse(localStorage.getItem('mirella_planning') || '[]');
+var planningEvents = []; try { planningEvents = JSON.parse(localStorage.getItem('mirella_planning') || '[]'); } catch(e) { planningEvents = []; }
 var selectedEventType = 'repas';
-var selectedEventEmoji = '🍽️';
+var selectedEventEmoji = '🍽';
 
 window.initPlanning = function initPlanning() {
   try { window.renderPlanning(); } catch(e) { console.error('initPlanning error:', e); }
@@ -658,6 +659,7 @@ async function schedulePlanningNotifications() {
   if (!window.Capacitor || !window.Capacitor.isNativePlatform()) return;
   planningEvents.filter(function(e) { return e.notif; }).forEach(scheduleNotification);
 }
+} catch(e) { console.error("Planning script error:", e); }
 
 (function() {
   var token = sessionStorage.getItem('transfer_token');
