@@ -574,10 +574,17 @@ window.analyseScore = function() {
 };
 
 window.renderScoreHisto = function() {
-  var hist = JSON.parse(localStorage.getItem('mirella_scores')||'[]');
+  var token = localStorage.getItem('nutricare_token');
   var el = document.getElementById('scoreHistorique');
   if(!el) return;
-  if(hist.length === 0){ el.innerHTML = '<div style="font-size:0.82rem;color:#ccc;text-align:center;width:100%">Aucun historique</div>'; return; }
+  fetch(BACKEND_URL + '/api/score/historique', {
+    headers: {'Authorization': 'Bearer ' + token}
+  }).then(function(r){return r.json();}).then(function(hist){
+    if(!hist || hist.length === 0){
+      el.innerHTML = '<div style="font-size:0.82rem;color:#ccc;text-align:center;width:100%">Aucun historique</div>';
+      return;
+    }
+    hist = hist.slice().reverse();
   var html = '';
   hist.forEach(function(h){
     var d = new Date(h.date);
@@ -591,6 +598,21 @@ window.renderScoreHisto = function() {
     html += '<div style="font-size:0.72rem;font-weight:700;color:'+c+'">'+h.score+'</div></div>';
   });
   el.innerHTML = html;
+  }).catch(function(){ 
+    var hist = JSON.parse(localStorage.getItem('mirella_scores')||'[]');
+    if(hist.length === 0){ el.innerHTML = '<div style="font-size:0.82rem;color:#ccc;text-align:center;width:100%">Aucun historique</div>'; return; }
+    var html2 = '';
+    hist.forEach(function(h){
+      var d = new Date(h.date);
+      var jours = ['Dim','Lun','Mar','Mer','Jeu','Ven','Sam'];
+      var c = h.score>=80?'#22c55e':h.score>=60?'#FF9A3C':'#FF6B6B';
+      var barH = Math.max(4, Math.round(h.score * 0.8));
+      html2 += '<div style="flex:1;text-align:center"><div style="font-size:0.65rem;color:#888;margin-bottom:4px">'+jours[d.getDay()]+'</div>';
+      html2 += '<div style="height:80px;display:flex;align-items:flex-end;justify-content:center"><div style="width:24px;background:'+c+';border-radius:6px 6px 0 0;height:'+barH+'px"></div></div>';
+      html2 += '<div style="font-size:0.72rem;font-weight:700;color:'+c+'">'+h.score+'</div></div>';
+    });
+    el.innerHTML = html2;
+  });
 };
 
 window.saveScoreForm = function() {
@@ -7366,7 +7388,7 @@ function closeMirellaNotif() {
       <button onclick="toggleQuickMenu();showView('visual')" style="display:flex;align-items:center;gap:8px;padding:12px;background:#FFF5F0;border:none;border-radius:12px;font-size:0.82rem;font-weight:600;color:#2D2D2D;cursor:pointer">🔬 Détection visuelle</button>
       <button onclick="toggleQuickMenu();showView('pro')" style="display:flex;align-items:center;gap:8px;padding:12px;background:#FFF5F0;border:none;border-radius:12px;font-size:0.82rem;font-weight:600;color:#2D2D2D;cursor:pointer">👨‍⚕️ Espace médecin</button>
       <button onclick="toggleQuickMenu();showView('oracle')" style="display:flex;align-items:center;gap:8px;padding:12px;background:linear-gradient(135deg,#FF6B6B,#FF9A3C);border:none;border-radius:12px;font-size:0.82rem;font-weight:600;color:white;cursor:pointer">👑 Oracle Santé</button>
-      <button onclick="toggleQuickMenu();showView('chrono')" style="display:flex;align-items:center;gap:8px;padding:12px;background:#FFF5F0;border:none;border-radius:12px;font-size:0.82rem;font-weight:600;color:#2D2D2D;cursor:pointer">🌙 Chrono-nutrition</button>
+      <button onclick="toggleQuickMenu();showView('chrono')" style="display:flex;align-items:center;gap:8px;padding:12px;background:#FFF5F0;border:none;border-radius:12px;font-size:0.82rem;font-weight:600;color:#2D2D2D;cursor:pointer">❤️ Score de santé</button>
       <button onclick="toggleQuickMenu();showView('biologie')" style="display:flex;align-items:center;gap:8px;padding:12px;background:#FFF5F0;border:none;border-radius:12px;font-size:0.82rem;font-weight:600;color:#2D2D2D;cursor:pointer">🧬 Bilan sanguin</button>
       <button onclick="toggleQuickMenu();showView('ordonnance')" style="display:flex;align-items:center;gap:8px;padding:12px;background:#FFF5F0;border:none;border-radius:12px;font-size:0.82rem;font-weight:600;color:#2D2D2D;cursor:pointer">📋 Scan ordonnance</button>
       <button onclick="toggleQuickMenu();showView('simulator')" style="display:flex;align-items:center;gap:8px;padding:12px;background:#FFF5F0;border:none;border-radius:12px;font-size:0.82rem;font-weight:600;color:#2D2D2D;cursor:pointer">⚡ Simulateur</button>
