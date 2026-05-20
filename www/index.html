@@ -873,7 +873,8 @@ window.analyseCycle = function() {
   var profile = JSON.parse(localStorage.getItem('nutricare_profile') || '{}');
   var token = localStorage.getItem('nutricare_token');
   
-  var prompt = 'Tu es Mirella, coach sante feminine. Je suis en phase ' + result.phase + ' de mon cycle (jour ' + result.day + '). Mon cycle dure ' + cycleLength + ' jours. Mes pathologies: ' + (profile.pathologies||[]).join(',') + '. Mes symptomes actuels: ' + (window._symptoms.join(',') || 'aucun') + '. Donne-moi 3-4 conseils nutritionnels et bien-etre tres personnalises et concrets pour cette phase, en tenant compte de mes pathologies et symptomes. Sois bienveillante et precise. Reponds en francais.';
+  var ressenti = document.getElementById('cycleRessenti') ? document.getElementById('cycleRessenti').value : '';
+  var prompt = 'Tu es Mirella, coach sante feminine. Je suis en phase ' + result.phase + ' de mon cycle (jour ' + result.day + '). Mon cycle dure ' + cycleLength + ' jours. Mes pathologies: ' + (profile.pathologies||[]).join(',') + '. Mes symptomes actuels: ' + (window._symptoms.join(',') || 'aucun') + '. Mon ressenti: ' + (ressenti || 'non renseigne') + '. Donne-moi 3-4 conseils nutritionnels et bien-etre tres personnalises et concrets pour cette phase, en tenant compte de mes pathologies, symptomes et ressenti. Sois bienveillante et precise. Reponds en francais.';
   
   fetch(BACKEND_URL + '/api/chat/message', {
     method: 'POST',
@@ -7758,6 +7759,12 @@ function toggleQuickMenu() {
       <div id="cycleAdvice" style="display:flex;flex-direction:column;gap:10px">
         <div style="font-size:0.85rem;color:#ccc;text-align:center;padding:20px">Renseignez votre cycle pour obtenir des conseils personnalisés</div>
       </div>
+      <!-- Ressenti libre -->
+      <div style="margin-top:16px">
+        <div style="font-size:0.82rem;font-weight:600;color:#555;margin-bottom:8px">Comment vous sentez-vous ? (facultatif)</div>
+        <textarea id="cycleRessenti" placeholder="Ex: Je me sens fatiguée, j ai des crampes légères, mon humeur est instable..." style="width:100%;padding:12px;border:1.5px solid #eee;border-radius:12px;font-size:0.85rem;font-family:'DM Sans',sans-serif;resize:none;height:80px;box-sizing:border-box;outline:none" onfocus="this.style.borderColor='#FF6B6B'" onblur="this.style.borderColor='#eee'"></textarea>
+      </div>
+
       <button onclick="window.analyseCycle()" id="cycleAnalyseBtn" style="width:100%;margin-top:16px;background:linear-gradient(135deg,#FF6B6B,#FF9A3C);color:white;border:none;border-radius:14px;padding:14px;font-size:0.95rem;font-weight:700;cursor:pointer">
         Analyse IA personnalisée ✨
       </button>
