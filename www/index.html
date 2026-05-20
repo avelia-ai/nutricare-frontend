@@ -495,6 +495,86 @@ button[style*="background:linear-gradient(135deg,#FF6B6B,#FF9A3C)"] {
 <body>
 <script>
 
+
+window._sedentarite = 0;
+window._sportSeances = [];
+
+window.setSedentarite = function(val, btn) {
+  window._sedentarite = val;
+  document.querySelectorAll('#sedentariteSelector button').forEach(function(b){
+    b.style.borderColor = '#eee'; b.style.background = 'white';
+  });
+  btn.style.borderColor = '#FF6B6B'; btn.style.background = '#FFF5F0';
+  var jauge = document.getElementById('sedentariteJauge');
+  var bar = document.getElementById('sedentariteBar');
+  var lbl = document.getElementById('sedentariteLabel');
+  if (jauge) jauge.style.display = 'block';
+  var pct = (val / 5) * 100;
+  if (bar) bar.style.width = pct + '%';
+  var labels = {1:'Tres actif', 2:'Actif', 3:'Moderement sedentaire', 4:'Sedentaire', 5:'Tres sedentaire'};
+  if (lbl) { lbl.textContent = labels[val]; lbl.style.color = val <= 2 ? '#22c55e' : val <= 3 ? '#FF9A3C' : '#FF6B6B'; }
+  window.saveScoreForm();
+  window.calcScore();
+};
+
+window.openAddSport = function() {
+  var m = document.getElementById('addSportModal');
+  if (m) { m.style.display = 'flex'; window.previewCalories(); }
+};
+
+window.previewCalories = function() {
+  var sel = document.getElementById('sportActivite');
+  var duree = parseFloat(document.getElementById('sportDuree').value) || 30;
+  var poids = parseFloat(document.getElementById('sportPoids').value) || 70;
+  var met = parseFloat((sel.value.split(',')[1])) || 4;
+  var cal = Math.round(met * poids * duree / 60 * 4.2);
+  var prev = document.getElementById('caloriesPreview');
+  if (prev) prev.textContent = 'Estimation : ' + cal + ' kcal brulees';
+};
+
+window.saveSportSeance = function() {
+  var sel = document.getElementById('sportActivite');
+  var parts = sel.value.split(',');
+  var nom = sel.options[sel.selectedIndex].text.split('(')[0].trim();
+  var duree = parseFloat(document.getElementById('sportDuree').value) || 30;
+  var poids = parseFloat(document.getElementById('sportPoids').value) || 70;
+  var met = parseFloat(parts[1]) || 4;
+  var cal = Math.round(met * poids * duree / 60 * 4.2);
+  window._sportSeances.push({nom: nom, duree: duree, cal: cal});
+  document.getElementById('addSportModal').style.display = 'none';
+  window.renderSportSeances();
+  window.saveScoreForm();
+};
+
+window.deleteSportSeance = function(idx) {
+  window._sportSeances.splice(idx, 1);
+  window.renderSportSeances();
+  window.saveScoreForm();
+};
+
+window.renderSportSeances = function() {
+  var el = document.getElementById('sportSeances');
+  var totalEl = document.getElementById('totalCalories');
+  if (!el) return;
+  if (window._sportSeances.length === 0) {
+    el.innerHTML = '<div style="font-size:0.8rem;color:#ccc;text-align:center;padding:10px">Aucune seance ajoutee</div>';
+    if (totalEl) totalEl.style.display = 'none';
+    return;
+  }
+  var total = 0;
+  el.innerHTML = window._sportSeances.map(function(s, i) {
+    total += s.cal;
+    return '<div style="display:flex;align-items:center;gap:10px;padding:10px;background:#FFF5F0;border-radius:10px">' +
+      '<div style="flex:1"><div style="font-size:0.85rem;font-weight:600;color:#1a1a1a">' + s.nom + '</div>' +
+      '<div style="font-size:0.75rem;color:#888">' + s.duree + ' min · ' + s.cal + ' kcal</div></div>' +
+      '<button onclick="window.deleteSportSeance(' + i + ')" style="background:none;border:none;color:#ddd;cursor:pointer;font-size:1rem">x</button></div>';
+  }).join('');
+  if (totalEl) {
+    totalEl.textContent = 'Total : ' + total + ' kcal brulees aujourd'hui';
+    totalEl.style.display = 'block';
+  }
+};
+
 // ── SCORE SANTE ──
 window._scoreData = {forme:0, aliment:0, sport:0};
 
@@ -2093,6 +2173,76 @@ function switchLang(lang) {
           <button onclick="window.setScore('sport',2,this)" data-val="2" style="padding:8px 14px;border-radius:10px;border:2px solid #eee;background:white;font-size:0.8rem;font-weight:600;cursor:pointer">Marche</button>
           <button onclick="window.setScore('sport',3,this)" data-val="3" style="padding:8px 14px;border-radius:10px;border:2px solid #eee;background:white;font-size:0.8rem;font-weight:600;cursor:pointer">30 min</button>
           <button onclick="window.setScore('sport',4,this)" data-val="4" style="padding:8px 14px;border-radius:10px;border:2px solid #eee;background:white;font-size:0.8rem;font-weight:600;cursor:pointer">1h+</button>
+        </div>
+      </div>
+
+      <!-- Sedentarite -->
+      <div style="margin-bottom:20px">
+        <div style="font-size:0.82rem;font-weight:600;color:#555;margin-bottom:10px">Temps assis aujourd'hui</div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap" id="sedentariteSelector">
+          <button onclick="window.setSedentarite(1,this)" data-val="1" style="padding:8px 14px;border-radius:10px;border:2px solid #eee;background:white;font-size:0.8rem;font-weight:600;cursor:pointer">Moins de 2h</button>
+          <button onclick="window.setSedentarite(2,this)" data-val="2" style="padding:8px 14px;border-radius:10px;border:2px solid #eee;background:white;font-size:0.8rem;font-weight:600;cursor:pointer">2-4h</button>
+          <button onclick="window.setSedentarite(3,this)" data-val="3" style="padding:8px 14px;border-radius:10px;border:2px solid #eee;background:white;font-size:0.8rem;font-weight:600;cursor:pointer">4-6h</button>
+          <button onclick="window.setSedentarite(4,this)" data-val="4" style="padding:8px 14px;border-radius:10px;border:2px solid #eee;background:white;font-size:0.8rem;font-weight:600;cursor:pointer">6-8h</button>
+          <button onclick="window.setSedentarite(5,this)" data-val="5" style="padding:8px 14px;border-radius:10px;border:2px solid #eee;background:white;font-size:0.8rem;font-weight:600;cursor:pointer">8h+</button>
+        </div>
+        <div id="sedentariteJauge" style="display:none;margin-top:12px">
+          <div style="display:flex;justify-content:space-between;font-size:0.72rem;color:#888;margin-bottom:4px">
+            <span>Actif</span><span id="sedentariteLabel" style="font-weight:700;color:#FF6B6B"></span><span>Sedentaire</span>
+          </div>
+          <div style="background:#f0f0f0;border-radius:10px;height:10px;overflow:hidden">
+            <div id="sedentariteBar" style="height:100%;border-radius:10px;transition:width 0.5s ease;background:linear-gradient(135deg,#22c55e,#FF6B6B)"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Seances sport custom -->
+      <div style="margin-bottom:20px">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+          <div style="font-size:0.82rem;font-weight:600;color:#555">Seances sport du jour</div>
+          <button onclick="window.openAddSport()" style="background:linear-gradient(135deg,#FF6B6B,#FF9A3C);color:white;border:none;border-radius:8px;padding:5px 12px;font-size:0.75rem;font-weight:700;cursor:pointer">+ Ajouter</button>
+        </div>
+        <div id="sportSeances" style="display:flex;flex-direction:column;gap:8px">
+          <div style="font-size:0.8rem;color:#ccc;text-align:center;padding:10px">Aucune seance ajoutee</div>
+        </div>
+        <div id="totalCalories" style="display:none;margin-top:10px;padding:10px;background:#FFF5F0;border-radius:10px;text-align:center;font-size:0.85rem;font-weight:600;color:#FF6B6B"></div>
+      </div>
+
+      <!-- Modal ajout sport -->
+      <div id="addSportModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:9999;align-items:flex-end;justify-content:center">
+        <div style="background:white;border-radius:24px 24px 0 0;padding:24px;width:100%;max-width:600px">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+            <div style="font-size:1rem;font-weight:700">Ajouter une seance</div>
+            <button onclick="document.getElementById('addSportModal').style.display='none'" style="background:#f5f5f5;border:none;border-radius:50%;width:32px;height:32px;cursor:pointer">x</button>
+          </div>
+          <div style="margin-bottom:14px">
+            <div style="font-size:0.8rem;font-weight:600;color:#555;margin-bottom:6px">Activite</div>
+            <select id="sportActivite" style="width:100%;padding:12px;border:1px solid #eee;border-radius:10px;font-size:0.9rem;background:white">
+              <option value="marche,3.5">Marche (3.5 kcal/min/kg)</option>
+              <option value="course,7">Course a pied (7 kcal/min/kg)</option>
+              <option value="velo,5">Velo (5 kcal/min/kg)</option>
+              <option value="natation,6">Natation (6 kcal/min/kg)</option>
+              <option value="musculation,4">Musculation (4 kcal/min/kg)</option>
+              <option value="yoga,2.5">Yoga/Pilates (2.5 kcal/min/kg)</option>
+              <option value="hiit,9">HIIT (9 kcal/min/kg)</option>
+              <option value="football,6.5">Football (6.5 kcal/min/kg)</option>
+              <option value="tennis,5.5">Tennis (5.5 kcal/min/kg)</option>
+              <option value="danse,4.5">Danse (4.5 kcal/min/kg)</option>
+              <option value="autre,4">Autre (4 kcal/min/kg)</option>
+            </select>
+          </div>
+          <div style="display:flex;gap:12px;margin-bottom:14px">
+            <div style="flex:1">
+              <div style="font-size:0.8rem;font-weight:600;color:#555;margin-bottom:6px">Duree (minutes)</div>
+              <input type="number" id="sportDuree" min="5" max="300" value="30" oninput="window.previewCalories()" style="width:100%;padding:12px;border:1px solid #eee;border-radius:10px;font-size:0.9rem;box-sizing:border-box">
+            </div>
+            <div style="flex:1">
+              <div style="font-size:0.8rem;font-weight:600;color:#555;margin-bottom:6px">Poids (kg)</div>
+              <input type="number" id="sportPoids" min="30" max="200" value="70" oninput="window.previewCalories()" style="width:100%;padding:12px;border:1px solid #eee;border-radius:10px;font-size:0.9rem;box-sizing:border-box">
+            </div>
+          </div>
+          <div id="caloriesPreview" style="background:#FFF5F0;border-radius:10px;padding:12px;text-align:center;margin-bottom:16px;font-size:0.9rem;font-weight:600;color:#FF6B6B">Selectionnez une activite</div>
+          <button onclick="window.saveSportSeance()" style="width:100%;background:linear-gradient(135deg,#FF6B6B,#FF9A3C);color:white;border:none;border-radius:12px;padding:14px;font-size:0.95rem;font-weight:700;cursor:pointer">Ajouter cette seance</button>
         </div>
       </div>
 
