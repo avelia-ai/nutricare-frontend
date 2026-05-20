@@ -881,7 +881,7 @@ window.analyseCycle = function() {
     headers: {'Content-Type':'application/json', 'Authorization': 'Bearer ' + token},
     body: JSON.stringify({message: prompt, context: 'cycle_feminin'})
   }).then(function(r){return r.json();}).then(function(d){
-    var comment = d.response || d.message || 'Conseils non disponibles';
+    var comment = d.reply || d.response || d.message || 'Conseils non disponibles';
     var el = document.getElementById('cycleAIComment');
     el.textContent = comment;
     el.style.display = 'block';
