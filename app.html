@@ -685,6 +685,91 @@ window.initScoreSante = function() {
 };
 
 
+
+window.getCycleHistory = function() {
+  try { return JSON.parse(localStorage.getItem('mirella_cycle_history') || '[]'); } catch(e) { return []; }
+};
+
+window.saveCycleHistory = function(history) {
+  localStorage.setItem('mirella_cycle_history', JSON.stringify(history));
+};
+
+window.addCycleToHistory = function() {
+  var date = prompt('Date du début des règles (JJ/MM/AAAA) :');
+  if (!date) return;
+  var parts = date.split('/');
+  if (parts.length !== 3) { alert('Format invalide. Utilisez JJ/MM/AAAA'); return; }
+  var isoDate = parts[2] + '-' + parts[1].padStart(2,'0') + '-' + parts[0].padStart(2,'0');
+  if (isNaN(new Date(isoDate))) { alert('Date invalide'); return; }
+  
+  var history = window.getCycleHistory();
+  history.push({ date: isoDate, addedAt: new Date().toISOString() });
+  history.sort(function(a,b){ return new Date(b.date) - new Date(a.date); });
+  window.saveCycleHistory(history);
+  window.renderCycleHistory();
+};
+
+window.deleteCycleEntry = function(idx) {
+  var history = window.getCycleHistory();
+  history.splice(idx, 1);
+  window.saveCycleHistory(history);
+  window.renderCycleHistory();
+};
+
+window.renderCycleHistory = function() {
+  var history = window.getCycleHistory();
+  var el = document.getElementById('cycleHistory');
+  var statsEl = document.getElementById('cycleStats');
+  if (!el) return;
+
+  if (history.length === 0) {
+    el.innerHTML = '<div style="font-size:0.82rem;color:#ccc;text-align:center;padding:20px">Aucun cycle enregistre. Cliquez sur + Ajouter regles pour commencer.</div>';
+    if (statsEl) statsEl.innerHTML = '';
+    return;
+  }
+
+  // Calculer stats
+  var durations = [];
+  for (var i = 0; i < history.length - 1; i++) {
+    var d1 = new Date(history[i].date);
+    var d2 = new Date(history[i+1].date);
+    var diff = Math.round((d2 - d1) / 86400000);
+    if (diff > 0) durations.push(Math.abs(diff));
+  }
+  var avgCycle = durations.length ? Math.round(durations.reduce(function(a,b){return a+b;},0)/durations.length) : '--';
+  var minCycle = durations.length ? Math.min.apply(null, durations) : '--';
+  var maxCycle = durations.length ? Math.max.apply(null, durations) : '--';
+
+  if (statsEl) {
+    statsEl.innerHTML = [
+      {label: 'Cycle moyen', val: avgCycle + (avgCycle !== '--' ? 'j' : ''), color: '#FF6B6B'},
+      {label: 'Plus court', val: minCycle + (minCycle !== '--' ? 'j' : ''), color: '#FF9A3C'},
+      {label: 'Plus long', val: maxCycle + (maxCycle !== '--' ? 'j' : ''), color: '#DDA0DD'}
+    ].map(function(s) {
+      return '<div style="background:#FFF5F0;border-radius:12px;padding:12px;text-align:center"><div style="font-size:1.4rem;font-weight:800;color:'+s.color+'">'+s.val+'</div><div style="font-size:0.7rem;color:#888;margin-top:2px">'+s.label+'</div></div>';
+    }).join('');
+  }
+
+  // Timeline
+  var months = ['jan','fev','mar','avr','mai','jun','jul','aou','sep','oct','nov','dec'];
+  el.innerHTML = history.map(function(h, idx) {
+    var d = new Date(h.date);
+    var nextEntry = history[idx-1];
+    var duration = nextEntry ? Math.abs(Math.round((new Date(nextEntry.date) - d) / 86400000)) : null;
+    return '<div style="display:flex;align-items:center;gap:12px;padding:12px;background:#FFF5F0;border-radius:12px">' +
+      '<div style="width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,#FF6B6B,#FF9A3C);display:flex;flex-direction:column;align-items:center;justify-content:center;flex-shrink:0">' +
+      '<div style="font-size:0.9rem;font-weight:800;color:white;line-height:1">' + d.getDate() + '</div>' +
+      '<div style="font-size:0.6rem;color:rgba(255,255,255,0.8)">' + months[d.getMonth()] + '</div></div>' +
+      '<div style="flex:1">' +
+      '<div style="font-size:0.88rem;font-weight:600;color:#1a1a1a">Debut des regles</div>' +
+      '<div style="font-size:0.75rem;color:#888">' + d.toLocaleDateString('fr-FR', {weekday:'long', day:'numeric', month:'long', year:'numeric'}) + '</div>' +
+      (duration ? '<div style="font-size:0.72rem;color:#FF6B6B;margin-top:2px">Cycle: ' + duration + ' jours</div>' : '') +
+      '</div>' +
+      '<button onclick="window.deleteCycleEntry('+idx+')" style="background:none;border:none;color:#ddd;font-size:1.1rem;cursor:pointer;padding:4px">x</button>' +
+      '</div>';
+  }).join('');
+};
+
 // ── CYCLE FEMININ ──
 window._symptoms = [];
 
@@ -808,6 +893,7 @@ window.analyseCycle = function() {
 };
 
 window.initCycle = function() {
+  window.renderCycleHistory();
   // Restaurer les données sauvegardées
   var saved = JSON.parse(localStorage.getItem('mirella_cycle') || '{}');
   if (saved.lastPeriod) {
@@ -7679,7 +7765,7 @@ function toggleQuickMenu() {
     </div>
 
     <!-- Calendrier 4 semaines -->
-    <div style="background:white;border-radius:20px;padding:24px;box-shadow:0 2px 12px rgba(0,0,0,0.06)">
+    <div style="background:white;border-radius:20px;padding:24px;box-shadow:0 2px 12px rgba(0,0,0,0.06);margin-bottom:16px">
       <div style="font-size:1rem;font-weight:700;color:#1a1a1a;margin-bottom:16px">Prévisions du cycle</div>
       <div id="cycleCalendar" style="display:grid;grid-template-columns:repeat(7,1fr);gap:4px;text-align:center"></div>
       <div style="display:flex;gap:12px;margin-top:12px;flex-wrap:wrap">
@@ -7687,6 +7773,22 @@ function toggleQuickMenu() {
         <div style="display:flex;align-items:center;gap:4px;font-size:0.72rem;color:#666"><div style="width:12px;height:12px;border-radius:50%;background:#FFB347"></div>Folliculaire</div>
         <div style="display:flex;align-items:center;gap:4px;font-size:0.72rem;color:#666"><div style="width:12px;height:12px;border-radius:50%;background:#FF9A3C"></div>Ovulation</div>
         <div style="display:flex;align-items:center;gap:4px;font-size:0.72rem;color:#666"><div style="width:12px;height:12px;border-radius:50%;background:#DDA0DD"></div>Lutéale</div>
+      </div>
+    </div>
+
+    <!-- Historique des cycles -->
+    <div style="background:white;border-radius:20px;padding:24px;box-shadow:0 2px 12px rgba(0,0,0,0.06)">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
+        <div style="font-size:1rem;font-weight:700;color:#1a1a1a">Historique des cycles</div>
+        <button onclick="window.addCycleToHistory()" style="background:linear-gradient(135deg,#FF6B6B,#FF9A3C);color:white;border:none;border-radius:10px;padding:8px 14px;font-size:0.78rem;font-weight:700;cursor:pointer">+ Ajouter règles</button>
+      </div>
+      
+      <!-- Stats -->
+      <div id="cycleStats" style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:16px"></div>
+      
+      <!-- Timeline -->
+      <div id="cycleHistory" style="display:flex;flex-direction:column;gap:10px">
+        <div style="font-size:0.82rem;color:#ccc;text-align:center;padding:20px">Aucun cycle enregistré</div>
       </div>
     </div>
 
