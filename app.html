@@ -5420,13 +5420,17 @@ Réponds UNIQUEMENT en JSON valide avec cette structure exacte:
     const daysLeft = Math.ceil((window.trialEnd - new Date()) / (1000 * 60 * 60 * 24));
     const banner = document.createElement('div');
     banner.id = 'trialActiveBanner';
-    banner.style.cssText = 'background:#FFF5F0;border-bottom:1px solid rgba(255,107,107,.2);padding:10px 24px;display:flex;align-items:center;justify-content:space-between;font-size:.82rem';
+    banner.style.cssText = 'position:fixed;top:0;left:0;right:0;z-index:9998;background:linear-gradient(135deg,#FF6B6B,#FF9A3C);padding:10px 16px;display:flex;align-items:center;justify-content:space-between;font-size:.78rem;box-shadow:0 2px 8px rgba(255,107,107,0.3)';
     banner.innerHTML = `
-      <span style="color:#FF6B6B;font-weight:500">🎁 Essai gratuit — <strong>${daysLeft} jour${daysLeft > 1 ? 's' : ''} restant${daysLeft > 1 ? 's' : ''}</strong> · Abonnez-vous à -50% à vie</span>
-      <button onclick="showView('pricing')" style="background:linear-gradient(135deg,#FF6B6B,#FF9A3C);color:white;border:none;border-radius:6px;padding:6px 16px;font-size:.78rem;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif">Voir les offres →</button>
+      <span style="color:white;font-weight:500">🎁 <strong>${daysLeft} jour${daysLeft > 1 ? 's' : ''}</strong> d'essai restant${daysLeft > 1 ? 's' : ''} · -50% à vie</span>
+      <button onclick="showView('pricing')" style="background:rgba(255,255,255,0.25);color:white;border:1px solid rgba(255,255,255,0.4);border-radius:6px;padding:4px 12px;font-size:.75rem;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif;white-space:nowrap">Voir les offres →</button>
     `;
-    const mainContent = document.querySelector('.main-content') || document.getElementById('appPage');
-    if (mainContent) mainContent.insertBefore(banner, mainContent.firstChild);
+    document.body.appendChild(banner);
+    // Ajouter padding-top au mobileTopbar pour ne pas masquer le contenu
+    var topbar = document.getElementById('mobileTopbar');
+    if (topbar) topbar.style.marginTop = '40px';
+    var appPage = document.getElementById('appPage');
+    if (appPage) appPage.style.paddingTop = '40px';
   }
 
   async function showView(view, btn) {
