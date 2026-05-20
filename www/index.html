@@ -684,6 +684,140 @@ window.initScoreSante = function() {
   } catch(e) { console.error(e); }
 };
 
+
+// ── CYCLE FEMININ ──
+window._symptoms = [];
+
+window.toggleSymptom = function(sym, btn) {
+  var idx = window._symptoms.indexOf(sym);
+  if (idx === -1) {
+    window._symptoms.push(sym);
+    btn.style.borderColor = '#FF6B6B';
+    btn.style.background = '#FFF5F0';
+  } else {
+    window._symptoms.splice(idx, 1);
+    btn.style.borderColor = '#eee';
+    btn.style.background = 'white';
+  }
+};
+
+window.getCyclePhase = function(lastPeriod, cycleLength, periodLength) {
+  var today = new Date();
+  var last = new Date(lastPeriod);
+  var dayOfCycle = Math.floor((today - last) / 86400000) % cycleLength;
+  if (dayOfCycle < 0) dayOfCycle += cycleLength;
+  
+  if (dayOfCycle < periodLength) return {phase: 'menstruelle', day: dayOfCycle + 1};
+  if (dayOfCycle < 13) return {phase: 'folliculaire', day: dayOfCycle + 1};
+  if (dayOfCycle < 16) return {phase: 'ovulation', day: dayOfCycle + 1};
+  return {phase: 'luteale', day: dayOfCycle + 1};
+};
+
+window.updateCycle = function() {
+  var lastPeriod = document.getElementById('cycleLastPeriod').value;
+  var cycleLength = parseInt(document.getElementById('cycleLength').value);
+  var periodLength = parseInt(document.getElementById('periodLength').value);
+  if (!lastPeriod) return;
+
+  // Sauvegarder
+  localStorage.setItem('mirella_cycle', JSON.stringify({lastPeriod, cycleLength, periodLength}));
+
+  var result = window.getCyclePhase(lastPeriod, cycleLength, periodLength);
+  var phases = {
+    menstruelle: {name: 'Phase Menstruelle', emoji: '🔴', color: '#FF6B6B', desc: 'Votre corps se régénère. Privilégiez le repos et les aliments riches en fer.', conseils: ['Aliments riches en fer : viande rouge, lentilles, épinards', 'Anti-inflammatoires naturels : gingembre, curcuma, oméga-3', 'Évitez alcool et caféine qui aggravent les crampes', 'Hydratation++, tisanes apaisantes', 'Sport léger : yoga, marche']},
+    folliculaire: {name: 'Phase Folliculaire', emoji: '🌱', color: '#FFB347', desc: 'Votre énergie remonte. Profitez-en pour des activités plus intenses et des repas équilibrés.', conseils: ['Protéines maigres pour soutenir la croissance folliculaire', 'Légumes crucifères : brocoli, chou-fleur, chou kale', 'Graines de lin et de citrouille (phytooestrogènes)', 'Bon moment pour introduire de nouveaux aliments', 'Sport : cardio, musculation possible']},
+    ovulation: {name: 'Phase Ovulation', emoji: '⭐', color: '#FF9A3C', desc: 'Pic energie ! Votre métabolisme est au maximum. Ideal pour les efforts physiques.', conseils: ['Antioxydants : fruits rouges, tomates, poivrons', 'Fibres pour soutenir la détoxification hormonale', 'Zinc : huîtres, graines de courge, légumineuses', 'Limitez les graisses saturées', 'Sport intensif possible : HIIT, course, natation']},
+    luteale: {name: 'Phase Lutéale', emoji: '🌙', color: '#DDA0DD', desc: 'Votre corps se prépare. Les fringales sont normales. Misez sur le magnésium.', conseils: ['Magnésium : chocolat noir, noix, banane, légumineuses', 'Réduire sel et sucre raffiné contre la rétention', 'Tryptophane pour la sérotonine : dinde, oeufs, noix', 'Évitez la caféine qui amplifie le SPM', 'Sport doux : pilates, natation, yoga']}
+  };
+
+  var phase = phases[result.phase];
+  document.getElementById('cyclePhaseName').textContent = phase.emoji + ' ' + phase.name;
+  document.getElementById('cyclePhaseName').style.color = phase.color;
+  document.getElementById('cyclePhaseDesc').textContent = phase.desc;
+
+  var adviceEl = document.getElementById('cycleAdvice');
+  adviceEl.innerHTML = phase.conseils.map(function(c) {
+    return '<div style="display:flex;align-items:flex-start;gap:10px;padding:10px;background:#FFF5F0;border-radius:10px"><span style="color:#FF6B6B;font-weight:700;flex-shrink:0">✓</span><span style="font-size:0.85rem;color:#444">'+c+'</span></div>';
+  }).join('');
+
+  // Calendrier
+  window.renderCycleCalendar(lastPeriod, cycleLength, periodLength);
+};
+
+window.renderCycleCalendar = function(lastPeriod, cycleLength, periodLength) {
+  var cal = document.getElementById('cycleCalendar');
+  if (!cal) return;
+  var days = ['L','M','M','J','V','S','D'];
+  var html = days.map(function(d){ return '<div style="font-size:0.65rem;font-weight:700;color:#888;padding:4px">'+d+'</div>'; }).join('');
+  
+  var today = new Date();
+  var startDate = new Date(today);
+  startDate.setDate(today.getDate() - 14);
+  var dayOfWeek = startDate.getDay() === 0 ? 6 : startDate.getDay() - 1;
+  for (var i = 0; i < dayOfWeek; i++) html += '<div></div>';
+  
+  var last = new Date(lastPeriod);
+  for (var d = 0; d < 35; d++) {
+    var date = new Date(startDate);
+    date.setDate(startDate.getDate() + d);
+    var dayOfCycle = Math.floor((date - last) / 86400000) % cycleLength;
+    if (dayOfCycle < 0) dayOfCycle += cycleLength;
+    
+    var color = '#f0f0f0';
+    if (dayOfCycle < periodLength) color = '#FF6B6B';
+    else if (dayOfCycle < 13) color = '#FFD580';
+    else if (dayOfCycle < 16) color = '#FF9A3C';
+    else color = '#DDA0DD';
+    
+    var isToday = date.toISOString().split('T')[0] === today.toISOString().split('T')[0];
+    html += '<div style="width:28px;height:28px;border-radius:50%;background:'+color+';display:flex;align-items:center;justify-content:center;margin:2px auto;font-size:0.65rem;font-weight:'+(isToday?'800':'400')+';color:'+(isToday?'white':'rgba(0,0,0,0.5)')+';box-shadow:'+(isToday?'0 0 0 2px #1a1a1a':'')+'">' + date.getDate() + '</div>';
+  }
+  cal.innerHTML = html;
+};
+
+window.analyseCycle = function() {
+  var lastPeriod = document.getElementById('cycleLastPeriod').value;
+  if (!lastPeriod) { alert('Renseignez la date de vos dernières règles'); return; }
+  var btn = document.getElementById('cycleAnalyseBtn');
+  btn.textContent = 'Analyse en cours...';
+  btn.disabled = true;
+  
+  var cycleLength = document.getElementById('cycleLength').value;
+  var periodLength = document.getElementById('periodLength').value;
+  var result = window.getCyclePhase(lastPeriod, cycleLength, periodLength);
+  var profile = JSON.parse(localStorage.getItem('nutricare_profile') || '{}');
+  var token = localStorage.getItem('nutricare_token');
+  
+  var prompt = 'Tu es Mirella, coach sante feminine. Je suis en phase ' + result.phase + ' de mon cycle (jour ' + result.day + '). Mon cycle dure ' + cycleLength + ' jours. Mes pathologies: ' + (profile.pathologies||[]).join(',') + '. Mes symptomes actuels: ' + (window._symptoms.join(',') || 'aucun') + '. Donne-moi 3-4 conseils nutritionnels et bien-etre tres personnalises et concrets pour cette phase, en tenant compte de mes pathologies et symptomes. Sois bienveillante et precise. Reponds en francais.';
+  
+  fetch(BACKEND_URL + '/api/chat/message', {
+    method: 'POST',
+    headers: {'Content-Type':'application/json', 'Authorization': 'Bearer ' + token},
+    body: JSON.stringify({message: prompt, context: 'cycle_feminin'})
+  }).then(function(r){return r.json();}).then(function(d){
+    var comment = d.response || d.message || 'Conseils non disponibles';
+    var el = document.getElementById('cycleAIComment');
+    el.textContent = comment;
+    el.style.display = 'block';
+    btn.textContent = 'Analyse IA personnalisée';
+    btn.disabled = false;
+  }).catch(function(){
+    btn.textContent = 'Analyse IA personnalisée';
+    btn.disabled = false;
+  });
+};
+
+window.initCycle = function() {
+  // Restaurer les données sauvegardées
+  var saved = JSON.parse(localStorage.getItem('mirella_cycle') || '{}');
+  if (saved.lastPeriod) {
+    document.getElementById('cycleLastPeriod').value = saved.lastPeriod;
+    if (saved.cycleLength) { document.getElementById('cycleLength').value = saved.cycleLength; document.getElementById('cycleLengthVal').textContent = saved.cycleLength + 'j'; }
+    if (saved.periodLength) { document.getElementById('periodLength').value = saved.periodLength; document.getElementById('periodLengthVal').textContent = saved.periodLength + 'j'; }
+    window.updateCycle();
+  }
+};
+
 // ── PLANNING ──
 try {
 window.planningWeekOffset = 0;
@@ -1280,6 +1414,15 @@ function switchLang(lang) {
           <div class="profile-field" style="grid-column:span 2">
             <label class="profile-label">Nom complet</label>
             <input type="text" class="profile-input" id="profileName" placeholder="Votre nom">
+          </div>
+          <div class="profile-field">
+            <label class="profile-label">Sexe biologique</label>
+            <select class="profile-input" id="profileSexe">
+              <option value="">Non renseigné</option>
+              <option value="femme">Femme</option>
+              <option value="homme">Homme</option>
+              <option value="autre">Autre / Ne souhaite pas préciser</option>
+            </select>
           </div>
           <div class="profile-field" style="grid-column:span 2">
             <label class="profile-label">Origine ethnique <span style="font-size:0.7rem;color:var(--soft);font-weight:400;">(facultatif - aide a personnaliser les conseils nutritionnels)</span></label>
@@ -3195,6 +3338,8 @@ function switchLang(lang) {
       document.getElementById('profileCultural').value = profile.cultural_constraints || '';
       document.getElementById('profileBudget').value = profile.budget_alimentaire || '';
       if (document.getElementById('profileEthnicity')) document.getElementById('profileEthnicity').value = profile.ethnicity || '';
+      if (document.getElementById('profileSexe')) document.getElementById('profileSexe').value = profile.sexe || '';
+      var btnCycle = document.getElementById('btnCycleFeminin'); if(btnCycle) btnCycle.style.display = profile.sexe === 'femme' ? 'flex' : 'none';
       if (document.getElementById('profileWakeUp')) document.getElementById('profileWakeUp').value = profile.wake_up || '07:00';
       if (document.getElementById('profileSleep')) document.getElementById('profileSleep').value = profile.sleep_time || '23:00';
       if (document.getElementById('profileWorkStart')) document.getElementById('profileWorkStart').value = profile.work_start || '09:00';
@@ -5490,6 +5635,7 @@ Réponds UNIQUEMENT en JSON valide avec cette structure exacte:
     document.getElementById('insightsView').style.display = view === 'insights' ? 'block' : 'none';
     document.getElementById('simulatorView').style.display = view === 'simulator' ? 'block' : 'none';
     document.getElementById('oracleView').style.display = view === 'oracle' ? 'flex' : 'none';
+    var cv = document.getElementById('cycleView'); if(cv) { cv.style.display = view === 'cycle' ? 'block' : 'none'; if(view === 'cycle') { var mc2 = document.querySelector('.main-content'); if(mc2) mc2.style.overflow = view === 'cycle' ? 'auto' : 'hidden'; setTimeout(function(){ if(typeof initCycle === 'function') initCycle(); }, 100); } }
     var pv = document.getElementById('planningView'); if(pv) { pv.style.display = view === 'planning' ? 'block' : 'none'; var mc = document.querySelector('.main-content'); if(mc) mc.style.overflow = view === 'planning' ? 'auto' : 'hidden'; if(view === 'planning') { setTimeout(function(){ try{ window.renderPlanning(); }catch(e){ document.getElementById('planningGrid').innerHTML='<div style="padding:20px;color:red">'+e.message+'</div>'; } }, 300); } }
     if (view === 'oracle') initOracle();
     document.getElementById('historyView').style.display = view === 'history' ? 'block' : 'none';
@@ -6825,6 +6971,7 @@ async function deleteProfessional(id) {
         objectif_nutritionnel: document.getElementById('menuObjectif')?.value || document.getElementById('profileObjectif')?.value || '',
         menu_filters: Array.from(activeMenuFilters),
       ethnicity: document.getElementById('profileEthnicity')?.value || '',
+      sexe: document.getElementById('profileSexe')?.value || '',
       wake_up: document.getElementById('profileWakeUp')?.value || '',
       sleep_time: document.getElementById('profileSleep')?.value || '',
       work_start: document.getElementById('profileWorkStart')?.value || '',
@@ -7401,6 +7548,7 @@ function closeMirellaNotif() {
       <button onclick="toggleQuickMenu();showView('passeport')" style="display:flex;align-items:center;gap:8px;padding:12px;background:#FFF5F0;border:none;border-radius:12px;font-size:0.82rem;font-weight:600;color:#2D2D2D;cursor:pointer">📄 Passeport santé</button>
       <button onclick="toggleQuickMenu();showView('pricing')" style="display:flex;align-items:center;gap:8px;padding:12px;background:#FFF5F0;border:none;border-radius:12px;font-size:0.82rem;font-weight:600;color:#2D2D2D;cursor:pointer">⭐ Abonnements</button>
       <button onclick="toggleQuickMenu();showView('planning')" style="display:flex;align-items:center;gap:8px;padding:12px;background:#FFF5F0;border:none;border-radius:12px;font-size:0.82rem;font-weight:600;color:#2D2D2D;cursor:pointer">📅 Mon planning</button>
+      <button id="btnCycleFeminin" onclick="toggleQuickMenu();showView('cycle')" style="display:none;align-items:center;gap:8px;padding:12px;background:#FFF5F0;border:none;border-radius:12px;font-size:0.82rem;font-weight:600;color:#2D2D2D;cursor:pointer">🌸 Cycle féminin</button>
       <button onclick="toggleQuickMenu();showView('gamification')" style="display:flex;align-items:center;gap:8px;padding:12px;background:#FFF5F0;border:none;border-radius:12px;font-size:0.82rem;font-weight:600;color:#2D2D2D;cursor:pointer">🏆 Progression</button>
     </div>
   </div>
@@ -7460,5 +7608,90 @@ function toggleQuickMenu() {
 
 
 
+
+
+<!-- CYCLE FEMININ VIEW -->
+<div id="cycleView" style="display:none;padding:0;overflow-y:auto;background:#FFF5F0;width:100%">
+  <div class="view-header" style="background:linear-gradient(135deg,#FF6B6B,#FF9A3C);padding:32px 32px 28px">
+    <div style="font-size:1.6rem;font-weight:700;color:white;font-family:'Open Sans',sans-serif">🌸 Cycle Féminin</div>
+    <div style="font-size:0.9rem;color:rgba(255,255,255,0.8);margin-top:4px">Nutrition & bien-être adaptés à votre cycle</div>
+  </div>
+
+  <div style="padding:20px;padding-bottom:100px">
+
+    <!-- Phase actuelle -->
+    <div id="cyclePhaseCard" style="background:white;border-radius:20px;padding:24px;margin-bottom:16px;box-shadow:0 2px 12px rgba(0,0,0,0.06);text-align:center">
+      <div style="font-size:0.8rem;font-weight:600;text-transform:uppercase;letter-spacing:.1em;color:#888;margin-bottom:8px">Phase actuelle</div>
+      <div id="cyclePhaseName" style="font-size:1.8rem;font-weight:800;color:#FF6B6B">--</div>
+      <div id="cyclePhaseDesc" style="font-size:0.85rem;color:#666;margin-top:8px;line-height:1.5"></div>
+      <div style="margin-top:16px;display:flex;justify-content:center;gap:8px" id="cyclePhaseIcons"></div>
+    </div>
+
+    <!-- Paramètres cycle -->
+    <div style="background:white;border-radius:20px;padding:24px;margin-bottom:16px;box-shadow:0 2px 12px rgba(0,0,0,0.06)">
+      <div style="font-size:1rem;font-weight:700;color:#1a1a1a;margin-bottom:16px">Paramètres de mon cycle</div>
+      
+      <div style="margin-bottom:14px">
+        <div style="font-size:0.82rem;font-weight:600;color:#555;margin-bottom:6px">Date des dernières règles</div>
+        <input type="date" id="cycleLastPeriod" style="width:100%;padding:12px;border:1.5px solid #eee;border-radius:10px;font-size:0.9rem;box-sizing:border-box" onchange="window.updateCycle()">
+      </div>
+      
+      <div style="margin-bottom:14px">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
+          <div style="font-size:0.82rem;font-weight:600;color:#555">Durée du cycle (jours)</div>
+          <div id="cycleLengthVal" style="font-size:0.9rem;font-weight:700;color:#FF6B6B">28j</div>
+        </div>
+        <input type="range" min="21" max="40" value="28" id="cycleLength" oninput="document.getElementById('cycleLengthVal').textContent=this.value+'j';window.updateCycle()" style="width:100%;accent-color:#FF6B6B">
+      </div>
+
+      <div style="margin-bottom:14px">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
+          <div style="font-size:0.82rem;font-weight:600;color:#555">Durée des règles (jours)</div>
+          <div id="periodLengthVal" style="font-size:0.9rem;font-weight:700;color:#FF6B6B">5j</div>
+        </div>
+        <input type="range" min="2" max="10" value="5" id="periodLength" oninput="document.getElementById('periodLengthVal').textContent=this.value+'j';window.updateCycle()" style="width:100%;accent-color:#FF6B6B">
+      </div>
+
+      <!-- Symptômes -->
+      <div>
+        <div style="font-size:0.82rem;font-weight:600;color:#555;margin-bottom:8px">Symptômes actuels (facultatif)</div>
+        <div style="display:flex;flex-wrap:wrap;gap:8px" id="symptomsSelector">
+          <button onclick="window.toggleSymptom('fatigue',this)" style="padding:6px 12px;border-radius:20px;border:1.5px solid #eee;background:white;font-size:0.78rem;cursor:pointer">😴 Fatigue</button>
+          <button onclick="window.toggleSymptom('douleurs',this)" style="padding:6px 12px;border-radius:20px;border:1.5px solid #eee;background:white;font-size:0.78rem;cursor:pointer">😣 Douleurs</button>
+          <button onclick="window.toggleSymptom('humeur',this)" style="padding:6px 12px;border-radius:20px;border:1.5px solid #eee;background:white;font-size:0.78rem;cursor:pointer">😔 Humeur</button>
+          <button onclick="window.toggleSymptom('gonflement',this)" style="padding:6px 12px;border-radius:20px;border:1.5px solid #eee;background:white;font-size:0.78rem;cursor:pointer">🫧 Gonflement</button>
+          <button onclick="window.toggleSymptom('fringales',this)" style="padding:6px 12px;border-radius:20px;border:1.5px solid #eee;background:white;font-size:0.78rem;cursor:pointer">🍫 Fringales</button>
+          <button onclick="window.toggleSymptom('energie',this)" style="padding:6px 12px;border-radius:20px;border:1.5px solid #eee;background:white;font-size:0.78rem;cursor:pointer">⚡ Énergie+</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Conseils Mirella -->
+    <div style="background:white;border-radius:20px;padding:24px;margin-bottom:16px;box-shadow:0 2px 12px rgba(0,0,0,0.06)">
+      <div style="font-size:1rem;font-weight:700;color:#1a1a1a;margin-bottom:16px">Conseils Mirella pour cette phase</div>
+      <div id="cycleAdvice" style="display:flex;flex-direction:column;gap:10px">
+        <div style="font-size:0.85rem;color:#ccc;text-align:center;padding:20px">Renseignez votre cycle pour obtenir des conseils personnalisés</div>
+      </div>
+      <button onclick="window.analyseCycle()" id="cycleAnalyseBtn" style="width:100%;margin-top:16px;background:linear-gradient(135deg,#FF6B6B,#FF9A3C);color:white;border:none;border-radius:14px;padding:14px;font-size:0.95rem;font-weight:700;cursor:pointer">
+        Analyse IA personnalisée ✨
+      </button>
+      <div id="cycleAIComment" style="display:none;margin-top:16px;padding:16px;background:#FFF5F0;border-radius:12px;font-size:0.85rem;color:#444;line-height:1.6;white-space:pre-wrap"></div>
+    </div>
+
+    <!-- Calendrier 4 semaines -->
+    <div style="background:white;border-radius:20px;padding:24px;box-shadow:0 2px 12px rgba(0,0,0,0.06)">
+      <div style="font-size:1rem;font-weight:700;color:#1a1a1a;margin-bottom:16px">Prévisions du cycle</div>
+      <div id="cycleCalendar" style="display:grid;grid-template-columns:repeat(7,1fr);gap:4px;text-align:center"></div>
+      <div style="display:flex;gap:12px;margin-top:12px;flex-wrap:wrap">
+        <div style="display:flex;align-items:center;gap:4px;font-size:0.72rem;color:#666"><div style="width:12px;height:12px;border-radius:50%;background:#FF6B6B"></div>Règles</div>
+        <div style="display:flex;align-items:center;gap:4px;font-size:0.72rem;color:#666"><div style="width:12px;height:12px;border-radius:50%;background:#FFB347"></div>Folliculaire</div>
+        <div style="display:flex;align-items:center;gap:4px;font-size:0.72rem;color:#666"><div style="width:12px;height:12px;border-radius:50%;background:#FF9A3C"></div>Ovulation</div>
+        <div style="display:flex;align-items:center;gap:4px;font-size:0.72rem;color:#666"><div style="width:12px;height:12px;border-radius:50%;background:#DDA0DD"></div>Lutéale</div>
+      </div>
+    </div>
+
+  </div>
+</div>
+<!-- FIN CYCLE FEMININ VIEW -->
 
 </body>
