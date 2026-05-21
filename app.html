@@ -1910,27 +1910,27 @@ function switchLang(lang) {
           </div>
         </div>
         <!-- Colonne droite : macros -->
-        <div style="background:#f9f9f9;border-radius:16px;padding:16px;display:flex;flex-direction:column;gap:0">
+        <div style="background:#f9f9f9;border-radius:16px;padding:16px;display:flex;flex-direction:column;gap:0;overflow:hidden;min-width:0">
           <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid #ececec">
             <div>
               <div style="font-size:1.1rem;font-weight:800;color:#1a1a1a"><span id="macroGlucidesVal">0</span> <span id="macroGlucidesMax" style="font-size:0.7rem;color:#aaa;font-weight:400">/ 205 g</span></div>
               <div style="font-size:0.72rem;color:#666">Glucides</div>
             </div>
-            <canvas id="macroGlucidesCircle" width="36" height="36"></canvas>
+            <canvas id="macroGlucidesCircle" width="32" height="32" style="flex-shrink:0"></canvas>
           </div>
           <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid #ececec">
             <div>
               <div style="font-size:1.1rem;font-weight:800;color:#1a1a1a"><span id="macroProteinesVal">0</span> <span id="macroProteinesMax" style="font-size:0.7rem;color:#aaa;font-weight:400">/ 154 g</span></div>
               <div style="font-size:0.72rem;color:#666">Proteines</div>
             </div>
-            <canvas id="macroProteinesCircle" width="36" height="36"></canvas>
+            <canvas id="macroProteinesCircle" width="32" height="32" style="flex-shrink:0"></canvas>
           </div>
           <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 0">
             <div>
               <div style="font-size:1.1rem;font-weight:800;color:#1a1a1a"><span id="macroLipidesVal">0</span> <span id="macroLipidesMax" style="font-size:0.7rem;color:#aaa;font-weight:400">/ 68 g</span></div>
               <div style="font-size:0.72rem;color:#666">Lipides</div>
             </div>
-            <canvas id="macroLipidesCircle" width="36" height="36"></canvas>
+            <canvas id="macroLipidesCircle" width="32" height="32" style="flex-shrink:0"></canvas>
           </div>
         </div>
       </div>
@@ -6377,13 +6377,14 @@ function updateNutritionPanel(dayIndex) {
     var cv = document.getElementById(id);
     if (!cv) return;
     var cx = cv.getContext('2d');
-    cx.clearRect(0,0,44,44);
-    cx.beginPath(); cx.arc(22,22,18,0,Math.PI*2);
-    cx.strokeStyle = '#f0f0f0'; cx.lineWidth = 4; cx.stroke();
+    var sz=cv.width; var r=sz/2-3;
+    cx.clearRect(0,0,sz,sz);
+    cx.beginPath(); cx.arc(sz/2,sz/2,r,0,Math.PI*2);
+    cx.strokeStyle = '#f0f0f0'; cx.lineWidth = 3; cx.stroke();
     if (pct > 0) {
       cx.beginPath();
-      cx.arc(22,22,18,-Math.PI/2,-Math.PI/2+(pct/100)*Math.PI*2);
-      cx.strokeStyle = color; cx.lineWidth = 4; cx.lineCap = 'round'; cx.stroke();
+      cx.arc(sz/2,sz/2,r,-Math.PI/2,-Math.PI/2+(pct/100)*Math.PI*2);
+      cx.strokeStyle = color; cx.lineWidth = 3; cx.lineCap = 'round'; cx.stroke();
     }
   }
   drawCircle('macroGlucidesCircle', gluPct, '#4FACFE');
