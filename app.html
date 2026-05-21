@@ -6372,14 +6372,16 @@ function updateNutritionPanel(dayIndex) {
     var cv = document.getElementById(id);
     if (!cv) return;
     var cx = cv.getContext('2d');
-    var sz=cv.width; var r=sz/2-3;
+    var sz = cv.width;
+    var lw = sz * 0.12;
+    var r = sz/2 - lw;
     cx.clearRect(0,0,sz,sz);
     cx.beginPath(); cx.arc(sz/2,sz/2,r,0,Math.PI*2);
-    cx.strokeStyle = '#f0f0f0'; cx.lineWidth = 3; cx.stroke();
+    cx.strokeStyle = '#e8e8e8'; cx.lineWidth = lw; cx.stroke();
     if (pct > 0) {
       cx.beginPath();
       cx.arc(sz/2,sz/2,r,-Math.PI/2,-Math.PI/2+(pct/100)*Math.PI*2);
-      cx.strokeStyle = color; cx.lineWidth = 3; cx.lineCap = 'round'; cx.stroke();
+      cx.strokeStyle = color; cx.lineWidth = lw; cx.lineCap = 'round'; cx.stroke();
     }
   }
   drawCircle('macroGlucidesCircle', gluPct, '#4FACFE');
