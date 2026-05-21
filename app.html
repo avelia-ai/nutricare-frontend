@@ -1885,65 +1885,57 @@ function switchLang(lang) {
           <option value="6">Dimanche</option>
         </select>
       </div>
-      <!-- Anneau calories -->
-      <div style="text-align:center;margin-bottom:16px">
-        <div style="position:relative;width:160px;height:160px;margin:0 auto 12px">
-          <canvas id="caloriesDonut" width="160" height="160"></canvas>
-          <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center">
-            <div id="donutCalories" style="font-size:2rem;font-weight:800;color:#1a1a1a;line-height:1">0</div>
-            <div style="font-size:0.62rem;color:#888;margin-top:2px">kcal</div>
-            <div style="font-size:0.7rem;font-weight:600;color:#555">Restantes</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+        <!-- Colonne gauche : anneau -->
+        <div style="background:#f9f9f9;border-radius:16px;padding:16px">
+          <div style="position:relative;width:130px;height:130px;margin:0 auto 12px">
+            <canvas id="caloriesDonut" width="130" height="130"></canvas>
+            <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center">
+              <div id="donutCalories" style="font-size:1.5rem;font-weight:800;color:#1a1a1a;line-height:1">0</div>
+              <div style="font-size:0.55rem;color:#888">kcal</div>
+              <div style="font-size:0.6rem;font-weight:600;color:#555">Restantes</div>
+            </div>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px">
+            <div style="background:white;border-radius:10px;padding:8px">
+              <div id="donutDepensees" style="font-size:0.95rem;font-weight:800;color:#1a1a1a">0</div>
+              <div style="font-size:0.58rem;color:#aaa">kcal</div>
+              <div style="font-size:0.62rem;color:#666;font-weight:600">Depensees</div>
+            </div>
+            <div style="background:white;border-radius:10px;padding:8px">
+              <div id="donutConsommees" style="font-size:0.95rem;font-weight:800;color:#1a1a1a">0</div>
+              <div style="font-size:0.58rem;color:#aaa">kcal</div>
+              <div style="font-size:0.62rem;color:#666;font-weight:600">Consommees</div>
+            </div>
           </div>
         </div>
-        <div style="display:flex;justify-content:center;gap:24px">
-          <div style="text-align:center">
-            <div id="donutDepensees" style="font-size:1.1rem;font-weight:800;color:#1a1a1a">0</div>
-            <div style="font-size:0.65rem;color:#aaa">kcal</div>
-            <div style="font-size:0.7rem;color:#666;font-weight:600">Depensees</div>
+        <!-- Colonne droite : macros -->
+        <div style="background:#f9f9f9;border-radius:16px;padding:16px;display:flex;flex-direction:column;gap:0">
+          <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid #ececec">
+            <div>
+              <div style="font-size:1.1rem;font-weight:800;color:#1a1a1a"><span id="macroGlucidesVal">0</span> <span id="macroGlucidesMax" style="font-size:0.7rem;color:#aaa;font-weight:400">/ 205 g</span></div>
+              <div style="font-size:0.72rem;color:#666">Glucides</div>
+            </div>
+            <canvas id="macroGlucidesCircle" width="36" height="36"></canvas>
           </div>
-          <div style="width:1px;background:#f0f0f0"></div>
-          <div style="text-align:center">
-            <div id="donutConsommees" style="font-size:1.1rem;font-weight:800;color:#1a1a1a">0</div>
-            <div style="font-size:0.65rem;color:#aaa">kcal</div>
-            <div style="font-size:0.7rem;color:#666;font-weight:600">Consommees</div>
+          <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid #ececec">
+            <div>
+              <div style="font-size:1.1rem;font-weight:800;color:#1a1a1a"><span id="macroProteinesVal">0</span> <span id="macroProteinesMax" style="font-size:0.7rem;color:#aaa;font-weight:400">/ 154 g</span></div>
+              <div style="font-size:0.72rem;color:#666">Proteines</div>
+            </div>
+            <canvas id="macroProteinesCircle" width="36" height="36"></canvas>
+          </div>
+          <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 0">
+            <div>
+              <div style="font-size:1.1rem;font-weight:800;color:#1a1a1a"><span id="macroLipidesVal">0</span> <span id="macroLipidesMax" style="font-size:0.7rem;color:#aaa;font-weight:400">/ 68 g</span></div>
+              <div style="font-size:0.72rem;color:#666">Lipides</div>
+            </div>
+            <canvas id="macroLipidesCircle" width="36" height="36"></canvas>
           </div>
         </div>
       </div>
-      <!-- Macros -->
-      <div style="display:flex;flex-direction:column;gap:0">
-        <div style="display:flex;align-items:center;justify-content:space-between;padding:12px 0;border-bottom:1px solid #f5f5f5">
-          <div>
-            <div style="display:flex;align-items:baseline;gap:4px">
-              <span id="macroGlucidesVal" style="font-size:1.4rem;font-weight:800;color:#1a1a1a">0</span>
-              <span id="macroGlucidesMax" style="font-size:0.75rem;color:#aaa">/ 250 g</span>
-            </div>
-            <div style="font-size:0.78rem;color:#666">Glucides</div>
-          </div>
-          <canvas id="macroGlucidesCircle" width="40" height="40" style="flex-shrink:0"></canvas>
-        </div>
-        <div style="display:flex;align-items:center;justify-content:space-between;padding:12px 0;border-bottom:1px solid #f5f5f5">
-          <div>
-            <div style="display:flex;align-items:baseline;gap:4px">
-              <span id="macroProteinesVal" style="font-size:1.4rem;font-weight:800;color:#1a1a1a">0</span>
-              <span id="macroProteinesMax" style="font-size:0.75rem;color:#aaa">/ 60 g</span>
-            </div>
-            <div style="font-size:0.78rem;color:#666">Proteines</div>
-          </div>
-          <canvas id="macroProteinesCircle" width="40" height="40" style="flex-shrink:0"></canvas>
-        </div>
-        <div style="display:flex;align-items:center;justify-content:space-between;padding:12px 0">
-          <div>
-            <div style="display:flex;align-items:baseline;gap:4px">
-              <span id="macroLipidesVal" style="font-size:1.4rem;font-weight:800;color:#1a1a1a">0</span>
-              <span id="macroLipidesMax" style="font-size:0.75rem;color:#aaa">/ 70 g</span>
-            </div>
-            <div style="font-size:0.78rem;color:#666">Lipides</div>
-          </div>
-          <canvas id="macroLipidesCircle" width="40" height="40" style="flex-shrink:0"></canvas>
-        </div>
-        <div style="padding:8px 12px;background:#FFF5F0;border-radius:8px;font-size:0.72rem;color:#FF6B6B;font-weight:500;margin-top:8px" id="nutritionAdvice">
-          Selectionnez un jour pour voir vos apports
-        </div>
+      <div style="padding:8px 12px;background:#FFF5F0;border-radius:8px;font-size:0.72rem;color:#FF6B6B;font-weight:500;margin-top:8px" id="nutritionAdvice">
+        Selectionnez un jour pour voir vos apports
       </div>
     </div>
     <!-- Menu semaine -->
