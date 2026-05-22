@@ -895,6 +895,48 @@ window.renderCycleHistory = function() {
   }).join('');
 };
 
+
+// ── THEMES ──
+window.THEMES = {
+  coral:   { coral: '#FF6B6B', accent: '#FF9A3C', cream: '#FFF5F0', dark: '#E85555', name: 'Corail', emoji: '🔴' },
+  violet:  { coral: '#8B5CF6', accent: '#A78BFA', cream: '#F5F3FF', dark: '#7C3AED', name: 'Violet', emoji: '🟣' },
+  mint:    { coral: '#10B981', accent: '#34D399', cream: '#ECFDF5', dark: '#059669', name: 'Menthe', emoji: '🟢' },
+  ocean:   { coral: '#3B82F6', accent: '#60A5FA', cream: '#EFF6FF', dark: '#2563EB', name: 'Ocean', emoji: '🔵' },
+  gold:    { coral: '#F59E0B', accent: '#FBBF24', cream: '#FFFBEB', dark: '#D97706', name: 'Or', emoji: '🟡' },
+  rose:    { coral: '#EC4899', accent: '#F472B6', cream: '#FDF2F8', dark: '#DB2777', name: 'Rose', emoji: '🩷' }
+};
+
+window.applyTheme = function(themeKey) {
+  var t = window.THEMES[themeKey];
+  if (!t) return;
+  var root = document.documentElement;
+  root.style.setProperty('--coral', t.coral);
+  root.style.setProperty('--coral-dark', t.dark);
+  root.style.setProperty('--accent', t.accent);
+  root.style.setProperty('--cream', t.cream);
+  // Mettre à jour aussi les éléments inline avec les couleurs hardcodées
+  document.querySelectorAll('[style*="#FF6B6B"]').forEach(function(el) {
+    el.style.cssText = el.style.cssText.replace(/#FF6B6B/g, t.coral).replace(/#E85555/g, t.dark);
+  });
+  document.querySelectorAll('[style*="#FF9A3C"]').forEach(function(el) {
+    el.style.cssText = el.style.cssText.replace(/#FF9A3C/g, t.accent);
+  });
+  document.querySelectorAll('[style*="#FFF5F0"]').forEach(function(el) {
+    el.style.cssText = el.style.cssText.replace(/#FFF5F0/g, t.cream);
+  });
+  localStorage.setItem('mirella_theme', themeKey);
+  // Mettre à jour les boutons
+  document.querySelectorAll('.theme-btn').forEach(function(b) {
+    b.style.border = b.dataset.theme === themeKey ? '3px solid #1a1a1a' : '3px solid transparent';
+  });
+};
+
+// Appliquer le thème sauvegardé au chargement
+(function() {
+  var saved = localStorage.getItem('mirella_theme');
+  if (saved && window.THEMES[saved]) window.applyTheme(saved);
+})();
+
 // ── CYCLE FEMININ ──
 window._symptoms = [];
 
