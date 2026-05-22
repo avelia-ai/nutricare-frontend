@@ -6494,11 +6494,11 @@ function renderMenu(menu) {
         impRow.style.cssText = 'margin:0 12px 2px;padding:10px 14px;background:linear-gradient(135deg,#FFF5F0,#FFF0EC);border-radius:10px;border-left:3px solid #FF6B6B;display:flex;flex-wrap:wrap;gap:8px;align-items:flex-start';
         impRow.innerHTML =
           '<div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;width:100%">' +
-          '<span style="background:white;border-radius:6px;padding:3px 8px;font-size:0.7rem;font-weight:700;color:#FF9A3C">⚡ ' + (imp.score_energie||0) + '% energie</span>' +
-          '<span style="background:white;border-radius:6px;padding:3px 8px;font-size:0.7rem;font-weight:700;color:#22c55e">🛡️ ' + (imp.score_anti_inflammatoire||0) + '% anti-inflam.</span>' +
+          '<span style="background:white;border-radius:6px;padding:3px 8px;font-size:0.7rem;font-weight:700;color:#FF9A3C">⚡ ' + (imp.se||imp.score_energie||0) + '% energie</span>' +
+          '<span style="background:white;border-radius:6px;padding:3px 8px;font-size:0.7rem;font-weight:700;color:#22c55e">🛡️ ' + (imp.ai||imp.score_anti_inflammatoire||0) + '% anti-inflam.</span>' +
           '</div>' +
-          (imp.benefice ? '<div style="font-size:0.75rem;color:#444;width:100%">🎯 ' + imp.benefice + '</div>' : '') +
-          (imp.conseil ? '<div style="font-size:0.75rem;color:#FF6B6B;font-weight:500;width:100%">💡 ' + imp.conseil + '</div>' : '');
+          ((imp.b||imp.benefice) ? '<div style="font-size:0.75rem;color:#444;width:100%">🎯 ' + (imp.b||imp.benefice) + '</div>' : '') +
+          ((imp.c||imp.conseil) ? '<div style="font-size:0.75rem;color:#FF6B6B;font-weight:500;width:100%">💡 ' + (imp.c||imp.conseil) + '</div>' : '');
         body.appendChild(impRow);
       }
     });
