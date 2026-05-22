@@ -583,16 +583,28 @@ window.updateCaloriesFromMeals = function() {
   Object.keys(meals).forEach(function(k) {
     if (k.startsWith(today)) totalConso += meals[k] || 0;
   });
+  // Calories brulees via sport (depuis score sante)
+  var totalSport = 0;
+  if (window._sportSeances && window._sportSeances.length) {
+    window._sportSeances.forEach(function(s){ totalSport += s.cal || 0; });
+  } else {
+    var savedForm = JSON.parse(localStorage.getItem('mirella_score_form') || '{}');
+    if (savedForm.date === today && savedForm.sportSeances) {
+      savedForm.sportSeances.forEach(function(s){ totalSport += s.cal || 0; });
+    }
+  }
   var profile = JSON.parse(localStorage.getItem('nutricare_profile') || '{}');
   var objectif = 2000;
   if (profile.objectif_nutritionnel === 'perte_de_poids') objectif = 1600;
   else if (profile.objectif_nutritionnel === 'prise_de_masse') objectif = 2800;
   else if (profile.objectif_nutritionnel === 'seche') objectif = 1800;
-  var restantes = Math.max(0, objectif - totalConso);
+  var restantes = Math.max(0, objectif - totalConso + totalSport);
   var el = document.getElementById('donutCalories');
   var elConso = document.getElementById('donutConsommees');
+  var elDep = document.getElementById('donutDepensees');
   if (el) el.textContent = restantes;
   if (elConso) elConso.textContent = totalConso;
+  if (elDep) elDep.textContent = totalSport;
   // Redessiner donut
   var canvas = document.getElementById('caloriesDonut');
   if (canvas && window._donutChart) {
@@ -6411,7 +6423,29 @@ function updateNutritionPanel(dayIndex) {
     });
   }
 
-  // Calories : basé sur les repas cochés, pas sur le menu planifié
+  // Macros : basées sur le menu planifié du jour sélectionné
+  if (document.getElementById('macroGlucidesVal')) document.getElementById('macroGlucidesVal').textContent = totals.glu;
+  if (document.getElementById('macroProteinesVal')) document.getElementById('macroProteinesVal').textContent = totals.pro;
+  if (document.getElementById('macroLipidesVal')) document.getElementById('macroLipidesVal').textContent = totals.lip;
+  if (document.getElementById('macroGlucidesMax')) document.getElementById('macroGlucidesMax').textContent = '/ ' + besoins.glu + ' g';
+  if (document.getElementById('macroProteinesMax')) document.getElementById('macroProteinesMax').textContent = '/ ' + besoins.pro + ' g';
+  if (document.getElementById('macroLipidesMax')) document.getElementById('macroLipidesMax').textContent = '/ ' + besoins.lip + ' g';
+  const lipPct = Math.min(100, Math.round(totals.lip / besoins.lip * 100));
+  const gluPct = Math.min(100, Math.round(totals.glu / besoins.glu * 100));
+  const proPct = Math.min(100, Math.round(totals.pro / besoins.pro * 100));
+  function drawCircle(id, pct, color) {
+    var cv = document.getElementById(id); if (!cv) return;
+    var cx = cv.getContext('2d'); var sz = cv.width; var lw = sz * 0.12; var r = sz/2 - lw;
+    cx.clearRect(0,0,sz,sz);
+    cx.beginPath(); cx.arc(sz/2,sz/2,r,0,Math.PI*2); cx.strokeStyle = '#e8e8e8'; cx.lineWidth = lw; cx.stroke();
+    if (pct > 0) { cx.beginPath(); cx.arc(sz/2,sz/2,r,-Math.PI/2,-Math.PI/2+(pct/100)*Math.PI*2); cx.strokeStyle = color; cx.lineWidth = lw; cx.lineCap = 'round'; cx.stroke(); }
+  }
+  drawCircle('macroGlucidesCircle', gluPct, '#4FACFE');
+  drawCircle('macroProteinesCircle', proPct, '#11998e');
+  drawCircle('macroLipidesCircle', lipPct, '#F7B731');
+  const advice = pct < 70 ? 'Apports caloriques insuffisants' : pct > 110 ? 'Apports caloriques eleves' : 'Apports bien equilibres';
+  document.getElementById('nutritionAdvice').textContent = advice;
+  // Calories : basé sur les repas cochés
   window.updateCaloriesFromMeals();
 
   const lipPct = Math.min(100, Math.round(totals.lip / besoins.lip * 100));
