@@ -1919,7 +1919,7 @@ function switchLang(lang) {
     </div>
 
     <!-- Conseils Mirella en haut -->
-    <div id="menusConseils" style="display:none;background:linear-gradient(135deg,#FFF5F0,#FFF0EC);border-left:4px solid #FF6B6B;border-radius:0 16px 16px 0;padding:20px 20px 16px;margin-bottom:20px;font-size:0.85rem;color:#333;line-height:1.7;box-shadow:0 2px 12px rgba(255,107,107,0.08)"></div>
+    <div id="menusConseils" style="display:none;background:#FFF5F0;border-radius:16px;padding:16px;margin-bottom:20px"></div>
 
     <!-- Résumé nutritionnel du jour -->
     <div id="menusNutritionPanel" style="display:none;background:white;border-radius:12px;border:1px solid #E6F1FB;padding:24px;margin-bottom:24px;box-shadow:0 2px 8px rgba(2,26,53,0.06)">
@@ -6639,12 +6639,26 @@ function renderMenu(menu) {
     }).join('');
     if (menu.conseils_semaine) {
       var el = document.getElementById('menusConseils');
-      var html = menu.conseils_semaine
-        .replace(/\d+\./g, function(m) { return '</p><p style="margin:8px 0;display:flex;gap:8px"><span style="background:linear-gradient(135deg,#FF6B6B,#FF9A3C);color:white;border-radius:50%;width:20px;height:20px;display:flex;align-items:center;justify-content:center;font-size:0.65rem;font-weight:700;flex-shrink:0;margin-top:2px">' + m.replace('.','') + '</span><span>'; })
-        .replace(/([A-Z][A-Z\s]+)\s*:/g, '<strong style="color:#FF6B6B">$1 :</strong>')
-        .replace(/\n/g, ' ');
-      html = '<p style="margin:0">' + html + '</p>';
-      el.innerHTML = html;
+      // Découper par numéros et afficher proprement
+      var parts = menu.conseils_semaine.split(/(?=\d+\.\s)/);
+      var html = '';
+      parts.forEach(function(part) {
+        if (!part.trim()) return;
+        var match = part.match(/^(\d+)\.\s*(.*)/s);
+        if (match) {
+          var num = match[1];
+          var text = match[2].trim();
+          // Mettre le premier mot en gras si c'est un titre en majuscules
+          text = text.replace(/^([A-Z][A-Z\s\-2]+)\s*:/,
+            '<strong style="color:#FF6B6B;font-size:0.88rem">$1 :</strong>');
+          html += '<div style="display:flex;gap:12px;align-items:flex-start;margin-bottom:14px;padding:12px;background:white;border-radius:12px;box-shadow:0 1px 4px rgba(255,107,107,0.1)">' +
+            '<span style="background:linear-gradient(135deg,#FF6B6B,#FF9A3C);color:white;border-radius:50%;min-width:24px;height:24px;display:flex;align-items:center;justify-content:center;font-size:0.7rem;font-weight:800;flex-shrink:0;margin-top:1px">' + num + '</span>' +
+            '<div style="font-size:0.83rem;color:#333;line-height:1.6">' + text + '</div></div>';
+        } else {
+          html += '<div style="font-size:0.83rem;color:#555;line-height:1.6;margin-bottom:8px">' + part.trim() + '</div>';
+        }
+      });
+      el.innerHTML = html || menu.conseils_semaine;
       el.style.display = 'block';
     }
   }
