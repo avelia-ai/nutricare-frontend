@@ -6083,7 +6083,25 @@ var activeMenuFilters = new Set();
     });
     clearTimeout(timeoutId);
     const menu = await res.json();
-    if (res.ok) { renderMenu(menu); showMirellaNotif('🍽️ Votre menu de la semaine est prêt ! J\'ai adapté chaque repas à votre objectif et votre profil santé. Bonne dégustation !'); }
+    if (res.ok) {
+        renderMenu(menu);
+        showMirellaNotif('🍽️ Votre menu de la semaine est prêt ! J\'ai adapté chaque repas à votre objectif et votre profil santé. Bonne dégustation !');
+        // Générer impacts santé en arrière-plan
+        const profile = JSON.parse(localStorage.getItem('nutricare_profile') || '{}');
+        fetch(BACKEND_URL + '/api/menus/impact', {
+          method: 'POST',
+          headers: {'Content-Type':'application/json','Authorization':'Bearer '+authToken},
+          body: JSON.stringify({menu: menu, profile: profile})
+        }).then(function(r){return r.json();}).then(function(d){
+          if (!d.impacts || !d.impacts.length) return;
+          // Injecter les impacts dans le menu
+          d.impacts.forEach(function(imp) {
+            var jour = menu.semaine.find(function(j){ return j.jour === imp.jour; });
+            if (jour && jour[imp.repas]) jour[imp.repas].impact = imp;
+          });
+          renderMenu(menu);
+        }).catch(function(){});
+      }
     else alert(menu.error || 'Erreur lors de la génération');
   } catch(e) {
     if (e.name === 'AbortError') alert('La génération prend plus de temps que prévu. Désactivez certains filtres et réessayez.');
