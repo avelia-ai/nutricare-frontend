@@ -6487,27 +6487,22 @@ function renderMenu(menu) {
       row.appendChild(info);
       row.appendChild(recipeBtn);
       body.appendChild(row);
+      // Impact sante par repas
+      if (r.impact) {
+        const imp = r.impact;
+        const impRow = document.createElement('div');
+        impRow.style.cssText = 'margin:0 12px 2px;padding:10px 14px;background:linear-gradient(135deg,#FFF5F0,#FFF0EC);border-radius:10px;border-left:3px solid #FF6B6B;display:flex;flex-wrap:wrap;gap:8px;align-items:flex-start';
+        impRow.innerHTML =
+          '<div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;width:100%">' +
+          '<span style="background:white;border-radius:6px;padding:3px 8px;font-size:0.7rem;font-weight:700;color:#FF9A3C">⚡ ' + (imp.score_energie||0) + '% energie</span>' +
+          '<span style="background:white;border-radius:6px;padding:3px 8px;font-size:0.7rem;font-weight:700;color:#22c55e">🛡️ ' + (imp.score_anti_inflammatoire||0) + '% anti-inflam.</span>' +
+          '</div>' +
+          (imp.benefice ? '<div style="font-size:0.75rem;color:#444;width:100%">🎯 ' + imp.benefice + '</div>' : '') +
+          (imp.conseil ? '<div style="font-size:0.75rem;color:#FF6B6B;font-weight:500;width:100%">💡 ' + imp.conseil + '</div>' : '');
+        body.appendChild(impRow);
+      }
     });
-    // Bloc impact sante
-    if (jour.impact_sante) {
-      const impact = jour.impact_sante;
-      const impactDiv = document.createElement('div');
-      impactDiv.style.cssText = 'margin:0 12px 12px;padding:14px;background:linear-gradient(135deg,#FFF5F0,#FFF0EC);border-radius:12px;border-left:3px solid #FF6B6B';
-      var scoreEnergie = impact.score_energie || 0;
-      var scoreAntiInflam = impact.score_anti_inflammatoire || 0;
-      impactDiv.innerHTML =
-        '<div style="font-size:0.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:#FF6B6B;margin-bottom:8px">Impact Sante</div>' +
-        '<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px">' +
-        '<div style="background:white;border-radius:8px;padding:8px;text-align:center">' +
-        '<div style="font-size:1.1rem;font-weight:800;color:#FF9A3C">' + scoreEnergie + '%</div>' +
-        '<div style="font-size:0.65rem;color:#888">Energie</div></div>' +
-        '<div style="background:white;border-radius:8px;padding:8px;text-align:center">' +
-        '<div style="font-size:1.1rem;font-weight:800;color:#22c55e">' + scoreAntiInflam + '%</div>' +
-        '<div style="font-size:0.65rem;color:#888">Anti-inflammatoire</div></div></div>' +
-        (impact.benefice_pathologie ? '<div style="font-size:0.78rem;color:#444;margin-bottom:6px">🎯 ' + impact.benefice_pathologie + '</div>' : '') +
-        (impact.conseil_du_jour ? '<div style="font-size:0.78rem;color:#FF6B6B;font-weight:500">💡 ' + impact.conseil_du_jour + '</div>' : '');
-      body.appendChild(impactDiv);
-    }
+
     header.onclick = function() {
       const open = body.style.display !== 'none';
       body.style.display = open ? 'none' : 'block';
