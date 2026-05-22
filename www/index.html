@@ -948,6 +948,145 @@ window.applyTheme = function(themeKey) {
   if (saved && window.THEMES[saved]) window.applyTheme(saved);
 })();
 
+
+// ── CATALOGUE RECETTES ──
+window._catalogueFilters = { categorie: '', tags: [], search: '' };
+window._cataloguePage = 1;
+window._cataloguePerPage = 20;
+window._catalogueTotal = 0;
+
+window.initCatalogue = function() {
+  window._cataloguePage = 1;
+  window.loadCatalogue();
+};
+
+window.setCatalogueFilter = function(type, val) {
+  window._catalogueFilters[type] = val;
+  window._cataloguePage = 1;
+  // Mettre à jour boutons catégorie
+  document.querySelectorAll('.cat-btn').forEach(function(b) {
+    var active = b.dataset.val === val;
+    b.style.background = active ? '#FF6B6B' : 'white';
+    b.style.color = active ? 'white' : '#555';
+    b.style.border = active ? 'none' : '1.5px solid #eee';
+  });
+  window.loadCatalogue();
+};
+
+window.toggleCatalogueTag = function(tag, btn) {
+  var idx = window._catalogueFilters.tags.indexOf(tag);
+  if (idx === -1) {
+    window._catalogueFilters.tags.push(tag);
+    btn.style.background = '#FF6B6B';
+    btn.style.color = 'white';
+    btn.style.borderColor = '#FF6B6B';
+  } else {
+    window._catalogueFilters.tags.splice(idx, 1);
+    btn.style.background = 'white';
+    btn.style.color = '#555';
+    btn.style.borderColor = '#eee';
+  }
+  window._cataloguePage = 1;
+  window.loadCatalogue();
+};
+
+window.searchCatalogue = function() {
+  window._catalogueFilters.search = document.getElementById('catalogueSearch').value;
+  window._cataloguePage = 1;
+  clearTimeout(window._searchTimeout);
+  window._searchTimeout = setTimeout(window.loadCatalogue, 400);
+};
+
+window.loadCatalogue = async function() {
+  var grid = document.getElementById('catalogueGrid');
+  var countEl = document.getElementById('catalogueCount');
+  if (grid) grid.innerHTML = '<div style="grid-column:span 2;text-align:center;padding:40px;color:#ccc">Chargement...</div>';
+
+  var token = localStorage.getItem('nutricare_token');
+  var params = new URLSearchParams();
+  params.set('page', window._cataloguePage);
+  params.set('per_page', window._cataloguePerPage);
+  if (window._catalogueFilters.categorie) params.set('categorie', window._catalogueFilters.categorie);
+  if (window._catalogueFilters.tags.length) params.set('tags', window._catalogueFilters.tags.join(','));
+  if (window._catalogueFilters.search) params.set('search', window._catalogueFilters.search);
+  var tri = document.getElementById('catalogueTri');
+  if (tri) params.set('tri', tri.value);
+
+  try {
+    var res = await fetch(BACKEND_URL + '/api/recettes?' + params.toString(), {
+      headers: { 'Authorization': 'Bearer ' + token }
+    });
+    var data = await res.json();
+    var recettes = data.recettes || [];
+    window._catalogueTotal = data.total || 0;
+    var totalPages = Math.ceil(window._catalogueTotal / window._cataloguePerPage);
+
+    if (countEl) countEl.textContent = window._catalogueTotal + ' recettes';
+    document.getElementById('cataloguePage').textContent = 'Page ' + window._cataloguePage + ' / ' + totalPages;
+    document.getElementById('cataloguePrev').style.opacity = window._cataloguePage <= 1 ? '0.4' : '1';
+    document.getElementById('catalogueNext').style.opacity = window._cataloguePage >= totalPages ? '0.4' : '1';
+
+    if (recettes.length === 0) {
+      grid.innerHTML = '<div style="grid-column:span 2;text-align:center;padding:40px;color:#ccc">Aucune recette trouvée</div>';
+      return;
+    }
+
+    var catIcons = { petit_dejeuner:'🌅', dejeuner:'☀️', diner:'🌙', collation:'🍎', dessert:'🍰', entree:'🥗' };
+    grid.innerHTML = recettes.map(function(r) {
+      var icon = catIcons[r.categorie] || '🍽️';
+      var tags = (r.tags || []).slice(0,2).map(function(t){ return '<span style="background:#FFF5F0;color:#FF6B6B;font-size:0.6rem;padding:2px 6px;border-radius:10px;font-weight:600">' + t.replace(/_/g,' ') + '</span>'; }).join('');
+      return '<div style="background:white;border-radius:14px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,0.06);cursor:pointer" onclick="window.showRecetteDetail(' + JSON.stringify(JSON.stringify(r)) + ')">' +
+        '<div style="height:90px;background:linear-gradient(135deg,#FFF5F0,#FFE8E0);display:flex;align-items:center;justify-content:center;font-size:2.5rem">' + icon + '</div>' +
+        '<div style="padding:10px">' +
+        '<div style="font-size:0.82rem;font-weight:700;color:#1a1a1a;margin-bottom:4px;line-height:1.3">' + r.nom + '</div>' +
+        '<div style="display:flex;gap:6px;font-size:0.7rem;color:#888;margin-bottom:6px">' +
+        '<span>⏱ ' + (r.prep_minutes||0) + 'min</span>' +
+        '<span>🔥 ' + (r.calories||0) + ' kcal</span>' +
+        '</div>' +
+        '<div style="display:flex;gap:4px;flex-wrap:wrap">' + tags + '</div>' +
+        '</div></div>';
+    }).join('');
+  } catch(e) {
+    if (grid) grid.innerHTML = '<div style="grid-column:span 2;text-align:center;padding:40px;color:#FF6B6B">Erreur de chargement</div>';
+  }
+};
+
+window.cataloguePrevPage = function() {
+  if (window._cataloguePage > 1) { window._cataloguePage--; window.loadCatalogue(); }
+};
+
+window.catalogueNextPage = function() {
+  var totalPages = Math.ceil(window._catalogueTotal / window._cataloguePerPage);
+  if (window._cataloguePage < totalPages) { window._cataloguePage++; window.loadCatalogue(); }
+};
+
+window.showRecetteDetail = function(rJson) {
+  var r = JSON.parse(rJson);
+  var catIcons = { petit_dejeuner:'🌅', dejeuner:'☀️', diner:'🌙', collation:'🍎', dessert:'🍰', entree:'🥗' };
+  var existing = document.getElementById('recetteDetailModal');
+  if (existing) existing.remove();
+  var modal = document.createElement('div');
+  modal.id = 'recetteDetailModal';
+  modal.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:9999;display:flex;align-items:flex-end;justify-content:center';
+  modal.innerHTML = '<div style="background:white;border-radius:24px 24px 0 0;padding:24px;width:100%;max-width:600px;max-height:85vh;overflow-y:auto">' +
+    '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">' +
+    '<div style="font-size:1rem;font-weight:800;color:#1a1a1a;flex:1;padding-right:12px">' + (catIcons[r.categorie]||'🍽️') + ' ' + r.nom + '</div>' +
+    '<button onclick="document.getElementById(\'recetteDetailModal\').remove()" style="background:#f5f5f5;border:none;border-radius:50%;width:32px;height:32px;cursor:pointer;flex-shrink:0">✕</button></div>' +
+    '<div style="display:flex;gap:12px;margin-bottom:16px">' +
+    '<div style="background:#FFF5F0;border-radius:10px;padding:10px;text-align:center;flex:1"><div style="font-size:1rem;font-weight:800;color:#FF6B6B">' + (r.calories||0) + '</div><div style="font-size:0.65rem;color:#888">kcal</div></div>' +
+    '<div style="background:#FFF5F0;border-radius:10px;padding:10px;text-align:center;flex:1"><div style="font-size:1rem;font-weight:800;color:#FF9A3C">' + (r.prep_minutes||0) + '</div><div style="font-size:0.65rem;color:#888">min</div></div>' +
+    '<div style="background:#FFF5F0;border-radius:10px;padding:10px;text-align:center;flex:1"><div style="font-size:1rem;font-weight:800;color:#22c55e">' + (r.proteines||0) + 'g</div><div style="font-size:0.65rem;color:#888">protéines</div></div>' +
+    '<div style="background:#FFF5F0;border-radius:10px;padding:10px;text-align:center;flex:1"><div style="font-size:1rem;font-weight:800;color:#3B82F6">' + (r.portions||2) + '</div><div style="font-size:0.65rem;color:#888">portions</div></div>' +
+    '</div>' +
+    '<div style="font-size:0.85rem;font-weight:700;color:#1a1a1a;margin-bottom:8px">Ingrédients</div>' +
+    '<div style="margin-bottom:16px">' + (r.ingredients||[]).map(function(i){ return '<div style="padding:6px 0;border-bottom:1px solid #f5f5f5;font-size:0.82rem;color:#444">• ' + i + '</div>'; }).join('') + '</div>' +
+    '<div style="font-size:0.85rem;font-weight:700;color:#1a1a1a;margin-bottom:8px">Préparation</div>' +
+    '<div>' + (r.etapes||[]).map(function(e,i){ return '<div style="display:flex;gap:10px;margin-bottom:10px"><span style="background:linear-gradient(135deg,#FF6B6B,#FF9A3C);color:white;border-radius:50%;min-width:22px;height:22px;display:flex;align-items:center;justify-content:center;font-size:0.7rem;font-weight:700">' + (i+1) + '</span><div style="font-size:0.82rem;color:#444;line-height:1.5">' + e + '</div></div>'; }).join('') + '</div>' +
+    '</div>';
+  document.body.appendChild(modal);
+  modal.onclick = function(e) { if(e.target===modal) modal.remove(); };
+};
+
 // ── CYCLE FEMININ ──
 window._symptoms = [];
 
@@ -5993,6 +6132,7 @@ Réponds UNIQUEMENT en JSON valide avec cette structure exacte:
     document.getElementById('insightsView').style.display = view === 'insights' ? 'block' : 'none';
     document.getElementById('simulatorView').style.display = view === 'simulator' ? 'block' : 'none';
     document.getElementById('oracleView').style.display = view === 'oracle' ? 'flex' : 'none';
+    var catv = document.getElementById('catalogueView'); if(catv) { catv.style.display = view === 'catalogue' ? 'block' : 'none'; if(view === 'catalogue') setTimeout(function(){ if(typeof window.initCatalogue==='function') window.initCatalogue(); }, 100); }
     var cv = document.getElementById('cycleView'); if(cv) { cv.style.display = view === 'cycle' ? 'block' : 'none'; if(view === 'cycle') { var mc2 = document.querySelector('.main-content'); if(mc2) mc2.style.overflow = view === 'cycle' ? 'auto' : 'hidden'; setTimeout(function(){ if(typeof initCycle === 'function') initCycle(); }, 100); } }
     var pv = document.getElementById('planningView'); if(pv) { pv.style.display = view === 'planning' ? 'block' : 'none'; var mc = document.querySelector('.main-content'); if(mc) mc.style.overflow = view === 'planning' ? 'auto' : 'hidden'; if(view === 'planning') { setTimeout(function(){ try{ window.renderPlanning(); }catch(e){ document.getElementById('planningGrid').innerHTML='<div style="padding:20px;color:red">'+e.message+'</div>'; } }, 300); } }
     if (view === 'oracle') initOracle();
@@ -8017,6 +8157,7 @@ function closeMirellaNotif() {
       <button onclick="toggleQuickMenu();showView('pricing')" style="display:flex;align-items:center;gap:8px;padding:12px;background:#FFF5F0;border:none;border-radius:12px;font-size:0.82rem;font-weight:600;color:#2D2D2D;cursor:pointer">⭐ Abonnements</button>
       <button onclick="toggleQuickMenu();showView('planning')" style="display:flex;align-items:center;gap:8px;padding:12px;background:#FFF5F0;border:none;border-radius:12px;font-size:0.82rem;font-weight:600;color:#2D2D2D;cursor:pointer">📅 Mon planning</button>
       <button id="btnCycleFeminin" onclick="toggleQuickMenu();showView('cycle')" style="display:none;align-items:center;gap:8px;padding:12px;background:#FFF5F0;border:none;border-radius:12px;font-size:0.82rem;font-weight:600;color:#2D2D2D;cursor:pointer">🌸 Cycle féminin</button>
+      <button onclick="toggleQuickMenu();showView('catalogue')" style="display:flex;align-items:center;gap:8px;padding:12px;background:#FFF5F0;border:none;border-radius:12px;font-size:0.82rem;font-weight:600;color:#2D2D2D;cursor:pointer">📖 Catalogue recettes</button>
       <button onclick="toggleQuickMenu();showView('gamification')" style="display:flex;align-items:center;gap:8px;padding:12px;background:#FFF5F0;border:none;border-radius:12px;font-size:0.82rem;font-weight:600;color:#2D2D2D;cursor:pointer">🏆 Progression</button>
     </div>
   </div>
@@ -8183,5 +8324,66 @@ function toggleQuickMenu() {
   </div>
 </div>
 <!-- FIN CYCLE FEMININ VIEW -->
+
+
+<!-- CATALOGUE RECETTES VIEW -->
+<div id="catalogueView" style="display:none;padding:0;overflow-y:auto;background:#FFF5F0;width:100%">
+  <!-- Header -->
+  <div style="background:linear-gradient(135deg,#FF6B6B,#FF9A3C);padding:28px 20px 20px">
+    <div style="font-size:1.5rem;font-weight:800;color:white;margin-bottom:12px">📖 Catalogue Recettes</div>
+    <div style="position:relative">
+      <input type="text" id="catalogueSearch" placeholder="Rechercher une recette..." 
+        style="width:100%;padding:12px 40px 12px 16px;border-radius:12px;border:none;font-size:0.9rem;box-sizing:border-box;font-family:DM Sans,sans-serif"
+        oninput="window.searchCatalogue()">
+      <span style="position:absolute;right:14px;top:50%;transform:translateY(-50%);font-size:1.1rem">🔍</span>
+    </div>
+  </div>
+
+  <!-- Filtres catégorie -->
+  <div style="padding:12px 16px;background:white;display:flex;gap:8px;overflow-x:auto;border-bottom:1px solid #f0f0f0">
+    <button onclick="window.setCatalogueFilter('categorie','')" class="cat-btn" data-val="" style="padding:6px 14px;border-radius:20px;border:none;background:#FF6B6B;color:white;font-size:0.78rem;font-weight:600;cursor:pointer;white-space:nowrap">Tout</button>
+    <button onclick="window.setCatalogueFilter('categorie','petit_dejeuner')" class="cat-btn" data-val="petit_dejeuner" style="padding:6px 14px;border-radius:20px;border:1.5px solid #eee;background:white;color:#555;font-size:0.78rem;font-weight:600;cursor:pointer;white-space:nowrap">🌅 Petit-déj</button>
+    <button onclick="window.setCatalogueFilter('categorie','dejeuner')" class="cat-btn" data-val="dejeuner" style="padding:6px 14px;border-radius:20px;border:1.5px solid #eee;background:white;color:#555;font-size:0.78rem;font-weight:600;cursor:pointer;white-space:nowrap">☀️ Déjeuner</button>
+    <button onclick="window.setCatalogueFilter('categorie','diner')" class="cat-btn" data-val="diner" style="padding:6px 14px;border-radius:20px;border:1.5px solid #eee;background:white;color:#555;font-size:0.78rem;font-weight:600;cursor:pointer;white-space:nowrap">🌙 Dîner</button>
+    <button onclick="window.setCatalogueFilter('categorie','collation')" class="cat-btn" data-val="collation" style="padding:6px 14px;border-radius:20px;border:1.5px solid #eee;background:white;color:#555;font-size:0.78rem;font-weight:600;cursor:pointer;white-space:nowrap">🍎 Collation</button>
+    <button onclick="window.setCatalogueFilter('categorie','dessert')" class="cat-btn" data-val="dessert" style="padding:6px 14px;border-radius:20px;border:1.5px solid #eee;background:white;color:#555;font-size:0.78rem;font-weight:600;cursor:pointer;white-space:nowrap">🍰 Dessert</button>
+    <button onclick="window.setCatalogueFilter('categorie','entree')" class="cat-btn" data-val="entree" style="padding:6px 14px;border-radius:20px;border:1.5px solid #eee;background:white;color:#555;font-size:0.78rem;font-weight:600;cursor:pointer;white-space:nowrap">🥗 Entrée</button>
+  </div>
+
+  <!-- Filtres tags -->
+  <div style="padding:10px 16px;background:white;display:flex;gap:6px;overflow-x:auto;border-bottom:1px solid #f0f0f0">
+    <button onclick="window.toggleCatalogueTag('vegetarien',this)" style="padding:4px 12px;border-radius:20px;border:1.5px solid #eee;background:white;color:#555;font-size:0.72rem;cursor:pointer;white-space:nowrap">🥦 Végétarien</button>
+    <button onclick="window.toggleCatalogueTag('vegan',this)" style="padding:4px 12px;border-radius:20px;border:1.5px solid #eee;background:white;color:#555;font-size:0.72rem;cursor:pointer;white-space:nowrap">🌱 Vegan</button>
+    <button onclick="window.toggleCatalogueTag('sans_gluten',this)" style="padding:4px 12px;border-radius:20px;border:1.5px solid #eee;background:white;color:#555;font-size:0.72rem;cursor:pointer;white-space:nowrap">🌾 Sans gluten</button>
+    <button onclick="window.toggleCatalogueTag('sans_lactose',this)" style="padding:4px 12px;border-radius:20px;border:1.5px solid #eee;background:white;color:#555;font-size:0.72rem;cursor:pointer;white-space:nowrap">🥛 Sans lactose</button>
+    <button onclick="window.toggleCatalogueTag('halal',this)" style="padding:4px 12px;border-radius:20px;border:1.5px solid #eee;background:white;color:#555;font-size:0.72rem;cursor:pointer;white-space:nowrap">☪️ Halal</button>
+    <button onclick="window.toggleCatalogueTag('sans_porc',this)" style="padding:4px 12px;border-radius:20px;border:1.5px solid #eee;background:white;color:#555;font-size:0.72rem;cursor:pointer;white-space:nowrap">🚫🐷 Sans porc</button>
+    <button onclick="window.toggleCatalogueTag('riche_proteines',this)" style="padding:4px 12px;border-radius:20px;border:1.5px solid #eee;background:white;color:#555;font-size:0.72rem;cursor:pointer;white-space:nowrap">💪 Riche en protéines</button>
+    <button onclick="window.toggleCatalogueTag('faible_calories',this)" style="padding:4px 12px;border-radius:20px;border:1.5px solid #eee;background:white;color:#555;font-size:0.72rem;cursor:pointer;white-space:nowrap">🔥 Faible calories</button>
+  </div>
+
+  <!-- Stats et tri -->
+  <div style="padding:10px 16px;display:flex;justify-content:space-between;align-items:center">
+    <div id="catalogueCount" style="font-size:0.8rem;color:#888">Chargement...</div>
+    <select id="catalogueTri" onchange="window.loadCatalogue()" style="padding:6px 10px;border:1px solid #eee;border-radius:8px;font-size:0.78rem;background:white">
+      <option value="nom">Nom A-Z</option>
+      <option value="calories">Calories</option>
+      <option value="prep_minutes">Temps de prep</option>
+    </select>
+  </div>
+
+  <!-- Grille recettes -->
+  <div id="catalogueGrid" style="padding:0 16px 100px;display:grid;grid-template-columns:1fr 1fr;gap:12px">
+    <div style="grid-column:span 2;text-align:center;padding:40px;color:#ccc">Chargement...</div>
+  </div>
+
+  <!-- Pagination -->
+  <div style="position:sticky;bottom:70px;left:0;right:0;padding:10px 16px;display:flex;justify-content:center;gap:12px;background:rgba(255,245,240,0.95)">
+    <button onclick="window.cataloguePrevPage()" id="cataloguePrev" style="padding:8px 20px;border-radius:10px;border:1.5px solid #eee;background:white;font-size:0.82rem;cursor:pointer">← Préc.</button>
+    <span id="cataloguePage" style="padding:8px 16px;font-size:0.82rem;color:#888;line-height:1.8">Page 1</span>
+    <button onclick="window.catalogueNextPage()" id="catalogueNext" style="padding:8px 20px;border-radius:10px;border:none;background:linear-gradient(135deg,#FF6B6B,#FF9A3C);color:white;font-size:0.82rem;cursor:pointer">Suiv. →</button>
+  </div>
+</div>
+<!-- FIN CATALOGUE RECETTES VIEW -->
 
 </body>
