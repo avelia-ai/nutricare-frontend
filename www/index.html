@@ -575,6 +575,33 @@ window.renderSportSeances = function() {
   }
 };
 
+// ── CALORIES SUIVI ──
+window.updateCaloriesFromMeals = function() {
+  var today = new Date().toISOString().split('T')[0];
+  var meals = JSON.parse(localStorage.getItem('mirella_checked_meals') || '{}');
+  var totalConso = 0;
+  Object.keys(meals).forEach(function(k) {
+    if (k.startsWith(today)) totalConso += meals[k] || 0;
+  });
+  var profile = JSON.parse(localStorage.getItem('nutricare_profile') || '{}');
+  var objectif = 2000;
+  if (profile.objectif_nutritionnel === 'perte_de_poids') objectif = 1600;
+  else if (profile.objectif_nutritionnel === 'prise_de_masse') objectif = 2800;
+  else if (profile.objectif_nutritionnel === 'seche') objectif = 1800;
+  var restantes = Math.max(0, objectif - totalConso);
+  var el = document.getElementById('donutCalories');
+  var elConso = document.getElementById('donutConsommees');
+  var elBar = document.getElementById('caloriesDonut');
+  if (el) el.textContent = restantes;
+  if (elConso) elConso.textContent = totalConso;
+  // Redessiner donut
+  if (elBar && window._donutChart) {
+    var pct = Math.min(100, Math.round(totalConso / objectif * 100));
+    window._donutChart.data.datasets[0].data = [totalConso, Math.max(0, objectif - totalConso)];
+    window._donutChart.update();
+  }
+};
+
 // ── SCORE SANTE ──
 window._scoreData = {forme:0, aliment:0, sport:0};
 
@@ -6501,8 +6528,30 @@ function renderMenu(menu) {
       recipeBtn.onclick = function() { showRecipeModal(this); };
       recipeBtn.style.cssText = 'flex-shrink:0;background:#F8F4F0;color:#2D2D2D;border:none;border-radius:10px;padding:8px 12px;font-size:0.72rem;cursor:pointer;font-weight:600';
       recipeBtn.textContent = '📖';
+      // Bouton cocher repas
+      const checkKey = new Date().toISOString().split('T')[0] + '_' + jour.jour + '_' + repas;
+      const checkedMeals = JSON.parse(localStorage.getItem('mirella_checked_meals') || '{}');
+      const isChecked = !!checkedMeals[checkKey];
+      const checkBtn = document.createElement('button');
+      checkBtn.style.cssText = 'flex-shrink:0;width:36px;height:36px;border-radius:50%;border:2px solid ' + (isChecked ? '#22c55e' : '#eee') + ';background:' + (isChecked ? '#22c55e' : 'white') + ';color:' + (isChecked ? 'white' : '#ccc') + ';font-size:1rem;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.2s';
+      checkBtn.textContent = '✓';
+      checkBtn.title = isChecked ? 'Repas pris' : 'Marquer comme pris';
+      checkBtn.onclick = function() {
+        const key = new Date().toISOString().split('T')[0] + '_' + jour.jour + '_' + repas;
+        const meals = JSON.parse(localStorage.getItem('mirella_checked_meals') || '{}');
+        const checked = !meals[key];
+        if (checked) meals[key] = r.calories || 0;
+        else delete meals[key];
+        localStorage.setItem('mirella_checked_meals', JSON.stringify(meals));
+        checkBtn.style.borderColor = checked ? '#22c55e' : '#eee';
+        checkBtn.style.background = checked ? '#22c55e' : 'white';
+        checkBtn.style.color = checked ? 'white' : '#ccc';
+        checkBtn.title = checked ? 'Repas pris' : 'Marquer comme pris';
+        updateCaloriesFromMeals();
+      };
       row.appendChild(imgWrap);
       row.appendChild(info);
+      row.appendChild(checkBtn);
       row.appendChild(recipeBtn);
       body.appendChild(row);
       // Impact sante par repas
