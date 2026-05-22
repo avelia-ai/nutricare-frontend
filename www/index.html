@@ -6430,9 +6430,9 @@ function updateNutritionPanel(dayIndex) {
   if (document.getElementById('macroGlucidesMax')) document.getElementById('macroGlucidesMax').textContent = '/ ' + besoins.glu + ' g';
   if (document.getElementById('macroProteinesMax')) document.getElementById('macroProteinesMax').textContent = '/ ' + besoins.pro + ' g';
   if (document.getElementById('macroLipidesMax')) document.getElementById('macroLipidesMax').textContent = '/ ' + besoins.lip + ' g';
-  const lipPct = Math.min(100, Math.round(totals.lip / besoins.lip * 100));
-  const gluPct = Math.min(100, Math.round(totals.glu / besoins.glu * 100));
-  const proPct = Math.min(100, Math.round(totals.pro / besoins.pro * 100));
+  var lipPct2 = Math.min(100, Math.round(totals.lip / besoins.lip * 100));
+  var gluPct2 = Math.min(100, Math.round(totals.glu / besoins.glu * 100));
+  var proPct2 = Math.min(100, Math.round(totals.pro / besoins.pro * 100));
   function drawCircle(id, pct, color) {
     var cv = document.getElementById(id); if (!cv) return;
     var cx = cv.getContext('2d'); var sz = cv.width; var lw = sz * 0.12; var r = sz/2 - lw;
@@ -6440,9 +6440,9 @@ function updateNutritionPanel(dayIndex) {
     cx.beginPath(); cx.arc(sz/2,sz/2,r,0,Math.PI*2); cx.strokeStyle = '#e8e8e8'; cx.lineWidth = lw; cx.stroke();
     if (pct > 0) { cx.beginPath(); cx.arc(sz/2,sz/2,r,-Math.PI/2,-Math.PI/2+(pct/100)*Math.PI*2); cx.strokeStyle = color; cx.lineWidth = lw; cx.lineCap = 'round'; cx.stroke(); }
   }
-  drawCircle('macroGlucidesCircle', gluPct, '#4FACFE');
-  drawCircle('macroProteinesCircle', proPct, '#11998e');
-  drawCircle('macroLipidesCircle', lipPct, '#F7B731');
+  drawCircle('macroGlucidesCircle', gluPct2, '#4FACFE');
+  drawCircle('macroProteinesCircle', proPct2, '#11998e');
+  drawCircle('macroLipidesCircle', lipPct2, '#F7B731');
   const advice = pct < 70 ? 'Apports caloriques insuffisants' : pct > 110 ? 'Apports caloriques eleves' : 'Apports bien equilibres';
   document.getElementById('nutritionAdvice').textContent = advice;
   // Calories : basé sur les repas cochés
