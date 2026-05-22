@@ -6443,8 +6443,8 @@ function updateNutritionPanel(dayIndex) {
   drawCircle('macroGlucidesCircle', gluPct2, '#4FACFE');
   drawCircle('macroProteinesCircle', proPct2, '#11998e');
   drawCircle('macroLipidesCircle', lipPct2, '#F7B731');
-  const advice = pct < 70 ? 'Apports caloriques insuffisants' : pct > 110 ? 'Apports caloriques eleves' : 'Apports bien equilibres';
-  document.getElementById('nutritionAdvice').textContent = advice;
+  var advice2 = pct < 70 ? 'Apports caloriques insuffisants' : pct > 110 ? 'Apports caloriques eleves' : 'Apports bien equilibres';
+  document.getElementById('nutritionAdvice').textContent = advice2;
   // Calories : basé sur les repas cochés
   window.updateCaloriesFromMeals();
 
