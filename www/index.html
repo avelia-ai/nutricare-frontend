@@ -3763,7 +3763,7 @@ function switchLang(lang) {
     if (authToken && currentUser) {
       await showApp();
       if (urlRedirect) { window.location.href = decodeURIComponent(urlRedirect); return; }
-      const targetView = urlView || localStorage.getItem('nutricare_last_view') || 'home';
+      const savedV = localStorage.getItem('nutricare_last_view'); const targetView = urlView || (['chat','health','menus','profile','home'].includes(savedV) ? savedV : 'home');
       if (urlEntreprise === 'create') await showView('entreprise');
       else { await showView(targetView); if (urlPathologie) window.selectedPathologie = urlPathologie; }
     }
