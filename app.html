@@ -1778,8 +1778,8 @@ function switchLang(lang) {
   <div class="main-content">
 
     <!-- HOME VIEW -->
-    <div id="homeView" style="display:none;overflow-y:auto;overflow-x:hidden;background:#FFF5F0;width:100%;height:100%;padding-bottom:140px">
-      <div style="background:linear-gradient(135deg,#FF6B6B,#FF9A3C);padding:56px 20px 24px;margin:0 -0px;width:100%;box-sizing:border-box;display:block">
+    <div id="homeView" style="display:none;overflow-y:auto;overflow-x:hidden;background:#FFF5F0;width:100%;min-height:100vh;padding-bottom:160px">
+      <div style="background:linear-gradient(135deg,#FF6B6B,#FF9A3C);padding:80px 20px 24px;margin:0 -0px;width:100%;box-sizing:border-box;display:block">
         <div style="display:flex;align-items:center;gap:12px;margin-bottom:14px">
           <div id="homeAvatar" style="width:42px;height:42px;border-radius:50%;background:rgba(255,255,255,0.3);display:flex;align-items:center;justify-content:center;font-size:1rem;font-weight:700;color:white;flex-shrink:0">?</div>
           <div>
@@ -6348,7 +6348,7 @@ Réponds UNIQUEMENT en JSON valide avec cette structure exacte:
     document.getElementById('insightsView').style.display = view === 'insights' ? 'block' : 'none';
     document.getElementById('simulatorView').style.display = view === 'simulator' ? 'block' : 'none';
     document.getElementById('oracleView').style.display = view === 'oracle' ? 'flex' : 'none';
-    var hv = document.getElementById('homeView'); if(hv) { hv.style.display = view === 'home' ? 'block' : 'none'; if(view === 'home') { setTimeout(function(){ if(typeof window.initHome==='function') window.initHome(); }, 100); } }
+    var hv = document.getElementById('homeView'); if(hv) { hv.style.display = view === 'home' ? 'block' : 'none'; if(view === 'home') { setTimeout(function(){ if(typeof window.initHome==='function') window.initHome(); }, 100); var mc2=document.querySelector('.main-content'); if(mc2){mc2.style.overflow='auto';mc2.style.height='100%';} } }
     var mc = document.querySelector('.main-content');
     if (mc) mc.style.overflow = ['home','cycle','planning','catalogue','menus','chrono'].includes(view) ? 'auto' : 'hidden';
     var catv = document.getElementById('catalogueView'); if(catv) { catv.style.display = view === 'catalogue' ? 'block' : 'none'; if(view === 'catalogue') setTimeout(function(){ if(typeof window.initCatalogue==='function') window.initCatalogue(); }, 100); }
