@@ -1090,6 +1090,146 @@ window.showRecetteDetail = function(rJson) {
   modal.onclick = function(e) { if(e.target===modal) modal.remove(); };
 };
 
+
+// ── HOME VIEW ──
+window.JOURNEES_MONDIALES = {
+  '01-01': {titre: 'Journee mondiale de la paix', desc: 'La paix dans le monde commence par la paix interieure. Prenez soin de votre sante mentale.', keyword: 'peace nature'},
+  '02-04': {titre: 'Journee mondiale contre le cancer', desc: 'Adoptez un mode de vie sain : alimentation equilibree, activite physique et arret du tabac reduisent le risque.', keyword: 'health wellness'},
+  '03-22': {titre: 'Journee mondiale de l eau', desc: 'L eau est essentielle a la vie. Buvez 1,5 a 2L par jour pour une sante optimale.', keyword: 'water blue'},
+  '04-07': {titre: 'Journee mondiale de la sante', desc: 'L OMS celebre la sante pour tous. Faites un bilan de votre sante aujourd hui.', keyword: 'health medical'},
+  '05-25': {titre: 'Journee mondiale de la thyroide', desc: 'La thyroide regule votre metabolism. Parlez a votre medecin si vous ressentez fatigue ou prise de poids inexpliquee.', keyword: 'medical wellness'},
+  '05-26': {titre: 'Journee mondiale de la thyroide', desc: 'La thyroide regule votre metabolisme. Parlez a votre medecin si vous ressentez une fatigue inexpliquee.', keyword: 'wellness health'},
+  '05-31': {titre: 'Journee mondiale sans tabac', desc: 'Le tabac est responsable de 8 millions de deces par an. Chaque jour sans tabac est une victoire pour votre sante.', keyword: 'nature fresh air'},
+  '06-14': {titre: 'Journee mondiale du donneur de sang', desc: 'Le don du sang sauve des vies. Un donneur peut aider jusqu a 3 personnes.', keyword: 'health care'},
+  '09-29': {titre: 'Journee mondiale du coeur', desc: 'Protegez votre coeur avec une alimentation pauvre en sel et riche en fruits et legumes.', keyword: 'heart health'},
+  '10-10': {titre: 'Journee mondiale de la sante mentale', desc: 'La sante mentale est aussi importante que la sante physique. Parlez, ecoutez, soutenez.', keyword: 'mindfulness calm'},
+  '11-14': {titre: 'Journee mondiale du diabete', desc: 'Reduisez votre risque de diabete avec une alimentation equilibree et une activite physique reguliere.', keyword: 'healthy food vegetables'},
+  '12-01': {titre: 'Journee mondiale contre le SIDA', desc: 'La prevention et le depistage sont essentiels. Proteges-vous et proteges les autres.', keyword: 'health awareness'}
+};
+
+window.CITATIONS = [
+  {texte: 'Prendre soin de votre corps, c est prendre soin de votre avenir.', auteur: 'Hippocrate', keyword: 'ancient wisdom'},
+  {texte: 'La sante est la premiere richesse.', auteur: 'Ralph Waldo Emerson', keyword: 'nature peaceful'},
+  {texte: 'Mangez bien, riez souvent, aimez beaucoup.', auteur: 'Proverbe', keyword: 'food happy'},
+  {texte: 'Votre corps entend tout ce que votre esprit dit.', auteur: 'Naomi Judd', keyword: 'mindfulness'},
+  {texte: 'Une bonne sante est un couronnement que seuls les malades peuvent voir.', auteur: 'Robin Sharma', keyword: 'wellness'},
+  {texte: 'L exercice physique est le roi et la nutrition est la reine. Ensemble, ils forment un royaume.', auteur: 'Jack LaLanne', keyword: 'fitness sport'},
+  {texte: 'Ton alimentation sera ta premiere medecine.', auteur: 'Hippocrate', keyword: 'vegetables food'},
+  {texte: 'Un corps sain est un produit d un esprit sain.', auteur: 'George Bernard Shaw', keyword: 'calm meditation'}
+];
+
+window.initHome = async function() {
+  var profile = JSON.parse(localStorage.getItem('nutricare_profile') || '{}');
+  var now = new Date();
+  var hours = now.getHours();
+  var prenom = profile.full_name ? profile.full_name.split(' ')[0] : '';
+
+  // Salutation
+  var greeting = hours < 12 ? 'Bonjour' : hours < 18 ? 'Bon apres-midi' : 'Bonsoir';
+  var greetEl = document.getElementById('homeGreeting');
+  if (greetEl) greetEl.textContent = greeting + (prenom ? ' ' + prenom + ' !' : ' !');
+
+  // Date
+  var dateEl = document.getElementById('homeDate');
+  if (dateEl) {
+    var jours = ['Dimanche','Lundi','Mardi','Mercredi','Jeudi','Vendredi','Samedi'];
+    var mois = ['janvier','fevrier','mars','avril','mai','juin','juillet','aout','septembre','octobre','novembre','decembre'];
+    dateEl.textContent = jours[now.getDay()] + ' ' + now.getDate() + ' ' + mois[now.getMonth()] + ' ' + now.getFullYear();
+  }
+
+  // Photo de fond header
+  var bgKeywords = ['healthy food colorful', 'vegetables fresh market', 'nature wellness morning'];
+  var bgKw = bgKeywords[now.getDate() % bgKeywords.length];
+  var bgEl = document.getElementById('homeBgPhoto');
+  if (bgEl) bgEl.style.backgroundImage = 'url(https://source.unsplash.com/800x400/?' + encodeURIComponent(bgKw) + '&sig=' + now.getDate() + ')';
+
+  // Avatar
+  var avatarEl = document.getElementById('homeAvatar');
+  if (avatarEl && profile.full_name) {
+    avatarEl.textContent = profile.full_name.split(' ').map(function(n){return n[0];}).join('').toUpperCase().slice(0,2);
+  }
+
+  // Score hier
+  var scores = JSON.parse(localStorage.getItem('mirella_scores') || '[]');
+  var yesterday = new Date(now); yesterday.setDate(now.getDate()-1);
+  var yStr = yesterday.toISOString().split('T')[0];
+  var yScore = scores.find(function(s){return s.date===yStr;});
+  var scoreEl = document.getElementById('homeScoreVal');
+  var scoreText = document.getElementById('homeScoreText');
+  if (yScore) {
+    if (scoreEl) scoreEl.textContent = yScore.score + '/100';
+    if (scoreText) scoreText.innerHTML = 'Votre score sante hier etait de <strong>' + yScore.score + '/100</strong>. ' + (yScore.score >= 70 ? 'Continuez sur cette lancee !' : 'Essayons de faire mieux aujourd hui !');
+  } else {
+    if (scoreEl) scoreEl.textContent = '--';
+    if (scoreText) scoreText.textContent = 'Remplissez votre score de sante quotidien pour suivre votre progression.';
+  }
+
+  // Journee mondiale
+  var mm = String(now.getMonth()+1).padStart(2,'0');
+  var dd = String(now.getDate()).padStart(2,'0');
+  var jKey = mm + '-' + dd;
+  var journee = window.JOURNEES_MONDIALES[jKey] || {titre: 'Journee sante et bien-etre', desc: 'Chaque jour est une opportunite de prendre soin de vous. Buvez suffisamment d eau et bougez !', keyword: 'wellness health nature'};
+  var jTitre = document.getElementById('homeJourneeTitre');
+  var jDesc = document.getElementById('homeJourneeDesc');
+  var jPhoto = document.getElementById('homeJourneePhoto');
+  if (jTitre) jTitre.textContent = journee.titre;
+  if (jDesc) jDesc.textContent = journee.desc;
+  if (jPhoto) jPhoto.style.backgroundImage = 'url(https://source.unsplash.com/600x200/?' + encodeURIComponent(journee.keyword) + '&sig=' + now.getDate() + 10 + ')';
+
+  // Citation du jour
+  var citIdx = now.getDate() % window.CITATIONS.length;
+  var cit = window.CITATIONS[citIdx];
+  var citEl = document.getElementById('homeCitation');
+  var citAut = document.getElementById('homeCitationAuteur');
+  var citPhoto = document.getElementById('homeCitationPhoto');
+  if (citEl) citEl.textContent = cit.texte;
+  if (citAut) citAut.textContent = '— ' + cit.auteur;
+  if (citPhoto) citPhoto.style.backgroundImage = 'url(https://source.unsplash.com/600x160/?' + encodeURIComponent(cit.keyword) + '&sig=' + now.getDate() + 20 + ')';
+
+  // Conseil personnalise
+  var pathologies = profile.pathologies || [];
+  var conseils = [
+    {conseil: 'Commencez la journee avec un verre d eau tiede avec du citron pour stimuler votre digestion.', keyword: 'lemon water morning', tags: ['Hydratation','Digestion']},
+    {conseil: 'Privilegiez les aliments riches en magnesium : noix, graines, chocolat noir. Benefique contre le stress.', keyword: 'nuts seeds healthy', tags: ['Magnesium','Anti-stress']},
+    {conseil: 'Une marche de 20 minutes apres le dejeuner reduit la glycemie et ameliore la digestion.', keyword: 'walking nature path', tags: ['Activite','Glycemie']},
+    {conseil: 'Les oméga-3 du saumon ou des noix sont excellents pour la sante cardiovasculaire.', keyword: 'salmon fish healthy', tags: ['Cardiovasculaire','Omega-3']},
+  ];
+  var conseilData = conseils[now.getDate() % conseils.length];
+  if (pathologies.includes('hypertension')) {
+    conseilData = {conseil: 'Avec votre hypertension, limitez le sel et privilegiez le potassium : banane, avocat, patate douce ce matin.', keyword: 'avocado banana healthy', tags: ['Hypertension','Potassium']};
+  } else if (pathologies.includes('diabete') || pathologies.some(function(p){return p.toLowerCase().includes('diabet');})) {
+    conseilData = {conseil: 'Favorisez les aliments a index glycemique bas : legumineuses, avoine, legumes verts pour stabiliser votre glycemie.', keyword: 'lentils vegetables healthy', tags: ['Diabete','IG bas']};
+  }
+  var conseilEl = document.getElementById('homeConseil');
+  var conseilPhoto = document.getElementById('homeConseilPhoto');
+  var conseilTags = document.getElementById('homeConseilTags');
+  if (conseilEl) conseilEl.textContent = conseilData.conseil;
+  if (conseilPhoto) conseilPhoto.style.backgroundImage = 'url(https://source.unsplash.com/200x200/?' + encodeURIComponent(conseilData.keyword) + '&sig=' + now.getDate() + 30 + ')';
+  if (conseilTags) conseilTags.innerHTML = conseilData.tags.map(function(t){ return '<span style="background:#ECFDF5;color:#059669;font-size:0.68rem;padding:2px 8px;border-radius:10px;font-weight:600">' + t + '</span>'; }).join('');
+
+  // Rappels medicaments
+  var medications = profile.medications || [];
+  var rappelsCard = document.getElementById('homeRappelsCard');
+  var rappelsEl = document.getElementById('homeRappels');
+  if (medications.length > 0 && rappelsCard && rappelsEl) {
+    rappelsCard.style.display = 'block';
+    rappelsEl.innerHTML = medications.slice(0,3).map(function(m, i) {
+      var heures = ['08:00','12:00','20:00'];
+      return '<div style="display:flex;align-items:center;justify-content:space-between;padding:6px 0;border-bottom:1px solid #f5f5f5">' +
+        '<div style="display:flex;align-items:center;gap:8px">' +
+        '<div style="width:8px;height:8px;border-radius:50%;background:#FF6B6B;flex-shrink:0"></div>' +
+        '<span style="font-size:0.83rem;color:#1a1a1a">' + m + '</span></div>' +
+        '<span style="font-size:0.78rem;color:#888">' + heures[i] + '</span></div>';
+    }).join('');
+  }
+
+  // CTA si profil incomplet
+  var ctaCard = document.getElementById('homeCtaCard');
+  if (ctaCard && pathologies.length === 0 && !profile.full_name) {
+    ctaCard.style.display = 'block';
+  }
+};
+
 // ── CYCLE FEMININ ──
 window._symptoms = [];
 
@@ -1576,7 +1716,7 @@ function switchLang(lang) {
       <button class="nav-item" onclick="showView('pricing', this)" data-i18n="nav_subscriptions">Abonnements</button>
       <div id="menuStandard" style="display:none">
         <div class="nav-label">Standard</div>
-        <button class="nav-item" onclick="showView('dashboard', this)">Dashboard</button>
+        <button class="nav-item" onclick="showView('home', this)">Dashboard</button>
         <button class="nav-item" onclick="showView('health', this)">Suivi sante</button>
         <button class="nav-item" onclick="showView('menus', this)">Mes menus</button>
         <button class="nav-item" onclick="showView('pro', this)">Espace Medecin</button>
@@ -6135,6 +6275,7 @@ Réponds UNIQUEMENT en JSON valide avec cette structure exacte:
     document.getElementById('insightsView').style.display = view === 'insights' ? 'block' : 'none';
     document.getElementById('simulatorView').style.display = view === 'simulator' ? 'block' : 'none';
     document.getElementById('oracleView').style.display = view === 'oracle' ? 'flex' : 'none';
+    var hv = document.getElementById('homeView'); if(hv) { hv.style.display = view === 'home' ? 'block' : 'none'; if(view === 'home') setTimeout(function(){ if(typeof window.initHome==='function') window.initHome(); }, 100); }
     var catv = document.getElementById('catalogueView'); if(catv) { catv.style.display = view === 'catalogue' ? 'block' : 'none'; if(view === 'catalogue') setTimeout(function(){ if(typeof window.initCatalogue==='function') window.initCatalogue(); }, 100); }
     var cv = document.getElementById('cycleView'); if(cv) { cv.style.display = view === 'cycle' ? 'block' : 'none'; if(view === 'cycle') { var mc2 = document.querySelector('.main-content'); if(mc2) mc2.style.overflow = view === 'cycle' ? 'auto' : 'hidden'; setTimeout(function(){ if(typeof initCycle === 'function') initCycle(); }, 100); } }
     var pv = document.getElementById('planningView'); if(pv) { pv.style.display = view === 'planning' ? 'block' : 'none'; var mc = document.querySelector('.main-content'); if(mc) mc.style.overflow = view === 'planning' ? 'auto' : 'hidden'; if(view === 'planning') { setTimeout(function(){ try{ window.renderPlanning(); }catch(e){ document.getElementById('planningGrid').innerHTML='<div style="padding:20px;color:red">'+e.message+'</div>'; } }, 300); } }
@@ -8388,5 +8529,98 @@ function toggleQuickMenu() {
   </div>
 </div>
 <!-- FIN CATALOGUE RECETTES VIEW -->
+
+
+<!-- HOME VIEW -->
+<div id="homeView" style="display:none;padding:0;overflow-y:auto;background:#FFF5F0;width:100%;padding-bottom:80px">
+
+  <!-- Header avec photo de fond -->
+  <div style="position:relative;padding:28px 20px 20px;overflow:hidden;min-height:160px">
+    <div id="homeBgPhoto" style="position:absolute;inset:0;background-size:cover;background-position:center;filter:brightness(0.4)"></div>
+    <div style="position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,107,107,0.85),rgba(255,154,60,0.85))"></div>
+    <div style="position:relative;z-index:1">
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:14px">
+        <div id="homeAvatar" style="width:42px;height:42px;border-radius:50%;background:rgba(255,255,255,0.3);display:flex;align-items:center;justify-content:center;font-size:1rem;font-weight:700;color:white;flex-shrink:0">?</div>
+        <div>
+          <div id="homeGreeting" style="font-size:1.1rem;font-weight:700;color:white">Bonjour !</div>
+          <div id="homeDate" style="font-size:0.78rem;color:rgba(255,255,255,0.8)"></div>
+        </div>
+      </div>
+      <div id="homeScoreResume" style="background:rgba(255,255,255,0.18);border-radius:12px;padding:10px 14px">
+        <div style="font-size:0.82rem;color:white;line-height:1.5" id="homeScoreText">Chargement...</div>
+      </div>
+    </div>
+  </div>
+
+  <div style="padding:16px">
+
+    <!-- Journée mondiale avec photo -->
+    <div id="homeJourneeCard" style="background:white;border-radius:16px;overflow:hidden;margin-bottom:12px;box-shadow:0 2px 8px rgba(0,0,0,0.06)">
+      <div id="homeJourneePhoto" style="height:120px;background:#f0f0f0;background-size:cover;background-position:center;position:relative">
+        <div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,0.6),transparent)"></div>
+        <div style="position:absolute;bottom:10px;left:14px">
+          <div style="font-size:0.65rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:rgba(255,255,255,0.8);margin-bottom:2px">Journée mondiale</div>
+          <div id="homeJourneeTitre" style="font-size:0.95rem;font-weight:700;color:white">Chargement...</div>
+        </div>
+      </div>
+      <div style="padding:12px 14px">
+        <div id="homeJourneeDesc" style="font-size:0.82rem;color:#555;line-height:1.5"></div>
+      </div>
+    </div>
+
+    <!-- Citation avec photo -->
+    <div style="background:white;border-radius:16px;overflow:hidden;margin-bottom:12px;box-shadow:0 2px 8px rgba(0,0,0,0.06)">
+      <div id="homeCitationPhoto" style="height:80px;background-size:cover;background-position:center;background-color:#f5f0ff;position:relative">
+        <div style="position:absolute;inset:0;background:rgba(139,92,246,0.4)"></div>
+      </div>
+      <div style="padding:14px">
+        <div style="font-size:0.72rem;font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:#8B5CF6;margin-bottom:8px">Citation du jour</div>
+        <div id="homeCitation" style="font-size:0.88rem;color:#333;line-height:1.6;font-style:italic">"Chargement..."</div>
+        <div id="homeCitationAuteur" style="font-size:0.75rem;color:#888;margin-top:6px"></div>
+      </div>
+    </div>
+
+    <!-- Conseil personnalisé avec photo aliment -->
+    <div style="background:white;border-radius:16px;overflow:hidden;margin-bottom:12px;box-shadow:0 2px 8px rgba(0,0,0,0.06)">
+      <div style="display:flex">
+        <div id="homeConseilPhoto" style="width:100px;min-height:100px;background-size:cover;background-position:center;background-color:#ECFDF5;flex-shrink:0"></div>
+        <div style="padding:14px;flex:1">
+          <div style="font-size:0.72rem;font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:#10B981;margin-bottom:6px">Conseil du jour</div>
+          <div id="homeConseil" style="font-size:0.82rem;color:#333;line-height:1.5">Chargement...</div>
+          <div id="homeConseilTags" style="display:flex;gap:6px;flex-wrap:wrap;margin-top:8px"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Stats rapides -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px">
+      <div onclick="showView('chrono')" style="background:white;border-radius:14px;padding:14px;box-shadow:0 2px 8px rgba(0,0,0,0.06);cursor:pointer">
+        <div style="font-size:1.6rem;font-weight:800;color:#FF6B6B" id="homeScoreVal">--</div>
+        <div style="font-size:0.72rem;color:#888;margin-top:2px">Score santé hier</div>
+        <div style="font-size:0.7rem;color:#FF6B6B;margin-top:4px">Voir le suivi →</div>
+      </div>
+      <div onclick="showView('menus')" style="background:white;border-radius:14px;padding:14px;box-shadow:0 2px 8px rgba(0,0,0,0.06);cursor:pointer">
+        <div id="homeProchainRepasPhoto" style="width:100%;height:50px;border-radius:8px;background:#f5f5f5;background-size:cover;background-position:center;margin-bottom:6px"></div>
+        <div style="font-size:0.72rem;color:#888">Prochain repas</div>
+        <div id="homeProchainRepas" style="font-size:0.78rem;font-weight:600;color:#1a1a1a;margin-top:2px">Voir les menus →</div>
+      </div>
+    </div>
+
+    <!-- Rappels médicaments -->
+    <div id="homeRappelsCard" style="display:none;background:white;border-radius:16px;padding:14px;margin-bottom:12px;box-shadow:0 2px 8px rgba(0,0,0,0.06)">
+      <div style="font-size:0.72rem;font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:#FF6B6B;margin-bottom:10px">Rappels du jour</div>
+      <div id="homeRappels" style="display:flex;flex-direction:column;gap:8px"></div>
+    </div>
+
+    <!-- CTA si profil incomplet -->
+    <div id="homeCtaCard" style="display:none;background:linear-gradient(135deg,#FF6B6B,#FF9A3C);border-radius:16px;padding:16px;text-align:center">
+      <div style="font-size:0.95rem;font-weight:700;color:white;margin-bottom:6px">Personnalisez votre expérience</div>
+      <div style="font-size:0.8rem;color:rgba(255,255,255,0.85);margin-bottom:12px">Renseignez votre profil pour des conseils adaptés à vos pathologies</div>
+      <button onclick="showView('profile')" style="background:white;color:#FF6B6B;border:none;border-radius:10px;padding:10px 20px;font-size:0.85rem;font-weight:700;cursor:pointer">Compléter mon profil</button>
+    </div>
+
+  </div>
+</div>
+<!-- FIN HOME VIEW -->
 
 </body>
