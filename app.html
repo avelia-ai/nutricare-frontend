@@ -915,26 +915,29 @@ window.applyTheme = function(themeKey) {
   root.style.setProperty('--coral-dark', t.dark);
   root.style.setProperty('--accent', t.accent);
   root.style.setProperty('--cream', t.cream);
+  // Remplacer couleurs inline dans tout le DOM
+  var allEls = document.querySelectorAll('*');
+  allEls.forEach(function(el) {
+    if (!el.style) return;
+    var s = el.style.cssText;
+    if (!s) return;
+    s = s.replace(/#FF6B6B/gi, t.coral).replace(/#E85555/gi, t.dark)
+          .replace(/#FF9A3C/gi, t.accent).replace(/#FFF5F0/gi, t.cream)
+          .replace(/#FFF0EC/gi, t.cream);
+    el.style.cssText = s;
+  });
   // Injecter CSS dynamique pour couvrir les couleurs hardcodées
   var existing = document.getElementById('mirella-theme-style');
   if (existing) existing.remove();
   var style = document.createElement('style');
   style.id = 'mirella-theme-style';
-  style.textContent = [
-    'body, .main-content, #appPage { background-color: ' + t.cream + ' !important; }',
-    '.view-header, [style*="linear-gradient(135deg,#FF6B6B"], [style*="linear-gradient(135deg, #FF6B6B"] { background: linear-gradient(135deg,' + t.coral + ',' + t.accent + ') !important; }',
-    'a[href], .nav-item.active, [style*="color:#FF6B6B"], [style*="color: #FF6B6B"] { color: ' + t.coral + ' !important; }',
-    '[style*="background:#FF6B6B"], [style*="background: #FF6B6B"] { background: ' + t.coral + ' !important; }',
-    '[style*="background:#FFF5F0"], [style*="background: #FFF5F0"] { background: ' + t.cream + ' !important; }',
-    '[style*="color:#FF9A3C"], [style*="color: #FF9A3C"] { color: ' + t.accent + ' !important; }',
-    '[style*="border-color:#FF6B6B"] { border-color: ' + t.coral + ' !important; }',
-    '[style*="accent-color:#FF6B6B"] { accent-color: ' + t.coral + ' !important; }',
-    '.bottom-nav-btn.active, .bottom-nav-btn.active svg { color: ' + t.coral + ' !important; fill: ' + t.coral + ' !important; }',
-    '#mobileUserAvatar, .user-avatar-btn { background: linear-gradient(135deg,' + t.coral + ',' + t.accent + ') !important; }',
-    '.sidebar-logo { color: ' + t.coral + ' !important; }',
-    '.sidebar-logo-dot { background: ' + t.coral + ' !important; }',
-    '.nav-item:hover, .nav-item.active { background: rgba(0,0,0,0.15) !important; color: ' + t.coral + ' !important; }',
-  ].join(' ');
+  style.textContent = 'body,#appPage{background:' + t.cream + ' !important} ' +
+    '.bottom-nav-btn.active{color:' + t.coral + ' !important} ' +
+    '.sidebar-logo{color:' + t.coral + ' !important} ' +
+    '.sidebar-logo-dot{background:' + t.coral + ' !important} ' +
+    '.nav-item:hover,.nav-item.active{color:' + t.coral + ' !important} ' +
+    'input[type=range]{accent-color:' + t.coral + ' !important} ' +
+    '.bottom-nav-center-btn{background:linear-gradient(135deg,' + t.coral + ',' + t.accent + ') !important}';
   document.head.appendChild(style);
   localStorage.setItem('mirella_theme', themeKey);
   document.querySelectorAll('.theme-btn').forEach(function(b) {
@@ -8158,7 +8161,7 @@ function closeMirellaNotif() {
       <button onclick="toggleQuickMenu();showView('planning')" style="display:flex;align-items:center;gap:8px;padding:12px;background:#FFF5F0;border:none;border-radius:12px;font-size:0.82rem;font-weight:600;color:#2D2D2D;cursor:pointer">📅 Mon planning</button>
       <button id="btnCycleFeminin" onclick="toggleQuickMenu();showView('cycle')" style="display:none;align-items:center;gap:8px;padding:12px;background:#FFF5F0;border:none;border-radius:12px;font-size:0.82rem;font-weight:600;color:#2D2D2D;cursor:pointer">🌸 Cycle féminin</button>
       <button onclick="toggleQuickMenu();showView('catalogue')" style="display:flex;align-items:center;gap:8px;padding:12px;background:#FFF5F0;border:none;border-radius:12px;font-size:0.82rem;font-weight:600;color:#2D2D2D;cursor:pointer">📖 Catalogue recettes</button>
-      <button onclick="toggleQuickMenu();showView('gamification')" style="display:flex;align-items:center;gap:8px;padding:12px;background:#FFF5F0;border:none;border-radius:12px;font-size:0.82rem;font-weight:600;color:#2D2D2D;cursor:pointer">🏆 Progression</button>
+<button onclick="toggleQuickMenu();showView('gamification')" style="display:flex;align-items:center;gap:8px;padding:12px;background:#FFF5F0;border:none;border-radius:12px;font-size:0.82rem;font-weight:600;color:#2D2D2D;cursor:pointer">🏆 Progression</button>
     </div>
   </div>
 </div>
