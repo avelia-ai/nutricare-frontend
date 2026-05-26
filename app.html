@@ -1594,7 +1594,7 @@ setInterval(async () => {
 var token = localStorage.getItem('nutricare_token');
   var user = localStorage.getItem('nutricare_user');
   var profile = localStorage.getItem('nutricare_profile');
-  var view = localStorage.getItem('nutricare_last_view') || 'chat';
+  var view = localStorage.getItem('nutricare_last_view') || 'home';
 // Détecter la langue courante depuis l'URL
 (function() {
   var page = window.location.pathname.split('/').pop();
@@ -1618,7 +1618,7 @@ function switchLang(lang) {
   var token = localStorage.getItem('nutricare_token');
   var user = localStorage.getItem('nutricare_user');
   var profile = localStorage.getItem('nutricare_profile');
-  var view = localStorage.getItem('nutricare_last_view') || 'chat';
+  var view = localStorage.getItem('nutricare_last_view') || 'home';
   sessionStorage.setItem('transfer_token', token || '');
   sessionStorage.setItem('transfer_user', user || '');
   sessionStorage.setItem('transfer_profile', profile || '');
@@ -3743,7 +3743,7 @@ function switchLang(lang) {
   // Corriger last_view si c'est oracle (ne doit jamais être la vue par défaut)
   (function() {
     const lv = localStorage.getItem('nutricare_last_view');
-    if (lv === 'oracle') localStorage.setItem('nutricare_last_view', 'chat');
+    if (lv === 'oracle') localStorage.setItem('nutricare_last_view', 'home');
   })();
   window.onload = async () => {
     const urlParams = new URLSearchParams(window.location.search);
@@ -3763,7 +3763,7 @@ function switchLang(lang) {
     if (authToken && currentUser) {
       await showApp();
       if (urlRedirect) { window.location.href = decodeURIComponent(urlRedirect); return; }
-      const targetView = urlView || localStorage.getItem('nutricare_last_view') || 'chat';
+      const targetView = urlView || localStorage.getItem('nutricare_last_view') || 'home';
       if (urlEntreprise === 'create') await showView('entreprise');
       else { await showView(targetView); if (urlPathologie) window.selectedPathologie = urlPathologie; }
     }
