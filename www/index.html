@@ -1141,7 +1141,7 @@ window.initHome = async function() {
   var bgKeywords = ['healthy food colorful', 'vegetables fresh market', 'nature wellness morning'];
   var bgKw = bgKeywords[now.getDate() % bgKeywords.length];
   var bgEl = document.getElementById('homeBgPhoto');
-  if (bgEl) bgEl.style.backgroundImage = 'url(https://picsum.photos/seed/home' + now.getDate() + '/800/400)';
+  if (bgEl) bgEl.style.backgroundImage = 'url(/images/food' + (now.getDate() % 3 + 1) + '.jpg)';
 
   // Avatar
   var avatarEl = document.getElementById('homeAvatar');
@@ -1174,7 +1174,7 @@ window.initHome = async function() {
   var jPhoto = document.getElementById('homeJourneePhoto');
   if (jTitre) jTitre.textContent = journee.titre;
   if (jDesc) jDesc.textContent = journee.desc;
-  if (jPhoto) jPhoto.style.backgroundImage = 'url(https://picsum.photos/seed/jour' + now.getDate() + '/600/200)';
+  if (jPhoto) jPhoto.style.backgroundImage = 'url(/images/healthy' + (now.getDate() % 2 + 1) + '.jpg)';
 
   // Citation du jour
   var citIdx = now.getDate() % window.CITATIONS.length;
@@ -1184,7 +1184,7 @@ window.initHome = async function() {
   var citPhoto = document.getElementById('homeCitationPhoto');
   if (citEl) citEl.textContent = cit.texte;
   if (citAut) citAut.textContent = '— ' + cit.auteur;
-  if (citPhoto) citPhoto.style.backgroundImage = 'url(https://picsum.photos/seed/cit' + citIdx + '/600/160)';
+  if (citPhoto) citPhoto.style.backgroundImage = 'url(/images/meditation1.jpg)';
 
   // Conseil personnalise
   var pathologies = profile.pathologies || [];
@@ -1204,7 +1204,7 @@ window.initHome = async function() {
   var conseilPhoto = document.getElementById('homeConseilPhoto');
   var conseilTags = document.getElementById('homeConseilTags');
   if (conseilEl) conseilEl.textContent = conseilData.conseil;
-  if (conseilPhoto) conseilPhoto.style.backgroundImage = 'url(https://picsum.photos/seed/cons' + now.getDate() + '/200/200)';
+  if (conseilPhoto) conseilPhoto.style.backgroundImage = 'url(/images/vegetables1.jpg)';
   if (conseilTags) conseilTags.innerHTML = conseilData.tags.map(function(t){ return '<span style="background:#ECFDF5;color:#059669;font-size:0.68rem;padding:2px 8px;border-radius:10px;font-weight:600">' + t + '</span>'; }).join('');
 
   // Rappels medicaments
