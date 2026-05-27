@@ -1056,7 +1056,7 @@ window.loadCatalogue = async function() {
     });
     grid.innerHTML = cards.join('');
 
-    // Charger les photos Pexels en arrière-plan
+    // Charger les photos Pexels en arrière-plan (URL directe)
     grid.querySelectorAll('[data-photo]').forEach(function(card) {
       var keyword = card.getAttribute('data-photo');
       var icon = card.getAttribute('data-icon');
@@ -1068,8 +1068,8 @@ window.loadCatalogue = async function() {
             var img = new Image();
             img.style.cssText = 'width:100%;height:110px;object-fit:cover;display:block';
             img.onload = function(){ imgDiv.innerHTML = ''; imgDiv.appendChild(img); };
-            img.onerror = function(){ /* garde l'icône */ };
-            img.src = BACKEND_URL + '/api/photos/proxy?url=' + encodeURIComponent(d.url);
+            img.onerror = function(){};
+            img.src = d.url;
           }
         }).catch(function(){});
     });
