@@ -1056,18 +1056,17 @@ window.loadCatalogue = async function() {
     });
     grid.innerHTML = cards.join('');
 
-    // Charger les photos Pexels en arrière-plan
+    // Charger les photos Pexels en arrière-plan via loadMealPhoto
     grid.querySelectorAll('[data-photo]').forEach(function(card) {
       var keyword = card.getAttribute('data-photo');
       var icon = card.getAttribute('data-icon');
       var imgDiv = card.querySelector('.rc-img');
-      fetch(BACKEND_URL + '/api/photos/search?q=' + encodeURIComponent(keyword), {
-        headers: { 'Authorization': 'Bearer ' + token }
-      }).then(function(r){ return r.json(); }).then(function(d){
-        if (d.url && imgDiv) {
-          imgDiv.innerHTML = '<img src="' + BACKEND_URL + '/api/photos/proxy?url=' + encodeURIComponent(d.url) + '" style="width:100%;height:100%;object-fit:cover;display:block" onerror="this.parentNode.innerHTML='' + icon + ''">';
-        }
-      }).catch(function(){});
+      var fakeImg = document.createElement('img');
+      fakeImg.style.cssText = 'width:100%;height:100%;object-fit:cover;display:block';
+      fakeImg.onerror = function(){ imgDiv.innerHTML = icon; };
+      loadMealPhoto(keyword, keyword, fakeImg).then(function(){
+        if (fakeImg.src) { imgDiv.innerHTML = ''; imgDiv.appendChild(fakeImg); }
+      });
     });
   } catch(e) {
     if (grid) grid.innerHTML = '<div style="grid-column:span 2;text-align:center;padding:40px;color:#FF6B6B">Erreur de chargement</div>';
