@@ -1042,8 +1042,9 @@ window.loadCatalogue = async function() {
     grid.innerHTML = recettes.map(function(r) {
       var icon = catIcons[r.categorie] || '🍽️';
       var tags = (r.tags || []).slice(0,2).map(function(t){ return '<span style="background:#FFF5F0;color:#FF6B6B;font-size:0.6rem;padding:2px 6px;border-radius:10px;font-weight:600">' + t.replace(/_/g,' ') + '</span>'; }).join('');
+      var imgHtml = r.photo_url ? '<img src="' + r.photo_url + '" style="width:100%;height:110px;object-fit:cover;display:block" onerror="this.parentNode.innerHTML='' + icon + ''">' : icon;
       return '<div style="background:white;border-radius:14px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,0.06);cursor:pointer" onclick="window.showRecetteDetail(' + JSON.stringify(JSON.stringify(r)) + ')">' +
-        '<div style="height:90px;background:linear-gradient(135deg,#FFF5F0,#FFE8E0);display:flex;align-items:center;justify-content:center;font-size:2.5rem">' + icon + '</div>' +
+        '<div style="height:110px;background:linear-gradient(135deg,#FFF5F0,#FFE8E0);display:flex;align-items:center;justify-content:center;font-size:2.5rem;overflow:hidden">' + imgHtml + '</div>' +
         '<div style="padding:10px">' +
         '<div style="font-size:0.82rem;font-weight:700;color:#1a1a1a;margin-bottom:4px;line-height:1.3">' + r.nom + '</div>' +
         '<div style="display:flex;gap:6px;font-size:0.7rem;color:#888;margin-bottom:6px">' +
