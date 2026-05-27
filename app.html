@@ -1061,7 +1061,7 @@ window.loadCatalogue = async function() {
       var keyword = card.getAttribute('data-photo');
       var icon = card.getAttribute('data-icon');
       var imgDiv = card.querySelector('.rc-img');
-      fetch(BACKEND_URL + '/api/photos/search?q=' + encodeURIComponent(keyword))
+      fetch('https://nutricare-backend-production.up.railway.app/api/photos/search?q=' + encodeURIComponent(keyword))
         .then(function(r){ return r.json(); })
         .then(function(d){
           if (d.url && imgDiv) {
