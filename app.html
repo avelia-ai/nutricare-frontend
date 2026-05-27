@@ -6372,6 +6372,7 @@ Réponds UNIQUEMENT en JSON valide avec cette structure exacte:
     var mc = document.querySelector('.main-content');
     if (mc) mc.style.overflow = ['home','cycle','planning','catalogue','menus','chrono'].includes(view) ? 'auto' : 'hidden';
     var catv = document.getElementById('catalogueView'); if(catv) { catv.style.display = view === 'catalogue' ? 'block' : 'none'; if(view === 'catalogue') setTimeout(function(){ if(typeof window.initCatalogue==='function') window.initCatalogue(); }, 100); }
+    var mrv = document.getElementById('mesRecettesView'); if(mrv) { mrv.style.display = view === 'mes-recettes' ? 'block' : 'none'; if(view === 'mes-recettes') setTimeout(function(){ loadMesRecettes(); }, 100); }
     var cv = document.getElementById('cycleView'); if(cv) { cv.style.display = view === 'cycle' ? 'block' : 'none'; if(view === 'cycle') { var mc2 = document.querySelector('.main-content'); if(mc2) mc2.style.overflow = view === 'cycle' ? 'auto' : 'hidden'; setTimeout(function(){ if(typeof initCycle === 'function') initCycle(); }, 100); } }
     var pv = document.getElementById('planningView'); if(pv) { pv.style.display = view === 'planning' ? 'block' : 'none'; var mc = document.querySelector('.main-content'); if(mc) mc.style.overflow = view === 'planning' ? 'auto' : 'hidden'; if(view === 'planning') { setTimeout(function(){ try{ window.renderPlanning(); }catch(e){ document.getElementById('planningGrid').innerHTML='<div style="padding:20px;color:red">'+e.message+'</div>'; } }, 300); } }
     if (view === 'oracle') initOracle();
@@ -8397,6 +8398,7 @@ function closeMirellaNotif() {
       <button onclick="toggleQuickMenu();showView('planning')" style="display:flex;align-items:center;gap:8px;padding:12px;background:#FFF5F0;border:none;border-radius:12px;font-size:0.82rem;font-weight:600;color:#2D2D2D;cursor:pointer">📅 Mon planning</button>
       <button id="btnCycleFeminin" onclick="toggleQuickMenu();showView('cycle')" style="display:none;align-items:center;gap:8px;padding:12px;background:#FFF5F0;border:none;border-radius:12px;font-size:0.82rem;font-weight:600;color:#2D2D2D;cursor:pointer">🌸 Cycle féminin</button>
       <button onclick="toggleQuickMenu();showView('catalogue')" style="display:flex;align-items:center;gap:8px;padding:12px;background:#FFF5F0;border:none;border-radius:12px;font-size:0.82rem;font-weight:600;color:#2D2D2D;cursor:pointer">📖 Catalogue recettes</button>
+      <button onclick="toggleQuickMenu();showView('mes-recettes')" style="display:flex;align-items:center;gap:8px;padding:12px;background:#FFF5F0;border:none;border-radius:12px;font-size:0.82rem;font-weight:600;color:#2D2D2D;cursor:pointer">👨‍🍳 Mes recettes</button>
 <button onclick="toggleQuickMenu();showView('gamification')" style="display:flex;align-items:center;gap:8px;padding:12px;background:#FFF5F0;border:none;border-radius:12px;font-size:0.82rem;font-weight:600;color:#2D2D2D;cursor:pointer">🏆 Progression</button>
     </div>
   </div>
@@ -8624,4 +8626,196 @@ function toggleQuickMenu() {
   </div>
 </div>
 <!-- FIN CATALOGUE RECETTES VIEW -->
-</body>
+</body
+<div id="mesRecettesView" style="display:none;padding:0;overflow-y:auto;background:#FFF5F0;width:100%">
+  <!-- Header -->
+  <div style="background:linear-gradient(135deg,#FF6B6B,#FF9A3C);padding:24px 20px 20px;position:sticky;top:0;z-index:10">
+    <div style="font-size:1.3rem;font-weight:800;color:white;margin-bottom:4px">👨‍🍳 Mes Recettes</div>
+    <div style="font-size:0.82rem;color:rgba(255,255,255,0.85)">Créez et gérez vos recettes personnelles</div>
+  </div>
+
+  <!-- Onglets -->
+  <div style="display:flex;gap:8px;padding:16px 16px 0">
+    <button onclick="switchRecettesTab('mes')" id="tabMesRecettes" style="flex:1;padding:10px;border:none;border-radius:10px;font-weight:700;font-size:0.82rem;cursor:pointer;background:#FF6B6B;color:white">Mes recettes</button>
+    <button onclick="switchRecettesTab('communaute')" id="tabCommunaute" style="flex:1;padding:10px;border:none;border-radius:10px;font-weight:700;font-size:0.82rem;cursor:pointer;background:white;color:#888">Communauté</button>
+  </div>
+
+  <!-- Bouton créer -->
+  <div style="padding:16px">
+    <button onclick="showFormulaireRecette()" style="width:100%;padding:14px;background:linear-gradient(135deg,#FF6B6B,#FF9A3C);color:white;border:none;border-radius:14px;font-weight:700;font-size:0.9rem;cursor:pointer">+ Créer une recette</button>
+  </div>
+
+  <!-- Liste recettes -->
+  <div id="mesRecettesList" style="padding:0 16px 100px">
+    <div style="text-align:center;padding:40px;color:#ccc">Chargement...</div>
+  </div>
+</div>
+
+<!-- Formulaire création recette (modal) -->
+<div id="formulaireRecetteModal" style="display:none;position:fixed;inset:0;z-index:99999;background:rgba(0,0,0,0.7);overflow-y:auto">
+  <div style="background:white;margin:20px auto;border-radius:20px;max-width:500px;padding:24px;position:relative">
+    <div style="font-size:1.1rem;font-weight:800;color:#1a1a1a;margin-bottom:20px">✍️ Nouvelle recette</div>
+
+    <div style="display:flex;flex-direction:column;gap:12px">
+      <input id="rcNom" placeholder="Nom de la recette *" style="padding:12px;border:1.5px solid #eee;border-radius:10px;font-size:0.88rem;font-family:'DM Sans',sans-serif">
+      
+      <select id="rcCategorie" style="padding:12px;border:1.5px solid #eee;border-radius:10px;font-size:0.88rem;font-family:'DM Sans',sans-serif">
+        <option value="">Catégorie</option>
+        <option value="petit_dejeuner">🌅 Petit-déjeuner</option>
+        <option value="dejeuner">☀️ Déjeuner</option>
+        <option value="diner">🌙 Dîner</option>
+        <option value="collation">🍎 Collation</option>
+        <option value="dessert">🍰 Dessert</option>
+        <option value="entree">🥗 Entrée</option>
+      </select>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+        <input id="rcCalories" type="number" placeholder="Calories (kcal)" style="padding:12px;border:1.5px solid #eee;border-radius:10px;font-size:0.88rem;font-family:'DM Sans',sans-serif">
+        <input id="rcTemps" type="number" placeholder="Temps (min)" style="padding:12px;border:1.5px solid #eee;border-radius:10px;font-size:0.88rem;font-family:'DM Sans',sans-serif">
+      </div>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px">
+        <input id="rcProteines" type="number" placeholder="Protéines (g)" style="padding:12px;border:1.5px solid #eee;border-radius:10px;font-size:0.82rem;font-family:'DM Sans',sans-serif">
+        <input id="rcGlucides" type="number" placeholder="Glucides (g)" style="padding:12px;border:1.5px solid #eee;border-radius:10px;font-size:0.82rem;font-family:'DM Sans',sans-serif">
+        <input id="rcLipides" type="number" placeholder="Lipides (g)" style="padding:12px;border:1.5px solid #eee;border-radius:10px;font-size:0.82rem;font-family:'DM Sans',sans-serif">
+      </div>
+
+      <textarea id="rcIngredients" placeholder="Ingrédients (un par ligne)" rows="4" style="padding:12px;border:1.5px solid #eee;border-radius:10px;font-size:0.88rem;font-family:'DM Sans',sans-serif;resize:none"></textarea>
+      <textarea id="rcEtapes" placeholder="Étapes de préparation (une par ligne)" rows="4" style="padding:12px;border:1.5px solid #eee;border-radius:10px;font-size:0.88rem;font-family:'DM Sans',sans-serif;resize:none"></textarea>
+
+      <div style="display:flex;gap:8px;align-items:center">
+        <span style="font-size:0.82rem;color:#666;font-weight:600">Visibilité :</span>
+        <button onclick="setVisibilite('prive')" id="btnPrive" style="flex:1;padding:8px;border:2px solid #FF6B6B;border-radius:8px;background:#FF6B6B;color:white;font-size:0.78rem;font-weight:700;cursor:pointer">🔒 Privée</button>
+        <button onclick="setVisibilite('public')" id="btnPublic" style="flex:1;padding:8px;border:2px solid #eee;border-radius:8px;background:white;color:#888;font-size:0.78rem;font-weight:700;cursor:pointer">🌍 Publique</button>
+      </div>
+    </div>
+
+    <div style="display:flex;gap:10px;margin-top:20px">
+      <button onclick="document.getElementById('formulaireRecetteModal').style.display='none'" style="flex:1;padding:12px;border:1.5px solid #eee;border-radius:10px;font-weight:600;cursor:pointer;background:white;color:#666">Annuler</button>
+      <button onclick="sauvegarderRecette()" style="flex:2;padding:12px;background:linear-gradient(135deg,#FF6B6B,#FF9A3C);color:white;border:none;border-radius:10px;font-weight:700;cursor:pointer">Sauvegarder</button>
+    </div>
+  </div>
+</div>
+>
+<script>
+// ===== MES RECETTES =====
+var _recettesTab = 'mes';
+var _visibiliteRecette = 'prive';
+
+window.switchRecettesTab = function(tab) {
+  _recettesTab = tab;
+  document.getElementById('tabMesRecettes').style.background = tab === 'mes' ? '#FF6B6B' : 'white';
+  document.getElementById('tabMesRecettes').style.color = tab === 'mes' ? 'white' : '#888';
+  document.getElementById('tabCommunaute').style.background = tab === 'communaute' ? '#FF6B6B' : 'white';
+  document.getElementById('tabCommunaute').style.color = tab === 'communaute' ? 'white' : '#888';
+  loadMesRecettes();
+};
+
+window.showFormulaireRecette = function() {
+  ['rcNom','rcIngredients','rcEtapes'].forEach(function(id){ document.getElementById(id).value = ''; });
+  ['rcCalories','rcTemps','rcProteines','rcGlucides','rcLipides'].forEach(function(id){ document.getElementById(id).value = ''; });
+  document.getElementById('rcCategorie').value = '';
+  _visibiliteRecette = 'prive';
+  document.getElementById('btnPrive').style.background = '#FF6B6B';
+  document.getElementById('btnPrive').style.color = 'white';
+  document.getElementById('btnPrive').style.borderColor = '#FF6B6B';
+  document.getElementById('btnPublic').style.background = 'white';
+  document.getElementById('btnPublic').style.color = '#888';
+  document.getElementById('btnPublic').style.borderColor = '#eee';
+  document.getElementById('formulaireRecetteModal').style.display = 'block';
+};
+
+window.setVisibilite = function(v) {
+  _visibiliteRecette = v;
+  document.getElementById('btnPrive').style.background = v === 'prive' ? '#FF6B6B' : 'white';
+  document.getElementById('btnPrive').style.color = v === 'prive' ? 'white' : '#888';
+  document.getElementById('btnPrive').style.borderColor = v === 'prive' ? '#FF6B6B' : '#eee';
+  document.getElementById('btnPublic').style.background = v === 'public' ? '#FF6B6B' : 'white';
+  document.getElementById('btnPublic').style.color = v === 'public' ? 'white' : '#888';
+  document.getElementById('btnPublic').style.borderColor = v === 'public' ? '#FF6B6B' : '#eee';
+};
+
+window.sauvegarderRecette = async function() {
+  var nom = document.getElementById('rcNom').value.trim();
+  if (!nom) { alert('Le nom est obligatoire'); return; }
+  var btn = document.querySelector('#formulaireRecetteModal button[onclick="sauvegarderRecette()"]');
+  btn.textContent = 'Sauvegarde...'; btn.disabled = true;
+  try {
+    var body = {
+      nom: nom,
+      categorie: document.getElementById('rcCategorie').value,
+      calories: parseInt(document.getElementById('rcCalories').value) || null,
+      prep_minutes: parseInt(document.getElementById('rcTemps').value) || null,
+      proteines: parseFloat(document.getElementById('rcProteines').value) || null,
+      glucides: parseFloat(document.getElementById('rcGlucides').value) || null,
+      lipides: parseFloat(document.getElementById('rcLipides').value) || null,
+      ingredients: document.getElementById('rcIngredients').value.split('\n').map(function(s){ return s.trim(); }).filter(Boolean),
+      etapes: document.getElementById('rcEtapes').value.split('\n').map(function(s){ return s.trim(); }).filter(Boolean),
+      visibilite: _visibiliteRecette
+    };
+    var token = localStorage.getItem('nutricare_token');
+    var res = await fetch('https://nutricare-backend-production.up.railway.app/api/user-recettes', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
+      body: JSON.stringify(body)
+    });
+    var data = await res.json();
+    if (data.error) throw new Error(data.error);
+    document.getElementById('formulaireRecetteModal').style.display = 'none';
+    loadMesRecettes();
+  } catch(e) {
+    alert('Erreur: ' + e.message);
+  } finally {
+    btn.textContent = 'Sauvegarder'; btn.disabled = false;
+  }
+};
+
+window.loadMesRecettes = async function() {
+  var list = document.getElementById('mesRecettesList');
+  if (!list) return;
+  list.innerHTML = '<div style="text-align:center;padding:40px;color:#ccc">Chargement...</div>';
+  try {
+    var token = localStorage.getItem('nutricare_token');
+    var res = await fetch('https://nutricare-backend-production.up.railway.app/api/user-recettes?type=' + _recettesTab, {
+      headers: { 'Authorization': 'Bearer ' + token }
+    });
+    var data = await res.json();
+    var recettes = data.recettes || [];
+    if (recettes.length === 0) {
+      list.innerHTML = '<div style="text-align:center;padding:60px 20px;color:#ccc"><div style="font-size:3rem;margin-bottom:12px">👨‍🍳</div><div style="font-size:0.9rem">' + (_recettesTab === 'mes' ? 'Aucune recette personnelle.<br>Créez votre première recette !' : 'Aucune recette partagée pour l'instant.') + '</div></div>';
+      return;
+    }
+    var catIcons = { petit_dejeuner:'🌅', dejeuner:'☀️', diner:'🌙', collation:'🍎', dessert:'🍰', entree:'🥗' };
+    list.innerHTML = recettes.map(function(r) {
+      var icon = catIcons[r.categorie] || '🍽️';
+      var imgHtml = r.photo_url ? '<img src="' + r.photo_url + '" style="width:100%;height:110px;object-fit:cover;display:block">' : '<div style="height:110px;background:linear-gradient(135deg,#FFF5F0,#FFE8E0);display:flex;align-items:center;justify-content:center;font-size:2.5rem">' + icon + '</div>';
+      var deleteBtn = _recettesTab === 'mes' ? '<button onclick="supprimerRecette('' + r.id + '')" style="position:absolute;top:8px;right:8px;background:rgba(255,107,107,0.9);border:none;border-radius:50%;width:28px;height:28px;color:white;cursor:pointer;font-size:0.8rem">✕</button>' : '';
+      return '<div style="background:white;border-radius:14px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,0.06);margin-bottom:12px;position:relative">' +
+        imgHtml + deleteBtn +
+        '<div style="padding:12px">' +
+        '<div style="font-size:0.88rem;font-weight:700;color:#1a1a1a;margin-bottom:4px">' + r.nom + '</div>' +
+        '<div style="display:flex;gap:8px;font-size:0.72rem;color:#888;margin-bottom:6px">' +
+        (r.prep_minutes ? '<span>⏱ ' + r.prep_minutes + 'min</span>' : '') +
+        (r.calories ? '<span>🔥 ' + r.calories + ' kcal</span>' : '') +
+        '<span>' + (r.visibilite === 'public' ? '🌍 Publique' : '🔒 Privée') + '</span>' +
+        '</div>' +
+        (r.ingredients && r.ingredients.length ? '<div style="font-size:0.72rem;color:#aaa">' + r.ingredients.slice(0,3).join(', ') + (r.ingredients.length > 3 ? '...' : '') + '</div>' : '') +
+        '</div></div>';
+    }).join('');
+  } catch(e) {
+    list.innerHTML = '<div style="text-align:center;padding:40px;color:#FF6B6B">Erreur de chargement</div>';
+  }
+};
+
+window.supprimerRecette = async function(id) {
+  if (!confirm('Supprimer cette recette ?')) return;
+  try {
+    var token = localStorage.getItem('nutricare_token');
+    await fetch('https://nutricare-backend-production.up.railway.app/api/user-recettes/' + id, {
+      method: 'DELETE',
+      headers: { 'Authorization': 'Bearer ' + token }
+    });
+    loadMesRecettes();
+  } catch(e) { alert('Erreur: ' + e.message); }
+};
+</script>
