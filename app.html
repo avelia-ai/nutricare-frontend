@@ -6574,6 +6574,12 @@ var activeMenuFilters = new Set();
             if (jour && jour[imp.repas]) jour[imp.repas].impact = imp;
           });
           renderMenu(menu);
+          // Sauvegarder le menu avec impacts en DB
+          fetch(BACKEND_URL + '/api/menus/save-impacts', {
+            method: 'POST',
+            headers: {'Content-Type':'application/json','Authorization':'Bearer '+authToken},
+            body: JSON.stringify({menu: menu})
+          }).catch(function(){});
         }).catch(function(){});
       }
     else alert(menu.error || 'Erreur lors de la génération');
