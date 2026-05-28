@@ -3870,6 +3870,7 @@ function switchLang(lang) {
     }
     if (authToken && currentUser) {
       await showApp();
+      var _savedTheme = localStorage.getItem('mirella_theme'); if (_savedTheme && window.THEMES[_savedTheme]) window.applyTheme(_savedTheme);
       if (urlRedirect) { window.location.href = decodeURIComponent(urlRedirect); return; }
       const savedV = localStorage.getItem('nutricare_last_view'); const targetView = urlView || (['chat','health','menus','profile','home'].includes(savedV) ? savedV : 'home');
       if (urlEntreprise === 'create') await showView('entreprise');
