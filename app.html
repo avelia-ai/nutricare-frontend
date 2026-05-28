@@ -913,17 +913,7 @@ window.THEMES = {
 window.applyTheme = function(themeKey) {
   var t = window.THEMES[themeKey];
   if (!t) return;
-  // Hue rotation par rapport au corail de base (#FF6B6B = ~0deg)
-  var hueMap = { coral: 0, violet: 260, mint: 150, ocean: 210, gold: 35, rose: 330 };
-  var hue = hueMap[themeKey] || 0;
-  var existing2 = document.getElementById('mirella-hue-style');
-  if (existing2) existing2.remove();
-  if (hue !== 0) {
-    var hueStyle = document.createElement('style');
-    hueStyle.id = 'mirella-hue-style';
-    hueStyle.textContent = '#appPage, #mainContent, .main-content, .bottom-nav, #mobileTopbar { filter: hue-rotate(' + hue + 'deg) !important; }';
-    document.head.appendChild(hueStyle);
-  }
+
   // Variables CSS
   var root = document.documentElement;
   root.style.setProperty('--coral', t.coral);
