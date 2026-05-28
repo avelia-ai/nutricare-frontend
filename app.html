@@ -935,13 +935,28 @@ window.applyTheme = function(themeKey) {
   if (existing) existing.remove();
   var style = document.createElement('style');
   style.id = 'mirella-theme-style';
-  style.textContent = 'body,#appPage{background:' + t.cream + ' !important} ' +
+  style.textContent = 
+    'body,#appPage,#mainContent,.main-content{background:' + t.cream + ' !important} ' +
+    ':root{--coral:' + t.coral + ';--accent:' + t.accent + ';--cream:' + t.cream + ';--coral-dark:' + t.dark + '} ' +
     '.bottom-nav-btn.active{color:' + t.coral + ' !important} ' +
+    '.bottom-nav,.bottom-nav-items{background:white !important} ' +
     '.sidebar-logo{color:' + t.coral + ' !important} ' +
     '.sidebar-logo-dot{background:' + t.coral + ' !important} ' +
     '.nav-item:hover,.nav-item.active{color:' + t.coral + ' !important} ' +
     'input[type=range]{accent-color:' + t.coral + ' !important} ' +
-    '.bottom-nav-center-btn{background:linear-gradient(135deg,' + t.coral + ',' + t.accent + ') !important}';
+    '.bottom-nav-center-btn,.bottom-nav-center button{background:linear-gradient(135deg,' + t.coral + ',' + t.accent + ') !important} ' +
+    '[style*="#FF6B6B"],[style*="#ff6b6b"]{color:' + t.coral + ' !important} ' +
+    'button[style*="FF6B6B"],a[style*="FF6B6B"]{background:' + t.coral + ' !important;border-color:' + t.coral + ' !important} ' +
+    '[style*="background:#FF6B6B"],[style*="background: #FF6B6B"]{background:' + t.coral + ' !important} ' +
+    '[style*="background:linear-gradient(135deg,#FF6B6B"]{background:linear-gradient(135deg,' + t.coral + ',' + t.accent + ') !important} ' +
+    '[style*="color:#FF6B6B"],[style*="color: #FF6B6B"]{color:' + t.coral + ' !important} ' +
+    '[style*="border-color:#FF6B6B"]{border-color:' + t.coral + ' !important} ' +
+    '[style*="background:#FFF5F0"],[style*="background: #FFF5F0"]{background:' + t.cream + ' !important} ' +
+    '[style*="#FF9A3C"]{color:' + t.accent + ' !important} ' +
+    '[style*="background:#FF9A3C"]{background:' + t.accent + ' !important} ' +
+    '.plan.featured{background:linear-gradient(135deg,' + t.coral + ',' + t.accent + ') !important} ' +
+    '.chat-bubble-ai{border-left-color:' + t.coral + ' !important} ' +
+    '.stat-card{border-left-color:' + t.coral + ' !important}';
   document.head.appendChild(style);
   localStorage.setItem('mirella_theme', themeKey);
   document.querySelectorAll('.theme-btn').forEach(function(b) {
