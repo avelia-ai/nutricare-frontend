@@ -936,6 +936,7 @@ window.applyTheme = function(themeKey) {
 (function() {
   var saved = localStorage.getItem('mirella_theme');
   if (saved && window.THEMES[saved]) window.applyTheme(saved);
+  else { localStorage.setItem('mirella_theme','coral'); }
 })();
 
 
@@ -1148,7 +1149,7 @@ window.partagerRecette = async function(type, nomEnc, calEnc, tempsEnc) {
         '<a href="sms:?body='+encodeURIComponent(texte)+'" style="display:flex;align-items:center;gap:12px;padding:14px;background:#f5f5f5;border-radius:12px;text-decoration:none;color:#1a1a1a;font-weight:600"><span style="font-size:1.3rem">💬</span> SMS</a>' +
         '<a href="mailto:?subject='+encodeURIComponent('Recette: '+nom)+'&body='+encodeURIComponent(texte)+'" style="display:flex;align-items:center;gap:12px;padding:14px;background:#f5f5f5;border-radius:12px;text-decoration:none;color:#1a1a1a;font-weight:600"><span style="font-size:1.3rem">📧</span> Email</a>' +
         '<a href="https://wa.me/?text='+encodeURIComponent(texte)+'" target="_blank" style="display:flex;align-items:center;gap:12px;padding:14px;background:#f5f5f5;border-radius:12px;text-decoration:none;color:#1a1a1a;font-weight:600"><span style="font-size:1.3rem">💬</span> WhatsApp</a>' +
-        '<button onclick="document.getElementById('shareMenu').remove()" style="padding:14px;background:#f5f5f5;border:none;border-radius:12px;font-weight:600;cursor:pointer;color:#888">Annuler</button>' +
+        '<button onclick="document.getElementById(\'shareMenu\').remove()" style="padding:14px;background:#f5f5f5;border:none;border-radius:12px;font-weight:600;cursor:pointer;color:#888">Annuler</button>' +
         '</div>';
       document.body.appendChild(m);
     }
