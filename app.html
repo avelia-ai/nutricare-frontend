@@ -8781,7 +8781,15 @@ window.loadFavorisCache = async function() {
 window.toggleFavori = async function(rJson, type) {
   var r = JSON.parse(rJson);
   var token = localStorage.getItem('nutricare_token');
-  var isFav = window._favorisCache && window._favorisCache.includes(r.nom);
+  // Initialiser le cache si besoin
+  if (window._favorisCache === null) {
+    try {
+      var initRes = await fetch('https://nutricare-backend-production.up.railway.app/api/favoris', {headers:{'Authorization':'Bearer '+token}});
+      var initData = await initRes.json();
+      window._favorisCache = (initData.favoris||[]).map(function(f){return f.recette_nom;});
+    } catch(e) { window._favorisCache = []; }
+  }
+  var isFav = window._favorisCache.includes(r.nom);
   try {
     if (isFav) {
       await fetch('https://nutricare-backend-production.up.railway.app/api/favoris/' + encodeURIComponent(r.nom), {
