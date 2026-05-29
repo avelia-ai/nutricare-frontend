@@ -1043,6 +1043,7 @@ window.loadCatalogue = async function() {
         '</div></div></div>';
     });
     grid.innerHTML = cards.join('');
+    setTimeout(window.updateFavBtns, 100);
 
     // Charger les photos Pexels en arrière-plan (URL directe)
     grid.querySelectorAll('[data-photo]').forEach(function(card) {
@@ -8563,7 +8564,7 @@ function toggleQuickMenu() {
 
 
 <!-- CATALOGUE RECETTES VIEW -->
-<div id="catalogueView" style="display:none;padding:0;overflow-y:auto;background:var(--cream);width:100%">
+<div id="catalogueView" style="display:none;padding-top:56px;overflow-y:auto;background:var(--cream);width:100%">
   <!-- Header -->
   <div style="background:linear-gradient(135deg,var(--coral),var(--accent));padding:28px 20px 20px">
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
@@ -8769,18 +8770,26 @@ window._favorisCache = null;
 
 window.loadFavorisCache = async function() {
   var token = localStorage.getItem('nutricare_token');
-  var res = await fetch('https://nutricare-backend-production.up.railway.app/api/favoris', {
-    headers: {'Authorization': 'Bearer ' + token}
-  });
-  var data = await res.json();
-  window._favorisCache = (data.favoris || []).map(function(f){ return f.recette_nom; });
-  // Mettre à jour les boutons visibles
-  document.querySelectorAll('[id^="fav-btn-"]').forEach(function(btn) {
-    var card = btn.closest('[data-photo]');
-    if (!card) return;
-    var nom = card.getAttribute('data-photo');
-    btn.textContent = window._favorisCache.includes(nom) ? '❤️' : '🤍';
-  });
+  try {
+    var res = await fetch('https://nutricare-backend-production.up.railway.app/api/favoris', {
+      headers: {'Authorization': 'Bearer ' + token}
+    });
+    var data = await res.json();
+    window._favorisCache = (data.favoris || []).map(function(f){ return f.recette_nom; });
+    updateFavBtns();
+  } catch(e) { window._favorisCache = []; }
+};
+
+window.updateFavBtns = function() {
+  if (!window._favorisCache) return;
+  // Mettre à jour via _catalogueRecettes
+  if (window._catalogueRecettes) {
+    Object.keys(window._catalogueRecettes).forEach(function(idx) {
+      var r = window._catalogueRecettes[idx];
+      var btn = document.querySelector('[onclick="event.stopPropagation();toggleFavoriIdx('+idx+')"]');
+      if (btn) btn.textContent = window._favorisCache.includes(r.nom) ? '❤️' : '🤍';
+    });
+  }
 };
 
 window.toggleFavori = async function(rJson, type) {
