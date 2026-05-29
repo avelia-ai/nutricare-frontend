@@ -1131,10 +1131,26 @@ window.partagerRecette = async function(type, nomEnc, calEnc, tempsEnc) {
       alert('✅ Copié !');
     }
   } else if (type === 'native') {
-    if (navigator.share) {
+    // Capacitor Share (Android/iOS natif)
+    if (window.Capacitor && window.Capacitor.Plugins && window.Capacitor.Plugins.Share) {
+      window.Capacitor.Plugins.Share.share({ title: nom, text: texte, url: 'https://www.mirella-ai.fr', dialogTitle: 'Partager cette recette' });
+    } else if (navigator.share) {
       navigator.share({ title: nom, text: texte, url: 'https://www.mirella-ai.fr' });
     } else {
-      window.open('https://wa.me/?text=' + encodeURIComponent(texte), '_blank');
+      // Fallback : afficher un mini menu
+      var shareMenu = document.getElementById('shareMenu');
+      if (shareMenu) shareMenu.remove();
+      var m = document.createElement('div');
+      m.id = 'shareMenu';
+      m.style.cssText = 'position:fixed;bottom:0;left:0;right:0;background:white;border-radius:24px 24px 0 0;padding:24px;z-index:99999;box-shadow:0 -4px 20px rgba(0,0,0,0.15)';
+      m.innerHTML = '<div style="font-weight:800;font-size:1rem;margin-bottom:16px;color:#1a1a1a">Partager la recette</div>' +
+        '<div style="display:flex;flex-direction:column;gap:10px">' +
+        '<a href="sms:?body='+encodeURIComponent(texte)+'" style="display:flex;align-items:center;gap:12px;padding:14px;background:#f5f5f5;border-radius:12px;text-decoration:none;color:#1a1a1a;font-weight:600"><span style="font-size:1.3rem">💬</span> SMS</a>' +
+        '<a href="mailto:?subject='+encodeURIComponent('Recette: '+nom)+'&body='+encodeURIComponent(texte)+'" style="display:flex;align-items:center;gap:12px;padding:14px;background:#f5f5f5;border-radius:12px;text-decoration:none;color:#1a1a1a;font-weight:600"><span style="font-size:1.3rem">📧</span> Email</a>' +
+        '<a href="https://wa.me/?text='+encodeURIComponent(texte)+'" target="_blank" style="display:flex;align-items:center;gap:12px;padding:14px;background:#f5f5f5;border-radius:12px;text-decoration:none;color:#1a1a1a;font-weight:600"><span style="font-size:1.3rem">💬</span> WhatsApp</a>' +
+        '<button onclick="document.getElementById('shareMenu').remove()" style="padding:14px;background:#f5f5f5;border:none;border-radius:12px;font-weight:600;cursor:pointer;color:#888">Annuler</button>' +
+        '</div>';
+      document.body.appendChild(m);
     }
   }
 };
