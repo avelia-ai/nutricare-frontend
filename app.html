@@ -1479,7 +1479,8 @@ window.renderPlanning = function renderPlanning() {
     var day = new Date(monday);
     day.setDate(monday.getDate() + i);
     var dateStr = day.getFullYear() + '-' + String(day.getMonth()+1).padStart(2,'0') + '-' + String(day.getDate()).padStart(2,'0');
-    var isToday = dateStr === today.toISOString().split('T')[0];
+    var todayLocal = today.getFullYear() + '-' + String(today.getMonth()+1).padStart(2,'0') + '-' + String(today.getDate()).padStart(2,'0');
+    var isToday = dateStr === todayLocal;
 
     var dayEvents = planningEvents.filter(function(e) {
       if (e.date === dateStr) return true;
