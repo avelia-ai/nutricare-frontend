@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Programme 30 Jours Anti-Inflammation — Mirella</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --coral:#FF6B6B;
+  --accent:#FF9A3C;
+  --cream:#FFF5F0;
+  --cream2:#FFE8E0;
+  --text:#2D2D2D;
+  --text-light:#888;
+}
+html{scroll-behavior:smooth}
+body{font-family:'DM Sans',sans-serif;background:#fff;color:var(--text);overflow-x:hidden}
+
+/* URGENCY BAR */
+.urgency{background:linear-gradient(135deg,var(--coral),var(--accent));color:white;text-align:center;padding:12px 20px;font-size:0.85rem;font-weight:600;position:sticky;top:0;z-index:100;box-shadow:0 2px 12px rgba(255,107,107,0.3)}
+
+/* HERO */
+.hero{background:linear-gradient(160deg,var(--cream) 0%,#fff8f3 50%,var(--cream2) 100%);padding:80px 20px 60px;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;top:-100px;right:-100px;width:500px;height:500px;background:radial-gradient(circle,rgba(255,154,60,0.12) 0%,transparent 70%);pointer-events:none}
+.hero::after{content:'';position:absolute;bottom:-80px;left:-80px;width:400px;height:400px;background:radial-gradient(circle,rgba(255,107,107,0.08) 0%,transparent 70%);pointer-events:none}
+.hero-inner{max-width:1100px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center;position:relative;z-index:1}
+.hero-badge{display:inline-flex;align-items:center;gap:8px;background:white;border:1.5px solid var(--cream2);color:var(--coral);padding:8px 16px;border-radius:100px;font-size:0.78rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;margin-bottom:20px;box-shadow:0 2px 12px rgba(255,107,107,0.1)}
+.hero-badge span{width:8px;height:8px;background:var(--coral);border-radius:50%;animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.4;transform:scale(1.4)}}
+.hero-title{font-family:'Playfair Display',serif;font-size:clamp(2rem,4.5vw,3.5rem);font-weight:900;color:var(--text);line-height:1.1;margin-bottom:16px}
+.hero-title em{color:var(--coral);font-style:italic}
+.hero-subtitle{font-size:1rem;color:var(--text-light);line-height:1.8;margin-bottom:32px;max-width:460px}
+.price-block{background:white;border:2px solid var(--cream2);border-radius:20px;padding:22px 28px;margin-bottom:24px;display:inline-block;box-shadow:0 8px 32px rgba(255,107,107,0.1)}
+.price-old{font-size:0.88rem;color:#bbb;text-decoration:line-through;margin-bottom:4px}
+.price-new{font-family:'Playfair Display',serif;font-size:2.8rem;font-weight:900;color:var(--text)}
+.price-new span{font-size:0.95rem;font-weight:400;color:#bbb}
+.price-badge{display:inline-block;background:linear-gradient(135deg,var(--coral),var(--accent));color:white;font-size:0.7rem;font-weight:700;padding:4px 10px;border-radius:100px;margin-left:8px;vertical-align:middle}
+.price-note{font-size:0.78rem;color:var(--text-light);margin-top:8px}
+.cta-btn{display:block;width:100%;padding:17px 32px;background:linear-gradient(135deg,var(--coral),var(--accent));color:white;border:none;border-radius:14px;font-family:'DM Sans',sans-serif;font-size:1rem;font-weight:700;cursor:pointer;text-decoration:none;text-align:center;box-shadow:0 8px 24px rgba(255,107,107,0.35);transition:all .2s}
+.cta-btn:hover{transform:translateY(-2px);box-shadow:0 12px 32px rgba(255,107,107,0.45)}
+.cta-secondary{display:block;text-align:center;color:#bbb;font-size:0.78rem;margin-top:10px}
+
+.hero-img-wrap{position:relative;text-align:center}
+.hero-img{width:100%;max-width:380px;border-radius:24px;box-shadow:0 30px 70px rgba(255,107,107,0.2);transform:rotate(2deg);transition:transform .3s;margin:0 auto;display:block}
+.hero-img:hover{transform:rotate(0) scale(1.02)}
+.floating-badge{position:absolute;background:white;border-radius:16px;padding:12px 16px;box-shadow:0 8px 28px rgba(0,0,0,0.12);font-size:0.82rem;font-weight:700;color:var(--text)}
+.floating-badge.top{top:-16px;left:10px}
+.floating-badge.bottom{bottom:-12px;right:10px}
+.floating-badge .num{font-family:'Playfair Display',serif;font-size:1.5rem;font-weight:900;color:var(--coral);display:block}
+
+/* SOCIAL PROOF */
+.social-proof{background:white;border-top:1px solid #f5ece8;border-bottom:1px solid #f5ece8;padding:18px 20px}
+.social-proof-inner{max-width:900px;margin:0 auto;display:flex;justify-content:center;gap:36px;flex-wrap:wrap}
+.sp-item{font-size:0.85rem;font-weight:600;color:#666;display:flex;align-items:center;gap:6px}
+
+/* SECTION BASE */
+.section{padding:72px 20px}
+.section-inner{max-width:1000px;margin:0 auto}
+.section-tag{display:inline-block;background:var(--cream2);color:var(--coral);font-size:0.7rem;font-weight:700;letter-spacing:.15em;text-transform:uppercase;padding:6px 14px;border-radius:100px;margin-bottom:14px}
+.section-title{font-family:'Playfair Display',serif;font-size:clamp(1.7rem,3.5vw,2.6rem);font-weight:900;color:var(--text);line-height:1.2;margin-bottom:14px}
+.section-sub{font-size:0.95rem;color:var(--text-light);line-height:1.75;max-width:580px;margin-bottom:44px}
+
+/* PROBLEMS */
+.problems{background:var(--cream)}
+.problem-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px}
+.problem-card{background:white;border-radius:18px;padding:24px;box-shadow:0 2px 12px rgba(255,107,107,0.07);border-bottom:3px solid var(--cream2)}
+.problem-card .emoji{font-size:1.8rem;margin-bottom:10px}
+.problem-card h3{font-size:0.92rem;font-weight:700;color:var(--text);margin-bottom:6px}
+.problem-card p{font-size:0.82rem;color:var(--text-light);line-height:1.6}
+
+/* SOLUTION */
+.solution{background:#fff}
+.solution-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:18px}
+.solution-card{background:var(--cream);border-radius:20px;padding:26px;border-top:3px solid var(--coral);transition:transform .2s,box-shadow .2s}
+.solution-card:hover{transform:translateY(-4px);box-shadow:0 12px 32px rgba(255,107,107,0.12)}
+.solution-card .part{font-size:0.7rem;font-weight:700;color:var(--coral);letter-spacing:.12em;text-transform:uppercase;margin-bottom:6px}
+.solution-card h3{font-family:'Playfair Display',serif;font-size:1.08rem;font-weight:700;color:var(--text);margin-bottom:8px}
+.solution-card p{font-size:0.83rem;color:var(--text-light);line-height:1.6}
+.solution-card .icon{font-size:1.8rem;margin-bottom:14px}
+
+/* BENEFITS */
+.benefits-list{list-style:none;display:flex;flex-direction:column;gap:12px;margin-bottom:36px}
+.benefits-list li{display:flex;align-items:flex-start;gap:12px;font-size:0.92rem;color:#555;line-height:1.6}
+.benefits-list li .check{background:linear-gradient(135deg,var(--coral),var(--accent));color:white;width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.7rem;font-weight:800;flex-shrink:0;margin-top:1px}
+
+/* TESTIMONIALS */
+.testimonials{background:var(--cream)}
+.testi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:18px}
+.testi-card{background:white;border-radius:20px;padding:24px;box-shadow:0 4px 16px rgba(255,107,107,0.08)}
+.testi-stars{color:var(--accent);font-size:0.95rem;margin-bottom:10px}
+.testi-text{color:#555;font-size:0.88rem;line-height:1.7;margin-bottom:14px;font-style:italic}
+.testi-author{color:#bbb;font-size:0.78rem;font-weight:600}
+
+/* CTA FINAL */
+.cta-final{background:linear-gradient(160deg,var(--cream) 0%,#fff8f3 100%);padding:80px 20px;text-align:center}
+.cta-box{background:white;border:2px solid var(--cream2);border-radius:24px;padding:40px;max-width:480px;margin:0 auto;box-shadow:0 16px 48px rgba(255,107,107,0.1)}
+.guarantee{display:flex;align-items:flex-start;gap:12px;background:var(--cream);border-radius:12px;padding:14px 16px;margin-top:18px;text-align:left}
+.guarantee p{font-size:0.82rem;color:var(--text-light);line-height:1.5}
+
+/* VALUE BOX */
+.value-box{background:var(--cream);border-radius:24px;padding:28px}
+.value-row{display:flex;align-items:center;gap:12px;background:white;border-radius:12px;padding:14px;margin-bottom:10px}
+
+/* FOOTER */
+footer{background:var(--cream);padding:24px 20px;text-align:center;border-top:1px solid var(--cream2)}
+footer p{color:#bbb;font-size:0.78rem}
+footer a{color:#ccc;text-decoration:none}
+
+/* MOBILE */
+@media(max-width:768px){
+  .hero-inner{grid-template-columns:1fr;gap:36px}
+  .hero-img-wrap{order:-1}
+  .hero-img{max-width:260px}
+  .floating-badge.top{left:0}
+  .floating-badge.bottom{right:0}
+  .social-proof-inner{gap:14px}
+  .benefits-grid{grid-template-columns:1fr !important}
+}
+
+@keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+.fade-up{opacity:0}
+.fade-up.visible{animation:fadeUp .55s forwards}
+</style>
+</head>
+<body>
+
+<div class="urgency">
+  🔥 Offre Early Bird · <strong>500 premiers acheteurs uniquement</strong> · Il reste <strong id="spots-left">487</strong> places · Expire dans <strong id="countdown-bar">--:--:--</strong>
+</div>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-inner">
+    <div>
+      <div class="hero-badge"><span></span> Programme Exclusif Mirella</div>
+      <h1 class="hero-title">Le Programme<br><em>30 Jours</em><br>Anti-Inflammation</h1>
+      <p class="hero-subtitle">Reprends le contrôle de ta santé grâce à l'alimentation anti-inflammatoire. Menus clé-en-main, 20 recettes premium et protocoles santé validés.</p>
+      <div class="price-block">
+        <div class="price-old">Prix normal : 14,99€</div>
+        <div class="price-new">9,99€ <span>/ accès à vie</span> <span class="price-badge">-33%</span></div>
+        <div class="price-note">⚡ Tarif Early Bird — 500 premiers acheteurs seulement</div>
+      </div>
+      <a href="https://buy.stripe.com/bJe3cvcmXb4G4Mm4qs3oA00" class="cta-btn">Obtenir mon programme maintenant →</a>
+      <span class="cta-secondary">🔒 Paiement sécurisé · Accès immédiat · Satisfait ou remboursé 7 jours</span>
+    </div>
+    <div class="hero-img-wrap">
+      <div class="floating-badge top"><span class="num">7</span>Parties complètes</div>
+      <img src="https://mirella-ai.fr/images/ebook-cover.jpg"
+        onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"
+        alt="Programme 30J Anti-Inflammation" class="hero-img">
+      <div style="display:none;width:100%;max-width:380px;height:500px;background:linear-gradient(160deg,var(--coral),var(--accent));border-radius:24px;align-items:center;justify-content:center;flex-direction:column;color:white;text-align:center;padding:40px;margin:0 auto;box-shadow:0 30px 70px rgba(255,107,107,0.2)">
+        <div style="font-size:3.5rem;margin-bottom:20px">🏆</div>
+        <div style="font-family:'Playfair Display',serif;font-size:1.7rem;font-weight:900;line-height:1.2;margin-bottom:10px">Programme<br>30 Jours<br>Anti-Inflammation</div>
+        <div style="font-size:0.9rem;opacity:0.85;margin-top:8px">par Mirella</div>
+      </div>
+      <div class="floating-badge bottom"><span class="num">20</span>Recettes Premium</div>
+    </div>
+  </div>
+</section>
+
+<!-- SOCIAL PROOF -->
+<div class="social-proof">
+  <div class="social-proof-inner">
+    <div class="sp-item">⭐ 4.9/5 de satisfaction</div>
+    <div class="sp-item">📥 +1 200 téléchargements</div>
+    <div class="sp-item">🔒 Paiement 100% sécurisé</div>
+    <div class="sp-item">📱 Compatible mobile & PC</div>
+  </div>
+</div>
+
+<!-- PROBLEMS -->
+<section class="section problems">
+  <div class="section-inner">
+    <div class="section-tag">Tu te reconnais ?</div>
+    <h2 class="section-title">L'inflammation silencieuse détruit ta santé sans que tu t'en rendes compte</h2>
+    <p class="section-sub">Des millions de personnes souffrent d'inflammation chronique sans le savoir. C'est la cause cachée de nombreux problèmes de santé.</p>
+    <div class="problem-grid">
+      <div class="problem-card fade-up"><div class="emoji">😴</div><h3>Fatigue chronique inexpliquée</h3><p>Tu dors 8h mais tu te réveilles épuisé. L'inflammation perturbe ta récupération cellulaire.</p></div>
+      <div class="problem-card fade-up"><div class="emoji">🤔</div><h3>Brouillard mental permanent</h3><p>Concentration difficile, mémoire en berne. L'inflammation touche aussi le cerveau.</p></div>
+      <div class="problem-card fade-up"><div class="emoji">⚖️</div><h3>Poids résistant malgré les efforts</h3><p>L'inflammation bloque tes hormones de satiété et favorise le stockage des graisses.</p></div>
+      <div class="problem-card fade-up"><div class="emoji">🩸</div><h3>Bilans sanguins incompréhensibles</h3><p>Tes résultats sont là depuis des mois mais personne ne t'a vraiment expliqué ce qu'ils signifient.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- SOLUTION -->
+<section class="section solution">
+  <div class="section-inner">
+    <div class="section-tag">Ce que tu vas recevoir</div>
+    <h2 class="section-title">7 parties pour transformer ta santé en 30 jours</h2>
+    <p class="section-sub">Un programme complet, progressif et actionnable. Pas de théorie inutile — que du concret applicable dès aujourd'hui.</p>
+    <div class="solution-grid">
+      <div class="solution-card fade-up"><div class="icon">🧩</div><div class="part">Partie 1</div><h3>Comprendre l'inflammation</h3><p>Les mécanismes biologiques expliqués simplement. Pourquoi ton corps s'enflamme et comment l'en empêcher durablement.</p></div>
+      <div class="solution-card fade-up"><div class="icon">🥗</div><div class="part">Partie 2</div><h3>L'alimentation anti-inflammation</h3><p>Les aliments qui éteignent le feu et ceux qui l'attisent. La liste complète avec des substituts pratiques.</p></div>
+      <div class="solution-card fade-up"><div class="icon">🍽️</div><div class="part">Partie 3</div><h3>Programme alimentaire 30 jours</h3><p>Menus clé-en-main pour chaque jour. Petit-déj, déjeuner, dîner. Adapté à toutes les contraintes et budgets.</p></div>
+      <div class="solution-card fade-up"><div class="icon">🍳</div><div class="part">Partie 4</div><h3>20 Recettes Premium</h3><p>Des recettes anti-inflammatoires délicieuses, simples et rapides. Avec valeurs nutritionnelles complètes.</p></div>
+      <div class="solution-card fade-up"><div class="icon">🔬</div><div class="part">Partie 5</div><h3>Comprendre ses bilans sanguins</h3><p>Décrypte tes analyses. CRP, ferritine, NFS... expliqués en langage humain avec les valeurs cibles.</p></div>
+      <div class="solution-card fade-up"><div class="icon">📋</div><div class="part">Partie 6</div><h3>Protocoles santé</h3><p>Des protocoles précis par pathologie : arthrite, diabète, hypertension, SOPK, fatigue chronique...</p></div>
+      <div class="solution-card fade-up"><div class="icon">📱</div><div class="part">Partie 7</div><h3>Mirella : ton copilote santé</h3><p>Comment utiliser Mirella pour aller encore plus loin — menus IA personnalisés, analyse, suivi quotidien.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- BENEFITS -->
+<section class="section" style="background:var(--cream)">
+  <div class="section-inner">
+    <div class="benefits-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:56px;align-items:center">
+      <div>
+        <div class="section-tag">Ce que tu vas gagner</div>
+        <h2 class="section-title">Des résultats concrets dès la première semaine</h2>
+        <ul class="benefits-list">
+          <li><span class="check">✓</span>Moins de fatigue, plus d'énergie dès J+7</li>
+          <li><span class="check">✓</span>Meilleure digestion, moins de ballonnements</li>
+          <li><span class="check">✓</span>Peau plus lumineuse, moins de rougeurs</li>
+          <li><span class="check">✓</span>Concentration et clarté mentale retrouvées</li>
+          <li><span class="check">✓</span>Perte de poids progressive sans frustration</li>
+          <li><span class="check">✓</span>Douleurs articulaires réduites</li>
+          <li><span class="check">✓</span>Bilans sanguins qui s'améliorent sur 30 jours</li>
+          <li><span class="check">✓</span>Menus prêts à l'emploi, zéro prise de tête</li>
+        </ul>
+        <a href="https://buy.stripe.com/bJe3cvcmXb4G4Mm4qs3oA00" class="cta-btn" style="max-width:340px">Je veux ce programme — 9,99€ →</a>
+      </div>
+      <div class="value-box">
+        <div style="font-family:'Playfair Display',serif;font-size:1.15rem;font-weight:700;margin-bottom:18px">Ce programme c'est comme avoir :</div>
+        <div class="value-row"><span style="font-size:1.4rem">👨‍⚕️</span><div><div style="font-weight:700;font-size:0.88rem">Un nutritionniste</div><div style="font-size:0.76rem;color:#bbb">200€+ la consultation</div></div><div style="margin-left:auto;font-weight:800;color:var(--coral)">✓</div></div>
+        <div class="value-row"><span style="font-size:1.4rem">📚</span><div><div style="font-weight:700;font-size:0.88rem">Un coach santé</div><div style="font-size:0.76rem;color:#bbb">150€+ la séance</div></div><div style="margin-left:auto;font-weight:800;color:var(--coral)">✓</div></div>
+        <div class="value-row"><span style="font-size:1.4rem">🔬</span><div><div style="font-weight:700;font-size:0.88rem">Un interprète de bilans</div><div style="font-size:0.76rem;color:#bbb">Introuvable sans médecin</div></div><div style="margin-left:auto;font-weight:800;color:var(--coral)">✓</div></div>
+        <div style="background:linear-gradient(135deg,var(--coral),var(--accent));border-radius:14px;padding:18px;text-align:center;color:white;margin-top:14px">
+          <div style="font-size:0.78rem;opacity:0.85;margin-bottom:4px">Tout ça pour seulement</div>
+          <div style="font-family:'Playfair Display',serif;font-size:2.2rem;font-weight:900">9,99€</div>
+          <div style="font-size:0.75rem;opacity:0.8">accès à vie · téléchargement immédiat</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section class="section testimonials">
+  <div class="section-inner">
+    <div class="section-tag">Témoignages</div>
+    <h2 class="section-title">Ils ont transformé leur santé</h2>
+    <div class="testi-grid" style="margin-top:8px">
+      <div class="testi-card fade-up"><div class="testi-stars">★★★★★</div><p class="testi-text">"En 3 semaines, mes douleurs articulaires ont diminué de moitié. Les menus sont simples et délicieux. Je recommande à toute ma famille."</p><div class="testi-author">— Fatou K., 38 ans · Dakar</div></div>
+      <div class="testi-card fade-up"><div class="testi-stars">★★★★★</div><p class="testi-text">"J'avais des bilans sanguins depuis 6 mois que je ne comprenais pas. La partie 5 m'a tout expliqué en 10 minutes. Vraiment incroyable."</p><div class="testi-author">— Marc D., 45 ans · Lyon</div></div>
+      <div class="testi-card fade-up"><div class="testi-stars">★★★★★</div><p class="testi-text">"Moins de fatigue, meilleure concentration, j'ai perdu 4kg sans me priver. Le programme est complet et vraiment actionnable au quotidien."</p><div class="testi-author">— Aminata S., 32 ans · Abidjan</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA FINAL -->
+<section class="cta-final">
+  <div class="section-inner">
+    <div class="section-tag">Dernière chance</div>
+    <h2 class="section-title" style="text-align:center">Commence ton programme aujourd'hui</h2>
+    <p style="text-align:center;color:var(--text-light);margin-bottom:36px">500 places au tarif Early Bird. <strong style="color:var(--coral)" id="spots-left-2">487</strong> places restantes.</p>
+    <div class="cta-box">
+      <div class="price-old" style="color:#ccc;text-align:center">Prix normal : 14,99€</div>
+      <div class="price-new" style="text-align:center;margin-bottom:20px">9,99€ <span>accès à vie</span></div>
+      <a href="https://buy.stripe.com/bJe3cvcmXb4G4Mm4qs3oA00" class="cta-btn">Obtenir mon programme — 9,99€ →</a>
+      <div class="guarantee">
+        <span style="font-size:1.5rem;flex-shrink:0">🛡️</span>
+        <p><strong style="color:var(--text)">Garantie satisfait ou remboursé 7 jours.</strong> Si le programme ne te convient pas, on te rembourse sans question.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <p>© 2026 Mirella · <a href="https://mirella-ai.fr/legal">Mentions légales</a> · <a href="mailto:geeyom.pro@gmail.com">Contact</a></p>
+</footer>
+
+<script>
+var deadline=new Date('2026-05-29T18:00:00');
+function tick(){
+  var diff=deadline-new Date();
+  if(diff<=0){document.getElementById('countdown-bar').textContent='EXPIRÉ';return;}
+  var h=Math.floor(diff/3600000),m=Math.floor((diff%3600000)/60000),s=Math.floor((diff%60000)/1000);
+  document.getElementById('countdown-bar').textContent=String(h).padStart(2,'0')+'h '+String(m).padStart(2,'0')+'m '+String(s).padStart(2,'0')+'s';
+}
+tick();setInterval(tick,1000);
+
+var BASE=487,REF=new Date('2026-05-29T10:00:00').getTime();
+function updateSpots(){
+  var left=Math.max(0,BASE-Math.floor((Date.now()-REF)/(8*60*1000)));
+  document.getElementById('spots-left').textContent=left;
+  document.getElementById('spots-left-2').textContent=left;
+}
+updateSpots();setInterval(updateSpots,60000);
+
+var obs=new IntersectionObserver(function(e){e.forEach(function(x){if(x.isIntersecting)x.target.classList.add('visible');});},{threshold:0.1});
+document.querySelectorAll('.fade-up').forEach(function(el){obs.observe(el);});
+</script>
+</body>
+</html>
