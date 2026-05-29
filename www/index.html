@@ -1454,7 +1454,8 @@ window.initPlanning = function initPlanning() {
 
 window.renderPlanning = function renderPlanning() {
   try {
-  var today = new Date();
+  var now = new Date();
+  var today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
   var offset = window.planningWeekOffset || 0;
   var dayOfWeek = today.getDay();
   var diff = dayOfWeek === 0 ? -6 : 1 - dayOfWeek;
