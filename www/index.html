@@ -1478,7 +1478,7 @@ window.renderPlanning = function renderPlanning() {
   for (var i = 0; i < 7; i++) {
     var day = new Date(monday);
     day.setDate(monday.getDate() + i);
-    var dateStr = day.toISOString().split('T')[0];
+    var dateStr = day.getFullYear() + '-' + String(day.getMonth()+1).padStart(2,'0') + '-' + String(day.getDate()).padStart(2,'0');
     var isToday = dateStr === today.toISOString().split('T')[0];
 
     var dayEvents = planningEvents.filter(function(e) {
@@ -7973,10 +7973,13 @@ window.delEvt = function(id) {
   window.renderPlanning();
 };
 
-window.openAddEvent = function() {
+window.openAddEvent = function(dateStr) {
   var m = document.getElementById('planningModal');
   if(m){
-    document.getElementById('eventDate').value = new Date().toISOString().split('T')[0];
+    // Fix timezone: utiliser la date locale pas UTC
+    var now = new Date();
+    var localDate = now.getFullYear() + '-' + String(now.getMonth()+1).padStart(2,'0') + '-' + String(now.getDate()).padStart(2,'0');
+    document.getElementById('eventDate').value = dateStr || localDate;
     document.getElementById('eventTime').value = '08:00';
     document.getElementById('eventTitle').value = '';
     m.style.display = 'flex';
