@@ -9244,8 +9244,12 @@ window.activerRoutine = async function(id) {
       }
     });
     localStorage.setItem('mirella_planning', JSON.stringify(events));
+    // Recharger planningEvents depuis localStorage
+    window.planningEvents = events;
     alert('✅ Routine activée ! Les actions ont été ajoutées au planning.');
     loadRoutines();
+    // Basculer vers l'agenda pour voir les événements
+    switchPlanningTab('agenda');
   } catch(e) { alert('Erreur: ' + e.message); }
 };
 
