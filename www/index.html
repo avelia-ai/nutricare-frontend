@@ -3963,7 +3963,8 @@ function switchLang(lang) {
             if (perm.display === 'granted') {
               schedulePlanningNotifications();
               // Test notification immédiate
-              await LocalNotifications.schedule({notifications:[{id:99999,title:'✅ Mirella',body:'Notifications activées ! Vos rappels fonctionnent.',schedule:{at:new Date(Date.now()+3000)}}]});
+              await LocalNotifications.schedule({notifications:[{id:99999,title:'✅ Mirella',body:'Notifications activées !',schedule:{at:new Date(Date.now()+1000),allowWhileIdle:true}}]});
+              console.log('Notification test envoyée');
             }
           } catch(e) { console.error('Permission error:', e); }
         }
