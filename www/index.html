@@ -7965,8 +7965,9 @@ window.renderPlanning = function() {
   var html = '';
   for(var i=0;i<7;i++){
     var d = new Date(mon.getTime()+i*86400000);
-    var ds = d.toISOString().split('T')[0];
-    var isT = ds === today.toISOString().split('T')[0];
+    var ds = d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+    var todayStr = today.getFullYear()+'-'+String(today.getMonth()+1).padStart(2,'0')+'-'+String(today.getDate()).padStart(2,'0');
+    var isT = ds === todayStr;
     var evts = window.planningEvents.filter(function(e){
       if(e.date===ds) return true;
       if(e.rec==='daily') return true;
