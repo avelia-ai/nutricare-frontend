@@ -3952,7 +3952,8 @@ function switchLang(lang) {
     }
     if (authToken && currentUser) {
       await showApp();
-      var _savedTheme = localStorage.getItem('mirella_theme'); if (_savedTheme && window.THEMES[_savedTheme]) window.applyTheme(_savedTheme);
+      var _savedTheme = localStorage.getItem('mirella_theme');
+      setTimeout(schedulePlanningNotifications, 2000); if (_savedTheme && window.THEMES[_savedTheme]) window.applyTheme(_savedTheme);
       if (urlRedirect) { window.location.href = decodeURIComponent(urlRedirect); return; }
       const savedV = localStorage.getItem('nutricare_last_view'); const targetView = urlView || (['chat','health','menus','profile','home'].includes(savedV) ? savedV : 'home');
       if (urlEntreprise === 'create') await showView('entreprise');
@@ -8066,9 +8067,11 @@ window.saveEvent = function() {
   var time = document.getElementById('eventTime').value;
   var rec = document.getElementById('eventRecurrence').value;
   if(!title||!date||!time){ alert('Remplissez tous les champs'); return; }
-  var evt = {id:Date.now().toString(), type:window._evtType, ico:window._evtIco, title:title, date:date, time:time, rec:rec};
+  var notifChecked = document.getElementById('eventNotif') ? document.getElementById('eventNotif').checked : false;
+  var evt = {id:Date.now().toString(), type:window._evtType, ico:window._evtIco, emoji:window._evtIco, title:title, date:date, time:time, rec:rec, notif:notifChecked};
   window.planningEvents.push(evt);
   localStorage.setItem('mirella_planning', JSON.stringify(window.planningEvents));
+  if (notifChecked) scheduleNotification(evt);
   window.closePlanningModal();
   window.renderPlanning();
 };
