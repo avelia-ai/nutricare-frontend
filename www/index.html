@@ -3953,7 +3953,21 @@ function switchLang(lang) {
     if (authToken && currentUser) {
       await showApp();
       var _savedTheme = localStorage.getItem('mirella_theme');
-      setTimeout(schedulePlanningNotifications, 2000); if (_savedTheme && window.THEMES[_savedTheme]) window.applyTheme(_savedTheme);
+      setTimeout(async function() {
+        // Demander permission notifications
+        if (window.Capacitor && window.Capacitor.isNativePlatform()) {
+          try {
+            var { LocalNotifications } = window.Capacitor.Plugins;
+            var perm = await LocalNotifications.requestPermissions();
+            console.log('Notification permission:', JSON.stringify(perm));
+            if (perm.display === 'granted') {
+              schedulePlanningNotifications();
+              // Test notification immédiate
+              await LocalNotifications.schedule({notifications:[{id:99999,title:'✅ Mirella',body:'Notifications activées ! Vos rappels fonctionnent.',schedule:{at:new Date(Date.now()+3000)}}]});
+            }
+          } catch(e) { console.error('Permission error:', e); }
+        }
+      }, 2000); if (_savedTheme && window.THEMES[_savedTheme]) window.applyTheme(_savedTheme);
       if (urlRedirect) { window.location.href = decodeURIComponent(urlRedirect); return; }
       const savedV = localStorage.getItem('nutricare_last_view'); const targetView = urlView || (['chat','health','menus','profile','home'].includes(savedV) ? savedV : 'home');
       if (urlEntreprise === 'create') await showView('entreprise');
