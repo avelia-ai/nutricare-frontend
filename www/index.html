@@ -9096,25 +9096,26 @@ window.supprimerFavoriCatalogue = async function(id, nom, btn) {
 <script>
 // ===== ROUTINES =====
 window.switchPlanningTab = function(tab) {
-  var agendaView = document.getElementById('planningAgendaView') || document.querySelector('#planningView > div[style*="padding:20px"]:first-of-type');
+  var agendaGrid = document.getElementById('planningGrid');
+  var agendaWeek = document.getElementById('planningWeekLabel');
   var routinesView = document.getElementById('planningRoutinesView');
   var tabAgenda = document.getElementById('tabAgenda');
   var tabRoutines = document.getElementById('tabRoutines');
-  
+
+  // Trouver le conteneur agenda (div parent de planningGrid)
+  var agendaContainer = agendaGrid ? agendaGrid.parentElement : null;
+
   if (tab === 'routines') {
-    // Cacher la vue agenda (le div padding:20px avec la grille)
-    var agendaDivs = document.querySelectorAll('#planningView > div[style*="padding:20px"]');
-    agendaDivs.forEach(function(d) { if (!d.id) d.style.display = 'none'; });
+    if (agendaContainer) agendaContainer.style.display = 'none';
     if (routinesView) routinesView.style.display = 'block';
-    if (tabAgenda) { tabAgenda.style.borderBottomColor = 'transparent'; tabAgenda.style.color = '#aaa'; }
-    if (tabRoutines) { tabRoutines.style.borderBottomColor = 'var(--coral)'; tabRoutines.style.color = 'var(--coral)'; }
+    if (tabAgenda) { tabAgenda.style.background = '#f0f0f0'; tabAgenda.style.color = '#888'; }
+    if (tabRoutines) { tabRoutines.style.background = 'var(--coral)'; tabRoutines.style.color = 'white'; }
     loadRoutines();
   } else {
-    var agendaDivs = document.querySelectorAll('#planningView > div[style*="padding:20px"]');
-    agendaDivs.forEach(function(d) { if (!d.id) d.style.display = 'block'; });
+    if (agendaContainer) agendaContainer.style.display = 'block';
     if (routinesView) routinesView.style.display = 'none';
-    if (tabAgenda) { tabAgenda.style.borderBottomColor = 'var(--coral)'; tabAgenda.style.color = 'var(--coral)'; }
-    if (tabRoutines) { tabRoutines.style.borderBottomColor = 'transparent'; tabRoutines.style.color = '#aaa'; }
+    if (tabAgenda) { tabAgenda.style.background = 'var(--coral)'; tabAgenda.style.color = 'white'; }
+    if (tabRoutines) { tabRoutines.style.background = '#f0f0f0'; tabRoutines.style.color = '#888'; }
     window.renderPlanning();
   }
 };
