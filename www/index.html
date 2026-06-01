@@ -8065,8 +8065,9 @@ window.saveEvent = function() {
   var title = document.getElementById('eventTitle').value.trim();
   var dateRaw = document.getElementById('eventDate').value;
   var time = document.getElementById('eventTime').value;
-  var rec = document.getElementById('eventRecurrence').value;
-  if(!title||!dateRaw||!time){ alert('Remplissez tous les champs'); return; }
+  var rec = document.getElementById('eventRecurrence') ? document.getElementById('eventRecurrence').value : 'none';
+  console.log('saveEvent:', title, dateRaw, time, rec);
+  if(!title||!dateRaw||!time){ alert('Champs manquants: titre=' + title + ' date=' + dateRaw + ' heure=' + time); return; }
   // Normaliser la date en format ISO YYYY-MM-DD
   var date = dateRaw;
   if (dateRaw.includes('/')) {
