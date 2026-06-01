@@ -8063,12 +8063,20 @@ window.selectEventType = function(t, ico) {
 
 window.saveEvent = function() {
   var title = document.getElementById('eventTitle').value.trim();
-  var date = document.getElementById('eventDate').value;
+  var dateRaw = document.getElementById('eventDate').value;
   var time = document.getElementById('eventTime').value;
   var rec = document.getElementById('eventRecurrence').value;
-  if(!title||!date||!time){ alert('Remplissez tous les champs'); return; }
+  if(!title||!dateRaw||!time){ alert('Remplissez tous les champs'); return; }
+  // Normaliser la date en format ISO YYYY-MM-DD
+  var date = dateRaw;
+  if (dateRaw.includes('/')) {
+    var parts = dateRaw.split('/');
+    if (parts.length === 3) {
+      date = parts[2] + '-' + parts[1].padStart(2,'0') + '-' + parts[0].padStart(2,'0');
+    }
+  }
   var notifChecked = document.getElementById('eventNotif') ? document.getElementById('eventNotif').checked : false;
-  var evt = {id:Date.now().toString(), type:window._evtType, ico:window._evtIco, emoji:window._evtIco, title:title, date:date, time:time, rec:rec, notif:notifChecked};
+  var evt = {id:Date.now().toString(), type:window._evtType||'rappel', ico:window._evtIco||'🔔', emoji:window._evtIco||'🔔', title:title, date:date, time:time, rec:rec, notif:notifChecked};
   window.planningEvents.push(evt);
   localStorage.setItem('mirella_planning', JSON.stringify(window.planningEvents));
   if (notifChecked) scheduleNotification(evt);
