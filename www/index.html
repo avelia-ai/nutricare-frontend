@@ -1585,23 +1585,27 @@ window.deleteEvent = function deleteEvent(id) {
 async function scheduleNotification(event) {
   if (!window.Capacitor || !window.Capacitor.isNativePlatform()) return;
   try {
-    var { LocalNotifications } = Capacitor.Plugins;
-    await LocalNotifications.requestPermissions();
+    var LN = window.Capacitor.Plugins.LocalNotifications;
     var dt = new Date(event.date + 'T' + event.time + ':00');
+    console.log('Scheduling notif for:', dt, 'now:', new Date());
     if (dt > new Date()) {
-      await LocalNotifications.schedule({
+      await LN.schedule({
         notifications: [{
-          id: parseInt(event.id) % 2147483647,
-          title: event.emoji + ' ' + event.title,
+          id: parseInt(event.id) % 2147483647 || Math.floor(Math.random()*100000),
+          title: (event.emoji || '🔔') + ' ' + event.title,
           body: 'Rappel Mirella : ' + event.title,
-          schedule: { at: dt },
-          sound: null,
-          actionTypeId: '',
-          extra: null
+          schedule: { at: dt, allowWhileIdle: true },
+          channelId: 'mirella_channel',
+          sound: 'default',
+          smallIcon: 'ic_launcher',
+          iconColor: '#FF6B6B'
         }]
       });
+      console.log('Notif schedulée pour:', dt);
+    } else {
+      console.log('Date passée, notif non schedulée:', dt);
     }
-  } catch(e) { console.error('Notif error:', e); }
+  } catch(e) { console.error('Notif error:', e.message); }
 }
 
 async function schedulePlanningNotifications() {
