@@ -3957,15 +3957,35 @@ function switchLang(lang) {
         // Demander permission notifications
         if (window.Capacitor && window.Capacitor.isNativePlatform()) {
           try {
-            var { LocalNotifications } = window.Capacitor.Plugins;
-            var perm = await LocalNotifications.requestPermissions();
-            console.log('Notification permission:', JSON.stringify(perm));
-            if (perm.display === 'granted') {
-              schedulePlanningNotifications();
-              // Test notification immédiate
-              await LocalNotifications.schedule({notifications:[{id:99999,title:'✅ Mirella',body:'Notifications activées !',schedule:{at:new Date(Date.now()+1000),allowWhileIdle:true}}]});
-              console.log('Notification test envoyée');
+            var LN = window.Capacitor.Plugins.LocalNotifications;
+            // Créer le channel Android
+            if (LN.createChannel) {
+              await LN.createChannel({
+                id: 'mirella_channel',
+                name: 'Rappels Mirella',
+                importance: 5,
+                visibility: 1,
+                sound: 'default',
+                vibration: true
+              });
             }
+            var perm = await LN.requestPermissions();
+            console.log('Perm:', JSON.stringify(perm));
+            // Test immédiat
+            await LN.schedule({
+              notifications: [{
+                id: 99999,
+                title: '✅ Mirella',
+                body: 'Notifications activées !',
+                schedule: { at: new Date(Date.now() + 2000) },
+                channelId: 'mirella_channel',
+                sound: 'default',
+                smallIcon: 'ic_launcher',
+                iconColor: '#FF6B6B'
+              }]
+            });
+            console.log('Notif test envoyée');
+            schedulePlanningNotifications();
           } catch(e) { console.error('Permission error:', e); }
         }
       }, 2000); if (_savedTheme && window.THEMES[_savedTheme]) window.applyTheme(_savedTheme);
