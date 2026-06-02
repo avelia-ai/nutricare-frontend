@@ -1613,8 +1613,9 @@ async function scheduleNotification(event) {
         }]
       });
       console.log('Notif schedulée pour:', dt);
+      alert('✅ Rappel programmé pour ' + dt.toLocaleTimeString('fr-FR', {hour:'2-digit',minute:'2-digit'}));
     } else {
-      console.log('Date passée, notif non schedulée:', dt);
+      alert('⚠️ La date est déjà passée : ' + dt.toLocaleString());
     }
   } catch(e) { console.error('Notif error:', e.message); }
 }
