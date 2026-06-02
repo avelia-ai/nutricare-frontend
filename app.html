@@ -1613,9 +1613,8 @@ async function scheduleNotification(event) {
         }]
       });
       console.log('Notif schedulée pour:', dt);
-      alert('✅ Rappel programmé pour ' + dt.toLocaleTimeString('fr-FR', {hour:'2-digit',minute:'2-digit'}));
     } else {
-      alert('⚠️ La date est déjà passée : ' + dt.toLocaleString());
+      console.log('Date passée:', dt);
     }
   } catch(e) { console.error('Notif error:', e.message); }
 }
@@ -8131,9 +8130,9 @@ window.saveEvent = function() {
   var evt = {id:Date.now().toString(), type:window._evtType||'rappel', ico:window._evtIco||'🔔', emoji:window._evtIco||'🔔', title:title, date:date, time:time, rec:rec, notif:notifChecked};
   window.planningEvents.push(evt);
   localStorage.setItem('mirella_planning', JSON.stringify(window.planningEvents));
-  if (notifChecked) scheduleNotification(evt);
   window.closePlanningModal();
   window.renderPlanning();
+  if (notifChecked) scheduleNotification(evt);
 };
 
 </script>
