@@ -1597,12 +1597,17 @@ async function scheduleNotification(event) {
         vibration: true
       });
     }
+    // Demander permissions si pas encore accordées
+    var perm = await LN.requestPermissions();
+    if (perm.display !== 'granted') { console.log('Notif permission refusée'); return; }
     var dt = new Date(event.date + 'T' + event.time + ':00');
     console.log('Scheduling notif for:', dt, 'now:', new Date());
     if (dt > new Date()) {
+      // ID stable basé sur titre+date+heure pour éviter les doublons
+      var notifId = Math.abs((event.title + event.date + event.time).split('').reduce(function(a,c){return a+c.charCodeAt(0);},1)) % 2000000 + 1;
       await LN.schedule({
         notifications: [{
-          id: parseInt(event.id) % 2147483647 || Math.floor(Math.random()*100000),
+          id: notifId,
           title: (event.emoji || '🔔') + ' ' + event.title,
           body: 'Rappel Mirella : ' + event.title,
           schedule: { at: dt, allowWhileIdle: true },
