@@ -1586,6 +1586,17 @@ async function scheduleNotification(event) {
   if (!window.Capacitor || !window.Capacitor.isNativePlatform()) return;
   try {
     var LN = window.Capacitor.Plugins.LocalNotifications;
+    // Créer le channel à chaque fois pour s'assurer qu'il existe
+    if (LN.createChannel) {
+      await LN.createChannel({
+        id: 'mirella_channel',
+        name: 'Rappels Mirella',
+        importance: 5,
+        visibility: 1,
+        sound: 'default',
+        vibration: true
+      });
+    }
     var dt = new Date(event.date + 'T' + event.time + ':00');
     console.log('Scheduling notif for:', dt, 'now:', new Date());
     if (dt > new Date()) {
