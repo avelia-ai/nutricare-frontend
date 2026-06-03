@@ -289,7 +289,7 @@ footer a{color:#ccc;text-decoration:none}
       var slideW = isMobile ? 100 : 50;
       var slideM = isMobile ? 10 : 25;
       Array.from(c.children).forEach(function(el){el.style.minWidth=slideW+'%';el.style.margin='0 '+slideM+'%';});
-      function goTo(n){cur=(n+total)%total;c.style.transform='translateX(-'+(cur*100)+'%)';dots.querySelectorAll('div').forEach(function(d,i){d.style.background=i===cur?'#FF6B6B':'#ddd';});}
+      function goTo(n){cur=(n+total)%total;var slideWidth=c.children[0].offsetWidth;c.style.transform='translateX(-'+(cur*slideWidth)+'px)';dots.querySelectorAll('div').forEach(function(d,i){d.style.background=i===cur?'#FF6B6B':'#ddd';});}
       var timer = setInterval(function(){goTo(cur+1);}, 2000);
       c.parentElement.addEventListener('mouseenter', function(){clearInterval(timer);});
       c.parentElement.addEventListener('mouseleave', function(){timer=setInterval(function(){goTo(cur+1);},3000);});
