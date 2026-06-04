@@ -46,7 +46,10 @@
   }
 }
 </script>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+<noscript><link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet"></noscript>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 :root{
@@ -210,7 +213,7 @@ footer a{color:#ccc;text-decoration:none}
     </div>
     <div class="hero-img-wrap">
       <div class="floating-badge top" style="top:0;left:-60px;z-index:10"><span class="num">7</span>Parties complètes</div>
-      <img src="https://raw.githubusercontent.com/avelia-ai/nutricare-frontend/main/www/images/ebook-cover.jpg"
+      <img src="https://raw.githubusercontent.com/avelia-ai/nutricare-frontend/main/www/images/ebook-cover.jpg" fetchpriority="high" loading="eager"
         onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"
         alt="Programme 30J Anti-Inflammation" class="hero-img">
       <div style="display:none;width:100%;max-width:380px;height:500px;background:linear-gradient(160deg,var(--coral),var(--accent));border-radius:24px;align-items:center;justify-content:center;flex-direction:column;color:white;text-align:center;padding:40px;margin:0 auto;box-shadow:0 30px 70px rgba(255,107,107,0.2)">
