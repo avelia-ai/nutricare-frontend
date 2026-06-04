@@ -1922,6 +1922,22 @@ function switchLang(lang) {
           <div style="font-size:0.72rem;font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:var(--coral);margin-bottom:10px">Rappels du jour</div>
           <div id="homeRappels" style="display:flex;flex-direction:column;gap:8px"></div>
         </div>
+        <!-- CARD MÉDECINS -->
+        <div id="homeMedecinsCard" style="background:white;border-radius:16px;overflow:hidden;margin-bottom:12px;box-shadow:0 2px 8px rgba(0,0,0,0.06)">
+          <div style="padding:14px">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+              <div style="font-size:0.72rem;font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:var(--coral)">🏥 Médecins à proximité</div>
+              <button onclick="loadMedecins()" style="background:var(--cream);border:none;border-radius:8px;padding:5px 10px;font-size:0.72rem;font-weight:600;color:var(--coral);cursor:pointer">Actualiser</button>
+            </div>
+            <div id="homeMedecinsList" style="display:flex;flex-direction:column;gap:8px">
+              <div style="text-align:center;padding:16px;color:#aaa;font-size:0.82rem">
+                <div style="font-size:1.5rem;margin-bottom:6px">📍</div>
+                <button onclick="loadMedecins()" style="background:linear-gradient(135deg,var(--coral),var(--accent));color:white;border:none;border-radius:10px;padding:10px 20px;font-size:0.82rem;font-weight:600;cursor:pointer">Trouver des médecins près de moi</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
         <div id="homeCtaCard" style="display:none;background:linear-gradient(135deg,var(--coral),var(--accent));border-radius:16px;padding:16px;text-align:center">
           <div style="font-size:0.95rem;font-weight:700;color:white;margin-bottom:6px">Personnalisez votre experience</div>
           <button onclick="showView('profile')" style="background:white;color:var(--coral);border:none;border-radius:10px;padding:10px 20px;font-size:0.85rem;font-weight:700;cursor:pointer">Completer mon profil</button>
@@ -8943,6 +8959,64 @@ window.supprimerRecette = async function(id) {
   loadMesRecettes();
 };
 </script>
+<script>
+// MÉDECINS À PROXIMITÉ
+window.loadMedecins = async function(specialite) {
+  var list = document.getElementById('homeMedecinsList');
+  if (!list) return;
+  list.innerHTML = '<div style="text-align:center;padding:16px;color:#aaa;font-size:0.82rem">📍 Localisation en cours...</div>';
+  
+  if (!navigator.geolocation) {
+    list.innerHTML = '<div style="padding:12px;color:#888;font-size:0.82rem">Géolocalisation non supportée sur cet appareil.</div>';
+    return;
+  }
+
+  navigator.geolocation.getCurrentPosition(async function(pos) {
+    var lat = pos.coords.latitude;
+    var lng = pos.coords.longitude;
+    var token = localStorage.getItem('nutricare_token');
+    var type = specialite || 'médecin';
+    
+    try {
+      list.innerHTML = '<div style="text-align:center;padding:16px;color:#aaa;font-size:0.82rem">🔍 Recherche en cours...</div>';
+      var res = await fetch('https://nutricare-backend-production.up.railway.app/api/nearby-doctors?lat=' + lat + '&lng=' + lng + '&type=' + encodeURIComponent(type), {
+        headers: {'Authorization': 'Bearer ' + token}
+      });
+      var data = await res.json();
+      
+      if (!data.doctors || data.doctors.length === 0) {
+        list.innerHTML = '<div style="padding:12px;color:#888;font-size:0.82rem">Aucun médecin trouvé à proximité.</div>';
+        return;
+      }
+
+      // Filtres spécialités
+      var filtres = ['Généraliste','Nutritionniste','Cardiologue','Rhumatologue','Dermatologue'];
+      var html = '<div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px">';
+      filtres.forEach(function(f) {
+        html += '<button onclick="window.loadMedecins('' + f.toLowerCase() + '')" style="background:' + (type.toLowerCase()===f.toLowerCase() ? 'var(--coral)' : 'var(--cream)') + ';color:' + (type.toLowerCase()===f.toLowerCase() ? 'white' : 'var(--coral)') + ';border:none;border-radius:20px;padding:4px 10px;font-size:0.7rem;font-weight:600;cursor:pointer">' + f + '</button>';
+      });
+      html += '</div>';
+
+      data.doctors.forEach(function(d) {
+        var ouvert = d.open === true ? '<span style="color:#10B981;font-size:0.68rem;font-weight:600">● Ouvert</span>' : d.open === false ? '<span style="color:#ef4444;font-size:0.68rem">● Fermé</span>' : '';
+        var stars = d.rating ? '⭐ ' + d.rating : '';
+        html += '<a href="' + d.mapsUrl + '" target="_blank" style="display:flex;align-items:center;gap:10px;padding:10px 0;border-top:1px solid #f5f5f5;text-decoration:none">';
+        html += '<div style="width:38px;height:38px;border-radius:10px;background:var(--cream);display:flex;align-items:center;justify-content:center;font-size:1.2rem;flex-shrink:0">🏥</div>';
+        html += '<div style="flex:1;min-width:0"><div style="font-size:0.82rem;font-weight:600;color:#1a1a1a;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">' + d.name + '</div>';
+        html += '<div style="font-size:0.72rem;color:#888;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">' + d.address + '</div>';
+        html += '<div style="display:flex;gap:8px;margin-top:2px">' + ouvert + ' <span style="font-size:0.68rem;color:#aaa">' + stars + '</span></div></div>';
+        html += '<span style="color:var(--coral);font-size:1rem;flex-shrink:0">›</span></a>';
+      });
+
+      list.innerHTML = html;
+    } catch(e) {
+      list.innerHTML = '<div style="padding:12px;color:#888;font-size:0.82rem">Erreur : ' + e.message + '</div>';
+    }
+  }, function() {
+    list.innerHTML = '<div style="text-align:center;padding:16px"><div style="font-size:0.82rem;color:#888;margin-bottom:10px">Activez la localisation pour trouver des médecins près de vous.</div><button onclick="window.loadMedecins()" style="background:linear-gradient(135deg,var(--coral),var(--accent));color:white;border:none;border-radius:10px;padding:10px 20px;font-size:0.82rem;font-weight:600;cursor:pointer">Réessayer</button></div>';
+  });
+};
+</script>
 </html>
 <script>
 // ===== FAVORIS =====
@@ -9075,6 +9149,64 @@ document.addEventListener('DOMContentLoaded', function() {
   setTimeout(function(){ if (localStorage.getItem('nutricare_token')) loadFavorisCache(); }, 2000);
 });
 </script>
+<script>
+// MÉDECINS À PROXIMITÉ
+window.loadMedecins = async function(specialite) {
+  var list = document.getElementById('homeMedecinsList');
+  if (!list) return;
+  list.innerHTML = '<div style="text-align:center;padding:16px;color:#aaa;font-size:0.82rem">📍 Localisation en cours...</div>';
+  
+  if (!navigator.geolocation) {
+    list.innerHTML = '<div style="padding:12px;color:#888;font-size:0.82rem">Géolocalisation non supportée sur cet appareil.</div>';
+    return;
+  }
+
+  navigator.geolocation.getCurrentPosition(async function(pos) {
+    var lat = pos.coords.latitude;
+    var lng = pos.coords.longitude;
+    var token = localStorage.getItem('nutricare_token');
+    var type = specialite || 'médecin';
+    
+    try {
+      list.innerHTML = '<div style="text-align:center;padding:16px;color:#aaa;font-size:0.82rem">🔍 Recherche en cours...</div>';
+      var res = await fetch('https://nutricare-backend-production.up.railway.app/api/nearby-doctors?lat=' + lat + '&lng=' + lng + '&type=' + encodeURIComponent(type), {
+        headers: {'Authorization': 'Bearer ' + token}
+      });
+      var data = await res.json();
+      
+      if (!data.doctors || data.doctors.length === 0) {
+        list.innerHTML = '<div style="padding:12px;color:#888;font-size:0.82rem">Aucun médecin trouvé à proximité.</div>';
+        return;
+      }
+
+      // Filtres spécialités
+      var filtres = ['Généraliste','Nutritionniste','Cardiologue','Rhumatologue','Dermatologue'];
+      var html = '<div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px">';
+      filtres.forEach(function(f) {
+        html += '<button onclick="window.loadMedecins('' + f.toLowerCase() + '')" style="background:' + (type.toLowerCase()===f.toLowerCase() ? 'var(--coral)' : 'var(--cream)') + ';color:' + (type.toLowerCase()===f.toLowerCase() ? 'white' : 'var(--coral)') + ';border:none;border-radius:20px;padding:4px 10px;font-size:0.7rem;font-weight:600;cursor:pointer">' + f + '</button>';
+      });
+      html += '</div>';
+
+      data.doctors.forEach(function(d) {
+        var ouvert = d.open === true ? '<span style="color:#10B981;font-size:0.68rem;font-weight:600">● Ouvert</span>' : d.open === false ? '<span style="color:#ef4444;font-size:0.68rem">● Fermé</span>' : '';
+        var stars = d.rating ? '⭐ ' + d.rating : '';
+        html += '<a href="' + d.mapsUrl + '" target="_blank" style="display:flex;align-items:center;gap:10px;padding:10px 0;border-top:1px solid #f5f5f5;text-decoration:none">';
+        html += '<div style="width:38px;height:38px;border-radius:10px;background:var(--cream);display:flex;align-items:center;justify-content:center;font-size:1.2rem;flex-shrink:0">🏥</div>';
+        html += '<div style="flex:1;min-width:0"><div style="font-size:0.82rem;font-weight:600;color:#1a1a1a;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">' + d.name + '</div>';
+        html += '<div style="font-size:0.72rem;color:#888;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">' + d.address + '</div>';
+        html += '<div style="display:flex;gap:8px;margin-top:2px">' + ouvert + ' <span style="font-size:0.68rem;color:#aaa">' + stars + '</span></div></div>';
+        html += '<span style="color:var(--coral);font-size:1rem;flex-shrink:0">›</span></a>';
+      });
+
+      list.innerHTML = html;
+    } catch(e) {
+      list.innerHTML = '<div style="padding:12px;color:#888;font-size:0.82rem">Erreur : ' + e.message + '</div>';
+    }
+  }, function() {
+    list.innerHTML = '<div style="text-align:center;padding:16px"><div style="font-size:0.82rem;color:#888;margin-bottom:10px">Activez la localisation pour trouver des médecins près de vous.</div><button onclick="window.loadMedecins()" style="background:linear-gradient(135deg,var(--coral),var(--accent));color:white;border:none;border-radius:10px;padding:10px 20px;font-size:0.82rem;font-weight:600;cursor:pointer">Réessayer</button></div>';
+  });
+};
+</script>
 </html>
 <script>
 // Favori par index (catalogue)
@@ -9157,6 +9289,64 @@ window.supprimerFavoriCatalogue = async function(id, nom, btn) {
   });
   if (window._favorisCache) window._favorisCache = window._favorisCache.filter(function(n){return n!==nom;});
   btn.closest('div[style*="border-radius:14px"]').remove();
+};
+</script>
+<script>
+// MÉDECINS À PROXIMITÉ
+window.loadMedecins = async function(specialite) {
+  var list = document.getElementById('homeMedecinsList');
+  if (!list) return;
+  list.innerHTML = '<div style="text-align:center;padding:16px;color:#aaa;font-size:0.82rem">📍 Localisation en cours...</div>';
+  
+  if (!navigator.geolocation) {
+    list.innerHTML = '<div style="padding:12px;color:#888;font-size:0.82rem">Géolocalisation non supportée sur cet appareil.</div>';
+    return;
+  }
+
+  navigator.geolocation.getCurrentPosition(async function(pos) {
+    var lat = pos.coords.latitude;
+    var lng = pos.coords.longitude;
+    var token = localStorage.getItem('nutricare_token');
+    var type = specialite || 'médecin';
+    
+    try {
+      list.innerHTML = '<div style="text-align:center;padding:16px;color:#aaa;font-size:0.82rem">🔍 Recherche en cours...</div>';
+      var res = await fetch('https://nutricare-backend-production.up.railway.app/api/nearby-doctors?lat=' + lat + '&lng=' + lng + '&type=' + encodeURIComponent(type), {
+        headers: {'Authorization': 'Bearer ' + token}
+      });
+      var data = await res.json();
+      
+      if (!data.doctors || data.doctors.length === 0) {
+        list.innerHTML = '<div style="padding:12px;color:#888;font-size:0.82rem">Aucun médecin trouvé à proximité.</div>';
+        return;
+      }
+
+      // Filtres spécialités
+      var filtres = ['Généraliste','Nutritionniste','Cardiologue','Rhumatologue','Dermatologue'];
+      var html = '<div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px">';
+      filtres.forEach(function(f) {
+        html += '<button onclick="window.loadMedecins('' + f.toLowerCase() + '')" style="background:' + (type.toLowerCase()===f.toLowerCase() ? 'var(--coral)' : 'var(--cream)') + ';color:' + (type.toLowerCase()===f.toLowerCase() ? 'white' : 'var(--coral)') + ';border:none;border-radius:20px;padding:4px 10px;font-size:0.7rem;font-weight:600;cursor:pointer">' + f + '</button>';
+      });
+      html += '</div>';
+
+      data.doctors.forEach(function(d) {
+        var ouvert = d.open === true ? '<span style="color:#10B981;font-size:0.68rem;font-weight:600">● Ouvert</span>' : d.open === false ? '<span style="color:#ef4444;font-size:0.68rem">● Fermé</span>' : '';
+        var stars = d.rating ? '⭐ ' + d.rating : '';
+        html += '<a href="' + d.mapsUrl + '" target="_blank" style="display:flex;align-items:center;gap:10px;padding:10px 0;border-top:1px solid #f5f5f5;text-decoration:none">';
+        html += '<div style="width:38px;height:38px;border-radius:10px;background:var(--cream);display:flex;align-items:center;justify-content:center;font-size:1.2rem;flex-shrink:0">🏥</div>';
+        html += '<div style="flex:1;min-width:0"><div style="font-size:0.82rem;font-weight:600;color:#1a1a1a;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">' + d.name + '</div>';
+        html += '<div style="font-size:0.72rem;color:#888;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">' + d.address + '</div>';
+        html += '<div style="display:flex;gap:8px;margin-top:2px">' + ouvert + ' <span style="font-size:0.68rem;color:#aaa">' + stars + '</span></div></div>';
+        html += '<span style="color:var(--coral);font-size:1rem;flex-shrink:0">›</span></a>';
+      });
+
+      list.innerHTML = html;
+    } catch(e) {
+      list.innerHTML = '<div style="padding:12px;color:#888;font-size:0.82rem">Erreur : ' + e.message + '</div>';
+    }
+  }, function() {
+    list.innerHTML = '<div style="text-align:center;padding:16px"><div style="font-size:0.82rem;color:#888;margin-bottom:10px">Activez la localisation pour trouver des médecins près de vous.</div><button onclick="window.loadMedecins()" style="background:linear-gradient(135deg,var(--coral),var(--accent));color:white;border:none;border-radius:10px;padding:10px 20px;font-size:0.82rem;font-weight:600;cursor:pointer">Réessayer</button></div>';
+  });
 };
 </script>
 </html>
@@ -9327,6 +9517,64 @@ window.supprimerRoutine = async function(id) {
     method: 'DELETE', headers: {'Authorization': 'Bearer ' + token}
   });
   loadRoutines();
+};
+</script>
+<script>
+// MÉDECINS À PROXIMITÉ
+window.loadMedecins = async function(specialite) {
+  var list = document.getElementById('homeMedecinsList');
+  if (!list) return;
+  list.innerHTML = '<div style="text-align:center;padding:16px;color:#aaa;font-size:0.82rem">📍 Localisation en cours...</div>';
+  
+  if (!navigator.geolocation) {
+    list.innerHTML = '<div style="padding:12px;color:#888;font-size:0.82rem">Géolocalisation non supportée sur cet appareil.</div>';
+    return;
+  }
+
+  navigator.geolocation.getCurrentPosition(async function(pos) {
+    var lat = pos.coords.latitude;
+    var lng = pos.coords.longitude;
+    var token = localStorage.getItem('nutricare_token');
+    var type = specialite || 'médecin';
+    
+    try {
+      list.innerHTML = '<div style="text-align:center;padding:16px;color:#aaa;font-size:0.82rem">🔍 Recherche en cours...</div>';
+      var res = await fetch('https://nutricare-backend-production.up.railway.app/api/nearby-doctors?lat=' + lat + '&lng=' + lng + '&type=' + encodeURIComponent(type), {
+        headers: {'Authorization': 'Bearer ' + token}
+      });
+      var data = await res.json();
+      
+      if (!data.doctors || data.doctors.length === 0) {
+        list.innerHTML = '<div style="padding:12px;color:#888;font-size:0.82rem">Aucun médecin trouvé à proximité.</div>';
+        return;
+      }
+
+      // Filtres spécialités
+      var filtres = ['Généraliste','Nutritionniste','Cardiologue','Rhumatologue','Dermatologue'];
+      var html = '<div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px">';
+      filtres.forEach(function(f) {
+        html += '<button onclick="window.loadMedecins('' + f.toLowerCase() + '')" style="background:' + (type.toLowerCase()===f.toLowerCase() ? 'var(--coral)' : 'var(--cream)') + ';color:' + (type.toLowerCase()===f.toLowerCase() ? 'white' : 'var(--coral)') + ';border:none;border-radius:20px;padding:4px 10px;font-size:0.7rem;font-weight:600;cursor:pointer">' + f + '</button>';
+      });
+      html += '</div>';
+
+      data.doctors.forEach(function(d) {
+        var ouvert = d.open === true ? '<span style="color:#10B981;font-size:0.68rem;font-weight:600">● Ouvert</span>' : d.open === false ? '<span style="color:#ef4444;font-size:0.68rem">● Fermé</span>' : '';
+        var stars = d.rating ? '⭐ ' + d.rating : '';
+        html += '<a href="' + d.mapsUrl + '" target="_blank" style="display:flex;align-items:center;gap:10px;padding:10px 0;border-top:1px solid #f5f5f5;text-decoration:none">';
+        html += '<div style="width:38px;height:38px;border-radius:10px;background:var(--cream);display:flex;align-items:center;justify-content:center;font-size:1.2rem;flex-shrink:0">🏥</div>';
+        html += '<div style="flex:1;min-width:0"><div style="font-size:0.82rem;font-weight:600;color:#1a1a1a;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">' + d.name + '</div>';
+        html += '<div style="font-size:0.72rem;color:#888;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">' + d.address + '</div>';
+        html += '<div style="display:flex;gap:8px;margin-top:2px">' + ouvert + ' <span style="font-size:0.68rem;color:#aaa">' + stars + '</span></div></div>';
+        html += '<span style="color:var(--coral);font-size:1rem;flex-shrink:0">›</span></a>';
+      });
+
+      list.innerHTML = html;
+    } catch(e) {
+      list.innerHTML = '<div style="padding:12px;color:#888;font-size:0.82rem">Erreur : ' + e.message + '</div>';
+    }
+  }, function() {
+    list.innerHTML = '<div style="text-align:center;padding:16px"><div style="font-size:0.82rem;color:#888;margin-bottom:10px">Activez la localisation pour trouver des médecins près de vous.</div><button onclick="window.loadMedecins()" style="background:linear-gradient(135deg,var(--coral),var(--accent));color:white;border:none;border-radius:10px;padding:10px 20px;font-size:0.82rem;font-weight:600;cursor:pointer">Réessayer</button></div>';
+  });
 };
 </script>
 </html>
