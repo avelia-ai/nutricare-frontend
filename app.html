@@ -1927,12 +1927,12 @@ function switchLang(lang) {
           <div style="padding:14px">
             <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
               <div style="font-size:0.72rem;font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:var(--coral)">🏥 Médecins à proximité</div>
-              <button onclick="loadMedecins()" style="background:var(--cream);border:none;border-radius:8px;padding:5px 10px;font-size:0.72rem;font-weight:600;color:var(--coral);cursor:pointer">Actualiser</button>
+              <button onclick="window.loadMedecins()" style="background:var(--cream);border:none;border-radius:8px;padding:5px 10px;font-size:0.72rem;font-weight:600;color:var(--coral);cursor:pointer">Actualiser</button>
             </div>
             <div id="homeMedecinsList" style="display:flex;flex-direction:column;gap:8px">
               <div style="text-align:center;padding:16px;color:#aaa;font-size:0.82rem">
                 <div style="font-size:1.5rem;margin-bottom:6px">📍</div>
-                <button onclick="loadMedecins()" style="background:linear-gradient(135deg,var(--coral),var(--accent));color:white;border:none;border-radius:10px;padding:10px 20px;font-size:0.82rem;font-weight:600;cursor:pointer">Trouver des médecins près de moi</button>
+                <button onclick="window.loadMedecins()" style="background:linear-gradient(135deg,var(--coral),var(--accent));color:white;border:none;border-radius:10px;padding:10px 20px;font-size:0.82rem;font-weight:600;cursor:pointer">Trouver des médecins près de moi</button>
               </div>
             </div>
           </div>
@@ -8963,7 +8963,8 @@ window.supprimerRecette = async function(id) {
 // MÉDECINS À PROXIMITÉ
 window.loadMedecins = async function(specialite) {
   var list = document.getElementById('homeMedecinsList');
-  if (!list) return;
+  if (!list) { alert("ERREUR: homeMedecinsList introuvable"); return; }
+  alert("loadMedecins appelé - géoloc: " + (navigator.geolocation ? "OK" : "NON"));
   list.innerHTML = '<div style="text-align:center;padding:16px;color:#aaa;font-size:0.82rem">📍 Localisation en cours...</div>';
   
   if (!navigator.geolocation) {
