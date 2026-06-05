@@ -7280,7 +7280,7 @@ function renderMenu(menu) {
       var raw = menu.conseils_semaine;
       var html = '';
       // Découper par sections en majuscules (ex: "INTERACTIONS MÉDICAMENTEUSES:", "SEMAINE PHASE...")
-      var sections = raw.split(/(?=\b[A-ZÀÂÉÈÊËÎÏÔÙÛÜÇ][A-ZÀÂÉÈÊËÎÏÔÙÛÜÇ\s\-:]{8,}(?::|\n))/);
+      var sections = raw.split(/\n{2,}/);
       var icons = ['🥗','⚠️','💊','🌿','💡','🏃','🩺','🔬'];
       var colors = ['#FF6B6B','#FF9A3C','#8B5CF6','#10B981','#3B82F6','#EC4899','#F59E0B','#6366F1'];
       var idx = 0;
