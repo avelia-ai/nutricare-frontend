@@ -4440,7 +4440,7 @@ function switchLang(lang) {
       const bioTimeout = setTimeout(() => bioController.abort(), 60000);
       const res = await fetch(`${BACKEND_URL}/api/biologie/analyze`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${authToken}` },
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${localStorage.getItem('nutricare_token')}` },
         body: JSON.stringify({ image_base64: base64, media_type: 'image/jpeg' }),
         signal: bioController.signal
       });
