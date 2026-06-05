@@ -2338,46 +2338,55 @@ function switchLang(lang) {
 
     <!-- Résultat analyse -->
     <div id="analysisResult" style="display:none">
-      <div style="background:white;border-radius: 4px;border:1px solid rgba(255,107,107,0.15);overflow:hidden;margin-bottom:20px">
-        <div style="background:#2D2D2D;padding:18px 24px;display:flex;align-items:center;justify-content:space-between">
-          <div style="font-family:'Open Sans',serif;font-size:1.3rem;color:white" id="analysisRepasNom">Analyse en cours...</div>
-          <div style="display:flex;gap:12px">
-            <div style="text-align:center">
-              <div style="font-family:'DM Mono',monospace;font-size:1.4rem;font-weight:700;color:var(--coral)" id="analysisScoreSante">—</div>
-              <div style="font-size:0.65rem;color:var(--accent);text-transform:uppercase;letter-spacing:1px">Score santé</div>
-            </div>
-            <div style="text-align:center">
-              <div style="font-family:'DM Mono',monospace;font-size:1.4rem;font-weight:700;color:#28C840" id="analysisScorePatho">—</div>
-              <div style="font-size:0.65rem;color:var(--accent);text-transform:uppercase;letter-spacing:1px">Score patho</div>
-            </div>
-            <div style="text-align:center">
-              <div style="font-family:'DM Mono',monospace;font-size:1.4rem;font-weight:700;color:white" id="analysisCalories">—</div>
-              <div style="font-size:0.65rem;color:var(--accent);text-transform:uppercase;letter-spacing:1px">Calories</div>
-            </div>
+      <!-- Header avec scores -->
+      <div style="background:linear-gradient(135deg,var(--coral),var(--accent));border-radius:16px;padding:18px 20px;margin-bottom:12px">
+        <div style="font-size:1rem;font-weight:700;color:white;margin-bottom:14px" id="analysisRepasNom">Analyse en cours...</div>
+        <div style="display:flex;gap:8px">
+          <div style="flex:1;background:rgba(255,255,255,0.2);border-radius:12px;padding:10px;text-align:center">
+            <div style="font-size:1.4rem;font-weight:800;color:white" id="analysisScoreSante">—</div>
+            <div style="font-size:0.6rem;color:rgba(255,255,255,0.85);text-transform:uppercase;letter-spacing:.05em">Score santé</div>
+          </div>
+          <div style="flex:1;background:rgba(255,255,255,0.2);border-radius:12px;padding:10px;text-align:center">
+            <div style="font-size:1.4rem;font-weight:800;color:white" id="analysisScorePatho">—</div>
+            <div style="font-size:0.6rem;color:rgba(255,255,255,0.85);text-transform:uppercase;letter-spacing:.05em">Score patho</div>
+          </div>
+          <div style="flex:1;background:rgba(255,255,255,0.2);border-radius:12px;padding:10px;text-align:center">
+            <div style="font-size:1.4rem;font-weight:800;color:white" id="analysisCalories">—</div>
+            <div style="font-size:0.6rem;color:rgba(255,255,255,0.85);text-transform:uppercase;letter-spacing:.05em">Calories</div>
           </div>
         </div>
-        <div style="padding:24px;display:grid;grid-template-columns:1fr 1fr;gap:20px">
-          <div>
-            <div style="font-size:0.72rem;font-weight:600;text-transform:uppercase;letter-spacing:1.5px;color:var(--accent);margin-bottom:12px"> ALIMENTS IDENTIFIÉS</div>
-            <div id="analysisAliments"></div>
-            <div style="margin-top:16px">
-              <div style="font-size:0.72rem;font-weight:600;text-transform:uppercase;letter-spacing:1.5px;color:var(--accent);margin-bottom:12px"> MACRONUTRIMENTS</div>
-              <div id="analysisMacros"></div>
-            </div>
-          </div>
-          <div>
-            <div style="font-size:0.72rem;font-weight:600;text-transform:uppercase;letter-spacing:1.5px;color:#28C840;margin-bottom:12px"> POINTS POSITIFS</div>
-            <div id="analysisPositifs" style="margin-bottom:16px"></div>
-            <div style="font-size:0.72rem;font-weight:600;text-transform:uppercase;letter-spacing:1.5px;color:var(--coral);margin-bottom:12px"> À AMÉLIORER</div>
-            <div id="analysisAmeliorer"></div>
-          </div>
+      </div>
+      <!-- Aliments + Macros -->
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px">
+        <div style="background:white;border-radius:14px;padding:14px;box-shadow:0 2px 8px rgba(0,0,0,0.06)">
+          <div style="font-size:0.65rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--coral);margin-bottom:10px">🍽️ Aliments</div>
+          <div id="analysisAliments"></div>
         </div>
-        <div style="padding:16px 24px;background:#E6F1FB;border-top:1px solid #B5D4F4">
-          <div style="font-size:0.85rem;color:#2D2D2D" id="analysisConseil"></div>
+        <div style="background:white;border-radius:14px;padding:14px;box-shadow:0 2px 8px rgba(0,0,0,0.06)">
+          <div style="font-size:0.65rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--coral);margin-bottom:10px">📊 Macros</div>
+          <div id="analysisMacros"></div>
         </div>
-        <div id="analysisAlerteZone" style="display:none;padding:16px 24px;background:#FEE;border-top:1px solid #FCC">
-          <div style="font-size:0.85rem;color:#C55" id="analysisAlerteMsg"></div>
+      </div>
+      <!-- Points positifs + À améliorer -->
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px">
+        <div style="background:#f0fdf4;border-radius:14px;padding:14px;box-shadow:0 2px 8px rgba(0,0,0,0.04)">
+          <div style="font-size:0.65rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#10B981;margin-bottom:10px">✅ Points positifs</div>
+          <div id="analysisPositifs"></div>
         </div>
+        <div style="background:#fff8f3;border-radius:14px;padding:14px;box-shadow:0 2px 8px rgba(0,0,0,0.04)">
+          <div style="font-size:0.65rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--coral);margin-bottom:10px">⚠️ À améliorer</div>
+          <div id="analysisAmeliorer"></div>
+        </div>
+      </div>
+      <!-- Conseil Mirella -->
+      <div style="background:white;border-radius:14px;padding:16px;margin-bottom:10px;box-shadow:0 2px 8px rgba(0,0,0,0.06);border-left:4px solid var(--coral)">
+        <div style="font-size:0.65rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--coral);margin-bottom:8px">💡 Conseil Mirella</div>
+        <div style="font-size:0.83rem;color:#333;line-height:1.7" id="analysisConseil"></div>
+      </div>
+      <!-- Alerte -->
+      <div id="analysisAlerteZone" style="display:none;background:#fff0f0;border-radius:14px;padding:16px;margin-bottom:10px;border-left:4px solid #ef4444">
+        <div style="font-size:0.65rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#ef4444;margin-bottom:8px">🚨 Alerte</div>
+        <div style="font-size:0.83rem;color:#333;line-height:1.7" id="analysisAlerteMsg"></div>
       </div>
     </div>
 
