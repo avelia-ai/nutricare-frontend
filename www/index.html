@@ -1389,26 +1389,6 @@ window.renderCycleCalendar = function(lastPeriod, cycleLength, periodLength) {
   cal.innerHTML = html;
 };
 
-window.demanderMenuCycle = function() {
-  var result = window._lastCycleResult;
-  if (!result) return;
-  var profile = JSON.parse(localStorage.getItem('nutricare_profile') || '{}');
-  var token = localStorage.getItem('nutricare_token');
-  var prompt = 'Tu es Mirella. Compose un menu type pour 3 jours adapté à la phase ' + result.phase + ' du cycle menstruel (jour ' + result.day + '). Pathologies: ' + (profile.pathologies||[]).join(',') + '. Format: petit-déjeuner, déjeuner, dîner pour chaque jour. Sois précise et pratique.';
-  var el = document.getElementById('cycleAIComment');
-  el.innerHTML += '<div style="margin-top:12px;padding:12px;background:white;border-radius:12px;border-left:3px solid var(--coral)"><div style="font-size:0.72rem;color:var(--coral);font-weight:700;margin-bottom:8px">🍽️ Génération des menus...</div></div>';
-  fetch(BACKEND_URL + '/api/chat/message', {
-    method: 'POST',
-    headers: {'Content-Type':'application/json','Authorization':'Bearer '+token},
-    body: JSON.stringify({message: prompt, context: 'cycle_menu'})
-  }).then(function(r){return r.json();}).then(function(d){
-    var reply = d.reply || d.response || '';
-    var menuDiv = el.querySelector('div:last-child');
-    menuDiv.innerHTML = '<div style="font-size:0.72rem;color:var(--coral);font-weight:700;margin-bottom:8px">🍽️ Menus adaptés à ta phase</div>' +
-      '<div style="font-size:0.82rem;color:#333;line-height:1.6">' + reply.replace(/\n/g,'<br>') + '</div>';
-  }).catch(function(){});
-};
-
 window.analyseCycle = function() {
   var lastPeriod = document.getElementById('cycleLastPeriod').value;
   if (!lastPeriod) { alert('Renseignez la date de vos dernières règles'); return; }
@@ -1419,7 +1399,6 @@ window.analyseCycle = function() {
   var cycleLength = document.getElementById('cycleLength').value;
   var periodLength = document.getElementById('periodLength').value;
   var result = window.getCyclePhase(lastPeriod, cycleLength, periodLength);
-  window._lastCycleResult = result;
   var profile = JSON.parse(localStorage.getItem('nutricare_profile') || '{}');
   var token = localStorage.getItem('nutricare_token');
   
@@ -1433,34 +1412,6 @@ window.analyseCycle = function() {
   }).then(function(r){return r.json();}).then(function(d){
     var comment = d.reply || d.response || d.message || 'Conseils non disponibles';
     var el = document.getElementById('cycleAIComment');
-    // Traiter les tableaux markdown
-    var lines = comment.split('\n');
-    var processedLines = [];
-    var inTable = false;
-    var tableHtml = '';
-    lines.forEach(function(line) {
-      if (line.trim().startsWith('|') && line.trim().endsWith('|')) {
-        if (!inTable) { inTable = true; tableHtml = '<div style="overflow-x:auto;margin:10px 0"><table style="width:100%;border-collapse:collapse;font-size:0.8rem">'; }
-        if (line.includes('---')) {
-          return; // skip separator
-        }
-        var cells = line.split('|').filter(function(c){return c.trim();});
-        var isHeader = !inTable || tableHtml.indexOf('<tr>') === -1;
-        tableHtml += '<tr>';
-        cells.forEach(function(cell) {
-          var tag = isHeader ? 'th' : 'td';
-          var style = isHeader ? 'background:var(--coral);color:white;padding:8px;text-align:left;font-weight:700' : 'padding:8px;border-bottom:1px solid #f0e0e0;color:#333';
-          tableHtml += '<' + tag + ' style="' + style + '">' + cell.trim() + '</' + tag + '>';
-        });
-        tableHtml += '</tr>';
-      } else {
-        if (inTable) { tableHtml += '</table></div>'; processedLines.push(tableHtml); inTable = false; tableHtml = ''; }
-        processedLines.push(line);
-      }
-    });
-    if (inTable) { tableHtml += '</table></div>'; processedLines.push(tableHtml); }
-    comment = processedLines.join('\n');
-
     var html = comment
       .replace(/###\s(.+)/g, '<div style="font-size:0.88rem;font-weight:700;color:var(--coral);margin:10px 0 4px">$1</div>')
       .replace(/##\s(.+)/g, '<div style="font-size:0.95rem;font-weight:700;color:#1a1a1a;margin:12px 0 4px">$1</div>')
@@ -1471,17 +1422,6 @@ window.analyseCycle = function() {
       .replace(/\n\n/g, '</p><p style="margin:6px 0">')
       .replace(/\n/g, '<br>');
     html = '<p style="margin:0">' + html + '</p>';
-    
-    // Ajouter bouton menu spécial si Mirella propose des menus
-    var wantsMenu = comment.toLowerCase().includes('menu') || comment.toLowerCase().includes('repas');
-    if (wantsMenu) {
-      html += '<div style="margin-top:16px;background:var(--cream);border-radius:14px;padding:14px">';
-      html += '<div style="font-size:0.82rem;font-weight:600;color:#1a1a1a;margin-bottom:10px">🍽️ Mirella peut composer des menus adaptés à ta phase. Tu veux qu'elle le fasse ?</div>';
-      html += '<div style="display:flex;gap:8px">';
-      html += '<button onclick="demanderMenuCycle()" style="flex:1;background:linear-gradient(135deg,var(--coral),var(--accent));color:white;border:none;border-radius:10px;padding:10px;font-size:0.82rem;font-weight:700;cursor:pointer">✅ Oui, compose mes menus</button>';
-      html += '<button onclick="this.closest('div').parentElement.remove()" style="flex:1;background:#f0f0f0;color:#666;border:none;border-radius:10px;padding:10px;font-size:0.82rem;font-weight:600;cursor:pointer">Non merci</button>';
-      html += '</div></div>';
-    }
     el.innerHTML = html;
     el.style.display = 'block';
     btn.textContent = 'Analyse IA personnalisée';
