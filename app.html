@@ -9063,6 +9063,9 @@ window.initMedecinsMapOnly = function() {
     var lng = pos.coords.longitude;
     mapDiv.style.display = 'block';
     var loadMap = function() {
+      if (!window.google || !window.google.maps) {
+        setTimeout(loadMap, 300); return;
+      }
       var map = new google.maps.Map(mapDiv, {
         center: {lat: lat, lng: lng},
         zoom: 14,
@@ -9084,7 +9087,7 @@ window.initMedecinsMapOnly = function() {
       var script = document.createElement('script');
       script.src = 'https://maps.googleapis.com/maps/api/js?key=AIzaSyCCvxdc-gPJr7myjxjZFWNUjbfDmzvZwig&callback=window._gmapsReady';
       document.head.appendChild(script);
-    } else if (window.google && window.google.maps) {
+    } else {
       loadMap();
     }
   }, function(){});
