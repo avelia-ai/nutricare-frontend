@@ -1186,8 +1186,8 @@ window.CITATIONS = [
 
 window.initHome = async function() {
   var profile = JSON.parse(localStorage.getItem('nutricare_profile') || '{}');
-  // Charger médecins auto
-  setTimeout(function(){ if(typeof window.loadMedecins==='function') window.loadMedecins(); }, 500);
+  // Afficher carte localisation auto
+  setTimeout(function(){ if(typeof window.initMedecinsMapOnly==='function') window.initMedecinsMapOnly(); }, 500);
   var now = new Date();
   var hours = now.getHours();
   var prenom = profile.full_name ? profile.full_name.split(' ')[0] : '';
@@ -8997,7 +8997,7 @@ window.loadMedecins = async function(specialite) {
         if (!window._gmapsLoaded) {
           window._gmapsLoaded = true;
           var script = document.createElement('script');
-          script.src = 'https://maps.googleapis.com/maps/api/js?key=AIzaSyCCvxdc-gPJr7myjxjZFWNUjbfDmzvZwig&callback=window._initMedecinsMap';
+          script.src = 'https://maps.googleapis.com/maps/api/js?key=AIzaSyCCvxdc-gPJr7myjxjZFWNUjbfDmzvZwig&callback=window._gmapsReady';
           window._medecinsMapData = {lat: lat, lng: lng, doctors: data.doctors, mapDiv: mapDiv};
           document.head.appendChild(script);
         } else {
@@ -9053,6 +9053,46 @@ window.loadMedecins = async function(specialite) {
   }, function() {
     list.innerHTML = '<div style="text-align:center;padding:16px"><div style="font-size:0.82rem;color:#888;margin-bottom:10px">Activez la localisation pour trouver des médecins près de vous.</div><button onclick="window.loadMedecins()" style="background:linear-gradient(135deg,var(--coral),var(--accent));color:white;border:none;border-radius:10px;padding:10px 20px;font-size:0.82rem;font-weight:600;cursor:pointer">Réessayer</button></div>';
   });
+};
+
+window.initMedecinsMapOnly = function() {
+  var mapDiv = document.getElementById('homeMedecinsMap');
+  if (!mapDiv || !navigator.geolocation) return;
+  navigator.geolocation.getCurrentPosition(function(pos) {
+    var lat = pos.coords.latitude;
+    var lng = pos.coords.longitude;
+    mapDiv.style.display = 'block';
+    var loadMap = function() {
+      var map = new google.maps.Map(mapDiv, {
+        center: {lat: lat, lng: lng},
+        zoom: 14,
+        disableDefaultUI: true,
+        zoomControl: true
+      });
+      new google.maps.Marker({
+        position: {lat: lat, lng: lng},
+        map: map,
+        icon: {path: google.maps.SymbolPath.CIRCLE, scale: 8, fillColor: '#FF6B6B', fillOpacity: 1, strokeColor: 'white', strokeWeight: 2},
+        title: 'Vous'
+      });
+      window._currentMap = map;
+      window._currentLatLng = {lat: lat, lng: lng};
+    };
+    if (!window._gmapsLoaded) {
+      window._gmapsLoaded = true;
+      window._pendingMapInit = loadMap;
+      var script = document.createElement('script');
+      script.src = 'https://maps.googleapis.com/maps/api/js?key=AIzaSyCCvxdc-gPJr7myjxjZFWNUjbfDmzvZwig&callback=window._gmapsReady';
+      document.head.appendChild(script);
+    } else if (window.google && window.google.maps) {
+      loadMap();
+    }
+  }, function(){});
+};
+
+window._gmapsReady = function() {
+  if (window._pendingMapInit) { window._pendingMapInit(); window._pendingMapInit = null; }
+  if (window._medecinsMapData) window._renderMedecinsMap(window._medecinsMapData);
 };
 
 window._initMedecinsMap = function() {
