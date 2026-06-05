@@ -6637,7 +6637,7 @@ Réponds UNIQUEMENT en JSON valide avec cette structure exacte:
     document.getElementById('insightsView').style.display = view === 'insights' ? 'block' : 'none';
     document.getElementById('simulatorView').style.display = view === 'simulator' ? 'block' : 'none';
     document.getElementById('oracleView').style.display = view === 'oracle' ? 'flex' : 'none';
-    var fv = document.getElementById('frigoView'); if(fv) fv.style.display = view === 'frigo' ? 'block' : 'none';
+    var fv = document.getElementById('frigoView'); if(fv) { fv.style.display = view === 'frigo' ? 'block' : 'none'; var mc = document.querySelector('.main-content'); if(mc) mc.style.overflow = view === 'frigo' ? 'auto' : ''; }
     var hv = document.getElementById('homeView'); if(hv) { hv.style.display = view === 'home' ? 'block' : 'none'; if(view === 'home') { setTimeout(function(){ if(typeof window.initHome==='function') window.initHome(); }, 100); var mc2=document.querySelector('.main-content'); if(mc2){mc2.style.overflow='auto';mc2.style.height='100%';} } }
     var mc = document.querySelector('.main-content');
     if (mc) mc.style.overflow = ['home','cycle','planning','catalogue','menus','chrono','mes-recettes'].includes(view) ? 'auto' : 'hidden';
@@ -8693,7 +8693,7 @@ function closeMirellaNotif() {
 </nav>
 
 <!-- FRIGO VIEW -->
-<div id="frigoView" style="display:none;padding:0;overflow-y:auto;background:var(--cream);width:100%;height:100%;position:fixed;top:56px;left:0;right:0;bottom:60px;z-index:10">
+<div id="frigoView" style="display:none;padding:0;overflow-y:auto;background:var(--cream);width:100%;height:100%;">
   <div style="background:linear-gradient(135deg,var(--coral),var(--accent));padding:16px 20px 24px;margin:0 -0px;width:100%;box-sizing:border-box;display:block">
     <div style="font-size:1.4rem;font-weight:800;color:white;margin-bottom:4px">🧊 Mon Frigo</div>
     <div style="font-size:0.85rem;color:rgba(255,255,255,0.85)">Photographiez votre frigo pour des recettes personnalisées</div>
