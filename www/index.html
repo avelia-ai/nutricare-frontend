@@ -4416,7 +4416,7 @@ function switchLang(lang) {
       const url = URL.createObjectURL(file);
       img.onload = () => {
         let w = img.width, h = img.height;
-        const maxDim = 1200;
+        const maxDim = 800;
         if (w > maxDim || h > maxDim) {
           if (w > h) { h = Math.round(h * maxDim / w); w = maxDim; }
           else { w = Math.round(w * maxDim / h); h = maxDim; }
@@ -4424,7 +4424,7 @@ function switchLang(lang) {
         canvas.width = w; canvas.height = h;
         canvas.getContext('2d').drawImage(img, 0, 0, w, h);
         URL.revokeObjectURL(url);
-        resolve(canvas.toDataURL('image/jpeg', 0.75));
+        resolve(canvas.toDataURL('image/jpeg', 0.6));
       };
       img.src = url;
     });
@@ -4436,11 +4436,15 @@ function switchLang(lang) {
     document.getElementById('bioLoading').style.display = 'block';
     document.getElementById('bioResult').style.display = 'none';
     try {
+      const bioController = new AbortController();
+      const bioTimeout = setTimeout(() => bioController.abort(), 60000);
       const res = await fetch(`${BACKEND_URL}/api/biologie/analyze`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${authToken}` },
-        body: JSON.stringify({ image_base64: base64, media_type: 'image/jpeg' })
+        body: JSON.stringify({ image_base64: base64, media_type: 'image/jpeg' }),
+        signal: bioController.signal
       });
+      clearTimeout(bioTimeout);
       const data = await res.json();
       if (res.ok) {
         renderBiologie(data);
