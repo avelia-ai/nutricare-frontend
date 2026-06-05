@@ -1924,11 +1924,14 @@ function switchLang(lang) {
         </div>
         <!-- CARD MÉDECINS -->
         <div id="homeMedecinsCard" style="background:white;border-radius:16px;overflow:hidden;margin-bottom:12px;box-shadow:0 2px 8px rgba(0,0,0,0.06)">
-          <div style="padding:14px">
-            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+          <div style="padding:14px 14px 0">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
               <div style="font-size:0.72rem;font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:var(--coral)">🏥 Médecins à proximité</div>
               <button onclick="window.loadMedecins()" style="background:var(--cream);border:none;border-radius:8px;padding:5px 10px;font-size:0.72rem;font-weight:600;color:var(--coral);cursor:pointer">Actualiser</button>
             </div>
+          </div>
+          <div id="homeMedecinsMap" style="width:100%;height:180px;background:#f0f0f0;display:none"></div>
+          <div style="padding:14px">
             <div id="homeMedecinsList" style="display:flex;flex-direction:column;gap:8px">
               <div style="text-align:center;padding:16px;color:#aaa;font-size:0.82rem">
                 <div style="font-size:1.5rem;margin-bottom:6px">📍</div>
@@ -8963,6 +8966,7 @@ window.supprimerRecette = async function(id) {
 // MÉDECINS À PROXIMITÉ
 window.loadMedecins = async function(specialite) {
   var list = document.getElementById('homeMedecinsList');
+  var mapDiv = document.getElementById('homeMedecinsMap');
   if (!list) return;
   list.innerHTML = '<div style="text-align:center;padding:16px;color:#aaa;font-size:0.82rem">📍 Localisation en cours...</div>';
   if (!navigator.geolocation) {
@@ -8984,8 +8988,22 @@ window.loadMedecins = async function(specialite) {
         list.innerHTML = '<div style="padding:12px;color:#888;font-size:0.82rem">Aucun médecin trouvé à proximité.</div>';
         return;
       }
+
+      // Afficher la carte Google Maps
+      if (mapDiv) {
+        mapDiv.style.display = 'block';
+        if (!window._gmapsLoaded) {
+          window._gmapsLoaded = true;
+          var script = document.createElement('script');
+          script.src = 'https://maps.googleapis.com/maps/api/js?key=AIzaSyCCvxdc-gPJr7myjxjZFWNUjbfDmzvZwig&callback=window._initMedecinsMap';
+          window._medecinsMapData = {lat: lat, lng: lng, doctors: data.doctors, mapDiv: mapDiv};
+          document.head.appendChild(script);
+        } else {
+          window._renderMedecinsMap({lat: lat, lng: lng, doctors: data.doctors, mapDiv: mapDiv});
+        }
+      }
+
       var wrap = document.createElement('div');
-      // Filtres
       var filtresDiv = document.createElement('div');
       filtresDiv.style.cssText = 'display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px';
       var filtres = ['Généraliste','Nutritionniste','Cardiologue','Rhumatologue','Dermatologue'];
@@ -8998,7 +9016,6 @@ window.loadMedecins = async function(specialite) {
         filtresDiv.appendChild(btn);
       });
       wrap.appendChild(filtresDiv);
-      // Liste médecins
       data.doctors.forEach(function(d) {
         var a = document.createElement('a');
         a.href = d.mapsUrl;
@@ -9033,6 +9050,24 @@ window.loadMedecins = async function(specialite) {
     }
   }, function() {
     list.innerHTML = '<div style="text-align:center;padding:16px"><div style="font-size:0.82rem;color:#888;margin-bottom:10px">Activez la localisation pour trouver des médecins près de vous.</div><button onclick="window.loadMedecins()" style="background:linear-gradient(135deg,var(--coral),var(--accent));color:white;border:none;border-radius:10px;padding:10px 20px;font-size:0.82rem;font-weight:600;cursor:pointer">Réessayer</button></div>';
+  });
+};
+
+window._initMedecinsMap = function() {
+  if (window._medecinsMapData) window._renderMedecinsMap(window._medecinsMapData);
+};
+
+window._renderMedecinsMap = function(d) {
+  var map = new google.maps.Map(d.mapDiv, {
+    center: {lat: d.lat, lng: d.lng},
+    zoom: 14,
+    disableDefaultUI: true,
+    zoomControl: true,
+    styles: [{featureType:'poi',elementType:'labels',stylers:[{visibility:'off'}]}]
+  });
+  new google.maps.Marker({position:{lat:d.lat,lng:d.lng},map:map,icon:{path:google.maps.SymbolPath.CIRCLE,scale:8,fillColor:'#FF6B6B',fillOpacity:1,strokeColor:'white',strokeWeight:2},title:'Vous'});
+  d.doctors.forEach(function(doc) {
+    new google.maps.Marker({position:{lat:doc.lat,lng:doc.lng},map:map,title:doc.name,icon:{url:'https://maps.google.com/mapfiles/ms/icons/red-dot.png'}});
   });
 };</script>
 </html>
