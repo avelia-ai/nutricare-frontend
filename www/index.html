@@ -1186,6 +1186,8 @@ window.CITATIONS = [
 
 window.initHome = async function() {
   var profile = JSON.parse(localStorage.getItem('nutricare_profile') || '{}');
+  // Charger médecins auto
+  setTimeout(function(){ if(typeof window.loadMedecins==='function') window.loadMedecins(); }, 500);
   var now = new Date();
   var hours = now.getHours();
   var prenom = profile.full_name ? profile.full_name.split(' ')[0] : '';
