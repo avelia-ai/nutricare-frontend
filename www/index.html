@@ -7267,26 +7267,36 @@ function renderMenu(menu) {
     if (menu.conseils_semaine) {
       var el = document.getElementById('menusConseilsContent');
       document.getElementById('menusConseils').style.display = 'block';
-      // Découper par numéros et afficher proprement
-      var parts = menu.conseils_semaine.split(/(?=\d+\.\s)/);
+      var raw = menu.conseils_semaine;
       var html = '';
-      parts.forEach(function(part) {
-        if (!part.trim()) return;
-        var match = part.match(/^(\d+)\.\s*(.*)/s);
-        if (match) {
-          var num = match[1];
-          var text = match[2].trim();
-          // Mettre le premier mot en gras si c'est un titre en majuscules
-          text = text.replace(/^([A-Z][A-Z\s\-2]+)\s*:/,
-            '<strong style="color:var(--coral);font-size:0.88rem">$1 :</strong>');
-          html += '<div style="display:flex;gap:12px;align-items:flex-start;margin-bottom:14px;padding:12px;background:white;border-radius:12px;box-shadow:0 1px 4px rgba(255,107,107,0.1)">' +
-            '<span style="background:linear-gradient(135deg,var(--coral),var(--accent));color:white;border-radius:50%;min-width:24px;height:24px;display:flex;align-items:center;justify-content:center;font-size:0.7rem;font-weight:800;flex-shrink:0;margin-top:1px">' + num + '</span>' +
-            '<div style="font-size:0.83rem;color:#333;line-height:1.6">' + text + '</div></div>';
+      // Découper par sections en majuscules (ex: "INTERACTIONS MÉDICAMENTEUSES:", "SEMAINE PHASE...")
+      var sections = raw.split(/(?=\b[A-ZÀÂÉÈÊËÎÏÔÙÛÜÇ][A-ZÀÂÉÈÊËÎÏÔÙÛÜÇ\s\-:]{8,}(?::|\n))/);
+      var icons = ['🥗','⚠️','💊','🌿','💡','🏃','🩺','🔬'];
+      var colors = ['#FF6B6B','#FF9A3C','#8B5CF6','#10B981','#3B82F6','#EC4899','#F59E0B','#6366F1'];
+      var idx = 0;
+      sections.forEach(function(section) {
+        if (!section.trim()) return;
+        // Détecter titre (ligne en majuscules)
+        var titleMatch = section.match(/^([A-ZÀÂÉÈÊËÎÏÔÙÛÜÇ][A-ZÀÂÉÈÊËÎÏÔÙÛÜÇ\s\-:]{4,})(?::|\n)(.*)/s);
+        if (titleMatch) {
+          var title = titleMatch[1].trim().replace(/:$/, '');
+          var body = titleMatch[2].trim();
+          var color = colors[idx % colors.length];
+          var icon = icons[idx % icons.length];
+          idx++;
+          html += '<div style="background:white;border-radius:14px;overflow:hidden;margin-bottom:12px;box-shadow:0 2px 8px rgba(0,0,0,0.06)">';
+          html += '<div style="background:' + color + ';padding:10px 14px;display:flex;align-items:center;gap:8px">';
+          html += '<span style="font-size:1rem">' + icon + '</span>';
+          html += '<span style="font-size:0.78rem;font-weight:700;color:white;text-transform:uppercase;letter-spacing:.05em">' + title + '</span>';
+          html += '</div>';
+          html += '<div style="padding:12px 14px;font-size:0.82rem;color:#444;line-height:1.7">' + body.replace(/\n/g, '<br>') + '</div>';
+          html += '</div>';
         } else {
-          html += '<div style="font-size:0.83rem;color:#555;line-height:1.6;margin-bottom:8px">' + part.trim() + '</div>';
+          // Section sans titre → bulle simple
+          html += '<div style="background:white;border-radius:14px;padding:12px 14px;margin-bottom:12px;box-shadow:0 2px 8px rgba(0,0,0,0.06);font-size:0.82rem;color:#444;line-height:1.7">' + section.trim().replace(/\n/g, '<br>') + '</div>';
         }
       });
-      el.innerHTML = html || menu.conseils_semaine;
+      el.innerHTML = html || '<div style="font-size:0.82rem;color:#555;line-height:1.7">' + raw + '</div>';
     }
   }
 }
