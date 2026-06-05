@@ -8175,6 +8175,21 @@ window.saveEvent = function() {
 
 </script>
 <script src="translations.js?v=2"></script>
+<script>
+// Cacher le splash screen une fois la page chargée
+document.addEventListener('deviceready', function() {
+  if (window.Capacitor && window.Capacitor.Plugins && window.Capacitor.Plugins.SplashScreen) {
+    window.Capacitor.Plugins.SplashScreen.hide();
+  }
+});
+window.addEventListener('load', function() {
+  setTimeout(function() {
+    if (window.Capacitor && window.Capacitor.Plugins && window.Capacitor.Plugins.SplashScreen) {
+      window.Capacitor.Plugins.SplashScreen.hide();
+    }
+  }, 500);
+});
+</script>
 
 
 <!-- Vue Fitness -->
