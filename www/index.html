@@ -6487,6 +6487,7 @@ Réponds UNIQUEMENT en JSON valide avec cette structure exacte:
   }
 
   async function showView(view, btn) {
+    window._currentView = view;
     if (view === 'menus') setTimeout(buildWeekSelector, 50);
     if (view === 'health') { loadInfoDuJour(); loadHydrationFromStorage(); setTimeout(renderEvolutionGallery, 100); }
     if (view === 'fitness') { loadFitnessView(); }
@@ -8577,26 +8578,26 @@ function closeMirellaNotif() {
   <div onclick="event.stopPropagation()" style="position:absolute;bottom:80px;left:16px;right:16px;background:white;border-radius:24px;padding:20px;max-height:70vh;overflow-y:auto">
     <div style="font-size:1rem;font-weight:700;color:#2D2D2D;margin-bottom:16px;text-align:center">Toutes les fonctionnalités</div>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
-      <button onclick="toggleQuickMenu();showView('menus')" style="display:flex;align-items:center;gap:8px;padding:12px;background:var(--cream);border:none;border-radius:12px;font-size:0.82rem;font-weight:600;color:#2D2D2D;cursor:pointer">🍽️ Mes menus</button>
-      <button onclick="toggleQuickMenu();showView('health')" style="display:flex;align-items:center;gap:8px;padding:12px;background:var(--cream);border:none;border-radius:12px;font-size:0.82rem;font-weight:600;color:#2D2D2D;cursor:pointer">📊 Suivi santé</button>
-      <button onclick="toggleQuickMenu();showView('analysis')" style="display:flex;align-items:center;gap:8px;padding:12px;background:var(--cream);border:none;border-radius:12px;font-size:0.82rem;font-weight:600;color:#2D2D2D;cursor:pointer">📸 Analyse repas</button>
-      <button onclick="toggleQuickMenu();showView('scanproduit')" style="display:flex;align-items:center;gap:8px;padding:12px;background:var(--cream);border:none;border-radius:12px;font-size:0.82rem;font-weight:600;color:#2D2D2D;cursor:pointer">🔍 Scan produit</button>
-      <button onclick="toggleQuickMenu();showView('visual')" style="display:flex;align-items:center;gap:8px;padding:12px;background:var(--cream);border:none;border-radius:12px;font-size:0.82rem;font-weight:600;color:#2D2D2D;cursor:pointer">🔬 Détection visuelle</button>
-      <button onclick="toggleQuickMenu();showView('pro')" style="display:flex;align-items:center;gap:8px;padding:12px;background:var(--cream);border:none;border-radius:12px;font-size:0.82rem;font-weight:600;color:#2D2D2D;cursor:pointer">👨‍⚕️ Espace médecin</button>
-      <button onclick="toggleQuickMenu();showView('oracle')" style="display:flex;align-items:center;gap:8px;padding:12px;background:linear-gradient(135deg,var(--coral),var(--accent));border:none;border-radius:12px;font-size:0.82rem;font-weight:600;color:white;cursor:pointer">👑 Oracle Santé</button>
-      <button onclick="toggleQuickMenu();showView('chrono')" style="display:flex;align-items:center;gap:8px;padding:12px;background:var(--cream);border:none;border-radius:12px;font-size:0.82rem;font-weight:600;color:#2D2D2D;cursor:pointer">❤️ Score de santé</button>
-      <button onclick="toggleQuickMenu();showView('biologie')" style="display:flex;align-items:center;gap:8px;padding:12px;background:var(--cream);border:none;border-radius:12px;font-size:0.82rem;font-weight:600;color:#2D2D2D;cursor:pointer">🧬 Bilan sanguin</button>
-      <button onclick="toggleQuickMenu();showView('ordonnance')" style="display:flex;align-items:center;gap:8px;padding:12px;background:var(--cream);border:none;border-radius:12px;font-size:0.82rem;font-weight:600;color:#2D2D2D;cursor:pointer">📋 Scan ordonnance</button>
-      <button onclick="toggleQuickMenu();showView('simulator')" style="display:flex;align-items:center;gap:8px;padding:12px;background:var(--cream);border:none;border-radius:12px;font-size:0.82rem;font-weight:600;color:#2D2D2D;cursor:pointer">⚡ Simulateur</button>
-      <button onclick="toggleQuickMenu();showView('fitness')" style="display:flex;align-items:center;gap:8px;padding:12px;background:linear-gradient(135deg,var(--coral),var(--accent));border:none;border-radius:12px;font-size:0.82rem;font-weight:600;color:white;cursor:pointer">💪 Fitness</button>
-      <button onclick="toggleQuickMenu();showView('programs')" style="display:flex;align-items:center;gap:8px;padding:12px;background:var(--cream);border:none;border-radius:12px;font-size:0.82rem;font-weight:600;color:#2D2D2D;cursor:pointer">🎯 Programmes</button>
-      <button onclick="toggleQuickMenu();showView('passeport')" style="display:flex;align-items:center;gap:8px;padding:12px;background:var(--cream);border:none;border-radius:12px;font-size:0.82rem;font-weight:600;color:#2D2D2D;cursor:pointer">📄 Passeport santé</button>
-      <button onclick="toggleQuickMenu();showView('pricing')" style="display:flex;align-items:center;gap:8px;padding:12px;background:var(--cream);border:none;border-radius:12px;font-size:0.82rem;font-weight:600;color:#2D2D2D;cursor:pointer">⭐ Abonnements</button>
-      <button onclick="toggleQuickMenu();showView('planning')" style="display:flex;align-items:center;gap:8px;padding:12px;background:var(--cream);border:none;border-radius:12px;font-size:0.82rem;font-weight:600;color:#2D2D2D;cursor:pointer">📅 Mon planning</button>
+      <button id="qmBtn-menus" onclick="toggleQuickMenu();showView('menus')" style="display:flex;align-items:center;gap:8px;padding:12px;background:var(--cream);border:none;border-radius:12px;font-size:0.82rem;font-weight:600;color:#2D2D2D;cursor:pointer">🍽️ Mes menus</button>
+      <button id="qmBtn-health" onclick="toggleQuickMenu();showView('health')" style="display:flex;align-items:center;gap:8px;padding:12px;background:var(--cream);border:none;border-radius:12px;font-size:0.82rem;font-weight:600;color:#2D2D2D;cursor:pointer">📊 Suivi santé</button>
+      <button id="qmBtn-analysis" onclick="toggleQuickMenu();showView('analysis')" style="display:flex;align-items:center;gap:8px;padding:12px;background:var(--cream);border:none;border-radius:12px;font-size:0.82rem;font-weight:600;color:#2D2D2D;cursor:pointer">📸 Analyse repas</button>
+      <button id="qmBtn-scanproduit" onclick="toggleQuickMenu();showView('scanproduit')" style="display:flex;align-items:center;gap:8px;padding:12px;background:var(--cream);border:none;border-radius:12px;font-size:0.82rem;font-weight:600;color:#2D2D2D;cursor:pointer">🔍 Scan produit</button>
+      <button id="qmBtn-visual" onclick="toggleQuickMenu();showView('visual')" style="display:flex;align-items:center;gap:8px;padding:12px;background:var(--cream);border:none;border-radius:12px;font-size:0.82rem;font-weight:600;color:#2D2D2D;cursor:pointer">🔬 Détection visuelle</button>
+      <button id="qmBtn-pro" onclick="toggleQuickMenu();showView('pro')" style="display:flex;align-items:center;gap:8px;padding:12px;background:var(--cream);border:none;border-radius:12px;font-size:0.82rem;font-weight:600;color:#2D2D2D;cursor:pointer">👨‍⚕️ Espace médecin</button>
+      <button id="qmBtn-oracle" onclick="toggleQuickMenu();showView('oracle')" style="display:flex;align-items:center;gap:8px;padding:12px;background:var(--cream);border:none;border-radius:12px;font-size:0.82rem;font-weight:600;color:#2D2D2D;cursor:pointer">👑 Oracle Santé</button>
+      <button id="qmBtn-chrono" onclick="toggleQuickMenu();showView('chrono')" style="display:flex;align-items:center;gap:8px;padding:12px;background:var(--cream);border:none;border-radius:12px;font-size:0.82rem;font-weight:600;color:#2D2D2D;cursor:pointer">❤️ Score de santé</button>
+      <button id="qmBtn-biologie" onclick="toggleQuickMenu();showView('biologie')" style="display:flex;align-items:center;gap:8px;padding:12px;background:var(--cream);border:none;border-radius:12px;font-size:0.82rem;font-weight:600;color:#2D2D2D;cursor:pointer">🧬 Bilan sanguin</button>
+      <button id="qmBtn-ordonnance" onclick="toggleQuickMenu();showView('ordonnance')" style="display:flex;align-items:center;gap:8px;padding:12px;background:var(--cream);border:none;border-radius:12px;font-size:0.82rem;font-weight:600;color:#2D2D2D;cursor:pointer">📋 Scan ordonnance</button>
+      <button id="qmBtn-simulator" onclick="toggleQuickMenu();showView('simulator')" style="display:flex;align-items:center;gap:8px;padding:12px;background:var(--cream);border:none;border-radius:12px;font-size:0.82rem;font-weight:600;color:#2D2D2D;cursor:pointer">⚡ Simulateur</button>
+      <button id="qmBtn-fitness" onclick="toggleQuickMenu();showView('fitness')" style="display:flex;align-items:center;gap:8px;padding:12px;background:var(--cream);border:none;border-radius:12px;font-size:0.82rem;font-weight:600;color:#2D2D2D;cursor:pointer">💪 Fitness</button>
+      <button id="qmBtn-programs" onclick="toggleQuickMenu();showView('programs')" style="display:flex;align-items:center;gap:8px;padding:12px;background:var(--cream);border:none;border-radius:12px;font-size:0.82rem;font-weight:600;color:#2D2D2D;cursor:pointer">🎯 Programmes</button>
+      <button id="qmBtn-passeport" onclick="toggleQuickMenu();showView('passeport')" style="display:flex;align-items:center;gap:8px;padding:12px;background:var(--cream);border:none;border-radius:12px;font-size:0.82rem;font-weight:600;color:#2D2D2D;cursor:pointer">📄 Passeport santé</button>
+      <button id="qmBtn-pricing" onclick="toggleQuickMenu();showView('pricing')" style="display:flex;align-items:center;gap:8px;padding:12px;background:var(--cream);border:none;border-radius:12px;font-size:0.82rem;font-weight:600;color:#2D2D2D;cursor:pointer">⭐ Abonnements</button>
+      <button id="qmBtn-planning" onclick="toggleQuickMenu();showView('planning')" style="display:flex;align-items:center;gap:8px;padding:12px;background:var(--cream);border:none;border-radius:12px;font-size:0.82rem;font-weight:600;color:#2D2D2D;cursor:pointer">📅 Mon planning</button>
       <button id="btnCycleFeminin" onclick="toggleQuickMenu();showView('cycle')" style="display:none;align-items:center;gap:8px;padding:12px;background:var(--cream);border:none;border-radius:12px;font-size:0.82rem;font-weight:600;color:#2D2D2D;cursor:pointer">🌸 Cycle féminin</button>
-      <button onclick="toggleQuickMenu();showView('catalogue')" style="display:flex;align-items:center;gap:8px;padding:12px;background:var(--cream);border:none;border-radius:12px;font-size:0.82rem;font-weight:600;color:#2D2D2D;cursor:pointer">📖 Catalogue recettes</button>
-      <button onclick="toggleQuickMenu();showView('mes-recettes')" style="display:flex;align-items:center;gap:8px;padding:12px;background:var(--cream);border:none;border-radius:12px;font-size:0.82rem;font-weight:600;color:#2D2D2D;cursor:pointer">👨‍🍳 Mes recettes</button>
-<button onclick="toggleQuickMenu();showView('gamification')" style="display:flex;align-items:center;gap:8px;padding:12px;background:var(--cream);border:none;border-radius:12px;font-size:0.82rem;font-weight:600;color:#2D2D2D;cursor:pointer">🏆 Progression</button>
+      <button id="qmBtn-catalogue" onclick="toggleQuickMenu();showView('catalogue')" style="display:flex;align-items:center;gap:8px;padding:12px;background:var(--cream);border:none;border-radius:12px;font-size:0.82rem;font-weight:600;color:#2D2D2D;cursor:pointer">📖 Catalogue recettes</button>
+      <button id="qmBtn-mes-recettes" onclick="toggleQuickMenu();showView('mes-recettes')" style="display:flex;align-items:center;gap:8px;padding:12px;background:var(--cream);border:none;border-radius:12px;font-size:0.82rem;font-weight:600;color:#2D2D2D;cursor:pointer">👨‍🍳 Mes recettes</button>
+<button id="qmBtn-gamification" onclick="toggleQuickMenu();showView('gamification')" style="display:flex;align-items:center;gap:8px;padding:12px;background:var(--cream);border:none;border-radius:12px;font-size:0.82rem;font-weight:600;color:#2D2D2D;cursor:pointer">🏆 Progression</button>
     </div>
   </div>
 </div>
@@ -8631,7 +8632,17 @@ initBottomNav();
 
 function toggleQuickMenu() {
   const menu = document.getElementById('quickMenu');
-  menu.style.display = menu.style.display === 'none' ? 'flex' : 'none';
+  const isOpening = menu.style.display === 'none';
+  menu.style.display = isOpening ? 'flex' : 'none';
+  if (isOpening) {
+    // Surligner le bouton de la vue active
+    var currentView = window._currentView || 'home';
+    document.querySelectorAll('[id^="qmBtn-"]').forEach(function(btn) {
+      var isActive = btn.id === 'qmBtn-' + currentView;
+      btn.style.background = isActive ? 'linear-gradient(135deg,var(--coral),var(--accent))' : 'var(--cream)';
+      btn.style.color = isActive ? 'white' : '#2D2D2D';
+    });
+  }
 }
 </script>
 
