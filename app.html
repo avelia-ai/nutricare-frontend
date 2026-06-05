@@ -504,7 +504,7 @@ button[style*="background:linear-gradient(135deg,var(--coral),var(--accent))"] {
 
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCCvxdc-gPJr7myjxjZFWNUjbfDmzvZwig" defer></script>
 </head>
-<body>
+<body style="background:#FF6B6B">
 <script>
 
 
@@ -1428,30 +1428,39 @@ window.analyseFrigo = async function(file) {
     result.style.display = 'block';
     var html = '';
     html += '<div style="background:white;border-radius:14px;padding:16px;margin-bottom:12px;box-shadow:0 2px 8px rgba(0,0,0,0.06)">';
-    html += '<div style="font-size:0.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--coral);margin-bottom:12px">🥦 Aliments détectés</div>';
+    html += '<div style="font-size:0.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--coral);margin-bottom:12px">&#x1F966; Aliments d&eacute;tect&eacute;s</div>';
     html += '<div style="display:flex;flex-wrap:wrap;gap:8px">';
     (data.aliments||[]).forEach(function(a) {
       html += '<span style="background:var(--cream);color:#1a1a1a;padding:4px 12px;border-radius:20px;font-size:0.8rem;font-weight:600">' + a + '</span>';
     });
     html += '</div></div>';
     html += '<div style="background:white;border-radius:14px;padding:16px;margin-bottom:12px;box-shadow:0 2px 8px rgba(0,0,0,0.06)">';
-    html += '<div style="font-size:0.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--coral);margin-bottom:12px">🍳 Recettes avec vos ingrédients</div>';
-    (data.recettes||[]).forEach(function(r, i) {
+    html += '<div style="font-size:0.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--coral);margin-bottom:12px">&#x1F373; Recettes avec vos ingr&eacute;dients</div>';
+    (data.recettes||[]).forEach(function(r, idx) {
       html += '<div style="padding:12px;background:var(--cream);border-radius:12px;margin-bottom:8px">';
-      html += '<div style="font-weight:700;font-size:0.88rem;color:#1a1a1a;margin-bottom:4px">' + (i+1) + '. ' + r.nom + '</div>';
+      html += '<div style="font-weight:700;font-size:0.88rem;color:#1a1a1a;margin-bottom:4px">' + (idx+1) + '. ' + r.nom + '</div>';
       html += '<div style="font-size:0.78rem;color:#666;margin-bottom:6px">' + r.description + '</div>';
-      if (r.temps) html += '<span style="font-size:0.7rem;color:var(--coral);font-weight:600">⏱ ' + r.temps + '</span>';
+      if (r.temps) html += '<span style="font-size:0.7rem;color:var(--coral);font-weight:600">&#x23F1; ' + r.temps + '</span>';
       html += '</div>';
     });
     html += '</div>';
     if (data.analyse) {
       html += '<div style="background:white;border-radius:14px;padding:16px;margin-bottom:12px;box-shadow:0 2px 8px rgba(0,0,0,0.06);border-left:4px solid var(--coral)">';
-      html += '<div style="font-size:0.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--coral);margin-bottom:8px">💡 Analyse de Mirella</div>';
+      html += '<div style="font-size:0.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--coral);margin-bottom:8px">&#x1F4A1; Analyse de Mirella</div>';
       html += '<div style="font-size:0.83rem;color:#333;line-height:1.7">' + data.analyse + '</div>';
       html += '</div>';
     }
-    html += '<button onclick="document.getElementById('frigoUploadZone').style.display='block';document.getElementById('frigoPreview').style.display='none';document.getElementById('frigoResult').style.display='none'" style="width:100%;background:var(--cream);color:var(--coral);border:none;border-radius:12px;padding:14px;font-size:0.88rem;font-weight:700;cursor:pointer;margin-top:4px">📸 Analyser une autre photo</button>';
+    var resetBtn = document.createElement('button');
+    resetBtn.textContent = 'Analyser une autre photo';
+    resetBtn.style.cssText = 'width:100%;background:var(--cream);color:var(--coral);border:none;border-radius:12px;padding:14px;font-size:0.88rem;font-weight:700;cursor:pointer;margin-top:4px';
+    resetBtn.onclick = function() {
+      uploadZone.style.display = 'block';
+      preview.style.display = 'none';
+      result.style.display = 'none';
+      result.innerHTML = '';
+    };
     result.innerHTML = html;
+    result.appendChild(resetBtn);
   } catch(e) {
     loading.style.display = 'none';
     result.style.display = 'block';
@@ -8683,7 +8692,6 @@ function closeMirellaNotif() {
   </div>
 </nav>
 
-
 <!-- FRIGO VIEW -->
 <div id="frigoView" style="display:none;padding:0;overflow-y:auto;background:var(--cream);width:100%;height:100%">
   <div style="background:linear-gradient(135deg,var(--coral),var(--accent));padding:32px 20px 28px">
@@ -8691,28 +8699,24 @@ function closeMirellaNotif() {
     <div style="font-size:0.85rem;color:rgba(255,255,255,0.85)">Photographiez votre frigo pour des recettes personnalisées</div>
   </div>
   <div style="padding:16px">
-    <!-- Zone upload -->
-    <div id="frigoUploadZone" onclick="document.getElementById('frigoInput').click()" 
-      style="border:2px dashed rgba(255,107,107,0.4);border-radius:16px;padding:40px 20px;text-align:center;background:white;cursor:pointer;margin-bottom:16px">
+    <div id="frigoUploadZone" onclick="document.getElementById('frigoInput').click()" style="border:2px dashed rgba(255,107,107,0.4);border-radius:16px;padding:40px 20px;text-align:center;background:white;cursor:pointer;margin-bottom:16px">
       <div style="font-size:2.5rem;margin-bottom:12px">📸</div>
       <div style="font-weight:600;color:#1a1a1a;margin-bottom:6px">Photographiez votre frigo</div>
       <div style="font-size:0.82rem;color:#888">Ou glissez une photo ici</div>
-      <input type="file" id="frigoInput" accept="image/*" capture="environment" style="display:none" onchange="analyseFrigo(this.files[0])">
+      <input type="file" id="frigoInput" accept="image/*" capture="environment" style="display:none" onchange="window.analyseFrigo(this.files[0])">
     </div>
-    <!-- Preview -->
     <div id="frigoPreview" style="display:none;margin-bottom:16px">
       <img id="frigoImg" style="width:100%;border-radius:16px;max-height:250px;object-fit:cover">
     </div>
-    <!-- Loading -->
     <div id="frigoLoading" style="display:none;text-align:center;padding:32px">
       <div style="font-size:2rem;margin-bottom:12px">🔍</div>
       <div style="font-weight:600;color:#1a1a1a;margin-bottom:4px">Analyse en cours...</div>
       <div style="font-size:0.82rem;color:#888">Mirella analyse le contenu de votre frigo</div>
     </div>
-    <!-- Résultats -->
     <div id="frigoResult" style="display:none"></div>
   </div>
 </div>
+
 <!-- Quick Menu Mobile -->
 <div id="quickMenu" style="display:none;position:fixed;inset:0;z-index:999;background:rgba(0,0,0,0.5)" onclick="toggleQuickMenu()">
   <div onclick="event.stopPropagation()" style="position:absolute;bottom:80px;left:16px;right:16px;background:white;border-radius:24px;padding:20px;max-height:70vh;overflow-y:auto">
