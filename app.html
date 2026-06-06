@@ -1306,7 +1306,12 @@ window.initHome = async function() {
   var conseilPhoto = document.getElementById('homeConseilPhoto');
   var conseilTags = document.getElementById('homeConseilTags');
   if (conseilEl) conseilEl.textContent = conseilData.conseil;
-  if (conseilPhoto) conseilPhoto.style.backgroundImage = 'url(/images/vegetables1.jpg)';
+  if (conseilPhoto && conseilData.keyword) {
+    fetch('https://nutricare-backend-production.up.railway.app/api/photos/search?q=' + encodeURIComponent(conseilData.keyword))
+      .then(function(r){ return r.json(); })
+      .then(function(d){ if (d.url && conseilPhoto) conseilPhoto.style.backgroundImage = 'url(' + d.url + ')'; })
+      .catch(function(){});
+  }
   if (conseilTags) conseilTags.innerHTML = conseilData.tags.map(function(t){ return '<span style="background:#ECFDF5;color:#059669;font-size:0.68rem;padding:2px 8px;border-radius:10px;font-weight:600">' + t + '</span>'; }).join('');
 
   // Rappels medicaments
