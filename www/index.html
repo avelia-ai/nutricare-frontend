@@ -1254,7 +1254,13 @@ window.initHome = async function() {
   var citPhoto = document.getElementById('homeCitationPhoto');
   if (citEl) citEl.textContent = cit.texte;
   if (citAut) citAut.textContent = '— ' + cit.auteur;
-  if (citPhoto) citPhoto.style.backgroundImage = 'url(/images/meditation1.jpg)';
+  if (citPhoto && cit.keyword) {
+    var citDayIndex = now.getFullYear() * 366 + now.getMonth() * 31 + now.getDate();
+    fetch('https://nutricare-backend-production.up.railway.app/api/photos/search?q=' + encodeURIComponent(cit.keyword + ' wellness'))
+      .then(function(r){ return r.json(); })
+      .then(function(d){ if (d.url && citPhoto) citPhoto.style.backgroundImage = 'url(' + d.url + ')'; })
+      .catch(function(){});
+  }
 
   // Conseil personnalise
   var pathologies = profile.pathologies || [];
