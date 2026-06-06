@@ -1259,17 +1259,49 @@ window.initHome = async function() {
   // Conseil personnalise
   var pathologies = profile.pathologies || [];
   var conseils = [
-    {conseil: 'Commencez la journee avec un verre d eau tiede avec du citron pour stimuler votre digestion.', keyword: 'lemon water morning', tags: ['Hydratation','Digestion']},
-    {conseil: 'Privilegiez les aliments riches en magnesium : noix, graines, chocolat noir. Benefique contre le stress.', keyword: 'nuts seeds healthy', tags: ['Magnesium','Anti-stress']},
-    {conseil: 'Une marche de 20 minutes apres le dejeuner reduit la glycemie et ameliore la digestion.', keyword: 'walking nature path', tags: ['Activite','Glycemie']},
-    {conseil: 'Les oméga-3 du saumon ou des noix sont excellents pour la sante cardiovasculaire.', keyword: 'salmon fish healthy', tags: ['Cardiovasculaire','Omega-3']},
+    {conseil: 'Commencez la journee avec un verre d eau tiede et du citron pour activer votre digestion et votre metabolisme.', keyword: 'lemon water morning', tags: ['Hydratation','Digestion']},
+    {conseil: 'Privilegiez les aliments riches en magnesium : noix, graines de courge, chocolat noir 70%. Benefique contre le stress et la fatigue.', keyword: 'nuts seeds healthy', tags: ['Magnesium','Anti-stress']},
+    {conseil: 'Une marche de 20 minutes apres le dejeuner reduit la glycemie de 30% et ameliore la digestion.', keyword: 'walking nature path', tags: ['Activite','Glycemie']},
+    {conseil: 'Les omega-3 du saumon, des sardines ou des noix sont essentiels pour la sante cardiovasculaire et cerebrale.', keyword: 'salmon fish healthy', tags: ['Cardiovasculaire','Omega-3']},
+    {conseil: 'Le curcuma associe au poivre noir multiplie son absorption par 20. Ajoutez-le a vos plats pour ses proprietes anti-inflammatoires.', keyword: 'turmeric spices healthy', tags: ['Anti-inflammation','Epices']},
+    {conseil: 'Dormez 7 a 9 heures par nuit. Le manque de sommeil augmente le cortisol et favorise la prise de poids.', keyword: 'sleep rest wellness', tags: ['Sommeil','Hormones']},
+    {conseil: 'Mangez lentement et mastiquez bien. Cela reduit les portions consommees de 20% et ameliore la digestion.', keyword: 'mindful eating healthy', tags: ['Digestion','Satiete']},
+    {conseil: 'Les probiotiques du kefir, du yaourt et de la choucroute renforcent votre microbiote et votre immunite.', keyword: 'fermented food yogurt', tags: ['Microbiote','Immunite']},
+    {conseil: 'Limitez les aliments ultra-transformes. Un repas fait maison contient en moyenne 3x moins de sel et de sucre.', keyword: 'home cooking healthy food', tags: ['Alimentation','Sante']},
+    {conseil: 'La vitamine D est indispensable : 15 minutes de soleil par jour ou une supplementation en hiver.', keyword: 'sunshine vitamin D', tags: ['Vitamine D','Immunite']},
+    {conseil: 'Hydratez-vous : 1,5 a 2L d eau par jour. La deshydratation cause fatigue, maux de tete et baisse de concentration.', keyword: 'water hydration healthy', tags: ['Hydratation','Energie']},
+    {conseil: 'Les legumes cruciferes (brocoli, chou, chou-fleur) contiennent des composes qui protegent contre certains cancers.', keyword: 'broccoli vegetables healthy', tags: ['Cancer','Protection']},
+    {conseil: 'Remplacez le sucre raffine par des dattes, du miel ou du sirop d erable pour un sucrant plus nutritif.', keyword: 'natural sweetener dates honey', tags: ['Sucre','Alternative']},
+    {conseil: 'Le jejune intermittent 16/8 peut ameliorer la sensibilite a l insuline et favoriser l autophagie cellulaire.', keyword: 'intermittent fasting healthy', tags: ['Jeune','Metabolisme']},
+    {conseil: 'Privilegiez les graisses saines : huile d olive, avocat, noix. Elles sont essentielles pour vos hormones et votre cerveau.', keyword: 'avocado olive oil healthy fats', tags: ['Graisses','Cerveau']},
+    {conseil: 'Les polyphenols du the vert et des baies protegent vos cellules du stress oxydatif et ralentissent le vieillissement.', keyword: 'green tea berries antioxidant', tags: ['Antioxydants','Anti-age']},
+    {conseil: 'Une poignee de noix par jour reduit le risque cardiovasculaire de 30% selon plusieurs etudes cliniques.', keyword: 'walnuts nuts healthy heart', tags: ['Cardiovasculaire','Noix']},
+    {conseil: 'Le gingembre frais apaise les nausees, reduit l inflammation et stimule la digestion. Ajoutez-le a vos infusions.', keyword: 'ginger tea healthy', tags: ['Anti-inflammation','Digestion']},
+    {conseil: 'Mangez au moins 5 portions de fruits et legumes par jour, de toutes les couleurs pour couvrir tous les micronutriments.', keyword: 'colorful vegetables fruits', tags: ['Micronutriments','Diversite']},
+    {conseil: 'Le zinc presente dans les huitres, la viande et les graines de courge est essentiel pour l immunite et la peau.', keyword: 'zinc rich foods healthy', tags: ['Zinc','Immunite']},
+    {conseil: 'Limitez l alcool a 2 verres maximum par semaine. Il perturbe le sommeil, le foie et le microbiote intestinal.', keyword: 'healthy lifestyle wellness', tags: ['Alcool','Foie']},
+    {conseil: 'La meditation de pleine conscience 10 minutes par jour reduit le stress et ameliore la qualite du sommeil.', keyword: 'meditation mindfulness wellness', tags: ['Stress','Sommeil']},
+    {conseil: 'Les lentilles et legumineuses sont des proteines vegetales excellentes : riches en fer, fibres et proteines.', keyword: 'lentils legumes healthy protein', tags: ['Proteines','Fer']},
+    {conseil: 'Evitez de manger apres 20h. Votre corps a besoin de repos digestif pour reparer et regenerer ses cellules.', keyword: 'healthy eating habits wellness', tags: ['Chrononutrition','Digestion']},
+    {conseil: 'Le petit-dejeuner ideal contient des proteines, des fibres et de bons lipides pour tenir jusqu au dejeuner.', keyword: 'healthy breakfast protein', tags: ['Petit-dejeuner','Energie']},
+    {conseil: 'Reduisez les sucres caches dans les sauces, jus de fruits et plats prepares. Lisez les etiquettes.', keyword: 'reading food labels healthy', tags: ['Sucre','Labels']},
+    {conseil: 'La marche quotidienne de 30 minutes reduit de 35% le risque de maladie cardiovasculaire.', keyword: 'walking exercise heart health', tags: ['Cardio','Marche']},
+    {conseil: 'Les graines de chia sont riches en omega-3, fibres et calcium. Parfaites dans un yaourt ou un smoothie.', keyword: 'chia seeds healthy breakfast', tags: ['Omega-3','Fibres']},
+    {conseil: 'Le foie est votre principal organe detoxifiant. Soutenez-le avec des artichauts, du citron et du pissenlit.', keyword: 'liver detox healthy food', tags: ['Detox','Foie']},
+    {conseil: 'Les aliments riches en tryptophane (dinde, banane, oeufs) favorisent la production de serotonine et le bonheur.', keyword: 'tryptophan serotonin food', tags: ['Serotonine','Humeur']},
   ];
-  var conseilData = conseils[now.getDate() % conseils.length];
-  if (pathologies.includes('hypertension')) {
-    conseilData = {conseil: 'Avec votre hypertension, limitez le sel et privilegiez le potassium : banane, avocat, patate douce ce matin.', keyword: 'avocado banana healthy', tags: ['Hypertension','Potassium']};
-  } else if (pathologies.includes('diabete') || pathologies.some(function(p){return p.toLowerCase().includes('diabet');})) {
-    conseilData = {conseil: 'Favorisez les aliments a index glycemique bas : legumineuses, avoine, legumes verts pour stabiliser votre glycemie.', keyword: 'lentils vegetables healthy', tags: ['Diabete','IG bas']};
+  var dayIndex = now.getFullYear() * 366 + now.getMonth() * 31 + now.getDate();
+  var conseilsPatho = conseils;
+  if (pathologies.length > 0) {
+    var pathoConseils = [
+      {conseil: 'Avec votre profil, privilegiez les aliments anti-inflammatoires : curcuma, gingembre, baies, poissons gras.', keyword: 'anti inflammatory food', tags: ['Anti-inflammation','Sante']},
+      {conseil: 'Limitez les aliments pro-inflammatoires : sucres raffines, farines blanches, huiles de tournesol et plats transformes.', keyword: 'healthy whole foods', tags: ['Inflammation','Prevention']},
+      {conseil: 'L alimentation mediterraneenne est recommandee pour votre profil : huile d olive, legumes, poissons, legumineuses.', keyword: 'mediterranean diet healthy', tags: ['Mediterranean','Sante']},
+      {conseil: 'Consultez regulierement votre medecin et faites vos bilans sanguins au moins une fois par an.', keyword: 'doctor health checkup', tags: ['Suivi','Prevention']},
+    ];
+    conseilsPatho = [...pathoConseils, ...conseils];
   }
+  var conseilData = conseilsPatho[dayIndex % conseilsPatho.length];
   var conseilEl = document.getElementById('homeConseil');
   var conseilPhoto = document.getElementById('homeConseilPhoto');
   var conseilTags = document.getElementById('homeConseilTags');
