@@ -1389,6 +1389,114 @@ window.renderCycleCalendar = function(lastPeriod, cycleLength, periodLength) {
   cal.innerHTML = html;
 };
 
+window.analyseVisage = async function(file) {
+  if (!file) return;
+  var preview = document.getElementById('visagePreview');
+  var img = document.getElementById('visageImg');
+  var loading = document.getElementById('visageLoading');
+  var result = document.getElementById('visageResult');
+  var uploadZone = document.getElementById('visageUploadZone');
+  var url = URL.createObjectURL(file);
+  img.src = url;
+  preview.style.display = 'block';
+  uploadZone.style.display = 'none';
+  loading.style.display = 'block';
+  result.style.display = 'none';
+  var compressed = await new Promise(function(resolve) {
+    var canvas = document.createElement('canvas');
+    var i = new Image();
+    i.onload = function() {
+      var w = i.width, h = i.height, max = 800;
+      if (w > max || h > max) { if (w > h) { h = Math.round(h*max/w); w = max; } else { w = Math.round(w*max/h); h = max; } }
+      canvas.width = w; canvas.height = h;
+      canvas.getContext('2d').drawImage(i, 0, 0, w, h);
+      resolve(canvas.toDataURL('image/jpeg', 0.7));
+    };
+    i.src = url;
+  });
+  var base64 = compressed.split(',')[1];
+  var token = localStorage.getItem('nutricare_token');
+  var profile = JSON.parse(localStorage.getItem('nutricare_profile') || '{}');
+  try {
+    var res = await fetch('https://nutricare-backend-production.up.railway.app/api/visage/analyze', {
+      method: 'POST',
+      headers: {'Content-Type':'application/json','Authorization':'Bearer '+token},
+      body: JSON.stringify({image_base64: base64, pathologies: profile.pathologies||[], medications: profile.medications||[]})
+    });
+    var data = await res.json();
+    loading.style.display = 'none';
+    result.style.display = 'block';
+    var html = '';
+
+    // Score général
+    if (data.score_global) {
+      var score = data.score_global;
+      var scoreColor = score >= 70 ? '#10B981' : score >= 40 ? '#FF9A3C' : '#ef4444';
+      html += '<div style="background:white;border-radius:14px;padding:16px;margin-bottom:12px;box-shadow:0 2px 8px rgba(0,0,0,0.06);text-align:center">';
+      html += '<div style="font-size:2.5rem;font-weight:900;color:' + scoreColor + '">' + score + '<span style="font-size:1rem">/100</span></div>';
+      html += '<div style="font-size:0.78rem;color:#888;margin-top:4px">Score bien-&#xEA;tre global</div>';
+      html += '</div>';
+    }
+
+    // Signes détectés
+    var sections = [
+      {key:'carences', label:'Signes de carences', icon:'&#x1F9EA;', color:'#8B5CF6'},
+      {key:'fatigue', label:'Niveau de fatigue', icon:'&#x1F634;', color:'#3B82F6'},
+      {key:'inflammation', label:'Inflammation', icon:'&#x1F525;', color:'#ef4444'},
+      {key:'peau', label:'État de la peau', icon:'&#x2728;', color:'#10B981'},
+      {key:'bien_etre', label:'Bien-être général', icon:'&#x1F9E0;', color:'#FF9A3C'},
+    ];
+    sections.forEach(function(s) {
+      if (data[s.key]) {
+        html += '<div style="background:white;border-radius:14px;padding:16px;margin-bottom:12px;box-shadow:0 2px 8px rgba(0,0,0,0.06);border-left:4px solid ' + s.color + '">';
+        html += '<div style="font-size:0.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:' + s.color + ';margin-bottom:8px">' + s.icon + ' ' + s.label + '</div>';
+        html += '<div style="font-size:0.83rem;color:#333;line-height:1.7">' + data[s.key] + '</div>';
+        html += '</div>';
+      }
+    });
+
+    // Conseils alimentaires
+    if (data.conseils_alimentaires && data.conseils_alimentaires.length) {
+      html += '<div style="background:white;border-radius:14px;padding:16px;margin-bottom:12px;box-shadow:0 2px 8px rgba(0,0,0,0.06)">';
+      html += '<div style="font-size:0.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--coral);margin-bottom:12px">&#x1F957; Conseils alimentaires</div>';
+      data.conseils_alimentaires.forEach(function(c) {
+        html += '<div style="display:flex;gap:8px;margin-bottom:8px"><span style="color:var(--coral)">&#x2714;</span><span style="font-size:0.83rem;color:#333">' + c + '</span></div>';
+      });
+      html += '</div>';
+    }
+
+    // Habitudes & hygiène de vie
+    if (data.hygiene_vie && data.hygiene_vie.length) {
+      html += '<div style="background:white;border-radius:14px;padding:16px;margin-bottom:12px;box-shadow:0 2px 8px rgba(0,0,0,0.06)">';
+      html += '<div style="font-size:0.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#10B981;margin-bottom:12px">&#x1F33F; Hygi&#xE8;ne de vie</div>';
+      data.hygiene_vie.forEach(function(h) {
+        html += '<div style="display:flex;gap:8px;margin-bottom:8px"><span style="color:#10B981">&#x2714;</span><span style="font-size:0.83rem;color:#333">' + h + '</span></div>';
+      });
+      html += '</div>';
+    }
+
+    // Disclaimer
+    html += '<div style="background:#f9f9f9;border-radius:12px;padding:12px;margin-bottom:12px;font-size:0.72rem;color:#999;font-style:italic;text-align:center">&#x26A0;&#xFE0F; Ces conseils ne remplacent pas un avis médical professionnel.</div>';
+
+    // Bouton refaire
+    var resetBtn = document.createElement('button');
+    resetBtn.textContent = '🤳 Analyser une autre photo';
+    resetBtn.style.cssText = 'width:100%;background:var(--cream);color:var(--coral);border:none;border-radius:12px;padding:14px;font-size:0.88rem;font-weight:700;cursor:pointer;margin-top:4px';
+    resetBtn.onclick = function() {
+      uploadZone.style.display = 'block';
+      preview.style.display = 'none';
+      result.style.display = 'none';
+      result.innerHTML = '';
+    };
+    result.innerHTML = html;
+    result.appendChild(resetBtn);
+  } catch(e) {
+    loading.style.display = 'none';
+    result.style.display = 'block';
+    result.innerHTML = '<div style="padding:16px;background:white;border-radius:14px;color:#ef4444">Erreur: ' + e.message + '</div>';
+  }
+};
+
 window.analyseFrigo = async function(file) {
   if (!file) return;
   var preview = document.getElementById('frigoPreview');
@@ -6637,6 +6745,7 @@ Réponds UNIQUEMENT en JSON valide avec cette structure exacte:
     document.getElementById('insightsView').style.display = view === 'insights' ? 'block' : 'none';
     document.getElementById('simulatorView').style.display = view === 'simulator' ? 'block' : 'none';
     document.getElementById('oracleView').style.display = view === 'oracle' ? 'flex' : 'none';
+    var vv = document.getElementById('visageView'); if(vv) { vv.style.display = view === 'visage' ? 'block' : 'none'; }
     var fv = document.getElementById('frigoView'); if(fv) { fv.style.display = view === 'frigo' ? 'block' : 'none'; var mc = document.querySelector('.main-content'); if(mc) mc.style.overflow = view === 'frigo' ? 'auto' : 'hidden'; }
     var hv = document.getElementById('homeView'); if(hv) { hv.style.display = view === 'home' ? 'block' : 'none'; if(view === 'home') { setTimeout(function(){ if(typeof window.initHome==='function') window.initHome(); }, 100); var mc2=document.querySelector('.main-content'); if(mc2){mc2.style.overflow='auto';mc2.style.height='100%';} } }
     var mc = document.querySelector('.main-content');
@@ -8692,6 +8801,28 @@ function closeMirellaNotif() {
   </div>
 </nav>
 
+<!-- VISAGE VIEW -->
+<div id="visageView" style="display:none;padding:32px;overflow-y:auto;background:var(--cream);width:100%">
+  <div class="view-header" style="font-family:'Open Sans',serif;font-size:2rem;font-weight:700;margin-bottom:6px;color:#2D2D2D">🪞 Analyse Visage</div>
+  <div style="font-size:0.85rem;color:var(--accent);margin-bottom:8px">Mirella analyse votre visage et vous propose des conseils nutritionnels et d'hygiène de vie personnalisés.</div>
+  <div style="font-size:0.75rem;color:#999;margin-bottom:24px;font-style:italic">⚠️ Ceci n'est pas un diagnostic médical. Consultez un professionnel de santé pour tout problème de santé.</div>
+  <div id="visageUploadZone" onclick="document.getElementById('visageInput').click()" style="border:2px dashed rgba(255,107,107,0.4);border-radius:16px;padding:40px 20px;text-align:center;background:white;cursor:pointer;margin-bottom:16px">
+    <div style="font-size:2.5rem;margin-bottom:12px">🤳</div>
+    <div style="font-weight:600;color:#1a1a1a;margin-bottom:6px">Prenez une photo de votre visage</div>
+    <div style="font-size:0.82rem;color:#888">Photo de face, bonne luminosité</div>
+    <input type="file" id="visageInput" accept="image/*" capture="user" style="display:none" onchange="window.analyseVisage(this.files[0])">
+  </div>
+  <div id="visagePreview" style="display:none;margin-bottom:16px">
+    <img id="visageImg" style="width:100%;border-radius:16px;max-height:300px;object-fit:cover">
+  </div>
+  <div id="visageLoading" style="display:none;text-align:center;padding:32px">
+    <div style="font-size:2rem;margin-bottom:12px">🔍</div>
+    <div style="font-weight:600;color:#1a1a1a;margin-bottom:4px">Analyse en cours...</div>
+    <div style="font-size:0.82rem;color:#888">Mirella analyse votre visage</div>
+  </div>
+  <div id="visageResult" style="display:none"></div>
+</div>
+
 <!-- FRIGO VIEW -->
 <div id="frigoView" style="display:none;padding:32px;overflow-y:auto;background:var(--cream);width:100%">
   <div class="view-header" style="font-family:'Open Sans',serif;font-size:2rem;font-weight:700;margin-bottom:6px;color:#2D2D2D">🧊 Mon Frigo</div>
@@ -8720,6 +8851,7 @@ function closeMirellaNotif() {
   <div onclick="event.stopPropagation()" style="position:absolute;bottom:80px;left:16px;right:16px;background:white;border-radius:24px;padding:20px;max-height:70vh;overflow-y:auto">
     <div style="font-size:1rem;font-weight:700;color:#2D2D2D;margin-bottom:16px;text-align:center">Toutes les fonctionnalités</div>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+      <button id="qmBtn-visage" onclick="toggleQuickMenu();showView('visage')" style="display:flex;align-items:center;gap:8px;padding:12px;background:linear-gradient(135deg,var(--coral),var(--accent));border:none;border-radius:12px;font-size:0.82rem;font-weight:600;color:white;cursor:pointer">🪞 Analyse Visage ✨</button>
       <button id="qmBtn-frigo" onclick="toggleQuickMenu();showView('frigo')" style="display:flex;align-items:center;gap:8px;padding:12px;background:linear-gradient(135deg,var(--coral),var(--accent));border:none;border-radius:12px;font-size:0.82rem;font-weight:600;color:white;cursor:pointer">🧊 Mon Frigo ✨</button>
       <button id="qmBtn-menus" onclick="toggleQuickMenu();showView('menus')" style="display:flex;align-items:center;gap:8px;padding:12px;background:var(--cream);border:none;border-radius:12px;font-size:0.82rem;font-weight:600;color:#2D2D2D;cursor:pointer">🍽️ Mes menus</button>
       <button id="qmBtn-health" onclick="toggleQuickMenu();showView('health')" style="display:flex;align-items:center;gap:8px;padding:12px;background:var(--cream);border:none;border-radius:12px;font-size:0.82rem;font-weight:600;color:#2D2D2D;cursor:pointer">📊 Suivi santé</button>
