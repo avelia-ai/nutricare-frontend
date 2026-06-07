@@ -1053,7 +1053,8 @@ window.loadCatalogue = async function() {
       var keyword = card.getAttribute('data-photo');
       var icon = card.getAttribute('data-icon');
       var imgDiv = card.querySelector('.rc-img');
-      fetch('https://nutricare-backend-production.up.railway.app/api/photos/search?q=' + encodeURIComponent(keyword))
+      var photoPage = Math.floor(Math.random() * 3) + 1;
+      fetch('https://nutricare-backend-production.up.railway.app/api/photos/search?q=' + encodeURIComponent(keyword) + '&nom=' + encodeURIComponent(card.querySelector('.rc-title') ? card.querySelector('.rc-title').textContent : keyword))
         .then(function(r){ return r.json(); })
         .then(function(d){
           if (d.url && imgDiv) {
