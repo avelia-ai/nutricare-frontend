@@ -2271,8 +2271,8 @@ function switchLang(lang) {
   </div>
   <!-- Onglets Agenda/Routines -->
   <div style="display:flex;gap:8px;padding:12px 20px;background:white;border-bottom:1px solid #f0f0f0">
-    <button id="tabAgenda" onclick="switchPlanningTab('agenda')" style="flex:1;padding:10px;border:none;border-radius:10px;background:var(--coral);color:white;font-weight:700;font-size:0.85rem;cursor:pointer;font-family:'DM Sans',sans-serif">Agenda</button>
-    <button id="tabRoutines" onclick="switchPlanningTab('routines')" style="flex:1;padding:10px;border:none;border-radius:10px;background:#f0f0f0;color:#888;font-weight:700;font-size:0.85rem;cursor:pointer;font-family:'DM Sans',sans-serif">Routines</button>
+    <button id="tabAgenda" onclick="document.getElementById('planningAgendaContent').style.display='block';document.getElementById('planningRoutinesView').style.display='none';this.style.background='var(--coral)';this.style.color='white';document.getElementById('tabRoutines').style.background='#f0f0f0';document.getElementById('tabRoutines').style.color='#888';" style="flex:1;padding:10px;border:none;border-radius:10px;background:var(--coral);color:white;font-weight:700;font-size:0.85rem;cursor:pointer;font-family:'DM Sans',sans-serif">Agenda</button>
+    <button id="tabRoutines" onclick="document.getElementById('planningAgendaContent').style.display='none';document.getElementById('planningRoutinesView').style.display='block';this.style.background='var(--coral)';this.style.color='white';document.getElementById('tabAgenda').style.background='#f0f0f0';document.getElementById('tabAgenda').style.color='#888';" style="flex:1;padding:10px;border:none;border-radius:10px;background:#f0f0f0;color:#888;font-weight:700;font-size:0.85rem;cursor:pointer;font-family:'DM Sans',sans-serif">Routines</button>
   </div>
 
   <div id="planningAgendaContent" style="padding:20px">
