@@ -2413,7 +2413,8 @@ function switchLang(lang) {
         <input type="date" id="routineStartDate" style="width:100%;padding:12px;border:1px solid #eee;border-radius:10px;font-size:0.9rem;box-sizing:border-box">
       </div>
       <div style="font-size:0.78rem;color:#888;margin-bottom:16px" id="routineModalDureeInfo"></div>
-      <button onclick="ajouterRoutineAgenda()" style="width:100%;padding:14px;background:linear-gradient(135deg,var(--coral),var(--accent));color:white;border:none;border-radius:12px;font-weight:700;font-size:0.9rem;cursor:pointer">✅ Ajouter à mon agenda</button>
+      <button onclick="ajouterRoutineAgenda()" style="width:100%;padding:14px;background:linear-gradient(135deg,var(--coral),var(--accent));color:white;border:none;border-radius:12px;font-weight:700;font-size:0.9rem;cursor:pointer;margin-bottom:10px">✅ Ajouter à mon agenda</button>
+      <button onclick="genererMenusRoutine()" style="width:100%;padding:14px;background:white;color:var(--coral);border:2px solid var(--coral);border-radius:12px;font-weight:700;font-size:0.9rem;cursor:pointer">🍽️ Générer mes menus de la semaine</button>
     </div>
   </div>
 
@@ -9931,6 +9932,35 @@ var ROUTINES_DATA = [
     switchPlanningTab('agenda');
     alert('✅ Routine ajoutée ! '+added+' événements créés dans votre agenda.');
     if(typeof renderPlanning === 'function') renderPlanning();
+  }
+
+  function genererMenusRoutine() {
+    if (!window._currentRoutine) return;
+    var objectif = window._currentRoutine.titre.replace(/^[^ ]+ /, '');
+    closeRoutineModal();
+    // Mettre l'objectif dans le select menus
+    var sel = document.getElementById('menuObjectif');
+    if (sel) {
+      // Chercher l'option la plus proche
+      for (var i = 0; i < sel.options.length; i++) {
+        if (sel.options[i].value.toLowerCase().includes('poids') && objectif.toLowerCase().includes('poids')) { sel.selectedIndex = i; break; }
+        if (sel.options[i].value.toLowerCase().includes('muscle') && objectif.toLowerCase().includes('muscle')) { sel.selectedIndex = i; break; }
+        if (sel.options[i].value.toLowerCase().includes('detox') && objectif.toLowerCase().includes('detox')) { sel.selectedIndex = i; break; }
+        if (sel.options[i].value.toLowerCase().includes('cardio') && objectif.toLowerCase().includes('cardio')) { sel.selectedIndex = i; break; }
+      }
+    }
+    // Naviguer vers menusView
+    showView('menus');
+    // Lancer la génération après un court délai
+    setTimeout(function() {
+      if (typeof genererMenusSemaine === 'function') {
+        genererMenusSemaine();
+      } else {
+        // Cliquer sur le bouton générer
+        var btn = document.querySelector('#menusContent button');
+        if (btn) btn.click();
+      }
+    }, 500);
   }
 </script>
 </html>
