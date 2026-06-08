@@ -9715,5 +9715,23 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 </script>
 <script>
-// MÉDECINS À </script>
+// MÉDECINS À 
+  function switchPlanningTab(tab) {
+    var agenda = document.getElementById('planningAgendaView');
+    var routines = document.getElementById('planningRoutinesView');
+    var tabAgenda = document.getElementById('tabAgenda');
+    var tabRoutines = document.getElementById('tabRoutines');
+    if (tab === 'agenda') {
+      if(agenda) agenda.style.display = 'block';
+      if(routines) routines.style.display = 'none';
+      if(tabAgenda) { tabAgenda.style.background = 'var(--coral)'; tabAgenda.style.color = 'white'; }
+      if(tabRoutines) { tabRoutines.style.background = '#f0f0f0'; tabRoutines.style.color = '#888'; }
+    } else {
+      if(agenda) agenda.style.display = 'none';
+      if(routines) routines.style.display = 'block';
+      if(tabAgenda) { tabAgenda.style.background = '#f0f0f0'; tabAgenda.style.color = '#888'; }
+      if(tabRoutines) { tabRoutines.style.background = 'var(--coral)'; tabRoutines.style.color = 'white'; }
+    }
+  }
+</script>
 </html>
