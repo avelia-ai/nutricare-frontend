@@ -2204,6 +2204,8 @@ function switchLang(lang) {
           <div style="font-size:0.72rem;font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:var(--coral);margin-bottom:10px">Rappels du jour</div>
           <div id="homeRappels" style="display:flex;flex-direction:column;gap:8px"></div>
         </div>
+        
+        <div style="background:white;border-radius:16px;padding:16px;margin-bottom:12px;box-shadow:0 2px 8px rgba(0,0,0,0.06)"><div style="font-size:0.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--coral);margin-bottom:12px">&#x1F50E; Explorer une pathologie</div><div style="display:flex;gap:8px;margin-bottom:12px"><input id="pathoSearchInput" type="text" placeholder="Hypertension, diabete, arthrose..." style="flex:1;padding:10px 14px;border:1.5px solid rgba(255,107,107,0.3);border-radius:12px;font-size:0.85rem;font-family:inherit;outline:none;background:var(--cream)"><button id="pathoBtn" style="background:linear-gradient(135deg,var(--coral),var(--accent));color:white;border:none;border-radius:12px;padding:10px 16px;font-size:0.85rem;font-weight:700;cursor:pointer">&#x1F50D;</button></div><div id="pathoLoading" style="display:none;text-align:center;padding:16px;color:var(--accent);font-size:0.82rem">Mirella analyse...</div><div id="pathoResult" style="display:none"></div></div>
         <!-- CARD MÉDECINS -->
         <div id="homeMedecinsCard" style="background:white;border-radius:16px;overflow:hidden;margin-bottom:12px;box-shadow:0 2px 8px rgba(0,0,0,0.06)">
           <div style="padding:14px 14px 0">
@@ -9261,6 +9263,39 @@ function toggleQuickMenu() {
     </div>
   </div>
 </div>
+<script>
+window.rechercherPathologie = async function() {
+  var input = document.getElementById('pathoSearchInput');
+  var loading = document.getElementById('pathoLoading');
+  var result = document.getElementById('pathoResult');
+  if (!input || !input.value.trim()) return;
+  var query = input.value.trim();
+  loading.style.display = 'block';
+  result.style.display = 'none';
+  var token = localStorage.getItem('nutricare_token');
+  fetch('https://nutricare-backend-production.up.railway.app/api/pathologie/info', {
+    method: 'POST',
+    headers: {'Content-Type':'application/json','Authorization':'Bearer '+token},
+    body: JSON.stringify({pathologie: query})
+  }).then(function(r){ return r.json(); }).then(function(d) {
+    loading.style.display = 'none';
+    result.style.display = 'block';
+    var h = '<div style="font-size:1rem;font-weight:700;color:#1a1a1a;margin-bottom:12px">' + (d.titre||query) + '</div>';
+    if (d.description) h += '<div style="background:#E6F1FB;border-radius:12px;padding:12px;margin-bottom:8px"><b style="font-size:0.65rem;color:#185FA5">DESCRIPTION</b><div style="font-size:0.82rem;margin-top:4px">' + d.description + '</div></div>';
+    if (d.aliments_recommandes && d.aliments_recommandes.length) { h += '<div style="background:#EAF3DE;border-radius:12px;padding:12px;margin-bottom:8px"><b style="font-size:0.65rem;color:#3B6D11">ALIMENTS RECOMMANDES</b><ul style="margin:4px 0 0;padding-left:16px">'; d.aliments_recommandes.forEach(function(a){h+='<li style="font-size:0.82rem">'+a+'</li>';}); h+='</ul></div>'; }
+    if (d.aliments_eviter && d.aliments_eviter.length) { h += '<div style="background:#FEF2F2;border-radius:12px;padding:12px;margin-bottom:8px"><b style="font-size:0.65rem;color:#ef4444">ALIMENTS A EVITER</b><ul style="margin:4px 0 0;padding-left:16px">'; d.aliments_eviter.forEach(function(a){h+='<li style="font-size:0.82rem">'+a+'</li>';}); h+='</ul></div>'; }
+    if (d.conseils && d.conseils.length) { h += '<div style="background:#FFF0EC;border-radius:12px;padding:12px;margin-bottom:8px"><b style="font-size:0.65rem;color:#FF6B6B">CONSEILS MIRELLA</b><ul style="margin:4px 0 0;padding-left:16px">'; d.conseils.forEach(function(a){h+='<li style="font-size:0.82rem">'+a+'</li>';}); h+='</ul></div>'; }
+    result.innerHTML = h;
+    document.getElementById('pathoBtn').onclick = window.rechercherPathologie;
+  }).catch(function(e){ loading.style.display='none'; result.style.display='block'; result.innerHTML='<p style="color:#ef4444">Erreur</p>'; });
+};
+document.addEventListener('DOMContentLoaded', function(){
+  var b = document.getElementById('pathoBtn');
+  var i = document.getElementById('pathoSearchInput');
+  if(b) b.onclick = window.rechercherPathologie;
+  if(i) i.onkeydown = function(e){ if(e.key==='Enter') window.rechercherPathologie(); };
+});
+</script>
 </body>
 </html><script>
 var _recettesTab = 'mes';
