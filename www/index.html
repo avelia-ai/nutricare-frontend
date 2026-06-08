@@ -2275,7 +2275,7 @@ function switchLang(lang) {
     </div>
   </div>
 
-  <div style="padding:20px">
+  <div id="planningAgendaContent" style="padding:20px">
     <!-- Sélecteur de semaine -->
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px">
       <button onclick="window.planningWeekOffset--;renderPlanning()" style="background:white;border:1px solid #eee;border-radius:10px;padding:8px 14px;font-size:1rem;cursor:pointer">‹</button>
@@ -9845,17 +9845,17 @@ document.addEventListener('DOMContentLoaded', function() {
 <script>
 // MÉDECINS À 
   function switchPlanningTab(tab) {
-    var agenda = document.getElementById('planningAgendaView');
+    var agendaContent = document.getElementById('planningAgendaContent');
     var routines = document.getElementById('planningRoutinesView');
     var tabAgenda = document.getElementById('tabAgenda');
     var tabRoutines = document.getElementById('tabRoutines');
     if (tab === 'agenda') {
-      if(agenda) agenda.style.display = 'block';
+      if(agendaContent) agendaContent.style.display = 'block';
       if(routines) routines.style.display = 'none';
       if(tabAgenda) { tabAgenda.style.background = 'var(--coral)'; tabAgenda.style.color = 'white'; }
       if(tabRoutines) { tabRoutines.style.background = '#f0f0f0'; tabRoutines.style.color = '#888'; }
     } else {
-      if(agenda) agenda.style.display = 'none';
+      if(agendaContent) agendaContent.style.display = 'none';
       if(routines) routines.style.display = 'block';
       if(tabAgenda) { tabAgenda.style.background = '#f0f0f0'; tabAgenda.style.color = '#888'; }
       if(tabRoutines) { tabRoutines.style.background = 'var(--coral)'; tabRoutines.style.color = 'white'; }
