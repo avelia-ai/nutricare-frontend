@@ -1621,67 +1621,6 @@ window.analyseFrigo = async function(file) {
   }
 };
 
-window.rechercherPathologie = async function() {
-  var input = document.getElementById('pathoSearchInput');
-  var loading = document.getElementById('pathoLoading');
-  var result = document.getElementById('pathoResult');
-  var query = input.value.trim();
-  if (!query) return;
-
-  loading.style.display = 'block';
-  result.style.display = 'none';
-  result.innerHTML = '';
-
-  var token = localStorage.getItem('nutricare_token');
-
-  try {
-    var res = await fetch('https://nutricare-backend-production.up.railway.app/api/chat/message', {
-      method: 'POST',
-      headers: {'Content-Type':'application/json','Authorization':'Bearer '+token},
-      body: JSON.stringify({
-        message: 'Tu es Mirella, experte en santé et nutrition. Donne-moi une fiche complète sur la pathologie suivante: "' + query + '". Structure ta réponse avec ces sections exactes séparées par ### : ###Description ###Causes ###Symptômes ###Aliments recommandés ###Aliments à éviter ###Conseils Mirella ###Quand consulter. Sois précise, bienveillante et pratique. Réponds en français.',
-        context: 'pathologie'
-      })
-    });
-    var data = await res.json();
-    var text = data.reply || data.response || '';
-    
-    loading.style.display = 'none';
-    result.style.display = 'block';
-
-    var icons = {'Description':'📋','Causes':'🔬','Symptômes':'🩺','Aliments recommandés':'🥗','Aliments à éviter':'❌','Conseils Mirella':'💡','Quand consulter':'👨‍⚕️'};
-    var colors = {'Description':'#185FA5','Causes':'#534AB7','Symptômes':'#FF9A3C','Aliments recommandés':'#3B6D11','Aliments à éviter':'#ef4444','Conseils Mirella':'#FF6B6B','Quand consulter':'#993556'};
-    var bgs = {'Description':'#E6F1FB','Causes':'#EEEDFE','Symptômes':'#FFF5E6','Aliments recommandés':'#EAF3DE','Aliments à éviter':'#FEF2F2','Conseils Mirella':'#FFF0EC','Quand consulter':'#FBEAF0'};
-
-    var html = '<div style="font-size:0.95rem;font-weight:700;color:#1a1a1a;margin-bottom:12px">' + query.charAt(0).toUpperCase() + query.slice(1) + '</div>';
-    
-    var sections = text.split(/###/).filter(function(s){ return s.trim(); });
-    sections.forEach(function(section) {
-      var lines = section.trim().split('
-');
-      var title = lines[0].trim();
-      var body = lines.slice(1).join('
-').trim();
-      if (!body) return;
-      var icon = icons[title] || '📌';
-      var color = colors[title] || 'var(--coral)';
-      var bg = bgs[title] || '#FFF0EC';
-      
-      html += '<div style="background:' + bg + ';border-radius:12px;padding:12px;margin-bottom:8px">';
-      html += '<div style="font-size:0.65rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:' + color + ';margin-bottom:6px">' + icon + ' ' + title + '</div>';
-      html += '<div style="font-size:0.82rem;color:#333;line-height:1.6">' + body.replace(/
-/g,'<br>').replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>') + '</div>';
-      html += '</div>';
-    });
-
-    result.innerHTML = html;
-  } catch(e) {
-    loading.style.display = 'none';
-    result.style.display = 'block';
-    result.innerHTML = '<div style="color:#ef4444;font-size:0.82rem">Erreur: ' + e.message + '</div>';
-  }
-};
-
 window.analyseCycle = function() {
   var lastPeriod = document.getElementById('cycleLastPeriod').value;
   if (!lastPeriod) { alert('Renseignez la date de vos dernières règles'); return; }
@@ -2265,25 +2204,6 @@ function switchLang(lang) {
           <div style="font-size:0.72rem;font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:var(--coral);margin-bottom:10px">Rappels du jour</div>
           <div id="homeRappels" style="display:flex;flex-direction:column;gap:8px"></div>
         </div>
-        <!-- SECTION PATHOLOGIES -->
-        <div style="background:white;border-radius:16px;padding:16px;margin-bottom:12px;box-shadow:0 2px 8px rgba(0,0,0,0.06)">
-          <div style="font-size:0.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--coral);margin-bottom:12px">🔎 Explorer une pathologie</div>
-          <div style="display:flex;gap:8px;margin-bottom:12px">
-            <input id="pathoSearchInput" type="text" placeholder="Ex: hypertension, diabète, arthrose..." 
-              style="flex:1;padding:10px 14px;border:1.5px solid rgba(255,107,107,0.3);border-radius:12px;font-size:0.85rem;font-family:inherit;outline:none;background:var(--cream)"
-              onkeydown="if(event.key==='Enter') window.rechercherPathologie()">
-            <button onclick="window.rechercherPathologie()" 
-              style="background:linear-gradient(135deg,var(--coral),var(--accent));color:white;border:none;border-radius:12px;padding:10px 16px;font-size:0.85rem;font-weight:700;cursor:pointer">
-              <i class="ti ti-search" aria-hidden="true"></i>
-            </button>
-          </div>
-          <div id="pathoLoading" style="display:none;text-align:center;padding:16px;color:var(--accent);font-size:0.82rem">
-            Mirella analyse cette pathologie...
-          </div>
-          <div id="pathoResult" style="display:none"></div>
-        </div>
-        <!-- FIN PATHOLOGIES -->
-
         <!-- CARD MÉDECINS -->
         <div id="homeMedecinsCard" style="background:white;border-radius:16px;overflow:hidden;margin-bottom:12px;box-shadow:0 2px 8px rgba(0,0,0,0.06)">
           <div style="padding:14px 14px 0">
