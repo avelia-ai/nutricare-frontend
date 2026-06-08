@@ -2290,23 +2290,151 @@ function switchLang(lang) {
 
   <!-- VUE ROUTINES -->
   <div id="planningRoutinesView" style="display:none;padding:20px;padding-bottom:120px">
-    <div style="background:linear-gradient(135deg,var(--coral),var(--accent));border-radius:16px;padding:20px;margin-bottom:20px;color:white">
-      <div style="font-size:1rem;font-weight:800;margin-bottom:6px">🤖 Générer une routine IA</div>
-      <div style="font-size:0.82rem;opacity:0.9;margin-bottom:14px">Mirella crée une routine personnalisée selon votre profil</div>
-      <input id="routineObjectif" placeholder="Ex: perdre du poids, améliorer mon sommeil..." style="width:100%;padding:10px 14px;border-radius:10px;border:none;font-size:0.85rem;margin-bottom:10px;box-sizing:border-box;font-family:'DM Sans',sans-serif">
-      <div style="display:flex;gap:8px">
-        <select id="routineDuree" style="flex:1;padding:10px;border-radius:10px;border:none;font-size:0.85rem">
-          <option value="7">7 jours</option>
-          <option value="14" selected>14 jours</option>
-          <option value="21">21 jours</option>
-          <option value="30">30 jours</option>
-        </select>
-        <button onclick="genererRoutineIA()" style="flex:2;padding:10px;background:white;color:var(--coral);border:none;border-radius:10px;font-weight:700;font-size:0.85rem;cursor:pointer">✨ Générer</button>
+    <div style="font-size:1.1rem;font-weight:800;color:#1a1a1a;margin-bottom:6px">📚 Routines prédéfinies</div>
+    <div style="font-size:0.82rem;color:#888;margin-bottom:20px">Choisissez une routine et elle s'ajoute automatiquement dans votre agenda</div>
+    <div style="display:flex;flex-direction:column;gap:12px" id="routinesPredefList">
+
+      <div onclick="openRoutineModal('🥗 Perdre du poids','Routine minceur équilibrée : repas hypocaloriques, collations healthy et hydratation optimale.',7,['🍽️ Petit-déj protéiné','🍎 Collation fruits','🥗 Déjeuner équilibré','💧 2L d'eau','🥦 Dîner léger'])" style="background:white;border-radius:16px;padding:16px;box-shadow:0 2px 8px rgba(0,0,0,0.06);cursor:pointer;display:flex;align-items:center;gap:14px">
+        <div style="width:48px;height:48px;background:#FFF0EC;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:1.5rem;flex-shrink:0">🥗</div>
+        <div style="flex:1"><div style="font-weight:700;color:#1a1a1a;font-size:0.9rem">Perdre du poids</div><div style="font-size:0.78rem;color:#888;margin-top:2px">7 jours · Repas équilibrés + hydratation</div></div>
+        <div style="color:#ccc;font-size:1.2rem">›</div>
       </div>
+
+      <div onclick="openRoutineModal('😴 Améliorer le sommeil','Programme sommeil réparateur : routine du soir, tisanes, digital detox et exercices de relaxation.',7,['🌙 Tisane camomille 21h','📵 Stop écrans 22h','🧘 5 min respiration','😴 Coucher 22h30','☀️ Réveil 7h sans alarme'])" style="background:white;border-radius:16px;padding:16px;box-shadow:0 2px 8px rgba(0,0,0,0.06);cursor:pointer;display:flex;align-items:center;gap:14px">
+        <div style="width:48px;height:48px;background:#EEF4FF;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:1.5rem;flex-shrink:0">😴</div>
+        <div style="flex:1"><div style="font-weight:700;color:#1a1a1a;font-size:0.9rem">Améliorer le sommeil</div><div style="font-size:0.78rem;color:#888;margin-top:2px">7 jours · Routine du soir + relaxation</div></div>
+        <div style="color:#ccc;font-size:1.2rem">›</div>
+      </div>
+
+      <div onclick="openRoutineModal('💪 Prendre du muscle','Programme prise de masse : entraînements ciblés, apports protéiques optimaux et récupération.',14,['💪 Entraînement 45min','🥩 Repas protéiné post-sport','🥛 Shake protéines','😴 8h de sommeil','🧘 Étirements 10min'])" style="background:white;border-radius:16px;padding:16px;box-shadow:0 2px 8px rgba(0,0,0,0.06);cursor:pointer;display:flex;align-items:center;gap:14px">
+        <div style="width:48px;height:48px;background:#F0FFEC;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:1.5rem;flex-shrink:0">💪</div>
+        <div style="flex:1"><div style="font-weight:700;color:#1a1a1a;font-size:0.9rem">Prendre du muscle</div><div style="font-size:0.78rem;color:#888;margin-top:2px">14 jours · Sport + nutrition protéinée</div></div>
+        <div style="color:#ccc;font-size:1.2rem">›</div>
+      </div>
+
+      <div onclick="openRoutineModal('🌿 Détox','Programme détox douce : nettoyage de l'organisme, jus verts, légumes vapeur et herbes.',7,['🥤 Jus vert matin','🫖 Tisane détox','🥦 Légumes vapeur midi','💧 3L eau','🍋 Eau citronnée soir'])" style="background:white;border-radius:16px;padding:16px;box-shadow:0 2px 8px rgba(0,0,0,0.06);cursor:pointer;display:flex;align-items:center;gap:14px">
+        <div style="width:48px;height:48px;background:#F0FFF4;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:1.5rem;flex-shrink:0">🌿</div>
+        <div style="flex:1"><div style="font-weight:700;color:#1a1a1a;font-size:0.9rem">Détox</div><div style="font-size:0.78rem;color:#888;margin-top:2px">7 jours · Jus verts + légumes vapeur</div></div>
+        <div style="color:#ccc;font-size:1.2rem">›</div>
+      </div>
+
+      <div onclick="openRoutineModal('✨ Skincare quotidien','Routine beauté complète : nettoyage, hydratation, protection solaire et soins du soir.',14,['🧴 Nettoyant visage matin','☀️ SPF50 avant sortie','💧 Sérum hydratant midi','🌙 Double nettoyage soir','🧖 Masque 2x/semaine'])" style="background:white;border-radius:16px;padding:16px;box-shadow:0 2px 8px rgba(0,0,0,0.06);cursor:pointer;display:flex;align-items:center;gap:14px">
+        <div style="width:48px;height:48px;background:#FFF5FB;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:1.5rem;flex-shrink:0">✨</div>
+        <div style="flex:1"><div style="font-weight:700;color:#1a1a1a;font-size:0.9rem">Skincare quotidien</div><div style="font-size:0.78rem;color:#888;margin-top:2px">14 jours · Routine beauté matin & soir</div></div>
+        <div style="color:#ccc;font-size:1.2rem">›</div>
+      </div>
+
+      <div onclick="openRoutineModal('🧘 Anti-stress','Programme bien-être mental : méditation, respiration, journaling et alimentation anti-inflammatoire.',7,['🧘 Méditation 10min matin','📓 Journaling 5min','🫁 Cohérence cardiaque','🍫 Carré chocolat noir','🌿 Tisane adaptogène soir'])" style="background:white;border-radius:16px;padding:16px;box-shadow:0 2px 8px rgba(0,0,0,0.06);cursor:pointer;display:flex;align-items:center;gap:14px">
+        <div style="width:48px;height:48px;background:#F5F0FF;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:1.5rem;flex-shrink:0">🧘</div>
+        <div style="flex:1"><div style="font-weight:700;color:#1a1a1a;font-size:0.9rem">Anti-stress</div><div style="font-size:0.78rem;color:#888;margin-top:2px">7 jours · Méditation + alimentation zen</div></div>
+        <div style="color:#ccc;font-size:1.2rem">›</div>
+      </div>
+
+      <div onclick="openRoutineModal('🫀 Santé cardiovasculaire','Routine coeur : cardio modéré, oméga-3, fruits rouges et gestion du stress.',14,['🏃 Marche rapide 30min','🐟 Repas poisson gras','🫐 Fruits rouges matin','🧂 Réduire sel','💊 Oméga-3 matin'])" style="background:white;border-radius:16px;padding:16px;box-shadow:0 2px 8px rgba(0,0,0,0.06);cursor:pointer;display:flex;align-items:center;gap:14px">
+        <div style="width:48px;height:48px;background:#FFECEC;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:1.5rem;flex-shrink:0">🫀</div>
+        <div style="flex:1"><div style="font-weight:700;color:#1a1a1a;font-size:0.9rem">Santé cardiovasculaire</div><div style="font-size:0.78rem;color:#888;margin-top:2px">14 jours · Cardio + oméga-3</div></div>
+        <div style="color:#ccc;font-size:1.2rem">›</div>
+      </div>
+
+      <div onclick="openRoutineModal('🦴 Santé des os','Programme osseux : calcium, vitamine D, exposition soleil et exercices de résistance.',21,['☀️ 15min soleil matin','🥛 Produit laitier x2','💊 Vitamine D','🏋️ Exercice résistance','🥦 Légumes verts riches en Ca'])" style="background:white;border-radius:16px;padding:16px;box-shadow:0 2px 8px rgba(0,0,0,0.06);cursor:pointer;display:flex;align-items:center;gap:14px">
+        <div style="width:48px;height:48px;background:#FFFBEC;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:1.5rem;flex-shrink:0">🦴</div>
+        <div style="flex:1"><div style="font-weight:700;color:#1a1a1a;font-size:0.9rem">Santé des os</div><div style="font-size:0.78rem;color:#888;margin-top:2px">21 jours · Calcium + vitamine D</div></div>
+        <div style="color:#ccc;font-size:1.2rem">›</div>
+      </div>
+
+      <div onclick="openRoutineModal('🧠 Boost cognitif','Programme cerveau : oméga-3, bleuets, exercice mental et sommeil de qualité.',14,['🫐 Smoothie bleuets matin','🐟 Sardines ou maquereau','🧩 Exercice mental 10min','📚 Lecture 20min','💊 Magnésium soir'])" style="background:white;border-radius:16px;padding:16px;box-shadow:0 2px 8px rgba(0,0,0,0.06);cursor:pointer;display:flex;align-items:center;gap:14px">
+        <div style="width:48px;height:48px;background:#EEF4FF;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:1.5rem;flex-shrink:0">🧠</div>
+        <div style="flex:1"><div style="font-weight:700;color:#1a1a1a;font-size:0.9rem">Boost cognitif</div><div style="font-size:0.78rem;color:#888;margin-top:2px">14 jours · Nutrition cerveau</div></div>
+        <div style="color:#ccc;font-size:1.2rem">›</div>
+      </div>
+
+      <div onclick="openRoutineModal('🌸 Équilibre hormonal','Routine hormones féminines : phytoestrogènes, magnésium, gestion du cycle et sport doux.',21,['🌱 Graines de lin matin','💊 Magnésium bisglycinate','🧘 Yoga 20min','🚫 Sucre raffiné','🫖 Tisane framboisier'])" style="background:white;border-radius:16px;padding:16px;box-shadow:0 2px 8px rgba(0,0,0,0.06);cursor:pointer;display:flex;align-items:center;gap:14px">
+        <div style="width:48px;height:48px;background:#FFF0F8;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:1.5rem;flex-shrink:0">🌸</div>
+        <div style="flex:1"><div style="font-weight:700;color:#1a1a1a;font-size:0.9rem">Équilibre hormonal</div><div style="font-size:0.78rem;color:#888;margin-top:2px">21 jours · Phytoestrogènes + magnésium</div></div>
+        <div style="color:#ccc;font-size:1.2rem">›</div>
+      </div>
+
+      <div onclick="openRoutineModal('🔥 Anti-inflammation','Programme anti-inflammatoire : curcuma, oméga-3, légumes colorés et réduction sucre.',14,['🟡 Latte curcuma matin','🐟 Poisson gras x3/sem','🌈 Assiette colorée','🚫 Aliments ultra-transformés','💊 Oméga-3 + vitamine D'])" style="background:white;border-radius:16px;padding:16px;box-shadow:0 2px 8px rgba(0,0,0,0.06);cursor:pointer;display:flex;align-items:center;gap:14px">
+        <div style="width:48px;height:48px;background:#FFF3E0;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:1.5rem;flex-shrink:0">🔥</div>
+        <div style="flex:1"><div style="font-weight:700;color:#1a1a1a;font-size:0.9rem">Anti-inflammation</div><div style="font-size:0.78rem;color:#888;margin-top:2px">14 jours · Curcuma + oméga-3</div></div>
+        <div style="color:#ccc;font-size:1.2rem">›</div>
+      </div>
+
+      <div onclick="openRoutineModal('💧 Hydratation optimale','Programme hydratation : eau structurée, électrolytes, fruits gorgés d'eau et tracking.',7,['💧 1 verre dès le réveil','🍉 Fruits hydratants','🧂 Pincée sel de mer','📊 Tracker 2L/jour','🫖 Tisane non sucrée soir'])" style="background:white;border-radius:16px;padding:16px;box-shadow:0 2px 8px rgba(0,0,0,0.06);cursor:pointer;display:flex;align-items:center;gap:14px">
+        <div style="width:48px;height:48px;background:#E0F7FF;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:1.5rem;flex-shrink:0">💧</div>
+        <div style="flex:1"><div style="font-weight:700;color:#1a1a1a;font-size:0.9rem">Hydratation optimale</div><div style="font-size:0.78rem;color:#888;margin-top:2px">7 jours · 2L + électrolytes</div></div>
+        <div style="color:#ccc;font-size:1.2rem">›</div>
+      </div>
+
+      <div onclick="openRoutineModal('🏃 Cardio débutant','Programme cardio progressif : marche, vélo, natation pour améliorer l'endurance.',21,['🚶 Marche 20min','🚴 Vélo ou natation','💓 FC cible 65%','🧴 Crème solaire sport','🥤 Boisson isotonique'])" style="background:white;border-radius:16px;padding:16px;box-shadow:0 2px 8px rgba(0,0,0,0.06);cursor:pointer;display:flex;align-items:center;gap:14px">
+        <div style="width:48px;height:48px;background:#E8FFE8;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:1.5rem;flex-shrink:0">🏃</div>
+        <div style="flex:1"><div style="font-weight:700;color:#1a1a1a;font-size:0.9rem">Cardio débutant</div><div style="font-size:0.78rem;color:#888;margin-top:2px">21 jours · Marche + endurance</div></div>
+        <div style="color:#ccc;font-size:1.2rem">›</div>
+      </div>
+
+      <div onclick="openRoutineModal('🍽️ Jeûne intermittent','Programme 16/8 : fenêtre alimentaire optimisée, repas riches et hydratation pendant le jeûne.',14,['⏰ Dernier repas 20h','💧 Eau + café noir matin','🥗 Premier repas 12h','🥩 Repas riches en protéines','📊 Tracker sa fenêtre'])" style="background:white;border-radius:16px;padding:16px;box-shadow:0 2px 8px rgba(0,0,0,0.06);cursor:pointer;display:flex;align-items:center;gap:14px">
+        <div style="width:48px;height:48px;background:#FFF8E0;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:1.5rem;flex-shrink:0">🍽️</div>
+        <div style="flex:1"><div style="font-weight:700;color:#1a1a1a;font-size:0.9rem">Jeûne intermittent 16/8</div><div style="font-size:0.78rem;color:#888;margin-top:2px">14 jours · Fenêtre 12h-20h</div></div>
+        <div style="color:#ccc;font-size:1.2rem">›</div>
+      </div>
+
+      <div onclick="openRoutineModal('🦷 Hygiène bucco-dentaire','Routine dentaire complète : brossage, fil, bain de bouche et alimentation protectrice.',14,['🪥 Brossage 2min x2','🧵 Fil dentaire soir','🌊 Bain de bouche','🧂 Grattoir de langue','🥛 Calcium + vitamine K2'])" style="background:white;border-radius:16px;padding:16px;box-shadow:0 2px 8px rgba(0,0,0,0.06);cursor:pointer;display:flex;align-items:center;gap:14px">
+        <div style="width:48px;height:48px;background:#F0FFFF;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:1.5rem;flex-shrink:0">🦷</div>
+        <div style="flex:1"><div style="font-weight:700;color:#1a1a1a;font-size:0.9rem">Hygiène bucco-dentaire</div><div style="font-size:0.78rem;color:#888;margin-top:2px">14 jours · Routine dentaire complète</div></div>
+        <div style="color:#ccc;font-size:1.2rem">›</div>
+      </div>
+
+      <div onclick="openRoutineModal('🌞 Boost énergie','Programme vitalité : lever tôt, lumière naturelle, alimentation énergisante et micro-siestes.',7,['☀️ Lever 6h30','🌅 10min lumière naturelle','🥚 Petit-déj protéiné','☕ Café avant 14h','😴 Micro-sieste 20min'])" style="background:white;border-radius:16px;padding:16px;box-shadow:0 2px 8px rgba(0,0,0,0.06);cursor:pointer;display:flex;align-items:center;gap:14px">
+        <div style="width:48px;height:48px;background:#FFFBCC;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:1.5rem;flex-shrink:0">🌞</div>
+        <div style="flex:1"><div style="font-weight:700;color:#1a1a1a;font-size:0.9rem">Boost énergie</div><div style="font-size:0.78rem;color:#888;margin-top:2px">7 jours · Lever tôt + lumière naturelle</div></div>
+        <div style="color:#ccc;font-size:1.2rem">›</div>
+      </div>
+
+      <div onclick="openRoutineModal('🫁 Santé respiratoire','Routine poumons : exercices de respiration, air pur, plantes purifiantes et alimentation.',7,['🫁 Cohérence cardiaque 5min','🌿 Aérer 10min','🚭 Zéro tabac','🧘 Pranayama yoga','🍵 Thym + gingembre'])" style="background:white;border-radius:16px;padding:16px;box-shadow:0 2px 8px rgba(0,0,0,0.06);cursor:pointer;display:flex;align-items:center;gap:14px">
+        <div style="width:48px;height:48px;background:#F0F8FF;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:1.5rem;flex-shrink:0">🫁</div>
+        <div style="flex:1"><div style="font-weight:700;color:#1a1a1a;font-size:0.9rem">Santé respiratoire</div><div style="font-size:0.78rem;color:#888;margin-top:2px">7 jours · Respiration + air pur</div></div>
+        <div style="color:#ccc;font-size:1.2rem">›</div>
+      </div>
+
+      <div onclick="openRoutineModal('🌾 Santé digestive','Programme intestin : probiotiques, fibres, mastication lente et gestion du stress digestif.',14,['🥣 Kéfir ou yaourt matin','🌾 Fibres x3/jour','🫚 Huile olive crue','🐌 Manger lentement','💊 Probiotiques soir'])" style="background:white;border-radius:16px;padding:16px;box-shadow:0 2px 8px rgba(0,0,0,0.06);cursor:pointer;display:flex;align-items:center;gap:14px">
+        <div style="width:48px;height:48px;background:#F5FFE0;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:1.5rem;flex-shrink:0">🌾</div>
+        <div style="flex:1"><div style="font-weight:700;color:#1a1a1a;font-size:0.9rem">Santé digestive</div><div style="font-size:0.78rem;color:#888;margin-top:2px">14 jours · Probiotiques + fibres</div></div>
+        <div style="color:#ccc;font-size:1.2rem">›</div>
+      </div>
+
+      <div onclick="openRoutineModal('💅 Cheveux & ongles','Routine beauté capillaire : biotine, silice, massages du cuir chevelu et alimentation ciblée.',21,['💊 Biotine matin','🫒 Huile d'olive + silice','💆 Massage cuir chevelu','🥚 Oeufs + légumineuses','💅 Lime douce ongles'])" style="background:white;border-radius:16px;padding:16px;box-shadow:0 2px 8px rgba(0,0,0,0.06);cursor:pointer;display:flex;align-items:center;gap:14px">
+        <div style="width:48px;height:48px;background:#FFF0FB;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:1.5rem;flex-shrink:0">💅</div>
+        <div style="flex:1"><div style="font-weight:700;color:#1a1a1a;font-size:0.9rem">Cheveux & ongles</div><div style="font-size:0.78rem;color:#888;margin-top:2px">21 jours · Biotine + silice</div></div>
+        <div style="color:#ccc;font-size:1.2rem">›</div>
+      </div>
+
+      <div onclick="openRoutineModal('🛡️ Immunité','Programme immunité : vitamine C, zinc, échinacée, sommeil et gestion du stress.',14,['🍊 Jus d'orange frais','💊 Zinc + vitamine C','🧄 Ail cru dans les repas','😴 8h de sommeil','🫖 Tisane échinacée'])" style="background:white;border-radius:16px;padding:16px;box-shadow:0 2px 8px rgba(0,0,0,0.06);cursor:pointer;display:flex;align-items:center;gap:14px">
+        <div style="width:48px;height:48px;background:#ECFFE8;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:1.5rem;flex-shrink:0">🛡️</div>
+        <div style="flex:1"><div style="font-weight:700;color:#1a1a1a;font-size:0.9rem">Boost immunité</div><div style="font-size:0.78rem;color:#888;margin-top:2px">14 jours · Vitamine C + zinc + ail</div></div>
+        <div style="color:#ccc;font-size:1.2rem">›</div>
+      </div>
+
     </div>
-    <div style="font-size:0.85rem;font-weight:700;color:#1a1a1a;margin-bottom:12px">📚 Routines disponibles</div>
-    <div id="routinesList" style="display:flex;flex-direction:column;gap:12px">
-      <div style="text-align:center;padding:40px;color:#ccc">Chargement...</div>
+  </div>
+
+  <!-- Modal Routine -->
+  <div id="routineModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:99999;display:none;align-items:flex-end;justify-content:center">
+    <div style="background:white;border-radius:24px 24px 0 0;padding:24px;width:100%;max-width:600px;max-height:85vh;overflow-y:auto">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
+        <div id="routineModalTitle" style="font-size:1.1rem;font-weight:800;color:#1a1a1a"></div>
+        <button onclick="closeRoutineModal()" style="background:#f5f5f5;border:none;border-radius:50%;width:32px;height:32px;font-size:1.1rem;cursor:pointer">✕</button>
+      </div>
+      <div id="routineModalDesc" style="font-size:0.85rem;color:#666;margin-bottom:16px;line-height:1.5"></div>
+      <div style="background:#f9f9f9;border-radius:12px;padding:14px;margin-bottom:16px">
+        <div style="font-size:0.8rem;font-weight:700;color:#888;margin-bottom:8px;text-transform:uppercase">Activités quotidiennes</div>
+        <div id="routineModalActivites" style="display:flex;flex-direction:column;gap:6px"></div>
+      </div>
+      <div style="margin-bottom:16px">
+        <div style="font-size:0.8rem;font-weight:700;color:#666;margin-bottom:8px;text-transform:uppercase;letter-spacing:.05em">Date de début</div>
+        <input type="date" id="routineStartDate" style="width:100%;padding:12px;border:1px solid #eee;border-radius:10px;font-size:0.9rem;box-sizing:border-box">
+      </div>
+      <div style="font-size:0.78rem;color:#888;margin-bottom:16px" id="routineModalDureeInfo"></div>
+      <button onclick="ajouterRoutineAgenda()" style="width:100%;padding:14px;background:linear-gradient(135deg,var(--coral),var(--accent));color:white;border:none;border-radius:12px;font-weight:700;font-size:0.9rem;cursor:pointer">✅ Ajouter à mon agenda</button>
     </div>
   </div>
 
@@ -9732,6 +9860,63 @@ document.addEventListener('DOMContentLoaded', function() {
       if(tabAgenda) { tabAgenda.style.background = '#f0f0f0'; tabAgenda.style.color = '#888'; }
       if(tabRoutines) { tabRoutines.style.background = 'var(--coral)'; tabRoutines.style.color = 'white'; }
     }
+  }
+
+  var _currentRoutine = null;
+
+  function openRoutineModal(titre, desc, duree, activites) {
+    _currentRoutine = {titre, desc, duree, activites};
+    document.getElementById('routineModalTitle').textContent = titre;
+    document.getElementById('routineModalDesc').textContent = desc;
+    document.getElementById('routineModalDureeInfo').textContent = 'Cette routine s'étend sur ' + duree + ' jours dans votre agenda.';
+    var today = new Date();
+    var yyyy = today.getFullYear();
+    var mm = String(today.getMonth()+1).padStart(2,'0');
+    var dd = String(today.getDate()).padStart(2,'0');
+    document.getElementById('routineStartDate').value = yyyy+'-'+mm+'-'+dd;
+    var actDiv = document.getElementById('routineModalActivites');
+    actDiv.innerHTML = activites.map(function(a){ return '<div style="font-size:0.85rem;color:#333;padding:4px 0;border-bottom:1px solid #f0f0f0">'+a+'</div>'; }).join('');
+    var modal = document.getElementById('routineModal');
+    modal.style.display = 'flex';
+  }
+
+  function closeRoutineModal() {
+    document.getElementById('routineModal').style.display = 'none';
+  }
+
+  async function ajouterRoutineAgenda() {
+    if (!_currentRoutine) return;
+    var startVal = document.getElementById('routineStartDate').value;
+    if (!startVal) { alert('Choisissez une date de début'); return; }
+    var start = new Date(startVal);
+    var token = localStorage.getItem('nutricare_token');
+    var added = 0;
+    for (var i = 0; i < _currentRoutine.duree; i++) {
+      var d = new Date(start);
+      d.setDate(d.getDate() + i);
+      var dateStr = d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+      for (var j = 0; j < _currentRoutine.activites.length; j++) {
+        try {
+          await fetch('https://nutricare-backend-production.up.railway.app/api/planning/event', {
+            method: 'POST',
+            headers: {'Content-Type':'application/json','Authorization':'Bearer '+token},
+            body: JSON.stringify({
+              date: dateStr,
+              type: 'rappel',
+              emoji: '🔔',
+              title: _currentRoutine.activites[j],
+              time: '08:00',
+              notes: 'Routine: ' + _currentRoutine.titre
+            })
+          });
+          added++;
+        } catch(e) {}
+      }
+    }
+    closeRoutineModal();
+    switchPlanningTab('agenda');
+    alert('✅ Routine ajoutée ! '+added+' événements créés dans votre agenda.');
+    if(typeof renderPlanning === 'function') renderPlanning();
   }
 </script>
 </html>
