@@ -9845,20 +9845,25 @@ document.addEventListener('DOMContentLoaded', function() {
 <script>
 // MÉDECINS À 
   function switchPlanningTab(tab) {
+    console.log('switchPlanningTab called:', tab);
     var agendaContent = document.getElementById('planningAgendaContent');
     var routines = document.getElementById('planningRoutinesView');
     var tabAgenda = document.getElementById('tabAgenda');
     var tabRoutines = document.getElementById('tabRoutines');
+    console.log('agenda:', agendaContent, 'routines:', routines);
     if (tab === 'agenda') {
-      if(agendaContent) agendaContent.style.display = 'block';
-      if(routines) routines.style.display = 'none';
+      if(agendaContent) { agendaContent.style.display = 'block'; agendaContent.style.visibility = 'visible'; }
+      if(routines) { routines.style.display = 'none'; routines.style.visibility = 'hidden'; }
       if(tabAgenda) { tabAgenda.style.background = 'var(--coral)'; tabAgenda.style.color = 'white'; }
       if(tabRoutines) { tabRoutines.style.background = '#f0f0f0'; tabRoutines.style.color = '#888'; }
     } else {
-      if(agendaContent) agendaContent.style.display = 'none';
-      if(routines) routines.style.display = 'block';
+      if(agendaContent) { agendaContent.style.display = 'none'; agendaContent.style.visibility = 'hidden'; }
+      if(routines) { routines.style.display = 'block'; routines.style.visibility = 'visible'; routines.style.zIndex = '10'; }
       if(tabAgenda) { tabAgenda.style.background = '#f0f0f0'; tabAgenda.style.color = '#888'; }
       if(tabRoutines) { tabRoutines.style.background = 'var(--coral)'; tabRoutines.style.color = 'white'; }
+      // Force scroll to top
+      var pv = document.getElementById('planningView');
+      if(pv) pv.scrollTop = 0;
     }
   }
 
