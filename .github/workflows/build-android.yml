@@ -29,9 +29,8 @@ jobs:
       - name: Setup Android SDK
         uses: android-actions/setup-android@v3
 
-      - name: Decode Keystore
-        run: |
-          echo "${{ secrets.KEYSTORE_BASE64 }}" | tr -d '\n' | base64 -d > android/app/mirella.keystore
+      - name: Copy Keystore
+        run: cp android/app/mirella.keystore.bak android/app/mirella.keystore || true
 
       - name: Build Release AAB
         run: |
