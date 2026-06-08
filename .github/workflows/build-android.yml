@@ -29,15 +29,13 @@ jobs:
       - name: Setup Android SDK
         uses: android-actions/setup-android@v3
 
-      - name: Copy Keystore
-        run: cp android/app/mirella.keystore.bak android/app/mirella.keystore || true
-
       - name: Build Release AAB
         run: |
           cd android
           chmod +x gradlew
+          KEYSTORE_PATH="${GITHUB_WORKSPACE}/android/app/mirella.keystore"
           ./gradlew bundleRelease \
-            -Pandroid.injected.signing.store.file=mirella.keystore \
+            -Pandroid.injected.signing.store.file="${KEYSTORE_PATH}" \
             -Pandroid.injected.signing.store.password=${{ secrets.KEYSTORE_PASSWORD }} \
             -Pandroid.injected.signing.key.alias=${{ secrets.KEY_ALIAS }} \
             -Pandroid.injected.signing.key.password=${{ secrets.KEY_PASSWORD }}
