@@ -4466,6 +4466,7 @@ function switchLang(lang) {
             });
             console.log('Notif test envoyée');
             schedulePlanningNotifications();
+            scheduleDailyNotifications();
           } catch(e) { console.error('Permission error:', e); }
         }
       }, 2000); if (_savedTheme && window.THEMES[_savedTheme]) window.applyTheme(_savedTheme);
@@ -9938,7 +9939,8 @@ var ROUTINES_DATA = [
           title: _currentRoutine.activites[j],
           time: hours[j % hours.length],
           notes: 'Routine: ' + _currentRoutine.titre,
-          recurrence: 'none'
+          recurrence: 'none',
+          notif: true
         });
         added++;
       }
@@ -10191,5 +10193,137 @@ document.addEventListener('DOMContentLoaded', function() {
   setTimeout(initMirellaNotifications, 1000);
 });
 // ============ FIN NOTIFICATIONS ============
+
+// ===== NOTIFICATIONS PUSH QUOTIDIENNES =====
+async function scheduleDailyNotifications() {
+  if (!window.Capacitor || !window.Capacitor.isNativePlatform()) return;
+  try {
+    var LN = window.Capacitor.Plugins.LocalNotifications;
+    if(!LN) return;
+
+    // Créer channel
+    if(LN.createChannel) {
+      await LN.createChannel({
+        id: 'mirella_daily',
+        name: 'Mirella - Messages quotidiens',
+        importance: 4,
+        visibility: 1,
+        sound: 'default',
+        vibration: true
+      });
+    }
+
+    var perm = await LN.requestPermissions();
+    if(perm.display !== 'granted') return;
+
+    // Récupérer prénom
+    var prenom = '';
+    try {
+      var p = JSON.parse(localStorage.getItem('mirella_profile') || '{}');
+      prenom = p.prenom || p.firstName || p.name || '';
+      if(prenom) prenom = prenom.split(' ')[0];
+    } catch(e) {}
+
+    var messages = [
+      'Bonjour ' + (prenom || 'toi') + ' ! 🌸 Mirella est là pour t'accompagner aujourd'hui !',
+      'Hey ' + (prenom || 'toi') + ' ! ☀️ Belle journée pour prendre soin de toi !',
+      'Coucou ' + (prenom || 'toi') + ' ! 💪 Prête pour une belle journée santé ?',
+      'Bonjour ' + (prenom || 'toi') + ' ! 🌺 Pense à bien t'hydrater aujourd'hui !'
+    ];
+    var msg = messages[new Date().getDay() % messages.length];
+
+    // Notification bonjour à 8h demain
+    var tomorrow8h = new Date();
+    tomorrow8h.setDate(tomorrow8h.getDate() + 1);
+    tomorrow8h.setHours(8, 0, 0, 0);
+
+    // Notification rappel si pas ouvert à 18h
+    var today18h = new Date();
+    today18h.setHours(18, 0, 0, 0);
+    if(today18h < new Date()) {
+      today18h.setDate(today18h.getDate() + 1);
+    }
+
+    // Notification repas midi
+    var tomorrowMidi = new Date();
+    tomorrowMidi.setDate(tomorrowMidi.getDate() + 1);
+    tomorrowMidi.setHours(12, 0, 0, 0);
+
+    // Notification repas soir
+    var tomorrowSoir = new Date();
+    tomorrowSoir.setDate(tomorrowSoir.getDate() + 1);
+    tomorrowSoir.setHours(19, 0, 0, 0);
+
+    // Notification hydratation
+    var tomorrowHydra = new Date();
+    tomorrowHydra.setDate(tomorrowHydra.getDate() + 1);
+    tomorrowHydra.setHours(15, 0, 0, 0);
+
+    await LN.schedule({
+      notifications: [
+        {
+          id: 10001,
+          title: '🌸 Mirella',
+          body: msg,
+          schedule: { at: tomorrow8h, repeats: true, every: 'day', allowWhileIdle: true },
+          channelId: 'mirella_daily',
+          smallIcon: 'ic_launcher',
+          iconColor: '#FF6B6B'
+        },
+        {
+          id: 10002,
+          title: '💧 Hydratation',
+          body: 'Coucou ' + (prenom || 'toi') + ' ! As-tu pensé à boire suffisamment aujourd'hui ?',
+          schedule: { at: tomorrowHydra, repeats: true, every: 'day', allowWhileIdle: true },
+          channelId: 'mirella_daily',
+          smallIcon: 'ic_launcher',
+          iconColor: '#FF6B6B'
+        },
+        {
+          id: 10003,
+          title: '🍽️ Repas du midi',
+          body: 'C'est l'heure de manger ' + (prenom || 'toi') + ' ! Pense à un repas équilibré 🥗',
+          schedule: { at: tomorrowMidi, repeats: true, every: 'day', allowWhileIdle: true },
+          channelId: 'mirella_daily',
+          smallIcon: 'ic_launcher',
+          iconColor: '#FF6B6B'
+        },
+        {
+          id: 10004,
+          title: '🌙 Repas du soir',
+          body: 'Bonsoir ' + (prenom || 'toi') + ' ! Un dîner léger et équilibré ce soir ? 🥗',
+          schedule: { at: tomorrowSoir, repeats: true, every: 'day', allowWhileIdle: true },
+          channelId: 'mirella_daily',
+          smallIcon: 'ic_launcher',
+          iconColor: '#FF6B6B'
+        },
+        {
+          id: 10005,
+          title: '💊 Mirella te manque !',
+          body: 'Hey ' + (prenom || 'toi') + ' ! Viens voir tes conseils santé du jour 🌸',
+          schedule: { at: today18h, allowWhileIdle: true },
+          channelId: 'mirella_daily',
+          smallIcon: 'ic_launcher',
+          iconColor: '#FF6B6B'
+        }
+      ]
+    });
+    console.log('Daily notifications schedulées');
+  } catch(e) { console.error('Daily notif error:', e.message); }
+}
+
+// Scheduler toutes les notifs planning
+async function scheduleAllPlanningNotifs() {
+  if (!window.Capacitor || !window.Capacitor.isNativePlatform()) return;
+  try {
+    var events = JSON.parse(localStorage.getItem('mirella_planning') || '[]');
+    var notifEvents = events.filter(function(e){ return e.notif; });
+    for(var i = 0; i < notifEvents.length; i++) {
+      await scheduleNotification(notifEvents[i]);
+    }
+    console.log('Planning notifs schedulées:', notifEvents.length);
+  } catch(e) { console.error('Planning notifs error:', e); }
+}
+// ===== FIN NOTIFICATIONS PUSH =====
 </script>
 </html>
