@@ -9899,38 +9899,43 @@ var ROUTINES_DATA = [
   }
 
 
-  async function ajouterRoutineAgenda() {
+  function ajouterRoutineAgenda() {
     if (!_currentRoutine) return;
     var startVal = document.getElementById('routineStartDate').value;
     if (!startVal) { alert('Choisissez une date de début'); return; }
-    var start = new Date(startVal);
-    var token = localStorage.getItem('nutricare_token');
+    var start = new Date(startVal + 'T00:00:00');
+    var events = [];
+    try { events = JSON.parse(localStorage.getItem('mirella_planning') || '[]'); } catch(e) { events = []; }
     var added = 0;
+    var hours = ['07:00','08:00','09:00','10:00','11:00','12:00','13:00','14:00','15:00','16:00'];
     for (var i = 0; i < _currentRoutine.duree; i++) {
       var d = new Date(start);
       d.setDate(d.getDate() + i);
       var dateStr = d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
       for (var j = 0; j < _currentRoutine.activites.length; j++) {
-        try {
-          await fetch('https://nutricare-backend-production.up.railway.app/api/planning/event', {
-            method: 'POST',
-            headers: {'Content-Type':'application/json','Authorization':'Bearer '+token},
-            body: JSON.stringify({
-              date: dateStr,
-              type: 'rappel',
-              emoji: '🔔',
-              title: _currentRoutine.activites[j],
-              time: '08:00',
-              notes: 'Routine: ' + _currentRoutine.titre
-            })
-          });
-          added++;
-        } catch(e) {}
+        events.push({
+          id: 'routine_' + Date.now() + '_' + i + '_' + j,
+          date: dateStr,
+          type: 'rappel',
+          emoji: '🔔',
+          title: _currentRoutine.activites[j],
+          time: hours[j % hours.length],
+          notes: 'Routine: ' + _currentRoutine.titre,
+          recurrence: 'none'
+        });
+        added++;
       }
     }
+    localStorage.setItem('mirella_planning', JSON.stringify(events));
+    window.planningEvents = events;
     closeRoutineModal();
-    switchPlanningTab('agenda');
-    alert('✅ Routine ajoutée ! '+added+' événements créés dans votre agenda.');
+    document.getElementById('planningAgendaContent').style.display = 'block';
+    document.getElementById('planningRoutinesView').style.display = 'none';
+    document.getElementById('tabAgenda').style.background = 'var(--coral)';
+    document.getElementById('tabAgenda').style.color = 'white';
+    document.getElementById('tabRoutines').style.background = '#f0f0f0';
+    document.getElementById('tabRoutines').style.color = '#888';
+    alert('✅ ' + added + ' événements ajoutés dans votre agenda !');
     if(typeof renderPlanning === 'function') renderPlanning();
   }
 
