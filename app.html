@@ -4470,6 +4470,8 @@ function switchLang(lang) {
             setTimeout(initMirellaNotifications, 2000);
           } catch(e) { console.error('Permission error:', e); }
         }
+        // Toujours initialiser les notifs in-app
+        setTimeout(initMirellaNotifications, 1500);
       }, 2000); if (_savedTheme && window.THEMES[_savedTheme]) window.applyTheme(_savedTheme);
       if (urlRedirect) { window.location.href = decodeURIComponent(urlRedirect); return; }
       const savedV = localStorage.getItem('nutricare_last_view'); const targetView = urlView || (['chat','health','menus','profile','home'].includes(savedV) ? savedV : 'home');
