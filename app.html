@@ -10159,10 +10159,12 @@ function initMirellaNotifications() {
     }
   }, 5 * 60 * 1000);
 
-  // Rappels planning
+  // Rappels planning toutes les 30 secondes
   setInterval(function() {
     checkPlanningReminders();
-  }, 60 * 1000);
+  }, 30 * 1000);
+  // Vérification immédiate
+  checkPlanningReminders();
 
   // Message motivation toutes les 4h
   setInterval(function() {
@@ -10178,15 +10180,42 @@ function checkPlanningReminders() {
     var events = JSON.parse(localStorage.getItem('mirella_planning') || '[]');
     var now = new Date();
     var today = now.getFullYear()+'-'+String(now.getMonth()+1).padStart(2,'0')+'-'+String(now.getDate()).padStart(2,'0');
-    var currentTime = String(now.getHours()).padStart(2,'0') + ':' + String(now.getMinutes()).padStart(2,'0');
+    var currentHour = now.getHours();
+    var currentMin = now.getMinutes();
     var todayEvents = events.filter(function(e){ return e.date === today; });
+    var alreadyNotified = JSON.parse(localStorage.getItem('mirella_notified_today') || '{}');
     todayEvents.forEach(function(e) {
-      if(e.time === currentTime) {
+      if(!e.time) return;
+      var parts = e.time.split(':');
+      var evtHour = parseInt(parts[0]);
+      var evtMin = parseInt(parts[1]);
+      var evtTotal = evtHour * 60 + evtMin;
+      var nowTotal = currentHour * 60 + currentMin;
+      // Tolérance 5 minutes
+      if(nowTotal >= evtTotal && nowTotal <= evtTotal + 5 && !alreadyNotified[e.id]) {
         var icons = {repas:'🍽️', medicament:'💊', sport:'💪', rappel:'🔔', rdv:'👨‍⚕️'};
-        addNotif('planning', '⏰ ' + e.title, icons[e.type] || '🔔');
+        var prenom = '';
+        try { var p = JSON.parse(localStorage.getItem('mirella_profile')||'{}'); prenom = (p.prenom||p.firstName||'').split(' ')[0]; } catch(x){}
+        var msgs = {
+          repas: 'C'est l'heure de manger ' + (prenom||'') + ' ! 🍽️',
+          medicament: 'N'oublie pas ton médicament ' + (prenom||'') + ' ! 💊',
+          sport: 'C'est l'heure de bouger ' + (prenom||'') + ' ! 💪',
+          rdv: 'Tu as un rendez-vous médical dans peu de temps ' + (prenom||'') + ' ! 👨‍⚕️',
+          rappel: 'Rappel : ' + e.title + ' ⏰'
+        };
+        var msg = msgs[e.type] || ('⏰ ' + e.title);
+        addNotif('planning', msg, icons[e.type] || '🔔');
+        alreadyNotified[e.id] = true;
+        localStorage.setItem('mirella_notified_today', JSON.stringify(alreadyNotified));
+        // Reset le lendemain
+        setTimeout(function() {
+          var an = JSON.parse(localStorage.getItem('mirella_notified_today')||'{}');
+          delete an[e.id];
+          localStorage.setItem('mirella_notified_today', JSON.stringify(an));
+        }, 6 * 60 * 1000);
       }
     });
-  } catch(err) {}
+  } catch(err) { console.error('checkPlanningReminders:', err); }
 }
 
 // Init au chargement
