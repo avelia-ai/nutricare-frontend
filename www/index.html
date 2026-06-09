@@ -4467,6 +4467,7 @@ function switchLang(lang) {
             console.log('Notif test envoyée');
             schedulePlanningNotifications();
             scheduleDailyNotifications();
+            setTimeout(initMirellaNotifications, 2000);
           } catch(e) { console.error('Permission error:', e); }
         }
       }, 2000); if (_savedTheme && window.THEMES[_savedTheme]) window.applyTheme(_savedTheme);
@@ -10189,9 +10190,7 @@ function checkPlanningReminders() {
 }
 
 // Init au chargement
-document.addEventListener('DOMContentLoaded', function() {
-  setTimeout(initMirellaNotifications, 1000);
-});
+// initMirellaNotifications appelé après login
 // ============ FIN NOTIFICATIONS ============
 
 // ===== NOTIFICATIONS PUSH QUOTIDIENNES =====
