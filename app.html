@@ -2129,6 +2129,166 @@ function switchLang(lang) {
         </div>
       </div>
       <div style="padding:12px 16px 16px;width:100%;box-sizing:border-box">
+        <!-- SECTION DÉFIS + NOUVEAUTÉS -->
+      <!-- SECTION DÉFIS -->
+      <div style="margin-bottom:16px">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
+          <div style="font-size:0.65rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--accent)">Défis Mirella 🏆</div>
+        </div>
+        <div style="display:flex;gap:10px;overflow-x:auto;padding-bottom:6px;scrollbar-width:none" id="defisCarousel">
+          <div onclick="openDefi('eau_2l')" style="min-width:150px;height:200px;border-radius:14px;flex-shrink:0;position:relative;overflow:hidden;background:url('https://images.pexels.com/photos/416528/pexels-photo-416528.jpeg?auto=compress&cs=tinysrgb&w=400') center/cover;cursor:pointer">
+            <div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,0.85) 60%,rgba(0,0,0,0.2) 100%)"></div>
+            <div id="defi-badge-eau_2l" style="position:absolute;top:10px;left:10px;background:rgba(255,255,255,0.2);color:white;font-size:9px;font-weight:600;padding:3px 8px;border-radius:20px">7 JOURS</div>
+            <div style="position:absolute;bottom:0;left:0;right:0;padding:12px">
+              <div style="font-size:18px;margin-bottom:4px">💧</div>
+              <div style="font-size:13px;font-weight:700;color:white;margin-bottom:6px">2L d'eau par jour</div>
+              <div id="defi-progress-bar-eau_2l" style="height:3px;background:rgba(255,255,255,0.2);border-radius:4px;margin-bottom:8px"><div id="defi-progress-fill-eau_2l" style="height:3px;width:0%;background:white;border-radius:4px"></div></div>
+              <div id="defi-btn-eau_2l" style="width:100%;font-size:11px;padding:6px;border-radius:20px;background:white;color:#333;border:none;font-weight:600;text-align:center">Relever le défi</div>
+            </div>
+          </div>
+          <div onclick="openDefi('pas_10k')" style="min-width:150px;height:200px;border-radius:14px;flex-shrink:0;position:relative;overflow:hidden;background:url('https://images.pexels.com/photos/2526878/pexels-photo-2526878.jpeg?auto=compress&cs=tinysrgb&w=400') center/cover;cursor:pointer">
+            <div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,0.85) 60%,rgba(0,0,0,0.2) 100%)"></div>
+            <div id="defi-badge-pas_10k" style="position:absolute;top:10px;left:10px;background:rgba(255,255,255,0.2);color:white;font-size:9px;font-weight:600;padding:3px 8px;border-radius:20px">14 JOURS</div>
+            <div style="position:absolute;bottom:0;left:0;right:0;padding:12px">
+              <div style="font-size:18px;margin-bottom:4px">🚶</div>
+              <div style="font-size:13px;font-weight:700;color:white;margin-bottom:6px">10 000 pas / jour</div>
+              <div id="defi-progress-bar-pas_10k" style="height:3px;background:rgba(255,255,255,0.2);border-radius:4px;margin-bottom:8px"><div id="defi-progress-fill-pas_10k" style="height:3px;width:0%;background:white;border-radius:4px"></div></div>
+              <div id="defi-btn-pas_10k" style="width:100%;font-size:11px;padding:6px;border-radius:20px;background:white;color:#333;border:none;font-weight:600;text-align:center">Relever le défi</div>
+            </div>
+          </div>
+          <div onclick="openDefi('meditation')" style="min-width:150px;height:200px;border-radius:14px;flex-shrink:0;position:relative;overflow:hidden;background:url('https://images.pexels.com/photos/3822622/pexels-photo-3822622.jpeg?auto=compress&cs=tinysrgb&w=400') center/cover;cursor:pointer">
+            <div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,0.85) 60%,rgba(0,0,0,0.2) 100%)"></div>
+            <div id="defi-badge-meditation" style="position:absolute;top:10px;left:10px;background:rgba(255,255,255,0.2);color:white;font-size:9px;font-weight:600;padding:3px 8px;border-radius:20px">14 JOURS</div>
+            <div style="position:absolute;bottom:0;left:0;right:0;padding:12px">
+              <div style="font-size:18px;margin-bottom:4px">🧘</div>
+              <div style="font-size:13px;font-weight:700;color:white;margin-bottom:6px">Méditation 10 min</div>
+              <div id="defi-progress-bar-meditation" style="height:3px;background:rgba(255,255,255,0.2);border-radius:4px;margin-bottom:8px"><div id="defi-progress-fill-meditation" style="height:3px;width:0%;background:white;border-radius:4px"></div></div>
+              <div id="defi-btn-meditation" style="width:100%;font-size:11px;padding:6px;border-radius:20px;background:white;color:#333;border:none;font-weight:600;text-align:center">Relever le défi</div>
+            </div>
+          </div>
+          <div onclick="openDefi('fruits_legumes')" style="min-width:150px;height:200px;border-radius:14px;flex-shrink:0;position:relative;overflow:hidden;background:url('https://images.pexels.com/photos/1640777/pexels-photo-1640777.jpeg?auto=compress&cs=tinysrgb&w=400') center/cover;cursor:pointer">
+            <div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,0.85) 60%,rgba(0,0,0,0.2) 100%)"></div>
+            <div id="defi-badge-fruits_legumes" style="position:absolute;top:10px;left:10px;background:rgba(255,255,255,0.2);color:white;font-size:9px;font-weight:600;padding:3px 8px;border-radius:20px">7 JOURS</div>
+            <div style="position:absolute;bottom:0;left:0;right:0;padding:12px">
+              <div style="font-size:18px;margin-bottom:4px">🥗</div>
+              <div style="font-size:13px;font-weight:700;color:white;margin-bottom:6px">5 fruits & légumes</div>
+              <div id="defi-progress-bar-fruits_legumes" style="height:3px;background:rgba(255,255,255,0.2);border-radius:4px;margin-bottom:8px"><div id="defi-progress-fill-fruits_legumes" style="height:3px;width:0%;background:white;border-radius:4px"></div></div>
+              <div id="defi-btn-fruits_legumes" style="width:100%;font-size:11px;padding:6px;border-radius:20px;background:white;color:#333;border:none;font-weight:600;text-align:center">Relever le défi</div>
+            </div>
+          </div>
+          <div onclick="openDefi('sommeil_22h')" style="min-width:150px;height:200px;border-radius:14px;flex-shrink:0;position:relative;overflow:hidden;background:url('https://images.pexels.com/photos/3771069/pexels-photo-3771069.jpeg?auto=compress&cs=tinysrgb&w=400') center/cover;cursor:pointer">
+            <div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,0.85) 60%,rgba(0,0,0,0.2) 100%)"></div>
+            <div id="defi-badge-sommeil_22h" style="position:absolute;top:10px;left:10px;background:rgba(255,255,255,0.2);color:white;font-size:9px;font-weight:600;padding:3px 8px;border-radius:20px">7 JOURS</div>
+            <div style="position:absolute;bottom:0;left:0;right:0;padding:12px">
+              <div style="font-size:18px;margin-bottom:4px">😴</div>
+              <div style="font-size:13px;font-weight:700;color:white;margin-bottom:6px">Coucher avant 22h30</div>
+              <div id="defi-progress-bar-sommeil_22h" style="height:3px;background:rgba(255,255,255,0.2);border-radius:4px;margin-bottom:8px"><div id="defi-progress-fill-sommeil_22h" style="height:3px;width:0%;background:white;border-radius:4px"></div></div>
+              <div id="defi-btn-sommeil_22h" style="width:100%;font-size:11px;padding:6px;border-radius:20px;background:white;color:#333;border:none;font-weight:600;text-align:center">Relever le défi</div>
+            </div>
+          </div>
+          <div onclick="openDefi('zero_sucre')" style="min-width:150px;height:200px;border-radius:14px;flex-shrink:0;position:relative;overflow:hidden;background:url('https://images.pexels.com/photos/1906439/pexels-photo-1906439.jpeg?auto=compress&cs=tinysrgb&w=400') center/cover;cursor:pointer">
+            <div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,0.85) 60%,rgba(0,0,0,0.2) 100%)"></div>
+            <div id="defi-badge-zero_sucre" style="position:absolute;top:10px;left:10px;background:rgba(255,255,255,0.2);color:white;font-size:9px;font-weight:600;padding:3px 8px;border-radius:20px">7 JOURS</div>
+            <div style="position:absolute;bottom:0;left:0;right:0;padding:12px">
+              <div style="font-size:18px;margin-bottom:4px">🚫</div>
+              <div style="font-size:13px;font-weight:700;color:white;margin-bottom:6px">Zéro sucre ajouté</div>
+              <div id="defi-progress-bar-zero_sucre" style="height:3px;background:rgba(255,255,255,0.2);border-radius:4px;margin-bottom:8px"><div id="defi-progress-fill-zero_sucre" style="height:3px;width:0%;background:white;border-radius:4px"></div></div>
+              <div id="defi-btn-zero_sucre" style="width:100%;font-size:11px;padding:6px;border-radius:20px;background:white;color:#333;border:none;font-weight:600;text-align:center">Relever le défi</div>
+            </div>
+          </div>
+          <div onclick="openDefi('sport_30min')" style="min-width:150px;height:200px;border-radius:14px;flex-shrink:0;position:relative;overflow:hidden;background:url('https://images.pexels.com/photos/1552242/pexels-photo-1552242.jpeg?auto=compress&cs=tinysrgb&w=400') center/cover;cursor:pointer">
+            <div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,0.85) 60%,rgba(0,0,0,0.2) 100%)"></div>
+            <div id="defi-badge-sport_30min" style="position:absolute;top:10px;left:10px;background:rgba(255,255,255,0.2);color:white;font-size:9px;font-weight:600;padding:3px 8px;border-radius:20px">21 JOURS</div>
+            <div style="position:absolute;bottom:0;left:0;right:0;padding:12px">
+              <div style="font-size:18px;margin-bottom:4px">🏃</div>
+              <div style="font-size:13px;font-weight:700;color:white;margin-bottom:6px">30 min de sport</div>
+              <div id="defi-progress-bar-sport_30min" style="height:3px;background:rgba(255,255,255,0.2);border-radius:4px;margin-bottom:8px"><div id="defi-progress-fill-sport_30min" style="height:3px;width:0%;background:white;border-radius:4px"></div></div>
+              <div id="defi-btn-sport_30min" style="width:100%;font-size:11px;padding:6px;border-radius:20px;background:white;color:#333;border:none;font-weight:600;text-align:center">Relever le défi</div>
+            </div>
+          </div>
+          <div onclick="openDefi('soleil_matin')" style="min-width:150px;height:200px;border-radius:14px;flex-shrink:0;position:relative;overflow:hidden;background:url('https://images.pexels.com/photos/1510392/pexels-photo-1510392.jpeg?auto=compress&cs=tinysrgb&w=400') center/cover;cursor:pointer">
+            <div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,0.85) 60%,rgba(0,0,0,0.2) 100%)"></div>
+            <div id="defi-badge-soleil_matin" style="position:absolute;top:10px;left:10px;background:rgba(255,255,255,0.2);color:white;font-size:9px;font-weight:600;padding:3px 8px;border-radius:20px">14 JOURS</div>
+            <div style="position:absolute;bottom:0;left:0;right:0;padding:12px">
+              <div style="font-size:18px;margin-bottom:4px">☀️</div>
+              <div style="font-size:13px;font-weight:700;color:white;margin-bottom:6px">15 min de soleil</div>
+              <div id="defi-progress-bar-soleil_matin" style="height:3px;background:rgba(255,255,255,0.2);border-radius:4px;margin-bottom:8px"><div id="defi-progress-fill-soleil_matin" style="height:3px;width:0%;background:white;border-radius:4px"></div></div>
+              <div id="defi-btn-soleil_matin" style="width:100%;font-size:11px;padding:6px;border-radius:20px;background:white;color:#333;border:none;font-weight:600;text-align:center">Relever le défi</div>
+            </div>
+          </div>
+          <div onclick="openDefi('sans_ecran')" style="min-width:150px;height:200px;border-radius:14px;flex-shrink:0;position:relative;overflow:hidden;background:url('https://images.pexels.com/photos/3692886/pexels-photo-3692886.jpeg?auto=compress&cs=tinysrgb&w=400') center/cover;cursor:pointer">
+            <div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,0.85) 60%,rgba(0,0,0,0.2) 100%)"></div>
+            <div id="defi-badge-sans_ecran" style="position:absolute;top:10px;left:10px;background:rgba(255,255,255,0.2);color:white;font-size:9px;font-weight:600;padding:3px 8px;border-radius:20px">7 JOURS</div>
+            <div style="position:absolute;bottom:0;left:0;right:0;padding:12px">
+              <div style="font-size:18px;margin-bottom:4px">📵</div>
+              <div style="font-size:13px;font-weight:700;color:white;margin-bottom:6px">Pas d'écran après 21h</div>
+              <div id="defi-progress-bar-sans_ecran" style="height:3px;background:rgba(255,255,255,0.2);border-radius:4px;margin-bottom:8px"><div id="defi-progress-fill-sans_ecran" style="height:3px;width:0%;background:white;border-radius:4px"></div></div>
+              <div id="defi-btn-sans_ecran" style="width:100%;font-size:11px;padding:6px;border-radius:20px;background:white;color:#333;border:none;font-weight:600;text-align:center">Relever le défi</div>
+            </div>
+          </div>
+          <div onclick="openDefi('cuisine_maison')" style="min-width:150px;height:200px;border-radius:14px;flex-shrink:0;position:relative;overflow:hidden;background:url('https://images.pexels.com/photos/4259140/pexels-photo-4259140.jpeg?auto=compress&cs=tinysrgb&w=400') center/cover;cursor:pointer">
+            <div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,0.85) 60%,rgba(0,0,0,0.2) 100%)"></div>
+            <div id="defi-badge-cuisine_maison" style="position:absolute;top:10px;left:10px;background:rgba(255,255,255,0.2);color:white;font-size:9px;font-weight:600;padding:3px 8px;border-radius:20px">7 JOURS</div>
+            <div style="position:absolute;bottom:0;left:0;right:0;padding:12px">
+              <div style="font-size:18px;margin-bottom:4px">🍳</div>
+              <div style="font-size:13px;font-weight:700;color:white;margin-bottom:6px">Cuisiner maison</div>
+              <div id="defi-progress-bar-cuisine_maison" style="height:3px;background:rgba(255,255,255,0.2);border-radius:4px;margin-bottom:8px"><div id="defi-progress-fill-cuisine_maison" style="height:3px;width:0%;background:white;border-radius:4px"></div></div>
+              <div id="defi-btn-cuisine_maison" style="width:100%;font-size:11px;padding:6px;border-radius:20px;background:white;color:#333;border:none;font-weight:600;text-align:center">Relever le défi</div>
+            </div>
+          </div>
+          <div onclick="openDefi('journaling')" style="min-width:150px;height:200px;border-radius:14px;flex-shrink:0;position:relative;overflow:hidden;background:url('https://images.pexels.com/photos/317355/pexels-photo-317355.jpeg?auto=compress&cs=tinysrgb&w=400') center/cover;cursor:pointer">
+            <div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,0.85) 60%,rgba(0,0,0,0.2) 100%)"></div>
+            <div id="defi-badge-journaling" style="position:absolute;top:10px;left:10px;background:rgba(255,255,255,0.2);color:white;font-size:9px;font-weight:600;padding:3px 8px;border-radius:20px">14 JOURS</div>
+            <div style="position:absolute;bottom:0;left:0;right:0;padding:12px">
+              <div style="font-size:18px;margin-bottom:4px">📓</div>
+              <div style="font-size:13px;font-weight:700;color:white;margin-bottom:6px">Journaling quotidien</div>
+              <div id="defi-progress-bar-journaling" style="height:3px;background:rgba(255,255,255,0.2);border-radius:4px;margin-bottom:8px"><div id="defi-progress-fill-journaling" style="height:3px;width:0%;background:white;border-radius:4px"></div></div>
+              <div id="defi-btn-journaling" style="width:100%;font-size:11px;padding:6px;border-radius:20px;background:white;color:#333;border:none;font-weight:600;text-align:center">Relever le défi</div>
+            </div>
+          </div>
+          <div onclick="openDefi('complements')" style="min-width:150px;height:200px;border-radius:14px;flex-shrink:0;position:relative;overflow:hidden;background:url('https://images.pexels.com/photos/3683098/pexels-photo-3683098.jpeg?auto=compress&cs=tinysrgb&w=400') center/cover;cursor:pointer">
+            <div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,0.85) 60%,rgba(0,0,0,0.2) 100%)"></div>
+            <div id="defi-badge-complements" style="position:absolute;top:10px;left:10px;background:rgba(255,255,255,0.2);color:white;font-size:9px;font-weight:600;padding:3px 8px;border-radius:20px">30 JOURS</div>
+            <div style="position:absolute;bottom:0;left:0;right:0;padding:12px">
+              <div style="font-size:18px;margin-bottom:4px">💊</div>
+              <div style="font-size:13px;font-weight:700;color:white;margin-bottom:6px">Prendre ses compléments</div>
+              <div id="defi-progress-bar-complements" style="height:3px;background:rgba(255,255,255,0.2);border-radius:4px;margin-bottom:8px"><div id="defi-progress-fill-complements" style="height:3px;width:0%;background:white;border-radius:4px"></div></div>
+              <div id="defi-btn-complements" style="width:100%;font-size:11px;padding:6px;border-radius:20px;background:white;color:#333;border:none;font-weight:600;text-align:center">Relever le défi</div>
+            </div>
+          </div>
+          <div onclick="openDefi('sans_gluten')" style="min-width:150px;height:200px;border-radius:14px;flex-shrink:0;position:relative;overflow:hidden;background:url('https://images.pexels.com/photos/1640774/pexels-photo-1640774.jpeg?auto=compress&cs=tinysrgb&w=400') center/cover;cursor:pointer">
+            <div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,0.85) 60%,rgba(0,0,0,0.2) 100%)"></div>
+            <div id="defi-badge-sans_gluten" style="position:absolute;top:10px;left:10px;background:rgba(255,255,255,0.2);color:white;font-size:9px;font-weight:600;padding:3px 8px;border-radius:20px">7 JOURS</div>
+            <div style="position:absolute;bottom:0;left:0;right:0;padding:12px">
+              <div style="font-size:18px;margin-bottom:4px">🌾</div>
+              <div style="font-size:13px;font-weight:700;color:white;margin-bottom:6px">Sans gluten 7 jours</div>
+              <div id="defi-progress-bar-sans_gluten" style="height:3px;background:rgba(255,255,255,0.2);border-radius:4px;margin-bottom:8px"><div id="defi-progress-fill-sans_gluten" style="height:3px;width:0%;background:white;border-radius:4px"></div></div>
+              <div id="defi-btn-sans_gluten" style="width:100%;font-size:11px;padding:6px;border-radius:20px;background:white;color:#333;border:none;font-weight:600;text-align:center">Relever le défi</div>
+            </div>
+          </div>
+          <div onclick="openDefi('poisson_gras')" style="min-width:150px;height:200px;border-radius:14px;flex-shrink:0;position:relative;overflow:hidden;background:url('https://images.pexels.com/photos/3655916/pexels-photo-3655916.jpeg?auto=compress&cs=tinysrgb&w=400') center/cover;cursor:pointer">
+            <div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,0.85) 60%,rgba(0,0,0,0.2) 100%)"></div>
+            <div id="defi-badge-poisson_gras" style="position:absolute;top:10px;left:10px;background:rgba(255,255,255,0.2);color:white;font-size:9px;font-weight:600;padding:3px 8px;border-radius:20px">14 JOURS</div>
+            <div style="position:absolute;bottom:0;left:0;right:0;padding:12px">
+              <div style="font-size:18px;margin-bottom:4px">🐟</div>
+              <div style="font-size:13px;font-weight:700;color:white;margin-bottom:6px">Poisson gras 3x/semaine</div>
+              <div id="defi-progress-bar-poisson_gras" style="height:3px;background:rgba(255,255,255,0.2);border-radius:4px;margin-bottom:8px"><div id="defi-progress-fill-poisson_gras" style="height:3px;width:0%;background:white;border-radius:4px"></div></div>
+              <div id="defi-btn-poisson_gras" style="width:100%;font-size:11px;padding:6px;border-radius:20px;background:white;color:#333;border:none;font-weight:600;text-align:center">Relever le défi</div>
+            </div>
+          </div>
+          <div onclick="openDefi('aliment_nouveau')" style="min-width:150px;height:200px;border-radius:14px;flex-shrink:0;position:relative;overflow:hidden;background:url('https://images.pexels.com/photos/1099680/pexels-photo-1099680.jpeg?auto=compress&cs=tinysrgb&w=400') center/cover;cursor:pointer">
+            <div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,0.85) 60%,rgba(0,0,0,0.2) 100%)"></div>
+            <div id="defi-badge-aliment_nouveau" style="position:absolute;top:10px;left:10px;background:rgba(255,255,255,0.2);color:white;font-size:9px;font-weight:600;padding:3px 8px;border-radius:20px">7 JOURS</div>
+            <div style="position:absolute;bottom:0;left:0;right:0;padding:12px">
+              <div style="font-size:18px;margin-bottom:4px">🌿</div>
+              <div style="font-size:13px;font-weight:700;color:white;margin-bottom:6px">1 aliment nouveau/jour</div>
+              <div id="defi-progress-bar-aliment_nouveau" style="height:3px;background:rgba(255,255,255,0.2);border-radius:4px;margin-bottom:8px"><div id="defi-progress-fill-aliment_nouveau" style="height:3px;width:0%;background:white;border-radius:4px"></div></div>
+              <div id="defi-btn-aliment_nouveau" style="width:100%;font-size:11px;padding:6px;border-radius:20px;background:white;color:#333;border:none;font-weight:600;text-align:center">Relever le défi</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
         <!-- SECTION NOUVEAUTÉS -->
         <div style="margin-bottom:16px">
           <div style="font-size:0.65rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--accent);margin-bottom:10px">Nouveautés Mirella</div>
@@ -9519,6 +9679,37 @@ document.addEventListener('DOMContentLoaded', function(){
   <div id="notifList" style="overflow-y:auto;max-height:calc(80vh - 60px);padding:8px 0"></div>
 </div>
 <div id="notifOverlay" style="display:none;position:fixed;inset:0;z-index:99998" onclick="toggleNotifications()"></div>
+
+<!-- Modal Défi -->
+<div id="defiModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:99999;align-items:flex-end;justify-content:center">
+  <div style="background:white;border-radius:24px 24px 0 0;padding:24px;width:100%;max-width:600px;max-height:85vh;overflow-y:auto">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
+      <div id="defiModalTitle" style="font-size:1.1rem;font-weight:800;color:#1a1a1a"></div>
+      <button onclick="closeDefiModal()" style="background:#f5f5f5;border:none;border-radius:50%;width:32px;height:32px;cursor:pointer">✕</button>
+    </div>
+    <div id="defiModalPhoto" style="height:160px;border-radius:16px;background:center/cover;margin-bottom:16px;position:relative;overflow:hidden">
+      <div style="position:absolute;inset:0;background:rgba(0,0,0,0.3)"></div>
+    </div>
+    <div id="defiModalDesc" style="font-size:0.85rem;color:#555;margin-bottom:16px;line-height:1.5"></div>
+    <div id="defiModalProgress" style="display:none;margin-bottom:16px">
+      <div style="display:flex;justify-content:space-between;margin-bottom:6px">
+        <div style="font-size:0.82rem;font-weight:700;color:#1a1a1a">Progression</div>
+        <div id="defiModalProgressLabel" style="font-size:0.82rem;color:var(--coral)"></div>
+      </div>
+      <div style="height:8px;background:#f0f0f0;border-radius:8px">
+        <div id="defiModalProgressBar" style="height:8px;background:linear-gradient(135deg,var(--coral),var(--accent));border-radius:8px;transition:.3s"></div>
+      </div>
+    </div>
+    <div id="defiModalStats" style="display:none;background:#FFF0EC;border-radius:12px;padding:14px;margin-bottom:16px">
+      <div style="display:flex;justify-content:space-around">
+        <div style="text-align:center"><div id="defiStatJours" style="font-size:1.5rem;font-weight:800;color:var(--coral)">0</div><div style="font-size:0.72rem;color:#888">jours</div></div>
+        <div style="text-align:center"><div id="defiStatStreak" style="font-size:1.5rem;font-weight:800;color:var(--coral)">0</div><div style="font-size:0.72rem;color:#888">streak 🔥</div></div>
+        <div style="text-align:center"><div id="defiStatRestant" style="font-size:1.5rem;font-weight:800;color:var(--coral)">0</div><div style="font-size:0.72rem;color:#888">restants</div></div>
+      </div>
+    </div>
+    <div id="defiModalActions"></div>
+  </div>
+</div>
 </body>
 </html><script>
 var _recettesTab = 'mes';
@@ -10462,5 +10653,182 @@ async function scheduleAllPlanningNotifs() {
       updateProfileAvatarDisplay();
     }
   });
+
+// ===== SYSTÈME DÉFIS MIRELLA =====
+var DEFIS_DATA = [
+  {id:"eau_2l",emoji:"💧",titre:"2L d'eau par jour",duree:7,photo:"https://images.pexels.com/photos/416528/pexels-photo-416528.jpeg?auto=compress&cs=tinysrgb&w=400",notif:"N'oublie pas de boire ton eau aujourd'hui ! 💧",description:"Bois au moins 2L d'eau chaque jour pendant 7 jours"},
+  {id:"pas_10k",emoji:"🚶",titre:"10 000 pas / jour",duree:14,photo:"https://images.pexels.com/photos/2526878/pexels-photo-2526878.jpeg?auto=compress&cs=tinysrgb&w=400",notif:"Tu as marche 10 000 pas aujourd'hui ? 🚶",description:"Atteins 10 000 pas chaque jour pendant 14 jours"},
+  {id:"meditation",emoji:"🧘",titre:"Meditation 10 min",duree:14,photo:"https://images.pexels.com/photos/3822622/pexels-photo-3822622.jpeg?auto=compress&cs=tinysrgb&w=400",notif:"C'est l'heure de ta meditation de 10 minutes 🧘",description:"Medite 10 minutes chaque jour pendant 14 jours"},
+  {id:"fruits_legumes",emoji:"🥗",titre:"5 fruits & legumes",duree:7,photo:"https://images.pexels.com/photos/1640777/pexels-photo-1640777.jpeg?auto=compress&cs=tinysrgb&w=400",notif:"As-tu mange tes 5 fruits et legumes ? 🥗",description:"Mange 5 fruits et legumes chaque jour pendant 7 jours"},
+  {id:"sommeil_22h",emoji:"😴",titre:"Coucher avant 22h30",duree:7,photo:"https://images.pexels.com/photos/3771069/pexels-photo-3771069.jpeg?auto=compress&cs=tinysrgb&w=400",notif:"Il est bientot 22h30, pense a aller te coucher ! 😴",description:"Couche-toi avant 22h30 chaque soir pendant 7 jours"},
+  {id:"zero_sucre",emoji:"🚫",titre:"Zero sucre ajoute",duree:7,photo:"https://images.pexels.com/photos/1906439/pexels-photo-1906439.jpeg?auto=compress&cs=tinysrgb&w=400",notif:"Rappel : pas de sucre ajoute aujourd'hui ! 🚫",description:"Evite tout sucre ajoute pendant 7 jours"},
+  {id:"sport_30min",emoji:"🏃",titre:"30 min de sport",duree:21,photo:"https://images.pexels.com/photos/1552242/pexels-photo-1552242.jpeg?auto=compress&cs=tinysrgb&w=400",notif:"C'est l'heure de bouger ! 30 min de sport 🏃",description:"Fais 30 min de sport 5x par semaine pendant 21 jours"},
+  {id:"soleil_matin",emoji:"☀️",titre:"15 min de soleil",duree:14,photo:"https://images.pexels.com/photos/1510392/pexels-photo-1510392.jpeg?auto=compress&cs=tinysrgb&w=400",notif:"Sors prendre ton soleil du matin ! ☀️",description:"Sors 15 min au soleil chaque matin pendant 14 jours"},
+  {id:"sans_ecran",emoji:"📵",titre:"Pas d'ecran apres 21h",duree:7,photo:"https://images.pexels.com/photos/3692886/pexels-photo-3692886.jpeg?auto=compress&cs=tinysrgb&w=400",notif:"Il est 21h ! Pose ton telephone 📵",description:"Plus d'ecran apres 21h pendant 7 jours"},
+  {id:"cuisine_maison",emoji:"🍳",titre:"Cuisiner maison",duree:7,photo:"https://images.pexels.com/photos/4259140/pexels-photo-4259140.jpeg?auto=compress&cs=tinysrgb&w=400",notif:"N'oublie pas de cuisiner maison aujourd'hui ! 🍳",description:"Cuisine tous tes repas a la maison pendant 7 jours"},
+  {id:"journaling",emoji:"📓",titre:"Journaling quotidien",duree:14,photo:"https://images.pexels.com/photos/317355/pexels-photo-317355.jpeg?auto=compress&cs=tinysrgb&w=400",notif:"As-tu ecrit dans ton journal aujourd'hui ? 📓",description:"Ecris dans ton journal chaque jour pendant 14 jours"},
+  {id:"complements",emoji:"💊",titre:"Prendre ses complements",duree:30,photo:"https://images.pexels.com/photos/3683098/pexels-photo-3683098.jpeg?auto=compress&cs=tinysrgb&w=400",notif:"N'oublie pas tes complements ce matin ! 💊",description:"Prends tes complements chaque jour pendant 30 jours"},
+  {id:"sans_gluten",emoji:"🌾",titre:"Sans gluten 7 jours",duree:7,photo:"https://images.pexels.com/photos/1640774/pexels-photo-1640774.jpeg?auto=compress&cs=tinysrgb&w=400",notif:"Rappel : regime sans gluten aujourd'hui ! 🌾",description:"Mange sans gluten pendant 7 jours"},
+  {id:"poisson_gras",emoji:"🐟",titre:"Poisson gras 3x/sem",duree:14,photo:"https://images.pexels.com/photos/3655916/pexels-photo-3655916.jpeg?auto=compress&cs=tinysrgb&w=400",notif:"Pense a manger du poisson gras aujourd'hui ! 🐟",description:"Mange du poisson gras 3 fois par semaine"},
+  {id:"aliment_nouveau",emoji:"🌿",titre:"1 aliment nouveau/jour",duree:7,photo:"https://images.pexels.com/photos/1099680/pexels-photo-1099680.jpeg?auto=compress&cs=tinysrgb&w=400",notif:"Quel nouvel aliment vas-tu decouvrir aujourd'hui ? 🌿",description:"Essaie un nouvel aliment chaque jour pendant 7 jours"}
+];
+
+function getDefisState() {
+  try { return JSON.parse(localStorage.getItem('mirella_defis') || '{}'); } catch(e) { return {}; }
+}
+function saveDefisState(state) {
+  localStorage.setItem('mirella_defis', JSON.stringify(state));
+}
+
+function initDefisCarousel() {
+  var state = getDefisState();
+  DEFIS_DATA.forEach(function(d) {
+    var defi = state[d.id];
+    var badge = document.getElementById('defi-badge-' + d.id);
+    var btn = document.getElementById('defi-btn-' + d.id);
+    var fill = document.getElementById('defi-progress-fill-' + d.id);
+    if (!defi) return;
+    if (defi.actif) {
+      var pct = Math.round((defi.jours_valides / d.duree) * 100);
+      if (fill) fill.style.width = pct + '%';
+      if (badge) { badge.textContent = 'EN COURS · J' + defi.jours_valides + '/' + d.duree; badge.style.background = '#378ADD'; }
+      var today = new Date().toDateString();
+      if (btn) {
+        if (defi.last_valid === today) {
+          btn.textContent = '✓ Validé aujourd'hui';
+          btn.style.background = '#378ADD';
+          btn.style.color = 'white';
+        } else {
+          btn.textContent = 'Valider aujourd'hui';
+          btn.style.background = 'white';
+          btn.style.color = '#333';
+        }
+      }
+    } else if (defi.termine) {
+      if (badge) { badge.textContent = '🏆 TERMINÉ !'; badge.style.background = '#3B6D11'; }
+      if (btn) { btn.textContent = '🏆 Complété !'; btn.style.background = '#3B6D11'; btn.style.color = 'white'; }
+      if (fill) fill.style.width = '100%';
+    }
+  });
+}
+
+window.openDefi = function(id) {
+  var d = DEFIS_DATA.find(function(x){ return x.id === id; });
+  if (!d) return;
+  var state = getDefisState();
+  var defi = state[id] || null;
+  document.getElementById('defiModalTitle').textContent = d.emoji + ' ' + d.titre;
+  document.getElementById('defiModalPhoto').style.backgroundImage = 'url(' + d.photo + ')';
+  document.getElementById('defiModalDesc').textContent = d.description;
+  var modal = document.getElementById('defiModal');
+  modal.style.display = 'flex';
+  var actions = document.getElementById('defiModalActions');
+  var progress = document.getElementById('defiModalProgress');
+  var stats = document.getElementById('defiModalStats');
+
+  if (!defi || !defi.actif && !defi.termine) {
+    progress.style.display = 'none';
+    stats.style.display = 'none';
+    actions.innerHTML = '<button onclick="accepterDefi('' + id + '')" style="width:100%;padding:14px;background:linear-gradient(135deg,var(--coral),var(--accent));color:white;border:none;border-radius:12px;font-weight:700;font-size:0.9rem;cursor:pointer">🏆 Relever le défi !</button>';
+  } else if (defi.termine) {
+    progress.style.display = 'block';
+    document.getElementById('defiModalProgressBar').style.width = '100%';
+    document.getElementById('defiModalProgressLabel').textContent = '100% · Terminé !';
+    stats.style.display = 'block';
+    document.getElementById('defiStatJours').textContent = d.duree;
+    document.getElementById('defiStatStreak').textContent = defi.streak || d.duree;
+    document.getElementById('defiStatRestant').textContent = '0';
+    actions.innerHTML = '<div style="text-align:center;padding:16px;background:#F0FFF4;border-radius:12px"><div style="font-size:2rem">🏆</div><div style="font-weight:700;color:#3B6D11;margin-top:8px">Défi complété !</div></div>';
+  } else {
+    var pct = Math.round((defi.jours_valides / d.duree) * 100);
+    progress.style.display = 'block';
+    document.getElementById('defiModalProgressBar').style.width = pct + '%';
+    document.getElementById('defiModalProgressLabel').textContent = pct + '% · J' + defi.jours_valides + '/' + d.duree;
+    stats.style.display = 'block';
+    document.getElementById('defiStatJours').textContent = defi.jours_valides;
+    document.getElementById('defiStatStreak').textContent = defi.streak || 0;
+    document.getElementById('defiStatRestant').textContent = d.duree - defi.jours_valides;
+    var today = new Date().toDateString();
+    if (defi.last_valid === today) {
+      actions.innerHTML = '<div style="text-align:center;padding:14px;background:#F0FFF4;border-radius:12px;color:#3B6D11;font-weight:700">✅ Défi validé aujourd'hui !</div><button onclick="abandonnerDefi('' + id + '')" style="width:100%;padding:10px;background:none;color:#ccc;border:none;font-size:0.8rem;margin-top:8px;cursor:pointer">Abandonner le défi</button>';
+    } else {
+      actions.innerHTML = '<button onclick="validerDefiAujourdhui('' + id + '')" style="width:100%;padding:14px;background:linear-gradient(135deg,var(--coral),var(--accent));color:white;border:none;border-radius:12px;font-weight:700;font-size:0.9rem;cursor:pointer;margin-bottom:8px">✅ Valider aujourd'hui !</button><button onclick="abandonnerDefi('' + id + '')" style="width:100%;padding:10px;background:none;color:#ccc;border:none;font-size:0.8rem;cursor:pointer">Abandonner le défi</button>';
+    }
+  }
+};
+
+window.accepterDefi = function(id) {
+  var d = DEFIS_DATA.find(function(x){ return x.id === id; });
+  var state = getDefisState();
+  state[id] = { actif: true, jours_valides: 0, streak: 0, date_debut: new Date().toISOString(), last_valid: null, termine: false };
+  saveDefisState(state);
+  addNotif('defi', 'Défi accepté : ' + d.emoji + ' ' + d.titre + ' ! C'est parti pour ' + d.duree + ' jours 💪', '🏆');
+  closeDefiModal();
+  initDefisCarousel();
+  openDefi(id);
+};
+
+window.validerDefiAujourdhui = function(id) {
+  var d = DEFIS_DATA.find(function(x){ return x.id === id; });
+  var state = getDefisState();
+  var defi = state[id];
+  if (!defi) return;
+  var today = new Date().toDateString();
+  if (defi.last_valid === today) return;
+  var yesterday = new Date();
+  yesterday.setDate(yesterday.getDate() - 1);
+  if (defi.last_valid === yesterday.toDateString()) {
+    defi.streak = (defi.streak || 0) + 1;
+  } else {
+    defi.streak = 1;
+  }
+  defi.jours_valides = (defi.jours_valides || 0) + 1;
+  defi.last_valid = today;
+  if (defi.jours_valides >= d.duree) {
+    defi.actif = false;
+    defi.termine = true;
+    addNotif('defi', '🏆 BRAVO ! Tu as terminé le défi ' + d.emoji + ' ' + d.titre + ' ! Incroyable !', '🏆');
+  } else {
+    addNotif('defi', d.emoji + ' Jour ' + defi.jours_valides + '/' + d.duree + ' validé pour le défi ' + d.titre + ' ! Continue ! 💪', '✅');
+  }
+  saveDefisState(state);
+  closeDefiModal();
+  initDefisCarousel();
+  openDefi(id);
+};
+
+window.abandonnerDefi = function(id) {
+  if (!confirm('Abandonner ce défi ?')) return;
+  var state = getDefisState();
+  delete state[id];
+  saveDefisState(state);
+  closeDefiModal();
+  initDefisCarousel();
+};
+
+window.closeDefiModal = function() {
+  document.getElementById('defiModal').style.display = 'none';
+};
+
+// Rappels notifs défis quotidiens
+function checkDefisReminders() {
+  var state = getDefisState();
+  var today = new Date().toDateString();
+  var h = new Date().getHours();
+  if (h !== 9 && h !== 18) return;
+  Object.keys(state).forEach(function(id) {
+    var defi = state[id];
+    var d = DEFIS_DATA.find(function(x){ return x.id === id; });
+    if (!d || !defi.actif || defi.last_valid === today) return;
+    addNotif('defi', d.notif, d.emoji);
+  });
+}
+
+// Init au chargement
+document.addEventListener('DOMContentLoaded', function() {
+  setTimeout(initDefisCarousel, 500);
+  setInterval(checkDefisReminders, 60 * 60 * 1000);
+});
+// ===== FIN DÉFIS =====
 </script>
 </html>
