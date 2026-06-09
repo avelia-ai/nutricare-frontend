@@ -1821,7 +1821,6 @@ async function scheduleNotification(event) {
   if (!window.Capacitor || !window.Capacitor.isNativePlatform()) return;
   try {
     var LN = window.Capacitor.Plugins.LocalNotifications;
-    // Créer le channel à chaque fois pour s'assurer qu'il existe
     if (LN.createChannel) {
       await LN.createChannel({
         id: 'mirella_channel',
@@ -1832,30 +1831,45 @@ async function scheduleNotification(event) {
         vibration: true
       });
     }
-    // Demander permissions si pas encore accordées
     var perm = await LN.requestPermissions();
-    if (perm.display !== 'granted') { console.log('Notif permission refusée'); return; }
-    var dt = new Date(event.date + 'T' + event.time + ':00');
-    console.log('Scheduling notif for:', dt, 'now:', new Date());
-    if (dt > new Date()) {
-      // ID stable basé sur titre+date+heure pour éviter les doublons
-      var notifId = Math.abs((event.title + event.date + event.time).split('').reduce(function(a,c){return a+c.charCodeAt(0);},1)) % 2000000 + 1;
-      await LN.schedule({
-        notifications: [{
-          id: notifId,
-          title: (event.emoji || '🔔') + ' ' + event.title,
-          body: 'Rappel Mirella : ' + event.title,
-          schedule: { at: dt, allowWhileIdle: true },
-          channelId: 'mirella_channel',
-          sound: 'default',
-          smallIcon: 'ic_launcher',
-          iconColor: '#FF6B6B'
-        }]
-      });
-      console.log('Notif schedulée pour:', dt);
-    } else {
-      console.log('Date passée:', dt);
+    if (perm.display !== 'granted') return;
+
+    var dt = new Date(event.date + 'T' + (event.time || '08:00') + ':00');
+    // Si la date est passée, ignorer
+    if (dt <= new Date()) {
+      console.log('Notif ignorée - date passée:', dt);
+      return;
     }
+
+    var notifId = Math.abs((event.title + event.date + event.time).split('').reduce(function(a,c){return a+c.charCodeAt(0);},1)) % 2000000 + 1;
+
+    // Notif 15 min avant
+    var dt15 = new Date(dt.getTime() - 15 * 60 * 1000);
+    var notifications = [{
+      id: notifId,
+      title: (event.emoji || '🔔') + ' ' + event.title,
+      body: 'Dans quelques instants : ' + event.title,
+      schedule: { at: dt, allowWhileIdle: true },
+      channelId: 'mirella_channel',
+      smallIcon: 'ic_launcher',
+      iconColor: '#FF6B6B'
+    }];
+
+    // Ajouter rappel 15min avant si possible
+    if (dt15 > new Date()) {
+      notifications.push({
+        id: notifId + 1000000,
+        title: '⏰ Dans 15 min : ' + event.title,
+        body: 'Rappel Mirella : ' + event.title + ' commence bientôt',
+        schedule: { at: dt15, allowWhileIdle: true },
+        channelId: 'mirella_channel',
+        smallIcon: 'ic_launcher',
+        iconColor: '#FF6B6B'
+      });
+    }
+
+    await LN.schedule({ notifications: notifications });
+    console.log('Notif schedulée:', event.title, 'pour', dt);
   } catch(e) { console.error('Notif error:', e.message); }
 }
 
