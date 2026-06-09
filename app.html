@@ -1750,7 +1750,7 @@ window.renderPlanning = function renderPlanning() {
         eventsHtml += '<div style="display:flex;align-items:center;gap:10px;padding:10px 16px;border-bottom:1px solid #f5f5f5;background:' + bg + '">';
         eventsHtml += '<div style="font-size:1.2rem">' + (e.emoji || e.ico || '🔔') + '</div>';
         eventsHtml += '<div style="flex:1"><div style="font-size:0.85rem;font-weight:600;color:#1a1a1a">' + e.title + '</div>';
-        eventsHtml += '<div style="font-size:0.75rem;color:#888">' + e.time + (e.recurrence !== 'none' ? ' · 🔁 ' + (e.recurrence === 'daily' ? 'Quotidien' : e.recurrence === 'weekly' ? 'Hebdo' : 'Mensuel') : '') + '</div></div>';
+        eventsHtml += '<div style="font-size:0.75rem;color:#888">' + (e.time||'') + (e.recurrence && e.recurrence !== 'none' ? ' · 🔁 ' + (e.recurrence === 'daily' ? 'Quotidien' : e.recurrence === 'weekly' ? 'Hebdo' : 'Mensuel') : '') + '</div></div>';
         eventsHtml += '<button onclick="window.delEvt(\'' + e.id + '\')" style="background:none;border:none;color:#ccc;font-size:1.1rem;cursor:pointer;padding:4px">✕</button>';
         eventsHtml += '</div>';
       });
