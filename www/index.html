@@ -2022,6 +2022,10 @@ function switchLang(lang) {
     <span style="font-family:'Open Sans',serif;font-size:1.2rem;font-weight:600;color:var(--coral)">Mirella</span>
   </a>
   <div style="display:flex;align-items:center;gap:10px">
+    <div onclick="toggleNotifications()" style="position:relative;cursor:pointer;width:36px;height:36px;border-radius:50%;background:#FFF0EC;display:flex;align-items:center;justify-content:center">
+      <span style="font-size:1.1rem">🔔</span>
+      <div id="notifBadge" style="display:none;position:absolute;top:-2px;right:-2px;width:16px;height:16px;background:var(--coral);border-radius:50%;font-size:0.6rem;color:white;font-weight:700;display:flex;align-items:center;justify-content:center" id="notifBadge">0</div>
+    </div>
     <button onclick="logout()" style="background:none;border:1px solid rgba(255,107,107,0.3);border-radius:8px;padding:6px 10px;font-size:0.72rem;font-weight:600;color:var(--coral);cursor:pointer;font-family:'DM Sans',sans-serif">Déconnexion</button>
     <div id="mobileUserAvatar" style="width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,var(--coral),var(--accent));display:flex;align-items:center;justify-content:center;color:white;font-weight:700;font-size:0.8rem;cursor:pointer" onclick="showView('profile')"></div>
   </div>
@@ -9458,6 +9462,19 @@ document.addEventListener('DOMContentLoaded', function(){
   if(i) i.onkeydown = function(e){ if(e.key==='Enter') window.rechercherPathologie(); };
 });
 </script>
+
+<!-- Panneau Notifications -->
+<div id="notifPanel" style="display:none;position:fixed;top:60px;right:12px;width:320px;max-height:80vh;background:white;border-radius:20px;box-shadow:0 8px 32px rgba(0,0,0,0.15);z-index:99999;overflow:hidden;flex-direction:column">
+  <div style="padding:16px 20px;border-bottom:1px solid #f0f0f0;display:flex;align-items:center;justify-content:space-between">
+    <div style="font-weight:800;font-size:1rem;color:#1a1a1a">🔔 Notifications</div>
+    <div style="display:flex;gap:8px">
+      <button onclick="clearAllNotifs()" style="font-size:0.72rem;color:#888;background:none;border:none;cursor:pointer">Tout effacer</button>
+      <button onclick="toggleNotifications()" style="background:#f5f5f5;border:none;border-radius:50%;width:28px;height:28px;cursor:pointer">✕</button>
+    </div>
+  </div>
+  <div id="notifList" style="overflow-y:auto;max-height:calc(80vh - 60px);padding:8px 0"></div>
+</div>
+<div id="notifOverlay" style="display:none;position:fixed;inset:0;z-index:99998" onclick="toggleNotifications()"></div>
 </body>
 </html><script>
 var _recettesTab = 'mes';
@@ -9967,5 +9984,212 @@ var ROUTINES_DATA = [
       }
     }, 500);
   }
+
+// ============ SYSTÈME NOTIFICATIONS MIRELLA ============
+var _notifList = [];
+try { _notifList = JSON.parse(localStorage.getItem('mirella_notifs') || '[]'); } catch(e) { _notifList = []; }
+
+var MIRELLA_MESSAGES = {
+  bonjour: [
+    "Je suis tellement contente de te revoir {prenom} ! 🌸 Comment tu vas aujourd'hui ?",
+    "Coucou {prenom} ! 😊 Mirella est là pour t'accompagner aujourd'hui !",
+    "Hey {prenom} ! ✨ Belle journée pour prendre soin de toi !",
+    "Bonjour {prenom} ! 🌺 Je pensais justement à toi. Prête pour une belle journée santé ?",
+    "Rebonjour {prenom} ! 💪 Content(e) de te retrouver ici !"
+  ],
+  hydratation: [
+    "Psst {prenom} ! 💧 Tu as pensé à boire de l'eau ? Ton corps te remerciera !",
+    "Hey ! 💧 Il est temps de s'hydrater {prenom}. Un grand verre d'eau ?",
+    "Rappel hydratation pour {prenom} ! 💧 2L d'eau par jour, c'est la clé !"
+  ],
+  repas: [
+    "C'est l'heure de manger {prenom} ! 🍽️ N'oublie pas un repas équilibré.",
+    "Ton corps a besoin de carburant {prenom} ! 🥗 Pense à manger sainement.",
+    "Petit rappel repas {prenom} ! 🍱 Prends soin de bien te nourrir."
+  ],
+  conseil: [
+    "Le saviez-vous {prenom} ? 🌿 Le curcuma est un puissant anti-inflammatoire naturel !",
+    "Conseil Mirella 💡 : Marcher 30 min par jour réduit le risque cardiovasculaire de 30% !",
+    "Astuce santé {prenom} ! 🫐 Les fruits rouges sont riches en antioxydants. À consommer sans modération !",
+    "Conseil du jour {prenom} ! 😴 Un sommeil de 7-8h est essentiel pour votre santé hormonale.",
+    "Tu savais {prenom} ? 🧘 5 minutes de cohérence cardiaque par jour réduisent le stress de 20% !",
+    "Rappel bien-être {prenom} ! ☀️ 10 minutes de soleil le matin synchronisent ton rythme circadien.",
+    "Conseil nutrition {prenom} ! 🥚 Les oeufs le matin apportent les acides aminés essentiels pour la journée.",
+    "Info santé {prenom} ! 💧 La déshydratation de 2% réduit tes performances cognitives de 10% !"
+  ],
+  motivation: [
+    "Tu fais du super boulot {prenom} ! 🌟 Continue comme ça !",
+    "Je suis fière de toi {prenom} ! 💪 Chaque petit pas compte.",
+    "Hey {prenom} ! 🌸 Prendre soin de soi c'est le plus beau cadeau qu'on puisse se faire.",
+    "Tu es incroyable {prenom} ! ✨ Ton engagement pour ta santé m'inspire !"
+  ]
+};
+
+function getMirellaMsg(type) {
+  var prenom = '';
+  try {
+    var p = JSON.parse(localStorage.getItem('mirella_profile') || '{}');
+    prenom = p.prenom || p.firstName || p.name || '';
+    if(prenom) prenom = prenom.split(' ')[0];
+  } catch(e) {}
+  var msgs = MIRELLA_MESSAGES[type] || MIRELLA_MESSAGES.conseil;
+  var msg = msgs[Math.floor(Math.random() * msgs.length)];
+  return msg.replace(/{prenom}/g, prenom || 'toi');
+}
+
+function addNotif(type, message, icon) {
+  var notif = {
+    id: 'n_' + Date.now() + '_' + Math.random().toString(36).substr(2,5),
+    type: type,
+    message: message,
+    icon: icon || '🔔',
+    time: new Date().toISOString(),
+    read: false
+  };
+  _notifList.unshift(notif);
+  if(_notifList.length > 50) _notifList = _notifList.slice(0, 50);
+  localStorage.setItem('mirella_notifs', JSON.stringify(_notifList));
+  updateNotifBadge();
+  return notif;
+}
+
+function updateNotifBadge() {
+  var unread = _notifList.filter(function(n){ return !n.read; }).length;
+  var badge = document.getElementById('notifBadge');
+  if(badge) {
+    if(unread > 0) {
+      badge.style.display = 'flex';
+      badge.textContent = unread > 9 ? '9+' : unread;
+    } else {
+      badge.style.display = 'none';
+    }
+  }
+}
+
+function toggleNotifications() {
+  var panel = document.getElementById('notifPanel');
+  var overlay = document.getElementById('notifOverlay');
+  if(!panel) return;
+  var isOpen = panel.style.display === 'flex';
+  if(isOpen) {
+    panel.style.display = 'none';
+    overlay.style.display = 'none';
+  } else {
+    panel.style.display = 'flex';
+    panel.style.flexDirection = 'column';
+    overlay.style.display = 'block';
+    renderNotifList();
+    // Marquer tout comme lu
+    _notifList.forEach(function(n){ n.read = true; });
+    localStorage.setItem('mirella_notifs', JSON.stringify(_notifList));
+    updateNotifBadge();
+  }
+}
+
+function renderNotifList() {
+  var list = document.getElementById('notifList');
+  if(!list) return;
+  if(_notifList.length === 0) {
+    list.innerHTML = '<div style="padding:40px;text-align:center;color:#ccc"><div style="font-size:2rem">🔔</div><div style="margin-top:8px;font-size:0.85rem">Aucune notification</div></div>';
+    return;
+  }
+  list.innerHTML = _notifList.map(function(n) {
+    var timeAgo = getTimeAgo(n.time);
+    var bg = n.read ? 'white' : '#FFF8F5';
+    return '<div style="padding:14px 20px;border-bottom:1px solid #f5f5f5;background:'+bg+';display:flex;gap:12px;align-items:flex-start">' +
+      '<div style="font-size:1.4rem;flex-shrink:0">'+n.icon+'</div>' +
+      '<div style="flex:1">' +
+        '<div style="font-size:0.85rem;color:#1a1a1a;line-height:1.4;margin-bottom:4px">'+n.message+'</div>' +
+        '<div style="font-size:0.72rem;color:#bbb">'+timeAgo+'</div>' +
+      '</div>' +
+    '</div>';
+  }).join('');
+}
+
+function getTimeAgo(isoTime) {
+  var diff = (Date.now() - new Date(isoTime).getTime()) / 1000;
+  if(diff < 60) return "À l'instant";
+  if(diff < 3600) return Math.floor(diff/60) + ' min';
+  if(diff < 86400) return Math.floor(diff/3600) + 'h';
+  return Math.floor(diff/86400) + 'j';
+}
+
+function clearAllNotifs() {
+  _notifList = [];
+  localStorage.setItem('mirella_notifs', JSON.stringify([]));
+  updateNotifBadge();
+  renderNotifList();
+}
+
+// Notifications automatiques
+function initMirellaNotifications() {
+  updateNotifBadge();
+
+  // Message de bienvenue si première visite du jour
+  var lastVisit = localStorage.getItem('mirella_last_visit');
+  var today = new Date().toDateString();
+  if(lastVisit !== today) {
+    localStorage.setItem('mirella_last_visit', today);
+    setTimeout(function() {
+      addNotif('bonjour', getMirellaMsg('bonjour'), '🌸');
+    }, 2000);
+    // Conseil du jour
+    setTimeout(function() {
+      addNotif('conseil', getMirellaMsg('conseil'), '💡');
+    }, 5000);
+  }
+
+  // Rappels hydratation toutes les 2h
+  setInterval(function() {
+    var h = new Date().getHours();
+    if(h >= 8 && h <= 20) {
+      addNotif('hydratation', getMirellaMsg('hydratation'), '💧');
+    }
+  }, 2 * 60 * 60 * 1000);
+
+  // Rappels repas
+  setInterval(function() {
+    var h = new Date().getHours();
+    var m = new Date().getMinutes();
+    if((h === 12 && m < 5) || (h === 19 && m < 5)) {
+      addNotif('repas', getMirellaMsg('repas'), '🍽️');
+    }
+  }, 5 * 60 * 1000);
+
+  // Rappels planning
+  setInterval(function() {
+    checkPlanningReminders();
+  }, 60 * 1000);
+
+  // Message motivation toutes les 4h
+  setInterval(function() {
+    var h = new Date().getHours();
+    if(h >= 9 && h <= 21) {
+      addNotif('motivation', getMirellaMsg('motivation'), '💪');
+    }
+  }, 4 * 60 * 60 * 1000);
+}
+
+function checkPlanningReminders() {
+  try {
+    var events = JSON.parse(localStorage.getItem('mirella_planning') || '[]');
+    var now = new Date();
+    var today = now.getFullYear()+'-'+String(now.getMonth()+1).padStart(2,'0')+'-'+String(now.getDate()).padStart(2,'0');
+    var currentTime = String(now.getHours()).padStart(2,'0') + ':' + String(now.getMinutes()).padStart(2,'0');
+    var todayEvents = events.filter(function(e){ return e.date === today; });
+    todayEvents.forEach(function(e) {
+      if(e.time === currentTime) {
+        var icons = {repas:'🍽️', medicament:'💊', sport:'💪', rappel:'🔔', rdv:'👨‍⚕️'};
+        addNotif('planning', '⏰ ' + e.title, icons[e.type] || '🔔');
+      }
+    });
+  } catch(err) {}
+}
+
+// Init au chargement
+document.addEventListener('DOMContentLoaded', function() {
+  setTimeout(initMirellaNotifications, 1000);
+});
+// ============ FIN NOTIFICATIONS ============
 </script>
 </html>
