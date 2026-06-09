@@ -10030,7 +10030,7 @@ var MIRELLA_MESSAGES = {
   ]
 };
 
-function getMirellaMsg(type) {
+window.getMirellaMsg = function getMirellaMsg(type) {
   var prenom = '';
   try {
     var p = JSON.parse(localStorage.getItem('mirella_profile') || '{}');
@@ -10042,7 +10042,7 @@ function getMirellaMsg(type) {
   return msg.replace(/{prenom}/g, prenom || 'toi');
 }
 
-function addNotif(type, message, icon) {
+window.addNotif = function addNotif(type, message, icon) {
   var notif = {
     id: 'n_' + Date.now() + '_' + Math.random().toString(36).substr(2,5),
     type: type,
@@ -10058,7 +10058,7 @@ function addNotif(type, message, icon) {
   return notif;
 }
 
-function updateNotifBadge() {
+window.updateNotifBadge = function updateNotifBadge() {
   var unread = _notifList.filter(function(n){ return !n.read; }).length;
   var badge = document.getElementById('notifBadge');
   if(badge) {
@@ -10071,7 +10071,7 @@ function updateNotifBadge() {
   }
 }
 
-function toggleNotifications() {
+window.toggleNotifications = function toggleNotifications() {
   var panel = document.getElementById('notifPanel');
   var overlay = document.getElementById('notifOverlay');
   if(!panel) return;
@@ -10091,7 +10091,7 @@ function toggleNotifications() {
   }
 }
 
-function renderNotifList() {
+window.renderNotifList = function renderNotifList() {
   var list = document.getElementById('notifList');
   if(!list) return;
   if(_notifList.length === 0) {
@@ -10111,7 +10111,7 @@ function renderNotifList() {
   }).join('');
 }
 
-function getTimeAgo(isoTime) {
+window.getTimeAgo = function getTimeAgo(isoTime) {
   var diff = (Date.now() - new Date(isoTime).getTime()) / 1000;
   if(diff < 60) return "À l'instant";
   if(diff < 3600) return Math.floor(diff/60) + ' min';
@@ -10119,7 +10119,7 @@ function getTimeAgo(isoTime) {
   return Math.floor(diff/86400) + 'j';
 }
 
-function clearAllNotifs() {
+window.clearAllNotifs = function clearAllNotifs() {
   _notifList = [];
   localStorage.setItem('mirella_notifs', JSON.stringify([]));
   updateNotifBadge();
@@ -10127,7 +10127,7 @@ function clearAllNotifs() {
 }
 
 // Notifications automatiques
-function initMirellaNotifications() {
+window.initMirellaNotifications = function initMirellaNotifications() {
   updateNotifBadge();
 
   // Message de bienvenue si première visite du jour
@@ -10177,7 +10177,7 @@ function initMirellaNotifications() {
   }, 4 * 60 * 60 * 1000);
 }
 
-function checkPlanningReminders() {
+window.checkPlanningReminders = function checkPlanningReminders() {
   try {
     var events = JSON.parse(localStorage.getItem('mirella_planning') || '[]');
     var now = new Date();
