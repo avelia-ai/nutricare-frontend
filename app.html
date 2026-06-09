@@ -10199,10 +10199,10 @@ window.checkPlanningReminders = function checkPlanningReminders() {
         var prenom = '';
         try { var p = JSON.parse(localStorage.getItem('mirella_profile')||'{}'); prenom = (p.prenom||p.firstName||'').split(' ')[0]; } catch(x){}
         var msgs = {
-          repas: 'C'est l'heure de manger ' + (prenom||'') + ' ! 🍽️',
-          medicament: 'N'oublie pas ton médicament ' + (prenom||'') + ' ! 💊',
-          sport: 'C'est l'heure de bouger ' + (prenom||'') + ' ! 💪',
-          rdv: 'Tu as un rendez-vous médical dans peu de temps ' + (prenom||'') + ' ! 👨‍⚕️',
+          repas: "C'est l'heure de manger " + (prenom||"") + " ! 🍽️",
+          medicament: "N'oublie pas ton médicament " + (prenom||"") + " ! 💊",
+          sport: "C'est l'heure de bouger " + (prenom||"") + " ! 💪",
+          rdv: "Tu as un rendez-vous médical dans peu de temps " + (prenom||"") + " ! 👨‍⚕️",
           rappel: 'Rappel : ' + e.title + ' ⏰'
         };
         var msg = msgs[e.type] || ('⏰ ' + e.title);
@@ -10255,10 +10255,10 @@ async function scheduleDailyNotifications() {
     } catch(e) {}
 
     var messages = [
-      'Bonjour ' + (prenom || 'toi') + ' ! 🌸 Mirella est là pour t'accompagner aujourd'hui !',
-      'Hey ' + (prenom || 'toi') + ' ! ☀️ Belle journée pour prendre soin de toi !',
-      'Coucou ' + (prenom || 'toi') + ' ! 💪 Prête pour une belle journée santé ?',
-      'Bonjour ' + (prenom || 'toi') + ' ! 🌺 Pense à bien t'hydrater aujourd'hui !'
+      "Bonjour " + (prenom || "toi") + " ! 🌸 Mirella est là pour t'accompagner aujourd'hui !",
+      "Hey " + (prenom || "toi") + " ! ☀️ Belle journée pour prendre soin de toi !",
+      "Coucou " + (prenom || "toi") + " ! 💪 Prête pour une belle journée santé ?",
+      "Bonjour " + (prenom || "toi") + " ! 🌺 Pense à bien t'hydrater aujourd'hui !"
     ];
     var msg = messages[new Date().getDay() % messages.length];
 
@@ -10303,7 +10303,7 @@ async function scheduleDailyNotifications() {
         {
           id: 10002,
           title: '💧 Hydratation',
-          body: 'Coucou ' + (prenom || 'toi') + ' ! As-tu pensé à boire suffisamment aujourd'hui ?',
+          body: "Coucou " + (prenom || "toi") + " ! As-tu pensé à boire suffisamment aujourd'hui ?",
           schedule: { at: tomorrowHydra, repeats: true, every: 'day', allowWhileIdle: true },
           channelId: 'mirella_daily',
           smallIcon: 'ic_launcher',
@@ -10312,7 +10312,7 @@ async function scheduleDailyNotifications() {
         {
           id: 10003,
           title: '🍽️ Repas du midi',
-          body: 'C'est l'heure de manger ' + (prenom || 'toi') + ' ! Pense à un repas équilibré 🥗',
+          body: "C'est l'heure de manger " + (prenom || "toi") + " ! Pense à un repas équilibré 🥗",
           schedule: { at: tomorrowMidi, repeats: true, every: 'day', allowWhileIdle: true },
           channelId: 'mirella_daily',
           smallIcon: 'ic_launcher',
@@ -10321,7 +10321,7 @@ async function scheduleDailyNotifications() {
         {
           id: 10004,
           title: '🌙 Repas du soir',
-          body: 'Bonsoir ' + (prenom || 'toi') + ' ! Un dîner léger et équilibré ce soir ? 🥗',
+          body: "Bonsoir " + (prenom || "toi") + " ! Un dîner léger et équilibré ce soir ? 🥗",
           schedule: { at: tomorrowSoir, repeats: true, every: 'day', allowWhileIdle: true },
           channelId: 'mirella_daily',
           smallIcon: 'ic_launcher',
@@ -10330,7 +10330,7 @@ async function scheduleDailyNotifications() {
         {
           id: 10005,
           title: '💊 Mirella te manque !',
-          body: 'Hey ' + (prenom || 'toi') + ' ! Viens voir tes conseils santé du jour 🌸',
+          body: "Hey " + (prenom || "toi") + " ! Viens voir tes conseils santé du jour 🌸",
           schedule: { at: today18h, allowWhileIdle: true },
           channelId: 'mirella_daily',
           smallIcon: 'ic_launcher',
