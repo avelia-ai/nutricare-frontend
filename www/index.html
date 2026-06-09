@@ -8651,7 +8651,7 @@ window.renderPlanning = function() {
       evts.forEach(function(e){
         var bg = colors[e.type]||'var(--cream)';
         html += '<div style="display:flex;align-items:center;gap:10px;padding:10px 14px;border-top:1px solid #f5f5f5;background:'+bg+'">';
-        html += '<span style="font-size:1.2rem">'+e.ico+'</span>';
+        html += '<span style="font-size:1.2rem">'+(e.ico||e.emoji||'🔔')+'</span>';
         html += '<div style="flex:1"><div style="font-size:0.85rem;font-weight:600;color:#1a1a1a">'+e.title+'</div>';
         html += '<div style="font-size:0.75rem;color:#888">'+e.time+'</div></div>';
         html += '<button onclick="window.delEvt(\'' + e.id + '\')" style="background:none;border:none;color:#ccc;cursor:pointer;font-size:1rem;padding:4px">x</button>';
