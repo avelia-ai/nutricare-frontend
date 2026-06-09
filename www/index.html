@@ -2207,6 +2207,41 @@ function switchLang(lang) {
             </div>
           </div>
         </div>
+        <!-- PANNEAU DÉTAIL DÉFI -->
+        <div id="defiDetailPanel" style="display:none;background:white;border-radius:16px;overflow:hidden;margin-bottom:16px;box-shadow:0 4px 16px rgba(0,0,0,0.1)">
+          <div id="defiDetailPhoto" style="height:160px;background:center/cover;position:relative">
+            <div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,0.6) 40%,rgba(0,0,0,0.0) 100%)"></div>
+            <button onclick="closeDefiDetail()" style="position:absolute;top:12px;right:12px;background:rgba(0,0,0,0.4);border:none;border-radius:50%;width:32px;height:32px;color:white;font-size:1rem;cursor:pointer">✕</button>
+            <div style="position:absolute;bottom:12px;left:16px">
+              <div id="defiDetailTitre" style="font-size:1.1rem;font-weight:800;color:white"></div>
+              <div id="defiDetailDuree" style="font-size:0.78rem;color:rgba(255,255,255,0.8)"></div>
+            </div>
+          </div>
+          <div style="padding:16px">
+            <div id="defiDetailDesc" style="font-size:0.82rem;color:#555;margin-bottom:14px;line-height:1.5"></div>
+            <!-- Stats -->
+            <div id="defiDetailStats" style="display:none;background:#FFF0EC;border-radius:12px;padding:12px;margin-bottom:14px">
+              <div style="display:flex;justify-content:space-around">
+                <div style="text-align:center"><div id="defiStatJoursD" style="font-size:1.4rem;font-weight:800;color:var(--coral)">0</div><div style="font-size:0.7rem;color:#888">jours</div></div>
+                <div style="text-align:center"><div id="defiStatStreakD" style="font-size:1.4rem;font-weight:800;color:var(--coral)">0</div><div style="font-size:0.7rem;color:#888">streak 🔥</div></div>
+                <div style="text-align:center"><div id="defiStatRestantD" style="font-size:1.4rem;font-weight:800;color:var(--coral)">0</div><div style="font-size:0.7rem;color:#888">restants</div></div>
+              </div>
+              <!-- Barre progression -->
+              <div style="margin-top:12px">
+                <div style="display:flex;justify-content:space-between;margin-bottom:4px">
+                  <div style="font-size:0.72rem;color:#888">Progression</div>
+                  <div id="defiDetailPct" style="font-size:0.72rem;color:var(--coral);font-weight:700"></div>
+                </div>
+                <div style="height:6px;background:#f0f0f0;border-radius:6px">
+                  <div id="defiDetailBar" style="height:6px;background:linear-gradient(135deg,var(--coral),var(--accent));border-radius:6px;transition:.3s;width:0%"></div>
+                </div>
+              </div>
+            </div>
+            <!-- Zone saisie -->
+            <div id="defiDetailInput"></div>
+          </div>
+        </div>
+
         <!-- SECTION DÉFIS -->
         <div style="margin-bottom:16px">
           <div style="font-size:0.65rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--accent);margin-bottom:10px">Défis Mirella 🏆</div>
@@ -9579,46 +9614,119 @@ window.initDefisCarousel = function() {
 window.openDefi = function(id) {
   var d = DEFIS_DATA.find(function(x){ return x.id === id; });
   if (!d) return;
+
   var state = getDefisState();
   var defi = state[id] || null;
-  document.getElementById("defiModalTitle").textContent = d.emoji + " " + d.titre;
-  document.getElementById("defiModalPhoto").style.backgroundImage = "url(" + d.photo + ")";
-  document.getElementById("defiModalDesc").textContent = d.description;
-  var modal = document.getElementById("defiModal");
-  modal.style.display = "flex";
-  var actions = document.getElementById("defiModalActions");
-  var progress = document.getElementById("defiModalProgress");
-  var stats = document.getElementById("defiModalStats");
-  if (!defi || (!defi.actif && !defi.termine)) {
-    progress.style.display = "none"; stats.style.display = "none";
-    actions.innerHTML = "<button onclick="accepterDefi('" + id + "')" style="width:100%;padding:14px;background:linear-gradient(135deg,var(--coral),var(--accent));color:white;border:none;border-radius:12px;font-weight:700;font-size:0.9rem;cursor:pointer">Relever le defi !</button>";
-  } else if (defi.termine) {
-    progress.style.display = "block";
-    document.getElementById("defiModalProgressBar").style.width = "100%";
-    document.getElementById("defiModalProgressLabel").textContent = "100% - Termine !";
+  var today = new Date().toDateString();
+
+  // Remplir le panneau
+  document.getElementById("defiDetailPhoto").style.backgroundImage = "url(" + d.photo + ")";
+  document.getElementById("defiDetailTitre").textContent = d.emoji + " " + d.titre;
+  document.getElementById("defiDetailDuree").textContent = d.duree + " jours";
+  document.getElementById("defiDetailDesc").textContent = d.description;
+
+  var stats = document.getElementById("defiDetailStats");
+  var inputZone = document.getElementById("defiDetailInput");
+
+  if (defi && (defi.actif || defi.termine)) {
     stats.style.display = "block";
-    document.getElementById("defiStatJours").textContent = d.duree;
-    document.getElementById("defiStatStreak").textContent = defi.streak || d.duree;
-    document.getElementById("defiStatRestant").textContent = "0";
-    actions.innerHTML = "<div style="text-align:center;padding:16px;background:#F0FFF4;border-radius:12px"><div style="font-size:2rem">🏆</div><div style="font-weight:700;color:#3B6D11;margin-top:8px">Defi complete !</div></div>";
+    var pct = Math.min(100, Math.round(((defi.jours_valides||0) / d.duree) * 100));
+    document.getElementById("defiStatJoursD").textContent = defi.jours_valides || 0;
+    document.getElementById("defiStatStreakD").textContent = defi.streak || 0;
+    document.getElementById("defiStatRestantD").textContent = Math.max(0, d.duree - (defi.jours_valides||0));
+    document.getElementById("defiDetailPct").textContent = pct + "%";
+    document.getElementById("defiDetailBar").style.width = pct + "%";
   } else {
-    var pct = Math.round((defi.jours_valides / d.duree) * 100);
-    progress.style.display = "block";
-    document.getElementById("defiModalProgressBar").style.width = pct + "%";
-    document.getElementById("defiModalProgressLabel").textContent = pct + "% - J" + defi.jours_valides + "/" + d.duree;
-    stats.style.display = "block";
-    document.getElementById("defiStatJours").textContent = defi.jours_valides;
-    document.getElementById("defiStatStreak").textContent = defi.streak || 0;
-    document.getElementById("defiStatRestant").textContent = d.duree - defi.jours_valides;
-    var today = new Date().toDateString();
-    if (defi.last_valid === today) {
-      actions.innerHTML = "<div style="text-align:center;padding:14px;background:#F0FFF4;border-radius:12px;color:#3B6D11;font-weight:700">Defi valide aujourd'hui !</div><button onclick="abandonnerDefi('" + id + "')" style="width:100%;padding:10px;background:none;color:#ccc;border:none;font-size:0.8rem;margin-top:8px;cursor:pointer">Abandonner</button>";
-    } else {
-      actions.innerHTML = "<button onclick="validerDefiAujourdhui('" + id + "')" style="width:100%;padding:14px;background:linear-gradient(135deg,var(--coral),var(--accent));color:white;border:none;border-radius:12px;font-weight:700;font-size:0.9rem;cursor:pointer;margin-bottom:8px">Valider aujourd'hui !</button><button onclick="abandonnerDefi('" + id + "')" style="width:100%;padding:10px;background:none;color:#ccc;border:none;font-size:0.8rem;cursor:pointer">Abandonner</button>";
-    }
+    stats.style.display = "none";
   }
+
+  // Zone de saisie selon type
+  if (defi && defi.termine) {
+    inputZone.innerHTML = "<div style='text-align:center;padding:16px;background:#F0FFF4;border-radius:12px'><div style='font-size:2rem'>🏆</div><div style='font-weight:700;color:#3B6D11;margin-top:8px'>Defi complete ! Bravo !</div></div>";
+  } else if (defi && defi.actif && defi.last_valid === today) {
+    inputZone.innerHTML = "<div style='text-align:center;padding:14px;background:#F0FFF4;border-radius:12px;color:#3B6D11;font-weight:700'>Defi valide aujourd\'hui !</div><button onclick='abandonnerDefi("" + id + "")' style='width:100%;padding:8px;background:none;color:#ccc;border:none;font-size:0.75rem;margin-top:8px;cursor:pointer'>Abandonner le defi</button>";
+  } else {
+    inputZone.innerHTML = buildDefiInput(d, defi);
+  }
+
+  // Afficher panneau et scroller
+  var panel = document.getElementById("defiDetailPanel");
+  panel.style.display = "block";
+  setTimeout(function(){ panel.scrollIntoView({behavior:"smooth", block:"start"}); }, 100);
 };
 
+function buildDefiInput(d, defi) {
+  var isNew = !defi || !defi.actif;
+  var btnLabel = isNew ? "Relever le defi et valider J1 !" : "Valider aujourd\'hui !";
+  var btnColor = "linear-gradient(135deg,var(--coral),var(--accent))";
+
+  // Défis mesurables avec compteur
+  var compteurDefis = {
+    "eau_2l": {label:"Verres bus (250ml)", max:8, unit:"verres", target:8},
+    "pas_10k": {label:"Pas effectues", max:15000, unit:"pas", target:10000, isNumber:true},
+    "fruits_legumes": {label:"Fruits/legumes manges", max:10, unit:"portions", target:5},
+    "poisson_gras": {label:"Repas avec poisson gras", max:3, unit:"repas", target:1},
+    "sport_30min": {label:"Minutes de sport", max:120, unit:"min", target:30, isNumber:true},
+    "soleil_matin": {label:"Minutes au soleil", max:60, unit:"min", target:15, isNumber:true}
+  };
+
+  var cpt = compteurDefis[d.id];
+  var html = "";
+
+  if (cpt) {
+    if (cpt.isNumber) {
+      html += "<div style='margin-bottom:14px'><div style='font-size:0.78rem;font-weight:600;color:#555;margin-bottom:8px'>" + cpt.label + "</div><div style='display:flex;align-items:center;gap:10px'><input type='number' id='defiInputVal' min='0' max='" + cpt.max + "' placeholder='0' style='flex:1;padding:10px;border:1px solid #eee;border-radius:10px;font-size:1rem;text-align:center'><span style='font-size:0.82rem;color:#888'>" + cpt.unit + "</span></div><div style='font-size:0.72rem;color:#888;margin-top:4px'>Objectif : " + cpt.target + " " + cpt.unit + "</div></div>";
+    } else {
+      html += "<div style='margin-bottom:14px'><div style='font-size:0.78rem;font-weight:600;color:#555;margin-bottom:10px'>" + cpt.label + "</div><div style='display:flex;align-items:center;justify-content:center;gap:16px'><button onclick='defiCompteurChange(-1)' style='width:40px;height:40px;border-radius:50%;border:2px solid var(--coral);background:white;font-size:1.3rem;color:var(--coral);cursor:pointer;font-weight:700'>−</button><div id='defiCompteurVal' style='font-size:2rem;font-weight:800;color:var(--coral);min-width:60px;text-align:center'>0</div><button onclick='defiCompteurChange(1)' style='width:40px;height:40px;border-radius:50%;border:2px solid var(--coral);background:var(--coral);font-size:1.3rem;color:white;cursor:pointer;font-weight:700'>+</button></div><div style='font-size:0.72rem;color:#888;text-align:center;margin-top:6px'>Objectif : " + cpt.target + " " + cpt.unit + "</div></div>";
+    }
+  } else {
+    html += "<div style='background:#FFF8F0;border-radius:12px;padding:14px;margin-bottom:14px;text-align:center'><div style='font-size:1.5rem;margin-bottom:6px'>" + d.emoji + "</div><div style='font-size:0.82rem;color:#555'>Confirme que tu as accompli ton defi aujourd\'hui !</div></div>";
+  }
+
+  html += "<button onclick='validerDefiDetail("" + d.id + "")' style='width:100%;padding:14px;background:" + btnColor + ";color:white;border:none;border-radius:12px;font-weight:700;font-size:0.9rem;cursor:pointer;margin-bottom:8px'>" + btnLabel + "</button>";
+  if (!isNew) html += "<button onclick='abandonnerDefi("" + d.id + "")' style='width:100%;padding:8px;background:none;color:#ccc;border:none;font-size:0.75rem;cursor:pointer'>Abandonner le defi</button>";
+
+  return html;
+}
+
+window.defiCompteurVal = 0;
+window.defiCompteurChange = function(delta) {
+  window.defiCompteurVal = Math.max(0, (window.defiCompteurVal || 0) + delta);
+  var el = document.getElementById("defiCompteurVal");
+  if (el) el.textContent = window.defiCompteurVal;
+};
+
+window.validerDefiDetail = function(id) {
+  var d = DEFIS_DATA.find(function(x){ return x.id === id; });
+  if (!d) return;
+  var state = getDefisState();
+  if (!state[id] || !state[id].actif) {
+    state[id] = { actif: true, jours_valides: 0, streak: 0, date_debut: new Date().toISOString(), last_valid: null, termine: false };
+  }
+  var defi = state[id];
+  var today = new Date().toDateString();
+  if (defi.last_valid === today) return;
+  var yesterday = new Date(); yesterday.setDate(yesterday.getDate()-1);
+  defi.streak = (defi.last_valid === yesterday.toDateString()) ? (defi.streak||0)+1 : 1;
+  defi.jours_valides = (defi.jours_valides||0)+1;
+  defi.last_valid = today;
+  if (defi.jours_valides >= d.duree) { defi.actif=false; defi.termine=true; if(window.addNotif) addNotif("defi","BRAVO ! Defi " + d.titre + " termine !","🏆"); }
+  else { if(window.addNotif) addNotif("defi", d.emoji+" Jour "+defi.jours_valides+"/"+d.duree+" valide !","✅"); }
+  saveDefisState(state);
+  window.initDefisCarousel();
+  window.openDefi(id);
+  window.defiCompteurVal = 0;
+};
+
+window.closeDefiDetail = function() {
+  document.getElementById("defiDetailPanel").style.display = "none";
+};
+
+window.closeDefiModal = function() {
+  document.getElementById("defiModal").style.display = "none";
+};
+
+window.openDefi = window.openDefi || function(){};
 window.accepterDefi = function(id) {
   var d = DEFIS_DATA.find(function(x){ return x.id === id; });
   var state = getDefisState();
