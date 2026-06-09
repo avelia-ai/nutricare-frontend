@@ -2579,6 +2579,21 @@ function switchLang(lang) {
     <div id="profileView">
       <div class="view-header" style="background:linear-gradient(135deg,var(--coral),var(--accent));margin:-32px -32px 32px -32px;padding:32px 32px 28px"><div style="font-size:1.6rem;font-weight:700;color:white;font-family:'Open Sans',sans-serif">Mon profil de santé</div><div style="font-size:0.9rem;color:rgba(255,255,255,0.8);margin-top:4px">Ces informations permettent à Mirella de personnaliser ses conseils</div></div>
       <div class="profile-sub">Ces informations permettent à Mirella de personnaliser ses conseils</div>
+
+      <!-- Photo de profil -->
+      <div style="display:flex;flex-direction:column;align-items:center;margin-bottom:24px">
+        <div style="position:relative;cursor:pointer" onclick="document.getElementById('profilePhotoInput').click()">
+          <div id="profileAvatarDisplay" style="width:90px;height:90px;border-radius:50%;background:linear-gradient(135deg,var(--coral),var(--accent));display:flex;align-items:center;justify-content:center;font-size:2.5rem;overflow:hidden;border:3px solid white;box-shadow:0 4px 16px rgba(255,107,107,0.3)">
+            <span id="profileAvatarEmoji">👤</span>
+            <img id="profileAvatarImg" src="" style="display:none;width:100%;height:100%;object-fit:cover" />
+          </div>
+          <div style="position:absolute;bottom:0;right:0;width:28px;height:28px;background:var(--coral);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.8rem;border:2px solid white">📷</div>
+        </div>
+        <input type="file" id="profilePhotoInput" accept="image/*" style="display:none" onchange="handleProfilePhoto(this)">
+        <div style="font-size:0.78rem;color:#888;margin-top:8px">Appuyez pour changer la photo</div>
+        <button id="removePhotoBtn" onclick="removeProfilePhoto()" style="display:none;margin-top:6px;background:none;border:none;color:#FF6B6B;font-size:0.78rem;cursor:pointer">Supprimer la photo</button>
+      </div>
+
       <div class="profile-card">
         <div class="profile-section-title">Informations personnelles</div>
         <div class="profile-grid">
@@ -10380,5 +10395,72 @@ async function scheduleAllPlanningNotifs() {
   } catch(e) { console.error('Planning notifs error:', e); }
 }
 // ===== FIN NOTIFICATIONS PUSH =====
+
+  function handleProfilePhoto(input) {
+    if (!input.files || !input.files[0]) return;
+    var file = input.files[0];
+    var reader = new FileReader();
+    reader.onload = function(e) {
+      var dataUrl = e.target.result;
+      localStorage.setItem('mirella_profile_photo', dataUrl);
+      updateProfileAvatarDisplay();
+    };
+    reader.readAsDataURL(file);
+  }
+
+  function removeProfilePhoto() {
+    localStorage.removeItem('mirella_profile_photo');
+    updateProfileAvatarDisplay();
+  }
+
+  function updateProfileAvatarDisplay() {
+    var photo = localStorage.getItem('mirella_profile_photo');
+    var sexe = document.getElementById('profileSexe') ? document.getElementById('profileSexe').value : '';
+    var emoji = sexe === 'femme' ? '👩' : sexe === 'homme' ? '👨' : '👤';
+
+    // Avatar dans profil
+    var avatarEmoji = document.getElementById('profileAvatarEmoji');
+    var avatarImg = document.getElementById('profileAvatarImg');
+    var removeBtn = document.getElementById('removePhotoBtn');
+
+    if (photo) {
+      if (avatarImg) { avatarImg.src = photo; avatarImg.style.display = 'block'; }
+      if (avatarEmoji) avatarEmoji.style.display = 'none';
+      if (removeBtn) removeBtn.style.display = 'block';
+    } else {
+      if (avatarImg) avatarImg.style.display = 'none';
+      if (avatarEmoji) { avatarEmoji.style.display = 'block'; avatarEmoji.textContent = emoji; }
+      if (removeBtn) removeBtn.style.display = 'none';
+    }
+
+    // Avatar dans le header
+    var headerAvatar = document.getElementById('mobileUserAvatar');
+    if (headerAvatar) {
+      if (photo) {
+        headerAvatar.style.backgroundImage = 'url(' + photo + ')';
+        headerAvatar.style.backgroundSize = 'cover';
+        headerAvatar.style.backgroundPosition = 'center';
+        headerAvatar.textContent = '';
+      } else {
+        headerAvatar.style.backgroundImage = 'none';
+        var name = localStorage.getItem('mirella_profile') ? JSON.parse(localStorage.getItem('mirella_profile')).full_name || '' : '';
+        headerAvatar.textContent = name ? name.split(' ').map(function(n){return n[0];}).join('').toUpperCase().slice(0,2) : emoji;
+      }
+    }
+  }
+
+  // Appeler au chargement du profil
+  var _origLoadProfile = window.loadProfile;
+  window.loadProfile = function() {
+    if (_origLoadProfile) _origLoadProfile.apply(this, arguments);
+    setTimeout(updateProfileAvatarDisplay, 300);
+  };
+
+  // Mettre à jour quand le sexe change
+  document.addEventListener('change', function(e) {
+    if (e.target && e.target.id === 'profileSexe') {
+      updateProfileAvatarDisplay();
+    }
+  });
 </script>
 </html>
