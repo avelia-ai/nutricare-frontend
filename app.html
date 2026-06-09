@@ -3080,18 +3080,13 @@ function switchLang(lang) {
       <div style="padding:8px 12px;background:var(--cream);border-radius:8px;font-size:0.72rem;color:var(--coral);font-weight:500;margin-top:8px" id="nutritionAdvice">
         Selectionnez un jour pour voir vos apports
       </div>
-      <div style="margin-top:16px;background:white;border-radius:16px;padding:16px;box-shadow:0 2px 8px rgba(0,0,0,0.06)">
-        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
-          <div style="display:flex;align-items:center;gap:8px">
-            <div style="width:36px;height:36px;background:#FFF0EC;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1.2rem">💪</div>
-            <div style="font-size:0.88rem;font-weight:700;color:#1a1a1a">Activite du jour</div>
-          </div>
-          <button onclick="window.openAddSport()" style="background:linear-gradient(135deg,var(--coral),var(--accent));color:white;border:none;border-radius:20px;padding:7px 16px;font-size:0.78rem;font-weight:700;cursor:pointer">+ Ajouter</button>
+      <div style="margin-top:12px;display:flex;align-items:center;justify-content:space-between;background:#FFF0EC;border-radius:12px;padding:10px 14px">
+        <div>
+          <div style="font-size:0.78rem;font-weight:700;color:#1a1a1a">💪 Activite du jour</div>
+          <div id="sportSeancesMenus" style="font-size:0.72rem;color:#888;margin-top:2px">Aucune activite</div>
+          <div id="totalCaloriesMenus" style="display:none;font-size:0.72rem;font-weight:700;color:#3B6D11;margin-top:2px"></div>
         </div>
-        <div id="sportSeancesMenus" style="display:flex;flex-direction:column;gap:8px">
-          <div style="font-size:0.78rem;color:#bbb;text-align:center;padding:12px;background:#f9f9f9;border-radius:10px">Ajoutez une activite pour voir les calories brulees</div>
-        </div>
-        <div id="totalCaloriesMenus" style="display:none;margin-top:10px;padding:10px 14px;background:#F0FFF4;border-radius:10px;font-size:0.82rem;font-weight:700;color:#3B6D11;text-align:center"></div>
+        <button onclick="window.openAddSport()" style="background:linear-gradient(135deg,var(--coral),var(--accent));color:white;border:none;border-radius:20px;padding:6px 14px;font-size:0.75rem;font-weight:700;cursor:pointer;flex-shrink:0">+ Ajouter</button>
       </div>
     </div>
 
@@ -3377,43 +3372,7 @@ function switchLang(lang) {
         <div id="totalCalories" style="display:none;margin-top:10px;padding:10px;background:var(--cream);border-radius:10px;text-align:center;font-size:0.85rem;font-weight:600;color:var(--coral)"></div>
       </div>
 
-      <!-- Modal ajout sport -->
-      <div id="addSportModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:99999;align-items:flex-end;justify-content:center">
-        <div style="background:white;border-radius:24px 24px 0 0;padding:24px;width:100%;max-width:600px">
-          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
-            <div style="font-size:1rem;font-weight:700">Ajouter une seance</div>
-            <button onclick="document.getElementById('addSportModal').style.display='none'" style="background:#f5f5f5;border:none;border-radius:50%;width:32px;height:32px;cursor:pointer">x</button>
-          </div>
-          <div style="margin-bottom:14px">
-            <div style="font-size:0.8rem;font-weight:600;color:#555;margin-bottom:6px">Activite</div>
-            <select id="sportActivite" style="width:100%;padding:12px;border:1px solid #eee;border-radius:10px;font-size:0.9rem;background:white">
-              <option value="marche,3.5">Marche (3.5 kcal/min/kg)</option>
-              <option value="course,7">Course a pied (7 kcal/min/kg)</option>
-              <option value="velo,5">Velo (5 kcal/min/kg)</option>
-              <option value="natation,6">Natation (6 kcal/min/kg)</option>
-              <option value="musculation,4">Musculation (4 kcal/min/kg)</option>
-              <option value="yoga,2.5">Yoga/Pilates (2.5 kcal/min/kg)</option>
-              <option value="hiit,9">HIIT (9 kcal/min/kg)</option>
-              <option value="football,6.5">Football (6.5 kcal/min/kg)</option>
-              <option value="tennis,5.5">Tennis (5.5 kcal/min/kg)</option>
-              <option value="danse,4.5">Danse (4.5 kcal/min/kg)</option>
-              <option value="autre,4">Autre (4 kcal/min/kg)</option>
-            </select>
-          </div>
-          <div style="display:flex;gap:12px;margin-bottom:14px">
-            <div style="flex:1">
-              <div style="font-size:0.8rem;font-weight:600;color:#555;margin-bottom:6px">Duree (minutes)</div>
-              <input type="number" id="sportDuree" min="5" max="300" value="30" oninput="window.previewCalories()" style="width:100%;padding:12px;border:1px solid #eee;border-radius:10px;font-size:0.9rem;box-sizing:border-box">
-            </div>
-            <div style="flex:1">
-              <div style="font-size:0.8rem;font-weight:600;color:#555;margin-bottom:6px">Poids (kg)</div>
-              <input type="number" id="sportPoids" min="30" max="200" value="70" oninput="window.previewCalories()" style="width:100%;padding:12px;border:1px solid #eee;border-radius:10px;font-size:0.9rem;box-sizing:border-box">
-            </div>
-          </div>
-          <div id="caloriesPreview" style="background:var(--cream);border-radius:10px;padding:12px;text-align:center;margin-bottom:16px;font-size:0.9rem;font-weight:600;color:var(--coral)">Selectionnez une activite</div>
-          <button onclick="window.saveSportSeance()" style="width:100%;background:linear-gradient(135deg,var(--coral),var(--accent));color:white;border:none;border-radius:12px;padding:14px;font-size:0.95rem;font-weight:700;cursor:pointer">Ajouter cette seance</button>
-        </div>
-      </div>
+
 
       <!-- Ressenti -->
       <div style="margin-bottom:20px">
@@ -9881,5 +9840,42 @@ document.addEventListener("DOMContentLoaded", function() {
     <div id="defiModalActions"></div>
   </div>
 </div>
+      <!-- Modal ajout sport -->
+      <div id="addSportModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:99999;align-items:flex-end;justify-content:center">
+        <div style="background:white;border-radius:24px 24px 0 0;padding:24px;width:100%;max-width:600px">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+            <div style="font-size:1rem;font-weight:700">Ajouter une seance</div>
+            <button onclick="document.getElementById('addSportModal').style.display='none'" style="background:#f5f5f5;border:none;border-radius:50%;width:32px;height:32px;cursor:pointer">x</button>
+          </div>
+          <div style="margin-bottom:14px">
+            <div style="font-size:0.8rem;font-weight:600;color:#555;margin-bottom:6px">Activite</div>
+            <select id="sportActivite" style="width:100%;padding:12px;border:1px solid #eee;border-radius:10px;font-size:0.9rem;background:white">
+              <option value="marche,3.5">Marche (3.5 kcal/min/kg)</option>
+              <option value="course,7">Course a pied (7 kcal/min/kg)</option>
+              <option value="velo,5">Velo (5 kcal/min/kg)</option>
+              <option value="natation,6">Natation (6 kcal/min/kg)</option>
+              <option value="musculation,4">Musculation (4 kcal/min/kg)</option>
+              <option value="yoga,2.5">Yoga/Pilates (2.5 kcal/min/kg)</option>
+              <option value="hiit,9">HIIT (9 kcal/min/kg)</option>
+              <option value="football,6.5">Football (6.5 kcal/min/kg)</option>
+              <option value="tennis,5.5">Tennis (5.5 kcal/min/kg)</option>
+              <option value="danse,4.5">Danse (4.5 kcal/min/kg)</option>
+              <option value="autre,4">Autre (4 kcal/min/kg)</option>
+            </select>
+          </div>
+          <div style="display:flex;gap:12px;margin-bottom:14px">
+            <div style="flex:1">
+              <div style="font-size:0.8rem;font-weight:600;color:#555;margin-bottom:6px">Duree (minutes)</div>
+              <input type="number" id="sportDuree" min="5" max="300" value="30" oninput="window.previewCalories()" style="width:100%;padding:12px;border:1px solid #eee;border-radius:10px;font-size:0.9rem;box-sizing:border-box">
+            </div>
+            <div style="flex:1">
+              <div style="font-size:0.8rem;font-weight:600;color:#555;margin-bottom:6px">Poids (kg)</div>
+              <input type="number" id="sportPoids" min="30" max="200" value="70" oninput="window.previewCalories()" style="width:100%;padding:12px;border:1px solid #eee;border-radius:10px;font-size:0.9rem;box-sizing:border-box">
+            </div>
+          </div>
+          <div id="caloriesPreview" style="background:var(--cream);border-radius:10px;padding:12px;text-align:center;margin-bottom:16px;font-size:0.9rem;font-weight:600;color:var(--coral)">Selectionnez une activite</div>
+          <button onclick="window.saveSportSeance()" style="width:100%;background:linear-gradient(135deg,var(--coral),var(--accent));color:white;border:none;border-radius:12px;padding:14px;font-size:0.95rem;font-weight:700;cursor:pointer">Ajouter cette seance</button>
+        </div>
+      </div>
 </body>
 </html>
