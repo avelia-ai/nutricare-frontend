@@ -568,24 +568,40 @@ window.deleteSportSeance = function(idx) {
 window.renderSportSeances = function() {
   var el = document.getElementById('sportSeances');
   var totalEl = document.getElementById('totalCalories');
-  if (!el) return;
+  var elMenus = document.getElementById('sportSeancesMenus');
+  var totalMenus = document.getElementById('totalCaloriesMenus');
+
+  var cardHtml = function(s, i) {
+    return '<div style="display:flex;align-items:center;gap:10px;padding:10px;background:var(--cream);border-radius:10px">' +
+      '<div style="flex:1"><div style="font-size:0.85rem;font-weight:600;color:#1a1a1a">💪 ' + s.nom + '</div>' +
+      '<div style="font-size:0.75rem;color:#888">' + s.duree + ' min · ' + s.cal + ' kcal brulees</div></div>' +
+      '<button onclick="window.deleteSportSeance(' + i + ')" style="background:none;border:none;color:#ddd;cursor:pointer;font-size:1rem">✕</button></div>';
+  };
+
   if (window._sportSeances.length === 0) {
-    el.innerHTML = '<div style="font-size:0.8rem;color:#ccc;text-align:center;padding:10px">Aucune seance ajoutee</div>';
+    var empty = '<div style="font-size:0.78rem;color:#ccc;text-align:center;padding:8px">Aucune activite ajoutee</div>';
+    if (el) el.innerHTML = empty;
+    if (elMenus) elMenus.innerHTML = empty;
     if (totalEl) totalEl.style.display = 'none';
+    if (totalMenus) totalMenus.style.display = 'none';
     return;
   }
+
   var total = 0;
-  el.innerHTML = window._sportSeances.map(function(s, i) {
-    total += s.cal;
-    return '<div style="display:flex;align-items:center;gap:10px;padding:10px;background:var(--cream);border-radius:10px">' +
-      '<div style="flex:1"><div style="font-size:0.85rem;font-weight:600;color:#1a1a1a">' + s.nom + '</div>' +
-      '<div style="font-size:0.75rem;color:#888">' + s.duree + ' min · ' + s.cal + ' kcal</div></div>' +
-      '<button onclick="window.deleteSportSeance(' + i + ')" style="background:none;border:none;color:#ddd;cursor:pointer;font-size:1rem">x</button></div>';
-  }).join('');
-  if (totalEl) {
-    totalEl.textContent = 'Total : ' + total + ' kcal brulees auj.';
-    totalEl.style.display = 'block';
-  }
+  var cards = window._sportSeances.map(function(s, i) { total += s.cal; return cardHtml(s, i); }).join('');
+  if (el) el.innerHTML = cards;
+  if (elMenus) elMenus.innerHTML = cards;
+
+  var totalTxt = '🔥 Total calories brulees : ' + total + ' kcal';
+  if (totalEl) { totalEl.textContent = totalTxt; totalEl.style.display = 'block'; }
+  if (totalMenus) { totalMenus.textContent = totalTxt; totalMenus.style.display = 'block'; }
+
+  // Mettre a jour donutDepensees
+  var dep = document.getElementById('donutDepensees');
+  if (dep) dep.textContent = total;
+
+  // Mettre a jour le donut principal si la fonction existe
+  if (typeof window.updateDonutCalories === 'function') window.updateDonutCalories();
 };
 
 // ── CALORIES SUIVI ──
