@@ -2310,23 +2310,27 @@ function switchLang(lang) {
               <button onclick="window.loadMedecins()" style="background:var(--cream);border:none;border-radius:8px;padding:5px 10px;font-size:0.72rem;font-weight:600;color:var(--coral);cursor:pointer">Actualiser</button>
             </div>
           </div>
-          <div id="homeMedecinsMap" style="width:100%;height:180px;background:#f0f0f0;display:none"></div>
-          <div style="padding:14px">
-            <div id="homeMedecinsList" style="display:flex;flex-direction:column;gap:8px">
-              <div style="text-align:center;padding:16px;color:#aaa;font-size:0.82rem">
-                <div style="font-size:1.5rem;margin-bottom:6px">📍</div>
-                <div style="display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;padding-bottom:4px;margin-bottom:8px">
-                <button onclick="window.loadMedecins('medecin generaliste',this)" style="padding:5px 12px;border-radius:20px;border:none;background:var(--coral);color:white;font-size:0.72rem;font-weight:600;cursor:pointer;white-space:nowrap;flex-shrink:0">Généraliste</button>
-                <button onclick="window.loadMedecins('cardiologue',this)" style="padding:5px 12px;border-radius:20px;border:1px solid #eee;background:white;color:#555;font-size:0.72rem;font-weight:600;cursor:pointer;white-space:nowrap;flex-shrink:0">Cardiologue</button>
-                <button onclick="window.loadMedecins('dermatologue',this)" style="padding:5px 12px;border-radius:20px;border:1px solid #eee;background:white;color:#555;font-size:0.72rem;font-weight:600;cursor:pointer;white-space:nowrap;flex-shrink:0">Dermatologue</button>
-                <button onclick="window.loadMedecins('nutritionniste',this)" style="padding:5px 12px;border-radius:20px;border:1px solid #eee;background:white;color:#555;font-size:0.72rem;font-weight:600;cursor:pointer;white-space:nowrap;flex-shrink:0">Nutritionniste</button>
-                <button onclick="window.loadMedecins('ophtalmologue',this)" style="padding:5px 12px;border-radius:20px;border:1px solid #eee;background:white;color:#555;font-size:0.72rem;font-weight:600;cursor:pointer;white-space:nowrap;flex-shrink:0">Ophtalmologue</button>
-                <button onclick="window.loadMedecins('dentiste',this)" style="padding:5px 12px;border-radius:20px;border:1px solid #eee;background:white;color:#555;font-size:0.72rem;font-weight:600;cursor:pointer;white-space:nowrap;flex-shrink:0">Dentiste</button>
-                <button onclick="window.loadMedecins('kinesitherapeute',this)" style="padding:5px 12px;border-radius:20px;border:1px solid #eee;background:white;color:#555;font-size:0.72rem;font-weight:600;cursor:pointer;white-space:nowrap;flex-shrink:0">Kiné</button>
-                <button onclick="window.loadMedecins('gynecologue',this)" style="padding:5px 12px;border-radius:20px;border:1px solid #eee;background:white;color:#555;font-size:0.72rem;font-weight:600;cursor:pointer;white-space:nowrap;flex-shrink:0">Gynécologue</button>
-              </div>
-              </div>
+          <!-- Filtres spécialités -->
+          <div style="padding:8px 12px;border-bottom:1px solid #f0f0f0">
+            <div style="display:flex;gap:6px;overflow-x:auto;scrollbar-width:none">
+              <button onclick="window.loadMedecins('medecin generaliste',this)" style="padding:5px 12px;border-radius:20px;border:none;background:var(--coral);color:white;font-size:0.7rem;font-weight:600;cursor:pointer;white-space:nowrap;flex-shrink:0">Généraliste</button>
+              <button onclick="window.loadMedecins('cardiologue',this)" style="padding:5px 12px;border-radius:20px;border:1px solid #eee;background:white;color:#555;font-size:0.7rem;cursor:pointer;white-space:nowrap;flex-shrink:0">Cardiologue</button>
+              <button onclick="window.loadMedecins('dermatologue',this)" style="padding:5px 12px;border-radius:20px;border:1px solid #eee;background:white;color:#555;font-size:0.7rem;cursor:pointer;white-space:nowrap;flex-shrink:0">Dermatologue</button>
+              <button onclick="window.loadMedecins('nutritionniste',this)" style="padding:5px 12px;border-radius:20px;border:1px solid #eee;background:white;color:#555;font-size:0.7rem;cursor:pointer;white-space:nowrap;flex-shrink:0">Nutritionniste</button>
+              <button onclick="window.loadMedecins('ophtalmologue',this)" style="padding:5px 12px;border-radius:20px;border:1px solid #eee;background:white;color:#555;font-size:0.7rem;cursor:pointer;white-space:nowrap;flex-shrink:0">Ophtalmo</button>
+              <button onclick="window.loadMedecins('rhumatologue',this)" style="padding:5px 12px;border-radius:20px;border:1px solid #eee;background:white;color:#555;font-size:0.7rem;cursor:pointer;white-space:nowrap;flex-shrink:0">Rhumatologue</button>
+              <button onclick="window.loadMedecins('pneumologue',this)" style="padding:5px 12px;border-radius:20px;border:1px solid #eee;background:white;color:#555;font-size:0.7rem;cursor:pointer;white-space:nowrap;flex-shrink:0">Pneumologue</button>
+              <button onclick="window.loadMedecins('gynecologue',this)" style="padding:5px 12px;border-radius:20px;border:1px solid #eee;background:white;color:#555;font-size:0.7rem;cursor:pointer;white-space:nowrap;flex-shrink:0">Gynécologue</button>
+              <button onclick="window.loadMedecins('dentiste',this)" style="padding:5px 12px;border-radius:20px;border:1px solid #eee;background:white;color:#555;font-size:0.7rem;cursor:pointer;white-space:nowrap;flex-shrink:0">Dentiste</button>
+              <button onclick="window.loadMedecins('kinesitherapeute',this)" style="padding:5px 12px;border-radius:20px;border:1px solid #eee;background:white;color:#555;font-size:0.7rem;cursor:pointer;white-space:nowrap;flex-shrink:0">Kiné</button>
             </div>
+          </div>
+          <!-- Carte -->
+          <div id="homeMedecinsMap" style="width:100%;height:180px;background:#f0f0f0;display:none"></div>
+          <!-- Bouton + liste -->
+          <div style="padding:12px">
+            <button onclick="window.loadMedecins(window._lastSpecialite||'medecin generaliste')" style="width:100%;padding:10px;background:linear-gradient(135deg,var(--coral),var(--accent));color:white;border:none;border-radius:10px;font-size:0.82rem;font-weight:700;cursor:pointer;margin-bottom:10px">📍 Trouver un médecin</button>
+            <div id="homeMedecinsList" style="display:flex;flex-direction:column;gap:8px"></div>
           </div>
         </div>
 
