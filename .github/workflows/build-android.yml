@@ -2,6 +2,10 @@ name: Build Android
 on:
   push:
     branches: [ main ]
+    paths:
+      - 'app.html'
+      - 'www/**'
+      - 'android/**'
   workflow_dispatch:
 jobs:
   build:
