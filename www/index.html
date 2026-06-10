@@ -9795,6 +9795,100 @@ document.addEventListener("DOMContentLoaded", function() {
   setTimeout(window.initDefisCarousel, 500);
 });
 // ===== FIN DÉFIS =====
+
+window.loadMedecins = function() {
+  var mapDiv = document.getElementById('homeMedecinsMap');
+  var listDiv = document.getElementById('homeMedecinsList');
+  if (listDiv) listDiv.innerHTML = '<div style="text-align:center;padding:20px;color:#888;font-size:0.82rem">Localisation en cours...</div>';
+
+  // Utiliser position en cache si disponible
+  var cached = localStorage.getItem('mirella_position');
+  if (cached) {
+    try {
+      var pos = JSON.parse(cached);
+      window._fetchMedecins(pos.lat, pos.lng);
+      return;
+    } catch(e) {}
+  }
+
+  if (!navigator.geolocation) {
+    if (listDiv) listDiv.innerHTML = '<div style="text-align:center;padding:20px;color:#888;font-size:0.82rem">Geolocalisation non disponible</div>';
+    return;
+  }
+
+  navigator.geolocation.getCurrentPosition(
+    function(pos) {
+      var lat = pos.coords.latitude;
+      var lng = pos.coords.longitude;
+      localStorage.setItem('mirella_position', JSON.stringify({lat: lat, lng: lng, ts: Date.now()}));
+      window._fetchMedecins(lat, lng);
+    },
+    function(err) {
+      // Utiliser position par defaut (Paris) si refus
+      if (listDiv) listDiv.innerHTML = '<div style="text-align:center;padding:20px;color:#888;font-size:0.82rem">Activez la localisation pour trouver des medecins pres de vous</div>';
+    },
+    { timeout: 8000, maximumAge: 300000 }
+  );
+};
+
+window._fetchMedecins = async function(lat, lng) {
+  var listDiv = document.getElementById('homeMedecinsList');
+  var mapDiv = document.getElementById('homeMedecinsMap');
+  try {
+    var token = localStorage.getItem('nutricare_token');
+    var res = await fetch('https://nutricare-backend-production.up.railway.app/api/nearby-doctors?lat=' + lat + '&lng=' + lng, {
+      headers: { 'Authorization': 'Bearer ' + token }
+    });
+    var data = await res.json();
+    var doctors = data.doctors || data.results || [];
+
+    if (mapDiv) {
+      mapDiv.style.display = 'block';
+      if (typeof google !== 'undefined' && google.maps) {
+        var map = new google.maps.Map(mapDiv, { center: {lat: lat, lng: lng}, zoom: 14 });
+        doctors.slice(0, 5).forEach(function(d) {
+          if (d.geometry) {
+            new google.maps.Marker({ position: d.geometry.location, map: map, title: d.name });
+          }
+        });
+      }
+    }
+
+    if (listDiv) {
+      if (doctors.length === 0) {
+        listDiv.innerHTML = '<div style="text-align:center;padding:16px;color:#888;font-size:0.82rem">Aucun medecin trouve pres de vous</div>';
+      } else {
+        listDiv.innerHTML = doctors.slice(0, 4).map(function(d) {
+          var rating = d.rating ? '⭐ ' + d.rating : '';
+          var open = d.opening_hours ? (d.opening_hours.open_now ? '<span style="color:#3B6D11;font-size:0.7rem">Ouvert</span>' : '<span style="color:#E24B4A;font-size:0.7rem">Ferme</span>') : '';
+          return '<div style="display:flex;align-items:center;gap:10px;padding:10px;background:#f9f9f9;border-radius:10px;margin-bottom:6px">' +
+            '<div style="width:36px;height:36px;background:#FFF0EC;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.2rem;flex-shrink:0">👨‍⚕️</div>' +
+            '<div style="flex:1;min-width:0">' +
+            '<div style="font-size:0.82rem;font-weight:700;color:#1a1a1a;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">' + d.name + '</div>' +
+            '<div style="font-size:0.72rem;color:#888">' + (d.vicinity||'') + '</div>' +
+            '<div style="display:flex;gap:8px;margin-top:2px">' + rating + ' ' + open + '</div>' +
+            '</div></div>';
+        }).join('');
+      }
+    }
+  } catch(e) {
+    if (listDiv) listDiv.innerHTML = '<div style="text-align:center;padding:16px;color:#888;font-size:0.82rem">Erreur de chargement</div>';
+  }
+};
+
+// Charger auto au demarrage si position en cache
+document.addEventListener('DOMContentLoaded', function() {
+  var cached = localStorage.getItem('mirella_position');
+  if (cached) {
+    try {
+      var pos = JSON.parse(cached);
+      // Rafraichir si cache < 1h
+      if (Date.now() - pos.ts < 3600000) {
+        setTimeout(function() { window._fetchMedecins(pos.lat, pos.lng); }, 2000);
+      }
+    } catch(e) {}
+  }
+});
 </script>
 
 <!-- Panneau Notifications -->
