@@ -9951,6 +9951,89 @@ window._afficherCarteUniquement = function(lat, lng) {
     window._currentLng = lng;
   }
 };
+
+var MIRELLA_MESSAGES = {
+  bonjour: [
+    "Je suis tellement contente de te revoir {prenom} ! 🌸 Comment tu vas aujourd'hui ?",
+    "Coucou {prenom} ! 😊 Mirella est là pour t'accompagner aujourd'hui !",
+    "Hey {prenom} ! ✨ Belle journée pour prendre soin de toi !",
+    "Bonjour {prenom} ! 🌺 Prête pour une belle journée santé ?",
+    "Rebonjour {prenom} ! 💪 Content(e) de te retrouver ici !"
+  ],
+  hydratation: [
+    "Psst {prenom} ! 💧 Tu as pensé à boire de l'eau ?",
+    "Hey ! 💧 Il est temps de s'hydrater {prenom}. Un grand verre d'eau ?",
+    "Rappel hydratation {prenom} ! 💧 2L d'eau par jour c'est la clé !"
+  ],
+  repas: [
+    "C'est l'heure de manger {prenom} ! 🍽️ N'oublie pas un repas équilibré.",
+    "Ton corps a besoin de carburant {prenom} ! 🥗 Pense à manger sainement.",
+    "Petit rappel repas {prenom} ! 🍱 Prends soin de bien te nourrir."
+  ],
+  conseil: [
+    "Le saviez-vous {prenom} ? 🌿 Le curcuma est un puissant anti-inflammatoire naturel !",
+    "Conseil Mirella 💡 : Marcher 30 min par jour réduit le risque cardiovasculaire de 30% !",
+    "Astuce santé {prenom} ! 🫐 Les fruits rouges sont riches en antioxydants.",
+    "Conseil du jour {prenom} ! 😴 Un sommeil de 7-8h est essentiel pour votre santé.",
+    "Tu savais {prenom} ? 🧘 5 minutes de cohérence cardiaque par jour réduisent le stress de 20% !",
+    "Rappel bien-être {prenom} ! ☀️ 10 minutes de soleil le matin synchronisent ton rythme circadien.",
+    "Conseil nutrition {prenom} ! 🥚 Les oeufs le matin apportent les acides aminés essentiels.",
+    "Info santé {prenom} ! 💧 La déshydratation de 2% réduit tes performances cognitives de 10% !"
+  ],
+  motivation: [
+    "Tu fais du super boulot {prenom} ! 🌟 Continue comme ça !",
+    "Je suis fière de toi {prenom} ! 💪 Chaque petit pas compte.",
+    "Hey {prenom} ! 🌸 Prendre soin de soi c'est le plus beau cadeau qu'on puisse se faire.",
+    "Tu es incroyable {prenom} ! ✨ Ton engagement pour ta santé m'inspire !"
+  ]
+};
+
+window.getMirellaMsg = function(type) {
+  var prenom = '';
+  try {
+    var p = JSON.parse(localStorage.getItem('mirella_profile') || '{}');
+    prenom = p.prenom || p.firstName || p.name || p.full_name || '';
+    if(prenom) prenom = prenom.split(' ')[0];
+  } catch(e) {}
+  var msgs = MIRELLA_MESSAGES[type] || MIRELLA_MESSAGES.conseil;
+  var msg = msgs[Math.floor(Math.random() * msgs.length)];
+  return msg.replace(/{prenom}/g, prenom || 'toi');
+};
+
+window.initMirellaNotifications = function() {
+  window.updateNotifBadge();
+
+  var lastVisit = localStorage.getItem('mirella_last_visit');
+  var today = new Date().toDateString();
+  if(lastVisit !== today) {
+    localStorage.setItem('mirella_last_visit', today);
+    setTimeout(function() {
+      window.addNotif('bonjour', window.getMirellaMsg('bonjour'), '🌸');
+    }, 2000);
+    setTimeout(function() {
+      window.addNotif('conseil', window.getMirellaMsg('conseil'), '💡');
+    }, 5000);
+  }
+
+  setInterval(function() {
+    var h = new Date().getHours();
+    if(h >= 8 && h <= 20) window.addNotif('hydratation', window.getMirellaMsg('hydratation'), '💧');
+  }, 2 * 60 * 60 * 1000);
+
+  setInterval(function() {
+    var h = new Date().getHours();
+    var m = new Date().getMinutes();
+    if((h === 12 && m < 5) || (h === 19 && m < 5)) window.addNotif('repas', window.getMirellaMsg('repas'), '🍽️');
+  }, 5 * 60 * 1000);
+
+  setInterval(function() { window.checkPlanningReminders(); }, 30 * 1000);
+  window.checkPlanningReminders();
+
+  setInterval(function() {
+    var h = new Date().getHours();
+    if(h >= 9 && h <= 21) window.addNotif('motivation', window.getMirellaMsg('motivation'), '💪');
+  }, 4 * 60 * 60 * 1000);
+};
 </script>
 
 <!-- Panneau Notifications -->
