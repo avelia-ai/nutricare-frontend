@@ -9810,7 +9810,7 @@ window.loadMedecins = function() {
       var lat = position.coords.latitude;
       var lng = position.coords.longitude;
       localStorage.setItem('mirella_position', JSON.stringify({lat:lat, lng:lng, ts:Date.now()}));
-      window._afficherCarteEtMedecins(lat, lng);
+      window._showMedecinsMap(lat, lng);
     },
     function(err) {
       // Essayer avec la position en cache
@@ -9818,7 +9818,7 @@ window.loadMedecins = function() {
       if (cached) {
         try {
           var pos = JSON.parse(cached);
-          window._afficherCarteEtMedecins(pos.lat, pos.lng);
+          window._showMedecinsMap(pos.lat, pos.lng);
           return;
         } catch(e) {}
       }
