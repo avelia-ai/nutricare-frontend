@@ -7829,13 +7829,35 @@ function renderMenu(menu) {
   }, 100);
   if (menu.liste_courses) {
     document.getElementById('menusShoppingList').style.display = 'block';
-    const categories = { fruits_legumes: '🥦 Fruits & Légumes', proteines: '🥩 Protéines', feculents: '🌾 Féculents', produits_laitiers: '🥛 Produits laitiers', epicerie: '🛒 Épicerie', autres: '📦 Autres' };
-    document.getElementById('shoppingListContent').innerHTML = Object.entries(categories).map(([key, label]) => {
+    window._currentShoppingList = menu.liste_courses;
+    const categories = {
+      fruits_legumes: {label:'Fruits & légumes', icon:'🥦', bg:'#EAF3DE', txtDark:'#27500A', txtMid:'#3B6D11'},
+      proteines: {label:'Protéines', icon:'🥩', bg:'#FFF0EC', txtDark:'#993C1D', txtMid:'#993C1D'},
+      feculents: {label:'Féculents', icon:'🌾', bg:'#FAEEDA', txtDark:'#633806', txtMid:'#854F0B'},
+      produits_laitiers: {label:'Produits laitiers', icon:'🥛', bg:'#E6F1FB', txtDark:'#0C447C', txtMid:'#185FA5'},
+      epicerie: {label:'Épicerie', icon:'🛒', bg:'#FBEAF0', txtDark:'#72243E', txtMid:'#993556'},
+      autres: {label:'Autres', icon:'📦', bg:'#F1EFE8', txtDark:'#444441', txtMid:'#5F5E5A'}
+    };
+    var checked = JSON.parse(localStorage.getItem('mirella_courses_checked') || '{}');
+    document.getElementById('shoppingListContent').innerHTML = Object.entries(categories).map(([key, cat]) => {
       const items = menu.liste_courses[key] || [];
       if (!items.length) return '';
-      return `<div>
-        <div style="font-size:0.75rem;font-weight:600;color:#2D2D2D;margin-bottom:8px">${label}</div>
-        ${items.map(i => `<div style="font-size:0.82rem;color:#378ADD;padding:3px 0;border-bottom:1px solid #E6F1FB">• ${i}</div>`).join('')}
+      return `<div style="background:white;border-radius:14px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,0.05)">
+        <div style="display:flex;align-items:center;gap:8px;padding:12px 14px;background:${cat.bg}">
+          <span style="font-size:1.1rem">${cat.icon}</span>
+          <span style="font-size:0.82rem;font-weight:700;color:${cat.txtDark}">${cat.label}</span>
+          <span style="margin-left:auto;font-size:0.68rem;color:${cat.txtMid};background:white;padding:2px 8px;border-radius:10px">${items.length}</span>
+        </div>
+        <div style="padding:6px 14px 10px">
+          ${items.map((i, idx) => {
+            const itemKey = key + '_' + idx;
+            const isChecked = checked[itemKey];
+            return `<label style="display:flex;align-items:center;gap:10px;padding:7px 0;border-bottom:1px solid #f5f5f5">
+              <input type="checkbox" ${isChecked?'checked':''} onchange="window.toggleCourseItem('${itemKey}', this)" style="width:18px;height:18px;accent-color:${cat.txtMid};flex-shrink:0">
+              <span style="font-size:0.82rem;color:${isChecked?'#bbb':'#333'};text-decoration:${isChecked?'line-through':'none'}">${i}</span>
+            </label>`;
+          }).join('')}
+        </div>
       </div>`;
     }).join('');
     if (menu.conseils_semaine) {
@@ -7874,11 +7896,63 @@ function renderMenu(menu) {
     }
   }
 }
-function copyShoppingList() {
-  const items = document.querySelectorAll('#shoppingListContent div[style*="color:#378ADD"]');
-  const text = Array.from(items).map(i => i.textContent).join('\n');
-  navigator.clipboard.writeText(text).then(() => alert('Liste de courses copiée ! '));
-}
+window.toggleCourseItem = function(itemKey, input) {
+  var checked = JSON.parse(localStorage.getItem('mirella_courses_checked') || '{}');
+  checked[itemKey] = input.checked;
+  localStorage.setItem('mirella_courses_checked', JSON.stringify(checked));
+  var span = input.nextElementSibling;
+  if (input.checked) { span.style.color = '#bbb'; span.style.textDecoration = 'line-through'; }
+  else { span.style.color = '#333'; span.style.textDecoration = 'none'; }
+};
+
+window.toggleSharePanel = function() {
+  var panel = document.getElementById('shareSharePanel');
+  if (panel) panel.style.display = panel.style.display === 'none' ? 'block' : 'none';
+};
+
+window.buildShoppingListText = function() {
+  var liste = window._currentShoppingList;
+  if (!liste) return '';
+  var categories = {
+    fruits_legumes: '🥦 Fruits & légumes', proteines: '🥩 Protéines', feculents: '🌾 Féculents',
+    produits_laitiers: '🥛 Produits laitiers', epicerie: '🛒 Épicerie', autres: '📦 Autres'
+  };
+  var text = '🛒 Ma liste de courses Mirella\n\n';
+  Object.entries(categories).forEach(function(entry) {
+    var key = entry[0], label = entry[1];
+    var items = liste[key] || [];
+    if (!items.length) return;
+    text += label + '\n';
+    items.forEach(function(i) { text += '• ' + i + '\n'; });
+    text += '\n';
+  });
+  return text.trim();
+};
+
+window.shareShoppingList = function(type) {
+  var text = window.buildShoppingListText();
+  if (!text) return;
+  if (type === 'copy') {
+    navigator.clipboard.writeText(text).then(function() {
+      if (window.addNotif) window.addNotif('info', 'Liste de courses copiée !', '📋');
+      else alert('Liste copiée !');
+    });
+  } else if (type === 'whatsapp') {
+    window.open('https://wa.me/?text=' + encodeURIComponent(text), '_blank');
+  } else if (type === 'email') {
+    window.open('mailto:?subject=' + encodeURIComponent('Ma liste de courses Mirella') + '&body=' + encodeURIComponent(text), '_blank');
+  } else if (type === 'sms') {
+    window.open('sms:?body=' + encodeURIComponent(text), '_blank');
+  } else if (type === 'native') {
+    if (navigator.share) {
+      navigator.share({ title: 'Liste de courses Mirella', text: text }).catch(function(){});
+    } else {
+      navigator.clipboard.writeText(text);
+      if (window.addNotif) window.addNotif('info', 'Liste copiée (partage non disponible)', '📋');
+    }
+  }
+  window.toggleSharePanel();
+};
 async function loadHealthDashboard() {
   try {
     const [todayRes, logsRes] = await Promise.all([
