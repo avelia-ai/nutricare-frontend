@@ -1210,7 +1210,7 @@ window.CITATIONS = [
 window.initHome = async function() {
   var profile = JSON.parse(localStorage.getItem('nutricare_profile') || '{}');
   // Afficher carte localisation auto
-  setTimeout(function(){ if(typeof window.loadMedecins==='function') window.loadMedecins(); }, 1000);
+  setTimeout(function(){ if(typeof window.afficherCarteSeule==='function') window.afficherCarteSeule(); }, 1000);
   var now = new Date();
   var hours = now.getHours();
   var prenom = profile.full_name ? profile.full_name.split(' ')[0] : '';
