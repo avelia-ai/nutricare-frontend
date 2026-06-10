@@ -1209,7 +1209,8 @@ window.CITATIONS = [
 
 window.initHome = async function() {
   var profile = JSON.parse(localStorage.getItem('nutricare_profile') || '{}');
-  // Carte medecins chargee uniquement sur demande
+  // Afficher carte localisation auto
+  setTimeout(function(){ if(typeof window.loadMedecins==='function') window.loadMedecins(); }, 1000);
   var now = new Date();
   var hours = now.getHours();
   var prenom = profile.full_name ? profile.full_name.split(' ')[0] : '';
@@ -9810,7 +9811,7 @@ window.loadMedecins = function() {
       var lat = position.coords.latitude;
       var lng = position.coords.longitude;
       localStorage.setItem('mirella_position', JSON.stringify({lat:lat, lng:lng, ts:Date.now()}));
-      window._showMedecinsMap(lat, lng);
+      window._afficherCarteEtMedecins(lat, lng);
     },
     function(err) {
       // Essayer avec la position en cache
@@ -9818,7 +9819,7 @@ window.loadMedecins = function() {
       if (cached) {
         try {
           var pos = JSON.parse(cached);
-          window._showMedecinsMap(pos.lat, pos.lng);
+          window._afficherCarteEtMedecins(pos.lat, pos.lng);
           return;
         } catch(e) {}
       }
