@@ -10049,7 +10049,142 @@ window.addNotif = function(type, message, icon) {
   if(_notifList.length > 50) _notifList = _notifList.slice(0, 50);
   localStorage.setItem('mirella_notifs', JSON.stringify(_notifList));
   window.updateNotifBadge();
+  window.showMirellaPopup(message);
   return notif;
+};
+
+window.showMirellaPopup = function(message) {
+  var popup = document.getElementById('mirellaPopup');
+  var text = document.getElementById('mirellaPopupText');
+  if(!popup || !text) return;
+  text.textContent = message;
+  popup.style.display = 'block';
+  popup.style.animation = 'slideUp 0.3s ease';
+  if(window._popupTimeout) clearTimeout(window._popupTimeout);
+  window._popupTimeout = setTimeout(function(){ window.closeMirellaPopup(); }, 5000);
+};
+
+window.closeMirellaPopup = function() {
+  var popup = document.getElementById('mirellaPopup');
+  if(popup) popup.style.display = 'none';
+};
+
+window.updateNotifBadge = function() {
+  var unread = _notifList.filter(function(n){ return !n.read; }).length;
+  var badge = document.getElementById('notifBadge');
+  if(badge) {
+    if(unread > 0) { badge.style.display = 'flex'; badge.textContent = unread > 9 ? '9+' : unread; }
+    else { badge.style.display = 'none'; }
+  }
+};
+
+window.toggleNotifications = function() {
+  var panel = document.getElementById('notifPanel');
+  var overlay = document.getElementById('notifOverlay');
+  if(!panel) return;
+  var isOpen = panel.style.display === 'flex';
+  if(isOpen) { panel.style.display = 'none'; if(overlay) overlay.style.display = 'none'; }
+  else {
+    panel.style.display = 'flex'; panel.style.flexDirection = 'column';
+    if(overlay) overlay.style.display = 'block';
+    window.renderNotifList();
+    _notifList.forEach(function(n){ n.read = true; });
+    localStorage.setItem('mirella_notifs', JSON.stringify(_notifList));
+    window.updateNotifBadge();
+  }
+};
+
+window.renderNotifList = function() {
+  var list = document.getElementById('notifList');
+  if(!list) return;
+  if(_notifList.length === 0) {
+    list.innerHTML = '<div style="padding:40px;text-align:center;color:#ccc"><div style="font-size:2rem">🔔</div><div style="margin-top:8px;font-size:0.85rem">Aucune notification</div></div>';
+    return;
+  }
+  list.innerHTML = _notifList.map(function(n) {
+    var diff = (Date.now() - new Date(n.time).getTime()) / 1000;
+    var timeAgo = diff < 60 ? "À l'instant" : diff < 3600 ? Math.floor(diff/60) + ' min' : diff < 86400 ? Math.floor(diff/3600) + 'h' : Math.floor(diff/86400) + 'j';
+    var bg = n.read ? 'white' : '#FFF8F5';
+    return '<div style="padding:14px 20px;border-bottom:1px solid #f5f5f5;background:'+bg+';display:flex;gap:12px;align-items:flex-start">' +
+      '<div style="font-size:1.4rem;flex-shrink:0">'+n.icon+'</div>' +
+      '<div style="flex:1"><div style="font-size:0.85rem;color:#1a1a1a;line-height:1.4;margin-bottom:4px">'+n.message+'</div>' +
+      '<div style="font-size:0.72rem;color:#bbb">'+timeAgo+'</div></div></div>';
+  }).join('');
+};
+
+window.clearAllNotifs = function() {
+  _notifList = [];
+  localStorage.setItem('mirella_notifs', JSON.stringify([]));
+  window.updateNotifBadge();
+  window.renderNotifList();
+};
+
+window.checkPlanningReminders = function() {
+  try {
+    var events = JSON.parse(localStorage.getItem('mirella_planning') || '[]');
+    var now = new Date();
+    var today = now.getFullYear()+'-'+String(now.getMonth()+1).padStart(2,'0')+'-'+String(now.getDate()).padStart(2,'0');
+    var currentHour = now.getHours();
+    var currentMin = now.getMinutes();
+    var todayEvents = events.filter(function(e){ return e.date === today; });
+    var alreadyNotified = JSON.parse(localStorage.getItem('mirella_notified_today') || '{}');
+    todayEvents.forEach(function(e) {
+      if(!e.time) return;
+      var parts = e.time.split(':');
+      var evtTotal = parseInt(parts[0]) * 60 + parseInt(parts[1]);
+      var nowTotal = currentHour * 60 + currentMin;
+      if(nowTotal >= evtTotal && nowTotal <= evtTotal + 5 && !alreadyNotified[e.id]) {
+        var icons = {repas:'🍽️', medicament:'💊', sport:'💪', rappel:'🔔', rdv:'👨‍⚕️'};
+        var prenom = '';
+        try { var p = JSON.parse(localStorage.getItem('mirella_profile')||'{}'); prenom = (p.prenom||p.firstName||p.full_name||'').split(' ')[0]; } catch(x){}
+        var msgs = {
+          repas: "C'est l'heure de manger " + (prenom||'') + " ! 🍽️",
+          medicament: "N'oublie pas ton médicament " + (prenom||'') + " ! 💊",
+          sport: "C'est l'heure de bouger " + (prenom||'') + " ! 💪",
+          rdv: "Tu as un rendez-vous bientôt " + (prenom||'') + " ! 👨‍⚕️",
+          rappel: "Rappel : " + e.title + " ⏰"
+        };
+        window.addNotif('planning', msgs[e.type] || ('⏰ ' + e.title), icons[e.type] || '🔔');
+        alreadyNotified[e.id] = true;
+        localStorage.setItem('mirella_notified_today', JSON.stringify(alreadyNotified));
+      }
+    });
+  } catch(err) {}
+};
+// ===== FIN NOTIFICATIONS =====
+
+// ===== SYSTÈME NOTIFICATIONS IN-APP =====
+var _notifList = [];
+try { _notifList = JSON.parse(localStorage.getItem('mirella_notifs') || '[]'); } catch(e) { _notifList = []; }
+
+window.addNotif = function(type, message, icon) {
+  var notif = {
+    id: 'n_' + Date.now() + '_' + Math.random().toString(36).substr(2,5),
+    type: type, message: message, icon: icon || '🔔',
+    time: new Date().toISOString(), read: false
+  };
+  _notifList.unshift(notif);
+  if(_notifList.length > 50) _notifList = _notifList.slice(0, 50);
+  localStorage.setItem('mirella_notifs', JSON.stringify(_notifList));
+  window.updateNotifBadge();
+  window.showMirellaPopup(message);
+  return notif;
+};
+
+window.showMirellaPopup = function(message) {
+  var popup = document.getElementById('mirellaPopup');
+  var text = document.getElementById('mirellaPopupText');
+  if(!popup || !text) return;
+  text.textContent = message;
+  popup.style.display = 'block';
+  popup.style.animation = 'slideUp 0.3s ease';
+  if(window._popupTimeout) clearTimeout(window._popupTimeout);
+  window._popupTimeout = setTimeout(function(){ window.closeMirellaPopup(); }, 5000);
+};
+
+window.closeMirellaPopup = function() {
+  var popup = document.getElementById('mirellaPopup');
+  if(popup) popup.style.display = 'none';
 };
 
 window.updateNotifBadge = function() {
@@ -10217,5 +10352,23 @@ window.checkPlanningReminders = function() {
           <button onclick="window.saveSportSeance()" style="width:100%;background:linear-gradient(135deg,var(--coral),var(--accent));color:white;border:none;border-radius:12px;padding:14px;font-size:0.95rem;font-weight:700;cursor:pointer">Ajouter cette seance</button>
         </div>
       </div>
+
+<!-- Popup notification Mirella -->
+<div id="mirellaPopup" style="display:none;position:fixed;bottom:80px;left:16px;right:16px;z-index:99998;animation:slideUp 0.3s ease">
+  <div style="background:white;border-radius:20px;padding:14px 16px;box-shadow:0 8px 32px rgba(0,0,0,0.15);display:flex;align-items:center;gap:12px;border-left:4px solid var(--coral)">
+    <div style="width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,var(--coral),var(--accent));display:flex;align-items:center;justify-content:center;font-size:1.2rem;flex-shrink:0">🌸</div>
+    <div style="flex:1;min-width:0">
+      <div style="font-size:0.72rem;font-weight:700;color:var(--coral);margin-bottom:2px">Mirella</div>
+      <div id="mirellaPopupText" style="font-size:0.82rem;color:#1a1a1a;line-height:1.4"></div>
+    </div>
+    <button onclick="closeMirellaPopup()" style="background:none;border:none;color:#ccc;font-size:1.1rem;cursor:pointer;flex-shrink:0;padding:4px">✕</button>
+  </div>
+</div>
+<style>
+@keyframes slideUp {
+  from { transform: translateY(100px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+</style>
 </body>
 </html>
