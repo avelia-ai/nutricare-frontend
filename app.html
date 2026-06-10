@@ -1555,6 +1555,20 @@ window.analyseVisage = async function(file) {
     };
     result.innerHTML = html;
     result.appendChild(resetBtn);
+
+    // Sauvegarder dans l'historique
+    var historique = [];
+    try { historique = JSON.parse(localStorage.getItem('mirella_visage_historique') || '[]'); } catch(x){}
+    historique.unshift({
+      date: new Date().toISOString(),
+      score: data.score_global || 0,
+      resume: data.peau || data.bien_etre || 'Analyse complète',
+      photo: compressed
+    });
+    if(historique.length > 5) historique = historique.slice(0,5);
+    localStorage.setItem('mirella_visage_historique', JSON.stringify(historique));
+    window.renderVisageHistorique();
+
   } catch(e) {
     loading.style.display = 'none';
     result.style.display = 'block';
@@ -1634,6 +1648,20 @@ window.analyseFrigo = async function(file) {
     };
     result.innerHTML = html;
     result.appendChild(resetBtn);
+
+    // Sauvegarder dans l'historique
+    var historique = [];
+    try { historique = JSON.parse(localStorage.getItem('mirella_visage_historique') || '[]'); } catch(x){}
+    historique.unshift({
+      date: new Date().toISOString(),
+      score: data.score_global || 0,
+      resume: data.peau || data.bien_etre || 'Analyse complète',
+      photo: compressed
+    });
+    if(historique.length > 5) historique = historique.slice(0,5);
+    localStorage.setItem('mirella_visage_historique', JSON.stringify(historique));
+    window.renderVisageHistorique();
+
   } catch(e) {
     loading.style.display = 'none';
     result.style.display = 'block';
@@ -7088,7 +7116,7 @@ Réponds UNIQUEMENT en JSON valide avec cette structure exacte:
     document.getElementById('insightsView').style.display = view === 'insights' ? 'block' : 'none';
     document.getElementById('simulatorView').style.display = view === 'simulator' ? 'block' : 'none';
     document.getElementById('oracleView').style.display = view === 'oracle' ? 'flex' : 'none';
-    var vv = document.getElementById('visageView'); if(vv) { vv.style.display = view === 'visage' ? 'block' : 'none'; }
+    var vv = document.getElementById('visageView'); if(vv) { vv.style.display = view === 'visage' ? 'block' : 'none'; if(view==='visage') setTimeout(window.renderVisageHistorique, 200); }
     var fv = document.getElementById('frigoView'); if(fv) { fv.style.display = view === 'frigo' ? 'block' : 'none'; var mc = document.querySelector('.main-content'); if(mc) mc.style.overflow = view === 'frigo' ? 'auto' : 'hidden'; }
     var hv = document.getElementById('homeView'); if(hv) { hv.style.display = view === 'home' ? 'block' : 'none'; if(view === 'home') { setTimeout(function(){ if(typeof window.initHome==='function') window.initHome(); }, 100); var mc2=document.querySelector('.main-content'); if(mc2){mc2.style.overflow='auto';mc2.style.height='100%';} } }
     var mc = document.querySelector('.main-content');
@@ -9170,6 +9198,13 @@ function closeMirellaNotif() {
     <div style="font-size:0.82rem;color:#888">Mirella analyse votre visage</div>
   </div>
   <div id="visageResult" style="display:none"></div>
+  <!-- Historique analyses visage -->
+  <div style="margin-top:24px;padding-bottom:20px">
+    <div style="font-size:0.88rem;font-weight:700;color:#1a1a1a;margin-bottom:12px">📋 Historique des analyses</div>
+    <div id="visageHistorique" style="display:flex;flex-direction:column;gap:10px">
+      <div style="font-size:0.78rem;color:#bbb;text-align:center;padding:16px">Aucune analyse enregistrée</div>
+    </div>
+  </div>
 </div>
 
 <!-- FRIGO VIEW -->
@@ -10329,6 +10364,43 @@ window.updateProfileAvatarDisplay = function() {
 document.addEventListener('change', function(e) {
   if (e.target && e.target.id === 'profileSexe') window.updateProfileAvatarDisplay();
 });
+
+window.renderVisageHistorique = function() {
+  var el = document.getElementById('visageHistorique');
+  if (!el) return;
+  var historique = [];
+  try { historique = JSON.parse(localStorage.getItem('mirella_visage_historique') || '[]'); } catch(e) {}
+  if (historique.length === 0) {
+    el.innerHTML = '<div style="font-size:0.78rem;color:#bbb;text-align:center;padding:16px">Aucune analyse enregistrée</div>';
+    return;
+  }
+  var mois = ['jan','fév','mar','avr','mai','jun','jul','aoû','sep','oct','nov','déc'];
+  el.innerHTML = historique.map(function(h, i) {
+    var d = new Date(h.date);
+    var dateStr = d.getDate() + ' ' + mois[d.getMonth()] + ' ' + d.getFullYear();
+    var score = h.score || 0;
+    var scoreColor = score >= 70 ? '#10B981' : score >= 40 ? '#FF9A3C' : '#ef4444';
+    return '<div style="background:white;border-radius:14px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,0.06);display:flex;align-items:center;gap:12px;padding:12px">' +
+      '<div style="width:56px;height:56px;border-radius:10px;overflow:hidden;flex-shrink:0;background:#f5f5f5">' +
+      (h.photo ? '<img src="'+h.photo+'" style="width:100%;height:100%;object-fit:cover">' : '<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:1.5rem">🤳</div>') +
+      '</div>' +
+      '<div style="flex:1;min-width:0">' +
+      '<div style="font-size:0.78rem;color:#888;margin-bottom:2px">' + dateStr + '</div>' +
+      '<div style="font-size:0.82rem;font-weight:700;color:' + scoreColor + ';margin-bottom:4px">Score : ' + score + '/100</div>' +
+      '<div style="font-size:0.75rem;color:#555;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">' + (h.resume||'') + '</div>' +
+      '</div>' +
+      '<button onclick="window.deleteVisageHistorique('+i+')" style="background:none;border:none;color:#ddd;font-size:1rem;cursor:pointer;flex-shrink:0">🗑️</button>' +
+      '</div>';
+  }).join('');
+};
+
+window.deleteVisageHistorique = function(idx) {
+  var historique = [];
+  try { historique = JSON.parse(localStorage.getItem('mirella_visage_historique') || '[]'); } catch(e) {}
+  historique.splice(idx, 1);
+  localStorage.setItem('mirella_visage_historique', JSON.stringify(historique));
+  window.renderVisageHistorique();
+};
 </script>
 
 <!-- Panneau Notifications -->
