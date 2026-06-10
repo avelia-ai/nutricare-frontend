@@ -10171,21 +10171,6 @@ window.addNotif = function(type, message, icon) {
   return notif;
 };
 
-window.showMirellaPopup = function(message) {
-  var popup = document.getElementById('mirellaPopup');
-  var text = document.getElementById('mirellaPopupText');
-  if(!popup || !text) return;
-  text.textContent = message;
-  popup.style.display = 'block';
-  popup.style.animation = 'slideUp 0.3s ease';
-  if(window._popupTimeout) clearTimeout(window._popupTimeout);
-  window._popupTimeout = setTimeout(function(){ window.closeMirellaPopup(); }, 5000);
-};
-
-window.closeMirellaPopup = function() {
-  var popup = document.getElementById('mirellaPopup');
-  if(popup) popup.style.display = 'none';
-};
 
 window.updateNotifBadge = function() {
   var unread = _notifList.filter(function(n){ return !n.read; }).length;
@@ -10270,6 +10255,21 @@ window.checkPlanningReminders = function() {
   } catch(err) {}
 };
 // ===== FIN NOTIFICATIONS =====
+
+// Quand l'utilisateur revient dans l'app
+document.addEventListener('resume', function() {
+  setTimeout(function() {
+    var lastVisit = localStorage.getItem('mirella_last_visit');
+    var today = new Date().toDateString();
+    if(lastVisit !== today) {
+      localStorage.setItem('mirella_last_visit', today);
+      window.addNotif('bonjour', window.getMirellaMsg('bonjour'), '🌸');
+      setTimeout(function(){ window.addNotif('conseil', window.getMirellaMsg('conseil'), '💡'); }, 3000);
+    } else {
+      window.showMirellaPopup(window.getMirellaMsg('bonjour'));
+    }
+  }, 1000);
+}, false);
 </script>
 
 <!-- Panneau Notifications -->
