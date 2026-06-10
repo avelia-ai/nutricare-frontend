@@ -9867,15 +9867,6 @@ window._afficherCarteEtMedecins = async function(lat, lng) {
 
 // Auto-load si position en cache
 document.addEventListener('DOMContentLoaded', function() {
-  setTimeout(function() {
-    var cached = localStorage.getItem('mirella_position');
-    if (cached) {
-      try {
-        var pos = JSON.parse(cached);
-        if (Date.now() - pos.ts < 3600000) window._afficherCarteEtMedecins(pos.lat, pos.lng);
-      } catch(e) {}
-    }
-  }, 3000);
 });
 window.initMedecinsMapOnly = function() {
   var mapDiv = document.getElementById('homeMedecinsMap');
