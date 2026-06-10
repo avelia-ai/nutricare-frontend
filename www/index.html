@@ -10005,6 +10005,10 @@ window.initMirellaNotifications = function() {
 
   var lastVisit = localStorage.getItem('mirella_last_visit');
   var today = new Date().toDateString();
+  // Toujours afficher la popup de bienvenue
+  setTimeout(function() {
+    window.showMirellaPopup(window.getMirellaMsg('bonjour'));
+  }, 2000);
   if(lastVisit !== today) {
     localStorage.setItem('mirella_last_visit', today);
     setTimeout(function() {
