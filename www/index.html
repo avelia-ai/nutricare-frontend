@@ -2315,7 +2315,16 @@ function switchLang(lang) {
             <div id="homeMedecinsList" style="display:flex;flex-direction:column;gap:8px">
               <div style="text-align:center;padding:16px;color:#aaa;font-size:0.82rem">
                 <div style="font-size:1.5rem;margin-bottom:6px">📍</div>
-                <button onclick="window.loadMedecins()" style="background:linear-gradient(135deg,var(--coral),var(--accent));color:white;border:none;border-radius:10px;padding:10px 20px;font-size:0.82rem;font-weight:600;cursor:pointer">Trouver des médecins près de moi</button>
+                <div style="display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;padding-bottom:4px;margin-bottom:8px">
+                <button onclick="window.loadMedecins('medecin generaliste',this)" style="padding:5px 12px;border-radius:20px;border:none;background:var(--coral);color:white;font-size:0.72rem;font-weight:600;cursor:pointer;white-space:nowrap;flex-shrink:0">Généraliste</button>
+                <button onclick="window.loadMedecins('cardiologue',this)" style="padding:5px 12px;border-radius:20px;border:1px solid #eee;background:white;color:#555;font-size:0.72rem;font-weight:600;cursor:pointer;white-space:nowrap;flex-shrink:0">Cardiologue</button>
+                <button onclick="window.loadMedecins('dermatologue',this)" style="padding:5px 12px;border-radius:20px;border:1px solid #eee;background:white;color:#555;font-size:0.72rem;font-weight:600;cursor:pointer;white-space:nowrap;flex-shrink:0">Dermatologue</button>
+                <button onclick="window.loadMedecins('nutritionniste',this)" style="padding:5px 12px;border-radius:20px;border:1px solid #eee;background:white;color:#555;font-size:0.72rem;font-weight:600;cursor:pointer;white-space:nowrap;flex-shrink:0">Nutritionniste</button>
+                <button onclick="window.loadMedecins('ophtalmologue',this)" style="padding:5px 12px;border-radius:20px;border:1px solid #eee;background:white;color:#555;font-size:0.72rem;font-weight:600;cursor:pointer;white-space:nowrap;flex-shrink:0">Ophtalmologue</button>
+                <button onclick="window.loadMedecins('dentiste',this)" style="padding:5px 12px;border-radius:20px;border:1px solid #eee;background:white;color:#555;font-size:0.72rem;font-weight:600;cursor:pointer;white-space:nowrap;flex-shrink:0">Dentiste</button>
+                <button onclick="window.loadMedecins('kinesitherapeute',this)" style="padding:5px 12px;border-radius:20px;border:1px solid #eee;background:white;color:#555;font-size:0.72rem;font-weight:600;cursor:pointer;white-space:nowrap;flex-shrink:0">Kiné</button>
+                <button onclick="window.loadMedecins('gynecologue',this)" style="padding:5px 12px;border-radius:20px;border:1px solid #eee;background:white;color:#555;font-size:0.72rem;font-weight:600;cursor:pointer;white-space:nowrap;flex-shrink:0">Gynécologue</button>
+              </div>
               </div>
             </div>
           </div>
@@ -9796,40 +9805,49 @@ document.addEventListener("DOMContentLoaded", function() {
 });
 // ===== FIN DÉFIS =====
 
-window.loadMedecins = function() {
-  var mapDiv = document.getElementById('homeMedecinsMap');
+window._lastSpecialite = 'medecin generaliste';
+window.loadMedecins = function(specialite, btn) {
+  specialite = specialite || window._lastSpecialite || 'medecin generaliste';
+  window._lastSpecialite = specialite;
+  // Maj boutons
+  if (btn) {
+    document.querySelectorAll('#homeMedecinsList button, #homeMedecinsCard button[onclick*="loadMedecins"]').forEach(function(b){
+      if(b.style.background.includes('coral') || b.style.background.includes('gradient')) {
+        b.style.background='white'; b.style.color='#555'; b.style.border='1px solid #eee';
+      }
+    });
+    btn.style.background='var(--coral)'; btn.style.color='white'; btn.style.border='none';
+  }
   var listDiv = document.getElementById('homeMedecinsList');
-  if (listDiv) listDiv.innerHTML = '<div style="text-align:center;padding:16px;color:#888;font-size:0.82rem">📍 Localisation en cours...</div>';
+  if (listDiv) listDiv.innerHTML = '<div style="text-align:center;padding:12px;color:#888;font-size:0.78rem">📍 Localisation en cours...</div>';
 
-  if (!navigator.geolocation) {
-    if (listDiv) listDiv.innerHTML = '<div style="text-align:center;padding:16px;color:#888;font-size:0.82rem">Geolocalisation non disponible sur cet appareil</div>';
-    return;
+  var cached = localStorage.getItem('mirella_position');
+  if (cached) {
+    try {
+      var pos = JSON.parse(cached);
+      if (Date.now() - pos.ts < 3600000) { window._afficherCarteEtMedecins(pos.lat, pos.lng, specialite); return; }
+    } catch(e) {}
   }
 
+  if (!navigator.geolocation) return;
   navigator.geolocation.getCurrentPosition(
     function(position) {
       var lat = position.coords.latitude;
       var lng = position.coords.longitude;
       localStorage.setItem('mirella_position', JSON.stringify({lat:lat, lng:lng, ts:Date.now()}));
-      window._afficherCarteEtMedecins(lat, lng);
+      window._afficherCarteEtMedecins(lat, lng, specialite);
     },
     function(err) {
-      // Essayer avec la position en cache
-      var cached = localStorage.getItem('mirella_position');
-      if (cached) {
-        try {
-          var pos = JSON.parse(cached);
-          window._afficherCarteEtMedecins(pos.lat, pos.lng);
-          return;
-        } catch(e) {}
-      }
-      if (listDiv) listDiv.innerHTML = '<div style="text-align:center;padding:16px"><div style="font-size:0.82rem;color:#888;margin-bottom:10px">Activez la localisation dans les parametres de votre telephone</div><button onclick="window.loadMedecins()" style="background:linear-gradient(135deg,var(--coral),var(--accent));color:white;border:none;border-radius:10px;padding:8px 16px;font-size:0.78rem;cursor:pointer">Reessayer</button></div>';
+      var cached2 = localStorage.getItem('mirella_position');
+      if (cached2) { try { var p=JSON.parse(cached2); window._afficherCarteEtMedecins(p.lat, p.lng, specialite); return; } catch(e) {} }
+      if (listDiv) listDiv.innerHTML = '<div style="text-align:center;padding:12px;color:#888;font-size:0.78rem">Activez la localisation</div>';
     },
     { timeout: 10000, maximumAge: 300000, enableHighAccuracy: false }
   );
 };
 
-window._afficherCarteEtMedecins = async function(lat, lng) {
+window._afficherCarteEtMedecins = async function(lat, lng, specialite) {
+  specialite = specialite || 'medecin generaliste';
   var mapDiv = document.getElementById('homeMedecinsMap');
   var listDiv = document.getElementById('homeMedecinsList');
 
@@ -9841,7 +9859,7 @@ window._afficherCarteEtMedecins = async function(lat, lng) {
 
     // Chercher medecins via Places API
     var service = new google.maps.places.PlacesService(map);
-    service.nearbySearch({location:{lat:lat,lng:lng}, radius:1500, type:'doctor'}, function(results, status) {
+    service.nearbySearch({location:{lat:lat,lng:lng}, radius:2000, keyword:specialite}, function(results, status) {
       if (status === google.maps.places.PlacesServiceStatus.OK && results.length > 0) {
         results.slice(0,5).forEach(function(place) {
           new google.maps.Marker({position:place.geometry.location, map:map, title:place.name});
