@@ -10508,7 +10508,7 @@ window.loginWithGoogle = async function() {
     var redirectTo = 'fr.mirella.app://auth-callback';
     var oauthResp = await client.auth.signInWithOAuth({
       provider: 'google',
-      options: { redirectTo: redirectTo, skipBrowserRedirect: true }
+      options: { redirectTo: redirectTo, skipBrowserRedirect: true, queryParams: { prompt: 'select_account' } }
     });
     if (oauthResp && oauthResp.data && oauthResp.data.url) {
       window.Capacitor.Plugins.Browser.open({ url: oauthResp.data.url });
@@ -10518,7 +10518,7 @@ window.loginWithGoogle = async function() {
     var redirectTo = window.location.origin + window.location.pathname;
     await client.auth.signInWithOAuth({
       provider: 'google',
-      options: { redirectTo: redirectTo }
+      options: { redirectTo: redirectTo, queryParams: { prompt: 'select_account' } }
     });
   }
 };
