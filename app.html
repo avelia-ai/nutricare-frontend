@@ -8017,6 +8017,7 @@ function applyHealthPlanGates() {
   const evolLock = document.getElementById('evolutionCorpLockOverlay');
   if (chartLock) chartLock.style.display = isFreePlan ? 'flex' : 'none';
   if (evolLock) evolLock.style.display = isFreePlan ? 'flex' : 'none';
+  if (window.addNotif) window.addNotif('debug', 'Plan: ' + window.currentPlan + ' | Trial: ' + window.isTrial + ' | isFree: ' + isFreePlan, '🔧');
 }
 
 async function loadHealthDashboard() {
