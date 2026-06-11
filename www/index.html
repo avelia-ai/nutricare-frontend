@@ -2394,45 +2394,7 @@ function switchLang(lang) {
           <div class="msg-bubble">Bonjour ! Je suis Mirella, votre coach santé et nutrition. Je suis là pour vous accompagner avec bienveillance, sans jugement. Comment puis-je vous aider aujourd'hui ? </div>
         </div>
       </div>
-      <div id="subscriptionModal" style="display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.45);z-index:99999;align-items:center;justify-content:center;padding:16px">
-        <div style="background:#FFF8F5;border-radius:20px;padding:24px 20px;width:100%;max-width:380px;max-height:90vh;overflow-y:auto;position:relative">
-          <div style="text-align:center;margin-bottom:4px">
-            <div style="width:48px;height:48px;border-radius:50%;background:linear-gradient(135deg,#FF6B6B,#FF9A3C);display:flex;align-items:center;justify-content:center;margin:0 auto 12px;font-weight:600;font-size:20px;color:white">M</div>
-            <h2 style="margin:0 0 6px;font-size:18px;font-weight:700;color:#2D2D2D">Limite quotidienne atteinte</h2>
-            <p style="margin:0;font-size:14px;color:#8a8a8a;line-height:1.5">Vous avez utilisé vos 5 messages gratuits aujourd'hui. Débloquez un accès illimité avec Mirella.</p>
-          </div>
-          <div style="display:flex;flex-direction:column;gap:12px;margin-top:20px">
-            <div style="background:white;border-radius:14px;padding:16px;border:0.5px solid rgba(0,0,0,0.08)">
-              <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px">
-                <span style="font-size:15px;font-weight:700;color:#2D2D2D">Standard</span>
-                <span style="font-size:16px;font-weight:700;color:#2D2D2D">3,99 €<span style="font-size:12px;color:#aaa;font-weight:400">/mois</span></span>
-              </div>
-              <div style="font-size:11px;color:#FF9A3C;font-weight:600;margin-bottom:10px">soit 0,13€/jour</div>
-              <ul style="list-style:none;padding:0;margin:0 0 14px;display:flex;flex-direction:column;gap:6px">
-                <li style="font-size:13px;color:#555;display:flex;align-items:center;gap:8px"><span style="color:#FF6B6B">✓</span>Messages illimités avec Mirella</li>
-                <li style="font-size:13px;color:#555;display:flex;align-items:center;gap:8px"><span style="color:#FF6B6B">✓</span>Suivi santé complet + graphiques</li>
-                <li style="font-size:13px;color:#555;display:flex;align-items:center;gap:8px"><span style="color:#FF6B6B">✓</span>Menus personnalisés & espace médecin</li>
-              </ul>
-              <button onclick="selectPlan('standard')" style="width:100%;background:linear-gradient(135deg,#FF6B6B,#FF9A3C);color:white;border:none;border-radius:12px;padding:12px;font-size:14px;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif">Choisir Standard</button>
-            </div>
-            <div style="background:white;border-radius:14px;padding:16px;border:2px solid #FF9A3C;position:relative">
-              <div style="position:absolute;top:-10px;left:16px;background:linear-gradient(135deg,#FF6B6B,#FF9A3C);color:white;font-size:11px;font-weight:700;padding:3px 10px;border-radius:8px">Recommandé</div>
-              <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px;margin-top:6px">
-                <span style="font-size:15px;font-weight:700;color:#2D2D2D">Premium</span>
-                <span style="font-size:16px;font-weight:700;color:#2D2D2D">6,49 €<span style="font-size:12px;color:#aaa;font-weight:400">/mois</span></span>
-              </div>
-              <div style="font-size:11px;color:#FF9A3C;font-weight:600;margin-bottom:10px">soit 0,22€/jour</div>
-              <ul style="list-style:none;padding:0;margin:0 0 14px;display:flex;flex-direction:column;gap:6px">
-                <li style="font-size:13px;color:#555;display:flex;align-items:center;gap:8px"><span style="color:#FF6B6B">✓</span>Tout Standard, en illimité</li>
-                <li style="font-size:13px;color:#555;display:flex;align-items:center;gap:8px"><span style="color:#FF6B6B">✓</span>Catalogue recettes complet</li>
-                <li style="font-size:13px;color:#555;display:flex;align-items:center;gap:8px"><span style="color:#FF6B6B">✓</span>Analyse visage & programmes illimités</li>
-              </ul>
-              <button onclick="selectPlan('premium')" style="width:100%;background:linear-gradient(135deg,#FF6B6B,#FF9A3C);color:white;border:none;border-radius:12px;padding:12px;font-size:14px;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif">Choisir Premium</button>
-            </div>
-          </div>
-          <button onclick="document.getElementById('subscriptionModal').style.display='none'" style="width:100%;background:none;border:none;color:#aaa;font-size:13px;margin-top:16px;cursor:pointer;padding:4px;font-family:'DM Sans',sans-serif">Plus tard</button>
-        </div>
-      </div>
+      
       <div class="chat-input-area">
         <textarea class="chat-input" id="chatInput" placeholder="Posez votre question à Mirella..." rows="1" onkeypress="handleChatKey(event)" oninput="autoResize(this)"></textarea>
         <button class="btn-send" id="sendBtn" onclick="sendMessage()">↑</button>
@@ -10763,5 +10725,45 @@ document.addEventListener('deviceready', function() {
   to { transform: translateY(0); opacity: 1; }
 }
 </style>
+
+<div id="subscriptionModal" style="display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.45);z-index:99999;align-items:center;justify-content:center;padding:16px">
+        <div style="background:#FFF8F5;border-radius:20px;padding:24px 20px;width:100%;max-width:380px;max-height:90vh;overflow-y:auto;position:relative">
+          <div style="text-align:center;margin-bottom:4px">
+            <div style="width:48px;height:48px;border-radius:50%;background:linear-gradient(135deg,#FF6B6B,#FF9A3C);display:flex;align-items:center;justify-content:center;margin:0 auto 12px;font-weight:600;font-size:20px;color:white">M</div>
+            <h2 style="margin:0 0 6px;font-size:18px;font-weight:700;color:#2D2D2D">Limite quotidienne atteinte</h2>
+            <p style="margin:0;font-size:14px;color:#8a8a8a;line-height:1.5">Vous avez utilisé vos 5 messages gratuits aujourd'hui. Débloquez un accès illimité avec Mirella.</p>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:12px;margin-top:20px">
+            <div style="background:white;border-radius:14px;padding:16px;border:0.5px solid rgba(0,0,0,0.08)">
+              <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px">
+                <span style="font-size:15px;font-weight:700;color:#2D2D2D">Standard</span>
+                <span style="font-size:16px;font-weight:700;color:#2D2D2D">3,99 €<span style="font-size:12px;color:#aaa;font-weight:400">/mois</span></span>
+              </div>
+              <div style="font-size:11px;color:#FF9A3C;font-weight:600;margin-bottom:10px">soit 0,13€/jour</div>
+              <ul style="list-style:none;padding:0;margin:0 0 14px;display:flex;flex-direction:column;gap:6px">
+                <li style="font-size:13px;color:#555;display:flex;align-items:center;gap:8px"><span style="color:#FF6B6B">✓</span>Messages illimités avec Mirella</li>
+                <li style="font-size:13px;color:#555;display:flex;align-items:center;gap:8px"><span style="color:#FF6B6B">✓</span>Suivi santé complet + graphiques</li>
+                <li style="font-size:13px;color:#555;display:flex;align-items:center;gap:8px"><span style="color:#FF6B6B">✓</span>Menus personnalisés & espace médecin</li>
+              </ul>
+              <button onclick="selectPlan('standard')" style="width:100%;background:linear-gradient(135deg,#FF6B6B,#FF9A3C);color:white;border:none;border-radius:12px;padding:12px;font-size:14px;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif">Choisir Standard</button>
+            </div>
+            <div style="background:white;border-radius:14px;padding:16px;border:2px solid #FF9A3C;position:relative">
+              <div style="position:absolute;top:-10px;left:16px;background:linear-gradient(135deg,#FF6B6B,#FF9A3C);color:white;font-size:11px;font-weight:700;padding:3px 10px;border-radius:8px">Recommandé</div>
+              <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px;margin-top:6px">
+                <span style="font-size:15px;font-weight:700;color:#2D2D2D">Premium</span>
+                <span style="font-size:16px;font-weight:700;color:#2D2D2D">6,49 €<span style="font-size:12px;color:#aaa;font-weight:400">/mois</span></span>
+              </div>
+              <div style="font-size:11px;color:#FF9A3C;font-weight:600;margin-bottom:10px">soit 0,22€/jour</div>
+              <ul style="list-style:none;padding:0;margin:0 0 14px;display:flex;flex-direction:column;gap:6px">
+                <li style="font-size:13px;color:#555;display:flex;align-items:center;gap:8px"><span style="color:#FF6B6B">✓</span>Tout Standard, en illimité</li>
+                <li style="font-size:13px;color:#555;display:flex;align-items:center;gap:8px"><span style="color:#FF6B6B">✓</span>Catalogue recettes complet</li>
+                <li style="font-size:13px;color:#555;display:flex;align-items:center;gap:8px"><span style="color:#FF6B6B">✓</span>Analyse visage & programmes illimités</li>
+              </ul>
+              <button onclick="selectPlan('premium')" style="width:100%;background:linear-gradient(135deg,#FF6B6B,#FF9A3C);color:white;border:none;border-radius:12px;padding:12px;font-size:14px;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif">Choisir Premium</button>
+            </div>
+          </div>
+          <button onclick="document.getElementById('subscriptionModal').style.display='none'" style="width:100%;background:none;border:none;color:#aaa;font-size:13px;margin-top:16px;cursor:pointer;padding:4px;font-family:'DM Sans',sans-serif">Plus tard</button>
+        </div>
+      </div>
 </body>
 </html>
