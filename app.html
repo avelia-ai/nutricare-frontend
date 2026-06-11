@@ -7157,14 +7157,14 @@ Réponds UNIQUEMENT en JSON valide avec cette structure exacte:
     if (p.plan) window.currentPlan = resolvePlan(p);
   }
   const plan = window.currentPlan;
-  const premiumViews = ['oracle', 'simulator', 'biologie', 'ordonnance', 'programs', 'visual'];
-  const standardViews = ['menus', 'protocols', 'analysis', 'health', 'gamification'];
+  const premiumViews = ['visage', 'analysis', 'visual', 'oracle', 'biologie', 'cycle', 'mes-recettes', 'frigo', 'scanproduit', 'ordonnance', 'planning', 'chrono'];
+  const standardViews = ['menus', 'pro', 'simulator', 'catalogue'];
   if (premiumViews.includes(view) && window.currentPlan !== 'premium') {
-    showUpgradeModal('premium');
+    document.getElementById('subscriptionModal').style.display = 'flex';
     return;
   }
   if (standardViews.includes(view) && plan === 'free') {
-    showUpgradeModal('standard');
+    document.getElementById('subscriptionModal').style.display = 'flex';
     return;
   }
     document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
