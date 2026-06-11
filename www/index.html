@@ -7160,11 +7160,11 @@ Réponds UNIQUEMENT en JSON valide avec cette structure exacte:
   const premiumViews = ['oracle', 'simulator', 'biologie', 'ordonnance', 'programs', 'visual'];
   const standardViews = ['menus', 'protocols', 'analysis', 'health', 'gamification'];
   if (premiumViews.includes(view) && window.currentPlan !== 'premium') {
-    document.getElementById('subscriptionModal').style.display = 'flex';
+    showUpgradeModal('premium');
     return;
   }
   if (standardViews.includes(view) && plan === 'free') {
-    document.getElementById('subscriptionModal').style.display = 'flex';
+    showUpgradeModal('standard');
     return;
   }
     document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
