@@ -10523,21 +10523,48 @@ window.loginWithGoogle = async function() {
   }
 };
 
-function handleOAuthCallback(urlString) {
+async function handleOAuthCallback(urlString) {
   try {
+    // Cas 1 : tokens directement dans le hash (#access_token=...)
     var hashIndex = urlString.indexOf('#');
-    if (hashIndex === -1) return;
-    var hash = urlString.substring(hashIndex + 1);
-    var params = new URLSearchParams(hash);
-    var accessToken = params.get('access_token');
-    var refreshToken = params.get('refresh_token');
-    if (accessToken) {
-      localStorage.setItem('nutricare_token', accessToken);
-      if (refreshToken) localStorage.setItem('nutricare_refresh_token', refreshToken);
-      if (window.Capacitor && window.Capacitor.Plugins.Browser) window.Capacitor.Plugins.Browser.close();
-      window.location.reload();
+    if (hashIndex !== -1) {
+      var hash = urlString.substring(hashIndex + 1);
+      var params = new URLSearchParams(hash);
+      var accessToken = params.get('access_token');
+      var refreshToken = params.get('refresh_token');
+      if (accessToken) {
+        localStorage.setItem('nutricare_token', accessToken);
+        if (refreshToken) localStorage.setItem('nutricare_refresh_token', refreshToken);
+        if (window.Capacitor && window.Capacitor.Plugins.Browser) window.Capacitor.Plugins.Browser.close();
+        window.location.reload();
+        return;
+      }
     }
-  } catch(e) { console.error('OAuth callback error', e); }
+    // Cas 2 : code PKCE dans la query (?code=...)
+    var qIndex = urlString.indexOf('?');
+    if (qIndex !== -1) {
+      var query = urlString.substring(qIndex + 1).split('#')[0];
+      var qparams = new URLSearchParams(query);
+      var code = qparams.get('code');
+      if (code) {
+        var client = getSupabaseClient();
+        var result = await client.auth.exchangeCodeForSession(code);
+        if (result.data && result.data.session) {
+          localStorage.setItem('nutricare_token', result.data.session.access_token);
+          localStorage.setItem('nutricare_refresh_token', result.data.session.refresh_token);
+          if (window.Capacitor && window.Capacitor.Plugins.Browser) window.Capacitor.Plugins.Browser.close();
+          window.location.reload();
+          return;
+        } else if (result.error && window.addNotif) {
+          window.addNotif('debug', 'Erreur exchange: ' + result.error.message, '⚠️');
+        }
+      }
+    }
+    if (window.addNotif) window.addNotif('debug', 'Aucun token trouvé dans: ' + urlString.substring(0,200), '⚠️');
+  } catch(e) {
+    console.error('OAuth callback error', e);
+    if (window.addNotif) window.addNotif('debug', 'Erreur callback: ' + e.message, '⚠️');
+  }
 }
 
 // Web : vérifier si on revient d'un login Google (hash avec access_token)
