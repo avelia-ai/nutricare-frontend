@@ -5012,7 +5012,7 @@ function switchLang(lang) {
     if (!isPremium && authToken) {
       try {
         const pr = await fetch(`${BACKEND_URL}/api/auth/profile`, { headers: { 'Authorization': `Bearer ${authToken}` } });
-        if (pr.ok) { const pd = await pr.json(); window.currentPlan = pd.plan || 'free'; isPremium = pd.plan === 'premium'; }
+        if (pr.ok) { const pd = await pr.json(); window.currentPlan = resolvePlan(pd); isPremium = window.currentPlan === 'premium'; }
       } catch(e) {}
     }
     const bioGate = document.getElementById('bioPlanRequired');
@@ -7116,6 +7116,22 @@ Réponds UNIQUEMENT en JSON valide avec cette structure exacte:
     if (appPage) appPage.style.paddingTop = '40px';
   }
 
+  function resolvePlan(profile) {
+    if (!profile) return 'free';
+    let plan = profile.plan || 'free';
+    if (plan === 'trial') {
+      const trialEnd = profile.trial_end_date ? new Date(profile.trial_end_date) : null;
+      if (trialEnd && trialEnd > new Date()) {
+        window.isTrial = true;
+        window.trialEnd = trialEnd;
+        return 'premium';
+      } else {
+        window.isTrial = false;
+        return 'free';
+      }
+    }
+    return plan;
+  }
   async function showView(view, btn) {
     window._currentView = view;
     if (view === 'menus') setTimeout(buildWeekSelector, 50);
@@ -7129,16 +7145,16 @@ Réponds UNIQUEMENT en JSON valide avec cette structure exacte:
     if (!p.plan) {
       try {
         const pr = await fetchWithAuth(`${BACKEND_URL}/api/profile`);
-        if (pr.ok) { const pd = await pr.json(); window.currentPlan = pd.plan || 'free'; localStorage.setItem('nutricare_profile', JSON.stringify(pd)); }
+        if (pr.ok) { const pd = await pr.json(); window.currentPlan = resolvePlan(pd); localStorage.setItem('nutricare_profile', JSON.stringify(pd)); }
       } catch(e) {}
     } else {
-      window.currentPlan = p.plan;
+      window.currentPlan = resolvePlan(p);
     }
   }
   // Toujours vérifier localStorage en cas de plan non chargé
   if (window.currentPlan === 'free') {
     const p = JSON.parse(localStorage.getItem('nutricare_profile') || '{}');
-    if (p.plan) window.currentPlan = p.plan;
+    if (p.plan) window.currentPlan = resolvePlan(p);
   }
   const plan = window.currentPlan;
   const premiumViews = ['oracle', 'simulator', 'biologie', 'ordonnance', 'programs', 'visual'];
@@ -7217,7 +7233,7 @@ if (view === 'analysis') loadAnalysis();
   if (!isPaid && authToken) {
     try {
       const pr = await fetchWithAuth(`${BACKEND_URL}/api/profile`);
-      if (pr.ok) { const pd = await pr.json(); window.currentPlan = pd.plan || 'free'; isPaid = pd.plan === 'standard' || pd.plan === 'premium'; }
+      if (pr.ok) { const pd = await pr.json(); window.currentPlan = resolvePlan(pd); isPaid = window.currentPlan === 'standard' || window.currentPlan === 'premium'; }
     } catch(e) {}
   }
   document.getElementById('analysisPlanRequired').style.display = isPaid ? 'none' : 'block';
@@ -7325,7 +7341,7 @@ async function loadAnalysisHistory() {
   if (!isPaid && authToken) {
     try {
       const pr = await fetchWithAuth(`${BACKEND_URL}/api/profile`);
-      if (pr.ok) { const pd = await pr.json(); window.currentPlan = pd.plan || 'free'; isPaid = pd.plan === 'standard' || pd.plan === 'premium'; }
+      if (pr.ok) { const pd = await pr.json(); window.currentPlan = resolvePlan(pd); isPaid = window.currentPlan === 'standard' || window.currentPlan === 'premium'; }
     } catch(e) {}
   }
   document.getElementById('menusPlanRequired').style.display = isPaid ? 'none' : 'block';
@@ -8530,7 +8546,7 @@ async function loadProtocols() {
   if (!isPaid && authToken) {
     try {
       const pr = await fetchWithAuth(`${BACKEND_URL}/api/profile`);
-      if (pr.ok) { const pd = await pr.json(); window.currentPlan = pd.plan || 'free'; isPaid = pd.plan === 'standard' || pd.plan === 'premium'; }
+      if (pr.ok) { const pd = await pr.json(); window.currentPlan = resolvePlan(pd); isPaid = window.currentPlan === 'standard' || window.currentPlan === 'premium'; }
     } catch(e) {}
   }
   document.getElementById('proPlanRequired').style.display = isPaid ? 'none' : 'block';
