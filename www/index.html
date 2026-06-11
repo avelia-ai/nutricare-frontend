@@ -3267,8 +3267,14 @@ function switchLang(lang) {
 
   <!-- Graphiques et historique -->
   <div style="display:flex;flex-direction:column;gap:16px">
-    <div style="background:white;border-radius:16px;padding:22px;box-shadow:0 2px 8px rgba(0,0,0,0.06)">
+    <div id="healthChartCard" style="background:white;border-radius:16px;padding:22px;box-shadow:0 2px 8px rgba(0,0,0,0.06);position:relative">
       <div style="font-size:0.72rem;font-weight:600;text-transform:uppercase;letter-spacing:1.5px;color:var(--accent);margin-bottom:16px">📈 ÉVOLUTION — 30 JOURS</div>
+      <div id="healthChartLockOverlay" style="display:none;position:absolute;inset:0;background:rgba(255,255,255,0.55);backdrop-filter:blur(3px);border-radius:16px;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:20px;cursor:pointer;z-index:5" onclick="document.getElementById('subscriptionModal').style.display='flex'">
+        <div style="font-size:1.8rem;margin-bottom:8px">🔒</div>
+        <div style="font-size:0.9rem;font-weight:700;color:#2D2D2D;margin-bottom:4px">Fonctionnalité Standard</div>
+        <div style="font-size:0.78rem;color:#888;margin-bottom:12px">Débloquez vos graphiques d'évolution sur 30 jours</div>
+        <div style="background:linear-gradient(135deg,var(--coral),var(--accent));color:white;border-radius:10px;padding:8px 20px;font-size:0.82rem;font-weight:700">Voir les offres →</div>
+      </div>
       <canvas id="healthChart" height="120"></canvas>
     </div>
     <div style="background:white;border-radius:16px;padding:22px;box-shadow:0 2px 8px rgba(0,0,0,0.06)">
@@ -3276,7 +3282,13 @@ function switchLang(lang) {
       <div id="healthHistory"></div>
     </div>
   <!-- Section évolution photos -->
-  <div style="background:white;border-radius:16px;padding:22px;box-shadow:0 2px 8px rgba(0,0,0,0.06);margin-top:16px;margin-bottom:100px">
+  <div id="evolutionCorpCard" style="background:white;border-radius:16px;padding:22px;box-shadow:0 2px 8px rgba(0,0,0,0.06);margin-top:16px;margin-bottom:100px;position:relative">
+    <div id="evolutionCorpLockOverlay" style="display:none;position:absolute;inset:0;background:rgba(255,255,255,0.6);backdrop-filter:blur(3px);border-radius:16px;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:20px;cursor:pointer;z-index:5" onclick="document.getElementById('subscriptionModal').style.display='flex'">
+      <div style="font-size:1.8rem;margin-bottom:8px">🔒</div>
+      <div style="font-size:0.9rem;font-weight:700;color:#2D2D2D;margin-bottom:4px">Fonctionnalité Standard</div>
+      <div style="font-size:0.78rem;color:#888;margin-bottom:12px">Suivez votre évolution corporelle avec photos et analyses</div>
+      <div style="background:linear-gradient(135deg,var(--coral),var(--accent));color:white;border-radius:10px;padding:8px 20px;font-size:0.82rem;font-weight:700">Voir les offres →</div>
+    </div>
     <div style="font-size:0.72rem;font-weight:600;text-transform:uppercase;letter-spacing:1.5px;color:var(--accent);margin-bottom:4px">📸 MON ÉVOLUTION CORPORELLE</div>
     <div style="font-size:0.82rem;color:#999;margin-bottom:16px">Prenez une photo régulièrement pour suivre votre évolution visuelle.</div>
 
@@ -7999,7 +8011,16 @@ window.shareShoppingList = function(type) {
   }
   window.toggleSharePanel();
 };
+function applyHealthPlanGates() {
+  const isFreePlan = (window.currentPlan || 'free') === 'free' && !window.isTrial;
+  const chartLock = document.getElementById('healthChartLockOverlay');
+  const evolLock = document.getElementById('evolutionCorpLockOverlay');
+  if (chartLock) chartLock.style.display = isFreePlan ? 'flex' : 'none';
+  if (evolLock) evolLock.style.display = isFreePlan ? 'flex' : 'none';
+}
+
 async function loadHealthDashboard() {
+  applyHealthPlanGates();
   try {
     const [todayRes, logsRes] = await Promise.all([
       fetch(`${BACKEND_URL}/api/health/today`, { headers: { 'Authorization': `Bearer ${authToken}` } }),
