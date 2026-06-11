@@ -10549,14 +10549,17 @@ async function handleOAuthCallback(urlString) {
       if (code) {
         var client = getSupabaseClient();
         var result = await client.auth.exchangeCodeForSession(code);
+        console.log('exchangeCodeForSession result:', JSON.stringify(result));
         if (result.data && result.data.session) {
           localStorage.setItem('nutricare_token', result.data.session.access_token);
           localStorage.setItem('nutricare_refresh_token', result.data.session.refresh_token);
           if (window.Capacitor && window.Capacitor.Plugins.Browser) window.Capacitor.Plugins.Browser.close();
+          alert('Connexion réussie ! Rechargement...');
           window.location.reload();
           return;
-        } else if (result.error && window.addNotif) {
-          window.addNotif('debug', 'Erreur exchange: ' + result.error.message, '⚠️');
+        } else if (result.error) {
+          alert('Erreur connexion Google: ' + result.error.message);
+          console.error('exchangeCodeForSession error:', result.error);
         }
       }
     }
