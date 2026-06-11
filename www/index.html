@@ -10570,8 +10570,9 @@ async function handleOAuthCallback(urlString) {
 // Web : vérifier si on revient d'un login Google (hash avec access_token)
 (function() {
   if (window.location.hash && window.location.hash.includes('access_token')) {
-    handleOAuthCallback(window.location.href);
-    window.history.replaceState(null, '', window.location.pathname);
+    var fullUrl = window.location.href;
+    window.history.replaceState(null, '', window.location.pathname + window.location.search);
+    handleOAuthCallback(fullUrl);
   }
 })();
 
