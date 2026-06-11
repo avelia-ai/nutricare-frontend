@@ -10492,7 +10492,7 @@ var SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYm
 var _supabaseClient = null;
 function getSupabaseClient() {
   if (!_supabaseClient && window.supabase) {
-    _supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    _supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, { auth: { flowType: 'pkce' } });
   }
   return _supabaseClient;
 }
@@ -10567,11 +10567,13 @@ async function handleOAuthCallback(urlString) {
   }
 }
 
-// Web : vérifier si on revient d'un login Google (hash avec access_token)
+// Web : vérifier si on revient d'un login Google (hash access_token OU query code)
 (function() {
-  if (window.location.hash && window.location.hash.includes('access_token')) {
+  var hasHashToken = window.location.hash && window.location.hash.includes('access_token');
+  var hasCode = window.location.search && window.location.search.includes('code=');
+  if (hasHashToken || hasCode) {
     var fullUrl = window.location.href;
-    window.history.replaceState(null, '', window.location.pathname + window.location.search);
+    window.history.replaceState(null, '', window.location.pathname);
     handleOAuthCallback(fullUrl);
   }
 })();
