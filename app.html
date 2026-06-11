@@ -10500,29 +10500,62 @@ function getSupabaseClient() {
 window.loginWithGoogle = async function() {
   var client = getSupabaseClient();
   if (!client) { alert('Erreur de chargement, réessayez.'); return; }
-  var redirectTo = window.location.origin + window.location.pathname;
-  await client.auth.signInWithOAuth({
-    provider: 'google',
-    options: { redirectTo: redirectTo }
-  });
+
+  var isCapacitor = !!(window.Capacitor && window.Capacitor.isNativePlatform && window.Capacitor.isNativePlatform());
+
+  if (isCapacitor && window.Capacitor.Plugins.Browser) {
+    // Mobile : ouvrir dans le navigateur in-app et écouter le retour via deep link
+    var redirectTo = 'fr.mirella.app://auth-callback';
+    var oauthResp = await client.auth.signInWithOAuth({
+      provider: 'google',
+      options: { redirectTo: redirectTo, skipBrowserRedirect: true }
+    });
+    if (oauthResp && oauthResp.data && oauthResp.data.url) {
+      window.Capacitor.Plugins.Browser.open({ url: oauthResp.data.url });
+    }
+  } else {
+    // Web
+    var redirectTo = window.location.origin + window.location.pathname;
+    await client.auth.signInWithOAuth({
+      provider: 'google',
+      options: { redirectTo: redirectTo }
+    });
+  }
 };
 
-// Au chargement, vérifier si on revient d'un login Google (hash avec access_token)
-(function() {
-  if (window.location.hash && window.location.hash.includes('access_token')) {
-    var params = new URLSearchParams(window.location.hash.substring(1));
+function handleOAuthCallback(urlString) {
+  try {
+    var hashIndex = urlString.indexOf('#');
+    if (hashIndex === -1) return;
+    var hash = urlString.substring(hashIndex + 1);
+    var params = new URLSearchParams(hash);
     var accessToken = params.get('access_token');
     var refreshToken = params.get('refresh_token');
     if (accessToken) {
       localStorage.setItem('nutricare_token', accessToken);
       if (refreshToken) localStorage.setItem('nutricare_refresh_token', refreshToken);
-      // Nettoyer l'URL
-      window.history.replaceState(null, '', window.location.pathname);
-      // Recharger pour déclencher l'init de l'app avec le token
-      setTimeout(function() { window.location.reload(); }, 100);
+      if (window.Capacitor && window.Capacitor.Plugins.Browser) window.Capacitor.Plugins.Browser.close();
+      window.location.reload();
     }
+  } catch(e) { console.error('OAuth callback error', e); }
+}
+
+// Web : vérifier si on revient d'un login Google (hash avec access_token)
+(function() {
+  if (window.location.hash && window.location.hash.includes('access_token')) {
+    handleOAuthCallback(window.location.href);
+    window.history.replaceState(null, '', window.location.pathname);
   }
 })();
+
+// Mobile : écouter le deep link de retour
+document.addEventListener('deviceready', function() {
+  if (window.Capacitor && window.Capacitor.Plugins && window.Capacitor.Plugins.App) {
+    window.Capacitor.Plugins.App.addListener('appUrlOpen', function(data) {
+      handleOAuthCallback(data.url);
+    });
+  }
+});
 </script>
 
 <!-- Panneau Notifications -->
