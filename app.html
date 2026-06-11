@@ -466,6 +466,7 @@ button[style*="background:linear-gradient(135deg,var(--coral),var(--accent))"] {
 </style>
 </style>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <style>
 @media (max-width: 768px) {
   #menusNutritionPanel > div:last-child {
@@ -10475,6 +10476,44 @@ window.deleteVisageHistorique = function(idx) {
   localStorage.setItem('mirella_visage_historique', JSON.stringify(historique));
   window.renderVisageHistorique();
 };
+
+// ===== GOOGLE OAUTH (Supabase) =====
+var SUPABASE_URL = 'https://smgbybiwuucicgmlcjoh.supabase.co';
+var SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNtZ2J5Yml3dXVjaWNnbWxjam9oIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzYwNDU4NzksImV4cCI6MjA5MTYyMTg3OX0.uGenybv3h0lDGBtrnYG5kRjYHSAI8uqTEdiIeKW-RQM';
+var _supabaseClient = null;
+function getSupabaseClient() {
+  if (!_supabaseClient && window.supabase) {
+    _supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+  }
+  return _supabaseClient;
+}
+
+window.loginWithGoogle = async function() {
+  var client = getSupabaseClient();
+  if (!client) { alert('Erreur de chargement, réessayez.'); return; }
+  var redirectTo = window.location.origin + window.location.pathname;
+  await client.auth.signInWithOAuth({
+    provider: 'google',
+    options: { redirectTo: redirectTo }
+  });
+};
+
+// Au chargement, vérifier si on revient d'un login Google (hash avec access_token)
+(function() {
+  if (window.location.hash && window.location.hash.includes('access_token')) {
+    var params = new URLSearchParams(window.location.hash.substring(1));
+    var accessToken = params.get('access_token');
+    var refreshToken = params.get('refresh_token');
+    if (accessToken) {
+      localStorage.setItem('nutricare_token', accessToken);
+      if (refreshToken) localStorage.setItem('nutricare_refresh_token', refreshToken);
+      // Nettoyer l'URL
+      window.history.replaceState(null, '', window.location.pathname);
+      // Recharger pour déclencher l'init de l'app avec le token
+      setTimeout(function() { window.location.reload(); }, 100);
+    }
+  }
+})();
 </script>
 
 <!-- Panneau Notifications -->
