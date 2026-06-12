@@ -5178,7 +5178,31 @@ function switchLang(lang) {
     const plan = profile.plan || 'free';
 
     if (window.currentPlan !== 'premium') {
-      document.getElementById('oracleView').innerHTML = `<div style="text-align:center;padding:60px;color:#a8c8e0"><div style="font-size:1.2rem;margin-bottom:8px;color:#5a9fc0">Oracle Santé · Premium</div><div style="font-size:0.88rem;color:#4a7a9a;margin-bottom:20px">Fonctionnalité réservée aux abonnés Premium.</div><button onclick="showView('pricing')" style="background:linear-gradient(135deg,var(--coral),var(--accent));color:#2D2D2D;border:none;border-radius:4px;padding:12px 28px;cursor:pointer">Voir les abonnements</button></div>`;
+      document.getElementById('oracleView').innerHTML = `
+      <div style="position:relative">
+        <div style="filter:blur(5px);pointer-events:none">
+          <div style="color:#5a9fc0;font-size:0.78rem;font-weight:700;letter-spacing:1px;margin-bottom:12px">PATIENT · ANALYSE COMPLÈTE</div>
+          <div style="background:#162132;border-radius:16px;padding:20px;margin-bottom:12px;border:1px solid #223349">
+            <div style="font-weight:700;font-size:0.95rem;color:#e8f1fb;margin-bottom:8px">🔮 Score de santé global</div>
+            <div style="font-size:2rem;font-weight:800;color:#5a9fc0;margin-bottom:6px">78 / 100</div>
+            <div style="font-size:0.8rem;color:#7a9bb8">Tendance positive sur les 30 derniers jours</div>
+          </div>
+          <div style="background:#162132;border-radius:16px;padding:20px;margin-bottom:12px;border:1px solid #223349">
+            <div style="font-weight:700;font-size:0.95rem;color:#e8f1fb;margin-bottom:8px">⚠️ Points de vigilance</div>
+            <div style="font-size:0.8rem;color:#7a9bb8">Sommeil insuffisant détecté sur 4 des 7 derniers jours. Risque accru de fatigue et d'irritabilité.</div>
+          </div>
+          <div style="background:#162132;border-radius:16px;padding:20px;border:1px solid #223349">
+            <div style="font-weight:700;font-size:0.95rem;color:#e8f1fb;margin-bottom:8px">💡 Recommandations personnalisées</div>
+            <div style="font-size:0.8rem;color:#7a9bb8">Augmenter l'apport en magnésium et réduire les écrans 1h avant le coucher pour améliorer la qualité du sommeil.</div>
+          </div>
+        </div>
+        <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:20px;background:rgba(14,21,32,0.6);cursor:pointer" onclick="document.getElementById('subscriptionModal').style.display='flex'">
+          <div style="font-size:1.8rem;margin-bottom:8px">🔒</div>
+          <div style="font-size:0.95rem;font-weight:700;color:#e8f1fb;margin-bottom:4px">Fonctionnalité Premium</div>
+          <div style="font-size:0.8rem;color:#7a9bb8;margin-bottom:12px">Débloquez l'Oracle Santé et son analyse complète personnalisée</div>
+          <div style="background:linear-gradient(135deg,var(--coral),var(--accent));color:white;border-radius:10px;padding:8px 20px;font-size:0.82rem;font-weight:700">Voir les offres →</div>
+        </div>
+      </div>`;
       return;
     }
 
