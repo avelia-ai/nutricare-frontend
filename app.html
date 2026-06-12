@@ -7204,8 +7204,8 @@ Réponds UNIQUEMENT en JSON valide avec cette structure exacte:
     document.getElementById('insightsView').style.display = view === 'insights' ? 'block' : 'none';
     document.getElementById('simulatorView').style.display = view === 'simulator' ? 'block' : 'none';
     document.getElementById('oracleView').style.display = view === 'oracle' ? 'flex' : 'none';
-    var vv = document.getElementById('visageView'); if(vv) { vv.style.display = view === 'visage' ? 'block' : 'none'; if(view==='visage') { var mc = document.querySelector('.main-content'); if(mc) mc.style.overflow = 'auto'; setTimeout(window.renderVisageHistorique, 200); } }
-    var fv = document.getElementById('frigoView'); if(fv) { fv.style.display = view === 'frigo' ? 'block' : 'none'; var mc = document.querySelector('.main-content'); if(mc) mc.style.overflow = view === 'frigo' ? 'auto' : 'hidden'; }
+    var vv = document.getElementById('visageView'); if(vv) { vv.style.display = view === 'visage' ? 'block' : 'none'; if(view==='visage') { var mc = document.querySelector('.main-content'); if(mc) mc.style.overflow = 'auto'; setTimeout(window.renderVisageHistorique, 200); applyVisagePlanGates(); } }
+    var fv = document.getElementById('frigoView'); if(fv) { fv.style.display = view === 'frigo' ? 'block' : 'none'; var mc = document.querySelector('.main-content'); if(mc) mc.style.overflow = view === 'frigo' ? 'auto' : 'hidden'; if(view==='frigo') applyFrigoPlanGates(); }
     var hv = document.getElementById('homeView'); if(hv) { hv.style.display = view === 'home' ? 'block' : 'none'; if(view === 'home') { setTimeout(function(){ if(typeof window.initHome==='function') window.initHome(); }, 100); var mc2=document.querySelector('.main-content'); if(mc2){mc2.style.overflow='auto';mc2.style.height='100%';} } }
     var mc = document.querySelector('.main-content');
     if (mc) mc.style.overflow = ['home','cycle','planning','catalogue','menus','chrono','mes-recettes'].includes(view) ? 'auto' : 'hidden';
@@ -8052,6 +8052,20 @@ function applyHealthPlanGates() {
   if (chartLock) chartLock.style.display = isFreePlan ? 'flex' : 'none';
   if (evolLock) evolLock.style.display = isFreePlan ? 'flex' : 'none';
   if (window.addNotif) window.addNotif('debug', 'Plan: ' + window.currentPlan + ' | Trial: ' + window.isTrial + ' | isFree: ' + isFreePlan, '🔧');
+}
+function applyVisagePlanGates() {
+  const isFreePlan = (window.currentPlan || 'free') === 'free' && !window.isTrial;
+  const lock = document.getElementById('visageExampleLocked');
+  const upload = document.getElementById('visageUploadZone');
+  if (lock) lock.style.display = isFreePlan ? 'block' : 'none';
+  if (upload) upload.style.display = isFreePlan ? 'none' : 'block';
+}
+function applyFrigoPlanGates() {
+  const isFreePlan = (window.currentPlan || 'free') === 'free' && !window.isTrial;
+  const lock = document.getElementById('frigoExampleLocked');
+  const upload = document.getElementById('frigoUploadZone');
+  if (lock) lock.style.display = isFreePlan ? 'block' : 'none';
+  if (upload) upload.style.display = isFreePlan ? 'none' : 'block';
 }
 
 async function loadHealthDashboard() {
@@ -9365,6 +9379,31 @@ function closeMirellaNotif() {
     <div style="font-size:0.82rem;color:#888">Photo de face, bonne luminosité</div>
     <input type="file" id="visageInput" accept="image/*" capture="user" style="display:none" onchange="window.analyseVisage(this.files[0])">
   </div>
+  <div id="visageExampleLocked" style="display:none;position:relative;margin-bottom:16px">
+    <div style="filter:blur(5px);pointer-events:none">
+      <div style="background:white;border-radius:16px;padding:20px;margin-bottom:12px;box-shadow:0 2px 8px rgba(0,0,0,0.06)">
+        <div style="font-weight:700;font-size:0.9rem;margin-bottom:10px">🧴 Hydratation de la peau</div>
+        <div style="font-size:0.8rem;color:#888;margin-bottom:6px">Niveau détecté : Moyen — quelques zones de sécheresse autour des joues</div>
+        <div style="font-size:0.78rem;color:#aaa">Conseil : augmenter l'apport en oméga-3 et en eau</div>
+      </div>
+      <div style="background:white;border-radius:16px;padding:20px;margin-bottom:12px;box-shadow:0 2px 8px rgba(0,0,0,0.06)">
+        <div style="font-weight:700;font-size:0.9rem;margin-bottom:10px">😴 Signes de fatigue</div>
+        <div style="font-size:0.8rem;color:#888;margin-bottom:6px">Cernes légères détectées — possible manque de sommeil</div>
+        <div style="font-size:0.78rem;color:#aaa">Conseil : viser 7-8h de sommeil et limiter les écrans le soir</div>
+      </div>
+      <div style="background:white;border-radius:16px;padding:20px;box-shadow:0 2px 8px rgba(0,0,0,0.06)">
+        <div style="font-weight:700;font-size:0.9rem;margin-bottom:10px">✨ Teint général</div>
+        <div style="font-size:0.8rem;color:#888;margin-bottom:6px">Teint légèrement terne — possible carence en vitamine B12 ou fer</div>
+        <div style="font-size:0.78rem;color:#aaa">Conseil : intégrer plus de légumes verts et de légumineuses</div>
+      </div>
+    </div>
+    <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:20px;background:rgba(255,255,255,0.4);cursor:pointer" onclick="document.getElementById('subscriptionModal').style.display='flex'">
+      <div style="font-size:1.8rem;margin-bottom:8px">🔒</div>
+      <div style="font-size:0.9rem;font-weight:700;color:#2D2D2D;margin-bottom:4px">Fonctionnalité Standard</div>
+      <div style="font-size:0.78rem;color:#888;margin-bottom:12px">Débloquez l'analyse de votre visage et des conseils personnalisés</div>
+      <div style="background:linear-gradient(135deg,var(--coral),var(--accent));color:white;border-radius:10px;padding:8px 20px;font-size:0.82rem;font-weight:700">Voir les offres →</div>
+    </div>
+  </div>
   <div id="visagePreview" style="display:none;margin-bottom:16px">
     <img id="visageImg" style="width:100%;border-radius:16px;max-height:300px;object-fit:cover">
   </div>
@@ -9399,6 +9438,31 @@ function closeMirellaNotif() {
       <div style="font-weight:600;color:#1a1a1a;margin-bottom:6px">Photographiez votre frigo</div>
       <div style="font-size:0.82rem;color:#888">Ou glissez une photo ici</div>
       <input type="file" id="frigoInput" accept="image/*" capture="environment" style="display:none" onchange="window.analyseFrigo(this.files[0])">
+    </div>
+    <div id="frigoExampleLocked" style="display:none;position:relative;margin-bottom:16px">
+      <div style="filter:blur(5px);pointer-events:none">
+        <div style="background:white;border-radius:16px;padding:16px;margin-bottom:12px;box-shadow:0 2px 8px rgba(0,0,0,0.06)">
+          <div style="font-weight:700;font-size:0.88rem;margin-bottom:6px">🥗 Bowl de quinoa aux légumes rôtis</div>
+          <div style="font-size:0.78rem;color:#888;margin:0">À partir de : courgette, carotte, quinoa, citron</div>
+          <div style="font-size:0.74rem;color:#aaa;margin-top:4px">25 min · 380 kcal</div>
+        </div>
+        <div style="background:white;border-radius:16px;padding:16px;margin-bottom:12px;box-shadow:0 2px 8px rgba(0,0,0,0.06)">
+          <div style="font-weight:700;font-size:0.88rem;margin-bottom:6px">🍳 Omelette aux épinards et fromage</div>
+          <div style="font-size:0.78rem;color:#888;margin:0">À partir de : œufs, épinards, fromage, oignon</div>
+          <div style="font-size:0.74rem;color:#aaa;margin-top:4px">15 min · 320 kcal</div>
+        </div>
+        <div style="background:white;border-radius:16px;padding:16px;box-shadow:0 2px 8px rgba(0,0,0,0.06)">
+          <div style="font-weight:700;font-size:0.88rem;margin-bottom:6px">🍲 Soupe de légumes maison</div>
+          <div style="font-size:0.78rem;color:#888;margin:0">À partir de : poireau, pomme de terre, carotte, bouillon</div>
+          <div style="font-size:0.74rem;color:#aaa;margin-top:4px">30 min · 210 kcal</div>
+        </div>
+      </div>
+      <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:20px;background:rgba(255,255,255,0.4);cursor:pointer" onclick="document.getElementById('subscriptionModal').style.display='flex'">
+        <div style="font-size:1.8rem;margin-bottom:8px">🔒</div>
+        <div style="font-size:0.9rem;font-weight:700;color:#2D2D2D;margin-bottom:4px">Fonctionnalité Standard</div>
+        <div style="font-size:0.78rem;color:#888;margin-bottom:12px">Débloquez l'analyse de votre frigo et des recettes personnalisées</div>
+        <div style="background:linear-gradient(135deg,var(--coral),var(--accent));color:white;border-radius:10px;padding:8px 20px;font-size:0.82rem;font-weight:700">Voir les offres →</div>
+      </div>
     </div>
     <div id="frigoPreview" style="display:none;margin-bottom:16px">
       <img id="frigoImg" style="width:100%;border-radius:16px;max-height:250px;object-fit:cover">
