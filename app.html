@@ -3802,11 +3802,30 @@ function switchLang(lang) {
     </div>
 
     <!-- Bloc non Premium -->
-    <div id="bioFree" style="display:none;background:white;border-radius:4px;padding:40px;text-align:center;border:1px solid rgba(255,107,107,0.15)">
-      <div style="font-size:2rem;margin-bottom:12px"></div>
-      <div style="font-family:'Open Sans',serif;font-size:1.4rem;margin-bottom:8px">Fonctionnalité Premium</div>
-      <div style="font-size:0.88rem;color:rgba(2,26,53,0.5);margin-bottom:20px">Passez au plan Premium pour analyser vos bilans sanguins.</div>
-      <button onclick="showView('pricing')" style="background:#2D2D2D;color:white;border:none;border-radius:4px;padding:12px 28px;font-family:'DM Sans',sans-serif;cursor:pointer">Voir les abonnements →</button>
+    <div id="bioFree" style="display:none;position:relative;margin-bottom:20px">
+      <div style="filter:blur(5px);pointer-events:none">
+        <div style="background:white;border-radius:16px;padding:20px;margin-bottom:12px;box-shadow:0 2px 8px rgba(0,0,0,0.06)">
+          <div style="font-weight:700;font-size:0.9rem;margin-bottom:10px">🩸 Cholestérol LDL</div>
+          <div style="font-size:1.4rem;font-weight:800;color:#2D2D2D;margin-bottom:6px">1.42 g/L <span style="font-size:0.78rem;color:#E24B4A;font-weight:600">Légèrement élevé</span></div>
+          <div style="font-size:0.78rem;color:#888">Conseil : privilégier les graisses insaturées et augmenter les fibres solubles</div>
+        </div>
+        <div style="background:white;border-radius:16px;padding:20px;margin-bottom:12px;box-shadow:0 2px 8px rgba(0,0,0,0.06)">
+          <div style="font-weight:700;font-size:0.9rem;margin-bottom:10px">🧬 Vitamine D</div>
+          <div style="font-size:1.4rem;font-weight:800;color:#2D2D2D;margin-bottom:6px">22 ng/mL <span style="font-size:0.78rem;color:#BA7517;font-weight:600">Insuffisant</span></div>
+          <div style="font-size:0.78rem;color:#888">Conseil : supplémentation recommandée, surtout en hiver</div>
+        </div>
+        <div style="background:white;border-radius:16px;padding:20px;box-shadow:0 2px 8px rgba(0,0,0,0.06)">
+          <div style="font-weight:700;font-size:0.9rem;margin-bottom:10px">⚡ Glycémie à jeun</div>
+          <div style="font-size:1.4rem;font-weight:800;color:#2D2D2D;margin-bottom:6px">5.4 mmol/L <span style="font-size:0.78rem;color:#1D9E75;font-weight:600">Normal</span></div>
+          <div style="font-size:0.78rem;color:#888">Conseil : continuez à limiter les sucres rapides</div>
+        </div>
+      </div>
+      <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:20px;background:rgba(255,255,255,0.4);cursor:pointer" onclick="document.getElementById('subscriptionModal').style.display='flex'">
+        <div style="font-size:1.8rem;margin-bottom:8px">🔒</div>
+        <div style="font-size:0.9rem;font-weight:700;color:#2D2D2D;margin-bottom:4px">Fonctionnalité Premium</div>
+        <div style="font-size:0.78rem;color:#888;margin-bottom:12px">Débloquez l'analyse de votre bilan sanguin en langage simple</div>
+        <div style="background:linear-gradient(135deg,var(--coral),var(--accent));color:white;border-radius:10px;padding:8px 20px;font-size:0.82rem;font-weight:700">Voir les offres →</div>
+      </div>
     </div>
 
     <!-- Contenu Premium -->
