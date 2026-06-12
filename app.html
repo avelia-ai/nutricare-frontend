@@ -689,6 +689,10 @@ window.calcScore = function() {
 };
 
 window.analyseScore = function() {
+  if (window.currentPlan !== 'premium') {
+    document.getElementById('subscriptionModal').style.display = 'flex';
+    return;
+  }
   var score = window.calcScore();
   if(!score){ alert('Veuillez remplir au moins la forme et l\'alimentation'); return; }
   var btn = document.getElementById('analyseBtn');
@@ -784,6 +788,8 @@ window.saveScoreForm = function() {
 };
 
 window.initScoreSante = function() {
+  var aBtn = document.getElementById('analyseBtn');
+  if (aBtn) aBtn.innerHTML = (window.currentPlan !== 'premium') ? '🔒 Analyser ma journée avec Mirella (Premium)' : 'Analyser ma journée avec Mirella ✨';
   window.renderScoreHisto();
   // Restaurer le formulaire si c'est le même jour
   try {
