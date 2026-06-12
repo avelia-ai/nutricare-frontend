@@ -2886,11 +2886,33 @@ function switchLang(lang) {
     </div>
   </div>
 
-  <div id="analysisPlanRequired" style="display:none;background:white;border-radius: 4px;padding:28px;border:1px solid rgba(255,107,107,0.15);text-align:center;margin-bottom:24px">
-    <div style="font-size:1.4rem;margin-bottom:8px"></div>
-    <div style="font-size:1rem;font-weight:600;color:#2D2D2D;margin-bottom:8px">Fonctionnalité Standard & Premium</div>
-    <div style="font-size:0.85rem;color:var(--accent);margin-bottom:18px">Passez à un plan payant pour analyser vos repas en photo.</div>
-    <button onclick="showView('pricing')" style="background:#2D2D2D;color:white;padding:10px 24px;border:none;border-radius: 4px;font-size:0.88rem;cursor:pointer;font-family:'DM Sans',sans-serif">Voir les abonnements →</button>
+  <div id="analysisPlanRequired" style="display:none;position:relative;margin-bottom:24px">
+    <div style="filter:blur(5px);pointer-events:none">
+      <div style="background:linear-gradient(135deg,var(--coral),var(--accent));border-radius:16px;padding:18px 20px;margin-bottom:12px">
+        <div style="font-size:1rem;font-weight:700;color:white;margin-bottom:14px">Salade de poulet grillé, quinoa et avocat</div>
+        <div style="display:flex;gap:8px">
+          <div style="flex:1;background:rgba(255,255,255,0.2);border-radius:12px;padding:10px;text-align:center">
+            <div style="font-size:1.4rem;font-weight:800;color:white">8.5</div>
+            <div style="font-size:0.7rem;color:rgba(255,255,255,0.85)">Score santé</div>
+          </div>
+          <div style="flex:1;background:rgba(255,255,255,0.2);border-radius:12px;padding:10px;text-align:center">
+            <div style="font-size:1.4rem;font-weight:800;color:white">540</div>
+            <div style="font-size:0.7rem;color:rgba(255,255,255,0.85)">kcal</div>
+          </div>
+        </div>
+      </div>
+      <div style="background:white;border-radius:16px;padding:16px;box-shadow:0 2px 8px rgba(0,0,0,0.06)">
+        <div style="font-weight:700;font-size:0.88rem;margin-bottom:6px">📊 Répartition</div>
+        <div style="font-size:0.8rem;color:#888">Protéines 38g · Glucides 42g · Lipides 22g</div>
+        <div style="font-size:0.78rem;color:#aaa;margin-top:6px">Riche en fibres et bonnes graisses, idéal pour un déjeuner équilibré</div>
+      </div>
+    </div>
+    <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:20px;background:rgba(255,255,255,0.4);cursor:pointer" onclick="document.getElementById('subscriptionModal').style.display='flex'">
+      <div style="font-size:1.8rem;margin-bottom:8px">🔒</div>
+      <div style="font-size:0.9rem;font-weight:700;color:#2D2D2D;margin-bottom:4px">Fonctionnalité Standard & Premium</div>
+      <div style="font-size:0.78rem;color:#888;margin-bottom:12px">Débloquez l'analyse nutritionnelle de vos repas en photo</div>
+      <div style="background:linear-gradient(135deg,var(--coral),var(--accent));color:white;border-radius:10px;padding:8px 20px;font-size:0.82rem;font-weight:700">Voir les offres →</div>
+    </div>
   </div>
 
   <div id="analysisContent" style="display:none">
@@ -3516,7 +3538,27 @@ function switchLang(lang) {
     <div style="background:#FDF6E8;border:1px solid #C9A84C;border-radius:6px;padding:12px 16px;margin-bottom:28px;font-size:0.78rem;color:#8B6914;line-height:1.5;">
       <strong>Avertissement</strong> — Cet outil ne remplace pas un diagnostic medical. Il identifie des signes visuels potentiels et vous oriente vers les bons professionnels. Consultez toujours un medecin pour tout diagnostic.
     </div>
-    <div style="background:white;border-radius:8px;border:1px solid rgba(255,107,107,0.15);padding:28px;margin-bottom:24px;">
+    <div id="visualExampleLocked" style="display:none;position:relative;margin-bottom:24px">
+      <div style="filter:blur(5px);pointer-events:none">
+        <div style="background:white;border-radius:16px;padding:20px;margin-bottom:12px;box-shadow:0 2px 8px rgba(0,0,0,0.06)">
+          <div style="font-weight:700;font-size:0.9rem;margin-bottom:10px">🧴 Peau / Dermatologie</div>
+          <div style="font-size:0.8rem;color:#888;margin-bottom:6px">Légères rougeurs détectées sur les pommettes, possible sensibilité cutanée</div>
+          <div style="font-size:0.78rem;color:#aaa">Conseil : limiter les produits irritants et privilégier une routine apaisante</div>
+        </div>
+        <div style="background:white;border-radius:16px;padding:20px;box-shadow:0 2px 8px rgba(0,0,0,0.06)">
+          <div style="font-weight:700;font-size:0.9rem;margin-bottom:10px">👁️ Yeux</div>
+          <div style="font-size:0.8rem;color:#888;margin-bottom:6px">Légère pâleur de la sclérotique observée — pourrait indiquer un manque de fer</div>
+          <div style="font-size:0.78rem;color:#aaa">Conseil : faire vérifier votre taux de ferritine lors d'un bilan sanguin</div>
+        </div>
+      </div>
+      <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:20px;background:rgba(255,255,255,0.4);cursor:pointer" onclick="document.getElementById('subscriptionModal').style.display='flex'">
+        <div style="font-size:1.8rem;margin-bottom:8px">🔒</div>
+        <div style="font-size:0.9rem;font-weight:700;color:#2D2D2D;margin-bottom:4px">Fonctionnalité Premium</div>
+        <div style="font-size:0.78rem;color:#888;margin-bottom:12px">Débloquez l'analyse visuelle IA de la peau, des yeux et des ongles</div>
+        <div style="background:linear-gradient(135deg,var(--coral),var(--accent));color:white;border-radius:10px;padding:8px 20px;font-size:0.82rem;font-weight:700">Voir les offres →</div>
+      </div>
+    </div>
+    <div id="visualUploadCard" style="background:white;border-radius:8px;border:1px solid rgba(255,107,107,0.15);padding:28px;margin-bottom:24px;">
       <div style="font-size:0.75rem;font-weight:600;text-transform:uppercase;letter-spacing:1px;color:var(--accent);margin-bottom:16px;">Charger une image</div>
       <div id="visualDropZone" style="border:2px dashed #B5D4F4;border-radius:8px;padding:40px;text-align:center;cursor:pointer;transition:all .2s;" onclick="document.getElementById('visualInput').click()" ondragover="event.preventDefault();this.style.borderColor='#021A35'" ondragleave="this.style.borderColor='#B5D4F4'" ondrop="handleVisualDrop(event)">
         <div style="font-size:2.5rem;margin-bottom:12px;">📸</div>
@@ -7196,7 +7238,7 @@ Réponds UNIQUEMENT en JSON valide avec cette structure exacte:
     if (view === 'pro') loadProfessionals();
     document.getElementById('protocolsView').style.display = view === 'protocols' ? 'block' : 'none';
     document.getElementById('chronoView').style.display = view === 'chrono' ? 'block' : 'none'; if(view==='chrono' && window.initScoreSante) window.initScoreSante();
-    if (document.getElementById('visualView')) document.getElementById('visualView').style.display = view === 'visual' ? 'block' : 'none';
+    if (document.getElementById('visualView')) { document.getElementById('visualView').style.display = view === 'visual' ? 'block' : 'none'; if (view === 'visual') applyVisualPlanGates(); }
     document.getElementById('gamificationView').style.display = view === 'gamification' ? 'block' : 'none';
     document.getElementById('programsView').style.display = view === 'programs' ? 'block' : 'none';
     document.getElementById('ordonnanceView').style.display = view === 'ordonnance' ? 'block' : 'none';
@@ -8066,6 +8108,13 @@ function applyFrigoPlanGates() {
   const upload = document.getElementById('frigoUploadZone');
   if (lock) lock.style.display = isFreePlan ? 'block' : 'none';
   if (upload) upload.style.display = isFreePlan ? 'none' : 'block';
+}
+function applyVisualPlanGates() {
+  const isPremium = window.currentPlan === 'premium';
+  const lock = document.getElementById('visualExampleLocked');
+  const upload = document.getElementById('visualUploadCard');
+  if (lock) lock.style.display = isPremium ? 'none' : 'block';
+  if (upload) upload.style.display = isPremium ? 'block' : 'none';
 }
 
 async function loadHealthDashboard() {
