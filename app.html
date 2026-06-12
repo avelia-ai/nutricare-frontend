@@ -1037,15 +1037,22 @@ window.loadCatalogue = async function() {
     document.getElementById('catalogueNext').style.opacity = window._cataloguePage >= totalPages ? '0.4' : '1';
 
     var exampleLock = document.getElementById('catalogueExampleLocked');
-    if (recettes.length === 0 && data.plan === 'free') {
-      grid.style.display = 'none';
-      if (exampleLock) exampleLock.style.display = 'block';
-      if (countEl) countEl.textContent = 'Catalogue verrouillé';
-      document.getElementById('cataloguePage').textContent = '';
-      return;
-    }
-    grid.style.display = 'grid';
     if (exampleLock) exampleLock.style.display = 'none';
+    grid.style.display = 'grid';
+    var bannerEl = document.getElementById('catalogueFreeBanner');
+    if (data.plan === 'free') {
+      if (!bannerEl) {
+        bannerEl = document.createElement('div');
+        bannerEl.id = 'catalogueFreeBanner';
+        bannerEl.style.cssText = 'margin:0 16px 14px;background:linear-gradient(135deg,var(--coral),var(--accent));border-radius:14px;padding:14px 16px;color:white;display:flex;align-items:center;justify-content:space-between;gap:12px;cursor:pointer';
+        bannerEl.onclick = function() { document.getElementById('subscriptionModal').style.display = 'flex'; };
+        bannerEl.innerHTML = '<div><div style="font-size:0.85rem;font-weight:700">🔒 Accédez au catalogue complet</div><div style="font-size:0.74rem;opacity:0.9;margin-top:2px">Plus de 7000 recettes avec Standard ou Premium</div></div><div style="background:white;color:var(--coral);border-radius:8px;padding:6px 12px;font-size:0.75rem;font-weight:700;white-space:nowrap">Voir →</div>';
+        grid.parentNode.insertBefore(bannerEl, grid);
+      }
+      bannerEl.style.display = 'flex';
+    } else if (bannerEl) {
+      bannerEl.style.display = 'none';
+    }
     if (recettes.length === 0) {
       grid.innerHTML = '<div style="grid-column:span 2;text-align:center;padding:40px;color:#ccc">Aucune recette trouvée</div>';
       return;
@@ -1063,9 +1070,12 @@ window.loadCatalogue = async function() {
       window._catalogueRecettes = window._catalogueRecettes || {};
       var rcIdx = Object.keys(window._catalogueRecettes).length;
       window._catalogueRecettes[rcIdx] = r;
+      var lockBadge = r.locked ? '<div style="position:absolute;top:8px;left:8px;z-index:3;background:rgba(45,45,45,0.85);color:white;border-radius:20px;padding:4px 10px;font-size:0.65rem;font-weight:700;display:flex;align-items:center;gap:4px">🔒 Premium</div>' : '';
+      var cardClick = r.locked ? "document.getElementById('subscriptionModal').style.display='flex'" : ('window.showRecetteDetail(JSON.stringify(window._catalogueRecettes[' + rcIdx + ']))');
       return '<div id="' + cardId + '" data-photo="' + ((r.photo_keyword||r.nom).replace(/['"]/g,"")) + '" data-icon="' + icon + '" style="background:white;border-radius:16px;overflow:hidden;box-shadow:0 3px 12px rgba(0,0,0,0.08);position:relative">' +
-        '<button onclick="event.stopPropagation();toggleFavoriIdx(' + rcIdx + ')" id="fav-btn-' + cardId + '" style="position:absolute;top:8px;right:8px;z-index:3;background:rgba(255,255,255,0.95);border:none;border-radius:50%;width:30px;height:30px;cursor:pointer;font-size:1rem;line-height:1;display:flex;align-items:center;justify-content:center;box-shadow:0 1px 4px rgba(0,0,0,0.1)">🤍</button>' +
-        '<div onclick="window.showRecetteDetail(JSON.stringify(window._catalogueRecettes[' + rcIdx + ']))" style="cursor:pointer">' +
+        lockBadge +
+        (r.locked ? '' : '<button onclick="event.stopPropagation();toggleFavoriIdx(' + rcIdx + ')" id="fav-btn-' + cardId + '" style="position:absolute;top:8px;right:8px;z-index:3;background:rgba(255,255,255,0.95);border:none;border-radius:50%;width:30px;height:30px;cursor:pointer;font-size:1rem;line-height:1;display:flex;align-items:center;justify-content:center;box-shadow:0 1px 4px rgba(0,0,0,0.1)">🤍</button>') +
+        '<div onclick="' + cardClick + '" style="cursor:pointer' + (r.locked ? ';opacity:0.7' : '') + '">' +
         '<div class="rc-img" style="height:130px;background:linear-gradient(135deg,#FFF0EC,#FFE4D6);display:flex;align-items:center;justify-content:center;font-size:2.5rem;overflow:hidden;position:relative">' + (r.photo_url ? '<img src="'+r.photo_url+'" style="width:100%;height:130px;object-fit:cover;display:block">' : '<span style="font-size:2.5rem">'+icon+'</span>') + '</div>' +
         '<div style="padding:12px">' +
         '<div style="font-size:0.82rem;font-weight:700;color:#1a1a1a;margin-bottom:5px;line-height:1.3;min-height:32px">' + r.nom + '</div>' +
