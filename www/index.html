@@ -1733,7 +1733,13 @@ window.analyseCycle = function() {
   });
 };
 
+function applyCyclePlanGates() {
+  const isPremium = window.currentPlan === 'premium';
+  const lock = document.getElementById('cycleAdviceLockOverlay');
+  if (lock) lock.style.display = isPremium ? 'none' : 'flex';
+}
 window.initCycle = function() {
+  applyCyclePlanGates();
   window.renderCycleHistory();
   // Restaurer les données sauvegardées
   var saved = JSON.parse(localStorage.getItem('mirella_cycle') || '{}');
@@ -9707,7 +9713,13 @@ function toggleQuickMenu() {
     </div>
 
     <!-- Conseils Mirella -->
-    <div style="background:white;border-radius:20px;padding:24px;margin-bottom:16px;box-shadow:0 2px 12px rgba(0,0,0,0.06)">
+    <div id="cycleAdviceCard" style="background:white;border-radius:20px;padding:24px;margin-bottom:16px;box-shadow:0 2px 12px rgba(0,0,0,0.06);position:relative">
+      <div id="cycleAdviceLockOverlay" style="display:none;position:absolute;inset:0;background:rgba(255,255,255,0.6);backdrop-filter:blur(3px);border-radius:20px;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:20px;cursor:pointer;z-index:5" onclick="document.getElementById('subscriptionModal').style.display='flex'">
+        <div style="font-size:1.8rem;margin-bottom:8px">🔒</div>
+        <div style="font-size:0.9rem;font-weight:700;color:#2D2D2D;margin-bottom:4px">Fonctionnalité Premium</div>
+        <div style="font-size:0.78rem;color:#888;margin-bottom:12px">Débloquez les conseils nutritionnels personnalisés selon votre phase</div>
+        <div style="background:linear-gradient(135deg,var(--coral),var(--accent));color:white;border-radius:10px;padding:8px 20px;font-size:0.82rem;font-weight:700">Voir les offres →</div>
+      </div>
       <div style="font-size:1rem;font-weight:700;color:#1a1a1a;margin-bottom:16px">Conseils Mirella pour cette phase</div>
       <div id="cycleAdvice" style="display:flex;flex-direction:column;gap:10px">
         <div style="font-size:0.85rem;color:#ccc;text-align:center;padding:20px">Renseignez votre cycle pour obtenir des conseils personnalisés</div>
