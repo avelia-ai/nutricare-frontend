@@ -7355,7 +7355,7 @@ Réponds UNIQUEMENT en JSON valide avec cette structure exacte:
     if (document.getElementById('fitnessView')) document.getElementById('fitnessView').style.display = view === 'fitness' ? 'block' : 'none';
     if (view === 'fitness') loadFitnessView();
     document.getElementById('menusView').style.display = view === 'menus' ? 'block' : 'none';
-if (view === 'menus') loadMenus();
+if (view === 'menus') { loadMenus(); setTimeout(initBottomNav, 100); }
 document.getElementById('analysisView').style.display = view === 'analysis' ? 'block' : 'none';
 if (view === 'analysis') loadAnalysis();
   }
