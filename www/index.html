@@ -4400,7 +4400,27 @@ function switchLang(lang) {
       <div style="font-size:0.85rem;color:white;font-weight:600;text-shadow:0 1px 3px rgba(0,0,0,0.4)">Scannez n'importe quel produit et découvrez s'il est compatible avec votre profil santé 🔍</div>
     </div>
   </div>
-  <div style="background:white;border-radius:12px;padding:24px;border:1px solid #E6F1FB;margin-bottom:20px">
+  <div id="scanproduitExampleLocked" style="display:none;position:relative;margin-bottom:20px">
+    <div style="filter:blur(5px);pointer-events:none">
+      <div style="background:white;border-radius:16px;padding:20px;margin-bottom:12px;box-shadow:0 2px 8px rgba(0,0,0,0.06)">
+        <div style="font-weight:700;font-size:0.9rem;margin-bottom:10px">🍪 Biscuits chocolat noir</div>
+        <div style="font-size:0.8rem;color:#888;margin-bottom:6px">⚠️ Riche en sucres ajoutés (28g/100g) — à consommer occasionnellement</div>
+        <div style="font-size:0.78rem;color:#aaa">Compatible avec votre profil, mais attention aux portions</div>
+      </div>
+      <div style="background:white;border-radius:16px;padding:20px;box-shadow:0 2px 8px rgba(0,0,0,0.06)">
+        <div style="font-weight:700;font-size:0.9rem;margin-bottom:10px">🥛 Yaourt nature</div>
+        <div style="font-size:0.8rem;color:#888;margin-bottom:6px">✅ Excellente source de protéines et probiotiques</div>
+        <div style="font-size:0.78rem;color:#aaa">Parfaitement adapté à vos objectifs</div>
+      </div>
+    </div>
+    <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:20px;background:rgba(255,255,255,0.4);cursor:pointer" onclick="document.getElementById('subscriptionModal').style.display='flex'">
+      <div style="font-size:1.8rem;margin-bottom:8px">🔒</div>
+      <div style="font-size:0.9rem;font-weight:700;color:#2D2D2D;margin-bottom:4px">Fonctionnalité Premium</div>
+      <div style="font-size:0.78rem;color:#888;margin-bottom:12px">Débloquez l'analyse des produits et leur compatibilité avec votre profil</div>
+      <div style="background:linear-gradient(135deg,var(--coral),var(--accent));color:white;border-radius:10px;padding:8px 20px;font-size:0.82rem;font-weight:700">Voir les offres →</div>
+    </div>
+  </div>
+  <div id="scanproduitUploadCard" style="background:white;border-radius:12px;padding:24px;border:1px solid #E6F1FB;margin-bottom:20px">
     <div style="font-weight:600;font-size:1rem;color:#2D2D2D;margin-bottom:16px">📸 Importer un produit</div>
     <div id="produitDropzone" onclick="document.getElementById('produitInput').click()" style="border:2px dashed #B5D4F4;border-radius:12px;padding:40px;text-align:center;cursor:pointer;background:#F0F7FF;transition:border .2s">
       <div style="font-size:2rem;margin-bottom:8px">🛒</div>
@@ -7272,7 +7292,7 @@ Réponds UNIQUEMENT en JSON valide avec cette structure exacte:
     document.getElementById('gamificationView').style.display = view === 'gamification' ? 'block' : 'none';
     document.getElementById('programsView').style.display = view === 'programs' ? 'block' : 'none';
     document.getElementById('ordonnanceView').style.display = view === 'ordonnance' ? 'block' : 'none';
-    document.getElementById('scanproduitView').style.display = view === 'scanproduit' ? 'block' : 'none';
+    document.getElementById('scanproduitView').style.display = view === 'scanproduit' ? 'block' : 'none'; if (view === 'scanproduit') applyScanproduitPlanGates();
     document.getElementById('insightsView').style.display = view === 'insights' ? 'block' : 'none';
     document.getElementById('simulatorView').style.display = view === 'simulator' ? 'block' : 'none';
     document.getElementById('oracleView').style.display = view === 'oracle' ? 'flex' : 'none';
@@ -8143,6 +8163,13 @@ function applyVisualPlanGates() {
   const isPremium = window.currentPlan === 'premium';
   const lock = document.getElementById('visualExampleLocked');
   const upload = document.getElementById('visualUploadCard');
+  if (lock) lock.style.display = isPremium ? 'none' : 'block';
+  if (upload) upload.style.display = isPremium ? 'block' : 'none';
+}
+function applyScanproduitPlanGates() {
+  const isPremium = window.currentPlan === 'premium';
+  const lock = document.getElementById('scanproduitExampleLocked');
+  const upload = document.getElementById('scanproduitUploadCard');
   if (lock) lock.style.display = isPremium ? 'none' : 'block';
   if (upload) upload.style.display = isPremium ? 'block' : 'none';
 }
