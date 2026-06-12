@@ -3971,11 +3971,11 @@ function switchLang(lang) {
 <!-- TABS -->
 <div style="display:flex;gap:4px;margin-bottom:14px;border-bottom:1px solid #1e3050;padding-bottom:10px;flex-wrap:wrap" id="oracleTabs">
   <div onclick="oracleTab('scanner',this)" style="cursor:pointer;padding:5px 12px;font-size:11px;border-radius:6px;background:#1a2a3e;color:#a8c8e0;border:1px solid #2a4a6a;font-weight:500">Scanner IA</div>
-  <div onclick="oracleTab('simulation',this)" style="cursor:pointer;padding:5px 12px;font-size:11px;border-radius:6px;color:#4a7a9a;border:1px solid transparent">Simulation temps réel</div>
-  <div onclick="oracleTab('epigenetique',this)" style="cursor:pointer;padding:5px 12px;font-size:11px;border-radius:6px;color:#4a7a9a;border:1px solid transparent">Épigénétique & Télomères</div>
-  <div onclick="oracleTab('comparaison',this)" style="cursor:pointer;padding:5px 12px;font-size:11px;border-radius:6px;color:#4a7a9a;border:1px solid transparent">Mode Comparaison</div>
-  <div onclick="oracleTab('medicaments',this)" style="cursor:pointer;padding:5px 12px;font-size:11px;border-radius:6px;color:#4a7a9a;border:1px solid transparent">Alertes Médicaments</div>
-  <div onclick="oracleTab('timeline',this)" style="cursor:pointer;padding:5px 12px;font-size:11px;border-radius:6px;color:#4a7a9a;border:1px solid transparent">Timeline 10 ans</div>
+  <div onclick="oracleTab('simulation',this)" style="cursor:pointer;padding:5px 12px;font-size:11px;border-radius:6px;color:#4a7a9a;border:1px solid transparent">🔒 Simulation temps réel</div>
+  <div onclick="oracleTab('epigenetique',this)" style="cursor:pointer;padding:5px 12px;font-size:11px;border-radius:6px;color:#4a7a9a;border:1px solid transparent">🔒 Épigénétique & Télomères</div>
+  <div onclick="oracleTab('comparaison',this)" style="cursor:pointer;padding:5px 12px;font-size:11px;border-radius:6px;color:#4a7a9a;border:1px solid transparent">🔒 Mode Comparaison</div>
+  <div onclick="oracleTab('medicaments',this)" style="cursor:pointer;padding:5px 12px;font-size:11px;border-radius:6px;color:#4a7a9a;border:1px solid transparent">🔒 Alertes Médicaments</div>
+  <div onclick="oracleTab('timeline',this)" style="cursor:pointer;padding:5px 12px;font-size:11px;border-radius:6px;color:#4a7a9a;border:1px solid transparent">🔒 Timeline 10 ans</div>
 </div>
 
 <!-- SCANNER -->
@@ -5177,39 +5177,9 @@ function switchLang(lang) {
     const name = profile.full_name || 'Patient';
     const plan = profile.plan || 'free';
 
-    if (window.currentPlan !== 'premium') {
-      document.getElementById('oracleView').innerHTML = `
-      <div>
-        <div style="color:#5a9fc0;font-size:0.78rem;font-weight:700;letter-spacing:1px;margin-bottom:12px">PATIENT · ANALYSE COMPLÈTE</div>
-        <div style="background:#162132;border-radius:16px;padding:20px;margin-bottom:12px;border:1px solid #223349">
-          <div style="font-weight:700;font-size:0.95rem;color:#e8f1fb;margin-bottom:8px">🔮 Score de santé global</div>
-          <div style="font-size:2rem;font-weight:800;color:#5a9fc0;margin-bottom:6px">78 / 100</div>
-          <div style="font-size:0.8rem;color:#7a9bb8">Tendance positive sur les 30 derniers jours</div>
-        </div>
-        <div style="background:#162132;border-radius:16px;padding:20px;margin-bottom:12px;border:1px solid #223349">
-          <div style="font-weight:700;font-size:0.95rem;color:#e8f1fb;margin-bottom:8px">⚠️ Points de vigilance</div>
-          <div style="font-size:0.8rem;color:#7a9bb8">Sommeil insuffisant détecté sur 4 des 7 derniers jours. Risque accru de fatigue et d'irritabilité.</div>
-        </div>
-        <div style="position:relative;margin-bottom:80px">
-          <div style="filter:blur(5px);pointer-events:none;background:#162132;border-radius:16px;padding:20px;border:1px solid #223349">
-            <div style="font-weight:700;font-size:0.95rem;color:#e8f1fb;margin-bottom:8px">💡 Recommandations personnalisées</div>
-            <div style="font-size:0.8rem;color:#7a9bb8">Augmenter l'apport en magnésium et réduire les écrans 1h avant le coucher pour améliorer la qualité du sommeil. Voici votre plan d'action sur 7 jours...</div>
-          </div>
-          <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(14,21,32,0.45);border-radius:16px">
-            <div style="font-size:1.6rem">🔒</div>
-          </div>
-        </div>
-      </div>
-      <div style="position:fixed;left:0;right:0;bottom:60px;background:linear-gradient(135deg,var(--coral),var(--accent));padding:14px 20px;display:flex;align-items:center;justify-content:space-between;gap:12px;cursor:pointer;z-index:50" onclick="document.getElementById('subscriptionModal').style.display='flex'">
-        <div>
-          <div style="font-size:0.85rem;font-weight:700;color:white">🔒 Fonctionnalité Premium</div>
-          <div style="font-size:0.74rem;color:rgba(255,255,255,0.9);margin-top:2px">Débloquez vos recommandations personnalisées complètes</div>
-        </div>
-        <div style="background:white;color:var(--coral);border-radius:8px;padding:8px 14px;font-size:0.78rem;font-weight:700;white-space:nowrap">Voir →</div>
-      </div>`;
-      return;
+    if (window.currentPlan === 'premium') {
+      document.querySelectorAll('#oracleTabs div').forEach(d => { d.textContent = d.textContent.replace('🔒 ', ''); });
     }
-
     document.getElementById('oraclePatientHeader').textContent = name.toUpperCase() + ' · Analyse en cours...';
 
     if (!oracleData) {
@@ -5252,6 +5222,11 @@ function switchLang(lang) {
 
 
   function oracleTab(tab, el) {
+    const lockedOracleTabs = ['simulation','epigenetique','comparaison','medicaments','timeline'];
+    if (lockedOracleTabs.includes(tab) && window.currentPlan !== 'premium') {
+      document.getElementById('subscriptionModal').style.display = 'flex';
+      return;
+    }
     ['scanner','simulation','epigenetique','comparaison','medicaments','timeline'].forEach(t => {
       const el2 = document.getElementById('oracle-'+t);
       if (el2) el2.style.display = t === tab ? 'block' : 'none';
