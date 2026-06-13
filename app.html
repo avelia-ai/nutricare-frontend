@@ -724,6 +724,49 @@ window.initIaMenus = function() {
     if (chevron) chevron.style.transform = 'rotate(180deg)';
   }
 };
+window.getCurrentWeekKey = function() {
+  if (window._currentWeekKey) return window._currentWeekKey;
+  var d = new Date();
+  var day = d.getDay();
+  var diff = day === 0 ? -6 : 1 - day;
+  d.setDate(d.getDate() + diff);
+  return d.toISOString().split('T')[0];
+};
+window.persistMenuUpdate = function() {
+  if (!_currentMenu) return;
+  fetch(BACKEND_URL + "/api/menus/current", {
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + authToken },
+    body: JSON.stringify({ week_start: window.getCurrentWeekKey(), plan_data: _currentMenu })
+  }).catch(function(e){ console.error("Erreur sauvegarde menu", e); });
+};
+window.deleteMenuRepas = function(jourIdx, repasKey) {
+  if (!_currentMenu || !_currentMenu.semaine[jourIdx]) return;
+  if (confirm('Supprimer ce repas ?') === false) return;
+  _currentMenu.semaine[jourIdx][repasKey] = null;
+  renderMenu(_currentMenu);
+  window.persistMenuUpdate();
+};
+window.deleteMenuJour = function(jourIdx) {
+  if (!_currentMenu || !_currentMenu.semaine[jourIdx]) return;
+  if (confirm('Supprimer tous les repas de ce jour ?') === false) return;
+  ['petit_dejeuner','dejeuner','collation','diner'].forEach(function(r) {
+    _currentMenu.semaine[jourIdx][r] = null;
+  });
+  renderMenu(_currentMenu);
+  window.persistMenuUpdate();
+};
+window.deleteMenuSemaine = function() {
+  if (!_currentMenu) return;
+  if (confirm('Supprimer tout le menu de la semaine ? Cette action est irreversible.') === false) return;
+  _currentMenu.semaine.forEach(function(jour) {
+    ['petit_dejeuner','dejeuner','collation','diner'].forEach(function(r) {
+      jour[r] = null;
+    });
+  });
+  renderMenu(_currentMenu);
+  window.persistMenuUpdate();
+};
 // ── OBJECTIFS NUTRITIONNELS PERSONNALISABLES ──
 window.getObjectifsNutrition = function() {
   var custom = JSON.parse(localStorage.getItem('mirella_objectifs_nutrition') || '{}');
@@ -3374,6 +3417,7 @@ function switchLang(lang) {
     </div>
 
     <!-- Liste de courses -->
+    <button id="deleteWeekBtn" onclick="window.deleteMenuSemaine()" style="display:none;width:100%;background:#fff5f5;color:#e74c3c;border:1px solid #fbdcdc;border-radius:10px;padding:10px;font-size:0.8rem;font-weight:600;cursor:pointer;margin-bottom:12px">🗑️ Supprimer tout le menu de la semaine</button>
     <div id="menusDays" style="display:flex;flex-direction:column;gap:16px"></div>
     <div id="menusShoppingList" style="display:none;background:white;border-radius: 4px;padding:24px;border:1px solid rgba(255,107,107,0.15);margin-top:24px">
       <div style="font-size:0.72rem;font-weight:600;text-transform:uppercase;letter-spacing:1.5px;color:var(--accent);margin-bottom:16px;display:flex;justify-content:space-between;align-items:center">
@@ -6417,6 +6461,7 @@ function switchLang(lang) {
           el.style.background = 'linear-gradient(135deg,var(--coral),var(--accent))';
           el.style.color = 'white';
           const weekKey = ws.toISOString().split('T')[0];
+          window._currentWeekKey = weekKey;
           document.getElementById('menusDays').innerHTML = '';
           document.getElementById('menusLoading').style.display = 'block';
           document.getElementById('menusShoppingList').style.display = 'none';
@@ -8106,6 +8151,8 @@ function renderMenu(menu) {
   const repasLabels = { petit_dejeuner: 'Petit-déjeuner', dejeuner: 'Déjeuner', collation: 'Collation', diner: 'Dîner' };
   _currentMenu = menu;
   document.getElementById('menusNutritionPanel').style.display = 'block';
+  const delWeekBtn = document.getElementById('deleteWeekBtn');
+  if (delWeekBtn) delWeekBtn.style.display = (menu && menu.semaine && menu.semaine.length) ? 'block' : 'none';
   // Calculer budget semaine
   let totalCout = 0;
   (menu.semaine || []).forEach(jour => {
@@ -8150,7 +8197,13 @@ function renderMenu(menu) {
     const btn = document.createElement('div');
     btn.style.cssText = 'width:32px;height:32px;background:#2D2D2D;border-radius:50%;display:flex;align-items:center;justify-content:center;color:white;font-size:1.2rem;font-weight:300;flex-shrink:0';
     btn.textContent = isToday ? '−' : '+';
+    const delJourBtn = document.createElement('button');
+    delJourBtn.onclick = function(e) { e.stopPropagation(); window.deleteMenuJour(idx); };
+    delJourBtn.style.cssText = 'flex-shrink:0;background:none;border:none;color:#ccc;font-size:0.85rem;cursor:pointer;padding:6px;margin-right:6px';
+    delJourBtn.textContent = '\ud83d\uddd1\ufe0f';
+    delJourBtn.title = 'Supprimer ce jour';
     header.appendChild(titleDiv);
+    header.appendChild(delJourBtn);
     header.appendChild(btn);
     const body = document.createElement('div');
     body.style.display = isToday ? 'block' : 'none';
@@ -8203,10 +8256,16 @@ function renderMenu(menu) {
         checkBtn.title = checked ? 'Repas pris' : 'Marquer comme pris';
         updateCaloriesFromMeals();
       };
+      const delRepasBtn = document.createElement('button');
+      delRepasBtn.onclick = function() { window.deleteMenuRepas(idx, repas); };
+      delRepasBtn.style.cssText = 'flex-shrink:0;background:none;border:none;color:#ccc;font-size:1.1rem;cursor:pointer;padding:4px';
+      delRepasBtn.textContent = '\u00d7';
+      delRepasBtn.title = 'Supprimer ce repas';
       row.appendChild(imgWrap);
       row.appendChild(info);
       row.appendChild(checkBtn);
       row.appendChild(recipeBtn);
+      row.appendChild(delRepasBtn);
       body.appendChild(row);
       // Impact sante par repas
       if (r.impact) {
