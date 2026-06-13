@@ -7698,7 +7698,6 @@ async function loadAnalysisHistory() {
   async function loadMenus() {
   window.initPersoMenus();
   window.initIaMenus();
-  if (typeof updateNutritionPanel === 'function') updateNutritionPanel();
   // Lire le plan directement depuis le profil API
   let isPaid = window.currentPlan === 'standard' || window.currentPlan === 'premium' || window.isTrial;
   if (!isPaid && authToken) {
@@ -7725,6 +7724,7 @@ async function loadAnalysisHistory() {
     else {
       // Aucun menu existant, afficher bouton de génération
       document.getElementById('menusLoading').style.display = 'none';
+      if (typeof updateNutritionPanel === 'function') updateNutritionPanel();
     }
   } catch(e) { console.error(e); }
 }
