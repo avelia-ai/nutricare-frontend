@@ -7653,6 +7653,7 @@ async function loadAnalysisHistory() {
   async function loadMenus() {
   window.initPersoMenus();
   window.initIaMenus();
+  if (typeof updateNutritionPanel === 'function') updateNutritionPanel();
   // Lire le plan directement depuis le profil API
   let isPaid = window.currentPlan === 'standard' || window.currentPlan === 'premium' || window.isTrial;
   if (!isPaid && authToken) {
@@ -7977,10 +7978,12 @@ let _currentMenu = null;
 let _donutChart = null;
 
 function updateNutritionPanel(dayIndex) {
-  if (!_currentMenu || !_currentMenu.semaine) return;
   const idx = dayIndex !== undefined ? dayIndex : parseInt(document.getElementById('menusDaySelector')?.value || 0);
-  const jour = _currentMenu.semaine[idx];
-  if (!jour) return;
+  const hasMenu = _currentMenu && _currentMenu.semaine;
+  const jour = hasMenu ? (_currentMenu.semaine[idx] || {}) : {};
+  const persoEnabledCheck = document.getElementById('persoMenusEnabled') ? document.getElementById('persoMenusEnabled').checked : false;
+  if (!hasMenu && !persoEnabledCheck) return;
+  document.getElementById('menusNutritionPanel').style.display = 'block';
 
   // Calculer totaux
   const repas = ['petit_dejeuner','dejeuner','collation','diner'];
