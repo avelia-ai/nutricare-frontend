@@ -606,6 +606,48 @@ window.renderSportSeances = function() {
   if (typeof window.updateCaloriesFromMeals === 'function') window.updateCaloriesFromMeals();
 };
 
+// ── OBJECTIFS NUTRITIONNELS PERSONNALISABLES ──
+window.getObjectifsNutrition = function() {
+  var custom = JSON.parse(localStorage.getItem('mirella_objectifs_nutrition') || '{}');
+  var profile = JSON.parse(localStorage.getItem('nutricare_profile') || '{}');
+  var defaultCal = 2000;
+  if (profile.objectif_nutritionnel === 'perte_de_poids') defaultCal = 1600;
+  else if (profile.objectif_nutritionnel === 'prise_de_masse') defaultCal = 2800;
+  else if (profile.objectif_nutritionnel === 'seche') defaultCal = 1800;
+  return {
+    cal: custom.cal || defaultCal,
+    glu: custom.glu || 250,
+    pro: custom.pro || 60,
+    lip: custom.lip || 70
+  };
+};
+window.openObjectifsModal = function() {
+  var o = window.getObjectifsNutrition();
+  document.getElementById('objKcal').value = o.cal;
+  document.getElementById('objGlu').value = o.glu;
+  document.getElementById('objPro').value = o.pro;
+  document.getElementById('objLip').value = o.lip;
+  document.getElementById('objectifsModal').style.display = 'flex';
+};
+window.saveObjectifsModal = function() {
+  var kcal = parseInt(document.getElementById('objKcal').value) || 2000;
+  var glu = parseInt(document.getElementById('objGlu').value) || 250;
+  var pro = parseInt(document.getElementById('objPro').value) || 60;
+  var lip = parseInt(document.getElementById('objLip').value) || 70;
+  window.setObjectifsNutrition({cal: kcal, glu: glu, pro: pro, lip: lip});
+  document.getElementById('objectifsModal').style.display = 'none';
+};
+window.resetObjectifsModal = function() {
+  localStorage.removeItem('mirella_objectifs_nutrition');
+  if (typeof window.updateCaloriesFromMeals === 'function') window.updateCaloriesFromMeals();
+  if (typeof updateNutritionPanel === 'function') updateNutritionPanel();
+  document.getElementById('objectifsModal').style.display = 'none';
+};
+window.setObjectifsNutrition = function(obj) {
+  localStorage.setItem('mirella_objectifs_nutrition', JSON.stringify(obj));
+  if (typeof window.updateCaloriesFromMeals === 'function') window.updateCaloriesFromMeals();
+  if (typeof updateNutritionPanel === 'function') updateNutritionPanel();
+};
 // ── CALORIES SUIVI ──
 window.updateCaloriesFromMeals = function() {
   var today = new Date().toISOString().split('T')[0];
@@ -624,11 +666,7 @@ window.updateCaloriesFromMeals = function() {
       savedForm.sportSeances.forEach(function(s){ totalSport += s.cal || 0; });
     }
   }
-  var profile = JSON.parse(localStorage.getItem('nutricare_profile') || '{}');
-  var objectif = 2000;
-  if (profile.objectif_nutritionnel === 'perte_de_poids') objectif = 1600;
-  else if (profile.objectif_nutritionnel === 'prise_de_masse') objectif = 2800;
-  else if (profile.objectif_nutritionnel === 'seche') objectif = 1800;
+  var objectif = window.getObjectifsNutrition().cal;
   var restantes = Math.max(0, objectif - totalConso + totalSport);
   var el = document.getElementById('donutCalories');
   var elConso = document.getElementById('donutConsommees');
@@ -3183,9 +3221,12 @@ function switchLang(lang) {
           </div>
         </div>
       </div>
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-top:8px">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-top:8px;gap:8px">
         <div id="nutritionAdvice" style="font-size:0.7rem;color:var(--coral)">Selectionnez un jour</div>
-        <button onclick="window.openAddSport()" style="background:var(--cream);color:var(--coral);border:none;border-radius:20px;padding:4px 12px;font-size:0.72rem;font-weight:700;cursor:pointer">+ Activité</button>
+        <div style="display:flex;gap:6px;flex-shrink:0">
+          <button onclick="window.openObjectifsModal()" style="background:var(--cream);color:#888;border:none;border-radius:20px;padding:4px 12px;font-size:0.72rem;font-weight:700;cursor:pointer">✏️ Objectifs</button>
+          <button onclick="window.openAddSport()" style="background:var(--cream);color:var(--coral);border:none;border-radius:20px;padding:4px 12px;font-size:0.72rem;font-weight:700;cursor:pointer">+ Activité</button>
+        </div>
       </div>
       <div id="sportSeancesMenus" style="margin-top:6px;display:flex;flex-direction:column;gap:4px"></div>
       <div id="totalCaloriesMenus" style="display:none;font-size:0.72rem;font-weight:700;color:#3B6D11;margin-top:4px"></div>
@@ -7809,8 +7850,8 @@ function updateNutritionPanel(dayIndex) {
     return acc;
   }, {cal:0, lip:0, glu:0, pro:0});
 
-  // Besoins estimés (moyennes)
-  const besoins = { cal: 2000, lip: 70, glu: 250, pro: 60 };
+  // Besoins estimés (personnalisables)
+  const besoins = window.getObjectifsNutrition();
   const pct = Math.min(100, Math.round(totals.cal / besoins.cal * 100));
 
   // Donut chart
@@ -10964,7 +11005,36 @@ document.addEventListener('deviceready', function() {
   </div>
 </div>
       <!-- Modal ajout sport -->
-      <div id="addSportModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:99999;align-items:flex-end;justify-content:center">
+      <div id="objectifsModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:99999;align-items:flex-end;justify-content:center">
+  <div style="background:white;border-radius:24px 24px 0 0;padding:24px;width:100%;max-width:600px">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+      <div style="font-size:1rem;font-weight:700">Mes objectifs nutritionnels</div>
+      <button onclick="document.getElementById('objectifsModal').style.display='none'" style="background:#f5f5f5;border:none;border-radius:50%;width:32px;height:32px;cursor:pointer">x</button>
+    </div>
+    <div style="font-size:0.8rem;color:#888;margin-bottom:16px">Personnalisez vos objectifs quotidiens. Laissez vide pour revenir aux valeurs recommandees selon votre profil.</div>
+    <div style="margin-bottom:14px">
+      <div style="font-size:0.8rem;font-weight:600;color:#555;margin-bottom:6px">Calories (kcal)</div>
+      <input type="number" id="objKcal" min="800" max="6000" placeholder="2000" style="width:100%;padding:12px;border:1px solid #eee;border-radius:10px;font-size:0.9rem;box-sizing:border-box">
+    </div>
+    <div style="display:flex;gap:12px;margin-bottom:16px">
+      <div style="flex:1">
+        <div style="font-size:0.8rem;font-weight:600;color:#555;margin-bottom:6px">Glucides (g)</div>
+        <input type="number" id="objGlu" min="0" max="900" placeholder="250" style="width:100%;padding:12px;border:1px solid #eee;border-radius:10px;font-size:0.9rem;box-sizing:border-box">
+      </div>
+      <div style="flex:1">
+        <div style="font-size:0.8rem;font-weight:600;color:#555;margin-bottom:6px">Proteines (g)</div>
+        <input type="number" id="objPro" min="0" max="400" placeholder="60" style="width:100%;padding:12px;border:1px solid #eee;border-radius:10px;font-size:0.9rem;box-sizing:border-box">
+      </div>
+      <div style="flex:1">
+        <div style="font-size:0.8rem;font-weight:600;color:#555;margin-bottom:6px">Lipides (g)</div>
+        <input type="number" id="objLip" min="0" max="300" placeholder="70" style="width:100%;padding:12px;border:1px solid #eee;border-radius:10px;font-size:0.9rem;box-sizing:border-box">
+      </div>
+    </div>
+    <button onclick="window.saveObjectifsModal()" style="width:100%;background:linear-gradient(135deg,var(--coral),var(--accent));color:white;border:none;border-radius:12px;padding:14px;font-size:0.95rem;font-weight:700;cursor:pointer;margin-bottom:10px">Enregistrer</button>
+    <button onclick="window.resetObjectifsModal()" style="width:100%;background:none;border:none;color:#aaa;font-size:0.82rem;cursor:pointer;padding:6px">Reinitialiser aux valeurs recommandees</button>
+  </div>
+</div>
+<div id="addSportModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:99999;align-items:flex-end;justify-content:center">
         <div style="background:white;border-radius:24px 24px 0 0;padding:24px;width:100%;max-width:600px">
           <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
             <div style="font-size:1rem;font-weight:700">Ajouter une seance</div>
