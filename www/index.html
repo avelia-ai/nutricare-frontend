@@ -617,6 +617,7 @@ window.togglePersoMenus = function() {
 window.onPersoMenusToggle = function() {
   var enabled = document.getElementById('persoMenusEnabled').checked;
   localStorage.setItem('mirella_perso_menus_enabled', enabled ? '1' : '0');
+  if (typeof updateNutritionPanel === 'function') updateNutritionPanel();
 };
 window.initPersoMenus = function() {
   var enabled = localStorage.getItem('mirella_perso_menus_enabled') === '1';
@@ -709,6 +710,7 @@ window.toggleIaMenus = function() {
 window.onIaMenusToggle = function() {
   var enabled = document.getElementById('iaMenusEnabled').checked;
   localStorage.setItem('mirella_ia_menus_enabled', enabled ? '1' : '0');
+  if (typeof updateNutritionPanel === 'function') updateNutritionPanel();
 };
 window.initIaMenus = function() {
   var stored = localStorage.getItem('mirella_ia_menus_enabled');
@@ -7982,7 +7984,9 @@ function updateNutritionPanel(dayIndex) {
 
   // Calculer totaux
   const repas = ['petit_dejeuner','dejeuner','collation','diner'];
+  const iaEnabled = document.getElementById('iaMenusEnabled') ? document.getElementById('iaMenusEnabled').checked : true;
   const totals = repas.reduce((acc, r) => {
+    if (!iaEnabled) return acc;
     const m = jour[r] || {};
     acc.cal += m.calories || 0;
     acc.lip += m.lipides || 0;
@@ -7990,6 +7994,21 @@ function updateNutritionPanel(dayIndex) {
     acc.pro += m.proteines || 0;
     return acc;
   }, {cal:0, lip:0, glu:0, pro:0});
+  // Ajouter les repas perso si actives
+  const persoEnabled = document.getElementById('persoMenusEnabled') ? document.getElementById('persoMenusEnabled').checked : false;
+  if (persoEnabled) {
+    const persoData = window.getPersoMenus();
+    const jourNom = window.PERSO_JOURS[idx];
+    const persoJour = persoData[jourNom] || {};
+    repas.forEach(r => {
+      (persoJour[r] || []).forEach(item => {
+        totals.cal += item.kcal || 0;
+        totals.glu += item.glu || 0;
+        totals.pro += item.pro || 0;
+        totals.lip += item.lip || 0;
+      });
+    });
+  }
 
   // Besoins estimés (personnalisables)
   const besoins = window.getObjectifsNutrition();
