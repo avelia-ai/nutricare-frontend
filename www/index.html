@@ -699,6 +699,29 @@ window.selectPersoJour = function(jour) {
   window._persoMenusJour = jour;
   window.renderPersoMenus();
 };
+window.toggleIaMenus = function() {
+  var content = document.getElementById('iaMenusContent');
+  var chevron = document.getElementById('iaMenusChevron');
+  var isOpen = content.style.display !== 'none';
+  content.style.display = isOpen ? 'none' : 'block';
+  chevron.style.transform = isOpen ? '' : 'rotate(180deg)';
+};
+window.onIaMenusToggle = function() {
+  var enabled = document.getElementById('iaMenusEnabled').checked;
+  localStorage.setItem('mirella_ia_menus_enabled', enabled ? '1' : '0');
+};
+window.initIaMenus = function() {
+  var stored = localStorage.getItem('mirella_ia_menus_enabled');
+  var enabled = stored === null ? true : stored === '1';
+  var cb = document.getElementById('iaMenusEnabled');
+  if (cb) cb.checked = enabled;
+  var content = document.getElementById('iaMenusContent');
+  var chevron = document.getElementById('iaMenusChevron');
+  if (content && content.style.display === 'none') {
+    content.style.display = 'block';
+    if (chevron) chevron.style.transform = 'rotate(180deg)';
+  }
+};
 // ── OBJECTIFS NUTRITIONNELS PERSONNALISABLES ──
 window.getObjectifsNutrition = function() {
   var custom = JSON.parse(localStorage.getItem('mirella_objectifs_nutrition') || '{}');
@@ -3165,7 +3188,16 @@ function switchLang(lang) {
   </div>
   <!-- Contenu menus -->
   <div id="menusContent" style="display:none">
-    <div style="background:white;border-radius:16px;padding:20px;margin-bottom:24px;border:1px solid #f0ece8">
+  <div style="background:white;border-radius:16px;padding:16px;margin-bottom:16px;border:1px solid #f0ece8">
+    <div style="display:flex;align-items:center;justify-content:space-between;cursor:pointer" onclick="window.toggleIaMenus()">
+      <div style="display:flex;align-items:center;gap:10px">
+        <input type="checkbox" id="iaMenusEnabled" onchange="event.stopPropagation();window.onIaMenusToggle()" style="width:20px;height:20px;accent-color:var(--coral)">
+        <div style="font-size:0.95rem;font-weight:700;color:#2D2D2D">🤖 Menu genere par Mirella</div>
+      </div>
+      <div id="iaMenusChevron" style="font-size:1.1rem;color:#aaa;transition:transform 0.2s">▾</div>
+    </div>
+    <div style="font-size:0.78rem;color:#888;margin-top:4px">Generez automatiquement un menu personnalise selon votre profil et vos preferences</div>
+    <div id="iaMenusContent" style="display:none;margin-top:16px">
       <div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin-bottom:16px">
         <select id="menuObjectif" style="padding:10px 16px;border:1.5px solid rgba(255,107,107,0.3);border-radius:8px;font-size:0.88rem;font-family:'DM Sans',sans-serif;background:white;color:#2D2D2D;cursor:pointer;flex:1;min-width:200px">
           <option value="">🎯 Objectif nutritionnel</option>
@@ -3232,6 +3264,8 @@ function switchLang(lang) {
         </div>
       </div>
     </div>
+    </div>
+  </div>
 
     <!-- Loading -->
     <div id="menusLoading" style="display:none;text-align:center;padding:48px">
@@ -7616,6 +7650,7 @@ async function loadAnalysisHistory() {
 }
   async function loadMenus() {
   window.initPersoMenus();
+  window.initIaMenus();
   // Lire le plan directement depuis le profil API
   let isPaid = window.currentPlan === 'standard' || window.currentPlan === 'premium' || window.isTrial;
   if (!isPaid && authToken) {
