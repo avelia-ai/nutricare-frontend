@@ -611,6 +611,7 @@ window.togglePersoMenus = function() {
   var chevron = document.getElementById('persoMenusChevron');
   var isOpen = content.style.display !== 'none';
   content.style.display = isOpen ? 'none' : 'block';
+  if (!isOpen) window.renderPersoMenus();
   chevron.style.transform = isOpen ? '' : 'rotate(180deg)';
 };
 window.onPersoMenusToggle = function() {
@@ -621,6 +622,82 @@ window.initPersoMenus = function() {
   var enabled = localStorage.getItem('mirella_perso_menus_enabled') === '1';
   var cb = document.getElementById('persoMenusEnabled');
   if (cb) cb.checked = enabled;
+};
+window.PERSO_JOURS = ["Lundi","Mardi","Mercredi","Jeudi","Vendredi","Samedi","Dimanche"];
+window.PERSO_REPAS = [["petit_dejeuner","Petit-dejeuner"],["dejeuner","Dejeuner"],["collation","Collation"],["diner","Diner"]];
+window._persoMenusJour = window._persoMenusJour || "Lundi";
+window.getPersoMenus = function() {
+  return JSON.parse(localStorage.getItem('mirella_menus_perso') || '{}');
+};
+window.savePersoMenus = function(data) {
+  localStorage.setItem('mirella_menus_perso', JSON.stringify(data));
+};
+window.renderPersoMenus = function() {
+  var container = document.getElementById('persoMenusContent');
+  if (!container) return;
+  var jours = window.PERSO_JOURS;
+  var jourActif = window._persoMenusJour;
+  var selectorHtml = '<div style="display:flex;gap:6px;overflow-x:auto;margin-bottom:14px;padding-bottom:4px">' + jours.map(function(j){
+    var active = j === jourActif;
+    return '<button onclick="window.selectPersoJour(\'' + j + '\')" style="flex-shrink:0;padding:6px 14px;border-radius:20px;border:1.5px solid ' + (active?'var(--coral)':'#eee') + ';background:' + (active?'var(--coral)':'white') + ';color:' + (active?'white':'#555') + ';font-size:0.78rem;font-weight:600;cursor:pointer">' + j + '</button>';
+  }).join('') + '</div>';
+  var data = window.getPersoMenus();
+  var jourData = data[jourActif] || {};
+  var repasHtml = window.PERSO_REPAS.map(function(r){
+    var key = r[0], label = r[1];
+    var items = jourData[key] || [];
+    var itemsHtml = items.map(function(it, idx){
+      var macros = (it.kcal||it.glu||it.pro||it.lip) ? ' &middot; ' + (it.kcal||0) + ' kcal' : '';
+      return '<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid #f5f5f5"><span style="font-size:0.85rem;color:#333">' + it.nom + macros + '</span><button onclick="window.removePersoRepas(\'' + key + '\',' + idx + ')" style="background:none;border:none;color:#ccc;cursor:pointer;font-size:1rem">&times;</button></div>';
+    }).join('');
+    return '<div style="background:#fafafa;border-radius:12px;padding:14px;margin-bottom:10px">' +
+      '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px"><span style="font-size:0.85rem;font-weight:700;color:#2D2D2D">' + label + '</span>' +
+      '<button onclick="window.openAddPersoRepas(\'' + key + '\')" style="background:none;border:none;color:var(--coral);font-size:0.78rem;font-weight:700;cursor:pointer">+ Ajouter</button></div>' +
+      (itemsHtml || '<div style="font-size:0.78rem;color:#bbb;padding:4px 0">Aucun repas ajoute</div>') +
+      '</div>';
+  }).join('');
+  container.innerHTML = selectorHtml + repasHtml;
+};
+window.removePersoRepas = function(key, idx) {
+  var data = window.getPersoMenus();
+  var jour = window._persoMenusJour;
+  if (data[jour] && data[jour][key]) {
+    data[jour][key].splice(idx, 1);
+    window.savePersoMenus(data);
+    window.renderPersoMenus();
+    if (typeof updateNutritionPanel === 'function') updateNutritionPanel();
+  }
+};
+window.openAddPersoRepas = function(key) {
+  document.getElementById('persoRepasTarget').value = key;
+  document.getElementById('persoRepasNom').value = '';
+  document.getElementById('persoRepasKcal').value = '';
+  document.getElementById('persoRepasGlu').value = '';
+  document.getElementById('persoRepasPro').value = '';
+  document.getElementById('persoRepasLip').value = '';
+  document.getElementById('persoRepasModal').style.display = 'flex';
+};
+window.savePersoRepas = function() {
+  var key = document.getElementById('persoRepasTarget').value;
+  var nom = document.getElementById('persoRepasNom').value.trim();
+  if (!nom) { alert("Veuillez entrer un nom de repas"); return; }
+  var kcal = parseInt(document.getElementById('persoRepasKcal').value) || 0;
+  var glu = parseInt(document.getElementById('persoRepasGlu').value) || 0;
+  var pro = parseInt(document.getElementById('persoRepasPro').value) || 0;
+  var lip = parseInt(document.getElementById('persoRepasLip').value) || 0;
+  var data = window.getPersoMenus();
+  var jour = window._persoMenusJour;
+  if (!data[jour]) data[jour] = {};
+  if (!data[jour][key]) data[jour][key] = [];
+  data[jour][key].push({nom: nom, kcal: kcal, glu: glu, pro: pro, lip: lip});
+  window.savePersoMenus(data);
+  document.getElementById('persoRepasModal').style.display = 'none';
+  window.renderPersoMenus();
+  if (typeof updateNutritionPanel === 'function') updateNutritionPanel();
+};
+window.selectPersoJour = function(jour) {
+  window._persoMenusJour = jour;
+  window.renderPersoMenus();
 };
 // ── OBJECTIFS NUTRITIONNELS PERSONNALISABLES ──
 window.getObjectifsNutrition = function() {
@@ -11034,7 +11111,30 @@ document.addEventListener('deviceready', function() {
   </div>
 </div>
       <!-- Modal ajout sport -->
-      <div id="objectifsModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:99999;align-items:flex-end;justify-content:center">
+      <div id="persoRepasModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:99999;align-items:flex-end;justify-content:center">
+  <div style="background:white;border-radius:24px 24px 0 0;padding:24px;width:100%;max-width:600px">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+      <div style="font-size:1rem;font-weight:700">Ajouter un repas</div>
+      <button onclick="document.getElementById('persoRepasModal').style.display='none'" style="background:#f5f5f5;border:none;border-radius:50%;width:32px;height:32px;cursor:pointer">x</button>
+    </div>
+    <div style="margin-bottom:14px">
+      <div style="font-size:0.8rem;font-weight:600;color:#555;margin-bottom:6px">Nom du repas</div>
+      <input type="text" id="persoRepasNom" placeholder="Ex: Salade de quinoa" style="width:100%;padding:12px;border:1px solid #eee;border-radius:10px;font-size:0.9rem;box-sizing:border-box">
+    </div>
+    <div style="font-size:0.78rem;color:#888;margin-bottom:8px">Valeurs nutritionnelles (optionnel)</div>
+    <div style="display:flex;gap:10px;margin-bottom:16px">
+      <div style="flex:1"><div style="font-size:0.75rem;color:#888;margin-bottom:4px">Kcal</div><input type="number" id="persoRepasKcal" min="0" max="3000" placeholder="0" style="width:100%;padding:10px;border:1px solid #eee;border-radius:8px;font-size:0.85rem;box-sizing:border-box"></div>
+      <div style="flex:1"><div style="font-size:0.75rem;color:#888;margin-bottom:4px">Glucides (g)</div><input type="number" id="persoRepasGlu" min="0" max="500" placeholder="0" style="width:100%;padding:10px;border:1px solid #eee;border-radius:8px;font-size:0.85rem;box-sizing:border-box"></div>
+    </div>
+    <div style="display:flex;gap:10px;margin-bottom:16px">
+      <div style="flex:1"><div style="font-size:0.75rem;color:#888;margin-bottom:4px">Proteines (g)</div><input type="number" id="persoRepasPro" min="0" max="300" placeholder="0" style="width:100%;padding:10px;border:1px solid #eee;border-radius:8px;font-size:0.85rem;box-sizing:border-box"></div>
+      <div style="flex:1"><div style="font-size:0.75rem;color:#888;margin-bottom:4px">Lipides (g)</div><input type="number" id="persoRepasLip" min="0" max="300" placeholder="0" style="width:100%;padding:10px;border:1px solid #eee;border-radius:8px;font-size:0.85rem;box-sizing:border-box"></div>
+    </div>
+    <input type="hidden" id="persoRepasTarget">
+    <button onclick="window.savePersoRepas()" style="width:100%;background:linear-gradient(135deg,var(--coral),var(--accent));color:white;border:none;border-radius:12px;padding:14px;font-size:0.95rem;font-weight:700;cursor:pointer">Ajouter</button>
+  </div>
+</div>
+<div id="objectifsModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:99999;align-items:flex-end;justify-content:center">
   <div style="background:white;border-radius:24px 24px 0 0;padding:24px;width:100%;max-width:600px">
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
       <div style="font-size:1rem;font-weight:700">Mes objectifs nutritionnels</div>
