@@ -8277,11 +8277,13 @@ function renderMenu(menu) {
       checkBtn.title = isChecked ? 'Repas pris' : 'Marquer comme pris';
       checkBtn.onclick = function() {
         const key = 'mealcheck_' + jour.jour + '_' + repas;
+        console.log('[DEBUG] key=', key, 'calories=', r.calories, 'jour=', jour.jour);
         const meals = JSON.parse(localStorage.getItem('mirella_checked_meals') || '{}');
         const checked = !meals[key];
         if (checked) meals[key] = r.calories || 0;
         else delete meals[key];
         localStorage.setItem('mirella_checked_meals', JSON.stringify(meals));
+        console.log('[DEBUG] meals after=', JSON.stringify(meals));
         checkBtn.style.borderColor = checked ? '#22c55e' : '#eee';
         checkBtn.style.background = checked ? '#22c55e' : 'white';
         checkBtn.style.color = checked ? 'white' : '#ccc';
