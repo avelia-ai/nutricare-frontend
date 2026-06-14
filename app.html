@@ -832,11 +832,10 @@ window.setObjectifsNutrition = function(obj) {
 };
 // ── CALORIES SUIVI ──
 window.updateCaloriesFromMeals = function() {
-  var today = new Date().toISOString().split('T')[0];
   var meals = JSON.parse(localStorage.getItem('mirella_checked_meals') || '{}');
   var totalConso = 0;
   Object.keys(meals).forEach(function(k) {
-    if (k.startsWith(today)) totalConso += meals[k] || 0;
+    if (k.startsWith('mealcheck_')) totalConso += meals[k] || 0;
   });
   // Calories brulees via sport (depuis score sante)
   var totalSport = 0;
