@@ -315,7 +315,6 @@
 @media (max-width: 768px) {
   #oracleScannerGrid { grid-template-columns: 1fr !important; }
   #oracleView { padding: 12px !important; padding-bottom: 120px !important; }
-  #menusView { padding-bottom: 400px !important; }
   #iaMenusContent { padding-bottom: 40px; }
   #oracleTabs { gap: 3px !important; }
   #oracleTabs div { padding: 4px 8px !important; font-size: 10px !important; }
@@ -7606,7 +7605,12 @@ Réponds UNIQUEMENT en JSON valide avec cette structure exacte:
     if (document.getElementById('fitnessView')) document.getElementById('fitnessView').style.display = view === 'fitness' ? 'block' : 'none';
     if (view === 'fitness') loadFitnessView();
     document.getElementById('menusView').style.display = view === 'menus' ? 'block' : 'none';
-if (view === 'menus') { loadMenus(); setTimeout(initBottomNav, 100); }
+if (view === 'menus') {
+  var mv = document.getElementById('menusView');
+  mv.style.cssText = 'display:block;position:fixed;top:56px;left:0;right:0;bottom:60px;overflow-y:auto;overflow-x:hidden;background:var(--cream);z-index:10;padding:16px 16px 120px;box-sizing:border-box;width:100%';
+  loadMenus();
+  setTimeout(function(){ mv.scrollTop = 0; if(typeof initBottomNav==='function') initBottomNav(); }, 300);
+}
 document.getElementById('analysisView').style.display = view === 'analysis' ? 'block' : 'none';
 if (view === 'analysis') loadAnalysis();
   }
