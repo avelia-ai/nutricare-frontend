@@ -843,6 +843,7 @@ window.updateCaloriesFromMeals = function() {
     window._sportSeances.forEach(function(s){ totalSport += s.cal || 0; });
   } else {
     var savedForm = JSON.parse(localStorage.getItem('mirella_score_form') || '{}');
+    var today = new Date().toISOString().split('T')[0];
     if (savedForm.date === today && savedForm.sportSeances) {
       savedForm.sportSeances.forEach(function(s){ totalSport += s.cal || 0; });
     }
