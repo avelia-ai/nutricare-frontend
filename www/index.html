@@ -647,9 +647,13 @@ window.renderPersoMenus = function() {
   var repasHtml = window.PERSO_REPAS.map(function(r){
     var key = r[0], label = r[1];
     var items = jourData[key] || [];
+    var checkedMeals = JSON.parse(localStorage.getItem('mirella_checked_meals') || '{}');
     var itemsHtml = items.map(function(it, idx){
       var macros = (it.kcal||it.glu||it.pro||it.lip) ? ' &middot; ' + (it.kcal||0) + ' kcal' : '';
-      return '<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid #f5f5f5"><span style="font-size:0.85rem;color:#333">' + it.nom + macros + '</span><button onclick="window.removePersoRepas(\'' + key + '\',' + idx + ')" style="background:none;border:none;color:#ccc;cursor:pointer;font-size:1rem">&times;</button></div>';
+      var checkKey = 'mealcheck_perso_' + jourActif + '_' + key + '_' + idx;
+      var isChecked = !!checkedMeals[checkKey];
+      var checkStyle = 'flex-shrink:0;width:28px;height:28px;border-radius:50%;border:2px solid ' + (isChecked ? '#22c55e' : '#eee') + ';background:' + (isChecked ? '#22c55e' : 'white') + ';color:' + (isChecked ? 'white' : '#ccc') + ';font-size:0.85rem;cursor:pointer;display:flex;align-items:center;justify-content:center;margin-right:8px';
+      return '<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid #f5f5f5"><div style="display:flex;align-items:center;flex:1;min-width:0"><button onclick="window.togglePersoRepasChecked(\'' + checkKey + '\',\'' + key + '\',' + idx + ')" style="' + checkStyle + '" title="Marquer comme pris">&#10003;</button><span style="font-size:0.85rem;color:#333;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">' + it.nom + macros + '</span></div><button onclick="window.removePersoRepas(\'' + key + '\',' + idx + ')" style="background:none;border:none;color:#ccc;cursor:pointer;font-size:1rem;flex-shrink:0">&times;</button></div>';
     }).join('');
     return '<div style="background:#fafafa;border-radius:12px;padding:14px;margin-bottom:10px">' +
       '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px"><span style="font-size:0.85rem;font-weight:700;color:#2D2D2D">' + label + '</span>' +
@@ -693,6 +697,22 @@ window.savePersoRepas = function() {
   data[jour][key].push({nom: nom, kcal: kcal, glu: glu, pro: pro, lip: lip});
   window.savePersoMenus(data);
   document.getElementById('persoRepasModal').style.display = 'none';
+  window.renderPersoMenus();
+  if (typeof updateNutritionPanel === 'function') updateNutritionPanel();
+};
+window.togglePersoRepasChecked = function(checkKey, repasKey, idx) {
+  var data = window.getPersoMenus();
+  var jour = window._persoMenusJour;
+  var item = (data[jour] && data[jour][repasKey]) ? data[jour][repasKey][idx] : null;
+  if (!item) return;
+  var meals = JSON.parse(localStorage.getItem('mirella_checked_meals') || '{}');
+  var ck = 'mealcheck_perso_' + jour + '_' + repasKey + '_' + idx;
+  if (meals[ck]) {
+    delete meals[ck];
+  } else {
+    meals[ck] = item.kcal || 0;
+  }
+  localStorage.setItem('mirella_checked_meals', JSON.stringify(meals));
   window.renderPersoMenus();
   if (typeof updateNutritionPanel === 'function') updateNutritionPanel();
 };
@@ -8030,26 +8050,33 @@ function updateNutritionPanel(dayIndex) {
   if (!hasMenu && !persoEnabledCheck) return;
   document.getElementById('menusNutritionPanel').style.display = 'block';
 
-  // Calculer totaux
+  // Calculer totaux consommes (repas coches uniquement)
   const repas = ['petit_dejeuner','dejeuner','collation','diner'];
   const iaEnabled = document.getElementById('iaMenusEnabled') ? document.getElementById('iaMenusEnabled').checked : true;
-  const totals = repas.reduce((acc, r) => {
-    if (!iaEnabled) return acc;
-    const m = jour[r] || {};
-    acc.cal += m.calories || 0;
-    acc.lip += m.lipides || 0;
-    acc.glu += m.glucides || 0;
-    acc.pro += m.proteines || 0;
-    return acc;
-  }, {cal:0, lip:0, glu:0, pro:0});
-  // Ajouter les repas perso si actives
+  const checkedMeals = JSON.parse(localStorage.getItem('mirella_checked_meals') || '{}');
+  const totals = {cal:0, lip:0, glu:0, pro:0};
+  if (iaEnabled && jour.jour) {
+    repas.forEach(r => {
+      const m = jour[r];
+      if (!m) return;
+      const ck = 'mealcheck_' + jour.jour + '_' + r;
+      if (!checkedMeals[ck]) return;
+      totals.cal += m.calories || 0;
+      totals.lip += m.lipides || 0;
+      totals.glu += m.glucides || 0;
+      totals.pro += m.proteines || 0;
+    });
+  }
+  // Ajouter les repas perso coches si actives
   const persoEnabled = document.getElementById('persoMenusEnabled') ? document.getElementById('persoMenusEnabled').checked : false;
+  const jourNom = window.PERSO_JOURS[idx];
   if (persoEnabled) {
     const persoData = window.getPersoMenus();
-    const jourNom = window.PERSO_JOURS[idx];
     const persoJour = persoData[jourNom] || {};
     repas.forEach(r => {
-      (persoJour[r] || []).forEach(item => {
+      (persoJour[r] || []).forEach((item, pidx) => {
+        const ck = 'mealcheck_perso_' + jourNom + '_' + r + '_' + pidx;
+        if (!checkedMeals[ck]) return;
         totals.cal += item.kcal || 0;
         totals.glu += item.glu || 0;
         totals.pro += item.pro || 0;
@@ -8236,7 +8263,7 @@ function renderMenu(menu) {
       recipeBtn.style.cssText = 'flex-shrink:0;background:#F8F4F0;color:#2D2D2D;border:none;border-radius:10px;padding:8px 12px;font-size:0.72rem;cursor:pointer;font-weight:600';
       recipeBtn.textContent = '📖';
       // Bouton cocher repas
-      const checkKey = new Date().toISOString().split('T')[0] + '_' + jour.jour + '_' + repas;
+      const checkKey = 'mealcheck_' + jour.jour + '_' + repas;
       const checkedMeals = JSON.parse(localStorage.getItem('mirella_checked_meals') || '{}');
       const isChecked = !!checkedMeals[checkKey];
       const checkBtn = document.createElement('button');
@@ -8244,7 +8271,7 @@ function renderMenu(menu) {
       checkBtn.textContent = '✓';
       checkBtn.title = isChecked ? 'Repas pris' : 'Marquer comme pris';
       checkBtn.onclick = function() {
-        const key = new Date().toISOString().split('T')[0] + '_' + jour.jour + '_' + repas;
+        const key = 'mealcheck_' + jour.jour + '_' + repas;
         const meals = JSON.parse(localStorage.getItem('mirella_checked_meals') || '{}');
         const checked = !meals[key];
         if (checked) meals[key] = r.calories || 0;
@@ -8254,7 +8281,7 @@ function renderMenu(menu) {
         checkBtn.style.background = checked ? '#22c55e' : 'white';
         checkBtn.style.color = checked ? 'white' : '#ccc';
         checkBtn.title = checked ? 'Repas pris' : 'Marquer comme pris';
-        updateCaloriesFromMeals();
+        if (typeof updateNutritionPanel === 'function') updateNutritionPanel();
       };
       const delRepasBtn = document.createElement('button');
       delRepasBtn.onclick = function() { window.deleteMenuRepas(idx, repas); };
