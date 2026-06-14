@@ -744,6 +744,7 @@ window.initIaMenus = function() {
     content.style.display = 'block';
     if (chevron) chevron.style.transform = 'rotate(180deg)';
   }
+  setTimeout(function() { if (typeof initBottomNav === 'function') initBottomNav(); }, 200);
 };
 window.getCurrentWeekKey = function() {
   if (window._currentWeekKey) return window._currentWeekKey;
