@@ -3495,7 +3495,7 @@ function switchLang(lang) {
       <!-- Calories -->
       <div style="background:#f9f9f9;border-radius:16px;padding:14px 16px;display:flex;align-items:center;gap:16px;margin-bottom:10px">
         <div style="position:relative;width:88px;height:88px;flex-shrink:0">
-          <canvas id="caloriesDonut" width="88" height="88" style="width:88px;height:88px;display:block"></canvas>
+          <canvas id="caloriesDonut" style="width:88px;height:88px;display:block"></canvas>
           <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center">
             <div id="donutCalories" style="font-size:1.15rem;font-weight:800;color:#1a1a1a;line-height:1">0</div>
             <div style="font-size:0.48rem;color:#aaa;margin-top:1px">kcal</div>
@@ -8271,7 +8271,6 @@ function updateNutritionPanel(dayIndex) {
   if (document.getElementById('nutritionAdvice')) document.getElementById('nutritionAdvice').textContent = adviceTxt;
   window.updateCaloriesFromMeals();
   if (document.getElementById('donutObjectif')) document.getElementById('donutObjectif').textContent = besoins.cal + ' kcal';
-  document.getElementById('nutritionAdvice').textContent = advice;
 
   // Sélectionner le bon jour dans le dropdown
   const sel = document.getElementById('menusDaySelector');
