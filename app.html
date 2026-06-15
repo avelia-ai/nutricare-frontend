@@ -848,8 +848,12 @@ window.setObjectifsNutrition = function(obj) {
 window.updateCaloriesFromMeals = function() {
   var meals = JSON.parse(localStorage.getItem('mirella_checked_meals') || '{}');
   var totalConso = 0;
+  var idx = parseInt(document.getElementById('menusDaySelector')?.value || 0);
+  var jourNom = window.PERSO_JOURS ? window.PERSO_JOURS[idx] : null;
   Object.keys(meals).forEach(function(k) {
-    if (k.startsWith('mealcheck_')) totalConso += meals[k] || 0;
+    if (!k.startsWith('mealcheck_')) return;
+    if (jourNom && !k.startsWith('mealcheck_' + jourNom + '_') && !k.startsWith('mealcheck_perso_' + jourNom + '_')) return;
+    totalConso += meals[k] || 0;
   });
   // Calories brulees via sport (depuis score sante)
   var totalSport = 0;
