@@ -22,7 +22,9 @@ jobs:
         run: npm install --ignore-scripts
 
       - name: Sync Capacitor
-        run: npx cap sync android
+        run: |
+          cp app.html www/app.html
+          npx cap sync android
 
       - name: Setup Java
         uses: actions/setup-java@v4
