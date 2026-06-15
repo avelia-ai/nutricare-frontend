@@ -7856,6 +7856,18 @@ async function loadAnalysisHistory() {
 }
 
 var activeMenuFilters = new Set();
+  window.applySelectFilter = function() {
+    activeMenuFilters.clear();
+    ['filterExclusions','filterCuisine','filterSante','filterCycle'].forEach(function(id) {
+      var el = document.getElementById(id);
+      if (el && el.value) activeMenuFilters.add(el.value);
+    });
+  };
+  (function() {
+    var profile = JSON.parse(localStorage.getItem('nutricare_profile') || '{}');
+    var wrap = document.getElementById('filterCycleWrap');
+    if (wrap && profile.sexe === 'homme') wrap.style.display = 'none';
+  })();
 
   function toggleMenuFilter(btn, filter) {
     if (activeMenuFilters.has(filter)) {
