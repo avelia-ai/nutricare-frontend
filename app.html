@@ -822,15 +822,32 @@ window.applyPersoObjectif = function(val) {
 window.getObjectifsNutrition = function() {
   var custom = JSON.parse(localStorage.getItem('mirella_objectifs_nutrition') || '{}');
   var profile = JSON.parse(localStorage.getItem('nutricare_profile') || '{}');
-  var defaultCal = 2000;
-  if (profile.objectif_nutritionnel === 'perte_de_poids') defaultCal = 1600;
-  else if (profile.objectif_nutritionnel === 'prise_de_masse') defaultCal = 2800;
-  else if (profile.objectif_nutritionnel === 'seche') defaultCal = 1800;
+  // Mifflin-St Jeor
+  var poids = parseFloat(profile.poids) || 70;
+  var taille = parseFloat(profile.taille) || 170;
+  var age = parseInt(profile.age) || 30;
+  var sexe = profile.sexe || 'homme';
+  var bmr = sexe === 'femme'
+    ? 10 * poids + 6.25 * taille - 5 * age - 161
+    : 10 * poids + 6.25 * taille - 5 * age + 5;
+  var facteurs = { sedentaire: 1.2, leger: 1.375, modere: 1.55, actif: 1.725, tres_actif: 1.9 };
+  var facteur = facteurs[profile.niveau_activite] || 1.375;
+  var tdee = Math.round(bmr * facteur);
+  // Ajuster selon objectif
+  var obj = profile.objectif_nutritionnel || '';
+  var defaultCal = tdee;
+  if (obj === 'perte_de_poids') defaultCal = Math.round(tdee * 0.8);
+  else if (obj === 'seche') defaultCal = Math.round(tdee * 0.85);
+  else if (obj === 'prise_de_masse') defaultCal = Math.round(tdee * 1.15);
+  // Macros proportionnelles
+  var defaultGlu = Math.round(defaultCal * 0.45 / 4);
+  var defaultPro = Math.round(defaultCal * 0.25 / 4);
+  var defaultLip = Math.round(defaultCal * 0.30 / 9);
   return {
     cal: custom.cal || defaultCal,
-    glu: custom.glu || 250,
-    pro: custom.pro || 60,
-    lip: custom.lip || 70
+    glu: custom.glu || defaultGlu,
+    pro: custom.pro || defaultPro,
+    lip: custom.lip || defaultLip
   };
 };
 window.openObjectifsModal = function() {
@@ -3032,6 +3049,29 @@ function switchLang(lang) {
               <option value="femme">Femme</option>
               <option value="homme">Homme</option>
               <option value="autre">Autre / Ne souhaite pas préciser</option>
+            </select>
+          </div>
+          <div class="profile-field">
+            <label class="profile-label">Âge</label>
+            <input type="number" class="profile-input" id="profileAge" placeholder="ex: 35" min="10" max="120">
+          </div>
+          <div class="profile-field">
+            <label class="profile-label">Poids (kg)</label>
+            <input type="number" class="profile-input" id="profilePoids" placeholder="ex: 70" min="30" max="300" step="0.1">
+          </div>
+          <div class="profile-field">
+            <label class="profile-label">Taille (cm)</label>
+            <input type="number" class="profile-input" id="profileTaille" placeholder="ex: 170" min="100" max="250">
+          </div>
+          <div class="profile-field">
+            <label class="profile-label">Niveau d'activité</label>
+            <select class="profile-input" id="profileActivite">
+              <option value="">Non renseigné</option>
+              <option value="sedentaire">🛋️ Sédentaire (peu/pas de sport)</option>
+              <option value="leger">🚶 Légèrement actif (1-3x/semaine)</option>
+              <option value="modere">🏃 Modérément actif (3-5x/semaine)</option>
+              <option value="actif">💪 Très actif (6-7x/semaine)</option>
+              <option value="tres_actif">🏋️ Extrêmement actif (sport intensif)</option>
             </select>
           </div>
           <div class="profile-field" style="grid-column:span 2">
@@ -5297,6 +5337,10 @@ function switchLang(lang) {
       document.getElementById('profileBudget').value = profile.budget_alimentaire || '';
       if (document.getElementById('profileEthnicity')) document.getElementById('profileEthnicity').value = profile.ethnicity || '';
       if (document.getElementById('profileSexe')) document.getElementById('profileSexe').value = profile.sexe || '';
+      if (document.getElementById('profileAge')) document.getElementById('profileAge').value = profile.age || '';
+      if (document.getElementById('profilePoids')) document.getElementById('profilePoids').value = profile.poids || '';
+      if (document.getElementById('profileTaille')) document.getElementById('profileTaille').value = profile.taille || '';
+      if (document.getElementById('profileActivite')) document.getElementById('profileActivite').value = profile.niveau_activite || '';
       var btnCycle = document.getElementById('btnCycleFeminin'); if(btnCycle) btnCycle.style.display = profile.sexe === 'femme' ? 'flex' : 'none';
       if (document.getElementById('profileWakeUp')) document.getElementById('profileWakeUp').value = profile.wake_up || '07:00';
       if (document.getElementById('profileSleep')) document.getElementById('profileSleep').value = profile.sleep_time || '23:00';
@@ -9237,7 +9281,11 @@ async function deleteProfessional(id) {
       sleep_time: document.getElementById('profileSleep')?.value || '',
       work_start: document.getElementById('profileWorkStart')?.value || '',
       work_end: document.getElementById('profileWorkEnd')?.value || '',
-      chrono_goal: document.getElementById('profileChronoGoal')?.value || ''
+      chrono_goal: document.getElementById('profileChronoGoal')?.value || '',
+      age: parseInt(document.getElementById('profileAge')?.value) || null,
+      poids: parseFloat(document.getElementById('profilePoids')?.value) || null,
+      taille: parseFloat(document.getElementById('profileTaille')?.value) || null,
+      niveau_activite: document.getElementById('profileActivite')?.value || ''
     };
 
     try {
