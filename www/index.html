@@ -8094,10 +8094,9 @@ function updateNutritionPanel(dayIndex) {
       totals.pro += m.proteines || 0;
     });
   }
-  // Ajouter les repas perso coches si actives
-  const persoEnabled = document.getElementById('persoMenusEnabled') ? document.getElementById('persoMenusEnabled').checked : false;
+  // Ajouter les repas perso coches (toujours, si coche)
   const jourNom = window.PERSO_JOURS[idx];
-  if (persoEnabled) {
+  if (true) {
     const persoData = window.getPersoMenus();
     const persoJour = persoData[jourNom] || {};
     repas.forEach(r => {
