@@ -879,8 +879,11 @@ window.updateCaloriesFromMeals = function() {
   if (canvas && window._donutChart) {
     window._donutChart.data.datasets[0].data = [totalConso, Math.max(0, objectif - totalConso)];
     window._donutChart.update();
-  } else if (canvas && !window._donutChart) {
+  } else if (canvas) {
     var ctx = canvas.getContext('2d');
+    var existing = Chart.getChart(canvas);
+    if (existing) existing.destroy();
+    if (window._donutChart) { window._donutChart.destroy(); window._donutChart = null; }
     window._donutChart = new Chart(ctx, {
       type: 'doughnut',
       data: { datasets: [{ data: [totalConso, objectif - totalConso], backgroundColor: ['var(--coral)','#f0f0f0'], borderWidth: 0 }] },
@@ -8117,7 +8120,9 @@ function updateNutritionPanel(dayIndex) {
   const canvas = document.getElementById('caloriesDonut');
   if (canvas) {
     const ctx = canvas.getContext('2d');
-    if (_donutChart) _donutChart.destroy();
+    if (_donutChart) { _donutChart.destroy(); _donutChart = null; }
+    const existingChart = Chart.getChart(canvas);
+    if (existingChart) existingChart.destroy();
     _donutChart = new Chart(ctx, {
       type: 'doughnut',
       data: {
