@@ -804,17 +804,21 @@ window.deleteMenuSemaine = function() {
 };
 // ── OBJECTIFS NUTRITIONNELS PERSONNALISABLES ──
 window.applyPersoObjectif = function(val) {
-  var presets = {
-    'equilibre':      {cal:2000, glu:250, pro:75,  lip:70},
-    'perte_de_poids': {cal:1600, glu:180, pro:100, lip:55},
-    'seche':          {cal:1800, glu:150, pro:130, lip:60},
-    'prise_de_masse': {cal:2800, glu:350, pro:150, lip:90},
-    'endurance':      {cal:2400, glu:320, pro:90,  lip:75}
-  };
-  if (val && presets[val]) {
-    localStorage.setItem('mirella_objectifs_nutrition', JSON.stringify(presets[val]));
-  } else {
-    localStorage.removeItem('mirella_objectifs_nutrition');
+  // Mettre a jour l'objectif dans le profil local et recalculer via Mifflin-St Jeor
+  localStorage.removeItem('mirella_objectifs_nutrition'); // reset custom pour utiliser Mifflin
+  var profile = JSON.parse(localStorage.getItem('nutricare_profile') || '{}');
+  profile.objectif_nutritionnel = val || '';
+  localStorage.setItem('nutricare_profile', JSON.stringify(profile));
+  // Afficher les calories calculees
+  var o = window.getObjectifsNutrition();
+  var infoEl = document.getElementById('persoObjectifInfo');
+  if (infoEl) {
+    if (val) {
+      infoEl.style.display = 'block';
+      infoEl.innerHTML = '🎯 Objectif calculé pour vous : <strong>' + o.cal + ' kcal/jour</strong> · ' + o.glu + 'g glucides · ' + o.pro + 'g protéines · ' + o.lip + 'g lipides';
+    } else {
+      infoEl.style.display = 'none';
+    }
   }
   if (typeof updateNutritionPanel === 'function') updateNutritionPanel();
   if (typeof window.updateCaloriesFromMeals === 'function') window.updateCaloriesFromMeals();
