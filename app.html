@@ -803,6 +803,22 @@ window.deleteMenuSemaine = function() {
   if (typeof updateNutritionPanel === 'function') updateNutritionPanel();
 };
 // ── OBJECTIFS NUTRITIONNELS PERSONNALISABLES ──
+window.applyPersoObjectif = function(val) {
+  var presets = {
+    'equilibre':      {cal:2000, glu:250, pro:75,  lip:70},
+    'perte_de_poids': {cal:1600, glu:180, pro:100, lip:55},
+    'seche':          {cal:1800, glu:150, pro:130, lip:60},
+    'prise_de_masse': {cal:2800, glu:350, pro:150, lip:90},
+    'endurance':      {cal:2400, glu:320, pro:90,  lip:75}
+  };
+  if (val && presets[val]) {
+    localStorage.setItem('mirella_objectifs_nutrition', JSON.stringify(presets[val]));
+  } else {
+    localStorage.removeItem('mirella_objectifs_nutrition');
+  }
+  if (typeof updateNutritionPanel === 'function') updateNutritionPanel();
+  if (typeof window.updateCaloriesFromMeals === 'function') window.updateCaloriesFromMeals();
+};
 window.getObjectifsNutrition = function() {
   var custom = JSON.parse(localStorage.getItem('mirella_objectifs_nutrition') || '{}');
   var profile = JSON.parse(localStorage.getItem('nutricare_profile') || '{}');
@@ -3371,6 +3387,16 @@ function switchLang(lang) {
         <div id="persoMenusChevron" style="font-size:1.1rem;color:#aaa;transition:transform 0.2s">▾</div>
       </div>
       <div style="font-size:0.78rem;color:#888;margin-top:4px">Ajoutez vos propres repas pour la semaine, en plus ou a la place du menu Mirella</div>
+      <div style="margin-top:12px">
+        <select id="persoObjectifSelector" onchange="window.applyPersoObjectif(this.value)" style="width:100%;padding:10px 14px;border:1.5px solid #f0ece8;border-radius:10px;font-size:0.85rem;color:#2D2D2D;background:white;cursor:pointer">
+          <option value="">🎯 Objectif nutritionnel (optionnel)</option>
+          <option value="equilibre">⚖️ Équilibre — 2000 kcal</option>
+          <option value="perte_de_poids">⬇️ Perte de poids — 1600 kcal</option>
+          <option value="seche">🔥 Sèche — 1800 kcal</option>
+          <option value="prise_de_masse">💪 Prise de masse — 2800 kcal</option>
+          <option value="endurance">🏃 Endurance — 2400 kcal</option>
+        </select>
+      </div>
       <div id="persoMenusContent" style="display:none;margin-top:16px"></div>
     </div>
     <!-- Conseils Mirella en haut -->
