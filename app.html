@@ -477,12 +477,12 @@ button[style*="background:linear-gradient(135deg,var(--coral),var(--accent))"] {
     grid-template-columns: 1fr !important;
   }
   #caloriesDonut {
-    width: 140px !important;
-    height: 140px !important;
+    width: 120px !important;
+    height: 120px !important;
   }
   #menusNutritionPanel > div:last-child > div:first-child {
-    width: 140px !important;
-    height: 140px !important;
+    width: 120px !important;
+    height: 120px !important;
     margin: 0 auto 16px auto !important;
   }
   .menu-jour-grid {
@@ -942,7 +942,7 @@ window.updateCaloriesFromMeals = function() {
     window._donutChart = new Chart(ctx, {
       type: 'doughnut',
       data: { datasets: [{ data: [totalConso || 0.001, Math.max(0, objectif - totalConso)], backgroundColor: ['rgba(255,255,255,0.9)','rgba(255,255,255,0.25)'], borderWidth: 0 }] },
-      options: { responsive: false, maintainAspectRatio: false, cutout: '78%', plugins: { legend: { display: false }, tooltip: { enabled: false } }, animation: { duration: 600 } }
+      options: { responsive: false, maintainAspectRatio: false, devicePixelRatio: 1, cutout: '78%', plugins: { legend: { display: false }, tooltip: { enabled: false } }, animation: { duration: 600 } }
     });
   }
 };
