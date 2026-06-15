@@ -918,10 +918,13 @@ window.updateCaloriesFromMeals = function() {
   var el = document.getElementById('donutCalories');
   var elConso = document.getElementById('donutConsommees');
   var elDep = document.getElementById('donutDepensees');
-  if (el) el.textContent = totalConso === 0 ? objectif : restantes;
+  if (el) el.textContent = totalConso;
   var elLabel = document.getElementById('donutLabel');
-  if (elLabel) elLabel.textContent = totalConso === 0 ? 'kcal objectif' : 'kcal restantes';
-  if (elConso) elConso.textContent = totalConso;
+  if (elLabel) elLabel.textContent = 'consommées';
+  if (document.getElementById('donutObjectif')) document.getElementById('donutObjectif').textContent = objectif + ' kcal';
+  if (document.getElementById('donutConsommees')) document.getElementById('donutConsommees').textContent = totalConso + ' kcal';
+  if (document.getElementById('donutDepensees')) document.getElementById('donutDepensees').textContent = totalSport + ' kcal';
+  if (document.getElementById('donutRestantes')) document.getElementById('donutRestantes').textContent = restantes;
   if (elDep) elDep.textContent = totalSport;
   // Redessiner donut
   var canvas = document.getElementById('caloriesDonut');
@@ -3489,46 +3492,72 @@ function switchLang(lang) {
           <option value="6">Dimanche</option>
         </select>
       </div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
-        <!-- Colonne gauche : anneau -->
-        <div style="background:#f9f9f9;border-radius:16px;padding:16px;display:flex;flex-direction:column;align-items:center">
-          <div style="position:relative;width:130px;height:130px;margin:0 auto">
-            <canvas id="caloriesDonut" width="260" height="260" style="width:130px;height:130px"></canvas>
-            <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center">
-              <div id="donutCalories" style="font-size:1.5rem;font-weight:800;color:#1a1a1a;line-height:1">0</div>
-              <div style="font-size:0.55rem;color:#888">kcal</div>
-              <div id="donutLabel" style="font-size:0.6rem;font-weight:600;color:#555">Objectif</div>
-            </div>
-          </div>
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;width:100%;margin-top:14px">
-            <div style="background:white;border-radius:10px;padding:8px;text-align:center">
-              <div id="donutDepensees" style="font-size:0.95rem;font-weight:800;color:#1a1a1a">0</div>
-              <div style="font-size:0.58rem;color:#aaa">kcal</div>
-              <div style="font-size:0.62rem;color:#666;font-weight:600">Depensees</div>
-            </div>
-            <div style="background:white;border-radius:10px;padding:8px;text-align:center">
-              <div id="donutConsommees" style="font-size:0.95rem;font-weight:800;color:#1a1a1a">0</div>
-              <div style="font-size:0.58rem;color:#aaa">kcal</div>
-              <div style="font-size:0.62rem;color:#666;font-weight:600">Consommees</div>
-            </div>
+      <!-- Calories -->
+      <div style="background:#f9f9f9;border-radius:16px;padding:14px 16px;display:flex;align-items:center;gap:16px;margin-bottom:10px">
+        <div style="position:relative;width:88px;height:88px;flex-shrink:0">
+          <canvas id="caloriesDonut" width="176" height="176" style="width:88px;height:88px"></canvas>
+          <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center">
+            <div id="donutCalories" style="font-size:1.15rem;font-weight:800;color:#1a1a1a;line-height:1">0</div>
+            <div style="font-size:0.48rem;color:#aaa;margin-top:1px">kcal</div>
+            <div id="donutLabel" style="font-size:0.5rem;font-weight:700;color:#FF6B6B">consommées</div>
           </div>
         </div>
-        <!-- Colonne droite : macros -->
-        <div style="background:#f9f9f9;border-radius:16px;padding:16px;display:flex;flex-direction:column;min-width:0">
-          <div style="padding:8px 0;border-bottom:1px solid #ececec;text-align:center">
-            <div style="font-size:1.1rem;font-weight:800;color:#1a1a1a"><span id="macroGlucidesVal">0</span> <span id="macroGlucidesMax" style="font-size:0.68rem;color:#aaa;font-weight:400">/ 250 g</span></div>
-            <div style="font-size:0.72rem;color:#666;margin-bottom:4px">Glucides</div>
-            <canvas id="macroGlucidesCircle" width="56" height="56" style="width:28px;height:28px;display:block;margin:0 auto"></canvas>
+        <div style="flex:1;display:flex;flex-direction:column;gap:5px">
+          <div style="display:flex;justify-content:space-between;align-items:center">
+            <span style="font-size:0.72rem;color:#888">🎯 Objectif</span>
+            <span id="donutObjectif" style="font-size:0.8rem;font-weight:700;color:#2D2D2D">— kcal</span>
           </div>
-          <div style="padding:8px 0;border-bottom:1px solid #ececec;text-align:center">
-            <div style="font-size:1.1rem;font-weight:800;color:#1a1a1a"><span id="macroProteinesVal">0</span> <span id="macroProteinesMax" style="font-size:0.68rem;color:#aaa;font-weight:400">/ 60 g</span></div>
-            <div style="font-size:0.72rem;color:#666;margin-bottom:4px">Proteines</div>
-            <canvas id="macroProteinesCircle" width="56" height="56" style="width:28px;height:28px;display:block;margin:0 auto"></canvas>
+          <div style="display:flex;justify-content:space-between;align-items:center">
+            <span style="font-size:0.72rem;color:#888">🍽️ Consommées</span>
+            <span id="donutConsommees" style="font-size:0.8rem;font-weight:700;color:#FF6B6B">0 kcal</span>
           </div>
-          <div style="padding:8px 0;text-align:center">
-            <div style="font-size:1.1rem;font-weight:800;color:#1a1a1a"><span id="macroLipidesVal">0</span> <span id="macroLipidesMax" style="font-size:0.68rem;color:#aaa;font-weight:400">/ 70 g</span></div>
-            <div style="font-size:0.72rem;color:#666;margin-bottom:4px">Lipides</div>
-            <canvas id="macroLipidesCircle" width="56" height="56" style="width:28px;height:28px;display:block;margin:0 auto"></canvas>
+          <div style="display:flex;justify-content:space-between;align-items:center">
+            <span style="font-size:0.72rem;color:#888">🔥 Dépensées</span>
+            <span id="donutDepensees" style="font-size:0.8rem;font-weight:700;color:#27ae60">0 kcal</span>
+          </div>
+          <div style="height:1px;background:#e8e8e8;margin:2px 0"></div>
+          <div style="display:flex;justify-content:space-between;align-items:center">
+            <span style="font-size:0.72rem;color:#888">⚡ Restantes</span>
+            <span style="font-size:0.82rem;font-weight:800;color:#2D2D2D"><span id="donutRestantes">—</span> kcal</span>
+          </div>
+        </div>
+      </div>
+      <!-- Macros barres -->
+      <div style="background:#f9f9f9;border-radius:16px;padding:14px 16px;display:flex;flex-direction:column;gap:12px;margin-bottom:10px">
+        <div>
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:5px">
+            <div style="display:flex;align-items:center;gap:6px">
+              <div style="width:8px;height:8px;border-radius:50%;background:#4FACFE;flex-shrink:0"></div>
+              <span style="font-size:0.78rem;font-weight:600;color:#444">Glucides</span>
+            </div>
+            <span style="font-size:0.78rem;color:#888"><b id="macroGlucidesVal" style="color:#2D2D2D">0</b> <span id="macroGlucidesMax">/ 250 g</span></span>
+          </div>
+          <div style="background:#e8e8e8;border-radius:6px;height:7px;overflow:hidden">
+            <div id="barGlucides" style="width:0%;height:100%;background:linear-gradient(90deg,#4FACFE,#00f2fe);border-radius:6px;transition:width 0.6s ease"></div>
+          </div>
+        </div>
+        <div>
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:5px">
+            <div style="display:flex;align-items:center;gap:6px">
+              <div style="width:8px;height:8px;border-radius:50%;background:#11998e;flex-shrink:0"></div>
+              <span style="font-size:0.78rem;font-weight:600;color:#444">Protéines</span>
+            </div>
+            <span style="font-size:0.78rem;color:#888"><b id="macroProteinesVal" style="color:#2D2D2D">0</b> <span id="macroProteinesMax">/ 60 g</span></span>
+          </div>
+          <div style="background:#e8e8e8;border-radius:6px;height:7px;overflow:hidden">
+            <div id="barProteines" style="width:0%;height:100%;background:linear-gradient(90deg,#11998e,#38ef7d);border-radius:6px;transition:width 0.6s ease"></div>
+          </div>
+        </div>
+        <div>
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:5px">
+            <div style="display:flex;align-items:center;gap:6px">
+              <div style="width:8px;height:8px;border-radius:50%;background:#F7B731;flex-shrink:0"></div>
+              <span style="font-size:0.78rem;font-weight:600;color:#444">Lipides</span>
+            </div>
+            <span style="font-size:0.78rem;color:#888"><b id="macroLipidesVal" style="color:#2D2D2D">0</b> <span id="macroLipidesMax">/ 70 g</span></span>
+          </div>
+          <div style="background:#e8e8e8;border-radius:6px;height:7px;overflow:hidden">
+            <div id="barLipides" style="width:0%;height:100%;background:linear-gradient(90deg,#F7B731,#ffd32a);border-radius:6px;transition:width 0.6s ease"></div>
           </div>
         </div>
       </div>
@@ -8218,61 +8247,23 @@ function updateNutritionPanel(dayIndex) {
 
   // Donut chart géré uniquement par updateCaloriesFromMeals
 
-  // Macros : basées sur le menu planifié du jour sélectionné
+  // Macros barres horizontales
+  var gluPct = Math.min(100, Math.round(totals.glu / besoins.glu * 100));
+  var proPct = Math.min(100, Math.round(totals.pro / besoins.pro * 100));
+  var lipPct = Math.min(100, Math.round(totals.lip / besoins.lip * 100));
   if (document.getElementById('macroGlucidesVal')) document.getElementById('macroGlucidesVal').textContent = totals.glu;
   if (document.getElementById('macroProteinesVal')) document.getElementById('macroProteinesVal').textContent = totals.pro;
   if (document.getElementById('macroLipidesVal')) document.getElementById('macroLipidesVal').textContent = totals.lip;
   if (document.getElementById('macroGlucidesMax')) document.getElementById('macroGlucidesMax').textContent = '/ ' + besoins.glu + ' g';
   if (document.getElementById('macroProteinesMax')) document.getElementById('macroProteinesMax').textContent = '/ ' + besoins.pro + ' g';
   if (document.getElementById('macroLipidesMax')) document.getElementById('macroLipidesMax').textContent = '/ ' + besoins.lip + ' g';
-  var lipPct2 = Math.min(100, Math.round(totals.lip / besoins.lip * 100));
-  var gluPct2 = Math.min(100, Math.round(totals.glu / besoins.glu * 100));
-  var proPct2 = Math.min(100, Math.round(totals.pro / besoins.pro * 100));
-  function drawCircle(id, pct, color) {
-    var cv = document.getElementById(id); if (!cv) return;
-    var cx = cv.getContext('2d'); var sz = cv.width; var lw = sz * 0.12; var r = sz/2 - lw;
-    cx.clearRect(0,0,sz,sz);
-    cx.beginPath(); cx.arc(sz/2,sz/2,r,0,Math.PI*2); cx.strokeStyle = '#e8e8e8'; cx.lineWidth = lw; cx.stroke();
-    if (pct > 0) { cx.beginPath(); cx.arc(sz/2,sz/2,r,-Math.PI/2,-Math.PI/2+(pct/100)*Math.PI*2); cx.strokeStyle = color; cx.lineWidth = lw; cx.lineCap = 'round'; cx.stroke(); }
-  }
-  drawCircle('macroGlucidesCircle', gluPct2, '#4FACFE');
-  drawCircle('macroProteinesCircle', proPct2, '#11998e');
-  drawCircle('macroLipidesCircle', lipPct2, '#F7B731');
-  var advice2 = pct < 70 ? 'Apports caloriques insuffisants' : pct > 110 ? 'Apports caloriques eleves' : 'Apports bien equilibres';
-  document.getElementById('nutritionAdvice').textContent = advice2;
-  // Calories : basé sur les repas cochés
+  if (document.getElementById('barGlucides')) document.getElementById('barGlucides').style.width = gluPct + '%';
+  if (document.getElementById('barProteines')) document.getElementById('barProteines').style.width = proPct + '%';
+  if (document.getElementById('barLipides')) document.getElementById('barLipides').style.width = lipPct + '%';
+  var adviceTxt = totals.cal === 0 ? 'Cochez vos repas pour mettre à jour' : pct < 70 ? 'Apports caloriques insuffisants' : pct > 110 ? 'Apports caloriques élevés' : 'Apports bien équilibrés';
+  if (document.getElementById('nutritionAdvice')) document.getElementById('nutritionAdvice').textContent = adviceTxt;
   window.updateCaloriesFromMeals();
-
-  const lipPct = Math.min(100, Math.round(totals.lip / besoins.lip * 100));
-  const gluPct = Math.min(100, Math.round(totals.glu / besoins.glu * 100));
-  const proPct = Math.min(100, Math.round(totals.pro / besoins.pro * 100));
-
-  if (document.getElementById('macroGlucidesVal')) document.getElementById('macroGlucidesVal').textContent = totals.glu;
-  if (document.getElementById('macroProteinesVal')) document.getElementById('macroProteinesVal').textContent = totals.pro;
-  if (document.getElementById('macroLipidesVal')) document.getElementById('macroLipidesVal').textContent = totals.lip;
-  if (document.getElementById('macroGlucidesMax')) document.getElementById('macroGlucidesMax').textContent = '/ ' + besoins.glu + ' g';
-  if (document.getElementById('macroProteinesMax')) document.getElementById('macroProteinesMax').textContent = '/ ' + besoins.pro + ' g';
-  if (document.getElementById('macroLipidesMax')) document.getElementById('macroLipidesMax').textContent = '/ ' + besoins.lip + ' g';
-
-  function drawCircle(id, pct, color) {
-    var cv = document.getElementById(id);
-    if (!cv) return;
-    var cx = cv.getContext('2d');
-    var sz = cv.width; var lw = sz * 0.12; var r = sz/2 - lw;
-    cx.clearRect(0,0,sz,sz);
-    cx.beginPath(); cx.arc(sz/2,sz/2,r,0,Math.PI*2);
-    cx.strokeStyle = '#e8e8e8'; cx.lineWidth = lw; cx.stroke();
-    if (pct > 0) {
-      cx.beginPath();
-      cx.arc(sz/2,sz/2,r,-Math.PI/2,-Math.PI/2+(pct/100)*Math.PI*2);
-      cx.strokeStyle = color; cx.lineWidth = lw; cx.lineCap = 'round'; cx.stroke();
-    }
-  }
-  drawCircle('macroGlucidesCircle', gluPct, '#4FACFE');
-  drawCircle('macroProteinesCircle', proPct, '#11998e');
-  drawCircle('macroLipidesCircle', lipPct, '#F7B731');
-
-  const advice = pct < 70 ? 'Apports caloriques insuffisants' : pct > 110 ? 'Apports caloriques eleves' : 'Apports bien equilibres';
+  if (document.getElementById('donutObjectif')) document.getElementById('donutObjectif').textContent = besoins.cal + ' kcal';
   document.getElementById('nutritionAdvice').textContent = advice;
 
   // Sélectionner le bon jour dans le dropdown
