@@ -890,6 +890,16 @@ window.updateCaloriesFromMeals = function() {
   Object.keys(meals).forEach(function(k) {
     if (!k.startsWith('mealcheck_')) return;
     if (jourNom && !k.startsWith('mealcheck_' + jourNom + '_') && !k.startsWith('mealcheck_perso_' + jourNom + '_')) return;
+    // Verifier que le repas existe encore dans le menu IA courant
+    if (k.startsWith('mealcheck_') && !k.startsWith('mealcheck_perso_')) {
+      var parts = k.replace('mealcheck_', '').split('_');
+      var jourKey = parts[0];
+      var repasKey = parts.slice(1).join('_');
+      if (window._currentMenu && window._currentMenu.semaine) {
+        var jour = window._currentMenu.semaine.find(function(j){ return j.jour === jourKey; });
+        if (jour && jour[repasKey] === null) return; // repas supprime
+      }
+    }
     totalConso += meals[k] || 0;
   });
   // Calories brulees via sport (depuis score sante)
