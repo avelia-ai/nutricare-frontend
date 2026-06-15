@@ -8116,29 +8116,7 @@ function updateNutritionPanel(dayIndex) {
   const besoins = window.getObjectifsNutrition();
   const pct = Math.min(100, Math.round(totals.cal / besoins.cal * 100));
 
-  // Donut chart
-  const canvas = document.getElementById('caloriesDonut');
-  if (canvas) {
-    const ctx = canvas.getContext('2d');
-    if (_donutChart) { _donutChart.destroy(); _donutChart = null; }
-    const existingChart = Chart.getChart(canvas);
-    if (existingChart) existingChart.destroy();
-    _donutChart = new Chart(ctx, {
-      type: 'doughnut',
-      data: {
-        datasets: [{
-          data: [pct, 100 - pct],
-          backgroundColor: ['#F7B731', '#F0F7FF'],
-          borderWidth: 0
-        }]
-      },
-      options: {
-        cutout: '75%',
-        plugins: { legend: { display: false }, tooltip: { enabled: false } },
-        animation: { duration: 600 }
-      }
-    });
-  }
+  // Donut chart géré uniquement par updateCaloriesFromMeals
 
   // Macros : basées sur le menu planifié du jour sélectionné
   if (document.getElementById('macroGlucidesVal')) document.getElementById('macroGlucidesVal').textContent = totals.glu;
