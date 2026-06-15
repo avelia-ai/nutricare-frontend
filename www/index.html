@@ -8412,7 +8412,8 @@ function renderMenu(menu) {
       loadMealPhoto(nom, kw, img);
     });
   }, 100);
-  if (menu.liste_courses) {
+  var hasShoppingItems = menu.liste_courses && Object.values(menu.liste_courses).some(function(arr){ return arr && arr.length > 0; });
+  if (hasShoppingItems) {
     document.getElementById('menusShoppingList').style.display = 'block';
     window._currentShoppingList = menu.liste_courses;
     const categories = {
