@@ -941,7 +941,7 @@ window.updateCaloriesFromMeals = function() {
     if (window._donutChart) { window._donutChart.destroy(); window._donutChart = null; }
     window._donutChart = new Chart(ctx, {
       type: 'doughnut',
-      data: { datasets: [{ data: [totalConso || 0.001, Math.max(0, objectif - totalConso)], backgroundColor: ['var(--coral)','#f0f0f0'], borderWidth: 0 }] },
+      data: { datasets: [{ data: [totalConso || 0.001, Math.max(0, objectif - totalConso)], backgroundColor: ['#FF6B6B','#f0f0f0'], borderWidth: 0 }] },
       options: { cutout: '78%', plugins: { legend: { display: false }, tooltip: { enabled: false } }, animation: { duration: 600 } }
     });
   }
