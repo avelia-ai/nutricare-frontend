@@ -764,29 +764,43 @@ window.persistMenuUpdate = function() {
 window.deleteMenuRepas = function(jourIdx, repasKey) {
   if (!_currentMenu || !_currentMenu.semaine[jourIdx]) return;
   if (confirm('Supprimer ce repas ?') === false) return;
+  var jourNom = _currentMenu.semaine[jourIdx].jour;
+  var meals = JSON.parse(localStorage.getItem('mirella_checked_meals') || '{}');
+  delete meals['mealcheck_' + jourNom + '_' + repasKey];
+  localStorage.setItem('mirella_checked_meals', JSON.stringify(meals));
   _currentMenu.semaine[jourIdx][repasKey] = null;
   renderMenu(_currentMenu);
   window.persistMenuUpdate();
+  if (typeof updateNutritionPanel === 'function') updateNutritionPanel();
 };
 window.deleteMenuJour = function(jourIdx) {
   if (!_currentMenu || !_currentMenu.semaine[jourIdx]) return;
   if (confirm('Supprimer tous les repas de ce jour ?') === false) return;
+  var jourNom = _currentMenu.semaine[jourIdx].jour;
+  var meals = JSON.parse(localStorage.getItem('mirella_checked_meals') || '{}');
   ['petit_dejeuner','dejeuner','collation','diner'].forEach(function(r) {
+    delete meals['mealcheck_' + jourNom + '_' + r];
     _currentMenu.semaine[jourIdx][r] = null;
   });
+  localStorage.setItem('mirella_checked_meals', JSON.stringify(meals));
   renderMenu(_currentMenu);
   window.persistMenuUpdate();
+  if (typeof updateNutritionPanel === 'function') updateNutritionPanel();
 };
 window.deleteMenuSemaine = function() {
   if (!_currentMenu) return;
   if (confirm('Supprimer tout le menu de la semaine ? Cette action est irreversible.') === false) return;
+  var meals = JSON.parse(localStorage.getItem('mirella_checked_meals') || '{}');
   _currentMenu.semaine.forEach(function(jour) {
     ['petit_dejeuner','dejeuner','collation','diner'].forEach(function(r) {
+      delete meals['mealcheck_' + jour.jour + '_' + r];
       jour[r] = null;
     });
   });
+  localStorage.setItem('mirella_checked_meals', JSON.stringify(meals));
   renderMenu(_currentMenu);
   window.persistMenuUpdate();
+  if (typeof updateNutritionPanel === 'function') updateNutritionPanel();
 };
 // ── OBJECTIFS NUTRITIONNELS PERSONNALISABLES ──
 window.getObjectifsNutrition = function() {
