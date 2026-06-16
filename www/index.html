@@ -685,6 +685,47 @@ window.openAddPersoRepas = function(key) {
   document.getElementById('persoRepasLip').value = '';
   document.getElementById('persoRepasModal').style.display = 'flex';
 };
+window.analyzeRepasPhoto = async function(input) {
+  if (!input.files || !input.files[0]) return;
+  var file = input.files[0];
+  var preview = document.getElementById('persoRepasPhotoPreview');
+  var img = document.getElementById('persoRepasPhotoImg');
+  var status = document.getElementById('persoRepasPhotoStatus');
+  var btn = document.getElementById('persoRepasPhotoBtn');
+  // Afficher preview
+  var reader = new FileReader();
+  reader.onload = async function(e) {
+    img.src = e.target.result;
+    preview.style.display = 'block';
+    btn.textContent = '⏳ Analyse en cours...';
+    btn.disabled = true;
+    status.textContent = 'Mirella analyse votre plat...';
+    try {
+      var token = localStorage.getItem('nutricare_token') || '';
+      var res = await fetch('https://nutricare-backend-production.up.railway.app/api/vision/analyze-meal', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token},
+        body: JSON.stringify({image: e.target.result})
+      });
+      var data = await res.json();
+      if (data.nom) document.getElementById('persoRepasNom').value = data.nom;
+      if (data.kcal) document.getElementById('persoRepasKcal').value = data.kcal;
+      if (data.glu) document.getElementById('persoRepasGlu').value = data.glu;
+      if (data.pro) document.getElementById('persoRepasPro').value = data.pro;
+      if (data.lip) document.getElementById('persoRepasLip').value = data.lip;
+      // Stocker micros détectés pour savePersoRepas
+      window._detectedMicros = {fib: data.fib||0, suc: data.suc||0, sel: data.sel||0, cal_mg: data.cal_mg||0, fer: data.fer||0};
+      status.textContent = '✅ Détecté : ' + (data.nom||'repas') + ' — ' + (data.kcal||0) + ' kcal';
+      btn.textContent = '📷 Changer la photo';
+    } catch(err) {
+      status.textContent = '❌ Erreur : ' + err.message;
+      btn.textContent = '📷 Réessayer';
+    }
+    btn.disabled = false;
+  };
+  reader.readAsDataURL(file);
+};
+
 window.savePersoRepas = async function() {
   var key = document.getElementById('persoRepasTarget').value;
   var nom = document.getElementById('persoRepasNom').value.trim();
@@ -695,18 +736,23 @@ window.savePersoRepas = async function() {
   var lip = parseInt(document.getElementById('persoRepasLip').value) || 0;
   var btn = document.querySelector('#persoRepasModal button[onclick*="savePersoRepas"]');
   if (btn) { btn.textContent = '⏳ Analyse en cours...'; btn.disabled = true; }
-  // Estimer micronutriments via backend
+  // Utiliser micros détectés par photo, sinon estimer via IA
   var micros = {fib:0, suc:0, sel:0, cal_mg:0, fer:0};
-  try {
-    var token = localStorage.getItem('nutricare_token') || '';
-    var res = await fetch('https://nutricare-backend-production.up.railway.app/api/micros/estimate', {
-      method: 'POST',
-      headers: {'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token},
-      body: JSON.stringify({nom: nom, kcal: kcal, glu: glu, pro: pro, lip: lip})
-    });
-    micros = await res.json();
-  } catch(e) {
-    console.warn('Micros estimation failed:', e);
+  if (window._detectedMicros) {
+    micros = window._detectedMicros;
+    window._detectedMicros = null;
+  } else {
+    try {
+      var token = localStorage.getItem('nutricare_token') || '';
+      var res = await fetch('https://nutricare-backend-production.up.railway.app/api/micros/estimate', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token},
+        body: JSON.stringify({nom: nom, kcal: kcal, glu: glu, pro: pro, lip: lip})
+      });
+      micros = await res.json();
+    } catch(e) {
+      console.warn('Micros estimation failed:', e);
+    }
   }
   var data = window.getPersoMenus();
   var jour = window._persoMenusJour;
@@ -11437,6 +11483,14 @@ document.addEventListener('deviceready', function() {
     <div style="margin-bottom:14px">
       <div style="font-size:0.8rem;font-weight:600;color:#555;margin-bottom:6px">Nom du repas</div>
       <input type="text" id="persoRepasNom" placeholder="Ex: Salade de quinoa" style="width:100%;padding:12px;border:1px solid #eee;border-radius:10px;font-size:0.9rem;box-sizing:border-box">
+    </div>
+    <input type="file" id="persoRepasPhoto" accept="image/*" capture="environment" style="display:none" onchange="window.analyzeRepasPhoto(this)">
+    <button onclick="document.getElementById('persoRepasPhoto').click()" id="persoRepasPhotoBtn" style="width:100%;background:#f8f8f8;border:1.5px dashed #ddd;border-radius:12px;padding:12px;font-size:0.88rem;color:#666;cursor:pointer;margin-bottom:14px">
+      📷 Prendre une photo pour détecter automatiquement
+    </button>
+    <div id="persoRepasPhotoPreview" style="display:none;margin-bottom:14px;text-align:center">
+      <img id="persoRepasPhotoImg" style="max-height:120px;border-radius:10px;object-fit:cover">
+      <div id="persoRepasPhotoStatus" style="font-size:0.78rem;color:#888;margin-top:6px"></div>
     </div>
     <div style="font-size:0.78rem;color:#888;margin-bottom:8px">Valeurs nutritionnelles (optionnel)</div>
     <div style="display:flex;gap:10px;margin-bottom:16px">
