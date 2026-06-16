@@ -12,30 +12,26 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '22'
-
       - name: Install dependencies
         run: npm install --ignore-scripts
-
       - name: Sync Capacitor
         run: |
           cp app.html www/app.html
           npx cap sync android
-          cp app.html android/app/src/main/assets/public/app.html
-
+          cp -f app.html android/app/src/main/assets/public/app.html
+          echo "=== VERIFICATION ==="
+          grep -c "MICRONUTRIMENTS" android/app/src/main/assets/public/app.html || echo "NON TROUVE"
       - name: Setup Java
         uses: actions/setup-java@v4
         with:
           distribution: 'temurin'
           java-version: '21'
-
       - name: Setup Android SDK
         uses: android-actions/setup-android@v3
-
       - name: Build Release APK + AAB
         run: |
           cd android
@@ -46,13 +42,11 @@ jobs:
             -Pandroid.injected.signing.store.password=${{ secrets.KEYSTORE_PASSWORD }} \
             -Pandroid.injected.signing.key.alias=${{ secrets.KEY_ALIAS }} \
             -Pandroid.injected.signing.key.password=${{ secrets.KEY_PASSWORD }}
-
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
           name: mirella-release.apk
           path: android/app/build/outputs/apk/release/app-release.apk
-
       - name: Upload AAB
         uses: actions/upload-artifact@v4
         with:
