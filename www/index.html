@@ -699,7 +699,7 @@ window.savePersoRepas = async function() {
   var micros = {fib:0, suc:0, sel:0, cal_mg:0, fer:0};
   try {
     var token = localStorage.getItem('token') || '';
-    var res = await fetch('/api/micros/estimate', {
+    var res = await fetch('https://nutricare-backend-production.up.railway.app/api/micros/estimate', {
       method: 'POST',
       headers: {'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token},
       body: JSON.stringify({nom: nom, kcal: kcal, glu: glu, pro: pro, lip: lip})
