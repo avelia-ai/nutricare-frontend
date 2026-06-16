@@ -698,7 +698,7 @@ window.savePersoRepas = async function() {
   // Estimer micronutriments via backend
   var micros = {fib:0, suc:0, sel:0, cal_mg:0, fer:0};
   try {
-    var token = localStorage.getItem('token') || '';
+    var token = localStorage.getItem('nutricare_token') || '';
     var res = await fetch('https://nutricare-backend-production.up.railway.app/api/micros/estimate', {
       method: 'POST',
       headers: {'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token},
