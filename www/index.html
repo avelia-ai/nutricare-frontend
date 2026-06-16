@@ -695,22 +695,18 @@ window.savePersoRepas = async function() {
   var lip = parseInt(document.getElementById('persoRepasLip').value) || 0;
   var btn = document.querySelector('#persoRepasModal button[onclick*="savePersoRepas"]');
   if (btn) { btn.textContent = '⏳ Analyse en cours...'; btn.disabled = true; }
-  // Estimer micronutriments via IA
+  // Estimer micronutriments via backend
   var micros = {fib:0, suc:0, sel:0, cal_mg:0, fer:0};
   try {
-    var prompt = 'Estime les micronutriments pour : "' + nom + '" (portion standard). Reponds UNIQUEMENT en JSON strict sans backticks ni texte: {"fib":X,"suc":X,"sel":X,"cal_mg":X,"fer":X} où fib=fibres en g, suc=sucres en g, sel=sel en g, cal_mg=calcium en mg, fer=fer en mg. Valeurs numeriques entières uniquement.';
-    var res = await fetch('https://api.anthropic.com/v1/messages', {
+    var token = localStorage.getItem('token') || '';
+    var res = await fetch('/api/micros/estimate', {
       method: 'POST',
-      headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify({model:'claude-sonnet-4-6', max_tokens:100, messages:[{role:'user', content:prompt}]})
+      headers: {'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token},
+      body: JSON.stringify({nom: nom, kcal: kcal, glu: glu, pro: pro, lip: lip})
     });
-    var data2 = await res.json();
-    var txt = data2.content && data2.content[0] ? data2.content[0].text : '{}';
-    var parsed = JSON.parse(txt.replace(/```json|```/g,'').trim());
-    micros = {fib: parsed.fib||0, suc: parsed.suc||0, sel: parsed.sel||0, cal_mg: parsed.cal_mg||0, fer: parsed.fer||0};
+    micros = await res.json();
   } catch(e) {
-    console.error('Micros estimation failed:', e);
-    alert('Debug micros: ' + e.message);
+    console.warn('Micros estimation failed:', e);
   }
   var data = window.getPersoMenus();
   var jour = window._persoMenusJour;
