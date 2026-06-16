@@ -3565,55 +3565,6 @@ function switchLang(lang) {
           </div>
         </div>
       </div>
-      <!-- Micronutriments --><div id="testMicro" style="background:red;color:white;font-size:20px;padding:20px;z-index:9999">MICRONUTRIMENTS TEST</div>
-      <div style="margin-top:10px;border-top:1px solid #f0f0f0;padding-top:10px;display:block">
-        <div style="font-size:0.68rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#aaa;margin-bottom:2px">Micronutriments</div>
-        <div>
-          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px">
-            <span style="font-size:0.75rem;font-weight:600;color:#444">🌿 Fibres</span>
-            <span style="font-size:0.75rem;color:#888"><b id="microFibresVal" style="color:#2D2D2D">0</b> <span id="microFibresMax">/ 25 g</span></span>
-          </div>
-          <div style="background:#e8e8e8;border-radius:6px;height:6px;overflow:hidden">
-            <div id="barFibres" style="width:0%;height:100%;background:linear-gradient(90deg,#56ab2f,#a8e063);border-radius:6px;transition:width 0.6s ease"></div>
-          </div>
-        </div>
-        <div>
-          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px">
-            <span style="font-size:0.75rem;font-weight:600;color:#444">🍬 Sucres</span>
-            <span style="font-size:0.75rem;color:#888"><b id="microSucresVal" style="color:#2D2D2D">0</b> <span id="microSucresMax">/ 50 g</span></span>
-          </div>
-          <div style="background:#e8e8e8;border-radius:6px;height:6px;overflow:hidden">
-            <div id="barSucres" style="width:0%;height:100%;background:linear-gradient(90deg,#f7971e,#ffd200);border-radius:6px;transition:width 0.6s ease"></div>
-          </div>
-        </div>
-        <div>
-          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px">
-            <span style="font-size:0.75rem;font-weight:600;color:#444">🧂 Sel</span>
-            <span style="font-size:0.75rem;color:#888"><b id="microSelVal" style="color:#2D2D2D">0</b> <span id="microSelMax">/ 6 g</span></span>
-          </div>
-          <div style="background:#e8e8e8;border-radius:6px;height:6px;overflow:hidden">
-            <div id="barSel" style="width:0%;height:100%;background:linear-gradient(90deg,#c94b4b,#4b134f);border-radius:6px;transition:width 0.6s ease"></div>
-          </div>
-        </div>
-        <div>
-          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px">
-            <span style="font-size:0.75rem;font-weight:600;color:#444">🦴 Calcium</span>
-            <span style="font-size:0.75rem;color:#888"><b id="microCalciumVal" style="color:#2D2D2D">0</b> <span id="microCalciumMax">/ 1000 mg</span></span>
-          </div>
-          <div style="background:#e8e8e8;border-radius:6px;height:6px;overflow:hidden">
-            <div id="barCalcium" style="width:0%;height:100%;background:linear-gradient(90deg,#4776E6,#8E54E9);border-radius:6px;transition:width 0.6s ease"></div>
-          </div>
-        </div>
-        <div>
-          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px">
-            <span style="font-size:0.75rem;font-weight:600;color:#444">🩸 Fer</span>
-            <span style="font-size:0.75rem;color:#888"><b id="microFerVal" style="color:#2D2D2D">0</b> <span id="microFerMax">/ 16 mg</span></span>
-          </div>
-          <div style="background:#e8e8e8;border-radius:6px;height:6px;overflow:hidden">
-            <div id="barFer" style="width:0%;height:100%;background:linear-gradient(90deg,#cb2d3e,#ef473a);border-radius:6px;transition:width 0.6s ease"></div>
-          </div>
-        </div>
-      </div>
       <div style="display:flex;align-items:center;justify-content:space-between;margin-top:8px;gap:8px">
         <div id="nutritionAdvice" style="font-size:0.7rem;color:var(--coral)">Selectionnez un jour</div>
         <div style="display:flex;gap:6px;flex-shrink:0">
@@ -8329,20 +8280,7 @@ function updateNutritionPanel(dayIndex) {
   if (document.getElementById('barGlucides')) document.getElementById('barGlucides').style.width = gluPct + '%';
   if (document.getElementById('barProteines')) document.getElementById('barProteines').style.width = proPct + '%';
   if (document.getElementById('barLipides')) document.getElementById('barLipides').style.width = lipPct + '%';
-  // Micronutriments
-  const micros = [
-    {id:'Fibres', val: totals.fib, max:25, unit:'g'},
-    {id:'Sucres', val: totals.suc, max:50, unit:'g'},
-    {id:'Sel',    val: totals.sel, max:6,  unit:'g'},
-    {id:'Calcium',val: totals.cal_mg, max:1000, unit:'mg'},
-    {id:'Fer',    val: totals.fer, max:16, unit:'mg'}
-  ];
-  micros.forEach(function(m) {
-    var pct = Math.min(100, Math.round(m.val / m.max * 100));
-    if (document.getElementById('micro'+m.id+'Val')) document.getElementById('micro'+m.id+'Val').textContent = Math.round(m.val);
-    if (document.getElementById('micro'+m.id+'Max')) document.getElementById('micro'+m.id+'Max').textContent = '/ '+m.max+' '+m.unit;
-    if (document.getElementById('bar'+m.id)) document.getElementById('bar'+m.id).style.width = pct + '%';
-  });
+
   var adviceTxt = totals.cal === 0 ? 'Cochez vos repas pour mettre à jour' : pct < 70 ? 'Apports caloriques insuffisants' : pct > 110 ? 'Apports caloriques élevés' : 'Apports bien équilibrés';
   if (document.getElementById('nutritionAdvice')) document.getElementById('nutritionAdvice').textContent = adviceTxt;
   window.updateCaloriesFromMeals();
