@@ -8214,15 +8214,15 @@ async function showRecipeModal(btn) {
     document.getElementById('recipeModalEtapes').innerHTML = '<div style="color:#e74c3c;font-size:0.85rem">Erreur de génération</div>';
   }
 }
-let _currentMenu = null;
+window._currentMenu = null;
 let _donutChart = null;
 
 function updateNutritionPanel(dayIndex) {
   const idx = dayIndex !== undefined ? dayIndex : parseInt(document.getElementById('menusDaySelector')?.value || 0);
-  const hasMenu = _currentMenu && _currentMenu.semaine;
-  const jour = hasMenu ? (_currentMenu.semaine[idx] || {}) : {};
+  const hasMenu = window._currentMenu && window._currentMenu.semaine;
+  const jour = hasMenu ? (window._currentMenu.semaine[idx] || {}) : {};
   const persoEnabledCheck = document.getElementById('persoMenusEnabled') ? document.getElementById('persoMenusEnabled').checked : false;
-  if (!hasMenu && !persoEnabledCheck) return;
+  if (!hasMenu && !persoEnabledCheck) { if (typeof window.updateCaloriesFromMeals === 'function') window.updateCaloriesFromMeals(); return; }
   document.getElementById('menusNutritionPanel').style.display = 'block';
 
   // Calculer totaux consommes (repas coches uniquement)
@@ -8318,6 +8318,7 @@ function updateNutritionPanel(dayIndex) {
 function renderMenu(menu) {
   const repasIcons = { petit_dejeuner: '🌅', dejeuner: '☀️', collation: '🍎', diner: '🌙' };
   const repasLabels = { petit_dejeuner: 'Petit-déjeuner', dejeuner: 'Déjeuner', collation: 'Collation', diner: 'Dîner' };
+  window._currentMenu = menu;
   _currentMenu = menu;
   document.getElementById('menusNutritionPanel').style.display = 'block';
   const delWeekBtn = document.getElementById('deleteWeekBtn');
