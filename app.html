@@ -8281,6 +8281,22 @@ function updateNutritionPanel(dayIndex) {
   if (document.getElementById('barProteines')) document.getElementById('barProteines').style.width = proPct + '%';
   if (document.getElementById('barLipides')) document.getElementById('barLipides').style.width = lipPct + '%';
 
+  // Micronutriments carte separee
+  var microCard = document.getElementById('micronutrimentsCard');
+  if (microCard) microCard.style.display = 'block';
+  var micros = [
+    {id:'Fibres', val: totals.fib, max:25, unit:'g'},
+    {id:'Sucres', val: totals.suc, max:50, unit:'g'},
+    {id:'Sel',    val: totals.sel, max:6,  unit:'g'},
+    {id:'Calcium',val: totals.cal_mg, max:1000, unit:'mg'},
+    {id:'Fer',    val: totals.fer, max:16, unit:'mg'}
+  ];
+  micros.forEach(function(m) {
+    var pct = Math.min(100, Math.round(m.val / m.max * 100));
+    if (document.getElementById('micro'+m.id+'Val')) document.getElementById('micro'+m.id+'Val').textContent = Math.round(m.val);
+    if (document.getElementById('micro'+m.id+'Max')) document.getElementById('micro'+m.id+'Max').textContent = '/ '+m.max+' '+m.unit;
+    if (document.getElementById('bar'+m.id)) document.getElementById('bar'+m.id).style.width = pct + '%';
+  });
   var adviceTxt = totals.cal === 0 ? 'Cochez vos repas pour mettre à jour' : pct < 70 ? 'Apports caloriques insuffisants' : pct > 110 ? 'Apports caloriques élevés' : 'Apports bien équilibrés';
   if (document.getElementById('nutritionAdvice')) document.getElementById('nutritionAdvice').textContent = adviceTxt;
   window.updateCaloriesFromMeals();
