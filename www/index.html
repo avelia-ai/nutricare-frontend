@@ -109,6 +109,9 @@
     margin-top: 24px;
   }
 
+    #menusView > div.view-header {
+    padding: 24px 16px 20px !important;
+  }
   /* ── ALERTES INTERACTIONS ── */
   .alertes-container { display: flex; flex-direction: column; gap: 10px; margin-bottom: 20px; }
   .alerte-card { display: flex; gap: 12px; padding: 14px 16px; border-radius: 14px; background: white; border-left: 4px solid #ddd; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
@@ -123,7 +126,7 @@
   .alerte-conseil { font-size: 0.78rem; color: #888; font-style: italic; line-height: 1.4; }
 
   @media(max-width:768px) {
-    [id$="View"]:not(#homeView) {
+    [id$="View"]:not(#homeView):not(#mesRecettesView) {
       padding: 16px !important;
     }
     #homeView {
@@ -133,6 +136,11 @@
     [id$="View"] > div.view-header {
       margin: -16px -16px 20px -16px !important;
       padding: 80px 16px 20px !important;
+    }
+    #frigoView > div.view-header, #cycleView > div.view-header, #mesRecettesView > div.view-header {
+      padding: 16px !important;
+      min-height: auto !important;
+      justify-content: flex-start !important;
     }
     [id$="View"] > div.view-header div[style*="font-size:2rem"],
     [id$="View"] > div.view-header div[style*="font-size: 2rem"] {
@@ -3406,7 +3414,7 @@ function switchLang(lang) {
     </div>
   </div>
 </div>
-<div id="menusView" style="display:none;padding:32px;padding-bottom:120px;overflow-y:auto;background:var(--cream);width:100%">
+<div id="menusView" style="display:none;padding:8px 32px 32px 32px;padding-bottom:120px;overflow-y:auto;background:var(--cream);width:100%">
   <div class="view-header" style="font-family:'Open Sans',serif;font-size:2rem;font-weight:700;margin-bottom:6px;color:#2D2D2D">Mes menus de la semaine</div>
   <div style="font-size:0.85rem;color:var(--accent);margin-bottom:28px">Menus personnalisés selon votre pathologie et vos préférences</div>
 
@@ -3414,7 +3422,7 @@ function switchLang(lang) {
   <div id="menusPlanRequired" style="display:none"></div>
 
   <!-- Sélecteur semaines -->
-  <div style="background:white;padding:16px;overflow-x:auto;border-bottom:1px solid #f0ece8;margin:-32px -32px 24px -32px">
+  <div style="background:white;padding:16px;overflow-x:auto;border-bottom:1px solid #f0ece8;margin:0 0 24px 0">
     <div id="menusWeekSelector" style="display:flex;gap:10px;min-width:max-content"></div>
   </div>
   <!-- Contenu menus -->
@@ -7712,6 +7720,11 @@ Réponds UNIQUEMENT en JSON valide avec cette structure exacte:
     if (topbar) topbar.style.marginTop = '40px';
     var appPage = document.getElementById('appPage');
     if (appPage) appPage.style.paddingTop = '40px';
+    // Ajuster les vues fixed pour tenir compte du banner
+    document.querySelectorAll('#homeView,#menusView,#frigoView,#cycleView,#catalogueView,#mesRecettesView').forEach(function(el) {
+      el.style.top = '96px';
+    });
+    window._trialBannerActive = true;
   }
 
   function resolvePlan(profile) {
@@ -7793,7 +7806,7 @@ Réponds UNIQUEMENT en JSON valide avec cette structure exacte:
     var hv = document.getElementById('homeView'); if(hv) { hv.style.display = view === 'home' ? 'block' : 'none'; if(view === 'home') { setTimeout(function(){ if(typeof window.initHome==='function') window.initHome(); }, 100); var mc2=document.querySelector('.main-content'); if(mc2){mc2.style.overflow='auto';mc2.style.height='100%';} } }
     var mc = document.querySelector('.main-content');
     if (mc) mc.style.overflow = ['home','cycle','planning','catalogue','menus','chrono','mes-recettes','oracle'].includes(view) ? 'auto' : 'hidden';
-    var catv = document.getElementById('catalogueView'); if(catv) { catv.style.display = view === 'catalogue' ? 'block' : 'none'; if(view === 'catalogue') { catv.style.paddingTop = '60px'; setTimeout(function(){ if(typeof window.initCatalogue==='function') window.initCatalogue(); }, 100); } }
+    var catv = document.getElementById('catalogueView'); if(catv) { catv.style.display = view === 'catalogue' ? 'block' : 'none'; if(view === 'catalogue') {  setTimeout(function(){ if(typeof window.initCatalogue==='function') window.initCatalogue(); }, 100); } }
     var mrv = document.getElementById('mesRecettesView'); if(mrv) { mrv.style.display = view === 'mes-recettes' ? 'block' : 'none'; if(view === 'mes-recettes') setTimeout(function(){ loadMesRecettes(); }, 100); }
     var cv = document.getElementById('cycleView'); if(cv) { cv.style.display = view === 'cycle' ? 'block' : 'none'; if(view === 'cycle') { var mc2 = document.querySelector('.main-content'); if(mc2) mc2.style.overflow = view === 'cycle' ? 'auto' : 'hidden'; setTimeout(function(){ if(typeof initCycle === 'function') initCycle(); }, 100); } }
     var pv = document.getElementById('planningView'); if(pv) { pv.style.display = view === 'planning' ? 'block' : 'none'; var mc = document.querySelector('.main-content'); if(mc) mc.style.overflow = view === 'planning' ? 'auto' : 'hidden'; if(view === 'planning') { setTimeout(function(){ try{ window.renderPlanning(); }catch(e){ document.getElementById('planningGrid').innerHTML='<div style="padding:20px;color:red">'+e.message+'</div>'; } }, 300); var ac=document.getElementById('planningAgendaContent'); var rv=document.getElementById('planningRoutinesView'); var ta=document.getElementById('tabAgenda'); var tr=document.getElementById('tabRoutines'); if(ac)ac.style.display='block'; if(rv)rv.style.display='none'; if(ta){ta.style.background='var(--coral)';ta.style.color='white';} if(tr){tr.style.background='#f0f0f0';tr.style.color='#888';} } }
@@ -7824,7 +7837,7 @@ Réponds UNIQUEMENT en JSON valide avec cette structure exacte:
     document.getElementById('menusView').style.display = view === 'menus' ? 'block' : 'none';
 if (view === 'menus') {
   var mv = document.getElementById('menusView');
-  mv.style.cssText = 'display:block;position:fixed;top:56px;left:0;right:0;bottom:60px;overflow-y:auto;overflow-x:hidden;background:var(--cream);z-index:10;padding:16px 16px 120px;box-sizing:border-box;width:100%';
+  mv.style.cssText = 'display:block;position:fixed;top:56px;left:0;right:0;bottom:60px;overflow-y:auto;overflow-x:hidden;background:var(--cream);z-index:10;padding:0 0 120px 0;box-sizing:border-box;width:100%';
   loadMenus();
   setTimeout(function(){ mv.scrollTop = 0; if(typeof initBottomNav==='function') initBottomNav(); }, 300);
 }
@@ -8296,7 +8309,7 @@ function updateNutritionPanel(dayIndex) {
 
   // Calculer totaux consommes (repas coches uniquement)
   const repas = ['petit_dejeuner','dejeuner','collation','diner'];
-  const iaEnabled = document.getElementById('iaMenusEnabled') ? document.getElementById('iaMenusEnabled').checked : true;
+  const iaEnabled = (window._currentMenu && window._currentMenu.semaine) ? true : (document.getElementById('iaMenusEnabled') ? document.getElementById('iaMenusEnabled').checked : false);
   const checkedMeals = JSON.parse(localStorage.getItem('mirella_checked_meals') || '{}');
   const totals = {cal:0, lip:0, glu:0, pro:0, fib:0, suc:0, sel:0, cal_mg:0, fer:0};
   if (iaEnabled && jour.jour) {
@@ -10066,7 +10079,7 @@ function closeMirellaNotif() {
 </div>
 
 <!-- FRIGO VIEW -->
-<div id="frigoView" style="display:none;padding:32px;overflow-y:auto;background:var(--cream);width:100%">
+<div id="frigoView" style="display:none;position:fixed;top:56px;left:0;right:0;bottom:60px;overflow-y:auto;background:var(--cream);z-index:10;padding:32px;box-sizing:border-box">
   <div class="view-header" style="font-family:'Open Sans',serif;font-size:2rem;font-weight:700;margin-bottom:6px;color:#2D2D2D">Mon Frigo</div>
   <div style="font-size:0.85rem;color:var(--accent);margin-bottom:16px">Photographiez votre frigo pour obtenir des recettes personnalisées</div>
   <div style="border-radius:16px;overflow:hidden;margin-bottom:20px;position:relative;height:180px;background:url(https://raw.githubusercontent.com/avelia-ai/nutricare-frontend/main/analyse_frigo.png) center/cover">
@@ -10168,6 +10181,8 @@ function initBottomNav() {
     }
     // Ajouter padding-bottom à toutes les vues
     document.querySelectorAll('[id$="View"]').forEach(v => {
+      var cs = window.getComputedStyle(v);
+      if (cs.position === 'fixed') return;
       v.style.paddingBottom = '180px';
       if (v.style.paddingTop === '' || v.style.paddingTop === '0px') {
         v.style.paddingTop = '70px';
@@ -10217,7 +10232,7 @@ function toggleQuickMenu() {
 
 
 <!-- CYCLE FEMININ VIEW -->
-<div id="cycleView" style="display:none;padding:0;overflow-y:auto;background:var(--cream);width:100%">
+<div id="cycleView" style="display:none;position:fixed;top:56px;left:0;right:0;bottom:60px;overflow-y:auto;background:var(--cream);z-index:10">
   <div class="view-header" style="background:linear-gradient(135deg,var(--coral),var(--accent));padding:32px 32px 28px">
     <div style="font-size:1.6rem;font-weight:700;color:white;font-family:'Open Sans',sans-serif">🌸 Cycle Féminin</div>
     <div style="font-size:0.9rem;color:rgba(255,255,255,0.8);margin-top:4px">Nutrition & bien-être adaptés à votre cycle</div>
@@ -10342,9 +10357,9 @@ function toggleQuickMenu() {
 
 
 <!-- CATALOGUE RECETTES VIEW -->
-<div id="catalogueView" style="display:none;padding-top:56px;overflow-y:auto;background:var(--cream);width:100%">
+<div id="catalogueView" style="display:none;position:fixed;top:56px;left:0;right:0;bottom:60px;overflow-y:auto;background:var(--cream);z-index:10">
   <!-- Header -->
-  <div style="background:linear-gradient(135deg,var(--coral),var(--accent));padding:70px 20px 20px">
+  <div style="background:linear-gradient(135deg,var(--coral),var(--accent));padding:20px">
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
       <div style="font-size:1.5rem;font-weight:800;color:white">📖 Catalogue Recettes</div>
       <button onclick="showCatalogueFavoris()" style="background:rgba(255,255,255,0.2);border:none;border-radius:20px;color:white;padding:6px 14px;font-size:0.8rem;font-weight:700;cursor:pointer">❤️ Mes favoris</button>
@@ -10461,7 +10476,7 @@ function toggleQuickMenu() {
 <!-- FIN CATALOGUE RECETTES VIEW -->
 
 
-<div id="mesRecettesView" style="display:none;position:fixed;top:56px;left:0;right:0;bottom:60px;overflow-y:auto;background:var(--cream);z-index:10">
+<div id="mesRecettesView" style="display:none;position:fixed;top:56px;left:0;right:0;bottom:60px;overflow-y:auto;background:var(--cream);z-index:10;padding:0">
   <div style="background:linear-gradient(135deg,var(--coral),var(--accent));padding:24px 20px 20px;position:sticky;top:0;z-index:10">
     <div style="font-size:1.3rem;font-weight:800;color:white;margin-bottom:4px">👨‍🍳 Mes Recettes</div>
     <div style="font-size:0.82rem;color:rgba(255,255,255,0.85)">Créez et gérez vos recettes personnelles</div>

@@ -7720,6 +7720,11 @@ Réponds UNIQUEMENT en JSON valide avec cette structure exacte:
     if (topbar) topbar.style.marginTop = '40px';
     var appPage = document.getElementById('appPage');
     if (appPage) appPage.style.paddingTop = '40px';
+    // Ajuster les vues fixed pour tenir compte du banner
+    document.querySelectorAll('#homeView,#menusView,#frigoView,#cycleView,#catalogueView,#mesRecettesView').forEach(function(el) {
+      el.style.top = '96px';
+    });
+    window._trialBannerActive = true;
   }
 
   function resolvePlan(profile) {
