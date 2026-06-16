@@ -25,6 +25,7 @@ jobs:
         run: |
           cp app.html www/app.html
           npx cap sync android
+          cp app.html android/app/src/main/assets/public/app.html
 
       - name: Setup Java
         uses: actions/setup-java@v4
