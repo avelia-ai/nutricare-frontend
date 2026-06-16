@@ -8222,7 +8222,9 @@ function updateNutritionPanel(dayIndex) {
   const hasMenu = window._currentMenu && window._currentMenu.semaine;
   const jour = hasMenu ? (window._currentMenu.semaine[idx] || {}) : {};
   const persoEnabledCheck = document.getElementById('persoMenusEnabled') ? document.getElementById('persoMenusEnabled').checked : false;
-  if (!hasMenu && !persoEnabledCheck) { if (typeof window.updateCaloriesFromMeals === 'function') window.updateCaloriesFromMeals(); return; }
+  var hasPersoMeals = Object.keys(JSON.parse(localStorage.getItem('mirella_checked_meals') || '{}')).some(function(k){ return k.startsWith('mealcheck_perso_'); });
+  if (!hasMenu && !persoEnabledCheck && !hasPersoMeals) { if (typeof window.updateCaloriesFromMeals === 'function') window.updateCaloriesFromMeals(); return; }
+  document.getElementById('menusNutritionPanel').style.display = 'block';
   document.getElementById('menusNutritionPanel').style.display = 'block';
 
   // Calculer totaux consommes (repas coches uniquement)
