@@ -10176,7 +10176,8 @@ function initBottomNav() {
     }
     // Ajouter padding-bottom à toutes les vues
     document.querySelectorAll('[id$="View"]').forEach(v => {
-      if (v.id === 'catalogueView' || v.id === 'mesRecettesView') return;
+      var cs = window.getComputedStyle(v);
+      if (cs.position === 'fixed') return;
       v.style.paddingBottom = '180px';
       if (v.style.paddingTop === '' || v.style.paddingTop === '0px') {
         v.style.paddingTop = '70px';
