@@ -12,19 +12,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '22'
-      - name: Install dependencies
-        run: npm install --ignore-scripts
-      - name: Sync Capacitor
+      - name: Copy HTML to assets
         run: |
-          cp app.html www/app.html
-          npx cap sync android
           cp -f app.html android/app/src/main/assets/public/app.html
-          echo "=== VERIFICATION ==="
-          grep -c "MICRONUTRIMENTS" android/app/src/main/assets/public/app.html || echo "NON TROUVE"
+          echo "Lignes dans assets:" $(wc -l < android/app/src/main/assets/public/app.html)
+          echo "micronutrimentsCard:" $(grep -c micronutrimentsCard android/app/src/main/assets/public/app.html)
       - name: Setup Java
         uses: actions/setup-java@v4
         with:
