@@ -84,7 +84,7 @@
   .btn-logout:hover { color: white; }
 
   /* Main content */
-  .main-content { flex: 1; display: flex; flex-direction: column; overflow: hidden; width: 100%; }
+  .main-content { flex: 1; display: flex; flex-direction: column; overflow: visible; width: 100%; }
 
 
   /* ── VIEW TITLES ── */
@@ -685,7 +685,48 @@ window.openAddPersoRepas = function(key) {
   document.getElementById('persoRepasLip').value = '';
   document.getElementById('persoRepasModal').style.display = 'flex';
 };
-window.savePersoRepas = function() {
+window.analyzeRepasPhoto = async function(input) {
+  if (!input.files || !input.files[0]) return;
+  var file = input.files[0];
+  var preview = document.getElementById('persoRepasPhotoPreview');
+  var img = document.getElementById('persoRepasPhotoImg');
+  var status = document.getElementById('persoRepasPhotoStatus');
+  var btn = document.getElementById('persoRepasPhotoBtn');
+  // Afficher preview
+  var reader = new FileReader();
+  reader.onload = async function(e) {
+    img.src = e.target.result;
+    preview.style.display = 'block';
+    btn.textContent = '⏳ Analyse en cours...';
+    btn.disabled = true;
+    status.textContent = 'Mirella analyse votre plat...';
+    try {
+      var token = localStorage.getItem('nutricare_token') || '';
+      var res = await fetch('https://nutricare-backend-production.up.railway.app/api/vision/analyze-meal', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token},
+        body: JSON.stringify({image: e.target.result})
+      });
+      var data = await res.json();
+      if (data.nom) document.getElementById('persoRepasNom').value = data.nom;
+      if (data.kcal) document.getElementById('persoRepasKcal').value = data.kcal;
+      if (data.glu) document.getElementById('persoRepasGlu').value = data.glu;
+      if (data.pro) document.getElementById('persoRepasPro').value = data.pro;
+      if (data.lip) document.getElementById('persoRepasLip').value = data.lip;
+      // Stocker micros détectés pour savePersoRepas
+      window._detectedMicros = {fib: data.fib||0, suc: data.suc||0, sel: data.sel||0, cal_mg: data.cal_mg||0, fer: data.fer||0};
+      status.textContent = '✅ Détecté : ' + (data.nom||'repas') + ' — ' + (data.kcal||0) + ' kcal';
+      btn.textContent = '📷 Changer la photo';
+    } catch(err) {
+      status.textContent = '❌ Erreur : ' + err.message;
+      btn.textContent = '📷 Réessayer';
+    }
+    btn.disabled = false;
+  };
+  reader.readAsDataURL(file);
+};
+
+window.savePersoRepas = async function() {
   var key = document.getElementById('persoRepasTarget').value;
   var nom = document.getElementById('persoRepasNom').value.trim();
   if (!nom) { alert("Veuillez entrer un nom de repas"); return; }
@@ -693,13 +734,34 @@ window.savePersoRepas = function() {
   var glu = parseInt(document.getElementById('persoRepasGlu').value) || 0;
   var pro = parseInt(document.getElementById('persoRepasPro').value) || 0;
   var lip = parseInt(document.getElementById('persoRepasLip').value) || 0;
+  var btn = document.querySelector('#persoRepasModal button[onclick*="savePersoRepas"]');
+  if (btn) { btn.textContent = '⏳ Analyse en cours...'; btn.disabled = true; }
+  // Utiliser micros détectés par photo, sinon estimer via IA
+  var micros = {fib:0, suc:0, sel:0, cal_mg:0, fer:0};
+  if (window._detectedMicros) {
+    micros = window._detectedMicros;
+    window._detectedMicros = null;
+  } else {
+    try {
+      var token = localStorage.getItem('nutricare_token') || '';
+      var res = await fetch('https://nutricare-backend-production.up.railway.app/api/micros/estimate', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token},
+        body: JSON.stringify({nom: nom, kcal: kcal, glu: glu, pro: pro, lip: lip})
+      });
+      micros = await res.json();
+    } catch(e) {
+      console.warn('Micros estimation failed:', e);
+    }
+  }
   var data = window.getPersoMenus();
   var jour = window._persoMenusJour;
   if (!data[jour]) data[jour] = {};
   if (!data[jour][key]) data[jour][key] = [];
-  data[jour][key].push({nom: nom, kcal: kcal, glu: glu, pro: pro, lip: lip});
+  data[jour][key].push({nom: nom, kcal: kcal, glu: glu, pro: pro, lip: lip, fib: micros.fib, suc: micros.suc, sel: micros.sel, cal_mg: micros.cal_mg, fer: micros.fer});
   window.savePersoMenus(data);
   document.getElementById('persoRepasModal').style.display = 'none';
+  if (btn) { btn.textContent = 'Ajouter'; btn.disabled = false; }
   window.renderPersoMenus();
   if (typeof updateNutritionPanel === 'function') updateNutritionPanel();
 };
@@ -717,7 +779,11 @@ window.togglePersoRepasChecked = function(checkKey, repasKey, idx) {
   }
   localStorage.setItem('mirella_checked_meals', JSON.stringify(meals));
   window.renderPersoMenus();
-  if (typeof updateNutritionPanel === 'function') updateNutritionPanel();
+  // Synchroniser le sélecteur de jour avec le jour perso actif
+  var jourIdx = window.PERSO_JOURS ? window.PERSO_JOURS.indexOf(jour) : -1;
+  var sel = document.getElementById('menusDaySelector');
+  if (sel && jourIdx >= 0) sel.value = jourIdx;
+  if (typeof updateNutritionPanel === 'function') updateNutritionPanel(jourIdx >= 0 ? jourIdx : undefined);
 };
 window.selectPersoJour = function(jour) {
   window._persoMenusJour = jour;
@@ -3477,7 +3543,7 @@ function switchLang(lang) {
     </div>
 
     <!-- Résumé nutritionnel du jour -->
-    <div id="menusNutritionPanel" style="display:none;background:white;border-radius:12px;border:1px solid #E6F1FB;padding:12px;margin-bottom:16px;box-shadow:0 2px 8px rgba(2,26,53,0.06)">
+    <div id="menusNutritionPanel" style="display:none;background:white;border-radius:12px;border:1px solid #E6F1FB;padding:12px;margin-bottom:16px;box-shadow:0 2px 8px rgba(2,26,53,0.06);overflow:visible !important;height:auto !important;min-height:0">
       <div id="menusBudgetBar" style="display:none;background:#F0F7FF;border-radius:8px;padding:10px 16px;margin-bottom:16px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px">
         <div style="font-size:0.78rem;color:#2D2D2D">💰 <strong>Budget semaine estimé :</strong> <span id="menusBudgetTotal">—</span></div>
         <div style="font-size:0.78rem;color:var(--accent)">Budget mensuel : <span id="menusBudgetMensuel">—</span></div>
@@ -3565,54 +3631,13 @@ function switchLang(lang) {
           </div>
         </div>
       </div>
-      <!-- Micronutriments --><div id="testMicro" style="background:red;color:white;font-size:20px;padding:20px;z-index:9999">MICRONUTRIMENTS TEST</div>
-      <div style="margin-top:10px;border-top:1px solid #f0f0f0;padding-top:10px;display:block">
-        <div style="font-size:0.68rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#aaa;margin-bottom:2px">Micronutriments</div>
-        <div>
-          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px">
-            <span style="font-size:0.75rem;font-weight:600;color:#444">🌿 Fibres</span>
-            <span style="font-size:0.75rem;color:#888"><b id="microFibresVal" style="color:#2D2D2D">0</b> <span id="microFibresMax">/ 25 g</span></span>
-          </div>
-          <div style="background:#e8e8e8;border-radius:6px;height:6px;overflow:hidden">
-            <div id="barFibres" style="width:0%;height:100%;background:linear-gradient(90deg,#56ab2f,#a8e063);border-radius:6px;transition:width 0.6s ease"></div>
-          </div>
-        </div>
-        <div>
-          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px">
-            <span style="font-size:0.75rem;font-weight:600;color:#444">🍬 Sucres</span>
-            <span style="font-size:0.75rem;color:#888"><b id="microSucresVal" style="color:#2D2D2D">0</b> <span id="microSucresMax">/ 50 g</span></span>
-          </div>
-          <div style="background:#e8e8e8;border-radius:6px;height:6px;overflow:hidden">
-            <div id="barSucres" style="width:0%;height:100%;background:linear-gradient(90deg,#f7971e,#ffd200);border-radius:6px;transition:width 0.6s ease"></div>
-          </div>
-        </div>
-        <div>
-          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px">
-            <span style="font-size:0.75rem;font-weight:600;color:#444">🧂 Sel</span>
-            <span style="font-size:0.75rem;color:#888"><b id="microSelVal" style="color:#2D2D2D">0</b> <span id="microSelMax">/ 6 g</span></span>
-          </div>
-          <div style="background:#e8e8e8;border-radius:6px;height:6px;overflow:hidden">
-            <div id="barSel" style="width:0%;height:100%;background:linear-gradient(90deg,#c94b4b,#4b134f);border-radius:6px;transition:width 0.6s ease"></div>
-          </div>
-        </div>
-        <div>
-          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px">
-            <span style="font-size:0.75rem;font-weight:600;color:#444">🦴 Calcium</span>
-            <span style="font-size:0.75rem;color:#888"><b id="microCalciumVal" style="color:#2D2D2D">0</b> <span id="microCalciumMax">/ 1000 mg</span></span>
-          </div>
-          <div style="background:#e8e8e8;border-radius:6px;height:6px;overflow:hidden">
-            <div id="barCalcium" style="width:0%;height:100%;background:linear-gradient(90deg,#4776E6,#8E54E9);border-radius:6px;transition:width 0.6s ease"></div>
-          </div>
-        </div>
-        <div>
-          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px">
-            <span style="font-size:0.75rem;font-weight:600;color:#444">🩸 Fer</span>
-            <span style="font-size:0.75rem;color:#888"><b id="microFerVal" style="color:#2D2D2D">0</b> <span id="microFerMax">/ 16 mg</span></span>
-          </div>
-          <div style="background:#e8e8e8;border-radius:6px;height:6px;overflow:hidden">
-            <div id="barFer" style="width:0%;height:100%;background:linear-gradient(90deg,#cb2d3e,#ef473a);border-radius:6px;transition:width 0.6s ease"></div>
-          </div>
-        </div>
+      <div style="margin-top:10px;padding-top:10px;border-top:1px solid #f0f0f0">
+        <div style="font-size:0.68rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#aaa;margin-bottom:8px">🧬 Micronutriments</div>
+        <div style="margin-bottom:6px"><div style="display:flex;justify-content:space-between;font-size:0.75rem;margin-bottom:3px"><span>🌿 Fibres</span><span><b id="microFibresVal">0</b> <span id="microFibresMax">/ 25 g</span></span></div><div style="background:#e8e8e8;border-radius:6px;height:6px"><div id="barFibres" style="width:0%;height:6px;background:linear-gradient(90deg,#56ab2f,#a8e063);border-radius:6px"></div></div></div>
+        <div style="margin-bottom:6px"><div style="display:flex;justify-content:space-between;font-size:0.75rem;margin-bottom:3px"><span>🍬 Sucres</span><span><b id="microSucresVal">0</b> <span id="microSucresMax">/ 50 g</span></span></div><div style="background:#e8e8e8;border-radius:6px;height:6px"><div id="barSucres" style="width:0%;height:6px;background:linear-gradient(90deg,#f7971e,#ffd200);border-radius:6px"></div></div></div>
+        <div style="margin-bottom:6px"><div style="display:flex;justify-content:space-between;font-size:0.75rem;margin-bottom:3px"><span>🧂 Sel</span><span><b id="microSelVal">0</b> <span id="microSelMax">/ 6 g</span></span></div><div style="background:#e8e8e8;border-radius:6px;height:6px"><div id="barSel" style="width:0%;height:6px;background:linear-gradient(90deg,#c94b4b,#4b134f);border-radius:6px"></div></div></div>
+        <div style="margin-bottom:6px"><div style="display:flex;justify-content:space-between;font-size:0.75rem;margin-bottom:3px"><span>🦴 Calcium</span><span><b id="microCalciumVal">0</b> <span id="microCalciumMax">/ 1000 mg</span></span></div><div style="background:#e8e8e8;border-radius:6px;height:6px"><div id="barCalcium" style="width:0%;height:6px;background:linear-gradient(90deg,#4776E6,#8E54E9);border-radius:6px"></div></div></div>
+        <div style="margin-bottom:6px"><div style="display:flex;justify-content:space-between;font-size:0.75rem;margin-bottom:3px"><span>🩸 Fer</span><span><b id="microFerVal">0</b> <span id="microFerMax">/ 16 mg</span></span></div><div style="background:#e8e8e8;border-radius:6px;height:6px"><div id="barFer" style="width:0%;height:6px;background:linear-gradient(90deg,#cb2d3e,#ef473a);border-radius:6px"></div></div></div>
       </div>
       <div style="display:flex;align-items:center;justify-content:space-between;margin-top:8px;gap:8px">
         <div id="nutritionAdvice" style="font-size:0.7rem;color:var(--coral)">Selectionnez un jour</div>
@@ -8255,20 +8280,23 @@ async function showRecipeModal(btn) {
     document.getElementById('recipeModalEtapes').innerHTML = '<div style="color:#e74c3c;font-size:0.85rem">Erreur de génération</div>';
   }
 }
-let _currentMenu = null;
+window._currentMenu = null;
 let _donutChart = null;
 
 function updateNutritionPanel(dayIndex) {
   const idx = dayIndex !== undefined ? dayIndex : parseInt(document.getElementById('menusDaySelector')?.value || 0);
-  const hasMenu = _currentMenu && _currentMenu.semaine;
-  const jour = hasMenu ? (_currentMenu.semaine[idx] || {}) : {};
+  const hasMenu = window._currentMenu && window._currentMenu.semaine;
+  const jour = hasMenu ? (window._currentMenu.semaine[idx] || {}) : {};
   const persoEnabledCheck = document.getElementById('persoMenusEnabled') ? document.getElementById('persoMenusEnabled').checked : false;
-  if (!hasMenu && !persoEnabledCheck) return;
+  var hasPersoMeals = Object.keys(JSON.parse(localStorage.getItem('mirella_checked_meals') || '{}')).some(function(k){ return k.startsWith('mealcheck_perso_'); });
+  if (!hasMenu && !persoEnabledCheck && !hasPersoMeals) { if (typeof window.updateCaloriesFromMeals === 'function') window.updateCaloriesFromMeals(); return; }
+  document.getElementById('menusNutritionPanel').style.display = 'block';
+  document.getElementById('menusNutritionPanel').style.display = 'block';
   document.getElementById('menusNutritionPanel').style.display = 'block';
 
   // Calculer totaux consommes (repas coches uniquement)
   const repas = ['petit_dejeuner','dejeuner','collation','diner'];
-  const iaEnabled = document.getElementById('iaMenusEnabled') ? document.getElementById('iaMenusEnabled').checked : true;
+  const iaEnabled = (window._currentMenu && window._currentMenu.semaine) ? true : (document.getElementById('iaMenusEnabled') ? document.getElementById('iaMenusEnabled').checked : false);
   const checkedMeals = JSON.parse(localStorage.getItem('mirella_checked_meals') || '{}');
   const totals = {cal:0, lip:0, glu:0, pro:0, fib:0, suc:0, sel:0, cal_mg:0, fer:0};
   if (iaEnabled && jour.jour) {
@@ -8329,8 +8357,11 @@ function updateNutritionPanel(dayIndex) {
   if (document.getElementById('barGlucides')) document.getElementById('barGlucides').style.width = gluPct + '%';
   if (document.getElementById('barProteines')) document.getElementById('barProteines').style.width = proPct + '%';
   if (document.getElementById('barLipides')) document.getElementById('barLipides').style.width = lipPct + '%';
-  // Micronutriments
-  const micros = [
+
+  // Micronutriments carte separee
+  var microCard = document.getElementById('micronutrimentsCard');
+  if (microCard) microCard.style.display = 'block';
+  var micros = [
     {id:'Fibres', val: totals.fib, max:25, unit:'g'},
     {id:'Sucres', val: totals.suc, max:50, unit:'g'},
     {id:'Sel',    val: totals.sel, max:6,  unit:'g'},
@@ -8356,6 +8387,7 @@ function updateNutritionPanel(dayIndex) {
 function renderMenu(menu) {
   const repasIcons = { petit_dejeuner: '🌅', dejeuner: '☀️', collation: '🍎', diner: '🌙' };
   const repasLabels = { petit_dejeuner: 'Petit-déjeuner', dejeuner: 'Déjeuner', collation: 'Collation', diner: 'Dîner' };
+  window._currentMenu = menu;
   _currentMenu = menu;
   document.getElementById('menusNutritionPanel').style.display = 'block';
   const delWeekBtn = document.getElementById('deleteWeekBtn');
@@ -11452,6 +11484,14 @@ document.addEventListener('deviceready', function() {
       <div style="font-size:0.8rem;font-weight:600;color:#555;margin-bottom:6px">Nom du repas</div>
       <input type="text" id="persoRepasNom" placeholder="Ex: Salade de quinoa" style="width:100%;padding:12px;border:1px solid #eee;border-radius:10px;font-size:0.9rem;box-sizing:border-box">
     </div>
+    <input type="file" id="persoRepasPhoto" accept="image/*" capture="environment" style="display:none" onchange="window.analyzeRepasPhoto(this)">
+    <button onclick="document.getElementById('persoRepasPhoto').click()" id="persoRepasPhotoBtn" style="width:100%;background:#f8f8f8;border:1.5px dashed #ddd;border-radius:12px;padding:12px;font-size:0.88rem;color:#666;cursor:pointer;margin-bottom:14px">
+      📷 Prendre une photo pour détecter automatiquement
+    </button>
+    <div id="persoRepasPhotoPreview" style="display:none;margin-bottom:14px;text-align:center">
+      <img id="persoRepasPhotoImg" style="max-height:120px;border-radius:10px;object-fit:cover">
+      <div id="persoRepasPhotoStatus" style="font-size:0.78rem;color:#888;margin-top:6px"></div>
+    </div>
     <div style="font-size:0.78rem;color:#888;margin-bottom:8px">Valeurs nutritionnelles (optionnel)</div>
     <div style="display:flex;gap:10px;margin-bottom:16px">
       <div style="flex:1"><div style="font-size:0.75rem;color:#888;margin-bottom:4px">Kcal</div><input type="number" id="persoRepasKcal" min="0" max="3000" placeholder="0" style="width:100%;padding:10px;border:1px solid #eee;border-radius:8px;font-size:0.85rem;box-sizing:border-box"></div>
@@ -11590,3 +11630,4 @@ document.addEventListener('deviceready', function() {
       </div>
 </body>
 </html>
+ 
