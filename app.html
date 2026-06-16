@@ -708,7 +708,10 @@ window.savePersoRepas = async function() {
     var txt = data2.content && data2.content[0] ? data2.content[0].text : '{}';
     var parsed = JSON.parse(txt.replace(/```json|```/g,'').trim());
     micros = {fib: parsed.fib||0, suc: parsed.suc||0, sel: parsed.sel||0, cal_mg: parsed.cal_mg||0, fer: parsed.fer||0};
-  } catch(e) { console.warn('Micros estimation failed:', e); }
+  } catch(e) {
+    console.error('Micros estimation failed:', e);
+    alert('Debug micros: ' + e.message);
+  }
   var data = window.getPersoMenus();
   var jour = window._persoMenusJour;
   if (!data[jour]) data[jour] = {};
