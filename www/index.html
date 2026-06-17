@@ -10538,6 +10538,114 @@ function toggleQuickMenu() {
   </div>
 </div>
 <script>
+window._recettesTab = 'mes';
+window.switchRecettesTab = function(tab) {
+  window._recettesTab = tab;
+  ['tabMesRecettes','tabCommunaute','tabFavoris'].forEach(function(id){
+    var btn = document.getElementById(id);
+    if (!btn) return;
+    var active = (id === 'tabMesRecettes' && tab === 'mes') || (id === 'tabCommunaute' && tab === 'communaute') || (id === 'tabFavoris' && tab === 'favoris');
+    btn.style.background = active ? 'var(--coral)' : 'white';
+    btn.style.color = active ? 'white' : '#888';
+  });
+  window.loadMesRecettes();
+};
+
+window.loadMesRecettes = async function() {
+  var list = document.getElementById('mesRecettesList');
+  if (!list) return;
+  list.innerHTML = '<div style="text-align:center;padding:40px;color:#ccc">Chargement...</div>';
+  var token = localStorage.getItem('nutricare_token');
+  var tab = window._recettesTab || 'mes';
+  try {
+    var apiType = tab === 'mes' ? 'mes' : 'communaute';
+    var res = await fetch(BACKEND_URL + '/api/user-recettes?type=' + apiType, {
+      headers: { 'Authorization': 'Bearer ' + token }
+    });
+    var data = await res.json();
+    var recettes = data.recettes || [];
+    if (tab === 'favoris') {
+      var favIds = JSON.parse(localStorage.getItem('mirella_recettes_favoris') || '[]');
+      recettes = recettes.filter(function(r){ return favIds.includes(r.id); });
+    }
+    if (!recettes.length) {
+      list.innerHTML = '<div style="text-align:center;padding:40px;color:#ccc">Aucune recette pour le moment</div>';
+      return;
+    }
+    list.innerHTML = recettes.map(function(r) {
+      var catEmoji = {petit_dejeuner:'🌅',dejeuner:'☀️',diner:'🌙',collation:'🍎',dessert:'🍰',entree:'🥗'}[r.categorie] || '🍽️';
+      return '<div style="background:white;border-radius:14px;padding:14px;margin-bottom:10px;box-shadow:0 2px 8px rgba(0,0,0,0.05)">' +
+        '<div style="display:flex;justify-content:space-between;align-items:flex-start">' +
+        '<div style="flex:1"><div style="font-weight:700;font-size:0.92rem;color:#1a1a1a">' + catEmoji + ' ' + r.nom + '</div>' +
+        '<div style="font-size:0.75rem;color:#888;margin-top:4px">' + (r.calories||0) + ' kcal · ' + (r.prep_minutes||0) + ' min · ' + (r.visibilite === 'public' ? '🌍 Publique' : '🔒 Privée') + '</div></div>' +
+        (tab === 'mes' ? '<button onclick="window.supprimerRecette(\'' + r.id + '\')" style="background:none;border:none;color:#ccc;font-size:1.1rem;cursor:pointer;padding:4px">×</button>' : '') +
+        '</div></div>';
+    }).join('');
+  } catch(e) {
+    list.innerHTML = '<div style="text-align:center;padding:40px;color:#e74c3c">Erreur de chargement</div>';
+  }
+};
+
+window.supprimerRecette = async function(id) {
+  if (!confirm('Supprimer cette recette ?')) return;
+  var token = localStorage.getItem('nutricare_token');
+  try {
+    await fetch(BACKEND_URL + '/api/user-recettes/' + id, {
+      method: 'DELETE',
+      headers: { 'Authorization': 'Bearer ' + token }
+    });
+    window.loadMesRecettes();
+  } catch(e) { alert('Erreur lors de la suppression'); }
+};
+
+window.showFormulaireRecette = function() {
+  ['rcNom','rcCategorie','rcCalories','rcTemps','rcProteines','rcGlucides','rcLipides','rcIngredients','rcEtapes'].forEach(function(id){
+    var el = document.getElementById(id);
+    if (el) el.value = '';
+  });
+  window.setVisibilite('prive');
+  document.getElementById('formulaireRecetteModal').style.display = 'block';
+};
+
+window._recetteVisibilite = 'prive';
+window.setVisibilite = function(v) {
+  window._recetteVisibilite = v;
+  var btnPrive = document.getElementById('btnPrive');
+  var btnPublic = document.getElementById('btnPublic');
+  if (btnPrive) { btnPrive.style.background = v === 'prive' ? 'var(--coral)' : 'white'; btnPrive.style.color = v === 'prive' ? 'white' : '#888'; }
+  if (btnPublic) { btnPublic.style.background = v === 'public' ? 'var(--coral)' : 'white'; btnPublic.style.color = v === 'public' ? 'white' : '#888'; }
+};
+
+window.sauvegarderRecette = async function() {
+  var nom = document.getElementById('rcNom').value.trim();
+  if (!nom) { alert('Veuillez entrer un nom de recette'); return; }
+  var payload = {
+    nom: nom,
+    categorie: document.getElementById('rcCategorie').value || null,
+    calories: parseInt(document.getElementById('rcCalories').value) || null,
+    prep_minutes: parseInt(document.getElementById('rcTemps').value) || null,
+    proteines: parseInt(document.getElementById('rcProteines').value) || null,
+    glucides: parseInt(document.getElementById('rcGlucides').value) || null,
+    lipides: parseInt(document.getElementById('rcLipides').value) || null,
+    ingredients: document.getElementById('rcIngredients').value.split('\n').map(function(s){return s.trim();}).filter(Boolean),
+    etapes: document.getElementById('rcEtapes').value.split('\n').map(function(s){return s.trim();}).filter(Boolean),
+    visibilite: window._recetteVisibilite || 'prive'
+  };
+  var token = localStorage.getItem('nutricare_token');
+  try {
+    var res = await fetch(BACKEND_URL + '/api/user-recettes', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
+      body: JSON.stringify(payload)
+    });
+    if (!res.ok) throw new Error('save failed');
+    document.getElementById('formulaireRecetteModal').style.display = 'none';
+    window.loadMesRecettes();
+  } catch(e) {
+    alert('Erreur lors de la sauvegarde de la recette');
+  }
+};
+
 window.rechercherPathologie = async function() {
   var input = document.getElementById('pathoSearchInput');
   var loading = document.getElementById('pathoLoading');
