@@ -3769,6 +3769,16 @@ function switchLang(lang) {
         <input type="number" id="hEnergy" min="1" max="10" placeholder="1-10" style="width:100%;background:transparent;border:none;border-bottom:1.5px solid rgba(255,107,107,0.3);font-size:1rem;font-weight:700;color:#2D2D2D;font-family:'DM Sans',sans-serif;outline:none;padding:2px 0">
       </div>
       <div style="background:var(--cream);border-radius:14px;padding:14px">
+        <div style="font-size:1.4rem;margin-bottom:6px">🧘</div>
+        <div style="font-size:0.7rem;color:var(--accent);font-weight:600;margin-bottom:6px">STRESS (1-10)</div>
+        <input type="number" id="hStress" min="1" max="10" placeholder="1-10" style="width:100%;background:transparent;border:none;border-bottom:1.5px solid rgba(255,107,107,0.3);font-size:1rem;font-weight:700;color:#2D2D2D;font-family:'DM Sans',sans-serif;outline:none;padding:2px 0">
+      </div>
+      <div style="background:var(--cream);border-radius:14px;padding:14px">
+        <div style="font-size:1.4rem;margin-bottom:6px">🏃</div>
+        <div style="font-size:0.7rem;color:var(--accent);font-weight:600;margin-bottom:6px">ACTIVITÉ (min)</div>
+        <input type="number" id="hActivity" min="0" placeholder="minutes" style="width:100%;background:transparent;border:none;border-bottom:1.5px solid rgba(255,107,107,0.3);font-size:1rem;font-weight:700;color:#2D2D2D;font-family:'DM Sans',sans-serif;outline:none;padding:2px 0">
+      </div>
+      <div style="background:var(--cream);border-radius:14px;padding:14px">
         <div style="font-size:1.4rem;margin-bottom:6px">😴</div>
         <div style="font-size:0.7rem;color:var(--accent);font-weight:600;margin-bottom:6px">SOMMEIL (h)</div>
         <input type="number" id="hSleep" step="0.5" placeholder="heures" style="width:100%;background:transparent;border:none;border-bottom:1.5px solid rgba(255,107,107,0.3);font-size:1rem;font-weight:700;color:#2D2D2D;font-family:'DM Sans',sans-serif;outline:none;padding:2px 0">
@@ -8747,6 +8757,8 @@ async function loadHealthDashboard() {
     window.updateIMCDisplay();
     if (today.energy_level) document.getElementById('hEnergy').value = today.energy_level;
     if (today.sleep_hours) document.getElementById('hSleep').value = today.sleep_hours;
+    if (today.stress_level) document.getElementById('hStress').value = today.stress_level;
+    if (today.activity_minutes) document.getElementById('hActivity').value = today.activity_minutes;
     if (today.blood_pressure_sys) document.getElementById('hBpSys').value = today.blood_pressure_sys;
     if (today.blood_pressure_dia) document.getElementById('hBpDia').value = today.blood_pressure_dia;
     if (today.hydration_liters) document.getElementById('hHydration').value = today.hydration_liters;
@@ -8772,6 +8784,8 @@ async function loadHealthForDate(dateStr) {
       if (log.weight) document.getElementById('hWeight').value = log.weight;
       if (log.energy_level) document.getElementById('hEnergy').value = log.energy_level;
       if (log.sleep_hours) document.getElementById('hSleep').value = log.sleep_hours;
+      if (log.stress_level) document.getElementById('hStress').value = log.stress_level;
+      if (log.activity_minutes) document.getElementById('hActivity').value = log.activity_minutes;
       if (log.hydration_liters) { document.getElementById('hHydration').value = log.hydration_liters; _hydrationMl = Math.round(log.hydration_liters * 1000); localStorage.setItem(getHydrationKey(), _hydrationMl); if(typeof updateHydrationDisplay==='function') updateHydrationDisplay(); }
       if (log.notes) document.getElementById('hNotes').value = log.notes;
       // Afficher un indicateur de date
@@ -8783,7 +8797,7 @@ async function loadHealthForDate(dateStr) {
       }
     } else {
       // Vider les champs si pas de données pour cette date
-      ['hGlycemia','hWeight','hEnergy','hSleep','hHydration','hNotes'].forEach(id => {
+      ['hGlycemia','hWeight','hEnergy','hSleep','hStress','hActivity','hHydration','hNotes'].forEach(id => {
         const el = document.getElementById(id);
         if (el) el.value = '';
       });
@@ -8830,6 +8844,8 @@ async function saveHealthLog() {
     weight: parseFloat(document.getElementById('hWeight').value) || null,
     energy_level: parseInt(document.getElementById('hEnergy').value) || null,
     sleep_hours: parseFloat(document.getElementById('hSleep').value) || null,
+    stress_level: parseInt(document.getElementById('hStress').value) || null,
+    activity_minutes: parseInt(document.getElementById('hActivity').value) || null,
     blood_pressure_sys: parseInt(document.getElementById('hBpSys').value) || null,
     blood_pressure_dia: parseInt(document.getElementById('hBpDia').value) || null,
     hydration_liters: parseFloat(document.getElementById('hHydration').value) || null,
