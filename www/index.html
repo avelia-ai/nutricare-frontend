@@ -3151,14 +3151,8 @@ function switchLang(lang) {
             <label class="profile-label">Âge</label>
             <input type="number" class="profile-input" id="profileAge" placeholder="ex: 35" min="10" max="120">
           </div>
-          <div class="profile-field">
-            <label class="profile-label">Poids (kg)</label>
-            <input type="number" class="profile-input" id="profilePoids" placeholder="ex: 70" min="30" max="300" step="0.1">
-          </div>
-          <div class="profile-field">
-            <label class="profile-label">Taille (cm)</label>
-            <input type="number" class="profile-input" id="profileTaille" placeholder="ex: 170" min="100" max="250">
-          </div>
+          <input type="hidden" id="profilePoids">
+          <input type="hidden" id="profileTaille">
           <div class="profile-field">
             <label class="profile-label">Niveau d'activité</label>
             <select class="profile-input" id="profileActivite">
@@ -3756,7 +3750,18 @@ function switchLang(lang) {
       <div style="background:var(--cream);border-radius:14px;padding:14px">
         <div style="font-size:1.4rem;margin-bottom:6px">⚖️</div>
         <div style="font-size:0.7rem;color:var(--accent);font-weight:600;margin-bottom:6px">POIDS (kg)</div>
-        <input type="number" id="hWeight" step="0.1" placeholder="kg" style="width:100%;background:transparent;border:none;border-bottom:1.5px solid rgba(255,107,107,0.3);font-size:1rem;font-weight:700;color:#2D2D2D;font-family:'DM Sans',sans-serif;outline:none;padding:2px 0">
+        <input type="number" id="hWeight" step="0.1" placeholder="kg" oninput="window.updateIMCDisplay()" style="width:100%;background:transparent;border:none;border-bottom:1.5px solid rgba(255,107,107,0.3);font-size:1rem;font-weight:700;color:#2D2D2D;font-family:'DM Sans',sans-serif;outline:none;padding:2px 0">
+      </div>
+      <div style="background:var(--cream);border-radius:14px;padding:14px">
+        <div style="font-size:1.4rem;margin-bottom:6px">📏</div>
+        <div style="font-size:0.7rem;color:var(--accent);font-weight:600;margin-bottom:6px">TAILLE (cm)</div>
+        <input type="number" id="hHeight" placeholder="cm" oninput="window.updateIMCDisplay()" style="width:100%;background:transparent;border:none;border-bottom:1.5px solid rgba(255,107,107,0.3);font-size:1rem;font-weight:700;color:#2D2D2D;font-family:'DM Sans',sans-serif;outline:none;padding:2px 0">
+      </div>
+      <div style="background:var(--cream);border-radius:14px;padding:14px">
+        <div style="font-size:1.4rem;margin-bottom:6px">📊</div>
+        <div style="font-size:0.7rem;color:var(--accent);font-weight:600;margin-bottom:6px">IMC</div>
+        <div id="hImcValue" style="font-size:1rem;font-weight:700;color:#2D2D2D">—</div>
+        <div id="hImcLabel" style="font-size:0.68rem;color:#aaa;margin-top:2px"></div>
       </div>
       <div style="background:var(--cream);border-radius:14px;padding:14px">
         <div style="font-size:1.4rem;margin-bottom:6px">⚡</div>
@@ -8737,6 +8742,9 @@ async function loadHealthDashboard() {
     const logs = await logsRes.json();
     if (today.glycemia) document.getElementById('hGlycemia').value = today.glycemia;
     if (today.weight) document.getElementById('hWeight').value = today.weight;
+    var localProfile = JSON.parse(localStorage.getItem('nutricare_profile') || '{}');
+    if (localProfile.taille && document.getElementById('hHeight')) document.getElementById('hHeight').value = localProfile.taille;
+    window.updateIMCDisplay();
     if (today.energy_level) document.getElementById('hEnergy').value = today.energy_level;
     if (today.sleep_hours) document.getElementById('hSleep').value = today.sleep_hours;
     if (today.blood_pressure_sys) document.getElementById('hBpSys').value = today.blood_pressure_sys;
@@ -8799,6 +8807,18 @@ async function loadMenusForDate(dateStr) {
 async function loadDashboardForDate(dateStr) {
   console.log('Chargement dashboard pour', dateStr);
 }
+window.updateIMCDisplay = function() {
+  var w = parseFloat(document.getElementById('hWeight')?.value);
+  var h = parseFloat(document.getElementById('hHeight')?.value);
+  var imcVal = document.getElementById('hImcValue');
+  var imcLabel = document.getElementById('hImcLabel');
+  if (!imcVal || !imcLabel) return;
+  if (!w || !h) { imcVal.textContent = '—'; imcLabel.textContent = ''; return; }
+  var imc = w / Math.pow(h/100, 2);
+  imcVal.textContent = imc.toFixed(1);
+  var cat = imc < 18.5 ? 'Maigreur' : imc < 25 ? 'Normal' : imc < 30 ? 'Surpoids' : 'Obésité';
+  imcLabel.textContent = cat;
+};
 async function saveHealthLog() {
   const selectedDate = (typeof wcalSelected !== 'undefined' ? wcalSelected : new Date()).toISOString().split('T')[0];
   // Sync hydratation
@@ -8825,6 +8845,24 @@ async function saveHealthLog() {
       const msg = document.getElementById('healthSaveMsg');
       msg.style.display = 'inline';
       setTimeout(() => msg.style.display = 'none', 3000);
+      // Synchroniser poids/taille vers le profil pour Mifflin-St Jeor
+      var heightVal = parseFloat(document.getElementById('hHeight')?.value);
+      var weightVal = parseFloat(document.getElementById('hWeight')?.value);
+      if (heightVal || weightVal) {
+        var profileUpdate = {};
+        if (heightVal) profileUpdate.taille = heightVal;
+        if (weightVal) profileUpdate.poids = weightVal;
+        try {
+          await fetch(`${BACKEND_URL}/api/profile`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${authToken}` },
+            body: JSON.stringify(profileUpdate)
+          });
+          var localProfile = JSON.parse(localStorage.getItem('nutricare_profile') || '{}');
+          Object.assign(localProfile, profileUpdate);
+          localStorage.setItem('nutricare_profile', JSON.stringify(localProfile));
+        } catch(e) { console.warn('sync profil poids/taille failed', e); }
+      }
       loadHealthDashboard();
     } else {
       const err = await res.json();
