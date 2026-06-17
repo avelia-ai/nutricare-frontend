@@ -3748,11 +3748,11 @@ function switchLang(lang) {
     <div style="position:relative;width:100%;aspect-ratio:1/1;max-height:240px;margin:0 auto 18px;display:flex;align-items:center;justify-content:center">
       <canvas id="harmonyCanvas" style="width:100%;height:100%"></canvas>
     </div>
-    <div style="display:flex;justify-content:center;gap:14px;flex-wrap:wrap;margin-bottom:14px">
-      <div style="display:flex;align-items:center;gap:5px;font-size:0.7rem;color:#8a8a8a"><span style="width:8px;height:8px;border-radius:50%;background:#7EC8E3;display:inline-block"></span>Sommeil</div>
-      <div style="display:flex;align-items:center;gap:5px;font-size:0.7rem;color:#8a8a8a"><span style="width:8px;height:8px;border-radius:50%;background:#A8D8A8;display:inline-block"></span>Hydratation</div>
-      <div style="display:flex;align-items:center;gap:5px;font-size:0.7rem;color:#8a8a8a"><span style="width:8px;height:8px;border-radius:50%;background:#FFB347;display:inline-block"></span>Activité</div>
-      <div style="display:flex;align-items:center;gap:5px;font-size:0.7rem;color:#8a8a8a"><span style="width:8px;height:8px;border-radius:50%;background:#C3A9D1;display:inline-block"></span>Calme</div>
+    <div style="display:flex;justify-content:center;gap:12px;flex-wrap:wrap;margin-bottom:14px">
+      <div style="display:flex;align-items:center;gap:5px;font-size:0.7rem;color:#8a8a8a"><span style="width:8px;height:8px;border-radius:50%;background:#7EC8E3;display:inline-block"></span>Sommeil <b id="harmonyPctSleep" style="color:#2D2D2D">0%</b></div>
+      <div style="display:flex;align-items:center;gap:5px;font-size:0.7rem;color:#8a8a8a"><span style="width:8px;height:8px;border-radius:50%;background:#A8D8A8;display:inline-block"></span>Hydratation <b id="harmonyPctHydra" style="color:#2D2D2D">0%</b></div>
+      <div style="display:flex;align-items:center;gap:5px;font-size:0.7rem;color:#8a8a8a"><span style="width:8px;height:8px;border-radius:50%;background:#FFB347;display:inline-block"></span>Activité <b id="harmonyPctActiv" style="color:#2D2D2D">0%</b></div>
+      <div style="display:flex;align-items:center;gap:5px;font-size:0.7rem;color:#8a8a8a"><span style="width:8px;height:8px;border-radius:50%;background:#C3A9D1;display:inline-block"></span>Stress <b id="harmonyPctStress" style="color:#2D2D2D">0%</b></div>
     </div>
     <div id="harmonyCaption" style="text-align:center;font-size:0.82rem;color:#8a8a8a;margin-bottom:4px;min-height:1.2em">Ton équilibre prend forme doucement.</div>
     <div style="display:flex;align-items:baseline;justify-content:center;gap:6px;margin-top:4px">
@@ -8934,7 +8934,8 @@ function normalizeHealthLog(log) {
   const hydra  = Math.min((log.water_liters || 0) / 2,  1);
   const activ  = Math.min((log.activity_min || 0) / 30, 1);
   const calm   = log.stress_level != null ? (10 - log.stress_level) / 9 : 0;
-  return { sleep, hydra, activ, calm };
+  const stress = log.stress_level != null ? Math.min(log.stress_level / 10, 1) : 0;
+  return { sleep, hydra, activ, calm, stress };
 }
 
 function calcDayPoints(log, prevLogExists) {
@@ -9150,13 +9151,24 @@ function updateHarmonyUI(totalPoints) {
 function refreshHarmonyAvatar(logs) {
   const totalPoints = calcHarmonyFromLogs(logs);
   updateHarmonyUI(totalPoints);
-
   // Valeurs du dernier log pour l'avatar visuel
+  var norm;
   if (logs && logs.length) {
     const last = [...logs].sort((a,b) => new Date(b.date) - new Date(a.date))[0];
-    renderHarmonyAvatar(normalizeHealthLog(last));
+    norm = normalizeHealthLog(last);
   } else {
-    renderHarmonyAvatar({ sleep: 0, hydra: 0, activ: 0, calm: 0 });
+    norm = { sleep: 0, hydra: 0, activ: 0, calm: 0, stress: 0 };
+  }
+  renderHarmonyAvatar(norm);
+  var pctSleep  = document.getElementById('harmonyPctSleep');
+  var pctHydra  = document.getElementById('harmonyPctHydra');
+  var pctActiv  = document.getElementById('harmonyPctActiv');
+  var pctStress = document.getElementById('harmonyPctStress');
+  if (pctSleep)  pctSleep.textContent  = Math.round(norm.sleep  * 100) + '%';
+  if (pctHydra)  pctHydra.textContent  = Math.round(norm.hydra  * 100) + '%';
+  if (pctActiv)  pctActiv.textContent  = Math.round(norm.activ  * 100) + '%';
+  if (pctStress) pctStress.textContent = Math.round(norm.stress * 100) + '%';
+}
   }
 }
 
