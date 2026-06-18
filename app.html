@@ -414,7 +414,7 @@ button[style*="background:linear-gradient(135deg,var(--coral),var(--accent))"] {
 /* Views background */
 #chatView, #dashboardView, #profileView,
 #menusView, #analysisView, #healthView,
-#protocolsView {
+#proView, #protocolsView {
   background: var(--cream) !important;
 }
 
@@ -2537,6 +2537,7 @@ function switchLang(lang) {
         <button class="nav-item" onclick="showView('home', this)">Dashboard</button>
         <button class="nav-item" onclick="showView('health', this)">Suivi sante</button>
         <button class="nav-item" onclick="showView('menus', this)">Mes menus</button>
+        <button class="nav-item" onclick="showView('pro', this)">Espace Medecin</button>
         <button class="nav-item" onclick="showView('gamification', this)">Ma progression</button>
       </div>
       <div id="menuPremium" style="display:none">
@@ -4782,6 +4783,48 @@ function switchLang(lang) {
   </div>
 </div>
 
+<div id="proView" style="display:none;padding:16px;overflow-y:auto;background:var(--cream);width:100%;box-sizing:border-box;overflow-x:hidden">
+  <div class="view-header" style="background:linear-gradient(135deg,var(--coral),var(--accent));margin:-32px -32px 32px -32px;padding:32px 32px 28px"><div style="font-size:1.6rem;font-weight:700;color:white;font-family:'Open Sans',sans-serif">Mes professionnels de santé</div><div style="font-size:0.9rem;color:rgba(255,255,255,0.8);margin-top:4px">Partagez vos données avec votre médecin ou nutritionniste</div></div>
+  <div style="font-size:0.85rem;color:var(--accent);margin-bottom:16px">Partagez vos données avec votre médecin ou nutritionniste</div>
+  <div style="border-radius:16px;overflow:hidden;margin-bottom:20px;position:relative;height:180px;background:url(https://raw.githubusercontent.com/avelia-ai/nutricare-frontend/main/espace-medecin.png) center/cover">
+    <div style="position:absolute;inset:0;background:rgba(0,0,0,0.25)"></div>
+    <div style="position:absolute;inset:0;display:flex;align-items:center;padding:16px">
+      <div style="font-size:0.85rem;color:white;font-weight:600;text-shadow:0 1px 3px rgba(0,0,0,0.4)">Partagez vos données de santé avec vos professionnels de santé en toute sécurité 🩺</div>
+    </div>
+  </div>
+
+  <!-- Plan requis -->
+  <div id="proPlanRequired" style="display:none;background:white;border-radius: 4px;padding:28px;border:1px solid rgba(255,107,107,0.15);text-align:center;margin-bottom:24px">
+    <div style="font-size:1.4rem;margin-bottom:8px">⭐</div>
+    <div style="font-size:1rem;font-weight:600;color:#2D2D2D;margin-bottom:8px">Fonctionnalité Standard & Premium</div>
+    <div style="font-size:0.85rem;color:var(--accent);margin-bottom:18px">Passez à un plan payant pour partager vos données avec vos professionnels de santé.</div>
+    <button onclick="showView('pricing')" style="background:#2D2D2D;color:white;padding:10px 24px;border:none;border-radius: 4px;font-size:0.88rem;cursor:pointer;font-family:'DM Sans',sans-serif">Voir les abonnements →</button>
+  </div>
+
+  <!-- Contenu pro -->
+  <div id="proContent" style="display:none">
+    <!-- Ajouter un professionnel -->
+    <div style="background:white;border-radius: 4px;padding:24px;border:1px solid rgba(255,107,107,0.15);margin-bottom:20px">
+      <div style="font-size:0.72rem;font-weight:600;text-transform:uppercase;letter-spacing:1.5px;color:var(--accent);margin-bottom:16px">AJOUTER UN PROFESSIONNEL</div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin-bottom:14px">
+        <input type="text" id="proName" placeholder="Nom du professionnel *" style="padding:10px 12px;border:1.5px solid rgba(255,107,107,0.2);border-radius: 4px;font-size:0.85rem;font-family:'DM Sans',sans-serif;outline:none">
+        <input type="text" id="proSpecialty" placeholder="Spécialité (ex: nutritionniste)" style="padding:10px 12px;border:1.5px solid rgba(255,107,107,0.2);border-radius: 4px;font-size:0.85rem;font-family:'DM Sans',sans-serif;outline:none">
+        <input type="email" id="proEmail" placeholder="Email (optionnel)" style="padding:10px 12px;border:1.5px solid rgba(255,107,107,0.2);border-radius: 4px;font-size:0.85rem;font-family:'DM Sans',sans-serif;outline:none">
+      </div>
+      <button onclick="addProfessional()" style="background:#2D2D2D;color:white;padding:10px 24px;border:none;border-radius: 4px;font-size:0.88rem;cursor:pointer;font-family:'DM Sans',sans-serif;transition:background .2s">Ajouter →</button>
+      <div id="proAddError" style="font-size:0.78rem;color:#C55;margin-top:8px;display:none"></div>
+    </div>
+
+    <!-- Liste des professionnels -->
+    <div id="proList" style="display:flex;flex-direction:column;gap:14px"></div>
+
+    <!-- Commentaires reçus -->
+    <div style="background:white;border-radius: 4px;padding:24px;border:1px solid rgba(255,107,107,0.15);margin-top:20px">
+      <div style="font-size:0.72rem;font-weight:600;text-transform:uppercase;letter-spacing:1.5px;color:var(--accent);margin-bottom:16px">COMMENTAIRES DE VOS PROFESSIONNELS</div>
+      <div id="proComments"><p style="font-size:0.85rem;color:var(--accent)">Aucun commentaire reçu pour le moment.</p></div>
+    </div>
+  </div>
+</div>
 
 <script>
   // ── CONFIG ──
@@ -6786,6 +6829,7 @@ Réponds UNIQUEMENT en JSON valide avec cette structure exacte:
     document.getElementById('dashboardView').style.display = view === 'dashboard' ? 'block' : 'none';
     document.getElementById('profileView').style.display = view === 'profile' ? 'block' : 'none';
     document.getElementById('pricingView').style.display = view === 'pricing' ? 'block' : 'none';
+    document.getElementById('proView').style.display = view === 'pro' ? 'block' : 'none';
     if (view === 'pro') loadProfessionals();
     document.getElementById('protocolsView').style.display = view === 'protocols' ? 'block' : 'none';
     document.getElementById('chronoView').style.display = view === 'chrono' ? 'block' : 'none'; if(view==='chrono' && window.initScoreSante) window.initScoreSante();
@@ -9320,80 +9364,6 @@ function closeMirellaNotif() {
   if (el) el.style.display = 'none';
   if (_notifTimeout) clearTimeout(_notifTimeout);
 }
-
-  async function showView(view, btn) {
-    window._currentView = view;
-    if (view === 'menus') setTimeout(buildWeekSelector, 50);
-    if (view === 'health') { loadInfoDuJour(); loadHydrationFromStorage(); setTimeout(renderEvolutionGallery, 100); }
-    if (view === 'fitness') { loadFitnessView(); }
-    if (wcalViews && wcalViews.includes(view)) setTimeout(function(){ wcalInit(view); }, 50);
-
-    if (window.currentPlan === 'free' && authToken) {
-      const p = JSON.parse(localStorage.getItem('nutricare_profile') || '{}');
-      if (!p.plan) {
-        try {
-          const pr = await fetchWithAuth(`${BACKEND_URL}/api/profile`);
-          if (pr.ok) { const pd = await pr.json(); window.currentPlan = resolvePlan(pd); localStorage.setItem('nutricare_profile', JSON.stringify(pd)); }
-        } catch(e) {}
-      } else {
-        window.currentPlan = resolvePlan(p);
-      }
-    }
-    if (window.currentPlan === 'free') {
-      const p = JSON.parse(localStorage.getItem('nutricare_profile') || '{}');
-      if (p.plan) window.currentPlan = resolvePlan(p);
-    }
-    const plan = window.currentPlan;
-    const premiumViews = [];
-    const standardViews = [];
-    if (premiumViews.includes(view) && window.currentPlan !== 'premium') {
-      document.getElementById('subscriptionModal').style.display = 'flex';
-      return;
-    }
-    if (standardViews.includes(view) && plan === 'free') {
-      document.getElementById('subscriptionModal').style.display = 'flex';
-      return;
-    }
-    document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
-    if (btn) btn.classList.add('active');
-    if (view !== 'oracle' && view !== 'simulator') localStorage.setItem('nutricare_last_view', view);
-    if (window.innerWidth <= 768) {
-      document.getElementById('sidebar').classList.remove('open');
-      document.getElementById('mobileOverlay').style.display = 'none';
-    }
-    document.getElementById('chatView').style.display = view === 'chat' ? 'flex' : 'none';
-    document.getElementById('dashboardView').style.display = view === 'dashboard' ? 'block' : 'none';
-    document.getElementById('profileView').style.display = view === 'profile' ? 'block' : 'none';
-    document.getElementById('pricingView').style.display = view === 'pricing' ? 'block' : 'none';
-    document.getElementById('protocolsView').style.display = view === 'protocols' ? 'block' : 'none';
-    document.getElementById('chronoView').style.display = view === 'chrono' ? 'block' : 'none'; if(view==='chrono' && window.initScoreSante) window.initScoreSante();
-    if (document.getElementById('visualView')) { document.getElementById('visualView').style.display = view === 'visual' ? 'block' : 'none'; if (view === 'visual') applyVisualPlanGates(); }
-    document.getElementById('gamificationView').style.display = view === 'gamification' ? 'block' : 'none';
-    document.getElementById('programsView').style.display = view === 'programs' ? 'block' : 'none';
-    document.getElementById('ordonnanceView').style.display = view === 'ordonnance' ? 'block' : 'none';
-    document.getElementById('scanproduitView').style.display = view === 'scanproduit' ? 'block' : 'none'; if (view === 'scanproduit') applyScanproduitPlanGates();
-    document.getElementById('insightsView').style.display = view === 'insights' ? 'block' : 'none';
-    var vv = document.getElementById('visageView'); if(vv) { vv.style.display = view === 'visage' ? 'block' : 'none'; if(view==='visage') { var mc = document.querySelector('.main-content'); if(mc) mc.style.overflow = 'auto'; setTimeout(window.renderVisageHistorique, 200); applyVisagePlanGates(); } }
-    var fv = document.getElementById('frigoView'); if(fv) { fv.style.display = view === 'frigo' ? 'block' : 'none'; var mc = document.querySelector('.main-content'); if(mc) mc.style.overflow = view === 'frigo' ? 'auto' : 'hidden'; if(view==='frigo') applyFrigoPlanGates(); }
-    var hv = document.getElementById('homeView'); if(hv) { hv.style.display = view === 'home' ? 'block' : 'none'; if(view === 'home') { setTimeout(function(){ if(typeof window.initHome==='function') window.initHome(); }, 100); var mc2=document.querySelector('.main-content'); if(mc2){mc2.style.overflow='auto';mc2.style.height='100%';} } }
-    var mc = document.querySelector('.main-content');
-    if (mc) mc.style.overflow = ['home','cycle','planning','catalogue','menus','chrono','mes-recettes'].includes(view) ? 'auto' : 'hidden';
-
-    const allViews = ['analysisView','menusView','healthView','biologieView','passeportView','historyView','insightsView','scanproduitView','ordonnanceView','programsView','gamificationView','fitnessView','visageView','frigoView','cycleView','catalogueView','planningView','entrepriseView','protocolsView','chronoView','visualView','profileView','pricingView','dashboardView'];
-    allViews.forEach(id => { const el = document.getElementById(id); if(el) el.style.display = 'none'; });
-    const viewMap = {
-      analysis: 'analysisView', menus: 'menusView', health: 'healthView',
-      biologie: 'biologieView', passeport: 'passeportView', history: 'historyView',
-      insights: 'insightsView', scanproduit: 'scanproduitView', ordonnance: 'ordonnanceView',
-      programs: 'programsView', gamification: 'gamificationView', fitness: 'fitnessView',
-      visage: 'visageView', frigo: 'frigoView', cycle: 'cycleView',
-      catalogue: 'catalogueView', planning: 'planningView', entreprise: 'entrepriseView',
-      protocols: 'protocolsView', chrono: 'chronoView', visual: 'visualView',
-      profile: 'profileView', pricing: 'pricingView', dashboard: 'dashboardView'
-    };
-    if (viewMap[view]) { const el = document.getElementById(viewMap[view]); if(el) el.style.display = 'block'; }
-  }
-
 </script>
 
 <!-- Bottom Navigation Mobile -->
@@ -9547,7 +9517,7 @@ function closeMirellaNotif() {
       <button id="qmBtn-analysis" onclick="toggleQuickMenu();showView('analysis')" style="display:flex;align-items:center;gap:10px;padding:12px;background:var(--color-background-secondary);border:0.5px solid var(--color-border-tertiary);border-radius:14px;font-size:0.82rem;font-weight:600;color:var(--color-text-primary);cursor:pointer"><div style="width:32px;height:32px;background:#FFF0EC;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0"><i class="ti ti-camera" style="font-size:16px;color:#FF6B6B" aria-hidden="true"></i></div>Analyse repas</button>
       <button id="qmBtn-scanproduit" onclick="toggleQuickMenu();showView('scanproduit')" style="display:flex;align-items:center;gap:10px;padding:12px;background:var(--color-background-secondary);border:0.5px solid var(--color-border-tertiary);border-radius:14px;font-size:0.82rem;font-weight:600;color:var(--color-text-primary);cursor:pointer"><div style="width:32px;height:32px;background:#E6F1FB;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0"><i class="ti ti-scan" style="font-size:16px;color:#185FA5" aria-hidden="true"></i></div>Scan produit</button>
       <button id="qmBtn-visual" onclick="toggleQuickMenu();showView('visual')" style="display:flex;align-items:center;gap:10px;padding:12px;background:var(--color-background-secondary);border:0.5px solid var(--color-border-tertiary);border-radius:14px;font-size:0.82rem;font-weight:600;color:var(--color-text-primary);cursor:pointer"><div style="width:32px;height:32px;background:#EEEDFE;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0"><i class="ti ti-microscope" style="font-size:16px;color:#534AB7" aria-hidden="true"></i></div>Détection visuelle</button>
-
+      <button id="qmBtn-pro" onclick="toggleQuickMenu();showView('pro')" style="display:flex;align-items:center;gap:10px;padding:12px;background:var(--color-background-secondary);border:0.5px solid var(--color-border-tertiary);border-radius:14px;font-size:0.82rem;font-weight:600;color:var(--color-text-primary);cursor:pointer"><div style="width:32px;height:32px;background:#EAF3DE;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0"><i class="ti ti-stethoscope" style="font-size:16px;color:#3B6D11" aria-hidden="true"></i></div>Espace médecin</button>
       <button id="qmBtn-chrono" onclick="toggleQuickMenu();showView('chrono')" style="display:flex;align-items:center;gap:10px;padding:12px;background:#FFF5F0;border:0.5px solid rgba(255,107,107,0.15);border-radius:14px;font-size:0.82rem;font-weight:600;color:#2D2D2D;cursor:pointer"><div style="width:32px;height:32px;background:#FBEAF0;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0"><i class="ti ti-heart" style="font-size:16px;color:#993556" aria-hidden="true"></i></div>Score de santé</button>
       <button id="qmBtn-biologie" onclick="toggleQuickMenu();showView('biologie')" style="display:flex;align-items:center;gap:10px;padding:12px;background:var(--color-background-secondary);border:0.5px solid var(--color-border-tertiary);border-radius:14px;font-size:0.82rem;font-weight:600;color:var(--color-text-primary);cursor:pointer"><div style="width:32px;height:32px;background:#EEEDFE;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0"><i class="ti ti-dna" style="font-size:16px;color:#534AB7" aria-hidden="true"></i></div>Bilan sanguin</button>
       <button id="qmBtn-ordonnance" onclick="toggleQuickMenu();showView('ordonnance')" style="display:flex;align-items:center;gap:10px;padding:12px;background:var(--color-background-secondary);border:0.5px solid var(--color-border-tertiary);border-radius:14px;font-size:0.82rem;font-weight:600;color:var(--color-text-primary);cursor:pointer"><div style="width:32px;height:32px;background:#E6F1FB;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0"><i class="ti ti-file-description" style="font-size:16px;color:#185FA5" aria-hidden="true"></i></div>Scan ordonnance</button>
