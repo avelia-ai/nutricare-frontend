@@ -1773,6 +1773,18 @@ window.initHome = async function() {
   if (ctaCard && pathologies.length === 0 && !profile.full_name) {
     ctaCard.style.display = 'block';
   }
+  // Charger logs pour le cœur d'harmonie home
+  try {
+    var authToken = localStorage.getItem('nutricare_token');
+    if (authToken) {
+      fetch('https://nutricare-backend-production.up.railway.app/api/health/logs?days=30', {
+        headers: { 'Authorization': 'Bearer ' + authToken }
+      })
+      .then(function(r){ return r.json(); })
+      .then(function(logs){ if (Array.isArray(logs) && logs.length) refreshHarmonyAvatar(logs); })
+      .catch(function(){});
+    }
+  } catch(e) {}
 };
 
 // ── CYCLE FEMININ ──
