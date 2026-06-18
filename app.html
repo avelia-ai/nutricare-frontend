@@ -1,6 +1,14 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
+<script>
+window.addEventListener("error", function(e) {
+  var div = document.createElement("div");
+  div.style.cssText = "position:fixed;top:0;left:0;right:0;z-index:999999;background:#c00;color:#fff;font-size:11px;padding:8px;word-break:break-all;max-height:40vh;overflow:auto";
+  div.textContent = "JS ERROR: " + e.message + " @ " + e.filename + ":" + e.lineno;
+  document.documentElement.appendChild(div);
+});
+</script>
 <meta charset="UTF-8">
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
   <meta http-equiv="Pragma" content="no-cache">
@@ -9015,100 +9023,20 @@ function _hcDerived() {
 function _hcDrawFrame() {
   var canvas = document.getElementById('harmonyCanvas');
   if (!canvas) { _hcRunning = false; return; }
-  var dpr = window.devicePixelRatio || 1;
   var rawW = canvas.offsetWidth || (canvas.parentElement ? canvas.parentElement.offsetWidth : 0);
   if (rawW <= 0) { setTimeout(_hcDrawFrame, 80); return; }
+  var dpr = window.devicePixelRatio || 1;
   var W = rawW;
   var H = canvas.offsetHeight > 0 ? canvas.offsetHeight : W;
-  if (canvas.width !== W*dpr) {
-    canvas.width = W*dpr; canvas.height = H*dpr;
-    canvas.style.width = W+'px'; canvas.style.height = H+'px';
-  }
+  canvas.width = W*dpr; canvas.height = H*dpr;
+  canvas.style.width = W+'px'; canvas.style.height = H+'px';
   var ctx = canvas.getContext('2d');
   ctx.setTransform(dpr,0,0,dpr,0,0);
   ctx.clearRect(0,0,W,H);
-
-  var d = _hcDerived();
-  var cx = W/2, cy = H/2;
-  var baseR = Math.min(W,H) * .22;
-  var lum = d.luminosity;
-  var jitter = (1-d.fluidity)*(Math.sin(_hcT*11.3)*.5+(Math.random()-.5)*.6);
-  _hcT += .012*(.6+d.fluidity*.9) + jitter*.004;
-
-  // Halos
-  for (var ring=3; ring>0; ring--) {
-    var rr = baseR*(1.4+ring*.55+.3*Math.sin(_hcT*.9+ring));
-    var alpha = (0.07+0.05*lum)*(1-ring/4);
-    var g = ctx.createRadialGradient(cx,cy,baseR*.3,cx,cy,rr);
-    g.addColorStop(0,'rgba(255,154,60,'+(alpha*1.5)+')');
-    g.addColorStop(.5,'rgba(255,107,107,'+alpha+')');
-    g.addColorStop(1,'rgba(255,107,107,0)');
-    ctx.fillStyle=g; ctx.beginPath(); ctx.arc(cx,cy,rr,0,Math.PI*2); ctx.fill();
-  }
-
-  // Shimmer ring
-  var sR = baseR*(1.28+.06*Math.sin(_hcT*2.1));
-  ctx.beginPath(); ctx.arc(cx,cy,sR,0,Math.PI*2);
-  ctx.strokeStyle='rgba(255,180,120,'+(.18*lum)+')';
-  ctx.lineWidth=1.5; ctx.stroke();
-
-  // Éjections
-  _hcSpawnAcc += d.balance;
-  var spawnRate = 2 + Math.floor(d.balance*28);
-  if (_hcSpawnAcc > spawnRate) {
-    var n = Math.floor(d.balance*3)+1;
-    for (var i=0;i<n;i++) _hcSpawnEject(cx,cy,baseR,lum);
-    _hcSpawnAcc = 0;
-  }
-  _hcEjectP = _hcEjectP.filter(function(p){return p.life>0;});
-  _hcEjectP.forEach(function(p) {
-    p.x+=p.vx; p.y+=p.vy; p.vx*=.97; p.vy*=.97; p.vy-=.012; p.life-=p.decay;
-    if(p.life<=0) return;
-    var al=p.life*(.5+.4*lum), sz=p.size*(.4+.6*p.life);
-    ctx.beginPath(); ctx.fillStyle='rgba('+p.hue+','+al+')'; ctx.arc(p.x,p.y,sz,0,Math.PI*2); ctx.fill();
-    if(p.size>1.8){ctx.beginPath();ctx.fillStyle='rgba('+p.hue+','+al*.25+')';ctx.arc(p.x,p.y,sz*2.2,0,Math.PI*2);ctx.fill();}
-  });
-
-  // Orbite
-  _hcOrbitP.forEach(function(p) {
-    p.angle += p.speed*.012*(.5+d.fluidity);
-    p.wobble += p.ws*.02*(.5+d.fluidity);
-    var noiseAmt=(1-d.balance)*6;
-    var r=baseR*p.rf+Math.sin(p.wobble)*(3+noiseAmt);
-    var px=cx+Math.cos(p.angle)*r, py=cy+Math.sin(p.angle)*r*.92;
-    var al=(.25+.55*lum)*(.6+.4*Math.sin(p.wobble*1.7));
-    ctx.beginPath();
-    ctx.fillStyle='rgba(255,'+(190+Math.round(20*lum))+',150,'+al+')';
-    ctx.arc(px,py,p.size,0,Math.PI*2); ctx.fill();
-  });
-
-  // Noyau organique
-  ctx.save(); ctx.beginPath();
-  for (var i=0; i<=80; i++) {
-    var a=(Math.PI*2*i)/80;
-    var r=baseR;
-    for (var l=0;l<6;l++){var amp=(baseR*.05)*(1-d.balance*.7);r+=Math.sin(a*(l+2)+_hcLobePhases[l]+_hcT*(.5+l*.15))*amp;}
-    r+=Math.sin(_hcT*1.8)*baseR*.04*(.5+lum*.5);
-    var x=cx+Math.cos(a)*r, y=cy+Math.sin(a)*r;
-    if(i===0) ctx.moveTo(x,y); else ctx.lineTo(x,y);
-  }
-  ctx.closePath();
-  var cg=ctx.createRadialGradient(cx-baseR*.25,cy-baseR*.3,baseR*.08,cx,cy,baseR*1.1);
-  cg.addColorStop(0,'rgba(255,'+(220+Math.round(15*lum))+',200,0.97)');
-  cg.addColorStop(.3,'rgba(255,'+(160+Math.round(20*lum))+',130,0.94)');
-  cg.addColorStop(.7,'rgba(255,107,107,0.91)');
-  cg.addColorStop(1,'rgba(232,85,85,0.88)');
-  ctx.fillStyle=cg;
-  ctx.shadowColor='rgba(255,107,107,'+(.55*lum)+')';
-  ctx.shadowBlur=32*lum;
-  ctx.fill(); ctx.restore();
-
-  // Reflets
-  ctx.save(); ctx.globalAlpha=.13+.10*lum;
-  ctx.beginPath(); ctx.ellipse(cx-baseR*.18,cy-baseR*.22,baseR*.48,baseR*.30,-.5,0,Math.PI*2);
-  ctx.fillStyle='white'; ctx.fill(); ctx.restore();
-
-  requestAnimationFrame(_hcDrawFrame);
+  ctx.fillStyle = 'red';
+  ctx.beginPath();
+  ctx.arc(W/2, H/2, Math.min(W,H)*0.3, 0, Math.PI*2);
+  ctx.fill();
 }
 
 function renderHarmonyAvatar(normalizedValues) {
