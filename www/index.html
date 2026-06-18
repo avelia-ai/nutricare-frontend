@@ -1,7 +1,23 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
+<script>
+window.addEventListener("error", function(e) {
+  var div = document.createElement("div");
+  div.style.cssText = "position:fixed;top:0;left:0;right:0;z-index:999999;background:#c00;color:#fff;font-size:11px;padding:8px;word-break:break-all;max-height:40vh;overflow:auto";
+  div.textContent = "JS ERROR: " + e.message + " @ " + e.filename + ":" + e.lineno;
+  document.documentElement.appendChild(div);
+});
+</script>
 <meta charset="UTF-8">
+<script>
+window.addEventListener('DOMContentLoaded', function() {
+  var tag = document.createElement('div');
+  tag.style.cssText = 'position:fixed;bottom:0;right:0;z-index:999999;background:#000;color:#0f0;font-size:10px;padding:4px 8px;font-family:monospace';
+  tag.textContent = 'BUILD-TEST-40c7038';
+  document.body.appendChild(tag);
+});
+</script>
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
   <meta http-equiv="Pragma" content="no-cache">
   <meta http-equiv="Expires" content="0">
@@ -1009,7 +1025,7 @@ window.updateCaloriesFromMeals = function() {
     window._donutChart.data.datasets[0].data = [totalConso, Math.max(0, objectif - totalConso)];
     window._donutChart.update();
   } else if (canvas) {
-    var ctx = canvas.getContext('2d');
+  var ctx = canvas.getContext('2d');
     var existing = Chart.getChart(canvas);
     if (existing) existing.destroy();
     if (window._donutChart) { window._donutChart.destroy(); window._donutChart = null; }
@@ -3736,6 +3752,29 @@ function switchLang(lang) {
     <div style="font-size:0.82rem;color:rgba(255,255,255,0.8);margin-bottom:16px">Objectif du jour : <span id="hydrationGoal">2.0</span> L</div>
     <div id="hydrationCups" style="display:flex;gap:10px;flex-wrap:wrap;margin-top:8px"></div>
 
+  </div>
+
+  <!-- Coeur d'Harmonie (avatar evolutif) -->
+  <div style="background:white;border-radius:20px;padding:24px;box-shadow:0 2px 12px rgba(0,0,0,0.06);margin-bottom:24px">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px">
+      <div style="font-size:0.75rem;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:var(--accent)">✨ Cœur d'harmonie</div>
+      <div id="harmonyLevelBadge" style="font-size:0.72rem;font-weight:600;color:var(--coral-dark);background:var(--cream2);padding:4px 10px;border-radius:100px">Niveau 1</div>
+    </div>
+    <div id="harmonyStageName" style="font-size:1.05rem;font-weight:600;color:#2D2D2D;margin:12px 0 16px">Éveil</div>
+    <div style="position:relative;width:100%;max-width:240px;height:240px;margin:0 auto 18px;display:flex;align-items:center;justify-content:center">
+      <canvas id="harmonyCanvas" style="width:100%;height:100%"></canvas>
+    </div>
+    <div style="display:flex;justify-content:center;gap:12px;flex-wrap:wrap;margin-bottom:14px">
+      <div style="display:flex;align-items:center;gap:5px;font-size:0.7rem;color:#8a8a8a"><span style="width:8px;height:8px;border-radius:50%;background:#7EC8E3;display:inline-block"></span>Sommeil <b id="harmonyPctSleep" style="color:#2D2D2D">0%</b></div>
+      <div style="display:flex;align-items:center;gap:5px;font-size:0.7rem;color:#8a8a8a"><span style="width:8px;height:8px;border-radius:50%;background:#A8D8A8;display:inline-block"></span>Hydratation <b id="harmonyPctHydra" style="color:#2D2D2D">0%</b></div>
+      <div style="display:flex;align-items:center;gap:5px;font-size:0.7rem;color:#8a8a8a"><span style="width:8px;height:8px;border-radius:50%;background:#FFB347;display:inline-block"></span>Activité <b id="harmonyPctActiv" style="color:#2D2D2D">0%</b></div>
+      <div style="display:flex;align-items:center;gap:5px;font-size:0.7rem;color:#8a8a8a"><span style="width:8px;height:8px;border-radius:50%;background:#C3A9D1;display:inline-block"></span>Stress <b id="harmonyPctStress" style="color:#2D2D2D">0%</b></div>
+    </div>
+    <div id="harmonyCaption" style="text-align:center;font-size:0.82rem;color:#8a8a8a;margin-bottom:4px;min-height:1.2em">Ton équilibre prend forme doucement.</div>
+    <div style="display:flex;align-items:baseline;justify-content:center;gap:6px;margin-top:4px">
+      <span id="harmonyPointsValue" style="font-family:'DM Mono',monospace;font-size:1.6rem;font-weight:500;color:var(--coral-dark)">0</span>
+      <span style="font-size:0.78rem;color:#aaa">points d'harmonie</span>
+    </div>
   </div>
 
   <!-- Formulaire saisie -->
@@ -8764,8 +8803,15 @@ async function loadHealthDashboard() {
     if (today.hydration_liters) document.getElementById('hHydration').value = today.hydration_liters;
     if (today.notes) document.getElementById('hNotes').value = today.notes;
     renderHealthChart(logs);
+    refreshHarmonyAvatar(logs);
     renderHealthHistory(logs);
-  } catch(e) { console.error(e); }
+  } catch(e) {
+    console.error(e);
+    var div = document.createElement('div');
+    div.style.cssText = 'position:fixed;top:40px;left:0;right:0;z-index:999999;background:#900;color:#fff;font-size:11px;padding:8px;word-break:break-all;max-height:40vh;overflow:auto';
+    div.textContent = 'HEALTH DASHBOARD ERROR: ' + (e && e.message ? e.message : String(e));
+    document.documentElement.appendChild(div);
+  }
 }
 
 
@@ -8886,6 +8932,189 @@ async function saveHealthLog() {
     }
   } catch(e) { console.error(e); alert("Erreur saveHealth: " + e.message); }
 }
+
+// ── Cœur d'Harmonie : moteur avatar ──────────────────────────────────────────
+
+var HARMONY_LEVELS = [
+  { name: 'Éveil',      min: 0,    max: 199,  level: 1 },
+  { name: 'Alignement', min: 200,  max: 599,  level: 2 },
+  { name: 'Harmonie',   min: 600,  max: 1499, level: 3 },
+  { name: 'Expansion',  min: 1500, max: 2999, level: 4 },
+  { name: 'Maîtrise',   min: 3000, max: Infinity, level: 5 },
+];
+
+var HARMONY_CAPTIONS = [
+  "Ton équilibre prend forme doucement.",
+  "Tes piliers s'alignent, continue.",
+  "Tu rayonnes d'une belle cohérence.",
+  "Ton énergie s'épanouit pleinement.",
+  "Tu as atteint une maîtrise profonde.",
+];
+
+function normalizeHealthLog(log) {
+  const sleep  = Math.min((log.sleep_hours  || 0) / 8,  1);
+  const hydra  = Math.min((log.water_liters || 0) / 2,  1);
+  const activ  = Math.min((log.activity_min || 0) / 30, 1);
+  const calm   = log.stress_level != null ? (10 - log.stress_level) / 9 : 0;
+  const stress = log.stress_level != null ? Math.min(log.stress_level / 10, 1) : 0;
+  return { sleep, hydra, activ, calm, stress };
+}
+
+function calcDayPoints(log, prevLogExists) {
+  const { sleep, hydra, activ, calm } = normalizeHealthLog(log);
+  const pillars = [sleep, hydra, activ, calm];
+  const goodCount = pillars.filter(v => v >= 0.6).length;
+  if (goodCount === 0) return 0;
+  let pts = goodCount; // 1 pt par pilier bon
+  if (goodCount >= 3) pts = Math.round(pts * 1.2); // +20% équilibre
+  if (prevLogExists)  pts = Math.round(pts * 1.1); // +10% constance
+  return Math.min(pts, 10);
+}
+
+function calcHarmonyFromLogs(logs) {
+  if (!logs || !logs.length) return 0;
+  const sorted = [...logs].sort((a, b) => new Date(a.date) - new Date(b.date));
+  let total = 0;
+  for (let i = 0; i < sorted.length; i++) {
+    const prev = i > 0 ? sorted[i - 1] : null;
+    let prevClose = false;
+    if (prev) {
+      const diff = (new Date(sorted[i].date) - new Date(prev.date)) / 86400000;
+      prevClose = diff <= 1.5;
+    }
+    total += calcDayPoints(sorted[i], prevClose);
+  }
+  return total;
+}
+
+function getHarmonyLevel(pts) {
+  return HARMONY_LEVELS.find(l => pts >= l.min && pts <= l.max) || HARMONY_LEVELS[0];
+}
+
+// ── Cœur d'Harmonie : noyau animé ──
+var _hcState = { sleep: 0, hydra: 0, activ: 0, calm: 0 };
+var _hcRunning = false;
+var _hcT = 0, _hcSpawnAcc = 0;
+var _hcOrbitP = [], _hcEjectP = [];
+var _hcLobePhases = Array.from({length:6}, () => Math.random() * Math.PI * 2);
+
+function _hcInitOrbit() {
+  _hcOrbitP = [];
+  for (var i = 0; i < 22; i++) {
+    _hcOrbitP.push({
+      angle: (Math.PI*2*i)/22 + Math.random()*.3,
+      rf: .62 + Math.random()*.30,
+      speed: (.15 + Math.random()*.18) * (Math.random()<.5?1:-1),
+      size: 1.4 + Math.random()*2.2,
+      wobble: Math.random()*Math.PI*2,
+      ws: .6 + Math.random()*.8
+    });
+  }
+}
+_hcInitOrbit();
+
+function _hcSpawnEject(cx, cy, baseR, lum) {
+  var angle = Math.random()*Math.PI*2;
+  var spd = .4 + Math.random()*1.1;
+  _hcEjectP.push({
+    x: cx + Math.cos(angle)*baseR*.85,
+    y: cy + Math.sin(angle)*baseR*.85,
+    vx: Math.cos(angle)*spd, vy: Math.sin(angle)*spd,
+    life: 1, decay: .012 + Math.random()*.018,
+    size: .8 + Math.random()*2.4,
+    hue: Math.random()<.6 ? '255,154,60' : '255,107,107'
+  });
+}
+
+function _hcDerived() {
+  var s = _hcState;
+  var balance = (s.sleep + s.hydra + s.activ + s.calm) / 4;
+  var luminosity = 0.35 + 0.65*(s.sleep*.4 + s.calm*.35 + s.hydra*.25);
+  var fluidity = 0.25 + 0.75*(s.calm*.6 + balance*.4);
+  return { balance: balance, luminosity: luminosity, fluidity: fluidity };
+}
+
+function _hcDrawFrame() {
+  var canvas = document.getElementById('harmonyCanvas');
+  if (!canvas) { _hcRunning = false; return; }
+  var rawW = canvas.offsetWidth || (canvas.parentElement ? canvas.parentElement.offsetWidth : 0);
+  if (rawW <= 0) { setTimeout(_hcDrawFrame, 80); return; }
+  var dpr = window.devicePixelRatio || 1;
+  var W = rawW;
+  var H = canvas.offsetHeight > 0 ? canvas.offsetHeight : W;
+  canvas.width = W*dpr; canvas.height = H*dpr;
+  canvas.style.width = W+'px'; canvas.style.height = H+'px';
+  var ctx = canvas.getContext('2d');
+  ctx.setTransform(dpr,0,0,dpr,0,0);
+  ctx.clearRect(0,0,W,H);
+  ctx.fillStyle = 'red';
+  ctx.beginPath();
+  ctx.arc(W/2, H/2, Math.min(W,H)*0.3, 0, Math.PI*2);
+  ctx.fill();
+}
+
+function renderHarmonyAvatar(normalizedValues) {
+  _hcState = {
+    sleep: normalizedValues.sleep || 0,
+    hydra: normalizedValues.hydra || 0,
+    activ: normalizedValues.activ || 0,
+    calm:  normalizedValues.calm  || 0
+  };
+  var canvas = document.getElementById('harmonyCanvas');
+  if (!canvas) return;
+  var dpr = window.devicePixelRatio || 1;
+  var size = canvas.offsetWidth || 220;
+  canvas.width  = size * dpr;
+  canvas.height = size * dpr;
+  canvas.style.width  = size + 'px';
+  canvas.style.height = size + 'px';
+  if (!_hcRunning) {
+    _hcRunning = true;
+    _hcDrawFrame();
+  }
+}
+
+function updateHarmonyUI(totalPoints) {
+  const lvl = getHarmonyLevel(totalPoints);
+  const badge = document.getElementById('harmonyLevelBadge');
+  const stage = document.getElementById('harmonyStageName');
+  const caption = document.getElementById('harmonyCaption');
+  const pts = document.getElementById('harmonyPointsValue');
+  if (badge)   badge.textContent   = 'Niveau ' + lvl.level;
+  if (stage)   stage.textContent   = lvl.name;
+  if (caption) caption.textContent = HARMONY_CAPTIONS[lvl.level - 1];
+  if (pts)     pts.textContent     = totalPoints;
+
+  // Sauvegarde locale dans le profil
+  var lp = JSON.parse(localStorage.getItem('nutricare_profile') || '{}');
+  lp.harmony_points = totalPoints;
+  lp.harmony_level  = lvl.level;
+  localStorage.setItem('nutricare_profile', JSON.stringify(lp));
+}
+
+function refreshHarmonyAvatar(logs) {
+  const totalPoints = calcHarmonyFromLogs(logs);
+  updateHarmonyUI(totalPoints);
+  // Valeurs du dernier log pour l'avatar visuel
+  var norm;
+  if (logs && logs.length) {
+    const last = [...logs].sort((a,b) => new Date(b.date) - new Date(a.date))[0];
+    norm = normalizeHealthLog(last);
+  } else {
+    norm = { sleep: 0, hydra: 0, activ: 0, calm: 0, stress: 0 };
+  }
+  renderHarmonyAvatar(norm);
+  var pctSleep  = document.getElementById('harmonyPctSleep');
+  var pctHydra  = document.getElementById('harmonyPctHydra');
+  var pctActiv  = document.getElementById('harmonyPctActiv');
+  var pctStress = document.getElementById('harmonyPctStress');
+  if (pctSleep)  pctSleep.textContent  = Math.round(norm.sleep  * 100) + '%';
+  if (pctHydra)  pctHydra.textContent  = Math.round(norm.hydra  * 100) + '%';
+  if (pctActiv)  pctActiv.textContent  = Math.round(norm.activ  * 100) + '%';
+  if (pctStress) pctStress.textContent = Math.round(norm.stress * 100) + '%';
+}
+
+// ── Fin moteur avatar ─────────────────────────────────────────────────────────
 
 function renderHealthChart(logs) {
   const canvas = document.getElementById('healthChart');

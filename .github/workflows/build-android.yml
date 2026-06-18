@@ -21,9 +21,12 @@ jobs:
       - name: Sync Capacitor
         run: |
           cp -f app.html www/app.html
+          cp -f app.html www/index.html
           npx cap sync android
           cp -f app.html android/app/src/main/assets/public/app.html
-          echo "micronutrimentsCard:" $(grep -c micronutrimentsCard android/app/src/main/assets/public/app.html)
+          cp -f app.html android/app/src/main/assets/public/index.html
+          echo "micronutrimentsCard (app.html):" $(grep -c micronutrimentsCard android/app/src/main/assets/public/app.html)
+          echo "harmonyCanvas (index.html):" $(grep -c harmonyCanvas android/app/src/main/assets/public/index.html)
       - name: Setup Java
         uses: actions/setup-java@v4
         with:
