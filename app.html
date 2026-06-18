@@ -8797,7 +8797,13 @@ async function loadHealthDashboard() {
     renderHealthChart(logs);
     refreshHarmonyAvatar(logs);
     renderHealthHistory(logs);
-  } catch(e) { console.error(e); }
+  } catch(e) {
+    console.error(e);
+    var div = document.createElement('div');
+    div.style.cssText = 'position:fixed;top:40px;left:0;right:0;z-index:999999;background:#900;color:#fff;font-size:11px;padding:8px;word-break:break-all;max-height:40vh;overflow:auto';
+    div.textContent = 'HEALTH DASHBOARD ERROR: ' + (e && e.message ? e.message : String(e));
+    document.documentElement.appendChild(div);
+  }
 }
 
 
