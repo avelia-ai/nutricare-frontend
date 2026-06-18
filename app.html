@@ -1802,6 +1802,47 @@ window.initHome = async function() {
       .catch(function(){});
     }
   } catch(e) {}
+
+  // ── Défis du jour sur home
+  (function() {
+    var todayKey = new Date().toISOString().slice(0,10);
+    var defiState = JSON.parse(localStorage.getItem('gami_defis_' + todayKey) || '{}');
+    var seed = parseInt(todayKey.replace(/-/g,''));
+    var DEFIS_POOL = [
+      { id:'d1', icon:'💧', text:"Boire 2L d'eau aujourd'hui", points:5 },
+      { id:'d2', icon:'🚶', text:"30 min d'activité physique", points:5 },
+      { id:'d3', icon:'😴', text:'Dormir au moins 7h cette nuit', points:5 },
+      { id:'d4', icon:'🥗', text:'Manger 5 fruits et légumes', points:3 },
+      { id:'d5', icon:'🧘', text:'10 min de relaxation ou méditation', points:3 },
+      { id:'d6', icon:'📝', text:'Remplir mon suivi santé du jour', points:4 },
+    ];
+    var defisDuJour = [DEFIS_POOL[seed%6], DEFIS_POOL[(seed+2)%6], DEFIS_POOL[(seed+4)%6]];
+    var heureReset = new Date(); heureReset.setDate(heureReset.getDate()+1); heureReset.setHours(0,0,0,0);
+    var msLeft = heureReset - new Date();
+    var hLeft = Math.floor(msLeft/3600000), mLeft = Math.floor((msLeft%3600000)/60000);
+    var resetEl = document.getElementById('homeDefiReset');
+    if (resetEl) resetEl.textContent = 'Reset dans ' + hLeft + 'h' + mLeft + 'm';
+    var listEl = document.getElementById('homeDefisList');
+    if (listEl) {
+      listEl.innerHTML = defisDuJour.map(function(d) {
+        var done = !!defiState[d.id];
+        var bg = done ? '#F0F8F0' : '#FAFAFA';
+        var border = done ? '#C0DDB8' : 'var(--border)';
+        var textColor = done ? '#4A8A4A' : 'var(--charcoal)';
+        var strike = done ? ';text-decoration:line-through' : '';
+        var ptColor = done ? '#4A8A4A' : 'var(--coral)';
+        var circleBorder = done ? '#4A8A4A' : '#DDD';
+        var circleBg = done ? '#4A8A4A' : 'white';
+        var check = done ? '<span style="color:white;font-size:0.65rem">✓</span>' : '';
+        return '<div style="display:flex;align-items:center;gap:10px;padding:10px 12px;background:' + bg + ';border-radius:12px;border:1px solid ' + border + ';cursor:pointer" onclick="toggleDefi(\'' + d.id + '\',\'' + todayKey + '\');initHome()">'
+          + '<div style="font-size:1.2rem">' + d.icon + '</div>'
+          + '<div style="flex:1;font-size:0.83rem;font-weight:500;color:' + textColor + strike + '">' + d.text + '</div>'
+          + '<div style="font-size:0.7rem;font-weight:700;color:' + ptColor + '">+' + d.points + 'pts</div>'
+          + '<div style="width:20px;height:20px;border-radius:50%;border:2px solid ' + circleBorder + ';background:' + circleBg + ';display:flex;align-items:center;justify-content:center;flex-shrink:0">' + check + '</div>'
+          + '</div>';
+      }).join('');
+    }
+  })();
 };
 
 // ── CYCLE FEMININ ──
@@ -2713,14 +2754,6 @@ function switchLang(lang) {
           <div id="homeDefisList" style="display:flex;flex-direction:column;gap:8px"></div>
         </div>
 
-        <!-- DÉFIS DU JOUR (gamification) -->
-        <div style="background:white;border-radius:16px;overflow:hidden;margin-bottom:12px;box-shadow:0 2px 8px rgba(0,0,0,0.06);padding:14px">
-          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
-            <div style="font-size:0.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--coral)">⚡ Défis du jour</div>
-            <div id="homeDefiReset" style="font-size:0.68rem;color:rgba(0,0,0,0.35)"></div>
-          </div>
-          <div id="homeDefisList" style="display:flex;flex-direction:column;gap:8px"></div>
-        </div>
         </div>
         <!-- SECTION DÉFIS -->
         <div style="margin-bottom:16px">
@@ -5836,6 +5869,7 @@ function switchLang(lang) {
     loadGamification();
     setTimeout(() => checkAndShowNewBadges(), 800);
   }
+  window.toggleDefi = toggleDefi;
 
 
   async function loadAlertes(medicaments) {
