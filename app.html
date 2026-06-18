@@ -1618,8 +1618,8 @@ window.initHome = async function() {
   // Démarrer animation canvas home
   setTimeout(function(){
     var hc = document.getElementById('harmonyCanvasHome');
-    if (hc && !hc._hcStarted) { hc._hcStarted = true; _hcRunningHome = true; _hcDrawFrameHome(); }
-  }, 200);
+    if (hc) { hc._hcStarted = true; _hcRunningHome = true; _hcDrawFrameHome(); }
+  }, 300);
   // Afficher carte localisation auto
   setTimeout(function(){ if(typeof window.afficherCarteSeule==='function') window.afficherCarteSeule(); }, 1000);
   var now = new Date();
@@ -2622,8 +2622,8 @@ function switchLang(lang) {
           <div style="font-size:0.65rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--accent);margin-bottom:12px">✨ Cœur d'Harmonie</div>
           <div style="display:flex;align-items:center;gap:14px">
             <!-- Canvas gauche -->
-            <div style="flex-shrink:0;width:110px;height:110px;position:relative">
-              <canvas id="harmonyCanvasHome" style="width:110px;height:110px;display:block"></canvas>
+            <div style="flex-shrink:0;width:150px;height:150px;position:relative">
+              <canvas id="harmonyCanvasHome" style="width:150px;height:150px;display:block"></canvas>
             </div>
             <!-- Mesures droite -->
             <div style="flex:1;display:flex;flex-direction:column;gap:8px">
@@ -9233,8 +9233,8 @@ function _hcDrawFrameHome() {
   var canvas = document.getElementById('harmonyCanvasHome');
   if (!canvas || !_hcRunningHome) return;
   var dpr = window.devicePixelRatio || 1;
-  var W = 110, H = 110;
-  if (canvas.width !== W*dpr) { canvas.width = W*dpr; canvas.height = H*dpr; }
+  var W = 150, H = 150;
+  if (canvas.width !== Math.round(W*dpr)) { canvas.width = Math.round(W*dpr); canvas.height = Math.round(H*dpr); }
   var ctx = canvas.getContext('2d');
   ctx.setTransform(dpr,0,0,dpr,0,0);
   ctx.clearRect(0,0,W,H);
