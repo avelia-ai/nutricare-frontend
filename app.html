@@ -4876,7 +4876,7 @@ function switchLang(lang) {
   // Corriger last_view si c'est oracle (ne doit jamais être la vue par défaut)
   (function() {
     const lv = localStorage.getItem('nutricare_last_view');
-    if (lv === ) localStorage.setItem('nutricare_last_view', 'home');
+    if (lv === 'oracle' || lv === 'pro') localStorage.setItem('nutricare_last_view', 'home');
   })();
   window.onload = async () => {
     const urlParams = new URLSearchParams(window.location.search);
