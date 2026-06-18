@@ -2603,54 +2603,48 @@ function switchLang(lang) {
       </div>
       <div style="padding:12px 16px 16px;width:100%;box-sizing:border-box">
         <!-- SECTION COEUR D'HARMONIE -->
-        <div style="margin-bottom:16px;background:white;border-radius:20px;padding:16px 18px;box-shadow:0 2px 10px rgba(0,0,0,0.06)">
-          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
-            <div style="display:flex;align-items:center;gap:7px">
-              <span style="font-size:15px">✨</span>
-              <span style="font-size:0.85rem;font-weight:700;color:#2D2D2D">Mon cœur d'harmonie</span>
-            </div>
-            <div id="homeHcAvgBadge" style="background:#f7f5f2;padding:4px 10px;border-radius:20px;font-size:0.68rem;font-weight:600;color:#8a8a8a">0% en moyenne</div>
-          </div>
-          <div style="display:flex;align-items:center;gap:16px">
+        <div style="margin-bottom:16px;background:white;border-radius:18px;padding:14px 16px;box-shadow:0 2px 10px rgba(0,0,0,0.06)">
+          <div style="font-size:0.65rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--accent);margin-bottom:12px">✨ Cœur d'Harmonie</div>
+          <div style="display:flex;align-items:center;gap:14px">
             <!-- Canvas gauche -->
-            <div style="flex-shrink:0;width:128px;height:128px;position:relative">
-              <canvas id="harmonyCanvasHome" style="width:128px;height:128px;display:block"></canvas>
+            <div style="flex-shrink:0;width:150px;height:150px;position:relative">
+              <canvas id="harmonyCanvasHome" style="width:150px;height:150px;display:block"></canvas>
             </div>
             <!-- Mesures droite -->
-            <div style="flex:1;display:flex;flex-direction:column;gap:10px">
+            <div style="flex:1;display:flex;flex-direction:column;gap:8px">
               <div>
-                <div style="display:flex;justify-content:space-between;align-items:center;font-size:0.78rem;margin-bottom:4px">
-                  <span style="color:#8a8a8a;display:flex;align-items:center;gap:5px">🌙 Sommeil</span>
-                  <b id="homePctSleep" style="color:#2D2D2D;font-weight:600">0%</b>
+                <div style="display:flex;justify-content:space-between;font-size:0.72rem;margin-bottom:3px">
+                  <span style="color:#8a8a8a">🌙 Sommeil</span>
+                  <b id="homePctSleep" style="color:#2D2D2D">0%</b>
                 </div>
-                <div style="height:6px;background:#f0f0f0;border-radius:10px;overflow:hidden">
+                <div style="height:5px;background:#f0f0f0;border-radius:10px;overflow:hidden">
                   <div id="homeBarSleep" style="height:100%;width:0%;background:#7EC8E3;border-radius:10px;transition:width .6s"></div>
                 </div>
               </div>
               <div>
-                <div style="display:flex;justify-content:space-between;align-items:center;font-size:0.78rem;margin-bottom:4px">
-                  <span style="color:#8a8a8a;display:flex;align-items:center;gap:5px">💧 Hydratation</span>
-                  <b id="homePctHydra" style="color:#2D2D2D;font-weight:600">0%</b>
+                <div style="display:flex;justify-content:space-between;font-size:0.72rem;margin-bottom:3px">
+                  <span style="color:#8a8a8a">💧 Hydratation</span>
+                  <b id="homePctHydra" style="color:#2D2D2D">0%</b>
                 </div>
-                <div style="height:6px;background:#f0f0f0;border-radius:10px;overflow:hidden">
+                <div style="height:5px;background:#f0f0f0;border-radius:10px;overflow:hidden">
                   <div id="homeBarHydra" style="height:100%;width:0%;background:#A8D8A8;border-radius:10px;transition:width .6s"></div>
                 </div>
               </div>
               <div>
-                <div style="display:flex;justify-content:space-between;align-items:center;font-size:0.78rem;margin-bottom:4px">
-                  <span style="color:#8a8a8a;display:flex;align-items:center;gap:5px">🏃 Activité</span>
-                  <b id="homePctActiv" style="color:#2D2D2D;font-weight:600">0%</b>
+                <div style="display:flex;justify-content:space-between;font-size:0.72rem;margin-bottom:3px">
+                  <span style="color:#8a8a8a">🏃 Activité</span>
+                  <b id="homePctActiv" style="color:#2D2D2D">0%</b>
                 </div>
-                <div style="height:6px;background:#f0f0f0;border-radius:10px;overflow:hidden">
+                <div style="height:5px;background:#f0f0f0;border-radius:10px;overflow:hidden">
                   <div id="homeBarActiv" style="height:100%;width:0%;background:#FFB347;border-radius:10px;transition:width .6s"></div>
                 </div>
               </div>
               <div>
-                <div style="display:flex;justify-content:space-between;align-items:center;font-size:0.78rem;margin-bottom:4px">
-                  <span style="color:#8a8a8a;display:flex;align-items:center;gap:5px">🧘 Calme</span>
-                  <b id="homePctStress"="color:#2D2D2D;font-weight:600">0%</b>
+                <div style="display:flex;justify-content:space-between;font-size:0.72rem;margin-bottom:3px">
+                  <span style="color:#8a8a8a">🧘 Calme</span>
+                  <b id="homePctStress" style="color:#2D2D2D">0%</b>
                 </div>
-                <div style="height:6px;background:#f0f0f0;border-radius:10px;overflow:hidden">
+                <div style="height:5px;background:#f0f0f0;border-radius:10px;overflow:hidden">
                   <div id="homeBarStress" style="height:100%;width:0%;background:#C3A9D1;border-radius:10px;transition:width .6s"></div>
                 </div>
               </div>
@@ -8145,12 +8139,6 @@ function refreshHarmonyAvatar(logs) {
   if (hbHydra)  hbHydra.style.width  = Math.round(norm.hydra  * 100) + '%';
   if (hbActiv)  hbActiv.style.width  = Math.round(norm.activ  * 100) + '%';
   if (hbStress) hbStress.style.width = Math.round(norm.stress * 100) + '%';
-  // Badge moyenne section home
-  var hcAvgBadge = document.getElementById('homeHcAvgBadge');
-  if (hcAvgBadge) {
-    var avg = Math.round(((norm.sleep + norm.hydra + norm.activ + norm.stress) / 4) * 100);
-    hcAvgBadge.textContent = avg + '% en moyenne';
-  }
   // Lancer l'animation sur le canvas home si pas encore démarrée
   var homeCanvas = document.getElementById('harmonyCanvasHome');
   if (homeCanvas && !homeCanvas._hcStarted) {
