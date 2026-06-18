@@ -9043,9 +9043,10 @@ function _hcDerived() {
   return { balance: balance, luminosity: luminosity, fluidity: fluidity };
 }
 
-function _hcDrawFrame() {
-  var canvas = document.getElementById('harmonyCanvas');
-  if (!canvas) { _hcRunning = false; return; }
+function _hcDrawFrame(canvasId) {
+  canvasId = canvasId || 'harmonyCanvas';
+  var canvas = document.getElementById(canvasId);
+  if (!canvas) { if (canvasId==='harmonyCanvas') _hcRunning = false; return; }
   var dpr = window.devicePixelRatio || 1;
   var rawW = canvas.offsetWidth || (canvas.parentElement ? canvas.parentElement.offsetWidth : 0);
   if (rawW <= 0) { setTimeout(_hcDrawFrame, 80); return; }
@@ -9139,7 +9140,7 @@ function _hcDrawFrame() {
   ctx.beginPath(); ctx.ellipse(cx-baseR*.18,cy-baseR*.22,baseR*.48,baseR*.30,-.5,0,Math.PI*2);
   ctx.fillStyle='white'; ctx.fill(); ctx.restore();
 
-  requestAnimationFrame(_hcDrawFrame);
+  requestAnimationFrame(function(){ _hcDrawFrame(canvasId); });
 }
 
 function renderHarmonyAvatar(normalizedValues) {
@@ -9227,61 +9228,11 @@ function refreshHarmonyAvatar(logs) {
   }
 }
 
-// ── Canvas home (version réduite 110px) ──────────────────────────────────────
+// ── Canvas home ──────────────────────────────────────────────────────────────
 var _hcRunningHome = false;
 function _hcDrawFrameHome() {
-  var canvas = document.getElementById('harmonyCanvasHome');
-  if (!canvas || !_hcRunningHome) return;
-  var dpr = window.devicePixelRatio || 1;
-  var W = 150, H = 150;
-  if (canvas.width !== Math.round(W*dpr)) { canvas.width = Math.round(W*dpr); canvas.height = Math.round(H*dpr); }
-  var ctx = canvas.getContext('2d');
-  ctx.setTransform(dpr,0,0,dpr,0,0);
-  ctx.clearRect(0,0,W,H);
-
-  var s = _hcState;
-  var t = Date.now() / 1000;
-  var cx = W/2, cy = H/2;
-  var baseR = W * 0.36;
-  var balance = (s.sleep + s.hydra + s.activ + s.calm) / 4;
-  var luminosity = 0.35 + 0.65*(s.sleep*.4 + s.calm*.35 + s.hydra*.25);
-  var fluidity = 0.25 + 0.75*(s.calm*.6 + balance*.4);
-
-  // Halo extérieur
-  var grad = ctx.createRadialGradient(cx,cy,baseR*0.4,cx,cy,baseR*1.5);
-  grad.addColorStop(0, 'rgba(255,140,100,' + (0.13*luminosity) + ')');
-  grad.addColorStop(1, 'rgba(255,140,100,0)');
-  ctx.beginPath(); ctx.arc(cx,cy,baseR*1.5,0,Math.PI*2);
-  ctx.fillStyle=grad; ctx.fill();
-
-  // Lobes animés
-  var lobes = [
-    {angle:0,      color:'rgba(126,200,227,', val:s.sleep},
-    {angle:Math.PI/2, color:'rgba(168,216,168,', val:s.hydra},
-    {angle:Math.PI,   color:'rgba(255,179,71,',  val:s.activ},
-    {angle:3*Math.PI/2, color:'rgba(195,169,209,', val:s.calm}
-  ];
-  lobes.forEach(function(l,i){
-    var pulse = 1 + 0.06*Math.sin(t*1.2 + i*1.5)*fluidity;
-    var r = baseR*(0.5 + 0.5*l.val)*pulse;
-    var ox = Math.cos(l.angle)*baseR*0.18;
-    var oy = Math.sin(l.angle)*baseR*0.18;
-    var g2 = ctx.createRadialGradient(cx+ox,cy+oy,0,cx+ox,cy+oy,r);
-    g2.addColorStop(0, l.color + (0.55+0.3*l.val) + ')');
-    g2.addColorStop(1, l.color + '0)');
-    ctx.beginPath(); ctx.arc(cx+ox,cy+oy,r,0,Math.PI*2);
-    ctx.fillStyle=g2; ctx.fill();
-  });
-
-  // Noyau central
-  var core = ctx.createRadialGradient(cx,cy,0,cx,cy,baseR*0.38);
-  core.addColorStop(0,'rgba(255,255,255,'+(0.85*luminosity)+')');
-  core.addColorStop(0.5,'rgba(255,160,100,'+(0.4*luminosity)+')');
-  core.addColorStop(1,'rgba(255,120,80,0)');
-  ctx.beginPath(); ctx.arc(cx,cy,baseR*0.38,0,Math.PI*2);
-  ctx.fillStyle=core; ctx.fill();
-
-  requestAnimationFrame(_hcDrawFrameHome);
+  if (!_hcRunningHome) return;
+  _hcDrawFrame('harmonyCanvasHome');
 }
 // ── Fin moteur avatar ─────────────────────────────────────────────────────────
 
