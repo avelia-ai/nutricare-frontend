@@ -1009,7 +1009,6 @@ window.updateCaloriesFromMeals = function() {
     window._donutChart.data.datasets[0].data = [totalConso, Math.max(0, objectif - totalConso)];
     window._donutChart.update();
   } else if (canvas) {
-    if (W <= 0 || H <= 0) { setTimeout(_hcDrawFrame, 80); return; }
   var ctx = canvas.getContext('2d');
     var existing = Chart.getChart(canvas);
     if (existing) existing.destroy();
@@ -9017,13 +9016,14 @@ function _hcDrawFrame() {
   var canvas = document.getElementById('harmonyCanvas');
   if (!canvas) { _hcRunning = false; return; }
   var dpr = window.devicePixelRatio || 1;
-  var W = canvas.offsetWidth > 0 ? canvas.offsetWidth : (canvas.parentElement ? canvas.parentElement.offsetWidth : 0) || 220;
-  var H = canvas.offsetHeight > 0 ? canvas.offsetHeight : W || 220;
+  var rawW = canvas.offsetWidth || (canvas.parentElement ? canvas.parentElement.offsetWidth : 0);
+  if (rawW <= 0) { setTimeout(_hcDrawFrame, 80); return; }
+  var W = rawW;
+  var H = canvas.offsetHeight > 0 ? canvas.offsetHeight : W;
   if (canvas.width !== W*dpr) {
     canvas.width = W*dpr; canvas.height = H*dpr;
     canvas.style.width = W+'px'; canvas.style.height = H+'px';
   }
-  if (W <= 0 || H <= 0) { setTimeout(_hcDrawFrame, 80); return; }
   var ctx = canvas.getContext('2d');
   ctx.setTransform(dpr,0,0,dpr,0,0);
   ctx.clearRect(0,0,W,H);
