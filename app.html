@@ -5389,6 +5389,16 @@ function switchLang(lang) {
     } catch(e) { console.error('Erreur insights:', e); }
   }
 
+  function initBiologie() {
+    const storedUser = JSON.parse(localStorage.getItem('nutricare_user') || '{}');
+    const storedProfile = JSON.parse(localStorage.getItem('nutricare_profile') || '{}');
+    const userPlan = storedProfile?.plan || storedUser?.plan || 'free';
+    const bioContent = document.getElementById('bioContent');
+    if (bioContent) {
+      bioContent.style.display = userPlan === 'premium' ? 'block' : 'none';
+    }
+  }
+
   function initOrdonnance() {
     const storedUser = JSON.parse(localStorage.getItem('nutricare_user') || '{}');
     const storedProfile = JSON.parse(localStorage.getItem('nutricare_profile') || '{}');
