@@ -4741,43 +4741,61 @@ function switchLang(lang) {
   </div>
 
   <div id="gamiContent" style="display:none">
-    <!-- Niveau + Points -->
-    <div style="background:var(--charcoal);border-radius: 4px;padding:28px;color:white;margin-bottom:20px;display:flex;align-items:center;gap:24px;flex-wrap:wrap">
-      <div style="font-size:3rem" id="gamiNiveauIcon"></div>
-      <div style="flex:1">
-        <div style="font-size:0.75rem;text-transform:uppercase;letter-spacing:.1em;color:rgba(255,255,255,0.5);margin-bottom:4px">Niveau</div>
-        <div style="font-family:'Open Sans',serif;font-size:1.8rem" id="gamiNiveauNom">Débutant</div>
-        <div style="font-size:0.82rem;color:rgba(255,255,255,0.6)" id="gamiPoints">0 points</div>
-      </div>
-      <div style="text-align:right">
-        <div style="font-size:0.75rem;color:rgba(255,255,255,0.5);margin-bottom:8px" id="gamiNextNiveau"></div>
-        <div style="background:rgba(255,255,255,0.15);border-radius: 4px;height:8px;width:200px;overflow:hidden">
-          <div id="gamiProgressBar" style="background:var(--coral);height:100%;border-radius: 4px;width:0%;transition:width 1s ease"></div>
+
+    <!-- Niveau + Points d'harmonie -->
+    <div style="background:var(--charcoal);border-radius:16px;padding:24px;color:white;margin-bottom:16px">
+      <div style="display:flex;align-items:center;gap:16px;margin-bottom:16px">
+        <div style="font-size:2.8rem" id="gamiNiveauIcon">🌱</div>
+        <div style="flex:1">
+          <div style="font-size:0.7rem;text-transform:uppercase;letter-spacing:.12em;color:rgba(255,255,255,0.45);margin-bottom:2px">Niveau</div>
+          <div style="font-family:'Open Sans',serif;font-size:1.6rem;font-weight:700" id="gamiNiveauNom">Éveil</div>
+          <div style="font-size:0.82rem;color:rgba(255,255,255,0.55)" id="gamiPoints">0 points d'harmonie</div>
         </div>
+        <div id="gamiLevelBadge" style="background:var(--coral);color:white;font-size:0.72rem;font-weight:700;padding:4px 12px;border-radius:100px">Niv. 1</div>
+      </div>
+      <div style="font-size:0.72rem;color:rgba(255,255,255,0.4);margin-bottom:6px" id="gamiNextNiveau"></div>
+      <div style="background:rgba(255,255,255,0.12);border-radius:100px;height:7px;overflow:hidden">
+        <div id="gamiProgressBar" style="background:linear-gradient(90deg,var(--coral),#FFB870);height:100%;border-radius:100px;width:0%;transition:width 1.2s ease"></div>
       </div>
     </div>
 
     <!-- Streak -->
-    <div style="background:white;border-radius: 4px;padding:20px;margin-bottom:20px;border:1px solid var(--border);display:flex;align-items:center;gap:12px;flex-wrap:wrap;overflow:hidden">
-      <div style="font-size:2.5rem"></div>
-      <div>
-        <div style="font-size:1.8rem;font-weight:600;color:var(--charcoal)" id="gamiStreak">0</div>
-        <div style="font-size:0.82rem;color:rgba(0,0,0,0.5)">jours consécutifs</div>
+    <div style="background:white;border-radius:16px;padding:20px;margin-bottom:16px;border:1px solid var(--border);display:flex;align-items:center;gap:16px">
+      <div style="width:52px;height:52px;background:linear-gradient(135deg,#FF6B35,#FFB347);border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:1.8rem;flex-shrink:0">🔥</div>
+      <div style="flex:1">
+        <div style="display:flex;align-items:baseline;gap:6px">
+          <span style="font-size:2rem;font-weight:700;color:var(--charcoal)" id="gamiStreak">0</span>
+          <span style="font-size:0.82rem;color:rgba(0,0,0,0.45)">jours consécutifs</span>
+        </div>
+        <div style="font-size:0.78rem;color:rgba(0,0,0,0.4);margin-top:2px" id="gamiStreakMsg">Connectez-vous chaque jour !</div>
       </div>
-      <div style="margin-left:auto;font-size:0.78rem;color:rgba(0,0,0,0.4)" id="gamiStreakMsg"></div>
+      <div id="gamiStreakShield" style="font-size:1.4rem;display:none" title="Bouclier streak actif">🛡️</div>
+    </div>
+
+    <!-- Défis du jour -->
+    <div style="background:white;border-radius:16px;padding:20px;margin-bottom:16px;border:1px solid var(--border)">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
+        <div style="font-size:0.75rem;font-weight:700;text-transform:uppercase;letter-spacing:1.2px;color:var(--accent)">⚡ Défis du jour</div>
+        <div id="gamiDefiReset" style="font-size:0.7rem;color:rgba(0,0,0,0.3)"></div>
+      </div>
+      <div id="gamiDefis" style="display:flex;flex-direction:column;gap:10px"></div>
     </div>
 
     <!-- Objectifs hebdo -->
-    <div style="background:white;border-radius: 4px;padding:24px;margin-bottom:20px;border:1px solid var(--border)">
-      <div style="font-family:'Open Sans',serif;font-size:1.2rem;margin-bottom:16px">Objectifs de la semaine</div>
+    <div style="background:white;border-radius:16px;padding:20px;margin-bottom:16px;border:1px solid var(--border)">
+      <div style="font-size:0.75rem;font-weight:700;text-transform:uppercase;letter-spacing:1.2px;color:var(--accent);margin-bottom:14px">📅 Objectifs de la semaine</div>
       <div id="gamiObjectifs" style="display:flex;flex-direction:column;gap:12px"></div>
     </div>
 
     <!-- Badges -->
-    <div style="background:white;border-radius: 4px;padding:24px;border:1px solid var(--border)">
-      <div style="font-family:'Open Sans',serif;font-size:1.2rem;margin-bottom:16px">Mes badges</div>
-      <div id="gamiBadges" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:12px"></div>
+    <div style="background:white;border-radius:16px;padding:20px;border:1px solid var(--border)">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
+        <div style="font-size:0.75rem;font-weight:700;text-transform:uppercase;letter-spacing:1.2px;color:var(--accent)">🏅 Mes badges</div>
+        <div id="gamiBadgeCount" style="font-size:0.72rem;color:rgba(0,0,0,0.35)"></div>
+      </div>
+      <div id="gamiBadges" style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px"></div>
     </div>
+
   </div>
 </div>
 
@@ -5503,72 +5521,173 @@ function switchLang(lang) {
   }
 
   async function loadGamification() {
+    // 100% frontend — calculé depuis les logs santé et le localStorage
+    const profile = JSON.parse(localStorage.getItem('nutricare_profile') || '{}');
+    const userPlan = profile?.plan || JSON.parse(localStorage.getItem('nutricare_user') || '{}')?.plan || 'free';
+
+    // Mur gratuit — visible pour tous sauf si on veut tout ouvrir
+    // On ouvre la gamification à tous les plans pour inciter à s'abonner
+    document.getElementById('gamiFree').style.display = 'none';
+    document.getElementById('gamiContent').style.display = 'block';
+
+    // ── Récupération des logs santé ──────────────────────────────────────────
+    var logs = [];
     try {
-      const res = await fetch(`${BACKEND_URL}/api/gamification`, {
+      const res = await fetch(`${BACKEND_URL}/api/health/logs`, {
         headers: { 'Authorization': `Bearer ${authToken}` }
       });
-      if (res.status === 403) {
-        document.getElementById('gamiFree').style.display = 'block';
-        document.getElementById('gamiContent').style.display = 'none';
-        return;
-      }
-      const data = await res.json();
-      document.getElementById('gamiFree').style.display = 'none';
-      document.getElementById('gamiContent').style.display = 'block';
+      if (res.ok) logs = await res.json();
+    } catch(e) { console.warn('logs non disponibles', e); }
 
-      // Niveau
-      document.getElementById('gamiNiveauIcon').textContent = data.niveau?.icon || '';
-      document.getElementById('gamiNiveauNom').textContent = data.niveau?.nom || 'Débutant';
-      document.getElementById('gamiPoints').textContent = `${data.points || 0} points`;
-      if (data.niveauSuivant) {
-        const pct = Math.min(100, ((data.points - data.niveau.min) / (data.niveauSuivant.min - data.niveau.min)) * 100);
-        document.getElementById('gamiProgressBar').style.width = pct + '%';
-        document.getElementById('gamiNextNiveau').textContent = `${data.niveauSuivant.min - data.points} pts pour ${data.niveauSuivant.nom}`;
-      } else {
-        document.getElementById('gamiProgressBar').style.width = '100%';
-        document.getElementById('gamiNextNiveau').textContent = 'Niveau maximum atteint ';
-      }
+    const sorted = [...logs].sort((a,b) => new Date(a.date) - new Date(b.date));
 
-      // Streak
-      const streak = data.stats?.streak || 0;
-      document.getElementById('gamiStreak').textContent = streak;
-      document.getElementById('gamiStreakMsg').textContent = streak >= 7 ? ' Impressionnant !' : streak >= 3 ? 'Continuez !' : 'Connectez-vous chaque jour !';
+    // ── Points d'harmonie (réutilise le moteur existant) ─────────────────────
+    const totalPoints = typeof calcHarmonyFromLogs === 'function' ? calcHarmonyFromLogs(logs) : (profile.harmony_points || 0);
+    const lvlData = typeof getHarmonyLevel === 'function' ? getHarmonyLevel(totalPoints) : { name: 'Éveil', level: 1, min: 0, max: 199 };
+    const LEVEL_ICONS = ['🌱','🌿','🌸','🌟','✨'];
+    const LEVEL_NEXT_MIN = [200, 600, 1500, 3000, Infinity];
 
-      // Objectifs
-      const objContainer = document.getElementById('gamiObjectifs');
-      objContainer.innerHTML = (data.objectifs || []).map(o => {
-        const pct = Math.min(100, (o.actuel / o.cible) * 100);
-        const done = o.actuel >= o.cible;
-        return `<div style="display:flex;align-items:center;gap:12px">
-          <div style="font-size:1.2rem">${o.icon}</div>
-          <div style="flex:1">
-            <div style="display:flex;justify-content:space-between;margin-bottom:4px">
-              <span style="font-size:0.82rem;font-weight:500">${o.nom}</span>
-              <span style="font-size:0.78rem;color:rgba(0,0,0,0.4)">${o.actuel}/${o.cible}</span>
-            </div>
-            <div style="background:#F0F0F0;border-radius: 4px;height:6px">
-              <div style="background:${done ? '#6B8F71' : '#C9A84C'};height:100%;border-radius: 4px;width:${pct}%;transition:width 1s"></div>
-            </div>
-          </div>
-          ${done ? '<div style="color:#6B8F71;font-size:0.8rem"></div>' : ''}
-        </div>`;
-      }).join('');
+    document.getElementById('gamiNiveauIcon').textContent = LEVEL_ICONS[lvlData.level - 1];
+    document.getElementById('gamiNiveauNom').textContent = lvlData.name;
+    document.getElementById('gamiPoints').textContent = `${totalPoints} points d'harmonie`;
+    document.getElementById('gamiLevelBadge').textContent = `Niv. ${lvlData.level}`;
 
-      // Badges
-      const badgesContainer = document.getElementById('gamiBadges');
-      badgesContainer.innerHTML = (data.badgesTotal || []).map(b => {
-        const obtenu = (data.badgesObtenus || []).find(bo => bo.id === b.id);
-        return `<div style="background:${obtenu ? 'var(--sage-pale)' : '#F5F5F5'};border-radius: 4px;padding:14px;text-align:center;opacity:${obtenu ? '1' : '0.4'}">
-          <div style="font-size:1.6rem;margin-bottom:6px">${b.icon}</div>
-          <div style="font-size:0.78rem;font-weight:600;color:var(--charcoal);margin-bottom:2px">${b.nom}</div>
-          <div style="font-size:0.7rem;color:rgba(0,0,0,0.45)">${b.desc}</div>
-        </div>`;
-      }).join('');
-
-    } catch(e) {
-      console.error('Erreur gamification:', e);
+    const nextMin = LEVEL_NEXT_MIN[lvlData.level - 1];
+    if (nextMin < Infinity) {
+      const pct = Math.min(100, ((totalPoints - lvlData.min) / (nextMin - lvlData.min)) * 100);
+      document.getElementById('gamiProgressBar').style.width = pct + '%';
+      document.getElementById('gamiNextNiveau').textContent = `${nextMin - totalPoints} pts pour le niveau suivant`;
+    } else {
+      document.getElementById('gamiProgressBar').style.width = '100%';
+      document.getElementById('gamiNextNiveau').textContent = 'Niveau maximum atteint ✨';
     }
+
+    // ── Streak ───────────────────────────────────────────────────────────────
+    var streak = 0;
+    if (sorted.length) {
+      const today = new Date(); today.setHours(0,0,0,0);
+      var cursor = new Date(today);
+      for (let i = sorted.length - 1; i >= 0; i--) {
+        const d = new Date(sorted[i].date); d.setHours(0,0,0,0);
+        const diff = Math.round((cursor - d) / 86400000);
+        if (diff === 0 || diff === 1) { streak++; cursor = d; }
+        else break;
+      }
+    }
+    document.getElementById('gamiStreak').textContent = streak;
+    document.getElementById('gamiStreakMsg').textContent =
+      streak >= 30 ? '🏆 Légendaire !' :
+      streak >= 14 ? '🔥 Incroyable série !' :
+      streak >= 7  ? '💪 Impressionnant !' :
+      streak >= 3  ? '👍 Continuez !' :
+      'Connectez-vous chaque jour !';
+    if (streak >= 7) document.getElementById('gamiStreakShield').style.display = 'block';
+
+    // ── Défis du jour ────────────────────────────────────────────────────────
+    const todayKey = new Date().toISOString().slice(0,10);
+    var defiState = JSON.parse(localStorage.getItem('gami_defis_' + todayKey) || '{}');
+    const DEFIS_POOL = [
+      { id:'d1', icon:'💧', text:'Boire 2L d'eau aujourd'hui', points:5 },
+      { id:'d2', icon:'🚶', text:'30 min d'activité physique', points:5 },
+      { id:'d3', icon:'😴', text:'Dormir au moins 7h cette nuit', points:5 },
+      { id:'d4', icon:'🥗', text:'Manger 5 fruits et légumes', points:3 },
+      { id:'d5', icon:'🧘', text:'10 min de relaxation ou méditation', points:3 },
+      { id:'d6', icon:'📝', text:'Remplir mon suivi santé du jour', points:4 },
+    ];
+    // Sélection déterministe des 3 défis du jour basée sur la date
+    const seed = parseInt(todayKey.replace(/-/g,''));
+    const defisDuJour = [
+      DEFIS_POOL[seed % 6],
+      DEFIS_POOL[(seed + 2) % 6],
+      DEFIS_POOL[(seed + 4) % 6],
+    ];
+    const heureReset = new Date(); heureReset.setDate(heureReset.getDate()+1); heureReset.setHours(0,0,0,0);
+    const msLeft = heureReset - new Date();
+    const hLeft = Math.floor(msLeft/3600000);
+    const mLeft = Math.floor((msLeft%3600000)/60000);
+    document.getElementById('gamiDefiReset').textContent = `Reset dans ${hLeft}h${mLeft}m`;
+    document.getElementById('gamiDefis').innerHTML = defisDuJour.map(d => {
+      const done = !!defiState[d.id];
+      return `<div style="display:flex;align-items:center;gap:12px;padding:12px;background:${done ? '#F0F8F0' : '#FAFAFA'};border-radius:12px;border:1px solid ${done ? '#C0DDB8' : 'var(--border)'};cursor:pointer" onclick="toggleDefi('${d.id}','${todayKey}')">
+        <div style="font-size:1.4rem">${d.icon}</div>
+        <div style="flex:1;font-size:0.85rem;font-weight:500;color:${done ? '#4A8A4A' : 'var(--charcoal)'}${done ? ';text-decoration:line-through' : ''}">${d.text}</div>
+        <div style="font-size:0.72rem;font-weight:600;color:${done ? '#4A8A4A' : 'var(--coral)'}">+${d.points}pts</div>
+        <div style="width:22px;height:22px;border-radius:50%;border:2px solid ${done ? '#4A8A4A' : '#DDD'};background:${done ? '#4A8A4A' : 'white'};display:flex;align-items:center;justify-content:center;flex-shrink:0">
+          ${done ? '<span style="color:white;font-size:0.7rem">✓</span>' : ''}
+        </div>
+      </div>`;
+    }).join('');
+
+    // ── Objectifs hebdo ──────────────────────────────────────────────────────
+    const weekAgo = new Date(); weekAgo.setDate(weekAgo.getDate()-6); weekAgo.setHours(0,0,0,0);
+    const logsWeek = sorted.filter(l => new Date(l.date) >= weekAgo);
+    const joursAvecLog = logsWeek.length;
+    const joursHydra = logsWeek.filter(l => (l.water_liters||0) >= 2).length;
+    const joursActivite = logsWeek.filter(l => (l.activity_min||0) >= 30).length;
+    const joursSommeil = logsWeek.filter(l => (l.sleep_hours||0) >= 7).length;
+    const objectifs = [
+      { icon:'📋', nom:'Jours de suivi', actuel:joursAvecLog, cible:7 },
+      { icon:'💧', nom:'Jours hydratation atteinte', actuel:joursHydra, cible:5 },
+      { icon:'🏃', nom:'Jours d'activité', actuel:joursActivite, cible:4 },
+      { icon:'😴', nom:'Nuits de sommeil suffisant', actuel:joursSommeil, cible:5 },
+    ];
+    document.getElementById('gamiObjectifs').innerHTML = objectifs.map(o => {
+      const pct = Math.min(100, (o.actuel / o.cible) * 100);
+      const done = o.actuel >= o.cible;
+      return `<div style="display:flex;align-items:center;gap:12px">
+        <div style="font-size:1.2rem">${o.icon}</div>
+        <div style="flex:1">
+          <div style="display:flex;justify-content:space-between;margin-bottom:5px">
+            <span style="font-size:0.82rem;font-weight:500">${o.nom}</span>
+            <span style="font-size:0.78rem;color:rgba(0,0,0,0.4)">${o.actuel}/${o.cible}</span>
+          </div>
+          <div style="background:#F0F0F0;border-radius:100px;height:6px;overflow:hidden">
+            <div style="background:${done ? '#6B8F71' : 'linear-gradient(90deg,var(--coral),#FFB870)'};height:100%;border-radius:100px;width:${pct}%;transition:width 1s"></div>
+          </div>
+        </div>
+        ${done ? '<div style="color:#6B8F71;font-size:1rem">✅</div>' : ''}
+      </div>`;
+    }).join('');
+
+    // ── Badges ───────────────────────────────────────────────────────────────
+    const isPremium = userPlan === 'premium';
+    const ALL_BADGES = [
+      { id:'b_first',    icon:'🌱', nom:'Premier pas',      desc:'Premier log santé',         check: () => logs.length >= 1 },
+      { id:'b_week',     icon:'📅', nom:'7 jours',          desc:'7 logs enregistrés',         check: () => logs.length >= 7 },
+      { id:'b_month',    icon:'🗓️', nom:'30 jours',         desc:'30 logs enregistrés',        check: () => logs.length >= 30 },
+      { id:'b_streak3',  icon:'🔥', nom:'Série x3',         desc:'3 jours consécutifs',        check: () => streak >= 3 },
+      { id:'b_streak7',  icon:'🔥🔥', nom:'Série x7',       desc:'7 jours consécutifs',        check: () => streak >= 7 },
+      { id:'b_streak30', icon:'💎', nom:'Série x30',        desc:'30 jours consécutifs',       check: () => streak >= 30, premium: true },
+      { id:'b_hydra',    icon:'💧', nom:'Bien hydraté',     desc:'5 jours à 2L cette semaine', check: () => joursHydra >= 5 },
+      { id:'b_sleep',    icon:'😴', nom:'Dormeur d'or',    desc:'7 nuits de 7h+',             check: () => joursSommeil >= 7 },
+      { id:'b_actif',    icon:'🏃', nom:'Actif',            desc:'5 jours d'activité/semaine',check: () => joursActivite >= 5 },
+      { id:'b_harmony1', icon:'🌸', nom:'Harmonie',         desc:'Atteindre niveau 3',         check: () => lvlData.level >= 3 },
+      { id:'b_harmony2', icon:'🌟', nom:'Expansion',        desc:'Atteindre niveau 4',         check: () => lvlData.level >= 4, premium: true },
+      { id:'b_master',   icon:'✨', nom:'Maîtrise',         desc:'Atteindre niveau 5',         check: () => lvlData.level >= 5, premium: true },
+    ];
+    const obtained = ALL_BADGES.filter(b => !b.premium && b.check()).map(b => b.id);
+    const premiumLocked = ALL_BADGES.filter(b => b.premium);
+    document.getElementById('gamiBadgeCount').textContent = `${obtained.length}/${ALL_BADGES.length} obtenus`;
+    document.getElementById('gamiBadges').innerHTML = ALL_BADGES.map(b => {
+      const done = obtained.includes(b.id);
+      const locked = b.premium && !isPremium;
+      return `<div style="background:${done ? '#F0F8F0' : '#F8F8F8'};border-radius:12px;padding:12px;text-align:center;border:1px solid ${done ? '#C0DDB8' : 'var(--border)'};opacity:${locked ? '0.5' : done ? '1' : '0.4'};position:relative">
+        ${locked ? '<div style="position:absolute;top:6px;right:6px;font-size:0.6rem">🔒</div>' : ''}
+        <div style="font-size:1.6rem;margin-bottom:5px">${b.icon}</div>
+        <div style="font-size:0.72rem;font-weight:600;color:var(--charcoal);margin-bottom:2px">${b.nom}</div>
+        <div style="font-size:0.65rem;color:rgba(0,0,0,0.4);line-height:1.3">${locked ? 'Premium' : b.desc}</div>
+        ${done ? '<div style="font-size:0.6rem;color:#4A8A4A;margin-top:4px;font-weight:600">✓ Obtenu</div>' : ''}
+      </div>`;
+    }).join('');
   }
+
+  function toggleDefi(defiId, dateKey) {
+    var state = JSON.parse(localStorage.getItem('gami_defis_' + dateKey) || '{}');
+    state[defiId] = !state[defiId];
+    localStorage.setItem('gami_defis_' + dateKey, JSON.stringify(state));
+    loadGamification();
+  }
+
 
   async function loadAlertes(medicaments) {
     try {
