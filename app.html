@@ -5716,6 +5716,66 @@ function switchLang(lang) {
     // autres badges à ajouter
   };
 
+
+  async function checkAndShowNewBadges() {
+    try {
+      var logs = [];
+      try {
+        const res = await fetch(`${BACKEND_URL}/api/health/logs`, {
+          headers: { 'Authorization': `Bearer ${authToken}` }
+        });
+        if (res.ok) logs = await res.json();
+      } catch(e) {}
+
+      const sorted = [...logs].sort((a,b) => new Date(a.date) - new Date(b.date));
+      const profile = JSON.parse(localStorage.getItem('nutricare_profile') || '{}');
+      const totalPoints = typeof calcHarmonyFromLogs === 'function' ? calcHarmonyFromLogs(logs) : (profile.harmony_points || 0);
+      const lvlData = typeof getHarmonyLevel === 'function' ? getHarmonyLevel(totalPoints) : { level: 1, min: 0 };
+
+      // Streak
+      var streak = 0;
+      if (sorted.length) {
+        const today = new Date(); today.setHours(0,0,0,0);
+        var cursor = new Date(today);
+        for (let i = sorted.length - 1; i >= 0; i--) {
+          const d = new Date(sorted[i].date); d.setHours(0,0,0,0);
+          const diff = Math.round((cursor - d) / 86400000);
+          if (diff === 0 || diff === 1) { streak++; cursor = d; }
+          else break;
+        }
+      }
+
+      // Objectifs semaine
+      const weekAgo = new Date(); weekAgo.setDate(weekAgo.getDate()-6); weekAgo.setHours(0,0,0,0);
+      const logsWeek = sorted.filter(l => new Date(l.date) >= weekAgo);
+      const joursHydra = logsWeek.filter(l => (l.water_liters||0) >= 2).length;
+      const joursActivite = logsWeek.filter(l => (l.activity_min||0) >= 30).length;
+      const joursSommeil = logsWeek.filter(l => (l.sleep_hours||0) >= 7).length;
+
+      const ALL_BADGES = [
+        { id:'b_first',    icon:'🌱', nom:'Premier pas',      desc:'Premier log santé',          check: () => logs.length >= 1 },
+        { id:'b_week',     icon:'📅', nom:'7 jours',          desc:'7 logs enregistrés',          check: () => logs.length >= 7 },
+        { id:'b_month',    icon:'🗓️', nom:'30 jours',         desc:'30 logs enregistrés',         check: () => logs.length >= 30 },
+        { id:'b_streak3',  icon:'🔥', nom:'Série x3',         desc:'3 jours consécutifs',         check: () => streak >= 3 },
+        { id:'b_streak7',  icon:'🔥🔥', nom:'Série x7',       desc:'7 jours consécutifs',         check: () => streak >= 7 },
+        { id:'b_streak30', icon:'💎', nom:'Série x30',        desc:'30 jours consécutifs',        check: () => streak >= 30 },
+        { id:'b_hydra',    icon:'💧', nom:'Bien hydraté',     desc:'5 jours à 2L cette semaine',  check: () => joursHydra >= 5 },
+        { id:'b_sleep',    icon:'😴', nom:"Dormeur d'or",     desc:'7 nuits de 7h+',              check: () => joursSommeil >= 7 },
+        { id:'b_actif',    icon:'🏃', nom:'Actif',            desc:"5 jours d'activité/semaine",  check: () => joursActivite >= 5 },
+        { id:'b_harmony1', icon:'🌸', nom:'Harmonie',         desc:'Atteindre niveau 3',          check: () => lvlData.level >= 3 },
+        { id:'b_harmony2', icon:'🌟', nom:'Expansion',        desc:'Atteindre niveau 4',          check: () => lvlData.level >= 4 },
+        { id:'b_master',   icon:'✨', nom:'Maîtrise',         desc:'Atteindre niveau 5',          check: () => lvlData.level >= 5 },
+      ];
+
+      const obtained = ALL_BADGES.filter(b => b.check()).map(b => b.id);
+      const prevObtained = JSON.parse(localStorage.getItem('gami_badges_obtained') || '[]');
+      const newBadges = ALL_BADGES.filter(b => obtained.includes(b.id) && !prevObtained.includes(b.id));
+      localStorage.setItem('gami_badges_obtained', JSON.stringify(obtained));
+
+      if (newBadges.length > 0) showBadgePopup(newBadges[0]);
+    } catch(e) { console.warn('checkAndShowNewBadges error', e); }
+  }
+
   function showBadgePopup(badge) {
     const overlay = document.getElementById('badgePopupOverlay');
     const box = document.getElementById('badgePopupBox');
@@ -5764,6 +5824,7 @@ function switchLang(lang) {
     state[defiId] = !state[defiId];
     localStorage.setItem('gami_defis_' + dateKey, JSON.stringify(state));
     loadGamification();
+    setTimeout(() => checkAndShowNewBadges(), 800);
   }
 
 
@@ -8104,6 +8165,7 @@ async function saveHealthLog() {
         } catch(e) { console.warn('sync profil poids/taille failed', e); }
       }
       loadHealthDashboard();
+      setTimeout(() => checkAndShowNewBadges(), 1000);
     } else {
       const err = await res.json();
       alert("Erreur serveur: " + JSON.stringify(err));
