@@ -5628,7 +5628,7 @@ function switchLang(lang) {
     const objectifs = [
       { icon:'📋', nom:'Jours de suivi', actuel:joursAvecLog, cible:7 },
       { icon:'💧', nom:'Jours hydratation atteinte', actuel:joursHydra, cible:5 },
-      { icon:'🏃', nom:'Jours d'activité', actuel:joursActivite, cible:4 },
+      { icon:'🏃', nom:"Jours d'activité", actuel:joursActivite, cible:4 },
       { icon:'😴', nom:'Nuits de sommeil suffisant', actuel:joursSommeil, cible:5 },
     ];
     document.getElementById('gamiObjectifs').innerHTML = objectifs.map(o => {
@@ -5659,8 +5659,8 @@ function switchLang(lang) {
       { id:'b_streak7',  icon:'🔥🔥', nom:'Série x7',       desc:'7 jours consécutifs',        check: () => streak >= 7 },
       { id:'b_streak30', icon:'💎', nom:'Série x30',        desc:'30 jours consécutifs',       check: () => streak >= 30, premium: true },
       { id:'b_hydra',    icon:'💧', nom:'Bien hydraté',     desc:'5 jours à 2L cette semaine', check: () => joursHydra >= 5 },
-      { id:'b_sleep',    icon:'😴', nom:'Dormeur d'or',    desc:'7 nuits de 7h+',             check: () => joursSommeil >= 7 },
-      { id:'b_actif',    icon:'🏃', nom:'Actif',            desc:'5 jours d'activité/semaine',check: () => joursActivite >= 5 },
+      { id:'b_sleep',    icon:'😴', nom:"Dormeur d'or",    desc:'7 nuits de 7h+',             check: () => joursSommeil >= 7 },
+      { id:'b_actif',    icon:'🏃', nom:'Actif',            desc:"5 jours d'activité/semaine",check: () => joursActivite >= 5 },
       { id:'b_harmony1', icon:'🌸', nom:'Harmonie',         desc:'Atteindre niveau 3',         check: () => lvlData.level >= 3 },
       { id:'b_harmony2', icon:'🌟', nom:'Expansion',        desc:'Atteindre niveau 4',         check: () => lvlData.level >= 4, premium: true },
       { id:'b_master',   icon:'✨', nom:'Maîtrise',         desc:'Atteindre niveau 5',         check: () => lvlData.level >= 5, premium: true },
