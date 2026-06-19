@@ -8445,51 +8445,61 @@ function _hcDrawFrame(canvasId) {
     ctx.arc(px,py,p.size,0,Math.PI*2); ctx.fill();
   });
 
-  // Noyau organique — forme F plasma ondulant
-  var rotSpeed = .008 + d.evolution * .004;
+  // Noyau organique — rendu 3D Orbe magnétique (X2)
+  var rotSpeed = .006 + d.evolution * .004;
   var globalRot = _hcT * rotSpeed * 60;
   ctx.save();
   ctx.translate(cx, cy);
   ctx.rotate(globalRot);
   ctx.beginPath();
-  for (var i=0; i<=120; i++) {
-    var a=(Math.PI*2*i)/120;
+  for (var i=0; i<=160; i++) {
+    var a=(Math.PI*2*i)/160;
     var r=baseR;
-    r+=Math.sin(a*2+_hcT*1.1)*baseR*.20*(1-d.evolution*.88);
-    r+=Math.sin(a*3-_hcT*1.8)*baseR*.14*(1-d.evolution*.90);
-    r+=Math.sin(a*4+_hcT*2.5)*baseR*.09*(1-d.evolution*.92);
-    r+=Math.sin(a*6-_hcT*3.1)*baseR*.05*(1-d.evolution*.95);
+    r+=Math.sin(a*2+_hcT*.9)*baseR*.18*(1-d.evolution*.87);
+    r+=Math.sin(a*3-_hcT*1.6)*baseR*.12*(1-d.evolution*.89);
+    r+=Math.sin(a*5+_hcT*2.2)*baseR*.07*(1-d.evolution*.93);
     var x=Math.cos(a)*r, y=Math.sin(a)*r;
     if(i===0) ctx.moveTo(x,y); else ctx.lineTo(x,y);
   }
   ctx.closePath();
-  var cg=ctx.createRadialGradient(-baseR*.25,-baseR*.3,baseR*.08,0,0,baseR*1.1);
-  cg.addColorStop(0,'rgba(255,'+(180+Math.round(70*d.evolution*lum))+','+(140+Math.round(100*d.evolution))+',0.97)');
-  cg.addColorStop(.3,'rgba(255,'+(100+Math.round(80*d.evolution))+','+(60+Math.round(90*d.evolution))+',0.94)');
-  cg.addColorStop(.7,'rgba('+(200+Math.round(55*d.evolution))+','+(80+Math.round(60*d.evolution))+','+(80-Math.round(40*d.evolution))+',0.91)');
-  cg.addColorStop(1,'rgba(232,85,85,0.88)');
+  // Gradient 3D zénithal + rim light
+  var cg=ctx.createRadialGradient(0,-baseR*.4,baseR*.05,0,baseR*.1,baseR*1.3);
+  cg.addColorStop(0,'rgba(255,235,200,0.97)');
+  cg.addColorStop(.2,'rgba(255,'+(170+Math.round(70*d.evolution))+','+(100+Math.round(100*d.evolution))+',0.94)');
+  cg.addColorStop(.55,'rgba(220,'+(80+Math.round(80*d.evolution))+','+(50+Math.round(60*d.evolution))+',0.91)');
+  cg.addColorStop(.85,'rgba(160,45,45,0.89)');
+  cg.addColorStop(1,'rgba(100,25,25,0.92)');
   ctx.fillStyle=cg;
-  ctx.shadowColor='rgba(255,'+(120+Math.round(100*d.evolution))+','+(60+Math.round(60*d.evolution))+','+(.1+.9*d.evolution*lum)+')';
-  ctx.shadowBlur=(4+80*d.evolution)*lum;
-  ctx.fill(); ctx.restore();
-
-  // Reflets — synchronisés avec la rotation du noyau
-  var rotSpeed = .008 + d.evolution * .004;
-  var globalRot = _hcT * rotSpeed * 60;
-  ctx.save();
-  ctx.translate(cx, cy);
-  ctx.rotate(globalRot);
-  // reflet principal — suit la rotation du noyau
-  ctx.globalAlpha = .18 + .10*lum;
-  ctx.beginPath();
-  ctx.ellipse(-baseR*.22, -baseR*.28, baseR*.36, baseR*.22, -.5, 0, Math.PI*2);
-  ctx.fillStyle="white"; ctx.fill();
-  // second petit reflet en opposition
-  ctx.globalAlpha = .07 + .05*lum;
-  ctx.beginPath();
-  ctx.ellipse(baseR*.18, baseR*.20, baseR*.16, baseR*.10, .4, 0, Math.PI*2);
-  ctx.fillStyle="white"; ctx.fill();
+  ctx.shadowColor='rgba(255,'+(120+Math.round(100*d.evolution))+','+(60+Math.round(60*d.evolution))+','+(.12+.7*d.evolution*lum)+')';
+  ctx.shadowBlur=(6+50*d.evolution)*lum;
+  ctx.fill();
+  // Reflet spéculaire zénithal
+  ctx.beginPath(); ctx.ellipse(0,-baseR*.38,baseR*.22,baseR*.10,0,0,Math.PI*2);
+  var sg=ctx.createRadialGradient(0,-baseR*.38,0,0,-baseR*.38,baseR*.22);
+  sg.addColorStop(0,'rgba(255,255,255,0.60)'); sg.addColorStop(1,'rgba(255,255,255,0)');
+  ctx.fillStyle=sg; ctx.shadowBlur=0; ctx.fill();
   ctx.restore();
+  // Rim light (contour lumineux latéral) — hors rotate
+  ctx.save(); ctx.translate(cx,cy);
+  ctx.beginPath();
+  for (var i=0; i<=160; i++) {
+    var a=(Math.PI*2*i)/160;
+    var r=baseR+3;
+    r+=Math.sin(a*2+_hcT*.9)*baseR*.18*(1-d.evolution*.87);
+    r+=Math.sin(a*3-_hcT*1.6)*baseR*.12*(1-d.evolution*.89);
+    r+=Math.sin(a*5+_hcT*2.2)*baseR*.07*(1-d.evolution*.93);
+    var x=Math.cos(a)*r, y=Math.sin(a)*r;
+    if(i===0) ctx.moveTo(x,y); else ctx.lineTo(x,y);
+  }
+  ctx.closePath();
+  var rim=ctx.createLinearGradient(-baseR,0,baseR,0);
+  rim.addColorStop(0,'rgba(255,180,100,'+(0.20+.25*d.evolution)+')');
+  rim.addColorStop(.5,'rgba(255,100,80,0)');
+  rim.addColorStop(1,'rgba(255,200,120,'+(0.18+.22*d.evolution)+')');
+  ctx.strokeStyle=rim; ctx.lineWidth=2+d.evolution*4; ctx.stroke();
+  ctx.restore();
+
+
 
   requestAnimationFrame(function(){ _hcDrawFrame(canvasId); });
 }
