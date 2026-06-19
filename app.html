@@ -8446,17 +8446,27 @@ function _hcDrawFrame(canvasId) {
   });
 
   // Noyau organique
-  ctx.save(); ctx.beginPath();
+  var rotSpeed = .008 + d.evolution * .004;
+  var globalRot = _hcT * rotSpeed * 60;
+  ctx.save();
+  ctx.translate(cx, cy);
+  ctx.rotate(globalRot);
+  ctx.beginPath();
   for (var i=0; i<=80; i++) {
     var a=(Math.PI*2*i)/80;
     var r=baseR;
-    for (var l=0;l<6;l++){var amp=(baseR*.28)*(1-d.evolution*.94);var lSpeed=2.5+l*.4-d.evolution*2.0;r+=Math.sin(a*(l+2)+_hcLobePhases[l]+_hcT*lSpeed)*amp;}
-    r+=Math.sin(_hcT*1.8)*baseR*.04*(.5+lum*.5);
-    var x=cx+Math.cos(a)*r, y=cy+Math.sin(a)*r;
+    var numLobes = 2 + Math.round(d.evolution * 2);
+    for (var l=0;l<6;l++){
+      var amp=(baseR*.26)*(1-d.evolution*.93);
+      var lSpeed=(3.0-d.evolution*2.2)*(1+l*.2);
+      r+=Math.sin(a*numLobes*(l+1)/2+_hcT*lSpeed)*amp;
+    }
+    r+=Math.sin(_hcT*2.2+a*3)*baseR*.05*(1-d.evolution*.8);
+    var x=Math.cos(a)*r, y=Math.sin(a)*r;
     if(i===0) ctx.moveTo(x,y); else ctx.lineTo(x,y);
   }
   ctx.closePath();
-  var cg=ctx.createRadialGradient(cx-baseR*.25,cy-baseR*.3,baseR*.08,cx,cy,baseR*1.1);
+  var cg=ctx.createRadialGradient(-baseR*.25,-baseR*.3,baseR*.08,0,0,baseR*1.1);
   cg.addColorStop(0,'rgba(255,'+(180+Math.round(70*d.evolution*lum))+','+(140+Math.round(100*d.evolution))+',0.97)');
   cg.addColorStop(.3,'rgba(255,'+(100+Math.round(80*d.evolution))+','+(60+Math.round(90*d.evolution))+',0.94)');
   cg.addColorStop(.7,'rgba('+(200+Math.round(55*d.evolution))+','+(80+Math.round(60*d.evolution))+','+(80-Math.round(40*d.evolution))+',0.91)');
