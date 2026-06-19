@@ -8445,23 +8445,20 @@ function _hcDrawFrame(canvasId) {
     ctx.arc(px,py,p.size,0,Math.PI*2); ctx.fill();
   });
 
-  // Noyau organique
+  // Noyau organique — forme F plasma ondulant
   var rotSpeed = .008 + d.evolution * .004;
   var globalRot = _hcT * rotSpeed * 60;
   ctx.save();
   ctx.translate(cx, cy);
   ctx.rotate(globalRot);
   ctx.beginPath();
-  for (var i=0; i<=80; i++) {
-    var a=(Math.PI*2*i)/80;
+  for (var i=0; i<=120; i++) {
+    var a=(Math.PI*2*i)/120;
     var r=baseR;
-    var numLobes = 2 + Math.round(d.evolution * 2);
-    for (var l=0;l<6;l++){
-      var amp=(baseR*.26)*(1-d.evolution*.93);
-      var lSpeed=(3.0-d.evolution*2.2)*(1+l*.2);
-      r+=Math.sin(a*numLobes*(l+1)/2+_hcT*lSpeed)*amp;
-    }
-    r+=Math.sin(_hcT*2.2+a*3)*baseR*.05*(1-d.evolution*.8);
+    r+=Math.sin(a*2+_hcT*1.1)*baseR*.20*(1-d.evolution*.88);
+    r+=Math.sin(a*3-_hcT*1.8)*baseR*.14*(1-d.evolution*.90);
+    r+=Math.sin(a*4+_hcT*2.5)*baseR*.09*(1-d.evolution*.92);
+    r+=Math.sin(a*6-_hcT*3.1)*baseR*.05*(1-d.evolution*.95);
     var x=Math.cos(a)*r, y=Math.sin(a)*r;
     if(i===0) ctx.moveTo(x,y); else ctx.lineTo(x,y);
   }
