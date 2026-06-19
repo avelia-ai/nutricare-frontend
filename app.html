@@ -5672,7 +5672,8 @@ function switchLang(lang) {
     const sorted = [...logs].sort((a,b) => new Date(a.date) - new Date(b.date));
 
     // ── Points d'harmonie (réutilise le moteur existant) ─────────────────────
-    const totalPoints = typeof calcHarmonyFromLogs === 'function' ? calcHarmonyFromLogs(logs) : (profile.harmony_points || 0);
+    const defiBonus = parseInt(localStorage.getItem('gami_bonus_total') || '0', 10);
+    const totalPoints = (typeof calcHarmonyFromLogs === 'function' ? calcHarmonyFromLogs(logs) : (profile.harmony_points || 0)) + defiBonus;
     const lvlData = typeof getHarmonyLevel === 'function' ? getHarmonyLevel(totalPoints) : { name: 'Éveil', level: 1, min: 0, max: 199 };
     const LEVEL_ICONS = ['🌱','🌿','🌸','🌟','✨'];
     const LEVEL_NEXT_MIN = [200, 600, 1500, 3000, Infinity];
@@ -5836,7 +5837,8 @@ function switchLang(lang) {
 
       const sorted = [...logs].sort((a,b) => new Date(a.date) - new Date(b.date));
       const profile = JSON.parse(localStorage.getItem('nutricare_profile') || '{}');
-      const totalPoints = typeof calcHarmonyFromLogs === 'function' ? calcHarmonyFromLogs(logs) : (profile.harmony_points || 0);
+      const defiBonus = parseInt(localStorage.getItem('gami_bonus_total') || '0', 10);
+    const totalPoints = (typeof calcHarmonyFromLogs === 'function' ? calcHarmonyFromLogs(logs) : (profile.harmony_points || 0)) + defiBonus;
       const lvlData = typeof getHarmonyLevel === 'function' ? getHarmonyLevel(totalPoints) : { level: 1, min: 0 };
 
       // Streak
@@ -5926,10 +5928,17 @@ function switchLang(lang) {
     document.getElementById('badgePopupOverlay').classList.remove('active');
   }
 
+  var DEFI_POINTS_MAP = { d1:5, d2:5, d3:5, d4:3, d5:3, d6:4 };
   function toggleDefi(defiId, dateKey) {
     var state = JSON.parse(localStorage.getItem('gami_defis_' + dateKey) || '{}');
-    state[defiId] = !state[defiId];
+    var wasDone = !!state[defiId];
+    state[defiId] = !wasDone;
     localStorage.setItem('gami_defis_' + dateKey, JSON.stringify(state));
+    var pts = DEFI_POINTS_MAP[defiId] || 0;
+    var bonus = parseInt(localStorage.getItem('gami_bonus_total') || '0', 10);
+    bonus += wasDone ? -pts : pts;
+    if (bonus < 0) bonus = 0;
+    localStorage.setItem('gami_bonus_total', String(bonus));
     loadGamification();
     setTimeout(() => checkAndShowNewBadges(), 800);
   }
