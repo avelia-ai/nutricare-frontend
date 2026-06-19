@@ -5747,8 +5747,8 @@ function switchLang(lang) {
     const weekAgo = new Date(); weekAgo.setDate(weekAgo.getDate()-6); weekAgo.setHours(0,0,0,0);
     const logsWeek = sorted.filter(l => new Date(l.date) >= weekAgo);
     const joursAvecLog = logsWeek.length;
-    const joursHydra = logsWeek.filter(l => (l.water_liters||0) >= 2).length;
-    const joursActivite = logsWeek.filter(l => (l.activity_min||0) >= 30).length;
+    const joursHydra = logsWeek.filter(l => (l.hydration_liters||0) >= 2).length;
+    const joursActivite = logsWeek.filter(l => (l.activity_minutes||0) >= 30).length;
     const joursSommeil = logsWeek.filter(l => (l.sleep_hours||0) >= 7).length;
     const objectifs = [
       { icon:'📋', nom:'Jours de suivi', actuel:joursAvecLog, cible:7 },
@@ -5845,8 +5845,8 @@ function switchLang(lang) {
       // Objectifs semaine
       const weekAgo = new Date(); weekAgo.setDate(weekAgo.getDate()-6); weekAgo.setHours(0,0,0,0);
       const logsWeek = sorted.filter(l => new Date(l.date) >= weekAgo);
-      const joursHydra = logsWeek.filter(l => (l.water_liters||0) >= 2).length;
-      const joursActivite = logsWeek.filter(l => (l.activity_min||0) >= 30).length;
+      const joursHydra = logsWeek.filter(l => (l.hydration_liters||0) >= 2).length;
+      const joursActivite = logsWeek.filter(l => (l.activity_minutes||0) >= 30).length;
       const joursSommeil = logsWeek.filter(l => (l.sleep_hours||0) >= 7).length;
 
       const ALL_BADGES = [
@@ -8292,8 +8292,8 @@ var HARMONY_CAPTIONS = [
 
 function normalizeHealthLog(log) {
   const sleep  = Math.min((log.sleep_hours  || 0) / 8,  1);
-  const hydra  = Math.min((log.water_liters || 0) / 2,  1);
-  const activ  = Math.min((log.activity_min || 0) / 30, 1);
+  const hydra  = Math.min((log.hydration_liters || 0) / 2,  1);
+  const activ  = Math.min((log.activity_minutes || 0) / 30, 1);
   const calm   = log.stress_level != null ? (10 - log.stress_level) / 9 : 0;
   const stress = log.stress_level != null ? Math.min(log.stress_level / 10, 1) : 0;
   return { sleep, hydra, activ, calm, stress };
