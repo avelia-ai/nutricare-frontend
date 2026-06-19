@@ -8393,7 +8393,7 @@ function _hcDrawFrame(canvasId) {
   var d = _hcDerived();
   if (!_hcOrbitP._lastLevel || _hcOrbitP._lastLevel !== d.level) { _hcInitOrbit(d.orbitCount); _hcOrbitP._lastLevel = d.level; }
   var cx = W/2, cy = H/2;
-  var baseR = Math.min(W,H) * .22;
+  var baseR = Math.min(W,H) * (.13 + d.evolution * .10);
   var lum = d.luminosity;
   var jitterScale = 1 - d.evolution*.95; var jitter = jitterScale*3.5*(Math.sin(_hcT*11.3)*.5+(Math.random()-.5)*1.8);
   _hcT += (.004 + d.evolution*.032)*(.6+d.fluidity*.9) + jitter*.008;
@@ -8450,7 +8450,7 @@ function _hcDrawFrame(canvasId) {
   for (var i=0; i<=80; i++) {
     var a=(Math.PI*2*i)/80;
     var r=baseR;
-    for (var l=0;l<6;l++){var amp=(baseR*.22)*(1-d.evolution*.96);r+=Math.sin(a*(l+2)+_hcLobePhases[l]+_hcT*(.5+l*.15))*amp;}
+    for (var l=0;l<6;l++){var amp=(baseR*.28)*(1-d.evolution*.94);var lSpeed=2.5+l*.4-d.evolution*2.0;r+=Math.sin(a*(l+2)+_hcLobePhases[l]+_hcT*lSpeed)*amp;}
     r+=Math.sin(_hcT*1.8)*baseR*.04*(.5+lum*.5);
     var x=cx+Math.cos(a)*r, y=cy+Math.sin(a)*r;
     if(i===0) ctx.moveTo(x,y); else ctx.lineTo(x,y);
@@ -8467,9 +8467,20 @@ function _hcDrawFrame(canvasId) {
   ctx.fill(); ctx.restore();
 
   // Reflets
-  ctx.save(); ctx.globalAlpha=.13+.10*lum;
-  ctx.beginPath(); ctx.ellipse(cx-baseR*.18,cy-baseR*.22,baseR*.48,baseR*.30,-.5,0,Math.PI*2);
-  ctx.fillStyle='white'; ctx.fill(); ctx.restore();
+  ctx.save();
+  var glowAngle = _hcT * .7;
+  var glowX = cx + Math.cos(glowAngle) * baseR * .28;
+  var glowY = cy + Math.sin(glowAngle * .8) * baseR * .22;
+  ctx.globalAlpha = .15 + .12*lum;
+  ctx.beginPath();
+  ctx.ellipse(glowX, glowY, baseR*.38, baseR*.24, glowAngle*.3, 0, Math.PI*2);
+  ctx.fillStyle="white"; ctx.fill();
+  // second petit reflet en opposition
+  ctx.globalAlpha = .08 + .06*lum;
+  ctx.beginPath();
+  ctx.ellipse(cx - Math.cos(glowAngle)*baseR*.18, cy - Math.sin(glowAngle*.8)*baseR*.14, baseR*.18, baseR*.12, -glowAngle*.3, 0, Math.PI*2);
+  ctx.fillStyle="white"; ctx.fill();
+  ctx.restore();
 
   requestAnimationFrame(function(){ _hcDrawFrame(canvasId); });
 }
