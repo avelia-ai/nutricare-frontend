@@ -5738,13 +5738,18 @@ function switchLang(lang) {
     document.getElementById('gamiDefiReset').textContent = `Reset dans ${hLeft}h${mLeft}m`;
     document.getElementById('gamiDefis').innerHTML = defisDuJour.map(d => {
       const done = !!defiState[d.id];
-      return `<div style="display:flex;align-items:center;gap:12px;padding:12px;background:${done ? '#F0F8F0' : '#FAFAFA'};border-radius:12px;border:1px solid ${done ? '#C0DDB8' : 'var(--border)'};cursor:pointer" onclick="toggleDefi('${d.id}','${todayKey}')">
-        <div style="font-size:1.4rem">${d.icon}</div>
-        <div style="flex:1;font-size:0.85rem;font-weight:500;color:${done ? '#4A8A4A' : 'var(--charcoal)'}${done ? ';text-decoration:line-through' : ''}">${d.text}</div>
-        <div style="font-size:0.72rem;font-weight:600;color:${done ? '#4A8A4A' : 'var(--coral)'}">+${d.points}pts</div>
-        <div style="width:22px;height:22px;border-radius:50%;border:2px solid ${done ? '#4A8A4A' : '#DDD'};background:${done ? '#4A8A4A' : 'white'};display:flex;align-items:center;justify-content:center;flex-shrink:0">
-          ${done ? '<span style="color:white;font-size:0.7rem">✓</span>' : ''}
+      const ptsBg = done ? 'rgba(74,138,74,0.12)' : 'rgba(255,154,60,0.10)';
+      const ptsColor = done ? '#4A8A4A' : '#FF9A3C';
+      const ptsTxt = done ? '✓ Relevé' : `+${d.points} pts`;
+      const btnBg = done ? '#4A8A4A' : 'linear-gradient(135deg,#FF9A3C,#FF6B6B)';
+      const btnTxt = done ? 'Défi relevé ✓' : 'Valider';
+      return `<div onclick="toggleDefi('${d.id}','${todayKey}')" style="display:flex;align-items:center;gap:14px;background:${done ? 'linear-gradient(135deg,#f0faf0,#e6f5e6)' : 'white'};border-radius:16px;padding:14px 16px;box-shadow:0 2px 10px rgba(0,0,0,0.06);border:1.5px solid ${done ? '#4A8A4A' : 'rgba(0,0,0,0.07)'};cursor:pointer">
+        <div style="width:48px;height:48px;border-radius:14px;background:url('${d.img}') center/cover;flex-shrink:0;box-shadow:0 2px 8px rgba(0,0,0,0.12)"></div>
+        <div style="flex:1;min-width:0">
+          <div style="font-size:0.88rem;font-weight:700;color:#1a1a1a;margin-bottom:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${d.icon} ${d.text}</div>
+          <div style="display:inline-block;background:${ptsBg};color:${ptsColor};font-size:0.72rem;font-weight:700;padding:3px 10px;border-radius:20px">${ptsTxt}</div>
         </div>
+        <div style="flex-shrink:0;background:${btnBg};color:white;font-size:0.72rem;font-weight:700;padding:8px 14px;border-radius:20px;white-space:nowrap">${btnTxt}</div>
       </div>`;
     }).join('');
 
