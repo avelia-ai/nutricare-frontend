@@ -8400,8 +8400,13 @@ function _hcDrawFrame(canvasId) {
   var canvas = document.getElementById(canvasId);
   if (!canvas) { if (canvasId==='harmonyCanvas') _hcRunning = false; return; }
   var dpr = window.devicePixelRatio || 1;
-  var rawW = canvas.offsetWidth || (canvas.parentElement ? canvas.parentElement.offsetWidth : 0);
-  if (rawW <= 0) { setTimeout(_hcDrawFrame, 80); return; }
+  var rawW;
+  if (canvasId === 'harmonyCanvasHome') {
+    rawW = 190; // taille fixe connue, on evite la mesure dynamique non fiable
+  } else {
+    rawW = canvas.offsetWidth || (canvas.parentElement ? canvas.parentElement.offsetWidth : 0);
+  }
+  if (rawW <= 0) { setTimeout(function(){ _hcDrawFrame(canvasId); }, 80); return; }
   var W = rawW;
   var H = canvas.offsetHeight > 0 ? canvas.offsetHeight : W;
   if (canvas.width !== W*dpr) {
