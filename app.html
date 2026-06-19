@@ -1817,14 +1817,37 @@ window.initHome = async function() {
       { id:'d6', icon:'📝', text:'Mon suivi santé du jour', points:4, img:'https://images.pexels.com/photos/317355/pexels-photo-317355.jpeg?auto=compress&cs=tinysrgb&w=400', desc:"Renseignez vos donnees du jour (poids, sommeil, energie...) dans l onglet Suivi pour valider ce defi." },
     ];
 
-    window.showDefiInfo = function(id) {
+    window.showDefiJourDetail = function(id, todayKey) {
       var d = DEFIS_POOL.find(function(x){ return x.id === id; });
       if (!d) return;
-      document.getElementById('defiInfoIcon').textContent = d.icon;
-      document.getElementById('defiInfoTitre').textContent = d.text;
-      document.getElementById('defiInfoDesc').textContent = d.desc;
-      document.getElementById('defiInfoPoints').textContent = '+' + d.points + ' points si valide aujourd hui';
-      document.getElementById('defiInfoModal').style.display = 'flex';
+      var defiState = JSON.parse(localStorage.getItem('gami_defis_' + todayKey) || '{}');
+      var done = !!defiState[id];
+      document.getElementById('defiJourPhoto').style.backgroundImage = "url('" + d.img + "')";
+      document.getElementById('defiJourIcon').textContent = d.icon;
+      document.getElementById('defiJourTitre').textContent = d.text;
+      document.getElementById('defiJourDesc').textContent = d.desc;
+      document.getElementById('defiJourPoints').textContent = '+' + d.points + ' points';
+      var btn = document.getElementById('defiJourActionBtn');
+      if (done) {
+        btn.textContent = 'Defi releve';
+        btn.style.background = '#4A8A4A';
+        btn.style.color = 'white';
+        btn.onclick = null;
+      } else {
+        btn.textContent = 'Marquer comme fait';
+        btn.style.background = 'linear-gradient(135deg,var(--coral),var(--accent))';
+        btn.style.color = 'white';
+        btn.onclick = function(){ window.validerDefiJour(id, todayKey); };
+      }
+      var panel = document.getElementById('defiJourDetailPanel');
+      panel.style.display = 'block';
+      setTimeout(function(){ panel.scrollIntoView({behavior:'smooth', block:'start'}); }, 100);
+    };
+
+    window.validerDefiJour = function(id, todayKey) {
+      toggleDefi(id, todayKey);
+      initHome();
+      setTimeout(function(){ window.showDefiJourDetail(id, todayKey); }, 250);
     };
     var defisDuJour = [DEFIS_POOL[seed%6], DEFIS_POOL[(seed+2)%6], DEFIS_POOL[(seed+4)%6]];
     var heureReset = new Date(); heureReset.setDate(heureReset.getDate()+1); heureReset.setHours(0,0,0,0);
@@ -1841,10 +1864,9 @@ window.initHome = async function() {
         var btnBg = done ? '#4A8A4A' : 'white';
         var btnColor = done ? 'white' : '#333';
         var btnTxt = done ? 'Défi relevé ✓' : 'Marquer comme fait';
-        return '<div onclick="toggleDefi(\'' + d.id + '\',\'' + todayKey + '\');initHome()" style="min-width:150px;height:200px;border-radius:14px;flex-shrink:0;position:relative;overflow:hidden;background:url(\'' + d.img + '\') center/cover;cursor:pointer">'
+        return '<div onclick="showDefiJourDetail(\'' + d.id + '\',\'' + todayKey + '\')" style="min-width:150px;height:200px;border-radius:14px;flex-shrink:0;position:relative;overflow:hidden;background:url(\'' + d.img + '\') center/cover;cursor:pointer">'
           + '<div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,0.55) 40%,rgba(0,0,0,0.0) 100%)"></div>'
           + '<div style="position:absolute;top:10px;left:10px;background:' + badgeBg + ';color:white;font-size:9px;font-weight:600;padding:3px 8px;border-radius:20px">' + badgeTxt + '</div>'
-          + '<div onclick="event.stopPropagation();showDefiInfo(\'' + d.id + '\')" style="position:absolute;top:8px;right:8px;width:20px;height:20px;border-radius:50%;background:rgba(255,255,255,0.3);color:white;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;cursor:pointer">i</div>'
           + '<div style="position:absolute;bottom:0;left:0;right:0;padding:12px">'
           + '<div style="font-size:18px;margin-bottom:4px">' + d.icon + '</div>'
           + '<div style="font-size:13px;font-weight:700;color:white;margin-bottom:8px">' + d.text + '</div>'
@@ -2763,6 +2785,22 @@ function switchLang(lang) {
             <div id="homeDefiReset" style="font-size:0.65rem;color:rgba(0,0,0,0.35)"></div>
           </div>
           <div style="display:flex;gap:10px;overflow-x:auto;padding-bottom:6px;scrollbar-width:none" id="homeDefisList"></div>
+        </div>
+        <!-- PANNEAU DETAIL DEFI DU JOUR -->
+        <div id="defiJourDetailPanel" style="display:none;background:white;border-radius:16px;overflow:hidden;margin-bottom:16px;box-shadow:0 4px 16px rgba(0,0,0,0.1)">
+          <div id="defiJourPhoto" style="height:140px;background:center/cover;position:relative">
+            <div onclick="document.getElementById('defiJourDetailPanel').style.display='none'" style="position:absolute;top:10px;right:10px;width:32px;height:32px;border-radius:50%;background:rgba(0,0,0,0.4);color:white;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:16px">x</div>
+            <div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,0.55) 30%,rgba(0,0,0,0) 100%)"></div>
+            <div style="position:absolute;bottom:12px;left:16px;right:16px">
+              <div id="defiJourIcon" style="font-size:1.6rem;margin-bottom:4px"></div>
+              <div id="defiJourTitre" style="font-size:1.1rem;font-weight:700;color:white"></div>
+            </div>
+          </div>
+          <div style="padding:18px">
+            <div id="defiJourDesc" style="font-size:0.85rem;color:#555;line-height:1.5;margin-bottom:12px"></div>
+            <div id="defiJourPoints" style="display:inline-block;background:rgba(255,154,60,0.12);color:#FF9A3C;font-weight:700;font-size:13px;padding:6px 14px;border-radius:20px;margin-bottom:16px"></div>
+            <button id="defiJourActionBtn" style="width:100%;border:none;border-radius:14px;padding:13px;font-size:14px;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif">Marquer comme fait</button>
+          </div>
         </div>
         <!-- SECTION DÉFIS -->
         <div style="margin-bottom:16px">
@@ -11408,17 +11446,6 @@ document.addEventListener('deviceready', function() {
 }
 </style>
 
-<div id="defiInfoModal" style="display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.45);z-index:99999;align-items:center;justify-content:center;padding:16px" onclick="this.style.display='none'">
-  <div style="background:#FFF8F5;border-radius:20px;padding:24px 20px;width:100%;max-width:340px;position:relative" onclick="event.stopPropagation()">
-    <div style="text-align:center">
-      <div id="defiInfoIcon" style="font-size:2.2rem;margin-bottom:8px"></div>
-      <h2 id="defiInfoTitre" style="margin:0 0 8px;font-size:17px;font-weight:700;color:#2D2D2D"></h2>
-      <p id="defiInfoDesc" style="margin:0 0 14px;font-size:13.5px;color:#666;line-height:1.5"></p>
-      <div id="defiInfoPoints" style="display:inline-block;background:rgba(255,154,60,0.12);color:#FF9A3C;font-weight:700;font-size:13px;padding:6px 14px;border-radius:20px;margin-bottom:16px"></div>
-    </div>
-    <button onclick="document.getElementById('defiInfoModal').style.display='none'" style="width:100%;background:linear-gradient(135deg,#FF6B6B,#FF9A3C);color:white;border:none;border-radius:12px;padding:11px;font-size:14px;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif">Compris</button>
-  </div>
-</div>
 <div id="subscriptionModal" style="display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.45);z-index:99999;align-items:center;justify-content:center;padding:16px">
         <div style="background:#FFF8F5;border-radius:20px;padding:24px 20px;width:100%;max-width:380px;max-height:90vh;overflow-y:auto;position:relative">
           <div style="text-align:center;margin-bottom:4px">
