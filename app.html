@@ -8338,6 +8338,7 @@ var _hcOrbitP = [], _hcEjectP = [];
 var _hcLobePhases = Array.from({length:6}, () => Math.random() * Math.PI * 2);
 var _hcCrystals = null;
 var _hcFilaments = [];
+var _hcInnerOrbit = null;
 
 function _hcInitOrbit(count) {
   _hcOrbitP = []; count = count || 22;
@@ -8500,6 +8501,84 @@ function _hcDrawFrame(canvasId) {
   rim.addColorStop(1,'rgba(255,200,120,'+(0.18+.22*d.evolution)+')');
   ctx.strokeStyle=rim; ctx.lineWidth=2+d.evolution*4; ctx.stroke();
   ctx.restore();
+
+  // ── N2 : Anneau orbital inversé (d.evolution >= 0.25) ────────────────────────
+  if (d.evolution >= 0.25) {
+    if (!_hcInnerOrbit || _hcInnerOrbit._level !== d.level) {
+      _hcInnerOrbit = [];
+      _hcInnerOrbit._level = d.level;
+      var innerCount = 6 + Math.round(d.evolution * 8);
+      for (var i = 0; i < innerCount; i++) {
+        _hcInnerOrbit.push({
+          angle: (Math.PI * 2 * i) / innerCount,
+          rf: 0.38 + Math.random() * 0.18,
+          speed: (0.22 + Math.random() * 0.15),
+          size: 0.9 + Math.random() * 1.4,
+          wobble: Math.random() * Math.PI * 2,
+          ws: 0.8 + Math.random() * 0.9
+        });
+      }
+    }
+    var innerIntensity = Math.min((d.evolution - 0.25) / 0.25, 1);
+    _hcInnerOrbit.forEach(function(p) {
+      p.angle -= p.speed * 0.014 * (0.5 + d.fluidity); // sens inverse
+      p.wobble += p.ws * 0.02;
+      var r = baseR * p.rf + Math.sin(p.wobble) * 2;
+      var px2 = cx + Math.cos(p.angle) * r;
+      var py2 = cy + Math.sin(p.angle) * r * 0.92;
+      var al = (0.15 + 0.45 * lum * innerIntensity) * (0.6 + 0.4 * Math.sin(p.wobble * 1.7));
+      ctx.beginPath();
+      ctx.fillStyle = 'rgba(255,' + (210 + Math.round(20 * lum)) + ',180,' + al + ')';
+      ctx.arc(px2, py2, p.size, 0, Math.PI * 2);
+      ctx.fill();
+    });
+  }
+
+  // ── N3 : Vagues de surface / respiration (d.evolution >= 0.5) ─────────────
+  if (d.evolution >= 0.5) {
+    var breathIntensity = Math.min((d.evolution - 0.5) / 0.25, 1);
+    var breathPulse = 0.5 + 0.5 * Math.sin(_hcT * 1.4);
+    var breathR = baseR * (1.04 + 0.07 * breathPulse);
+    var bg = ctx.createRadialGradient(cx, cy, baseR * 0.85, cx, cy, breathR * 1.18);
+    bg.addColorStop(0, 'rgba(255,200,140,' + (0.0) + ')');
+    bg.addColorStop(0.5, 'rgba(255,180,100,' + (0.10 * breathPulse * breathIntensity) + ')');
+    bg.addColorStop(1, 'rgba(255,140,80,0)');
+    ctx.beginPath();
+    ctx.arc(cx, cy, breathR * 1.18, 0, Math.PI * 2);
+    ctx.fillStyle = bg;
+    ctx.fill();
+    // Anneau de respiration
+    ctx.beginPath();
+    ctx.arc(cx, cy, breathR, 0, Math.PI * 2);
+    ctx.strokeStyle = 'rgba(255,190,110,' + (0.12 + 0.28 * breathPulse * breathIntensity) + ')';
+    ctx.lineWidth = 1 + 2.5 * breathPulse * breathIntensity;
+    ctx.stroke();
+  }
+
+  // ── N4 : Rayons d'expansion (d.evolution >= 0.75) ─────────────────────────
+  if (d.evolution >= 0.75) {
+    var rayIntensity = Math.min((d.evolution - 0.75) / 0.25, 1);
+    var rayCount = 6;
+    for (var i = 0; i < rayCount; i++) {
+      var rayAngle = (Math.PI * 2 * i / rayCount) + _hcT * 0.18;
+      var rayPulse = 0.5 + 0.5 * Math.sin(_hcT * 1.1 + i * 1.2);
+      var rayLen = baseR * (0.55 + 0.45 * rayPulse);
+      var rg = ctx.createLinearGradient(
+        cx + Math.cos(rayAngle) * baseR,
+        cy + Math.sin(rayAngle) * baseR,
+        cx + Math.cos(rayAngle) * (baseR + rayLen),
+        cy + Math.sin(rayAngle) * (baseR + rayLen)
+      );
+      rg.addColorStop(0, 'rgba(255,200,120,' + (0.28 * rayPulse * rayIntensity) + ')');
+      rg.addColorStop(1, 'rgba(255,160,80,0)');
+      ctx.beginPath();
+      ctx.moveTo(cx + Math.cos(rayAngle) * baseR, cy + Math.sin(rayAngle) * baseR);
+      ctx.lineTo(cx + Math.cos(rayAngle) * (baseR + rayLen), cy + Math.sin(rayAngle) * (baseR + rayLen));
+      ctx.strokeStyle = rg;
+      ctx.lineWidth = 1.5 + 2.5 * rayPulse * rayIntensity;
+      ctx.stroke();
+    }
+  }
 
   // ── Micro-cristaux (niv. 4+, d.evolution >= 0.75) ──────────────────────────
   if (d.evolution >= 0.75) {
