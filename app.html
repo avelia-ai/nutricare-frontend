@@ -8473,19 +8473,21 @@ function _hcDrawFrame(canvasId) {
   ctx.shadowBlur=(4+80*d.evolution)*lum;
   ctx.fill(); ctx.restore();
 
-  // Reflets
+  // Reflets — synchronisés avec la rotation du noyau
+  var rotSpeed = .008 + d.evolution * .004;
+  var globalRot = _hcT * rotSpeed * 60;
   ctx.save();
-  var glowAngle = _hcT * .7;
-  var glowX = cx + Math.cos(glowAngle) * baseR * .28;
-  var glowY = cy + Math.sin(glowAngle * .8) * baseR * .22;
-  ctx.globalAlpha = .15 + .12*lum;
+  ctx.translate(cx, cy);
+  ctx.rotate(globalRot);
+  // reflet principal — suit la rotation du noyau
+  ctx.globalAlpha = .18 + .10*lum;
   ctx.beginPath();
-  ctx.ellipse(glowX, glowY, baseR*.38, baseR*.24, glowAngle*.3, 0, Math.PI*2);
+  ctx.ellipse(-baseR*.22, -baseR*.28, baseR*.36, baseR*.22, -.5, 0, Math.PI*2);
   ctx.fillStyle="white"; ctx.fill();
   // second petit reflet en opposition
-  ctx.globalAlpha = .08 + .06*lum;
+  ctx.globalAlpha = .07 + .05*lum;
   ctx.beginPath();
-  ctx.ellipse(cx - Math.cos(glowAngle)*baseR*.18, cy - Math.sin(glowAngle*.8)*baseR*.14, baseR*.18, baseR*.12, -glowAngle*.3, 0, Math.PI*2);
+  ctx.ellipse(baseR*.18, baseR*.20, baseR*.16, baseR*.10, .4, 0, Math.PI*2);
   ctx.fillStyle="white"; ctx.fill();
   ctx.restore();
 
