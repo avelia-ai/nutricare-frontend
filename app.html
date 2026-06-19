@@ -7075,7 +7075,7 @@ Réponds UNIQUEMENT en JSON valide avec cette structure exacte:
     var appPage = document.getElementById('appPage');
     if (appPage) appPage.style.paddingTop = '40px';
     // Ajuster les vues fixed pour tenir compte du banner
-    document.querySelectorAll('#homeView,#menusView,#frigoView,#cycleView,#catalogueView,#mesRecettesView').forEach(function(el) {
+    document.querySelectorAll('#homeView,#menusView,#frigoView,#cycleView,#catalogueView,#mesRecettesView,#visageView').forEach(function(el) {
       el.style.top = '96px';
     });
     window._trialBannerActive = true;
@@ -7187,7 +7187,8 @@ Réponds UNIQUEMENT en JSON valide avec cette structure exacte:
     document.getElementById('menusView').style.display = view === 'menus' ? 'block' : 'none';
 if (view === 'menus') {
   var mv = document.getElementById('menusView');
-  mv.style.cssText = 'display:block;position:fixed;top:56px;left:0;right:0;bottom:60px;overflow-y:auto;overflow-x:hidden;background:var(--cream);z-index:10;padding:0 0 120px 0;box-sizing:border-box;width:100%';
+  var menusTop = window._trialBannerActive ? '96px' : '56px';
+  mv.style.cssText = 'display:block;position:fixed;top:' + menusTop + ';left:0;right:0;bottom:60px;overflow-y:auto;overflow-x:hidden;background:var(--cream);z-index:10;padding:0 0 120px 0;box-sizing:border-box;width:100%';
   loadMenus();
   setTimeout(function(){ mv.scrollTop = 0; if(typeof initBottomNav==='function') initBottomNav(); }, 300);
 }
