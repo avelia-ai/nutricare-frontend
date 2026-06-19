@@ -3879,7 +3879,7 @@ function switchLang(lang) {
     </div>
     <div id="harmonyStageName" style="font-size:1.05rem;font-weight:600;color:#2D2D2D;margin:12px 0 16px">Éveil</div>
     <div style="position:relative;width:100%;max-width:240px;height:240px;margin:0 auto 18px;display:flex;align-items:center;justify-content:center">
-      <canvas id="harmonyCanvas" style="width:100%;height:100%"></canvas>
+      <div id="debugLevelPicker" style="display:flex;gap:6px;justify-content:center;margin-top:8px"><button onclick="window._debugLevel=1;refreshHarmonyAvatar(window._lastLogs||[])" style="padding:4px 10px;border-radius:20px;border:1px solid #ff9a3c;background:white;font-size:0.75rem;cursor:pointer">N1</button><button onclick="window._debugLevel=2;refreshHarmonyAvatar(window._lastLogs||[])" style="padding:4px 10px;border-radius:20px;border:1px solid #ff9a3c;background:white;font-size:0.75rem;cursor:pointer">N2</button><button onclick="window._debugLevel=3;refreshHarmonyAvatar(window._lastLogs||[])" style="padding:4px 10px;border-radius:20px;border:1px solid #ff9a3c;background:white;font-size:0.75rem;cursor:pointer">N3</button><button onclick="window._debugLevel=4;refreshHarmonyAvatar(window._lastLogs||[])" style="padding:4px 10px;border-radius:20px;border:1px solid #ff9a3c;background:white;font-size:0.75rem;cursor:pointer">N4</button><button onclick="window._debugLevel=5;refreshHarmonyAvatar(window._lastLogs||[])" style="padding:4px 10px;border-radius:20px;border:1px solid #ff9a3c;background:white;font-size:0.75rem;cursor:pointer">N5</button></div><canvas id="harmonyCanvas" style="cursor:pointer" onclick="void(0)" style="width:100%;height:100%"></canvas>
     </div>
     <div style="display:flex;justify-content:center;gap:12px;flex-wrap:wrap;margin-bottom:14px">
       <div style="display:flex;align-items:center;gap:5px;font-size:0.7rem;color:#8a8a8a"><span style="width:8px;height:8px;border-radius:50%;background:#7EC8E3;display:inline-block"></span>Sommeil <b id="harmonyPctSleep" style="color:#2D2D2D">0%</b></div>
@@ -8526,7 +8526,8 @@ function refreshHarmonyAvatar(logs) {
     norm = { sleep: 0, hydra: 0, activ: 0, calm: 0, stress: 0 };
   }
   var lvlData = getHarmonyLevel(totalPoints);
-  norm.level = lvlData.level;
+  norm.level = window._debugLevel || lvlData.level;
+  window._lastLogs = logs;
   renderHarmonyAvatar(norm);
   var pctSleep  = document.getElementById('harmonyPctSleep');
   var pctHydra  = document.getElementById('harmonyPctHydra');
