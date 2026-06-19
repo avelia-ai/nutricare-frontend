@@ -5480,9 +5480,14 @@ function switchLang(lang) {
     const storedUser = JSON.parse(localStorage.getItem('nutricare_user') || '{}');
     const storedProfile = JSON.parse(localStorage.getItem('nutricare_profile') || '{}');
     const userPlan = storedProfile?.plan || storedUser?.plan || 'free';
+    const isPremium = userPlan === 'premium' || userPlan === 'trial';
     const bioContent = document.getElementById('bioContent');
+    const bioFree = document.getElementById('bioFree');
     if (bioContent) {
-      bioContent.style.display = userPlan === 'premium' ? 'block' : 'none';
+      bioContent.style.display = isPremium ? 'block' : 'none';
+    }
+    if (bioFree) {
+      bioFree.style.display = isPremium ? 'none' : 'block';
     }
   }
 
@@ -5490,8 +5495,9 @@ function switchLang(lang) {
     const storedUser = JSON.parse(localStorage.getItem('nutricare_user') || '{}');
     const storedProfile = JSON.parse(localStorage.getItem('nutricare_profile') || '{}');
     const userPlan = storedProfile?.plan || storedUser?.plan || 'free';
+    const isPremium = userPlan === 'premium' || userPlan === 'trial';
     console.log('Plan detecte:', userPlan);
-    if (userPlan !== 'premium') {
+    if (!isPremium) {
       document.getElementById('ordoFree').style.display = 'block';
       document.getElementById('ordoContent').style.display = 'none';
     } else {
@@ -8739,7 +8745,7 @@ function analyzeVisual(file) {
 async function analyzeVisualImage() {
   if (!visualFileData) return;
   const profileData = JSON.parse(localStorage.getItem('nutricare_profile') || '{}');
-  if (profileData.plan !== 'premium') {
+  if (profileData.plan !== 'premium' && profileData.plan !== 'trial') {
     document.getElementById('visualResult').innerHTML = `<div style="background:#FDF6E8;border:1px solid #C9A84C;border-radius:8px;padding:20px;text-align:center;"><div style="font-size:1.5rem;margin-bottom:10px;">&#128081;</div><div style="font-size:0.95rem;font-weight:600;color:#2D2D2D;margin-bottom:8px;">Fonctionnalite Premium</div><div style="font-size:0.82rem;color:rgba(2,26,53,.6);margin-bottom:16px;line-height:1.5;">L analyse visuelle IA est reservee aux abonnes Premium.</div><button onclick="showView('pricing')" style="background:linear-gradient(135deg,var(--coral),var(--accent));color:#2D2D2D;border:none;padding:10px 24px;border-radius:4px;font-size:0.85rem;font-weight:600;cursor:pointer;">Voir les abonnements</button></div>`;
     document.getElementById('visualResult').style.display = 'block';
     return;
