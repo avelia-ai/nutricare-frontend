@@ -5788,7 +5788,7 @@ function switchLang(lang) {
     // ── Badges ───────────────────────────────────────────────────────────────
     const isPremium = userPlan === 'premium';
     const ALL_BADGES = [
-      { id:'b_first',    icon:'🌱', nom:'Premier pas',      desc:'Premier log santé',         check: () => logs.length >= 1 },
+      { id:'b_first',    icon:'<img src="https://raw.githubusercontent.com/avelia-ai/nutricare-frontend/main/badge_premiers_pas1-png.png" style="width:6rem;height:6rem;object-fit:contain;border-radius:50%;background:#fff">', nom:'Premier pas',      desc:'Premier log santé',         check: () => logs.length >= 1 },
       { id:'b_week',     icon:'📅', nom:'7 jours',          desc:'7 logs enregistrés',         check: () => logs.length >= 7 },
       { id:'b_month',    icon:'🗓️', nom:'30 jours',         desc:'30 logs enregistrés',        check: () => logs.length >= 30 },
       { id:'b_streak3',  icon:'🔥', nom:'Série x3',         desc:'3 jours consécutifs',        check: () => streak >= 3 },
@@ -5862,7 +5862,7 @@ function switchLang(lang) {
       const joursSommeil = logsWeek.filter(l => (l.sleep_hours||0) >= 7).length;
 
       const ALL_BADGES = [
-        { id:'b_first',    icon:'🌱', nom:'Premier pas',      desc:'Premier log santé',          check: () => logs.length >= 1 },
+        { id:'b_first',    icon:'<img src="https://raw.githubusercontent.com/avelia-ai/nutricare-frontend/main/badge_premiers_pas1-png.png" style="width:6rem;height:6rem;object-fit:contain;border-radius:50%;background:#fff">', nom:'Premier pas',      desc:'Premier log santé',          check: () => logs.length >= 1 },
         { id:'b_week',     icon:'📅', nom:'7 jours',          desc:'7 logs enregistrés',          check: () => logs.length >= 7 },
         { id:'b_month',    icon:'🗓️', nom:'30 jours',         desc:'30 logs enregistrés',         check: () => logs.length >= 30 },
         { id:'b_streak3',  icon:'🔥', nom:'Série x3',         desc:'3 jours consécutifs',         check: () => streak >= 3 },
