@@ -4266,6 +4266,14 @@ function switchLang(lang) {
 
   </div>
 </div>
+
+<div id="leaderboardView" style="display:none;padding:20px;padding-bottom:120px;position:relative">
+  <div style="font-size:1.1rem;font-weight:800;color:#1a1a1a;margin-bottom:6px">🏆 Classement</div>
+  <div style="font-size:0.82rem;color:#888;margin-bottom:20px">Les utilisateurs les plus assidus de Mirella, classes par points d'harmonie</div>
+  <div style="display:flex;flex-direction:column;gap:10px" id="leaderboardList">
+    <div style="text-align:center;padding:40px;color:#ccc;font-size:0.85rem">Chargement du classement...</div>
+  </div>
+</div>
 <div id="visualView" style="display:none;padding:32px;overflow-y:auto;background:var(--cream);width:100%">
   <div class="view-header" style="background:linear-gradient(135deg,var(--coral),var(--accent));margin:-32px -32px 32px -32px;padding:32px 32px 28px">
     <div style="font-family:'Open Sans',serif;font-size:2rem;font-weight:700;color:white;margin-bottom:6px">Detection et analyse visuelle</div>
@@ -7294,6 +7302,7 @@ Réponds UNIQUEMENT en JSON valide avec cette structure exacte:
     if (view === 'pro') loadProfessionals();
     document.getElementById('protocolsView').style.display = view === 'protocols' ? 'block' : 'none';
     document.getElementById('chronoView').style.display = view === 'chrono' ? 'block' : 'none'; if(view==='chrono' && window.initScoreSante) window.initScoreSante();
+    document.getElementById('leaderboardView').style.display = view === 'leaderboard' ? 'block' : 'none';
     if (document.getElementById('visualView')) { document.getElementById('visualView').style.display = view === 'visual' ? 'block' : 'none'; if (view === 'visual') applyVisualPlanGates(); }
     document.getElementById('gamificationView').style.display = view === 'gamification' ? 'block' : 'none';
     document.getElementById('programsView').style.display = view === 'programs' ? 'block' : 'none';
@@ -8878,6 +8887,35 @@ function updateHarmonyUI(totalPoints) {
   }
 }
 
+function loadLeaderboard() {
+  var list = document.getElementById('leaderboardList');
+  if (!list) return;
+  var token = localStorage.getItem('nutricare_token');
+  fetch(BACKEND_URL + '/api/gamification/leaderboard', {
+    headers: {'Authorization': 'Bearer ' + token}
+  }).then(function(r){return r.json();}).then(function(d){
+    var lb = d.leaderboard || [];
+    if (!lb.length) {
+      list.innerHTML = '<div style="text-align:center;padding:40px;color:#ccc;font-size:0.85rem">Aucun classement disponible pour le moment</div>';
+      return;
+    }
+    var medals = ['🥇','🥈','🥉'];
+    list.innerHTML = lb.map(function(u){
+      var medal = u.rank <= 3 ? medals[u.rank - 1] : ('#' + u.rank);
+      var bg = u.is_you ? '#FFF0EC' : 'white';
+      var border = u.is_you ? '2px solid var(--coral)' : 'none';
+      return '<div style="background:' + bg + ';border-radius:14px;padding:14px 16px;box-shadow:0 2px 8px rgba(0,0,0,0.06);display:flex;align-items:center;gap:14px;border:' + border + '">' +
+        '<div style="font-size:1.1rem;font-weight:800;color:#1a1a1a;min-width:36px;text-align:center">' + medal + '</div>' +
+        '<div style="flex:1;font-weight:700;color:#1a1a1a;font-size:0.9rem">' + u.display_name + (u.is_you ? ' (vous)' : '') + '</div>' +
+        '<div style="font-weight:700;color:var(--coral);font-size:0.92rem">' + u.points + ' pts</div>' +
+      '</div>';
+    }).join('');
+  }).catch(function(e){
+    console.error(e);
+    list.innerHTML = '<div style="text-align:center;padding:40px;color:#ccc;font-size:0.85rem">Erreur de chargement du classement</div>';
+  });
+}
+
 function refreshHarmonyAvatar(logs) {
   const defiBonus = parseInt(localStorage.getItem('gami_bonus_total') || '0', 10);
   const totalPoints = calcHarmonyFromLogs(logs) + defiBonus;
@@ -10259,6 +10297,7 @@ function closeMirellaNotif() {
       <button id="qmBtn-ordonnance" onclick="toggleQuickMenu();showView('ordonnance')" style="display:flex;align-items:center;gap:10px;padding:12px;background:var(--color-background-secondary);border:0.5px solid var(--color-border-tertiary);border-radius:14px;font-size:0.82rem;font-weight:600;color:var(--color-text-primary);cursor:pointer"><div style="width:32px;height:32px;background:#E6F1FB;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0"><i class="ti ti-file-description" style="font-size:16px;color:#185FA5" aria-hidden="true"></i></div>Scan ordonnance</button>
             
       <button id="qmBtn-programs" onclick="toggleQuickMenu();showView('programs')" style="display:flex;align-items:center;gap:10px;padding:12px;background:var(--color-background-secondary);border:0.5px solid var(--color-border-tertiary);border-radius:14px;font-size:0.82rem;font-weight:600;color:var(--color-text-primary);cursor:pointer"><div style="width:32px;height:32px;background:#FFF0EC;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0"><i class="ti ti-target" style="font-size:16px;color:#FF6B6B" aria-hidden="true"></i></div>Programmes</button>
+      <button id="qmBtn-leaderboard" onclick="toggleQuickMenu();showView('leaderboard');loadLeaderboard()" style="display:flex;align-items:center;gap:10px;padding:12px;background:var(--color-background-secondary);border:0.5px solid var(--color-border-tertiary);border-radius:14px;font-size:0.82rem;font-weight:600;color:var(--color-text-primary);cursor:pointer"><div style="width:32px;height:32px;background:#FFF7E0;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0"><i class="ti ti-trophy" style="font-size:16px;color:#D4A017" aria-hidden="true"></i></div>Classement</button>
       
       <button id="qmBtn-pricing" onclick="toggleQuickMenu();showView('pricing')" style="display:flex;align-items:center;gap:10px;padding:12px;background:var(--color-background-secondary);border:0.5px solid var(--color-border-tertiary);border-radius:14px;font-size:0.82rem;font-weight:600;color:var(--color-text-primary);cursor:pointer"><div style="width:32px;height:32px;background:#FAEEDA;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0"><i class="ti ti-star" style="font-size:16px;color:#854F0B" aria-hidden="true"></i></div>Abonnements</button>
       <button id="qmBtn-planning" onclick="toggleQuickMenu();showView('planning')" style="display:flex;align-items:center;gap:10px;padding:12px;background:var(--color-background-secondary);border:0.5px solid var(--color-border-tertiary);border-radius:14px;font-size:0.82rem;font-weight:600;color:var(--color-text-primary);cursor:pointer"><div style="width:32px;height:32px;background:#E6F1FB;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0"><i class="ti ti-calendar" style="font-size:16px;color:#185FA5" aria-hidden="true"></i></div>Mon planning</button>
