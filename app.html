@@ -4923,6 +4923,48 @@ function switchLang(lang) {
   </div>
 </div>
 
+<div id="proView" style="display:none;padding:16px;overflow-y:auto;background:var(--cream);width:100%;box-sizing:border-box;overflow-x:hidden">
+  <div class="view-header" style="background:linear-gradient(135deg,var(--coral),var(--accent));margin:-32px -32px 32px -32px;padding:32px 32px 28px"><div style="font-size:1.6rem;font-weight:700;color:white;font-family:'Open Sans',sans-serif">Mes professionnels de santé</div><div style="font-size:0.9rem;color:rgba(255,255,255,0.8);margin-top:4px">Partagez vos données avec votre médecin ou nutritionniste</div></div>
+  <div style="font-size:0.85rem;color:var(--accent);margin-bottom:16px">Partagez vos données avec votre médecin ou nutritionniste</div>
+  <div style="border-radius:16px;overflow:hidden;margin-bottom:20px;position:relative;height:180px;background:url(https://raw.githubusercontent.com/avelia-ai/nutricare-frontend/main/espace-medecin.png) center/cover">
+    <div style="position:absolute;inset:0;background:rgba(0,0,0,0.25)"></div>
+    <div style="position:absolute;inset:0;display:flex;align-items:center;padding:16px">
+      <div style="font-size:0.85rem;color:white;font-weight:600;text-shadow:0 1px 3px rgba(0,0,0,0.4)">Partagez vos données de santé avec vos professionnels de santé en toute sécurité 🩺</div>
+    </div>
+  </div>
+
+  <!-- Plan requis -->
+  <div id="proPlanRequired" style="display:none;background:white;border-radius: 4px;padding:28px;border:1px solid rgba(255,107,107,0.15);text-align:center;margin-bottom:24px">
+    <div style="font-size:1.4rem;margin-bottom:8px">⭐</div>
+    <div style="font-size:1rem;font-weight:600;color:#2D2D2D;margin-bottom:8px">Fonctionnalité Standard & Premium</div>
+    <div style="font-size:0.85rem;color:var(--accent);margin-bottom:18px">Passez à un plan payant pour partager vos données avec vos professionnels de santé.</div>
+    <button onclick="showView('pricing')" style="background:#2D2D2D;color:white;padding:10px 24px;border:none;border-radius: 4px;font-size:0.88rem;cursor:pointer;font-family:'DM Sans',sans-serif">Voir les abonnements →</button>
+  </div>
+
+  <!-- Contenu pro -->
+  <div id="proContent" style="display:none">
+    <!-- Ajouter un professionnel -->
+    <div style="background:white;border-radius: 4px;padding:24px;border:1px solid rgba(255,107,107,0.15);margin-bottom:20px">
+      <div style="font-size:0.72rem;font-weight:600;text-transform:uppercase;letter-spacing:1.5px;color:var(--accent);margin-bottom:16px">AJOUTER UN PROFESSIONNEL</div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin-bottom:14px">
+        <input type="text" id="proName" placeholder="Nom du professionnel *" style="padding:10px 12px;border:1.5px solid rgba(255,107,107,0.2);border-radius: 4px;font-size:0.85rem;font-family:'DM Sans',sans-serif;outline:none">
+        <input type="text" id="proSpecialty" placeholder="Spécialité (ex: nutritionniste)" style="padding:10px 12px;border:1.5px solid rgba(255,107,107,0.2);border-radius: 4px;font-size:0.85rem;font-family:'DM Sans',sans-serif;outline:none">
+        <input type="email" id="proEmail" placeholder="Email (optionnel)" style="padding:10px 12px;border:1.5px solid rgba(255,107,107,0.2);border-radius: 4px;font-size:0.85rem;font-family:'DM Sans',sans-serif;outline:none">
+      </div>
+      <button onclick="addProfessional()" style="background:#2D2D2D;color:white;padding:10px 24px;border:none;border-radius: 4px;font-size:0.88rem;cursor:pointer;font-family:'DM Sans',sans-serif;transition:background .2s">Ajouter →</button>
+      <div id="proAddError" style="font-size:0.78rem;color:#C55;margin-top:8px;display:none"></div>
+    </div>
+
+    <!-- Liste des professionnels -->
+    <div id="proList" style="display:flex;flex-direction:column;gap:14px"></div>
+
+    <!-- Commentaires reçus -->
+    <div style="background:white;border-radius: 4px;padding:24px;border:1px solid rgba(255,107,107,0.15);margin-top:20px">
+      <div style="font-size:0.72rem;font-weight:600;text-transform:uppercase;letter-spacing:1.5px;color:var(--accent);margin-bottom:16px">COMMENTAIRES DE VOS PROFESSIONNELS</div>
+      <div id="proComments"><p style="font-size:0.85rem;color:var(--accent)">Aucun commentaire reçu pour le moment.</p></div>
+    </div>
+  </div>
+</div>
 
 <script>
   // ── CONFIG ──
@@ -10124,10 +10166,12 @@ function closeMirellaNotif() {
       <button id="qmBtn-analysis" onclick="toggleQuickMenu();showView('analysis')" style="display:flex;align-items:center;gap:10px;padding:12px;background:var(--color-background-secondary);border:0.5px solid var(--color-border-tertiary);border-radius:14px;font-size:0.82rem;font-weight:600;color:var(--color-text-primary);cursor:pointer"><div style="width:32px;height:32px;background:#FFF0EC;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0"><i class="ti ti-camera" style="font-size:16px;color:#FF6B6B" aria-hidden="true"></i></div>Analyse repas</button>
       <button id="qmBtn-scanproduit" onclick="toggleQuickMenu();showView('scanproduit')" style="display:flex;align-items:center;gap:10px;padding:12px;background:var(--color-background-secondary);border:0.5px solid var(--color-border-tertiary);border-radius:14px;font-size:0.82rem;font-weight:600;color:var(--color-text-primary);cursor:pointer"><div style="width:32px;height:32px;background:#E6F1FB;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0"><i class="ti ti-scan" style="font-size:16px;color:#185FA5" aria-hidden="true"></i></div>Scan produit</button>
       <button id="qmBtn-visual" onclick="toggleQuickMenu();showView('visual')" style="display:flex;align-items:center;gap:10px;padding:12px;background:var(--color-background-secondary);border:0.5px solid var(--color-border-tertiary);border-radius:14px;font-size:0.82rem;font-weight:600;color:var(--color-text-primary);cursor:pointer"><div style="width:32px;height:32px;background:#EEEDFE;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0"><i class="ti ti-microscope" style="font-size:16px;color:#534AB7" aria-hidden="true"></i></div>Détection visuelle</button>
+      <button id="qmBtn-pro" onclick="toggleQuickMenu();showView('pro')" style="display:flex;align-items:center;gap:10px;padding:12px;background:var(--color-background-secondary);border:0.5px solid var(--color-border-tertiary);border-radius:14px;font-size:0.82rem;font-weight:600;color:var(--color-text-primary);cursor:pointer"><div style="width:32px;height:32px;background:#EAF3DE;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0"><i class="ti ti-stethoscope" style="font-size:16px;color:#3B6D11" aria-hidden="true"></i></div>Espace médecin</button>
       <button id="qmBtn-chrono" onclick="toggleQuickMenu();showView('chrono')" style="display:flex;align-items:center;gap:10px;padding:12px;background:#FFF5F0;border:0.5px solid rgba(255,107,107,0.15);border-radius:14px;font-size:0.82rem;font-weight:600;color:#2D2D2D;cursor:pointer"><div style="width:32px;height:32px;background:#FBEAF0;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0"><i class="ti ti-heart" style="font-size:16px;color:#993556" aria-hidden="true"></i></div>Score de santé</button>
       <button id="qmBtn-biologie" onclick="toggleQuickMenu();showView('biologie')" style="display:flex;align-items:center;gap:10px;padding:12px;background:var(--color-background-secondary);border:0.5px solid var(--color-border-tertiary);border-radius:14px;font-size:0.82rem;font-weight:600;color:var(--color-text-primary);cursor:pointer"><div style="width:32px;height:32px;background:#EEEDFE;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0"><i class="ti ti-dna" style="font-size:16px;color:#534AB7" aria-hidden="true"></i></div>Bilan sanguin</button>
       <button id="qmBtn-ordonnance" onclick="toggleQuickMenu();showView('ordonnance')" style="display:flex;align-items:center;gap:10px;padding:12px;background:var(--color-background-secondary);border:0.5px solid var(--color-border-tertiary);border-radius:14px;font-size:0.82rem;font-weight:600;color:var(--color-text-primary);cursor:pointer"><div style="width:32px;height:32px;background:#E6F1FB;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0"><i class="ti ti-file-description" style="font-size:16px;color:#185FA5" aria-hidden="true"></i></div>Scan ordonnance</button>
             
+      <button id="qmBtn-programs" onclick="toggleQuickMenu();showView('programs')" style="display:flex;align-items:center;gap:10px;padding:12px;background:var(--color-background-secondary);border:0.5px solid var(--color-border-tertiary);border-radius:14px;font-size:0.82rem;font-weight:600;color:var(--color-text-primary);cursor:pointer"><div style="width:32px;height:32px;background:#FFF0EC;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0"><i class="ti ti-target" style="font-size:16px;color:#FF6B6B" aria-hidden="true"></i></div>Programmes</button>
       
       <button id="qmBtn-pricing" onclick="toggleQuickMenu();showView('pricing')" style="display:flex;align-items:center;gap:10px;padding:12px;background:var(--color-background-secondary);border:0.5px solid var(--color-border-tertiary);border-radius:14px;font-size:0.82rem;font-weight:600;color:var(--color-text-primary);cursor:pointer"><div style="width:32px;height:32px;background:#FAEEDA;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0"><i class="ti ti-star" style="font-size:16px;color:#854F0B" aria-hidden="true"></i></div>Abonnements</button>
       <button id="qmBtn-planning" onclick="toggleQuickMenu();showView('planning')" style="display:flex;align-items:center;gap:10px;padding:12px;background:var(--color-background-secondary);border:0.5px solid var(--color-border-tertiary);border-radius:14px;font-size:0.82rem;font-weight:600;color:var(--color-text-primary);cursor:pointer"><div style="width:32px;height:32px;background:#E6F1FB;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0"><i class="ti ti-calendar" style="font-size:16px;color:#185FA5" aria-hidden="true"></i></div>Mon planning</button>
