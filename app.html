@@ -8867,6 +8867,15 @@ function updateHarmonyUI(totalPoints) {
   lp.harmony_points = totalPoints;
   lp.harmony_level  = lvl.level;
   localStorage.setItem('nutricare_profile', JSON.stringify(lp));
+  // Synchronisation backend pour le classement
+  var token = localStorage.getItem('nutricare_token');
+  if (token) {
+    fetch(BACKEND_URL + '/api/gamification/sync-points', {
+      method: 'POST',
+      headers: {'Content-Type':'application/json', 'Authorization': 'Bearer ' + token},
+      body: JSON.stringify({ harmony_points: totalPoints })
+    }).catch(function(e){ console.warn('Sync points echouee', e); });
+  }
 }
 
 function refreshHarmonyAvatar(logs) {
