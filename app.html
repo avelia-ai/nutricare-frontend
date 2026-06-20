@@ -1474,11 +1474,11 @@ window.loadCatalogue = async function() {
       window._catalogueRecettes[rcIdx] = r;
       var lockBadge = r.locked ? '<div style="position:absolute;top:8px;left:8px;z-index:3;background:rgba(45,45,45,0.85);color:white;border-radius:20px;padding:4px 10px;font-size:0.65rem;font-weight:700;display:flex;align-items:center;gap:4px">🔒 Premium</div>' : '';
       var cardClick = r.locked ? "document.getElementById('subscriptionModal').style.display='flex'" : ('window.showRecetteDetail(JSON.stringify(window._catalogueRecettes[' + rcIdx + ']))');
-      return '<div id="' + cardId + '" data-photo="' + ((r.photo_keyword||r.nom).replace(/['"]/g,"")) + '" data-icon="' + icon + '" style="background:white;border-radius:16px;overflow:hidden;box-shadow:0 3px 12px rgba(0,0,0,0.08);position:relative;height:170px;display:flex;flex-direction:column;align-items:center;justify-content:flex-start">' +
+      return '<div id="' + cardId + '" data-photo="' + ((r.photo_keyword||r.nom).replace(/['"]/g,"")) + '" data-icon="' + icon + '" style="background:white;border-radius:16px;overflow:hidden;box-shadow:0 3px 12px rgba(0,0,0,0.08);position:relative">' +
         lockBadge +
         (r.locked ? '' : '<button onclick="event.stopPropagation();toggleFavoriIdx(' + rcIdx + ')" id="fav-btn-' + cardId + '" style="position:absolute;top:8px;right:8px;z-index:3;background:rgba(255,255,255,0.95);border:none;border-radius:50%;width:30px;height:30px;cursor:pointer;font-size:1rem;line-height:1;display:flex;align-items:center;justify-content:center;box-shadow:0 1px 4px rgba(0,0,0,0.1)">🤍</button>') +
         '<div onclick="' + cardClick + '" style="cursor:pointer' + (r.locked ? ';opacity:0.7' : '') + '">' +
-        '<div class="rc-img" style="height:130px;background:linear-gradient(135deg,#FFF0EC,#FFE4D6);display:flex;align-items:center;justify-content:center;font-size:2.5rem;overflow:hidden;position:relative;height:170px;display:flex;flex-direction:column;align-items:center;justify-content:flex-start">' + (r.photo_url ? '<img src="'+r.photo_url+'" style="width:100%;height:130px;object-fit:cover;display:block">' : '<span style="font-size:2.5rem">'+icon+'</span>') + '</div>' +
+        '<div class="rc-img" style="height:130px;background:linear-gradient(135deg,#FFF0EC,#FFE4D6);display:flex;align-items:center;justify-content:center;font-size:2.5rem;overflow:hidden;position:relative">' + (r.photo_url ? '<img src="'+r.photo_url+'" style="width:100%;height:130px;object-fit:cover;display:block">' : '<span style="font-size:2.5rem">'+icon+'</span>') + '</div>' +
         '<div style="padding:12px">' +
         '<div style="font-size:0.82rem;font-weight:700;color:#1a1a1a;margin-bottom:5px;line-height:1.3;min-height:32px">' + r.nom + '</div>' +
         '<div style="display:flex;gap:8px;font-size:0.7rem;color:#888;margin-bottom:7px">' +
@@ -2714,7 +2714,7 @@ function switchLang(lang) {
           <div style="font-size:0.65rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--accent);margin-bottom:0px">✨ Cœur d'Harmonie</div>
           <div style="display:flex;align-items:center;width:100%;gap:6px;margin-left:-32px">
             <!-- Canvas gauche -->
-            <div style="flex-shrink:0;width:160px;height:160px;position:relative;height:170px;display:flex;flex-direction:column;align-items:center;justify-content:flex-start">
+            <div style="flex-shrink:0;width:160px;height:160px;position:relative">
               <canvas id="harmonyCanvasHome" style="width:160px;height:160px;display:block"></canvas>
             </div>
             <!-- Mesures droite -->
@@ -2761,7 +2761,7 @@ function switchLang(lang) {
         <!-- FIN COEUR D'HARMONIE -->
 
         <div id="homeJourneeCard" style="background:white;border-radius:16px;overflow:hidden;margin-bottom:12px;box-shadow:0 2px 8px rgba(0,0,0,0.06)">
-          <div id="homeJourneePhoto" style="height:120px;background:#f0f0f0;background-size:cover;background-position:center;position:relative;height:170px;display:flex;flex-direction:column;align-items:center;justify-content:flex-start">
+          <div id="homeJourneePhoto" style="height:120px;background:#f0f0f0;background-size:cover;background-position:center;position:relative">
             <div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,0.6),transparent)"></div>
             <div style="position:absolute;bottom:10px;left:14px">
               <div style="font-size:0.65rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:rgba(255,255,255,0.8);margin-bottom:2px">Journee mondiale</div>
@@ -2794,7 +2794,7 @@ function switchLang(lang) {
         </div>
         <!-- PANNEAU DETAIL DEFI DU JOUR -->
         <div id="defiJourDetailPanel" style="display:none;background:white;border-radius:16px;overflow:hidden;margin-bottom:16px;box-shadow:0 4px 16px rgba(0,0,0,0.1)">
-          <div id="defiJourPhoto" style="height:140px;background:center/cover;position:relative;height:170px;display:flex;flex-direction:column;align-items:center;justify-content:flex-start">
+          <div id="defiJourPhoto" style="height:140px;background:center/cover;position:relative">
             <div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,0.55) 30%,rgba(0,0,0,0) 100%);pointer-events:none"></div>
             <div onclick="document.getElementById('defiJourDetailPanel').style.display='none'" style="position:absolute;top:10px;right:10px;width:32px;height:32px;border-radius:50%;background:rgba(0,0,0,0.4);color:white;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:16px;z-index:2">x</div>
             <div style="position:absolute;bottom:12px;left:16px;right:16px">
@@ -2831,7 +2831,7 @@ function switchLang(lang) {
         </div>
         <!-- PANNEAU DÉTAIL DÉFI -->
         <div id="defiDetailPanel" style="display:none;background:white;border-radius:16px;overflow:hidden;margin-bottom:16px;box-shadow:0 4px 16px rgba(0,0,0,0.1)">
-          <div id="defiDetailPhoto" style="height:160px;background:center/cover;position:relative;height:170px;display:flex;flex-direction:column;align-items:center;justify-content:flex-start">
+          <div id="defiDetailPhoto" style="height:160px;background:center/cover;position:relative">
             <div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,0.6) 40%,rgba(0,0,0,0.0) 100%)"></div>
             <button onclick="closeDefiDetail()" style="position:absolute;top:12px;right:12px;background:rgba(0,0,0,0.4);border:none;border-radius:50%;width:32px;height:32px;color:white;font-size:1rem;cursor:pointer">✕</button>
             <div style="position:absolute;bottom:12px;left:16px">
@@ -2976,7 +2976,7 @@ function switchLang(lang) {
 
 
   <!-- VUE ROUTINES -->
-  <div id="planningRoutinesView" style="display:none;padding:20px;padding-bottom:120px;position:relative;height:170px;display:flex;flex-direction:column;align-items:center;justify-content:flex-start">
+  <div id="planningRoutinesView" style="display:none;padding:20px;padding-bottom:120px;position:relative">
     <div id="planningRoutinesLockOverlay" style="display:none;position:absolute;inset:0;background:rgba(255,245,240,0.6);backdrop-filter:blur(3px);flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:20px;cursor:pointer;z-index:5" onclick="document.getElementById('subscriptionModal').style.display='flex'">
       <div style="font-size:1.8rem;margin-bottom:8px">🔒</div>
       <div style="font-size:0.9rem;font-weight:700;color:#2D2D2D;margin-bottom:4px">Fonctionnalité Premium</div>
@@ -3984,7 +3984,7 @@ function switchLang(lang) {
       <div id="healthHistory"></div>
     </div>
   <!-- Section évolution photos -->
-  <div id="evolutionCorpCard" style="background:white;border-radius:16px;padding:22px;box-shadow:0 2px 8px rgba(0,0,0,0.06);margin-top:16px;margin-bottom:100px;position:relative;height:170px;display:flex;flex-direction:column;align-items:center;justify-content:flex-start">
+  <div id="evolutionCorpCard" style="background:white;border-radius:16px;padding:22px;box-shadow:0 2px 8px rgba(0,0,0,0.06);margin-top:16px;margin-bottom:100px;position:relative">
     <div id="evolutionCorpLockOverlay" style="display:none;position:absolute;inset:0;background:rgba(255,255,255,0.6);backdrop-filter:blur(3px);border-radius:16px;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:20px;cursor:pointer;z-index:5" onclick="document.getElementById('subscriptionModal').style.display='flex'">
       <div style="font-size:1.8rem;margin-bottom:8px">🔒</div>
       <div style="font-size:0.9rem;font-weight:700;color:#2D2D2D;margin-bottom:4px">Fonctionnalité Standard</div>
@@ -6086,7 +6086,7 @@ function switchLang(lang) {
               <div style="font-size:1.5rem;font-weight:800;color:#1a1a1a">3,99€<span style="font-size:0.75rem;font-weight:400;color:#aaa">/mois</span></div>
               <div style="font-size:0.68rem;color:#aaa;text-decoration:line-through">7,99€/mois</div>
             </div>
-            <div style="background:linear-gradient(135deg,var(--coral),var(--accent));border-radius:10px;padding:14px;position:relative;height:170px;display:flex;flex-direction:column;align-items:center;justify-content:flex-start">
+            <div style="background:linear-gradient(135deg,var(--coral),var(--accent));border-radius:10px;padding:14px;position:relative">
               <div style="position:absolute;top:-8px;left:50%;transform:translateX(-50%);background:#1a1a1a;color:white;font-size:0.6rem;font-weight:700;padding:2px 10px;border-radius:10px;white-space:nowrap">⭐ POPULAIRE</div>
               <div style="font-size:0.72rem;font-weight:700;color:rgba(255,255,255,0.85);text-transform:uppercase;margin-bottom:4px">Premium</div>
               <div style="font-size:1.5rem;font-weight:800;color:white">6,49€<span style="font-size:0.75rem;font-weight:400;color:rgba(255,255,255,0.7)">/mois</span></div>
@@ -9941,7 +9941,7 @@ window.addEventListener('load', function() {
 
 <!-- Modal Recette -->
 <div id="recipeModal" style="display:none;position:fixed;inset:0;z-index:99999;background:rgba(0,0,0,0.7);align-items:center;justify-content:center;padding:20px" onclick="if(event.target===this)this.style.display='none'">
-  <div style="max-width:580px;width:100%;max-height:88vh;overflow-y:auto;border-radius:20px;background:white;position:relative;height:170px;display:flex;flex-direction:column;align-items:center;justify-content:flex-start">
+  <div style="max-width:580px;width:100%;max-height:88vh;overflow-y:auto;border-radius:20px;background:white;position:relative">
     <!-- Photo -->
     <div style="position:relative;height:300px;overflow:hidden;border-radius:20px 20px 0 0;flex-shrink:0">
       <img id="recipeModalImg" src="" style="width:100%;height:100%;object-fit:cover">
@@ -9974,7 +9974,7 @@ window.addEventListener('load', function() {
 
 <!-- Bulle notification Mirella -->
 <div id="mirellaNotif" style="display:none;position:fixed;bottom:24px;right:24px;z-index:9998;max-width:320px;animation:slideInNotif 0.4s ease">
-  <div style="background:#2D2D2D;border-radius:16px 16px 4px 16px;padding:16px 20px;box-shadow:0 8px 32px rgba(2,26,53,0.25);position:relative;height:170px;display:flex;flex-direction:column;align-items:center;justify-content:flex-start">
+  <div style="background:#2D2D2D;border-radius:16px 16px 4px 16px;padding:16px 20px;box-shadow:0 8px 32px rgba(2,26,53,0.25);position:relative">
     <div style="display:flex;align-items:flex-start;gap:12px">
       <div style="width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,#C9A84C,#B8860B);display:flex;align-items:center;justify-content:center;font-size:1.1rem;flex-shrink:0">●</div>
       <div style="flex:1">
@@ -10314,7 +10314,7 @@ function toggleQuickMenu() {
     </div>
 
     <!-- Conseils Mirella -->
-    <div id="cycleAdviceCard" style="background:white;border-radius:20px;padding:24px;margin-bottom:16px;box-shadow:0 2px 12px rgba(0,0,0,0.06);position:relative;height:170px;display:flex;flex-direction:column;align-items:center;justify-content:flex-start">
+    <div id="cycleAdviceCard" style="background:white;border-radius:20px;padding:24px;margin-bottom:16px;box-shadow:0 2px 12px rgba(0,0,0,0.06);position:relative">
       <div id="cycleAdviceLockOverlay" style="display:none;position:absolute;inset:0;background:rgba(255,255,255,0.6);backdrop-filter:blur(3px);border-radius:20px;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:20px;cursor:pointer;z-index:5" onclick="document.getElementById('subscriptionModal').style.display='flex'">
         <div style="font-size:1.8rem;margin-bottom:8px">🔒</div>
         <div style="font-size:0.9rem;font-weight:700;color:#2D2D2D;margin-bottom:4px">Fonctionnalité Premium</div>
@@ -10334,11 +10334,11 @@ function toggleQuickMenu() {
       <button onclick="window.analyseCycle()" id="cycleAnalyseBtn" style="width:100%;margin-top:16px;background:linear-gradient(135deg,var(--coral),var(--accent));color:white;border:none;border-radius:14px;padding:14px;font-size:0.95rem;font-weight:700;cursor:pointer">
         Analyse IA personnalisée ✨
       </button>
-      <div id="cycleAIComment" style="display:none;margin-top:16px;padding:20px;background:linear-gradient(135deg,var(--cream),#FFF0EC);border-radius:0 16px 16px 16px;font-size:0.85rem;color:#333;line-height:1.7;border-left:3px solid var(--coral);box-shadow:0 2px 12px rgba(255,107,107,0.08);position:relative;height:170px;display:flex;flex-direction:column;align-items:center;justify-content:flex-start"></div>
+      <div id="cycleAIComment" style="display:none;margin-top:16px;padding:20px;background:linear-gradient(135deg,var(--cream),#FFF0EC);border-radius:0 16px 16px 16px;font-size:0.85rem;color:#333;line-height:1.7;border-left:3px solid var(--coral);box-shadow:0 2px 12px rgba(255,107,107,0.08)"></div>
     </div>
 
     <!-- Calendrier 4 semaines -->
-    <div id="cycleCalendarCard" style="background:white;border-radius:20px;padding:24px;box-shadow:0 2px 12px rgba(0,0,0,0.06);margin-bottom:16px;position:relative;height:170px;display:flex;flex-direction:column;align-items:center;justify-content:flex-start">
+    <div id="cycleCalendarCard" style="background:white;border-radius:20px;padding:24px;box-shadow:0 2px 12px rgba(0,0,0,0.06);margin-bottom:16px;position:relative">
       <div id="cycleCalendarLockOverlay" style="display:none;position:absolute;inset:0;background:rgba(255,255,255,0.6);backdrop-filter:blur(3px);border-radius:20px;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:20px;cursor:pointer;z-index:5" onclick="document.getElementById('subscriptionModal').style.display='flex'">
         <div style="font-size:1.8rem;margin-bottom:8px">🔒</div>
         <div style="font-size:0.9rem;font-weight:700;color:#2D2D2D;margin-bottom:4px">Fonctionnalité Premium</div>
@@ -10384,7 +10384,7 @@ function toggleQuickMenu() {
       <div style="font-size:1.5rem;font-weight:800;color:white">📖 Catalogue Recettes</div>
       <button onclick="showCatalogueFavoris()" style="background:rgba(255,255,255,0.2);border:none;border-radius:20px;color:white;padding:6px 14px;font-size:0.8rem;font-weight:700;cursor:pointer">❤️ Mes favoris</button>
     </div>
-    <div style="position:relative;height:170px;display:flex;flex-direction:column;align-items:center;justify-content:flex-start">
+    <div style="position:relative">
       <input type="text" id="catalogueSearch" placeholder="Rechercher une recette..." 
         style="width:100%;padding:12px 40px 12px 16px;border-radius:12px;border:none;font-size:0.9rem;box-sizing:border-box;font-family:DM Sans,sans-serif"
         oninput="window.searchCatalogue()">
@@ -11731,7 +11731,7 @@ document.addEventListener('deviceready', function() {
 </style>
 
 <div id="subscriptionModal" style="display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.45);z-index:99999;align-items:center;justify-content:center;padding:16px">
-        <div style="background:#FFF8F5;border-radius:20px;padding:24px 20px;width:100%;max-width:380px;max-height:90vh;overflow-y:auto;position:relative;height:170px;display:flex;flex-direction:column;align-items:center;justify-content:flex-start">
+        <div style="background:#FFF8F5;border-radius:20px;padding:24px 20px;width:100%;max-width:380px;max-height:90vh;overflow-y:auto;position:relative">
           <div style="text-align:center;margin-bottom:4px">
             <div style="width:48px;height:48px;border-radius:50%;background:linear-gradient(135deg,#FF6B6B,#FF9A3C);display:flex;align-items:center;justify-content:center;margin:0 auto 12px;font-weight:600;font-size:20px;color:white">M</div>
             <h2 style="margin:0 0 6px;font-size:18px;font-weight:700;color:#2D2D2D">Limite quotidienne atteinte</h2>
@@ -11751,7 +11751,7 @@ document.addEventListener('deviceready', function() {
               </ul>
               <button onclick="selectPlan('standard')" style="width:100%;background:linear-gradient(135deg,#FF6B6B,#FF9A3C);color:white;border:none;border-radius:12px;padding:12px;font-size:14px;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif">Choisir Standard</button>
             </div>
-            <div style="background:white;border-radius:14px;padding:16px;border:2px solid #FF9A3C;position:relative;height:170px;display:flex;flex-direction:column;align-items:center;justify-content:flex-start">
+            <div style="background:white;border-radius:14px;padding:16px;border:2px solid #FF9A3C;position:relative">
               <div style="position:absolute;top:-10px;left:16px;background:linear-gradient(135deg,#FF6B6B,#FF9A3C);color:white;font-size:11px;font-weight:700;padding:3px 10px;border-radius:8px">Recommandé</div>
               <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px;margin-top:6px">
                 <span style="font-size:15px;font-weight:700;color:#2D2D2D">Premium</span>
