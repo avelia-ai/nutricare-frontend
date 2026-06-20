@@ -1084,6 +1084,82 @@ window.calcScore = function() {
   return score;
 };
 
+window.analyseHealthLog = function() {
+  var btn = document.getElementById('healthAnalyseBtn');
+  btn.textContent = 'Analyse en cours...';
+  btn.disabled = true;
+  var payload = {
+    glycemia: document.getElementById('hGlycemia') ? document.getElementById('hGlycemia').value : null,
+    weight: document.getElementById('hWeight') ? document.getElementById('hWeight').value : null,
+    energy_level: document.getElementById('hEnergy') ? document.getElementById('hEnergy').value : null,
+    sleep_hours: document.getElementById('hSleep') ? document.getElementById('hSleep').value : null,
+    sleep_quality: document.getElementById('hSleepQuality') ? document.getElementById('hSleepQuality').value : null,
+    blood_pressure_sys: document.getElementById('hBpSys') ? document.getElementById('hBpSys').value : null,
+    blood_pressure_dia: document.getElementById('hBpDia') ? document.getElementById('hBpDia').value : null,
+    hydration_liters: document.getElementById('hHydration') ? document.getElementById('hHydration').value : null,
+    stress_level: document.getElementById('hStress') ? document.getElementById('hStress').value : null,
+    activity_minutes: document.getElementById('hActivity') ? document.getElementById('hActivity').value : null,
+    notes: document.getElementById('hNotes') ? document.getElementById('hNotes').value : ''
+  };
+  var token = localStorage.getItem('nutricare_token');
+  fetch(BACKEND_URL + '/api/health/analyse', {
+    method: 'POST',
+    headers: {'Content-Type':'application/json', 'Authorization': 'Bearer ' + token},
+    body: JSON.stringify(payload)
+  }).then(function(r){return r.json();}).then(function(d){
+    var comment = d.analyse || 'Bonne journee ! Continuez vos efforts.';
+    var el = document.getElementById('healthAnalyseComment');
+    el.style.whiteSpace = 'pre-wrap';
+    el.textContent = comment;
+    el.style.display = 'block';
+    btn.textContent = 'Analyser ma journee avec Mirella';
+    btn.disabled = false;
+  }).catch(function(e){
+    console.error(e);
+    btn.textContent = 'Analyser ma journee avec Mirella';
+    btn.disabled = false;
+    alert('Erreur lors de l\'analyse. Verifiez votre connexion.');
+  });
+};
+
+window.analyseHealthLog = function() {
+  var btn = document.getElementById('healthAnalyseBtn');
+  btn.textContent = 'Analyse en cours...';
+  btn.disabled = true;
+  var payload = {
+    glycemia: document.getElementById('hGlycemia') ? document.getElementById('hGlycemia').value : null,
+    weight: document.getElementById('hWeight') ? document.getElementById('hWeight').value : null,
+    energy_level: document.getElementById('hEnergy') ? document.getElementById('hEnergy').value : null,
+    sleep_hours: document.getElementById('hSleep') ? document.getElementById('hSleep').value : null,
+    sleep_quality: null,
+    blood_pressure_sys: document.getElementById('hBpSys') ? document.getElementById('hBpSys').value : null,
+    blood_pressure_dia: document.getElementById('hBpDia') ? document.getElementById('hBpDia').value : null,
+    hydration_liters: document.getElementById('hHydration') ? document.getElementById('hHydration').value : null,
+    stress_level: document.getElementById('hStress') ? document.getElementById('hStress').value : null,
+    activity_minutes: document.getElementById('hActivity') ? document.getElementById('hActivity').value : null,
+    notes: document.getElementById('hNotes') ? document.getElementById('hNotes').value : ''
+  };
+  var token = localStorage.getItem('nutricare_token');
+  fetch(BACKEND_URL + '/api/health/analyse', {
+    method: 'POST',
+    headers: {'Content-Type':'application/json', 'Authorization': 'Bearer ' + token},
+    body: JSON.stringify(payload)
+  }).then(function(r){return r.json();}).then(function(d){
+    var comment = d.analyse || 'Bonne journee ! Continuez vos efforts.';
+    var el = document.getElementById('healthAnalyseComment');
+    el.style.whiteSpace = 'pre-wrap';
+    el.textContent = comment;
+    el.style.display = 'block';
+    btn.textContent = 'Analyser ma journee avec Mirella';
+    btn.disabled = false;
+  }).catch(function(e){
+    console.error(e);
+    btn.textContent = 'Analyser ma journee avec Mirella';
+    btn.disabled = false;
+    alert('Erreur lors de l\'analyse. Verifiez votre connexion.');
+  });
+};
+
 window.analyseScore = function() {
   if (window.currentPlan !== 'premium') {
     document.getElementById('subscriptionModal').style.display = 'flex';
@@ -3965,6 +4041,8 @@ function switchLang(lang) {
     </div>
     <button onclick="saveHealthLog()" style="background:linear-gradient(135deg,var(--coral),var(--accent));color:white;padding:12px 32px;border:none;border-radius:12px;font-size:0.92rem;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif;box-shadow:0 4px 12px rgba(255,107,107,0.3)">Enregistrer ✓</button>
     <span id="healthSaveMsg" style="font-size:0.78rem;color:#28C840;margin-left:12px;display:none">✅ Enregistré !</span>
+    <button onclick="window.analyseHealthLog()" id="healthAnalyseBtn" style="width:100%;margin-top:16px;background:linear-gradient(135deg,var(--coral),var(--accent));color:white;border:none;border-radius:14px;padding:14px;font-size:0.95rem;font-weight:700;cursor:pointer">Analyser ma journee avec Mirella</button>
+    <div id="healthAnalyseComment" style="display:none;margin-top:16px;padding:20px;background:linear-gradient(135deg,var(--cream),#FFF0EC);border-radius:0 16px 16px 16px;font-size:0.85rem;color:#333;line-height:1.7;border-left:3px solid var(--coral);box-shadow:0 2px 12px rgba(255,107,107,0.08)"></div>
   </div>
 
   <!-- Graphiques et historique -->
