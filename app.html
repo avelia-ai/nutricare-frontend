@@ -8792,7 +8792,8 @@ function updateHarmonyUI(totalPoints) {
 }
 
 function refreshHarmonyAvatar(logs) {
-  const totalPoints = calcHarmonyFromLogs(logs);
+  const defiBonus = parseInt(localStorage.getItem('gami_bonus_total') || '0', 10);
+  const totalPoints = calcHarmonyFromLogs(logs) + defiBonus;
   updateHarmonyUI(totalPoints);
   // Valeurs du dernier log pour l'avatar visuel
   var norm;
