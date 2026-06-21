@@ -3948,10 +3948,38 @@ function switchLang(lang) {
       <canvas id="harmonyCanvas" style="cursor:pointer" onclick="void(0)" style="width:100%;height:100%"></canvas>
     </div>
     <div style="display:flex;justify-content:center;gap:12px;flex-wrap:wrap;margin-bottom:14px">
-      <div style="display:flex;align-items:center;gap:5px;font-size:0.7rem;color:#8a8a8a"><span style="width:8px;height:8px;border-radius:50%;background:#7EC8E3;display:inline-block"></span>Sommeil <b id="harmonyPctSleep" style="color:#2D2D2D">0%</b></div>
-      <div style="display:flex;align-items:center;gap:5px;font-size:0.7rem;color:#8a8a8a"><span style="width:8px;height:8px;border-radius:50%;background:#A8D8A8;display:inline-block"></span>Hydratation <b id="harmonyPctHydra" style="color:#2D2D2D">0%</b></div>
-      <div style="display:flex;align-items:center;gap:5px;font-size:0.7rem;color:#8a8a8a"><span style="width:8px;height:8px;border-radius:50%;background:#FFB347;display:inline-block"></span>Activité <b id="harmonyPctActiv" style="color:#2D2D2D">0%</b></div>
-      <div style="display:flex;align-items:center;gap:5px;font-size:0.7rem;color:#8a8a8a"><span style="width:8px;height:8px;border-radius:50%;background:#C3A9D1;display:inline-block"></span>Stress <b id="harmonyPctStress" style="color:#2D2D2D">0%</b></div>
+      <div style="display:flex;flex-direction:column;align-items:center;gap:4px">
+        <svg width="52" height="52" viewBox="0 0 56 56">
+          <circle cx="28" cy="28" r="24" fill="none" stroke="#F2EFE9" stroke-width="5"/>
+          <circle id="harmonyRingSleep" cx="28" cy="28" r="24" fill="none" stroke="#7EC8E3" stroke-width="5" stroke-linecap="round" stroke-dasharray="150.8" stroke-dashoffset="150.8" transform="rotate(-90 28 28)" style="transition:stroke-dashoffset .4s ease"/>
+          <text id="harmonyPctSleep" x="28" y="32" text-anchor="middle" font-size="12" font-weight="600" fill="#2D2D2D">0%</text>
+        </svg>
+        <span style="font-size:0.68rem;color:#8a8a8a">Sommeil</span>
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:center;gap:4px">
+        <svg width="52" height="52" viewBox="0 0 56 56">
+          <circle cx="28" cy="28" r="24" fill="none" stroke="#F2EFE9" stroke-width="5"/>
+          <circle id="harmonyRingHydra" cx="28" cy="28" r="24" fill="none" stroke="#A8D8A8" stroke-width="5" stroke-linecap="round" stroke-dasharray="150.8" stroke-dashoffset="150.8" transform="rotate(-90 28 28)" style="transition:stroke-dashoffset .4s ease"/>
+          <text id="harmonyPctHydra" x="28" y="32" text-anchor="middle" font-size="12" font-weight="600" fill="#2D2D2D">0%</text>
+        </svg>
+        <span style="font-size:0.68rem;color:#8a8a8a">Hydratation</span>
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:center;gap:4px">
+        <svg width="52" height="52" viewBox="0 0 56 56">
+          <circle cx="28" cy="28" r="24" fill="none" stroke="#F2EFE9" stroke-width="5"/>
+          <circle id="harmonyRingActiv" cx="28" cy="28" r="24" fill="none" stroke="#FFB347" stroke-width="5" stroke-linecap="round" stroke-dasharray="150.8" stroke-dashoffset="150.8" transform="rotate(-90 28 28)" style="transition:stroke-dashoffset .4s ease"/>
+          <text id="harmonyPctActiv" x="28" y="32" text-anchor="middle" font-size="12" font-weight="600" fill="#2D2D2D">0%</text>
+        </svg>
+        <span style="font-size:0.68rem;color:#8a8a8a">Activité</span>
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:center;gap:4px">
+        <svg width="52" height="52" viewBox="0 0 56 56">
+          <circle cx="28" cy="28" r="24" fill="none" stroke="#F2EFE9" stroke-width="5"/>
+          <circle id="harmonyRingStress" cx="28" cy="28" r="24" fill="none" stroke="#C3A9D1" stroke-width="5" stroke-linecap="round" stroke-dasharray="150.8" stroke-dashoffset="150.8" transform="rotate(-90 28 28)" style="transition:stroke-dashoffset .4s ease"/>
+          <text id="harmonyPctStress" x="28" y="32" text-anchor="middle" font-size="12" font-weight="600" fill="#2D2D2D">0%</text>
+        </svg>
+        <span style="font-size:0.68rem;color:#8a8a8a">Stress</span>
+      </div>
     </div>
     <div id="harmonyCaption" style="text-align:center;font-size:0.82rem;color:#8a8a8a;margin-bottom:4px;min-height:1.2em">Ton équilibre prend forme doucement.</div>
     <div style="display:flex;align-items:baseline;justify-content:center;gap:6px;margin-top:4px">
@@ -9019,6 +9047,15 @@ function refreshHarmonyAvatar(logs) {
   if (pctHydra)  pctHydra.textContent  = Math.round(norm.hydra  * 100) + '%';
   if (pctActiv)  pctActiv.textContent  = Math.round(norm.activ  * 100) + '%';
   if (pctStress) pctStress.textContent = Math.round(norm.stress * 100) + '%';
+  var ringCirc = 150.8;
+  var ringSleep  = document.getElementById('harmonyRingSleep');
+  var ringHydra  = document.getElementById('harmonyRingHydra');
+  var ringActiv  = document.getElementById('harmonyRingActiv');
+  var ringStress = document.getElementById('harmonyRingStress');
+  if (ringSleep)  ringSleep.style.strokeDashoffset  = ringCirc * (1 - Math.min(norm.sleep,  1));
+  if (ringHydra)  ringHydra.style.strokeDashoffset  = ringCirc * (1 - Math.min(norm.hydra,  1));
+  if (ringActiv)  ringActiv.style.strokeDashoffset  = ringCirc * (1 - Math.min(norm.activ,  1));
+  if (ringStress) ringStress.style.strokeDashoffset = ringCirc * (1 - Math.min(norm.stress, 1));
   // Mise à jour section home
   var hpSleep  = document.getElementById('homePctSleep');
   var hpHydra  = document.getElementById('homePctHydra');
