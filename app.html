@@ -8895,31 +8895,6 @@ function _hcDrawFrame(canvasId) {
   requestAnimationFrame(function(){ _hcDrawFrame(canvasId); });
 }
 
-function _debugSetHarmonyLevel(lvl) {
-  _hcState.level = lvl;
-  if (!_hcRunning) { _hcRunning = true; _hcDrawFrame(); }
-}
-(function _debugInitLevelPicker() {
-  function inject() {
-    var box = document.getElementById('debugLevelPicker');
-    if (!box) { return; }
-    box.innerHTML = '';
-    for (var i = 1; i <= 5; i++) {
-      (function(lvl) {
-        var btn = document.createElement('button');
-        btn.textContent = 'Niveau ' + lvl;
-        btn.style.cssText = 'padding:4px 10px;border-radius:8px;border:1px solid #ddd;background:#fff;font-size:0.75rem;cursor:pointer';
-        btn.onclick = function() { _debugSetHarmonyLevel(lvl); };
-        box.appendChild(btn);
-      })(i);
-    }
-  }
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', inject);
-  } else {
-    inject();
-  }
-})();
 function renderHarmonyAvatar(normalizedValues) {
   _hcState = {
     level: normalizedValues.level || 1,
