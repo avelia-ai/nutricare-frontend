@@ -1713,6 +1713,7 @@ window.initHome = async function() {
     var hc = document.getElementById('harmonyCanvasHome');
     if (hc) { hc._hcStarted = true; _hcRunningHome = true; _hcDrawFrameHome(); }
   }, 300);
+  if (typeof loadMyRank === 'function') loadMyRank();
   // Afficher carte localisation auto
   setTimeout(function(){ if(typeof window.afficherCarteSeule==='function') window.afficherCarteSeule(); }, 1000);
   var now = new Date();
@@ -2942,13 +2943,17 @@ function switchLang(lang) {
 
 
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px">
-          <div onclick="showView('chrono')" style="background:white;border-radius:14px;padding:14px;box-shadow:0 2px 8px rgba(0,0,0,0.06);cursor:pointer">
-            <div style="font-size:1.6rem;font-weight:800;color:var(--coral)" id="homeScoreVal">--</div>
-            <div style="font-size:0.72rem;color:#888;margin-top:2px">Score sante hier</div>
-            <div style="font-size:0.7rem;color:var(--coral);margin-top:4px">Voir le suivi</div>
+          <div onclick="toggleQuickMenu();showView('leaderboard');loadLeaderboard()" style="background:white;border-radius:14px;padding:18px;box-shadow:0 2px 8px rgba(0,0,0,0.06);cursor:pointer">
+            <div style="width:32px;height:32px;background:#FFF7E0;border-radius:8px;display:flex;align-items:center;justify-content:center;margin-bottom:8px"><i class="ti ti-trophy" style="font-size:16px;color:#D4A017" aria-hidden="true"></i></div>
+            <div style="display:flex;align-items:baseline;gap:4px">
+              <div style="font-size:1.9rem;font-weight:800;color:var(--coral)" id="homeRankVal">--</div>
+              <div style="font-size:0.78rem;color:#888" id="homeRankTotal"></div>
+            </div>
+            <div style="font-size:0.72rem;color:#888;margin-top:2px">Classement</div>
+            <div style="font-size:0.7rem;color:var(--coral);margin-top:4px">Voir le classement</div>
           </div>
-          <div onclick="showView('menus')" style="background:white;border-radius:14px;padding:14px;box-shadow:0 2px 8px rgba(0,0,0,0.06);cursor:pointer">
-            <div id="homeProchainRepasPhoto" style="width:100%;height:50px;border-radius:8px;background:#f5f5f5;margin-bottom:6px;background-image:url(https://images.pexels.com/photos/1640777/pexels-photo-1640777.jpeg?auto=compress&cs=tinysrgb&w=400);background-size:cover;background-position:center"></div>
+          <div onclick="showView('menus')" style="background:white;border-radius:14px;padding:18px;box-shadow:0 2px 8px rgba(0,0,0,0.06);cursor:pointer">
+            <div id="homeProchainRepasPhoto" style="width:100%;height:70px;border-radius:8px;background:#f5f5f5;margin-bottom:8px;background-image:url(https://images.pexels.com/photos/1640777/pexels-photo-1640777.jpeg?auto=compress&cs=tinysrgb&w=400);background-size:cover;background-position:center"></div>
             <div style="font-size:0.72rem;color:#888">Prochain repas</div>
             <div id="homeProchainRepas" style="font-size:0.78rem;font-weight:600;color:#1a1a1a;margin-top:2px">Voir les menus</div>
           </div>
@@ -8974,6 +8979,24 @@ function updateHarmonyUI(totalPoints) {
 
 var leaderboardCurrentPage = 1;
 var leaderboardTotalPages = 1;
+function loadMyRank() {
+  var elVal = document.getElementById('homeRankVal');
+  var elTotal = document.getElementById('homeRankTotal');
+  if (!elVal) return;
+  var token = localStorage.getItem('nutricare_token');
+  fetch(BACKEND_URL + '/api/gamification/leaderboard/me', {
+    headers: {'Authorization': 'Bearer ' + token}
+  }).then(function(r){
+    if (!r.ok) throw new Error('not available');
+    return r.json();
+  }).then(function(d){
+    elVal.textContent = '#' + d.rank;
+    if (elTotal) elTotal.textContent = d.total ? ('/ ' + d.total) : '';
+  }).catch(function(){
+    elVal.textContent = '--';
+    if (elTotal) elTotal.textContent = '';
+  });
+}
 
 function loadLeaderboard(page) {
   var list = document.getElementById('leaderboardList');
