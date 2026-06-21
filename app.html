@@ -8517,7 +8517,7 @@ function _hcDrawFrame(canvasId) {
   var shadowRy = baseR * (0.18 + d.evolution * 0.06);
   var shadowRx = baseR * (0.62 + d.evolution * 0.10);
   var shadowY = cy + baseR * (0.78 + d.evolution * 0.12);
-  var shadowAlpha = 0.10 + 0.16 * d.evolution;
+  var shadowAlpha = 0.30 + 0.15 * d.evolution;
   ctx.save();
   ctx.beginPath();
   ctx.ellipse(cx, shadowY, shadowRx, shadowRy, 0, 0, Math.PI * 2);
@@ -8531,7 +8531,7 @@ function _hcDrawFrame(canvasId) {
   // Halos
   for (var ring=3; ring>0; ring--) {
     var rr = baseR*(1.1+d.evolution*.8+ring*(.3+d.evolution*.5)+.3*Math.sin(_hcT*.9+ring));
-    var alpha = (0.02+0.18*d.evolution*lum)*(1-ring/4);
+    var alpha = (0.05+0.22*d.evolution)*(1-ring/4);
     var g = ctx.createRadialGradient(cx,cy,baseR*.3,cx,cy,rr);
     g.addColorStop(0,'rgba(255,154,60,'+(alpha*1.5)+')');
     g.addColorStop(.5,'rgba(255,107,107,'+alpha+')');
@@ -8542,7 +8542,7 @@ function _hcDrawFrame(canvasId) {
   // Shimmer ring
   var sR = baseR*(1.28+.06*Math.sin(_hcT*2.1));
   ctx.beginPath(); ctx.arc(cx,cy,sR,0,Math.PI*2);
-  ctx.strokeStyle='rgba(255,'+(160+Math.round(60*d.evolution))+',120,'+(.02+.35*d.evolution*lum)+')';
+  ctx.strokeStyle='rgba(255,'+(160+Math.round(60*d.evolution))+',120,'+(.10+.35*d.evolution)+')';
   ctx.lineWidth=(.5+3*d.evolution); ctx.stroke();
 
   // Éjections
@@ -8600,8 +8600,8 @@ function _hcDrawFrame(canvasId) {
   cg.addColorStop(.85,'rgba(160,45,45,0.89)');
   cg.addColorStop(1,'rgba(100,25,25,0.92)');
   ctx.fillStyle=cg;
-  ctx.shadowColor='rgba(255,'+(120+Math.round(100*d.evolution))+','+(60+Math.round(60*d.evolution))+','+(.12+.7*d.evolution*lum)+')';
-  ctx.shadowBlur=(6+50*d.evolution)*lum;
+  ctx.shadowColor='rgba(255,'+(120+Math.round(100*d.evolution))+','+(60+Math.round(60*d.evolution))+','+(.25+.45*d.evolution)+')';
+  ctx.shadowBlur=(14+46*d.evolution);
   ctx.fill();
   // Assombrissement directionnel (côté opposé à la lumière)
   ctx.save();
