@@ -8513,17 +8513,28 @@ function _hcDrawFrame(canvasId) {
   var jitterScale = d.evolution * 0.95; var jitter = jitterScale*3.5*(Math.sin(_hcT*11.3)*.5+(Math.random()-.5)*1.8);
   _hcT += (.018 + d.evolution*.014)*(.6+d.fluidity*.9) + jitter*.008;
 
-  // Ombre portée au sol
-  var shadowRy = baseR * (0.18 + d.evolution * 0.06);
-  var shadowRx = baseR * (0.62 + d.evolution * 0.10);
-  var shadowY = cy + baseR * (0.78 + d.evolution * 0.12);
-  var shadowAlpha = 0.30 + 0.15 * d.evolution;
+  // Ombre portée au sol — silhouette projetée, déformée en phase avec le noyau
+  var shadowY = cy + baseR * (0.80 + d.evolution * 0.12);
+  var shadowAlpha = 0.34 + 0.16 * d.evolution;
+  var shadowScaleY = 0.30 + d.evolution * 0.05;
   ctx.save();
+  ctx.translate(cx, shadowY);
+  ctx.scale(1, shadowScaleY);
   ctx.beginPath();
-  ctx.ellipse(cx, shadowY, shadowRx, shadowRy, 0, 0, Math.PI * 2);
-  var shg = ctx.createRadialGradient(cx, shadowY, 0, cx, shadowY, shadowRx);
-  shg.addColorStop(0, 'rgba(20,8,8,' + shadowAlpha + ')');
-  shg.addColorStop(1, 'rgba(20,8,8,0)');
+  for (var si=0; si<=160; si++) {
+    var sa=(Math.PI*2*si)/160;
+    var sr=baseR*1.08;
+    sr+=Math.sin(sa*2+_hcT*.9)*baseR*.18*(1-d.evolution*.87);
+    sr+=Math.sin(sa*3-_hcT*1.6)*baseR*.12*(1-d.evolution*.89);
+    sr+=Math.sin(sa*5+_hcT*2.2)*baseR*.07*(1-d.evolution*.93);
+    var sx=Math.cos(sa)*sr, sy=Math.sin(sa)*sr;
+    if(si===0) ctx.moveTo(sx,sy); else ctx.lineTo(sx,sy);
+  }
+  ctx.closePath();
+  var shg = ctx.createRadialGradient(0, 0, 0, 0, 0, baseR*1.3);
+  shg.addColorStop(0, 'rgba(25,8,8,' + shadowAlpha + ')');
+  shg.addColorStop(0.6, 'rgba(25,8,8,' + (shadowAlpha*0.5) + ')');
+  shg.addColorStop(1, 'rgba(25,8,8,0)');
   ctx.fillStyle = shg;
   ctx.fill();
   ctx.restore();
