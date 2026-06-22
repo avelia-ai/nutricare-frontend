@@ -5917,6 +5917,9 @@ function switchLang(lang) {
       { id:'b_streak3',  icon:'<img src="https://raw.githubusercontent.com/avelia-ai/nutricare-frontend/main/badge_3_jours_consecutifs-png.png" style="width:6rem;height:6rem;object-fit:contain;border-radius:50%">', nom:'Série x3',         desc:'3 jours consécutifs',        check: () => streak >= 3 },
       { id:'b_streak7',  icon:'<img src="https://raw.githubusercontent.com/avelia-ai/nutricare-frontend/main/badge_7_jours_consecutifs-png.png" style="width:6rem;height:6rem;object-fit:contain;border-radius:50%">', nom:'Série x7',       desc:'7 jours consécutifs',        check: () => streak >= 7 },
       { id:'b_streak30', icon:'<img src="https://raw.githubusercontent.com/avelia-ai/nutricare-frontend/main/badge_30_jours_consecutifs_png.png" style="width:6rem;height:6rem;object-fit:contain;border-radius:50%">', nom:'Série x30',        desc:'30 jours consécutifs',       check: () => streak >= 30, premium: true },
+      { id:'b_rank1',    icon:'<img src="https://raw.githubusercontent.com/avelia-ai/nutricare-frontend/main/badge_or_1ere_place-png.png" style="width:6rem;height:6rem;object-fit:contain;border-radius:50%">', nom:'1ère place',      desc:'Classement Or — 1ère place',     check: () => userRank === 1 },
+      { id:'b_rank2',    icon:'<img src="https://raw.githubusercontent.com/avelia-ai/nutricare-frontend/main/badge_argent_2nde_place_png.png" style="width:6rem;height:6rem;object-fit:contain;border-radius:50%">', nom:'2ème place',      desc:'Classement Argent — 2ème place', check: () => userRank === 2 },
+      { id:'b_rank3',    icon:'<img src="https://raw.githubusercontent.com/avelia-ai/nutricare-frontend/main/badge_bronze_3eme_place_png.png" style="width:6rem;height:6rem;object-fit:contain;border-radius:50%">', nom:'3ème place',      desc:'Classement Bronze — 3ème place', check: () => userRank === 3 },
       { id:'b_hydra',    icon:'<img src="https://raw.githubusercontent.com/avelia-ai/nutricare-frontend/main/badge_bien_hydrate-png.png" style="width:6rem;height:6rem;object-fit:contain;border-radius:50%">', nom:'Bien hydraté',     desc:'5 jours à 2L cette semaine', check: () => joursHydra >= 5 },
       { id:'b_sleep',    icon:'<img src="https://raw.githubusercontent.com/avelia-ai/nutricare-frontend/main/badge_dormeur_dor-png.png" style="width:6rem;height:6rem;object-fit:contain;border-radius:50%">', nom:"Dormeur d'or",    desc:'7 nuits de 7h+',             check: () => joursSommeil >= 7 },
       { id:'b_actif',    icon:'<img src="https://raw.githubusercontent.com/avelia-ai/nutricare-frontend/main/badge_actif-png.png" style="width:6rem;height:6rem;object-fit:contain;border-radius:50%">', nom:'Actif',            desc:"5 jours d'activité/semaine",check: () => joursActivite >= 5 },
@@ -8993,6 +8996,7 @@ function loadMyRank() {
     if (!r.ok) throw new Error('not available');
     return r.json();
   }).then(function(d){
+    window.userRank = d.rank;
     elVal.textContent = '#' + d.rank;
     if (elTotal) elTotal.textContent = d.total ? ('/ ' + d.total) : '';
   }).catch(function(){
