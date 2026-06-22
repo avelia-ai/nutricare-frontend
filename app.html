@@ -42,7 +42,7 @@ window.addEventListener("error", function(e) {
   body { font-family: 'DM Sans', sans-serif; background: var(--cream); color: var(--charcoal); overflow-x: hidden; }
 
   /* ── PAGES ── */
-  .page { display: none; min-height: 100vh; }
+  .page { display: none; min-height: 100vh; position: relative; z-index: 1; }
   .page.active { display: flex; }
 
   /* ── AUTH PAGE ── */
@@ -578,8 +578,8 @@ button[style*="background:linear-gradient(135deg,var(--coral),var(--accent))"] {
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCCvxdc-gPJr7myjxjZFWNUjbfDmzvZwig&libraries=places" defer></script>
 </head>
 
-<body style="background:#FF6B6B">
-<canvas id="cellCanvas" style="position:fixed;top:0;left:0;width:100%;height:100%;z-index:-1;pointer-events:none;"></canvas>
+<body style="background:transparent">
+<canvas id="cellCanvas" style="position:fixed;top:0;left:0;width:100%;height:100%;z-index:0;pointer-events:none;"></canvas>
 <script>
 (function(){
   var cv=document.getElementById('cellCanvas');
