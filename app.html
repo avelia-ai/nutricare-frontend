@@ -5671,6 +5671,47 @@ function switchLang(lang) {
     <style>body{font-family:Georgia,serif;max-width:800px;margin:40px auto;padding:40px;color:#2D2D2D}.header{border-bottom:2px solid #021A35;padding-bottom:20px;margin-bottom:28px;display:flex;justify-content:space-between}.logo{font-size:1.2rem;font-weight:600}.report{font-size:0.95rem;line-height:1.8;white-space:pre-wrap}.disclaimer{margin-top:40px;padding:16px;background:#FDF6E8;font-size:0.78rem;color:rgba(2,26,53,0.6)}@media print{body{margin:20px}}</style>
     
 </head><body>
+<!-- WAVES BACKGROUND -->
+<canvas id="wavesBg" style="position:fixed;top:0;left:0;width:100%;height:100%;z-index:0;pointer-events:none"></canvas>
+<script>
+(function(){
+var c=document.getElementById("wavesBg");
+var ctx=c.getContext("2d");
+function resize(){c.width=window.innerWidth;c.height=window.innerHeight;}resize();
+window.addEventListener("resize",resize);
+var layers=[
+{color:"#FF9090",speedMult:1.0,phaseSeed:0.0,ampMult:1.0},
+{color:"#FFAA80",speedMult:1.63,phaseSeed:2.3,ampMult:0.85},
+{color:"#FFBE8A",speedMult:0.71,phaseSeed:4.9,ampMult:1.1},
+{color:"#FFD4A0",speedMult:1.27,phaseSeed:1.5,ampMult:0.9}
+];
+var t=0;
+function draw(){
+var W=c.width,H=c.height;
+ctx.clearRect(0,0,W,H);
+ctx.fillStyle="#FDF8F3";
+ctx.fillRect(0,0,W,H);
+layers.forEach(function(l,i){
+var baseY=H*0.35+i*(H*0.12);
+var amp=H*0.045*l.ampMult;
+var freq=0.006;
+var spd=0.018*l.speedMult;
+ctx.beginPath();
+ctx.moveTo(0,H);
+for(var x=0;x<=W;x+=2){
+var y=baseY+Math.sin(x*freq+t*spd+l.phaseSeed)*amp+Math.sin(x*freq*1.7+t*spd*0.6+l.phaseSeed+1.1)*amp*0.4+Math.sin(x*freq*0.5+t*spd*1.4+l.phaseSeed+2.3)*amp*0.2;
+ctx.lineTo(x,y);}
+ctx.lineTo(W,H);
+ctx.closePath();
+ctx.fillStyle=l.color;
+ctx.globalAlpha=0.55;
+ctx.fill();
+ctx.globalAlpha=1;});
+t+=1;
+requestAnimationFrame(draw);}
+draw();
+})();
+</script>
     <div class="header"><div><div class="logo">● Mirella Entreprise</div><div style="font-size:0.78rem;color:rgba(2,26,53,0.4)">Rapport mensuel RH · Données anonymisées</div></div><div style="text-align:right;font-size:0.78rem;color:rgba(2,26,53,0.4)">${entreprise}<br>${new Date().toLocaleDateString('fr-FR',{month:'long',year:'numeric'})}</div></div>
     <div class="report">${rapport}</div>
     <div class="disclaimer">️ Données 100% anonymisées. Aucune information individuelle n'est présente dans ce rapport. Conformité RGPD garantie.</div>
