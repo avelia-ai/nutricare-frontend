@@ -1196,7 +1196,7 @@ window.analyseHealthLog = function() {
 
 window.analyseScore = function() {
   if (window.currentPlan !== 'premium') {
-    document.getElementById('subscriptionModal').style.display = 'flex';
+    openSubscriptionModal('chat');
     return;
   }
   var score = window.calcScore();
@@ -1557,7 +1557,7 @@ window.loadCatalogue = async function() {
         bannerEl = document.createElement('div');
         bannerEl.id = 'catalogueFreeBanner';
         bannerEl.style.cssText = 'margin:0 16px 14px;background:linear-gradient(135deg,var(--coral),var(--accent));border-radius:14px;padding:14px 16px;color:white;display:flex;align-items:center;justify-content:space-between;gap:12px;cursor:pointer';
-        bannerEl.onclick = function() { document.getElementById('subscriptionModal').style.display = 'flex'; };
+        bannerEl.onclick = function() { openSubscriptionModal('chat'); };
         bannerEl.innerHTML = '<div><div style="font-size:0.85rem;font-weight:700">🔒 Accédez au catalogue complet</div><div style="font-size:0.74rem;opacity:0.9;margin-top:2px">Plus de 7000 recettes avec Standard ou Premium</div></div><div style="background:white;color:var(--coral);border-radius:8px;padding:6px 12px;font-size:0.75rem;font-weight:700;white-space:nowrap">Voir →</div>';
         grid.parentNode.insertBefore(bannerEl, grid);
       }
@@ -1583,7 +1583,7 @@ window.loadCatalogue = async function() {
       var rcIdx = Object.keys(window._catalogueRecettes).length;
       window._catalogueRecettes[rcIdx] = r;
       var lockBadge = r.locked ? '<div style="position:absolute;top:8px;left:8px;z-index:3;background:rgba(45,45,45,0.85);color:white;border-radius:20px;padding:4px 10px;font-size:0.65rem;font-weight:700;display:flex;align-items:center;gap:4px">🔒 Premium</div>' : '';
-      var cardClick = r.locked ? "document.getElementById('subscriptionModal').style.display='flex'" : ('window.showRecetteDetail(JSON.stringify(window._catalogueRecettes[' + rcIdx + ']))');
+      var cardClick = r.locked ? "openSubscriptionModal('lock')" : ('window.showRecetteDetail(JSON.stringify(window._catalogueRecettes[' + rcIdx + ']))');
       return '<div id="' + cardId + '" data-photo="' + ((r.photo_keyword||r.nom).replace(/['"]/g,"")) + '" data-icon="' + icon + '" style="background:white;border-radius:16px;overflow:hidden;box-shadow:0 3px 12px rgba(0,0,0,0.08);position:relative">' +
         lockBadge +
         (r.locked ? '' : '<button onclick="event.stopPropagation();toggleFavoriIdx(' + rcIdx + ')" id="fav-btn-' + cardId + '" style="position:absolute;top:8px;right:8px;z-index:3;background:rgba(255,255,255,0.95);border:none;border-radius:50%;width:30px;height:30px;cursor:pointer;font-size:1rem;line-height:1;display:flex;align-items:center;justify-content:center;box-shadow:0 1px 4px rgba(0,0,0,0.1)">🤍</button>') +
@@ -3095,7 +3095,7 @@ function switchLang(lang) {
 
   <!-- VUE ROUTINES -->
   <div id="planningRoutinesView" style="display:none;padding:20px;padding-bottom:120px;position:relative">
-    <div id="planningRoutinesLockOverlay" style="display:none;position:absolute;inset:0;background:rgba(255,245,240,0.6);backdrop-filter:blur(3px);flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:20px;cursor:pointer;z-index:5" onclick="document.getElementById('subscriptionModal').style.display='flex'">
+    <div id="planningRoutinesLockOverlay" style="display:none;position:absolute;inset:0;background:rgba(255,245,240,0.6);backdrop-filter:blur(3px);flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:20px;cursor:pointer;z-index:5" onclick="openSubscriptionModal('lock')">
       <div style="font-size:1.8rem;margin-bottom:8px">🔒</div>
       <div style="font-size:0.9rem;font-weight:700;color:#2D2D2D;margin-bottom:4px">Fonctionnalité Premium</div>
       <div style="font-size:0.78rem;color:#888;margin-bottom:12px">Débloquez les routines prédéfinies et ajoutez-les automatiquement à votre agenda</div>
@@ -3571,7 +3571,7 @@ function switchLang(lang) {
         <div style="font-size:0.78rem;color:#aaa;margin-top:6px">Riche en fibres et bonnes graisses, idéal pour un déjeuner équilibré</div>
       </div>
     </div>
-    <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:20px;background:rgba(255,255,255,0.4);cursor:pointer" onclick="document.getElementById('subscriptionModal').style.display='flex'">
+    <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:20px;background:rgba(255,255,255,0.4);cursor:pointer" onclick="openSubscriptionModal('lock')">
       <div style="font-size:1.8rem;margin-bottom:8px">🔒</div>
       <div style="font-size:0.9rem;font-weight:700;color:#2D2D2D;margin-bottom:4px">Fonctionnalité Standard & Premium</div>
       <div style="font-size:0.78rem;color:#888;margin-bottom:12px">Débloquez l'analyse nutritionnelle de vos repas en photo</div>
@@ -3949,7 +3949,7 @@ function switchLang(lang) {
         <div style="font-size:0.74rem;color:#aaa;margin:4px 0 0">520 kcal · 38g protéines</div>
       </div>
     </div>
-    <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:20px;background:rgba(255,255,255,0.4);cursor:pointer" onclick="document.getElementById('subscriptionModal').style.display='flex'">
+    <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:20px;background:rgba(255,255,255,0.4);cursor:pointer" onclick="openSubscriptionModal('lock')">
       <div style="font-size:1.8rem;margin-bottom:8px">🔒</div>
       <div style="font-size:0.9rem;font-weight:700;color:#2D2D2D;margin-bottom:4px">Fonctionnalité Standard</div>
       <div style="font-size:0.78rem;color:#888;margin-bottom:12px">Débloquez vos menus personnalisés et le suivi calorique</div>
@@ -4119,7 +4119,7 @@ function switchLang(lang) {
   <div style="display:flex;flex-direction:column;gap:16px">
     <div id="healthChartCard" style="background:white;border-radius:16px;padding:22px;box-shadow:0 2px 8px rgba(0,0,0,0.06);position:relative">
       <div style="font-size:0.72rem;font-weight:600;text-transform:uppercase;letter-spacing:1.5px;color:var(--accent);margin-bottom:16px">📈 ÉVOLUTION — 30 JOURS</div>
-      <div id="healthChartLockOverlay" style="display:none;position:absolute;inset:0;background:rgba(255,255,255,0.55);backdrop-filter:blur(3px);border-radius:16px;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:20px;cursor:pointer;z-index:5" onclick="document.getElementById('subscriptionModal').style.display='flex'">
+      <div id="healthChartLockOverlay" style="display:none;position:absolute;inset:0;background:rgba(255,255,255,0.55);backdrop-filter:blur(3px);border-radius:16px;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:20px;cursor:pointer;z-index:5" onclick="openSubscriptionModal('lock')">
         <div style="font-size:1.8rem;margin-bottom:8px">🔒</div>
         <div style="font-size:0.9rem;font-weight:700;color:#2D2D2D;margin-bottom:4px">Fonctionnalité Standard</div>
         <div style="font-size:0.78rem;color:#888;margin-bottom:12px">Débloquez vos graphiques d'évolution sur 30 jours</div>
@@ -4133,7 +4133,7 @@ function switchLang(lang) {
     </div>
   <!-- Section évolution photos -->
   <div id="evolutionCorpCard" style="background:white;border-radius:16px;padding:22px;box-shadow:0 2px 8px rgba(0,0,0,0.06);margin-top:16px;margin-bottom:100px;position:relative">
-    <div id="evolutionCorpLockOverlay" style="display:none;position:absolute;inset:0;background:rgba(255,255,255,0.6);backdrop-filter:blur(3px);border-radius:16px;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:20px;cursor:pointer;z-index:5" onclick="document.getElementById('subscriptionModal').style.display='flex'">
+    <div id="evolutionCorpLockOverlay" style="display:none;position:absolute;inset:0;background:rgba(255,255,255,0.6);backdrop-filter:blur(3px);border-radius:16px;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:20px;cursor:pointer;z-index:5" onclick="openSubscriptionModal('lock')">
       <div style="font-size:1.8rem;margin-bottom:8px">🔒</div>
       <div style="font-size:0.9rem;font-weight:700;color:#2D2D2D;margin-bottom:4px">Fonctionnalité Standard</div>
       <div style="font-size:0.78rem;color:#888;margin-bottom:12px">Suivez votre évolution corporelle avec photos et analyses</div>
@@ -4376,7 +4376,7 @@ function switchLang(lang) {
           <div style="font-size:0.78rem;color:#aaa">Conseil : faire vérifier votre taux de ferritine lors d'un bilan sanguin</div>
         </div>
       </div>
-      <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:20px;background:rgba(255,255,255,0.4);cursor:pointer" onclick="document.getElementById('subscriptionModal').style.display='flex'">
+      <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:20px;background:rgba(255,255,255,0.4);cursor:pointer" onclick="openSubscriptionModal('lock')">
         <div style="font-size:1.8rem;margin-bottom:8px">🔒</div>
         <div style="font-size:0.9rem;font-weight:700;color:#2D2D2D;margin-bottom:4px">Fonctionnalité Premium</div>
         <div style="font-size:0.78rem;color:#888;margin-bottom:12px">Débloquez l'analyse visuelle IA de la peau, des yeux et des ongles</div>
@@ -4645,7 +4645,7 @@ function switchLang(lang) {
           <div style="font-size:0.78rem;color:#888">Conseil : continuez à limiter les sucres rapides</div>
         </div>
       </div>
-      <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:20px;background:rgba(255,255,255,0.4);cursor:pointer" onclick="document.getElementById('subscriptionModal').style.display='flex'">
+      <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:20px;background:rgba(255,255,255,0.4);cursor:pointer" onclick="openSubscriptionModal('lock')">
         <div style="font-size:1.8rem;margin-bottom:8px">🔒</div>
         <div style="font-size:0.9rem;font-weight:700;color:#2D2D2D;margin-bottom:4px">Fonctionnalité Premium</div>
         <div style="font-size:0.78rem;color:#888;margin-bottom:12px">Débloquez l'analyse de votre bilan sanguin en langage simple</div>
@@ -4863,7 +4863,7 @@ function switchLang(lang) {
         <div style="font-size:0.78rem;color:#aaa">Parfaitement adapté à vos objectifs</div>
       </div>
     </div>
-    <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:20px;background:rgba(255,255,255,0.4);cursor:pointer" onclick="document.getElementById('subscriptionModal').style.display='flex'">
+    <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:20px;background:rgba(255,255,255,0.4);cursor:pointer" onclick="openSubscriptionModal('lock')">
       <div style="font-size:1.8rem;margin-bottom:8px">🔒</div>
       <div style="font-size:0.9rem;font-weight:700;color:#2D2D2D;margin-bottom:4px">Fonctionnalité Premium</div>
       <div style="font-size:0.78rem;color:#888;margin-bottom:12px">Débloquez l'analyse des produits et leur compatibilité avec votre profil</div>
@@ -4918,7 +4918,7 @@ function switchLang(lang) {
         <div style="font-size:0.8rem;color:#888">Aucune interaction majeure détectée avec votre profil actuel</div>
       </div>
     </div>
-    <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:20px;background:rgba(255,255,255,0.4);cursor:pointer" onclick="document.getElementById('subscriptionModal').style.display='flex'">
+    <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:20px;background:rgba(255,255,255,0.4);cursor:pointer" onclick="openSubscriptionModal('lock')">
       <div style="font-size:1.8rem;margin-bottom:8px">🔒</div>
       <div style="font-size:0.9rem;font-weight:700;color:#2D2D2D;margin-bottom:4px">Fonctionnalité Premium</div>
       <div style="font-size:0.78rem;color:#888;margin-bottom:12px">Débloquez le scan d'ordonnance et l'extraction automatique de vos médicaments</div>
@@ -7436,11 +7436,11 @@ Réponds UNIQUEMENT en JSON valide avec cette structure exacte:
   const premiumViews = [];
   const standardViews = ['pro', ];
   if (premiumViews.includes(view) && window.currentPlan !== 'premium') {
-    document.getElementById('subscriptionModal').style.display = 'flex';
+    openSubscriptionModal('chat');
     return;
   }
   if (standardViews.includes(view) && plan === 'free') {
-    document.getElementById('subscriptionModal').style.display = 'flex';
+    openSubscriptionModal('chat');
     return;
   }
     document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
@@ -9799,7 +9799,7 @@ async function deleteProfessional(id) {
       hideTyping();
 
       if (res.status === 403) {
-        document.getElementById('subscriptionModal').style.display = 'flex';
+        openSubscriptionModal('chat');
         return;
       }
 
@@ -10469,7 +10469,7 @@ function closeMirellaNotif() {
         <div style="font-size:0.78rem;color:#aaa">Conseil : intégrer plus de légumes verts et de légumineuses</div>
       </div>
     </div>
-    <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:20px;background:rgba(255,255,255,0.4);cursor:pointer" onclick="document.getElementById('subscriptionModal').style.display='flex'">
+    <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:20px;background:rgba(255,255,255,0.4);cursor:pointer" onclick="openSubscriptionModal('lock')">
       <div style="font-size:1.8rem;margin-bottom:8px">🔒</div>
       <div style="font-size:0.9rem;font-weight:700;color:#2D2D2D;margin-bottom:4px">Fonctionnalité Premium</div>
       <div style="font-size:0.78rem;color:#888;margin-bottom:12px">Débloquez l'analyse de votre visage et des conseils personnalisés</div>
@@ -10529,7 +10529,7 @@ function closeMirellaNotif() {
           <div style="font-size:0.74rem;color:#aaa;margin-top:4px">30 min · 210 kcal</div>
         </div>
       </div>
-      <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:20px;background:rgba(255,255,255,0.4);cursor:pointer" onclick="document.getElementById('subscriptionModal').style.display='flex'">
+      <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:20px;background:rgba(255,255,255,0.4);cursor:pointer" onclick="openSubscriptionModal('lock')">
         <div style="font-size:1.8rem;margin-bottom:8px">🔒</div>
         <div style="font-size:0.9rem;font-weight:700;color:#2D2D2D;margin-bottom:4px">Fonctionnalité Premium</div>
         <div style="font-size:0.78rem;color:#888;margin-bottom:12px">Débloquez l'analyse de votre frigo et des recettes personnalisées</div>
@@ -10710,7 +10710,7 @@ function toggleQuickMenu() {
 
     <!-- Conseils Mirella -->
     <div id="cycleAdviceCard" style="background:white;border-radius:20px;padding:24px;margin-bottom:16px;box-shadow:0 2px 12px rgba(0,0,0,0.06);position:relative">
-      <div id="cycleAdviceLockOverlay" style="display:none;position:absolute;inset:0;background:rgba(255,255,255,0.6);backdrop-filter:blur(3px);border-radius:20px;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:20px;cursor:pointer;z-index:5" onclick="document.getElementById('subscriptionModal').style.display='flex'">
+      <div id="cycleAdviceLockOverlay" style="display:none;position:absolute;inset:0;background:rgba(255,255,255,0.6);backdrop-filter:blur(3px);border-radius:20px;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:20px;cursor:pointer;z-index:5" onclick="openSubscriptionModal('lock')">
         <div style="font-size:1.8rem;margin-bottom:8px">🔒</div>
         <div style="font-size:0.9rem;font-weight:700;color:#2D2D2D;margin-bottom:4px">Fonctionnalité Premium</div>
         <div style="font-size:0.78rem;color:#888;margin-bottom:12px">Débloquez les conseils nutritionnels personnalisés selon votre phase</div>
@@ -10734,7 +10734,7 @@ function toggleQuickMenu() {
 
     <!-- Calendrier 4 semaines -->
     <div id="cycleCalendarCard" style="background:white;border-radius:20px;padding:24px;box-shadow:0 2px 12px rgba(0,0,0,0.06);margin-bottom:16px;position:relative">
-      <div id="cycleCalendarLockOverlay" style="display:none;position:absolute;inset:0;background:rgba(255,255,255,0.6);backdrop-filter:blur(3px);border-radius:20px;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:20px;cursor:pointer;z-index:5" onclick="document.getElementById('subscriptionModal').style.display='flex'">
+      <div id="cycleCalendarLockOverlay" style="display:none;position:absolute;inset:0;background:rgba(255,255,255,0.6);backdrop-filter:blur(3px);border-radius:20px;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:20px;cursor:pointer;z-index:5" onclick="openSubscriptionModal('lock')">
         <div style="font-size:1.8rem;margin-bottom:8px">🔒</div>
         <div style="font-size:0.9rem;font-weight:700;color:#2D2D2D;margin-bottom:4px">Fonctionnalité Premium</div>
         <div style="font-size:0.78rem;color:#888;margin-bottom:12px">Débloquez les prévisions de votre cycle sur 4 semaines</div>
@@ -10873,7 +10873,7 @@ function toggleQuickMenu() {
         <div style="padding:10px"><div style="font-weight:700;font-size:0.82rem">Omelette aux épinards et feta</div><div style="font-size:0.7rem;color:#aaa;margin-top:4px">260 kcal · 12 min</div></div>
       </div>
     </div>
-    <div style="position:absolute;top:0;left:0;right:0;bottom:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:20px;background:rgba(255,245,240,0.45);cursor:pointer" onclick="document.getElementById('subscriptionModal').style.display='flex'">
+    <div style="position:absolute;top:0;left:0;right:0;bottom:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:20px;background:rgba(255,245,240,0.45);cursor:pointer" onclick="openSubscriptionModal('lock')">
       <div style="font-size:1.8rem;margin-bottom:8px">🔒</div>
       <div style="font-size:0.9rem;font-weight:700;color:#2D2D2D;margin-bottom:4px">Fonctionnalité Standard & Premium</div>
       <div style="font-size:0.78rem;color:#888;margin-bottom:12px">Accédez au catalogue de plus de 7000 recettes</div>
@@ -12125,45 +12125,94 @@ document.addEventListener('deviceready', function() {
 }
 </style>
 
-<div id="subscriptionModal" style="display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.45);z-index:99999;align-items:center;justify-content:center;padding:16px">
-        <div style="background:#FFF8F5;border-radius:20px;padding:24px 20px;width:100%;max-width:380px;max-height:90vh;overflow-y:auto;position:relative">
-          <div style="text-align:center;margin-bottom:4px">
-            <div style="width:48px;height:48px;border-radius:50%;background:linear-gradient(135deg,#FF6B6B,#FF9A3C);display:flex;align-items:center;justify-content:center;margin:0 auto 12px;font-weight:600;font-size:20px;color:white">M</div>
-            <h2 style="margin:0 0 6px;font-size:18px;font-weight:700;color:#2D2D2D">Limite quotidienne atteinte</h2>
-            <p style="margin:0;font-size:14px;color:#8a8a8a;line-height:1.5">Vous avez utilisé vos 5 messages gratuits aujourd'hui. Débloquez un accès illimité avec Mirella.</p>
-          </div>
-          <div style="display:flex;flex-direction:column;gap:12px;margin-top:20px">
-            <div style="background:white;border-radius:14px;padding:16px;border:0.5px solid rgba(0,0,0,0.08)">
-              <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px">
-                <span style="font-size:15px;font-weight:700;color:#2D2D2D">Standard</span>
-                <span style="font-size:16px;font-weight:700;color:#2D2D2D">3,99 €<span style="font-size:12px;color:#aaa;font-weight:400">/mois</span></span>
-              </div>
-              <div style="font-size:11px;color:#FF9A3C;font-weight:600;margin-bottom:10px">soit 0,13€/jour</div>
-              <ul style="list-style:none;padding:0;margin:0 0 14px;display:flex;flex-direction:column;gap:6px">
-                <li style="font-size:13px;color:#555;display:flex;align-items:center;gap:8px"><span style="color:#FF6B6B">✓</span>Messages illimités avec Mirella</li>
-                <li style="font-size:13px;color:#555;display:flex;align-items:center;gap:8px"><span style="color:#FF6B6B">✓</span>Suivi santé complet + graphiques</li>
-                <li style="font-size:13px;color:#555;display:flex;align-items:center;gap:8px"><span style="color:#FF6B6B">✓</span>Menus personnalisés & espace médecin</li>
-              </ul>
-              <button onclick="selectPlan('standard')" style="width:100%;background:linear-gradient(135deg,#FF6B6B,#FF9A3C);color:white;border:none;border-radius:12px;padding:12px;font-size:14px;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif">Choisir Standard</button>
-            </div>
-            <div style="background:white;border-radius:14px;padding:16px;border:2px solid #FF9A3C;position:relative">
-              <div style="position:absolute;top:-10px;left:16px;background:linear-gradient(135deg,#FF6B6B,#FF9A3C);color:white;font-size:11px;font-weight:700;padding:3px 10px;border-radius:8px">Recommandé</div>
-              <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px;margin-top:6px">
-                <span style="font-size:15px;font-weight:700;color:#2D2D2D">Premium</span>
-                <span style="font-size:16px;font-weight:700;color:#2D2D2D">6,49 €<span style="font-size:12px;color:#aaa;font-weight:400">/mois</span></span>
-              </div>
-              <div style="font-size:11px;color:#FF9A3C;font-weight:600;margin-bottom:10px">soit 0,22€/jour</div>
-              <ul style="list-style:none;padding:0;margin:0 0 14px;display:flex;flex-direction:column;gap:6px">
-                <li style="font-size:13px;color:#555;display:flex;align-items:center;gap:8px"><span style="color:#FF6B6B">✓</span>Tout Standard, en illimité</li>
-                <li style="font-size:13px;color:#555;display:flex;align-items:center;gap:8px"><span style="color:#FF6B6B">✓</span>Catalogue recettes complet</li>
-                <li style="font-size:13px;color:#555;display:flex;align-items:center;gap:8px"><span style="color:#FF6B6B">✓</span>Analyse visage & programmes illimités</li>
-              </ul>
-              <button onclick="selectPlan('premium')" style="width:100%;background:linear-gradient(135deg,#FF6B6B,#FF9A3C);color:white;border:none;border-radius:12px;padding:12px;font-size:14px;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif">Choisir Premium</button>
-            </div>
-          </div>
-          <button onclick="document.getElementById('subscriptionModal').style.display='none'" style="width:100%;background:none;border:none;color:#aaa;font-size:13px;margin-top:16px;cursor:pointer;padding:4px;font-family:'DM Sans',sans-serif">Plus tard</button>
-        </div>
+<style>
+@keyframes gradientShift{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
+@keyframes floatBubble{0%{transform:translateY(0) scale(1);opacity:.18}50%{transform:translateY(-30px) scale(1.08);opacity:.28}100%{transform:translateY(0) scale(1);opacity:.18}}
+@keyframes pulseIcon{0%,100%{transform:scale(1);box-shadow:0 0 0 0 rgba(255,107,107,.4)}50%{transform:scale(1.07);box-shadow:0 0 0 12px rgba(255,107,107,0)}}
+@keyframes badgePulse{0%,100%{box-shadow:0 2px 12px rgba(255,107,107,.35)}50%{box-shadow:0 4px 24px rgba(255,107,107,.65)}}
+@keyframes fadeSlideUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+@keyframes shimmer{0%{background-position:-200% 0}100%{background-position:200% 0}}
+#subscriptionModal .sub-header{background:linear-gradient(135deg,#FF6B6B,#FF9A3C,#FF6B6B);background-size:200% 200%;animation:gradientShift 4s ease infinite}
+#subscriptionModal .sub-bubble{position:absolute;border-radius:50%;background:rgba(255,255,255,.22);animation:floatBubble linear infinite}
+#subscriptionModal .sub-icon{animation:pulseIcon 2.2s ease-in-out infinite}
+#subscriptionModal .sub-badge{animation:badgePulse 1.8s ease-in-out infinite}
+#subscriptionModal .sub-card{animation:fadeSlideUp .4s ease both}
+#subscriptionModal .sub-card:nth-child(2){animation-delay:.1s}
+#subscriptionModal .sub-btn-shimmer{background:linear-gradient(135deg,#FF6B6B,#FF9A3C);position:relative;overflow:hidden}
+#subscriptionModal .sub-btn-shimmer::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,transparent,rgba(255,255,255,.25),transparent);background-size:200% 100%;animation:shimmer 2s infinite}
+</style>
+<div id="subscriptionModal" style="display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.55);z-index:99999;align-items:center;justify-content:center;padding:16px;backdrop-filter:blur(3px)">
+  <div style="background:#FFF8F5;border-radius:24px;width:100%;max-width:390px;max-height:92vh;overflow-y:auto;position:relative;box-shadow:0 24px 60px rgba(0,0,0,0.22)">
+    <!-- Header animé -->
+    <div class="sub-header" style="border-radius:24px 24px 0 0;padding:28px 20px 22px;text-align:center;position:relative;overflow:hidden">
+      <div class="sub-bubble" style="width:80px;height:80px;top:-20px;left:-20px;animation-duration:5s"></div>
+      <div class="sub-bubble" style="width:50px;height:50px;top:10px;right:10px;animation-duration:7s;animation-delay:1s"></div>
+      <div class="sub-bubble" style="width:35px;height:35px;bottom:5px;left:40%;animation-duration:6s;animation-delay:2s"></div>
+      <div style="position:relative;z-index:1">
+        <div class="sub-icon" style="width:56px;height:56px;border-radius:50%;background:rgba(255,255,255,0.25);display:flex;align-items:center;justify-content:center;margin:0 auto 10px;font-size:26px">✨</div>
+        <div style="font-size:10px;font-weight:700;letter-spacing:2px;color:rgba(255,255,255,0.8);text-transform:uppercase;margin-bottom:6px">Mirella Premium</div>
+        <h2 id="subModalTitle" style="margin:0 0 8px;font-size:20px;font-weight:800;color:white;line-height:1.25"></h2>
+        <p id="subModalSubtitle" style="margin:0;font-size:13px;color:rgba(255,255,255,0.88);line-height:1.5"></p>
       </div>
+    </div>
+    <!-- Plans -->
+    <div style="padding:16px 16px 4px;display:flex;flex-direction:column;gap:12px">
+      <!-- Standard -->
+      <div class="sub-card" style="background:white;border-radius:16px;padding:16px;border:1px solid rgba(0,0,0,0.07)">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:2px">
+          <span style="font-size:15px;font-weight:700;color:#2D2D2D">Standard</span>
+          <span style="font-size:17px;font-weight:800;color:#2D2D2D">3,99 €<span style="font-size:12px;color:#aaa;font-weight:400"> /mois</span></span>
+        </div>
+        <div style="font-size:11px;color:#FF9A3C;font-weight:600;margin-bottom:10px">soit 0,13 € / jour</div>
+        <ul style="list-style:none;padding:0;margin:0 0 14px;display:flex;flex-direction:column;gap:7px">
+          <li style="font-size:13px;color:#555;display:flex;align-items:center;gap:8px"><span style="color:#FF6B6B;font-weight:700">✓</span>Messages illimités avec Mirella</li>
+          <li style="font-size:13px;color:#555;display:flex;align-items:center;gap:8px"><span style="color:#FF6B6B;font-weight:700">✓</span>Suivi santé complet + graphiques</li>
+          <li style="font-size:13px;color:#555;display:flex;align-items:center;gap:8px"><span style="color:#FF6B6B;font-weight:700">✓</span>Menus personnalisés & espace médecin</li>
+        </ul>
+        <button onclick="selectPlan('standard')" class="sub-btn-shimmer" style="width:100%;color:white;border:none;border-radius:12px;padding:13px;font-size:14px;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif">Choisir Standard</button>
+      </div>
+      <!-- Premium -->
+      <div class="sub-card" style="background:white;border-radius:16px;padding:16px;border:2px solid #FF9A3C;position:relative">
+        <div class="sub-badge" style="position:absolute;top:-11px;left:16px;background:linear-gradient(135deg,#FF6B6B,#FF9A3C);color:white;font-size:11px;font-weight:700;padding:3px 12px;border-radius:8px">⭐ Recommandé</div>
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:2px;margin-top:8px">
+          <span style="font-size:15px;font-weight:700;color:#2D2D2D">Premium</span>
+          <span style="font-size:17px;font-weight:800;color:#2D2D2D">6,49 €<span style="font-size:12px;color:#aaa;font-weight:400"> /mois</span></span>
+        </div>
+        <div style="font-size:11px;color:#FF9A3C;font-weight:600;margin-bottom:10px">soit 0,22 € / jour</div>
+        <ul style="list-style:none;padding:0;margin:0 0 14px;display:flex;flex-direction:column;gap:7px">
+          <li style="font-size:13px;color:#555;display:flex;align-items:center;gap:8px"><span style="color:#FF6B6B;font-weight:700">✓</span>Tout Standard, en illimité</li>
+          <li style="font-size:13px;color:#555;display:flex;align-items:center;gap:8px"><span style="color:#FF6B6B;font-weight:700">✓</span>Catalogue recettes complet</li>
+          <li style="font-size:13px;color:#555;display:flex;align-items:center;gap:8px"><span style="color:#FF6B6B;font-weight:700">✓</span>Analyse visage & programmes illimités</li>
+        </ul>
+        <button onclick="selectPlan('premium')" class="sub-btn-shimmer" style="width:100%;color:white;border:none;border-radius:12px;padding:13px;font-size:14px;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif">Choisir Premium ✨</button>
+      </div>
+    </div>
+    <button onclick="document.getElementById('subscriptionModal').style.display='none'" style="width:100%;background:none;border:none;color:#bbb;font-size:13px;margin-top:8px;margin-bottom:16px;cursor:pointer;padding:4px;font-family:'DM Sans',sans-serif">Plus tard</button>
+  </div>
+</div>
+
+<script>
+var _subContexts = {
+  chat: {
+    title: "Vous avez atteint la limite 💬",
+    subtitle: "5 messages gratuits utilisés aujourd'hui. Passez à la vitesse supérieure pour continuer avec Mirella."
+  },
+  feature: {
+    title: "Débloquez tout Mirella 🚀",
+    subtitle: "Accédez à toutes les fonctionnalités pour atteindre vos objectifs santé au quotidien."
+  },
+  lock: {
+    title: "Fonctionnalité Premium 🔒",
+    subtitle: "Cette fonctionnalité est réservée aux abonnés. Rejoignez Mirella Premium dès aujourd'hui !"
+  }
+};
+function openSubscriptionModal(context) {
+  var ctx = _subContexts[context] || _subContexts.lock;
+  document.getElementById('subModalTitle').textContent = ctx.title;
+  document.getElementById('subModalSubtitle').textContent = ctx.subtitle;
+  openSubscriptionModal('chat');
+}
+</script>
 
   <!-- Badge Popup -->
   <canvas id="badgeFwCanvas" style="display:none"></canvas>
