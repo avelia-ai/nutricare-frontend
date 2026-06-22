@@ -7484,7 +7484,7 @@ Réponds UNIQUEMENT en JSON valide avec cette structure exacte:
     if (view === 'history') loadHistory();
     if (view === 'chat') loadChatHistory();
     document.getElementById('passeportView').style.display = view === 'passeport' ? 'block' : 'none';
-    document.getElementById('biologieView').style.display = view === 'biologie' ? 'block' : 'none';
+    document.getElementById('biologieView').style.display = view === 'biologie' ? 'block' : 'none'; if (view === 'biologie') applyBiologiePlanGates();
     document.getElementById('entrepriseView').style.display = view === 'entreprise' ? 'block' : 'none';
     if (view === 'entreprise') initEntreprise();
     if (view === 'biologie') initBiologie();
@@ -8363,6 +8363,13 @@ function applyVisagePlanGates() {
   const upload = document.getElementById('visageUploadZone');
   if (lock) lock.style.display = isFreePlan ? 'block' : 'none';
   if (upload) upload.style.display = isFreePlan ? 'none' : 'block';
+}
+function applyBiologiePlanGates() {
+  const isPremium = window.currentPlan === 'premium' || window.isTrial;
+  const lock = document.getElementById('bioFree');
+  const content = document.getElementById('bioContent');
+  if (lock) lock.style.display = isPremium ? 'none' : 'block';
+  if (content) content.style.display = isPremium ? 'block' : 'none';
 }
 function applyFrigoPlanGates() {
   const isFreePlan = (window.currentPlan || 'free') === 'free' && !window.isTrial;
