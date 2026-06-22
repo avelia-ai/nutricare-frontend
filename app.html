@@ -40,6 +40,9 @@ window.addEventListener("error", function(e) {
   }
   * { margin: 0; padding: 0; box-sizing: border-box; }
   html { background: var(--cream); }
+  /* CANVAS: forcer toutes les vues transparentes */
+  [id$="View"], [id$="Page"] { background: transparent !important; }
+
   #appPage, #dashboardView, #profileView, #chatView, #pricingView, #proView, #protocolsView { background: transparent !important; }
   #authPage, #homePage, #profilePage, #nutritionPage, #coachPage, #settingsPage { background: transparent !important; }
   body { font-family: 'DM Sans', sans-serif; background: transparent; color: var(--charcoal); overflow-x: hidden; }
@@ -182,7 +185,7 @@ window.addEventListener("error", function(e) {
   .wcal-day.wtoday .wcal-num{color:var(--coral)}
   .wcal-day.wactive.wtoday .wcal-num{color:white}
   /* ── CHAT VIEW ── */
-  #chatView { display: flex; flex-direction: column; height: 100vh; background: var(--cream); }
+  #chatView { display: flex; flex-direction: column; height: 100vh; background: transparent; }
   .chat-header { padding: 16px 20px; border-bottom: 1px solid rgba(255,107,107,0.1); display: flex; align-items: center; justify-content: space-between; background: white; box-shadow: 0 2px 8px rgba(0,0,0,0.04); }
   .chat-header-info h2 { font-size: 1rem; font-weight: 700; color: #2D2D2D; }
   .chat-header-info p { font-size: 0.75rem; color: #999; margin-top: 2px; }
@@ -215,7 +218,7 @@ window.addEventListener("error", function(e) {
   .btn-send:disabled { background: #ddd; box-shadow: none; cursor: not-allowed; }
 
   /* ── DASHBOARD VIEW ── */
-  #dashboardView { display: none; padding: 24px; overflow-y: auto; background: var(--cream); }
+  #dashboardView { display: none; padding: 24px; overflow-y: auto; background: transparent; }
   .dashboard-title { font-family: 'Open Sans', serif; font-size: 1.8rem; font-weight: 700; color: #2D2D2D; margin-bottom: 4px; }
   .dashboard-sub { font-size: 0.88rem; color: #999; margin-bottom: 24px; }
   .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 12px; margin-bottom: 20px; }
@@ -241,7 +244,7 @@ window.addEventListener("error", function(e) {
   .adherence-value { font-size: 0.82rem; font-weight: 600; color: var(--charcoal); }
 
   /* ── PROFILE VIEW ── */
-  #profileView { display: none; padding: 32px; overflow-y: auto; background: var(--cream); }
+  #profileView { display: none; padding: 32px; overflow-y: auto; background: transparent; }
   .profile-title { font-family: 'Open Sans', serif; font-size: 2rem; font-weight: 700; margin-bottom: 6px; color: #2D2D2D; }
   .profile-sub { font-size: 0.88rem; color: #999; margin-bottom: 28px; }
   .profile-card { background: white; border-radius: 20px; padding: 28px; border: none; box-shadow: 0 4px 20px rgba(0,0,0,0.06); max-width: 680px; margin-bottom: 20px; width: 100%; box-sizing: border-box; overflow: hidden; }
@@ -257,7 +260,7 @@ window.addEventListener("error", function(e) {
   .save-success.show { display: inline; }
 
   /* ── PRICING VIEW ── */
-  #pricingView { display: none; padding: 32px; overflow-y: auto; background: var(--cream); }
+  #pricingView { display: none; padding: 32px; overflow-y: auto; background: transparent; }
   .pricing-title { font-family: 'Open Sans', serif; font-size: 1.8rem; font-weight: 700; color: #2D2D2D; margin-bottom: 6px; }
   .pricing-sub { font-size: 0.88rem; color: #999; margin-bottom: 32px; }
   .pricing-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; max-width: 900px; }
