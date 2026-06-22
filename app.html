@@ -6300,30 +6300,50 @@ function switchLang(lang) {
     if (existing) return;
     const modal = document.createElement('div');
     modal.id = 'trialExpiredModal';
-    modal.style.cssText = 'position:fixed;inset:0;z-index:99999;background:rgba(0,0,0,0.7);display:flex;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(4px)';
+    modal.style.cssText = 'position:fixed;inset:0;z-index:99999;background:rgba(10,5,20,0.88);display:flex;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(10px)';
+
+    // Étoiles
+    let starsHtml = '';
+    for (let i = 0; i < 40; i++) {
+      const size = Math.random() > 0.7 ? 3 : 2;
+      starsHtml += `<div style="position:absolute;left:${Math.random()*100}%;top:${Math.random()*100}%;width:${size}px;height:${size}px;background:white;border-radius:50%;opacity:${0.1+Math.random()*0.7};animation:twinkle ${2+Math.random()*3}s ${Math.random()*3}s ease-in-out infinite"></div>`;
+    }
+
     modal.innerHTML = `
-      <div style="background:white;border-radius:24px;padding:40px 32px;max-width:480px;width:100%;text-align:center;position:relative;box-shadow:0 24px 60px rgba(0,0,0,0.3)">
-        <div style="font-size:2.5rem;margin-bottom:16px">⏰</div>
-        <div style="font-size:1.4rem;font-weight:800;color:#1a1a1a;margin-bottom:8px;font-family:'DM Sans',sans-serif">Votre essai gratuit est terminé</div>
-        <div style="font-size:0.92rem;color:#666;margin-bottom:28px;line-height:1.6">Vous avez découvert Mirella pendant 3 jours.<br>Passez à un plan payant pour continuer à profiter de toutes les fonctionnalités.</div>
-        <div style="background:linear-gradient(135deg,rgba(255,107,107,0.06),rgba(255,154,60,0.06));border-radius:14px;padding:16px;margin-bottom:24px;border:1px solid rgba(255,107,107,0.15)">
-          <div style="font-size:0.7rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--accent);margin-bottom:12px">Offre Early Access · -50% à vie</div>
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
-            <div style="background:white;border-radius:10px;padding:14px;border:1.5px solid #f0f0f0">
-              <div style="font-size:0.72rem;font-weight:700;color:#888;text-transform:uppercase;margin-bottom:4px">Standard</div>
-              <div style="font-size:1.5rem;font-weight:800;color:#1a1a1a">3,99€<span style="font-size:0.75rem;font-weight:400;color:#aaa">/mois</span></div>
-              <div style="font-size:0.68rem;color:#aaa;text-decoration:line-through">7,99€/mois</div>
-            </div>
-            <div style="background:linear-gradient(135deg,var(--coral),var(--accent));border-radius:10px;padding:14px;position:relative">
-              <div style="position:absolute;top:-8px;left:50%;transform:translateX(-50%);background:#1a1a1a;color:white;font-size:0.6rem;font-weight:700;padding:2px 10px;border-radius:10px;white-space:nowrap">⭐ POPULAIRE</div>
-              <div style="font-size:0.72rem;font-weight:700;color:rgba(255,255,255,0.85);text-transform:uppercase;margin-bottom:4px">Premium</div>
-              <div style="font-size:1.5rem;font-weight:800;color:white">6,49€<span style="font-size:0.75rem;font-weight:400;color:rgba(255,255,255,0.7)">/mois</span></div>
-              <div style="font-size:0.68rem;color:rgba(255,255,255,0.6);text-decoration:line-through">12,99€/mois</div>
-            </div>
+      <style>
+        @keyframes trialPopIn{from{transform:scale(0.85);opacity:0}to{transform:scale(1);opacity:1}}
+        @keyframes crownFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+        @keyframes shimmerGold{0%{background-position:0%}100%{background-position:200%}}
+        @keyframes twinkle{0%,100%{opacity:0.1}50%{opacity:0.8}}
+        @keyframes cardShimmer{0%{left:-100%}100%{left:200%}}
+        #trialBox{animation:trialPopIn .5s cubic-bezier(.34,1.56,.64,1)}
+        #trialCrown{animation:crownFloat 3s ease-in-out infinite;filter:drop-shadow(0 0 12px rgba(255,200,80,0.8))}
+        #trialTitle{background:linear-gradient(135deg,#FFD700,#FF9A3C,#FFD700);background-size:200% auto;-webkit-background-clip:text;-webkit-text-fill-color:transparent;animation:shimmerGold 3s linear infinite}
+        .trial-card-prem{position:relative;overflow:hidden}
+        .trial-card-prem::after{content:'';position:absolute;top:0;left:-100%;width:60%;height:100%;background:linear-gradient(90deg,transparent,rgba(255,255,255,0.2),transparent);animation:cardShimmer 2.5s ease-in-out infinite}
+        #trialCta:hover{transform:translateY(-2px);box-shadow:0 8px 28px rgba(255,180,40,0.5)!important}
+      </style>
+      <div id="trialBox" style="position:relative;background:linear-gradient(160deg,#1a0a2e 0%,#0d1a3a 60%,#1a0a2e 100%);border-radius:28px;padding:32px 24px 24px;max-width:360px;width:100%;text-align:center;border:1px solid rgba(255,255,255,0.08);box-shadow:0 0 0 1px rgba(255,200,80,0.12),0 30px 80px rgba(0,0,0,0.6);overflow:hidden">
+        ${starsHtml}
+        <div id="trialCrown" style="font-size:2.8rem;margin-bottom:16px;display:block;position:relative">👑</div>
+        <div id="trialTitle" style="font-size:1.4rem;font-weight:800;margin-bottom:8px;position:relative">Passez à la vitesse supérieure</div>
+        <div style="font-size:0.82rem;color:rgba(255,255,255,0.55);line-height:1.5;margin-bottom:20px;position:relative">Votre essai de 3 jours est terminé.<br>Continuez à prendre soin de vous avec Mirella.</div>
+        <div style="display:inline-block;font-size:0.65rem;font-weight:800;letter-spacing:.12em;background:linear-gradient(135deg,rgba(255,200,80,0.15),rgba(255,150,60,0.15));color:#FFB830;border:1px solid rgba(255,180,60,0.3);padding:5px 14px;border-radius:20px;margin-bottom:16px;text-transform:uppercase;position:relative">⚡ Offre Early Access · -50% à vie</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px;position:relative">
+          <div style="background:rgba(255,255,255,0.06);border-radius:16px;padding:16px 12px;border:1px solid rgba(255,255,255,0.1)">
+            <div style="font-size:0.62rem;font-weight:700;color:rgba(255,255,255,0.4);letter-spacing:.1em;margin-bottom:8px;text-transform:uppercase">Standard</div>
+            <div style="font-size:1.5rem;font-weight:800;color:white">3,99€<span style="font-size:0.72rem;font-weight:400;color:rgba(255,255,255,0.4)">/mois</span></div>
+            <div style="font-size:0.68rem;color:rgba(255,255,255,0.25);text-decoration:line-through;margin-top:2px">7,99€/mois</div>
+          </div>
+          <div class="trial-card-prem" style="background:linear-gradient(135deg,#FF9A3C,#FF6B6B);border-radius:16px;padding:16px 12px;box-shadow:0 8px 24px rgba(255,107,107,0.35)">
+            <div style="position:absolute;top:0;right:0;background:white;color:#FF6B6B;font-size:0.55rem;font-weight:800;padding:3px 8px;border-radius:0 16px 0 10px">⭐ POPULAIRE</div>
+            <div style="font-size:0.62rem;font-weight:700;color:rgba(255,255,255,0.8);letter-spacing:.1em;margin-bottom:8px;text-transform:uppercase">Premium</div>
+            <div style="font-size:1.5rem;font-weight:800;color:white">6,49€<span style="font-size:0.72rem;font-weight:400;color:rgba(255,255,255,0.7)">/mois</span></div>
+            <div style="font-size:0.68rem;color:rgba(255,255,255,0.5);text-decoration:line-through;margin-top:2px">12,99€/mois</div>
           </div>
         </div>
-        <button onclick="document.getElementById('trialExpiredModal').remove();showView('pricing')" style="width:100%;background:linear-gradient(135deg,var(--coral),var(--accent));color:white;border:none;border-radius:12px;padding:14px;font-size:0.95rem;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif;margin-bottom:10px">Voir les offres -50% →</button>
-        <button onclick="document.getElementById('trialExpiredModal').remove()" style="width:100%;background:none;border:none;color:#aaa;font-size:0.82rem;cursor:pointer;font-family:'DM Sans',sans-serif;padding:6px">Continuer en accès limité</button>
+        <button id="trialCta" onclick="document.getElementById('trialExpiredModal').remove();showView('pricing')" style="width:100%;padding:16px;border:none;border-radius:18px;background:linear-gradient(135deg,#FFD700,#FF9A3C);color:#1a0a2e;font-size:1rem;font-weight:800;cursor:pointer;font-family:'DM Sans',sans-serif;margin-bottom:12px;box-shadow:0 4px 20px rgba(255,180,40,0.4);transition:all .2s;position:relative">Voir les offres -50% →</button>
+        <div onclick="document.getElementById('trialExpiredModal').remove()" style="font-size:0.75rem;color:rgba(255,255,255,0.3);cursor:pointer;position:relative">Continuer en accès limité</div>
       </div>
     `;
     document.body.appendChild(modal);
