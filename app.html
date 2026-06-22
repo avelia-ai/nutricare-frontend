@@ -5300,6 +5300,8 @@ function switchLang(lang) {
       localStorage.setItem('nutricare_token', authToken);
       localStorage.setItem('nutricare_user', JSON.stringify(currentUser));
       if (data.profile) localStorage.setItem('nutricare_profile', JSON.stringify(data.profile));
+      // Nettoyer les notifs de debug
+      try { var _n = JSON.parse(localStorage.getItem('mirella_notifs')||'[]'); _n = _n.filter(function(n){ return !n.message || !n.message.startsWith('Plan:'); }); localStorage.setItem('mirella_notifs', JSON.stringify(_n)); } catch(e) {}
       showApp();
       const redirectUrl = new URLSearchParams(window.location.search).get('redirect');
       if (redirectUrl) { setTimeout(() => window.location.href = decodeURIComponent(redirectUrl), 500); return; }
