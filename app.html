@@ -578,6 +578,7 @@ button[style*="background:linear-gradient(135deg,var(--coral),var(--accent))"] {
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCCvxdc-gPJr7myjxjZFWNUjbfDmzvZwig&libraries=places" defer></script>
 </head>
 
+<body style="background:#FF6B6B">
 <canvas id="cellCanvas" style="position:fixed;top:0;left:0;width:100%;height:100%;z-index:-1;pointer-events:none;"></canvas>
 <script>
 (function(){
@@ -588,40 +589,35 @@ button[style*="background:linear-gradient(135deg,var(--coral),var(--accent))"] {
   function resize(){W=cv.width=window.innerWidth;H=cv.height=window.innerHeight;}
   function makeCell(x,y,s){
     var col=COLS[Math.floor(Math.random()*COLS.length)];
-    s=s||(6+Math.random()*14);
-    var spd=0.05+Math.random()*0.1;
+    s=s||(5+Math.random()*10);
+    var spd=0.04+Math.random()*0.08;
     return{x:x!==undefined?x:Math.random()*W,y:y!==undefined?y:Math.random()*H,
       vx:(Math.random()-0.5)*spd,vy:(Math.random()-0.5)*spd,
       s:s,r:col[0],g:col[1],b:col[2],
-      op:0.06+Math.random()*0.09,
+      op:0.05+Math.random()*0.08,
       nx:(Math.random()-0.5)*0.3,ny:(Math.random()-0.5)*0.3,
       ns:0.25+Math.random()*0.12,
       dividing:false,divProgress:0,divSpeed:0.003+Math.random()*0.004,
-      nextDiv:200+Math.random()*400};
+      nextDiv:300+Math.random()*500};
   }
-  function init(){resize();cells=[];for(var i=0;i<28;i++)cells.push(makeCell());}
+  function init(){resize();cells=[];for(var i=0;i<30;i++)cells.push(makeCell());}
   function drawCell(c,pinch){
     var p=pinch||0;
-    var r=c.r,g=c.g,b=c.b,op=c.op;
-    // corps cellulaire avec pincement si division
     ctx.save();
     ctx.translate(c.x,c.y);
-    if(p>0){
-      ctx.scale(1+p*0.3, 1-p*0.25);
-    }
+    if(p>0){ctx.scale(1+p*0.3,1-p*0.25);}
     var gr=ctx.createRadialGradient(-c.s*.15,-c.s*.15,c.s*.05,0,0,c.s);
-    gr.addColorStop(0,'rgba('+r+','+g+','+b+','+(op*1.6)+')');
-    gr.addColorStop(0.65,'rgba('+r+','+g+','+b+','+op+')');
-    gr.addColorStop(1,'rgba('+r+','+g+','+b+',0)');
+    gr.addColorStop(0,'rgba('+c.r+','+c.g+','+c.b+','+(c.op*1.6)+')');
+    gr.addColorStop(0.65,'rgba('+c.r+','+c.g+','+c.b+','+c.op+')');
+    gr.addColorStop(1,'rgba('+c.r+','+c.g+','+c.b+',0)');
     ctx.beginPath();ctx.arc(0,0,c.s,0,Math.PI*2);
     ctx.fillStyle=gr;ctx.fill();
-    ctx.strokeStyle='rgba('+r+','+g+','+b+','+(op+0.1)+')';
-    ctx.lineWidth=0.8;ctx.stroke();
-    // noyau
+    ctx.strokeStyle='rgba('+c.r+','+c.g+','+c.b+','+(c.op+0.1)+')';
+    ctx.lineWidth=0.7;ctx.stroke();
     var nx=c.s*c.nx,ny=c.s*c.ny,nr=c.s*c.ns;
     var ng=ctx.createRadialGradient(nx-nr*.2,ny-nr*.2,nr*.05,nx,ny,nr);
-    ng.addColorStop(0,'rgba('+r+','+g+','+b+','+(op*3)+')');
-    ng.addColorStop(1,'rgba('+r+','+g+','+b+','+(op*1.5)+')');
+    ng.addColorStop(0,'rgba('+c.r+','+c.g+','+c.b+','+(c.op*3)+')');
+    ng.addColorStop(1,'rgba('+c.r+','+c.g+','+c.b+','+(c.op*1.5)+')');
     ctx.beginPath();ctx.arc(nx,ny,nr,0,Math.PI*2);
     ctx.fillStyle=ng;ctx.fill();
     ctx.restore();
@@ -634,12 +630,11 @@ button[style*="background:linear-gradient(135deg,var(--coral),var(--accent))"] {
       if(c.x<-c.s*3)c.x=W+c.s;if(c.x>W+c.s*3)c.x=-c.s;
       if(c.y<-c.s*3)c.y=H+c.s;if(c.y>H+c.s*3)c.y=-c.s;
       c.nextDiv--;
-      if(c.nextDiv<=0&&!c.dividing&&cells.length<40){c.dividing=true;c.divProgress=0;}
+      if(c.nextDiv<=0&&!c.dividing&&cells.length<45){c.dividing=true;c.divProgress=0;}
       if(c.dividing){
         c.divProgress+=c.divSpeed;
         drawCell(c,c.divProgress);
         if(c.divProgress>=1){
-          // crée 2 petites cellules filles
           var ns=c.s*0.75;
           toAdd.push(makeCell(c.x-c.s*0.6,c.y,ns));
           toAdd.push(makeCell(c.x+c.s*0.6,c.y,ns));
@@ -657,7 +652,6 @@ button[style*="background:linear-gradient(135deg,var(--coral),var(--accent))"] {
   init();draw();
 })();
 </script>
-<body style="background:#FF6B6B">
 <script>
 
 
