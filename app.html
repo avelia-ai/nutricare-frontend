@@ -5933,7 +5933,7 @@ function switchLang(lang) {
     document.getElementById('gamiBadges').innerHTML = ALL_BADGES.map(b => {
       const done = obtained.includes(b.id);
       const locked = b.premium && !isPremium;
-      return `<div style="background:${done ? '#F0F8F0' : '#F8F8F8'};border-radius:12px;padding:12px;text-align:center;border:1px solid ${done ? '#C0DDB8' : 'var(--border)'};opacity:${locked ? '0.5' : done ? '1' : '0.4'};position:relative;height:170px;display:flex;flex-direction:column;align-items:center;justify-content:flex-start">
+      return `<div style="background:${done ? '#F0F8F0' : '#F8F8F8'};border-radius:12px;padding:12px;text-align:center;border:1px solid ${done ? '#C0DDB8' : 'var(--border)'};opacity:${locked ? '0.5' : done ? '1' : '0.4'};position:relative;min-height:170px;display:flex;flex-direction:column;align-items:center;justify-content:flex-start">
         ${locked ? '<div style="position:absolute;top:6px;right:6px;font-size:0.6rem">🔒</div>' : ''}
         <div style="width:6rem;height:6rem;display:flex;align-items:center;justify-content:center;margin-bottom:5px;overflow:hidden">${b.icon}</div>
         <div style="font-size:0.72rem;font-weight:600;color:var(--charcoal);margin-bottom:2px">${b.nom}</div>
