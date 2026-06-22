@@ -594,7 +594,7 @@ window.addEventListener('DOMContentLoaded', function(){
   function makeCell(x,y,s){
     var col = COLS[Math.floor(Math.random()*COLS.length)];
     s = s || (5 + Math.random()*10);
-    var spd = 0.04 + Math.random()*0.08;
+    var spd = 0.18 + Math.random()*0.25;
     return { x: x!==undefined?x:Math.random()*W, y: y!==undefined?y:Math.random()*H,
       vx:(Math.random()-0.5)*spd, vy:(Math.random()-0.5)*spd,
       s:s, r:col[0], g:col[1], b:col[2],
