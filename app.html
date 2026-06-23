@@ -12319,6 +12319,185 @@ function openSubscriptionModal(context) {
     </div>
   </div>
 
+
+<div id="rituelOverlay" style="display:none;position:fixed;inset:0;z-index:9999;background:rgba(10,5,20,0.92);backdrop-filter:blur(8px);flex-direction:column;align-items:center;justify-content:center">
+  <button onclick="closeRituel()" style="position:absolute;top:20px;right:20px;background:rgba(255,255,255,0.1);border:none;color:white;width:40px;height:40px;border-radius:50%;font-size:1.2rem;cursor:pointer">✕</button>
+  <div id="rituelTitle" style="color:white;font-size:1.1rem;font-weight:700;margin-bottom:8px;letter-spacing:1px"></div>
+  <div id="rituelPhase" style="color:rgba(255,255,255,0.6);font-size:0.85rem;margin-bottom:24px;min-height:1.2em"></div>
+  <div style="position:relative;width:220px;height:220px">
+    <canvas id="rituelHarmonyCanvas" style="width:220px;height:220px;display:block"></canvas>
+    <svg style="position:absolute;inset:0" viewBox="0 0 220 220">
+      <circle cx="110" cy="110" r="105" fill="none" stroke="rgba(255,255,255,0.08)" stroke-width="4"/>
+      <circle id="rituelTimerArc" cx="110" cy="110" r="105" fill="none" stroke="rgba(255,150,100,0.7)" stroke-width="4" stroke-linecap="round" stroke-dasharray="659.7" stroke-dashoffset="659.7" transform="rotate(-90 110 110)" style="transition:stroke-dashoffset 0.5s linear"/>
+    </svg>
+  </div>
+  <div id="rituelInstruction" style="color:white;font-size:1.3rem;font-weight:600;margin-top:28px;min-height:2em;text-align:center"></div>
+  <div id="rituelCounter" style="color:rgba(255,255,255,0.5);font-size:2.5rem;font-weight:300;font-family:monospace;margin-top:8px"></div>
+  <div id="rituelDone" style="display:none;text-align:center;margin-top:20px">
+    <div style="font-size:2rem;margin-bottom:8px">✨</div>
+    <div id="rituelPtsGained" style="color:#FF9090;font-size:0.9rem;margin-top:4px"></div>
+    <button onclick="closeRituel()" style="margin-top:16px;background:linear-gradient(135deg,#FF6B6B,#FF9A3C);color:white;border:none;border-radius:14px;padding:12px 28px;font-size:0.95rem;font-weight:700;cursor:pointer">Fermer</button>
+  </div>
+</div>
+
+<script>
+var _rituelTimer = null;
+var _rituelConfig = {
+  coherence: { title:'Cohérence Cardiaque', pts:20, duration:300, steps:[{text:'Inspirez...', duration:4, calm:0.9},{text:'Expirez...', duration:4, calm:0.2}] },
+  '478':     { title:'Technique 4-7-8',      pts:15, duration:180, steps:[{text:'Inspirez...', duration:4, calm:0.9},{text:'Retenez...', duration:7, calm:0.6},{text:'Expirez...', duration:8, calm:0.1}] },
+  bodyscan:  { title:'Body Scan',            pts:30, duration:600, steps:[{text:'Détendez vos pieds...', duration:10, calm:0.4},{text:'Relâchez vos jambes...', duration:10, calm:0.5},{text:'Détendez le ventre...', duration:10, calm:0.6},{text:'Relâchez les épaules...', duration:10, calm:0.7},{text:'Visage détendu...', duration:10, calm:0.85}] },
+  reveil:    { title:'Réveil en Douceur',    pts:20, duration:300, steps:[{text:'Étirez les bras...', duration:5, calm:0.5},{text:'Respirez profondément...', duration:5, calm:0.7},{text:'Souriez...', duration:5, calm:0.9}] },
+  soir:      { title:'Rituel du Soir',       pts:25, duration:420, steps:[{text:'Relâchez la journée...', duration:7, calm:0.4},{text:'Respirez lentement...', duration:7, calm:0.65},{text:'Soyez reconnaissant...', duration:7, calm:0.9}] }
+};
+
+function startRituel(type) {
+  var cfg = _rituelConfig[type];
+  var overlay = document.getElementById('rituelOverlay');
+  overlay.style.display = 'flex';
+  document.getElementById('rituelTitle').textContent = cfg.title;
+  document.getElementById('rituelDone').style.display = 'none';
+  document.getElementById('rituelInstruction').style.display = 'block';
+  document.getElementById('rituelCounter').style.display = 'block';
+  var rc = document.getElementById('rituelHarmonyCanvas');
+  var dpr = window.devicePixelRatio || 1;
+  rc.width = 220*dpr; rc.height = 220*dpr;
+  rc.style.width = '220px'; rc.style.height = '220px';
+  var elapsed = 0, stepIdx = 0, stepElapsed = 0;
+  var arc = document.getElementById('rituelTimerArc');
+  var circumference = 659.7;
+  function tick() {
+    var step = cfg.steps[stepIdx % cfg.steps.length];
+    document.getElementById('rituelInstruction').textContent = step.text;
+    var remaining = step.duration - stepElapsed;
+    document.getElementById('rituelCounter').textContent = remaining;
+    document.getElementById('rituelPhase').textContent = Math.floor(elapsed/60) + 'min ' + (elapsed%60) + 's';
+    _hcState.calm  = step.calm;
+    _hcState.sleep = 0.5 + step.calm*0.3;
+    _hcState.hydra = 0.4 + step.calm*0.2;
+    _hcState.activ = 0.3;
+    _hcDrawFrame('rituelHarmonyCanvas');
+    arc.style.strokeDashoffset = circumference*(1 - elapsed/cfg.duration);
+    stepElapsed++; elapsed++;
+    if (stepElapsed >= step.duration) { stepElapsed=0; stepIdx++; }
+    if (elapsed >= cfg.duration) { finishRituel(cfg.pts); return; }
+    _rituelTimer = setTimeout(tick, 1000);
+  }
+  tick();
+}
+
+function finishRituel(pts) {
+  clearTimeout(_rituelTimer);
+  document.getElementById('rituelInstruction').style.display = 'none';
+  document.getElementById('rituelCounter').style.display = 'none';
+  document.getElementById('rituelDone').style.display = 'block';
+  document.getElementById('rituelPtsGained').textContent = '+' + pts + ' pts d harmonie gagnés !';
+  _hcState.calm=1; _hcState.sleep=1; _hcState.hydra=1; _hcState.activ=1;
+  var bonus = parseInt(localStorage.getItem('gami_bonus_total')||'0') + pts;
+  localStorage.setItem('gami_bonus_total', bonus);
+  if (typeof updateHarmonyUI === 'function') {
+    var logs = JSON.parse(localStorage.getItem('nutricare_logs')||'[]');
+    var total = (typeof calcHarmonyFromLogs==='function' ? calcHarmonyFromLogs(logs) : 0) + bonus;
+    updateHarmonyUI(total);
+  }
+}
+
+function closeRituel() {
+  clearTimeout(_rituelTimer);
+  document.getElementById('rituelOverlay').style.display = 'none';
+  _hcState.calm=0; _hcState.sleep=0; _hcState.hydra=0; _hcState.activ=0;
+}
+</script>
+
+<!-- OVERLAY RITUEL -->
+<div id="rituelOverlay" style="display:none;position:fixed;inset:0;z-index:9999;background:rgba(10,5,20,0.92);backdrop-filter:blur(8px);flex-direction:column;align-items:center;justify-content:center">
+  <button onclick="closeRituel()" style="position:absolute;top:20px;right:20px;background:rgba(255,255,255,0.1);border:none;color:white;width:40px;height:40px;border-radius:50%;font-size:1.2rem;cursor:pointer">✕</button>
+  <div id="rituelTitle" style="color:white;font-size:1.1rem;font-weight:700;margin-bottom:8px;letter-spacing:1px"></div>
+  <div id="rituelPhase" style="color:rgba(255,255,255,0.6);font-size:0.85rem;margin-bottom:24px;min-height:1.2em"></div>
+  <div style="position:relative;width:220px;height:220px">
+    <canvas id="rituelHarmonyCanvas" style="width:220px;height:220px;display:block"></canvas>
+    <svg style="position:absolute;inset:0" viewBox="0 0 220 220">
+      <circle cx="110" cy="110" r="105" fill="none" stroke="rgba(255,255,255,0.08)" stroke-width="4"/>
+      <circle id="rituelTimerArc" cx="110" cy="110" r="105" fill="none" stroke="rgba(255,150,100,0.7)" stroke-width="4" stroke-linecap="round" stroke-dasharray="659.7" stroke-dashoffset="659.7" transform="rotate(-90 110 110)" style="transition:stroke-dashoffset 0.5s linear"/>
+    </svg>
+  </div>
+  <div id="rituelInstruction" style="color:white;font-size:1.3rem;font-weight:600;margin-top:28px;min-height:2em;text-align:center"></div>
+  <div id="rituelCounter" style="color:rgba(255,255,255,0.5);font-size:2.5rem;font-weight:300;font-family:monospace;margin-top:8px"></div>
+  <div id="rituelDone" style="display:none;text-align:center;margin-top:20px">
+    <div style="font-size:2rem;margin-bottom:8px">✨</div>
+    <div style="color:white;font-size:1rem;font-weight:700">Rituel termine</div>
+    <div id="rituelPtsGained" style="color:#FF9090;font-size:0.9rem;margin-top:4px"></div>
+    <button onclick="closeRituel()" style="margin-top:16px;background:linear-gradient(135deg,#FF6B6B,#FF9A3C);color:white;border:none;border-radius:14px;padding:12px 28px;font-size:0.95rem;font-weight:700;cursor:pointer">Fermer</button>
+  </div>
+</div>
+
+<script>
+var _rituelTimer = null;
+var _rituelConfig = {
+  coherence: { title:'Coherence Cardiaque', pts:20, duration:300, steps:[{text:'Inspirez...', duration:4, calm:0.9},{text:'Expirez...', duration:4, calm:0.2}] },
+  r478:      { title:'Technique 4-7-8',     pts:15, duration:180, steps:[{text:'Inspirez...', duration:4, calm:0.9},{text:'Retenez...', duration:7, calm:0.6},{text:'Expirez...', duration:8, calm:0.1}] },
+  bodyscan:  { title:'Body Scan',           pts:30, duration:600, steps:[{text:'Detendez vos pieds...', duration:10, calm:0.4},{text:'Relacher les jambes...', duration:10, calm:0.5},{text:'Detendre le ventre...', duration:10, calm:0.6},{text:'Relacher les epaules...', duration:10, calm:0.7},{text:'Visage detendu...', duration:10, calm:0.85}] },
+  reveil:    { title:'Reveil en Douceur',   pts:20, duration:300, steps:[{text:'Etirez les bras...', duration:5, calm:0.5},{text:'Respirez profondement...', duration:5, calm:0.7},{text:'Souriez...', duration:5, calm:0.9}] },
+  soir:      { title:'Rituel du Soir',      pts:25, duration:420, steps:[{text:'Relacher la journee...', duration:7, calm:0.4},{text:'Respirez lentement...', duration:7, calm:0.65},{text:'Soyez reconnaissant...', duration:7, calm:0.9}] }
+};
+
+function startRituel(type) {
+  var cfg = _rituelConfig[type];
+  if (type === '478') cfg = _rituelConfig['r478'];
+  if (!cfg) return;
+  var overlay = document.getElementById('rituelOverlay');
+  overlay.style.display = 'flex';
+  document.getElementById('rituelTitle').textContent = cfg.title;
+  document.getElementById('rituelDone').style.display = 'none';
+  document.getElementById('rituelInstruction').style.display = 'block';
+  document.getElementById('rituelCounter').style.display = 'block';
+  var rc = document.getElementById('rituelHarmonyCanvas');
+  var dpr = window.devicePixelRatio || 1;
+  rc.width = 220*dpr; rc.height = 220*dpr;
+  rc.style.width = '220px'; rc.style.height = '220px';
+  var elapsed = 0, stepIdx = 0, stepElapsed = 0;
+  var arc = document.getElementById('rituelTimerArc');
+  var circumference = 659.7;
+  function tick() {
+    var step = cfg.steps[stepIdx % cfg.steps.length];
+    document.getElementById('rituelInstruction').textContent = step.text;
+    document.getElementById('rituelCounter').textContent = step.duration - stepElapsed;
+    document.getElementById('rituelPhase').textContent = Math.floor(elapsed/60) + 'min ' + (elapsed%60) + 's';
+    _hcState.calm  = step.calm;
+    _hcState.sleep = 0.5 + step.calm*0.3;
+    _hcState.hydra = 0.4 + step.calm*0.2;
+    _hcState.activ = 0.3;
+    _hcDrawFrame('rituelHarmonyCanvas');
+    arc.style.strokeDashoffset = circumference*(1 - elapsed/cfg.duration);
+    stepElapsed++; elapsed++;
+    if (stepElapsed >= step.duration) { stepElapsed=0; stepIdx++; }
+    if (elapsed >= cfg.duration) { finishRituel(cfg.pts); return; }
+    _rituelTimer = setTimeout(tick, 1000);
+  }
+  tick();
+}
+
+function finishRituel(pts) {
+  clearTimeout(_rituelTimer);
+  document.getElementById('rituelInstruction').style.display = 'none';
+  document.getElementById('rituelCounter').style.display = 'none';
+  document.getElementById('rituelDone').style.display = 'block';
+  document.getElementById('rituelPtsGained').textContent = '+' + pts + ' pts harmonie gagnes';
+  _hcState.calm=1; _hcState.sleep=1; _hcState.hydra=1; _hcState.activ=1;
+  var bonus = parseInt(localStorage.getItem('gami_bonus_total')||'0') + pts;
+  localStorage.setItem('gami_bonus_total', bonus);
+  if (typeof updateHarmonyUI === 'function') {
+    var logs = JSON.parse(localStorage.getItem('nutricare_logs')||'[]');
+    var total = (typeof calcHarmonyFromLogs==='function' ? calcHarmonyFromLogs(logs) : 0) + bonus;
+    updateHarmonyUI(total);
+  }
+}
+
+function closeRituel() {
+  clearTimeout(_rituelTimer);
+  document.getElementById('rituelOverlay').style.display = 'none';
+  _hcState.calm=0; _hcState.sleep=0; _hcState.hydra=0; _hcState.activ=0;
+}
+</script>
 </body>
 </html>
  
