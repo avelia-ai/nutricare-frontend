@@ -12457,7 +12457,8 @@ function initRituelParticles() {
   }
 }
 
-function drawRituelHeart(canvas, breathPhase, globalCalm) {
+function drawRituelHeart(canvas, breathPhase, globalCalm, progress) {
+  progress = progress || 0;
   var dpr = window.devicePixelRatio || 1;
   var W = 300, H = 300;
   if (canvas.width !== W*dpr) {
@@ -12551,16 +12552,22 @@ function drawRituelHeart(canvas, breathPhase, globalCalm) {
     timerArc.style.filter = 'drop-shadow(0 0 '+(4+8*breathPhase)+'px rgba('+rc+','+gc+','+bc+',0.7))';
   }
 
-  // Particules orbitales qui se rapprochent/eloignent avec la respiration
+  // Particules orbitales : peu au debut, de plus en plus avec le temps
   if (_rituelParticles.length === 0) initRituelParticles();
-  _rituelParticles.forEach(function(p){
+  var nActiveParticles = Math.round(3 + 17 * progress);
+  _rituelParticles.forEach(function(p, pIdx){
+    if (pIdx >= nActiveParticles) return;
+    // Fondu d'apparition pour la derniere particule active (transition douce)
+    var fadeIn = pIdx === nActiveParticles - 1
+      ? Math.min((progress * 17 + 3) - nActiveParticles + 1, 1)
+      : 1;
     p.angle += p.speed*(0.6+0.6*breathPhase);
     p.life += p.lifeSpeed;
     var sparkle = 0.3+0.7*Math.abs(Math.sin(p.life));
     var orb = p.orbitR*(0.85+0.3*breathPhase);
     var px2=cx+Math.cos(p.angle)*orb;
     var py2=cy+Math.sin(p.angle)*orb;
-    var pal=(0.08+0.55*sparkle*globalCalm*(0.4+0.6*breathPhase));
+    var pal=(0.08+0.55*sparkle*globalCalm*(0.4+0.6*breathPhase))*fadeIn;
     var ps=p.size*(0.6+0.7*breathPhase);
     // Halo particule
     var pg=ctx.createRadialGradient(px2,py2,0,px2,py2,ps*3);
@@ -12623,7 +12630,8 @@ function startRituel(type) {
     }
     // Incrementer blobT exactement comme _hcT dans _hcDrawFrame
     _rituelBlobT += 0.018 * 0.6; // vitesse reduite x0.6 pour effet calme
-    drawRituelHeart(rc, bp, calm);
+    var progress = Math.min(totalElapsedMs / (totalDuration * 1000), 1.0);
+    drawRituelHeart(rc, bp, calm, progress);
     requestAnimationFrame(animLoop);
   }
   animLoop();
