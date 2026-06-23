@@ -12326,8 +12326,36 @@ function openSubscriptionModal(context) {
 
   <!-- ECRAN INTRO -->
   <div id="rituelIntroScreen" style="display:none;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:40px 32px;max-width:380px;width:100%;position:relative">
-    <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:320px;height:320px;border-radius:50%;background:radial-gradient(circle,rgba(255,120,80,0.18) 0%,transparent 70%);animation:rituelHaloBreath 4s ease-in-out infinite;pointer-events:none"></div>
-    <div id="rituelIntroIcon" style="font-size:2.4rem;margin-bottom:14px;opacity:0;transition:opacity 0.6s ease"></div>
+    <!-- Halo pulsant -->
+    <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:380px;height:380px;border-radius:50%;background:radial-gradient(circle,rgba(255,110,70,0.22) 0%,transparent 70%);animation:rituelHaloBreath 4s ease-in-out infinite;pointer-events:none"></div>
+    <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:260px;height:260px;border-radius:50%;background:radial-gradient(circle,rgba(255,140,90,0.14) 0%,transparent 70%);animation:rituelHaloBreath 4s ease-in-out infinite 1s;pointer-events:none"></div>
+    <!-- Etoiles scintillantes -->
+    <div style="position:absolute;inset:0;pointer-events:none;overflow:hidden">
+      <span style="position:absolute;top:12%;left:8%;color:rgba(255,150,100,0.6);font-size:0.55rem;animation:rituelStar 2.8s ease-in-out infinite">✦</span>
+      <span style="position:absolute;top:18%;right:10%;color:rgba(255,180,140,0.5);font-size:0.45rem;animation:rituelStar 3.4s ease-in-out infinite 0.7s">✦</span>
+      <span style="position:absolute;top:8%;left:55%;color:rgba(255,130,90,0.4);font-size:0.4rem;animation:rituelStar 2.2s ease-in-out infinite 1.2s">✦</span>
+      <span style="position:absolute;bottom:30%;left:5%;color:rgba(255,160,110,0.55);font-size:0.5rem;animation:rituelStar 3.1s ease-in-out infinite 0.4s">✦</span>
+      <span style="position:absolute;bottom:35%;right:7%;color:rgba(255,140,100,0.45);font-size:0.42rem;animation:rituelStar 2.6s ease-in-out infinite 1.8s">✦</span>
+      <span style="position:absolute;top:40%;left:3%;color:rgba(255,170,120,0.35);font-size:0.38rem;animation:rituelStar 3.8s ease-in-out infinite 0.9s">✦</span>
+      <span style="position:absolute;top:35%;right:4%;color:rgba(255,150,110,0.4);font-size:0.44rem;animation:rituelStar 2.4s ease-in-out infinite 2.1s">✦</span>
+    </div>
+    <!-- Icône premium SVG losange -->
+    <div id="rituelIntroIcon" style="margin-bottom:18px;opacity:0;transition:opacity 0.6s ease">
+      <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
+        <polygon points="24,4 44,24 24,44 4,24" fill="none" stroke="url(#dg1)" stroke-width="1.5" opacity="0.5"/>
+        <polygon points="24,10 38,24 24,38 10,24" fill="url(#dg2)" opacity="0.9"/>
+        <defs>
+          <linearGradient id="dg1" x1="4" y1="4" x2="44" y2="44" gradientUnits="userSpaceOnUse">
+            <stop offset="0%" stop-color="#FFB899"/>
+            <stop offset="100%" stop-color="#FF6B6B"/>
+          </linearGradient>
+          <linearGradient id="dg2" x1="10" y1="10" x2="38" y2="38" gradientUnits="userSpaceOnUse">
+            <stop offset="0%" stop-color="#FF9A6C"/>
+            <stop offset="100%" stop-color="#FF6B6B"/>
+          </linearGradient>
+        </defs>
+      </svg>
+    </div>
     <div id="rituelIntroTitle" style="color:white;font-size:1.45rem;font-weight:800;letter-spacing:1px;margin-bottom:6px;opacity:0;transition:opacity 0.6s ease"></div>
     <div id="rituelIntroDuration" style="color:rgba(255,150,100,0.8);font-size:0.75rem;font-weight:700;letter-spacing:3px;text-transform:uppercase;margin-bottom:36px;opacity:0;transition:opacity 0.6s ease"></div>
     <div id="rituelIntroText" style="color:rgba(255,255,255,0.72);font-size:0.97rem;line-height:1.75;min-height:90px;font-family:monospace;text-align:left;width:100%;position:relative;z-index:1"></div>
