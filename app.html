@@ -12330,6 +12330,7 @@ function openSubscriptionModal(context) {
   @keyframes rituelTwinkle { 0%,100%{opacity:0.15;transform:scale(0.6)} 50%{opacity:1;transform:scale(1.5)} }
   @keyframes rituelFloat { 0%,100%{transform:translateY(0px)} 50%{transform:translateY(-6px)} }
   @keyframes rituelCountdownPop { 0%{opacity:0;transform:scale(2)} 30%{opacity:1;transform:scale(1)} 80%{opacity:1;transform:scale(1)} 100%{opacity:0;transform:scale(0.5)} }
+  @keyframes rituel478Hold { 0%,100%{transform:scale(1)} 50%{transform:scale(1.04)} }
   </style>
   <!-- ECRAN INTRO -->
   <div id="rituelIntroScreen" style="display:none;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:40px 32px;max-width:380px;width:100%;position:relative">
@@ -12400,6 +12401,32 @@ function openSubscriptionModal(context) {
   </div>
   <div id="rituelInstruction" style="color:white;font-size:1.3rem;font-weight:600;margin-top:28px;min-height:2em;text-align:center"></div>
   <div id="rituelCounter" style="color:rgba(255,255,255,0.5);font-size:2.5rem;font-weight:300;font-family:monospace;margin-top:8px"></div>
+  <!-- ECRAN 478 -->
+  <div id="rituel478Screen" style="display:none;flex-direction:column;align-items:center;justify-content:center;text-align:center">
+    <div style="color:white;font-size:1.1rem;font-weight:700;margin-bottom:4px;letter-spacing:1px">Technique 4-7-8</div>
+    <div id="rituel478CycleCount" style="color:rgba(255,255,255,0.4);font-size:0.8rem;margin-bottom:32px;letter-spacing:1px"></div>
+    <!-- Cercle de respiration -->
+    <div style="position:relative;width:260px;height:260px;display:flex;align-items:center;justify-content:center">
+      <!-- Halo externe -->
+      <div id="rituel478Halo" style="position:absolute;width:260px;height:260px;border-radius:50%;background:radial-gradient(circle,rgba(120,180,255,0.15) 0%,transparent 70%);transition:all 0.3s ease"></div>
+      <!-- Anneau de progression -->
+      <svg style="position:absolute;inset:0" viewBox="0 0 260 260">
+        <circle cx="130" cy="130" r="120" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+        <circle id="rituel478Arc" cx="130" cy="130" r="120" fill="none" stroke="rgba(120,180,255,0.6)" stroke-width="3" stroke-linecap="round" stroke-dasharray="753.98" stroke-dashoffset="753.98" transform="rotate(-90 130 130)" style="transition:stroke 0.8s ease"/>
+      </svg>
+      <!-- Cercle central qui respire -->
+      <div id="rituel478Circle" style="position:relative;width:140px;height:140px;border-radius:50%;background:radial-gradient(circle,rgba(120,180,255,0.9) 0%,rgba(80,120,255,0.6) 60%,transparent 100%);box-shadow:0 0 40px rgba(120,180,255,0.5);transition:transform 0.3s ease,background 0.8s ease,box-shadow 0.8s ease;display:flex;align-items:center;justify-content:center">
+        <div id="rituel478Counter" style="color:white;font-size:2.8rem;font-weight:200;font-family:monospace;line-height:1"></div>
+      </div>
+    </div>
+    <!-- Phase et instruction -->
+    <div id="rituel478Phase" style="color:white;font-size:1.4rem;font-weight:600;margin-top:28px;min-height:1.8em;letter-spacing:0.5px"></div>
+    <div id="rituel478Sub" style="color:rgba(255,255,255,0.45);font-size:0.82rem;margin-top:6px;letter-spacing:1px"></div>
+    <!-- Barre de progression globale -->
+    <div style="width:200px;height:3px;background:rgba(255,255,255,0.1);border-radius:2px;margin-top:28px;overflow:hidden">
+      <div id="rituel478Progress" style="height:100%;width:0%;background:linear-gradient(90deg,rgba(120,180,255,0.8),rgba(180,120,255,0.8));border-radius:2px;transition:width 1s linear"></div>
+    </div>
+  </div>
   <div id="rituelDone" style="display:none;text-align:center;margin-top:20px">
     <div style="font-size:2rem;margin-bottom:8px">✨</div>
     <div style="color:white;font-size:1rem;font-weight:700">Rituel termine</div>
@@ -12636,6 +12663,7 @@ function startRituel(type) {
 
   // Stocker cfg pour le lancement
   window._currentRituelCfg = cfg;
+  window._currentRituelType = type;
 }
 
 function launchRituelExercise() {
@@ -12667,6 +12695,8 @@ function launchRituelExercise() {
 }
 function _startRituelExercise() {
   var cfg = window._currentRituelCfg;
+  // Rituel 4-7-8 : écran dédié
+  if (window._currentRituelType === '478') { start478Exercise(); return; }
   // Montrer exercice
   document.getElementById('rituelExerciseScreen').style.display = 'flex';
   document.getElementById('rituelTitle').textContent = cfg.title;
@@ -12734,6 +12764,74 @@ function finishRituel(pts) {
     var total = (typeof calcHarmonyFromLogs==='function' ? calcHarmonyFromLogs(logs) : 0) + bonus;
     updateHarmonyUI(total);
   }
+}
+
+function start478Exercise() {
+  var PHASES = [
+    { label: 'Inspirez', sub: '4 secondes · par le nez', dur: 4, color: 'rgba(100,180,255,0.9)', glow: 'rgba(100,180,255,0.5)', arcColor: 'rgba(100,180,255,0.8)', scale: 'scale(1.28)', hold: false },
+    { label: 'Retenez', sub: '7 secondes · poumons pleins', dur: 7, color: 'rgba(180,130,255,0.9)', glow: 'rgba(180,130,255,0.5)', arcColor: 'rgba(180,130,255,0.8)', scale: 'scale(1.28)', hold: true },
+    { label: 'Expirez', sub: '8 secondes · par la bouche', dur: 8, color: 'rgba(100,220,180,0.9)', glow: 'rgba(100,220,180,0.4)', arcColor: 'rgba(100,220,180,0.8)', scale: 'scale(0.82)', hold: false }
+  ];
+  var TOTAL_CYCLES = 4;
+  var TOTAL_SEC = PHASES.reduce(function(s,p){return s+p.dur;},0) * TOTAL_CYCLES; // 76s
+  var screen = document.getElementById('rituel478Screen');
+  var circle = document.getElementById('rituel478Circle');
+  var counter = document.getElementById('rituel478Counter');
+  var phaseEl = document.getElementById('rituel478Phase');
+  var subEl = document.getElementById('rituel478Sub');
+  var arc = document.getElementById('rituel478Arc');
+  var progress = document.getElementById('rituel478Progress');
+  var cycleEl = document.getElementById('rituel478CycleCount');
+  var halo = document.getElementById('rituel478Halo');
+  screen.style.display = 'flex';
+  var phaseIdx = 0, cycle = 1, elapsed = 0, phaseElapsed = 0;
+  var _running = true;
+  function applyPhase(ph) {
+    phaseEl.textContent = ph.label;
+    subEl.textContent = ph.sub;
+    circle.style.background = 'radial-gradient(circle,' + ph.color + ' 0%,rgba(40,40,80,0.3) 100%)';
+    circle.style.boxShadow = '0 0 50px ' + ph.glow + ', 0 0 20px ' + ph.glow;
+    circle.style.transform = ph.scale;
+    circle.style.animation = ph.hold ? 'rituel478Hold 2s ease-in-out infinite' : 'none';
+    halo.style.background = 'radial-gradient(circle,' + ph.glow.replace('0.5','0.12') + ' 0%,transparent 70%)';
+    arc.style.stroke = ph.arcColor;
+  }
+  function tick478() {
+    if (!_running) return;
+    var ph = PHASES[phaseIdx];
+    if (phaseElapsed === 0) applyPhase(ph);
+    var remaining = ph.dur - phaseElapsed;
+    counter.textContent = remaining;
+    cycleEl.textContent = 'Cycle ' + cycle + ' / ' + TOTAL_CYCLES;
+    // Arc de phase (reset à chaque phase)
+    var circumference = 753.98;
+    arc.style.strokeDashoffset = circumference * (1 - phaseElapsed / ph.dur);
+    // Progression globale
+    progress.style.width = Math.min(100, Math.round(elapsed / TOTAL_SEC * 100)) + '%';
+    phaseElapsed++; elapsed++;
+    if (phaseElapsed >= ph.dur) {
+      phaseElapsed = 0;
+      phaseIdx++;
+      if (phaseIdx >= PHASES.length) {
+        phaseIdx = 0;
+        cycle++;
+        if (cycle > TOTAL_CYCLES) {
+          _running = false;
+          screen.style.display = 'none';
+          var done = document.getElementById('rituelDone');
+          done.style.display = 'block';
+          document.getElementById('rituelPtsGained').textContent = '+15 pts d'harmonie gagnés';
+          // Sauvegarde points
+          if (typeof addHarmonyPoints === 'function') addHarmonyPoints(15);
+          return;
+        }
+      }
+    }
+    setTimeout(tick478, 1000);
+  }
+  tick478();
+  // Stoppe si on ferme l'overlay
+  window._stop478 = function() { _running = false; };
 }
 
 function closeRituel() {
