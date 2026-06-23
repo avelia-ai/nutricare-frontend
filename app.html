@@ -12440,6 +12440,89 @@ var _rituelConfig = {
   soir:      { title:'Rituel du Soir',      pts:25, duration:420, steps:[{text:'Relacher la journee...', duration:7, calm:0.4},{text:'Respirez lentement...', duration:7, calm:0.65},{text:'Soyez reconnaissant...', duration:7, calm:0.9}] }
 };
 
+function drawRituelHeart(canvas, breathPhase, globalCalm, color) {
+  // breathPhase : 0->1 (inspire) puis 1->0 (expire), cycle lent
+  var dpr = window.devicePixelRatio || 1;
+  var W = 220, H = 220;
+  if (canvas.width !== W*dpr) {
+    canvas.width = W*dpr; canvas.height = H*dpr;
+    canvas.style.width = W+'px'; canvas.style.height = H+'px';
+  }
+  var ctx = canvas.getContext('2d');
+  ctx.setTransform(dpr,0,0,dpr,0,0);
+  ctx.clearRect(0,0,W,H);
+  var cx = W/2, cy = H/2;
+
+  // Taille qui pulse avec la respiration
+  var baseR = 52 + 22 * breathPhase;
+
+  // Couleur qui evolue : corail -> violet-bleu au fur et a mesure
+  var r = Math.round(255 - 80*globalCalm);
+  var g = Math.round(100 + 40*globalCalm);
+  var b = Math.round(80 + 160*globalCalm);
+
+  // Halos exterieurs qui pulsent
+  for (var ring = 3; ring > 0; ring--) {
+    var rr = baseR * (1.2 + ring*0.35 + 0.15*breathPhase);
+    var alpha = (0.04 + 0.10*breathPhase) * (1 - ring/4) * (0.5 + 0.5*globalCalm);
+    var g2 = ctx.createRadialGradient(cx,cy,baseR*0.3,cx,cy,rr);
+    g2.addColorStop(0,'rgba('+r+','+g+','+b+','+alpha*2+')');
+    g2.addColorStop(1,'rgba('+r+','+g+','+b+',0)');
+    ctx.fillStyle=g2; ctx.beginPath(); ctx.arc(cx,cy,rr,0,Math.PI*2); ctx.fill();
+  }
+
+  // Forme organique douce (pas de jitter)
+  var slowT = Date.now() / 4000; // rotation tres lente
+  ctx.save();
+  ctx.translate(cx,cy);
+  ctx.rotate(slowT * 0.15);
+  ctx.beginPath();
+  for (var i=0; i<=120; i++) {
+    var a = (Math.PI*2*i)/120;
+    var rr2 = baseR;
+    rr2 += Math.sin(a*2 + slowT*0.5) * baseR * 0.10;
+    rr2 += Math.sin(a*3 - slowT*0.3) * baseR * 0.06;
+    var x = Math.cos(a)*rr2, y = Math.sin(a)*rr2;
+    if(i===0) ctx.moveTo(x,y); else ctx.lineTo(x,y);
+  }
+  ctx.closePath();
+
+  // Gradient 3D
+  var cg = ctx.createRadialGradient(0,-baseR*0.35,baseR*0.05,0,baseR*0.1,baseR*1.2);
+  cg.addColorStop(0,'rgba(255,240,220,0.97)');
+  cg.addColorStop(0.25,'rgba('+r+','+(g+40)+','+b+',0.93)');
+  cg.addColorStop(0.6,'rgba('+r+','+g+','+b+',0.90)');
+  cg.addColorStop(1,'rgba('+Math.round(r*0.5)+','+Math.round(g*0.4)+','+Math.round(b*0.6)+',0.92)');
+  ctx.fillStyle = cg;
+  ctx.shadowColor = 'rgba('+r+','+g+','+b+',0.5)';
+  ctx.shadowBlur = 20 + 30*breathPhase;
+  ctx.fill();
+
+  // Reflet speculaire
+  ctx.beginPath(); ctx.ellipse(0,-baseR*0.35,baseR*0.18,baseR*0.08,0,0,Math.PI*2);
+  var sg = ctx.createRadialGradient(0,-baseR*0.35,0,0,-baseR*0.35,baseR*0.18);
+  sg.addColorStop(0,'rgba(255,255,255,0.65)'); sg.addColorStop(1,'rgba(255,255,255,0)');
+  ctx.fillStyle=sg; ctx.shadowBlur=0; ctx.fill();
+  ctx.restore();
+
+  // Anneau de respiration
+  var breathRing = baseR * (1.05 + 0.08*breathPhase);
+  ctx.beginPath(); ctx.arc(cx,cy,breathRing,0,Math.PI*2);
+  ctx.strokeStyle='rgba('+r+','+g+','+b+','+(0.15+0.35*breathPhase)+')';
+  ctx.lineWidth = 1.5 + 3*breathPhase; ctx.stroke();
+
+  // Particules douces en cercle
+  var nParticles = Math.round(6 + 8*globalCalm);
+  for (var p=0; p<nParticles; p++) {
+    var pa = (Math.PI*2*p/nParticles) + slowT*0.3;
+    var pr = baseR*(1.35 + 0.15*Math.sin(slowT*1.2 + p));
+    var px = cx + Math.cos(pa)*pr, py = cy + Math.sin(pa)*pr;
+    var pal = (0.15 + 0.45*globalCalm*breathPhase);
+    ctx.beginPath(); ctx.arc(px,py,2+globalCalm*2,0,Math.PI*2);
+    ctx.fillStyle='rgba('+r+','+g+','+b+','+pal+')'; ctx.fill();
+  }
+}
+
 function startRituel(type) {
   var cfg = _rituelConfig[type];
   if (type === '478') cfg = _rituelConfig['r478'];
@@ -12452,48 +12535,31 @@ function startRituel(type) {
   document.getElementById('rituelCounter').style.display = 'block';
 
   var rc = document.getElementById('rituelHarmonyCanvas');
-  var dpr = window.devicePixelRatio || 1;
-  rc.width = 220*dpr; rc.height = 220*dpr;
-  rc.style.width = '220px'; rc.style.height = '220px';
-
   var elapsed = 0, stepIdx = 0, stepElapsed = 0;
   var arc = document.getElementById('rituelTimerArc');
   var circumference = 659.7;
   var totalDuration = cfg.duration;
-  var progress = 0; // 0 -> 1 sur toute la duree
-
-  // Boucle visuelle independante (60fps) pour animation fluide
   var _rituelAnimRunning = true;
+  var currentBreathPhase = 0;
+  var currentCalm = 0.3;
+
+  // Boucle visuelle 60fps completement independante
   function animLoop() {
     if (!_rituelAnimRunning) return;
     var step = cfg.steps[stepIdx % cfg.steps.length];
-    var stepProgress = stepElapsed / step.duration; // 0->1 dans le step courant
-    var isInspire = (step.calm > 0.5);
-
-    // Pulse lent : sin pour transition douce inspire/expire
-    var breathPhase = isInspire ? stepProgress : (1 - stepProgress);
-    var breathScale = 0.85 + 0.18 * Math.sin(breathPhase * Math.PI);
-
-    // Evolution globale du calme : monte progressivement
-    var globalCalm = 0.3 + 0.65 * progress;
-
-    // Forcer etat du coeur
-    _hcState.calm  = globalCalm * breathScale;
-    _hcState.sleep = 0.4 + 0.4 * globalCalm;
-    _hcState.hydra = 0.3 + 0.4 * globalCalm;
-    _hcState.activ = 0.1; // tres faible pour ralentir les ejections
-
-    // Ralentir drastiquement la vitesse interne
-    if (typeof _hcT !== 'undefined') {
-      _hcT += 0.003; // au lieu de 0.018 par defaut => 6x plus lent
-    }
-
-    _hcDrawFrame('rituelHarmonyCanvas');
-    if (_rituelAnimRunning) requestAnimationFrame(animLoop);
+    var stepPct = stepElapsed / step.duration;
+    var isInspire = step.calm > 0.5;
+    // breathPhase : monte sur inspire, descend sur expire, via sin doux
+    currentBreathPhase = isInspire
+      ? Math.sin(stepPct * Math.PI * 0.5)
+      : Math.cos(stepPct * Math.PI * 0.5);
+    currentCalm = 0.25 + 0.70 * (elapsed / totalDuration);
+    drawRituelHeart(rc, currentBreathPhase, currentCalm);
+    requestAnimationFrame(animLoop);
   }
   animLoop();
 
-  // Tick 1s pour le guidage vocal et le timer
+  // Tick 1s
   function tick() {
     var step = cfg.steps[stepIdx % cfg.steps.length];
     document.getElementById('rituelInstruction').textContent = step.text;
@@ -12501,7 +12567,6 @@ function startRituel(type) {
     document.getElementById('rituelPhase').textContent = Math.floor(elapsed/60) + 'min ' + (elapsed%60) + 's';
     arc.style.strokeDashoffset = circumference * (1 - elapsed / totalDuration);
     stepElapsed++; elapsed++;
-    progress = elapsed / totalDuration;
     if (stepElapsed >= step.duration) { stepElapsed=0; stepIdx++; }
     if (elapsed >= totalDuration) {
       _rituelAnimRunning = false;
