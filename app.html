@@ -12441,6 +12441,7 @@ var _rituelConfig = {
 };
 
 var _rituelParticles = [];
+var _rituelBlobT = 0;
 
 function initRituelParticles() {
   _rituelParticles = [];
@@ -12488,19 +12489,19 @@ function drawRituelHeart(canvas, breathPhase, globalCalm) {
     ctx.fillStyle=hg; ctx.beginPath(); ctx.arc(cx,cy,hr,0,Math.PI*2); ctx.fill();
   }
 
-  // Blob organique - deformation lente comme le coeur d'harmonie
+  // Blob organique - MEME logique exacte que _hcDrawFrame
+  var blobT = _rituelBlobT; // increment externe comme _hcT
   ctx.save();
   ctx.translate(cx,cy);
-  ctx.rotate(T*0.06);
+  ctx.rotate(blobT * 0.006 * 60 * 0.004);
   ctx.beginPath();
-  var N=120;
+  var N=160;
   for(var i=0;i<=N;i++){
     var a=(Math.PI*2*i)/N;
     var rr=baseR;
-    // Meme style que _hcDrawFrame mais ralenti
-    rr+=Math.sin(a*2+T*0.35)*baseR*0.13*(1-0.5*globalCalm);
-    rr+=Math.sin(a*3-T*0.22)*baseR*0.08*(1-0.4*globalCalm);
-    rr+=Math.sin(a*5+T*0.45)*baseR*0.04;
+    rr+=Math.sin(a*2+blobT*0.9)*baseR*0.18;
+    rr+=Math.sin(a*3-blobT*1.6)*baseR*0.12;
+    rr+=Math.sin(a*5+blobT*2.2)*baseR*0.07;
     var x=Math.cos(a)*rr, y=Math.sin(a)*rr;
     if(i===0) ctx.moveTo(x,y); else ctx.lineTo(x,y);
   }
@@ -12613,6 +12614,8 @@ function startRituel(type) {
     } else {
       document.getElementById('rituelInstruction').textContent = 'Expirez...';
     }
+    // Incrementer blobT exactement comme _hcT dans _hcDrawFrame
+    _rituelBlobT += 0.018 * 0.6; // vitesse reduite x0.6 pour effet calme
     drawRituelHeart(rc, bp, calm);
     requestAnimationFrame(animLoop);
   }
