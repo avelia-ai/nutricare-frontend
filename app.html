@@ -12324,11 +12324,11 @@ function openSubscriptionModal(context) {
   <button onclick="closeRituel()" style="position:absolute;top:20px;right:20px;background:rgba(255,255,255,0.1);border:none;color:white;width:40px;height:40px;border-radius:50%;font-size:1.2rem;cursor:pointer">✕</button>
   <div id="rituelTitle" style="color:white;font-size:1.1rem;font-weight:700;margin-bottom:8px;letter-spacing:1px"></div>
   <div id="rituelPhase" style="color:rgba(255,255,255,0.6);font-size:0.85rem;margin-bottom:24px;min-height:1.2em"></div>
-  <div style="position:relative;width:220px;height:220px">
-    <canvas id="rituelHarmonyCanvas" style="width:220px;height:220px;display:block"></canvas>
-    <svg style="position:absolute;inset:0" viewBox="0 0 220 220">
-      <circle cx="110" cy="110" r="105" fill="none" stroke="rgba(255,255,255,0.08)" stroke-width="4"/>
-      <circle id="rituelTimerArc" cx="110" cy="110" r="105" fill="none" stroke="rgba(255,150,100,0.7)" stroke-width="4" stroke-linecap="round" stroke-dasharray="659.7" stroke-dashoffset="659.7" transform="rotate(-90 110 110)" style="transition:stroke-dashoffset 0.5s linear"/>
+  <div style="position:relative;width:300px;height:300px">
+    <canvas id="rituelHarmonyCanvas" style="width:300px;height:300px;display:block"></canvas>
+    <svg style="position:absolute;inset:0" viewBox="0 0 300 300">
+      <circle cx="150" cy="150" r="140" fill="none" stroke="rgba(255,255,255,0.08)" stroke-width="4"/>
+      <circle id="rituelTimerArc" cx="150" cy="150" r="140" fill="none" stroke="rgba(255,150,100,0.7)" stroke-width="4" stroke-linecap="round" stroke-dasharray="879.6" stroke-dashoffset="879.6" transform="rotate(-90 150 150)" style="transition:stroke-dashoffset 0.5s linear"/>
     </svg>
   </div>
   <div id="rituelInstruction" style="color:white;font-size:1.3rem;font-weight:600;margin-top:28px;min-height:2em;text-align:center"></div>
@@ -12364,7 +12364,7 @@ function startRituel(type) {
   rc.style.width = '220px'; rc.style.height = '220px';
   var elapsed = 0, stepIdx = 0, stepElapsed = 0;
   var arc = document.getElementById('rituelTimerArc');
-  var circumference = 659.7;
+  var circumference = 879.6;
   function tick() {
     var step = cfg.steps[stepIdx % cfg.steps.length];
     document.getElementById('rituelInstruction').textContent = step.text;
@@ -12413,11 +12413,11 @@ function closeRituel() {
   <button onclick="closeRituel()" style="position:absolute;top:20px;right:20px;background:rgba(255,255,255,0.1);border:none;color:white;width:40px;height:40px;border-radius:50%;font-size:1.2rem;cursor:pointer">✕</button>
   <div id="rituelTitle" style="color:white;font-size:1.1rem;font-weight:700;margin-bottom:8px;letter-spacing:1px"></div>
   <div id="rituelPhase" style="color:rgba(255,255,255,0.6);font-size:0.85rem;margin-bottom:24px;min-height:1.2em"></div>
-  <div style="position:relative;width:220px;height:220px">
-    <canvas id="rituelHarmonyCanvas" style="width:220px;height:220px;display:block"></canvas>
-    <svg style="position:absolute;inset:0" viewBox="0 0 220 220">
-      <circle cx="110" cy="110" r="105" fill="none" stroke="rgba(255,255,255,0.08)" stroke-width="4"/>
-      <circle id="rituelTimerArc" cx="110" cy="110" r="105" fill="none" stroke="rgba(255,150,100,0.7)" stroke-width="4" stroke-linecap="round" stroke-dasharray="659.7" stroke-dashoffset="659.7" transform="rotate(-90 110 110)" style="transition:stroke-dashoffset 0.5s linear"/>
+  <div style="position:relative;width:300px;height:300px">
+    <canvas id="rituelHarmonyCanvas" style="width:300px;height:300px;display:block"></canvas>
+    <svg style="position:absolute;inset:0" viewBox="0 0 300 300">
+      <circle cx="150" cy="150" r="140" fill="none" stroke="rgba(255,255,255,0.08)" stroke-width="4"/>
+      <circle id="rituelTimerArc" cx="150" cy="150" r="140" fill="none" stroke="rgba(255,150,100,0.7)" stroke-width="4" stroke-linecap="round" stroke-dasharray="879.6" stroke-dashoffset="879.6" transform="rotate(-90 150 150)" style="transition:stroke-dashoffset 0.5s linear"/>
     </svg>
   </div>
   <div id="rituelInstruction" style="color:white;font-size:1.3rem;font-weight:600;margin-top:28px;min-height:2em;text-align:center"></div>
@@ -12459,7 +12459,7 @@ function initRituelParticles() {
 
 function drawRituelHeart(canvas, breathPhase, globalCalm) {
   var dpr = window.devicePixelRatio || 1;
-  var W = 220, H = 220;
+  var W = 300, H = 300;
   if (canvas.width !== W*dpr) {
     canvas.width = W*dpr; canvas.height = H*dpr;
     canvas.style.width = W+'px'; canvas.style.height = H+'px';
@@ -12587,7 +12587,7 @@ function startRituel(type) {
   var rc = document.getElementById('rituelHarmonyCanvas');
   var elapsed = 0, stepIdx = 0, stepElapsed = 0;
   var arc = document.getElementById('rituelTimerArc');
-  var circumference = 659.7;
+  var circumference = 879.6;
   var totalDuration = cfg.duration;
   var _rituelAnimRunning = true;
   var currentBreathPhase = 0;
