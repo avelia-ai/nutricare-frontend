@@ -12378,7 +12378,7 @@ function startRituel(type) {
     _hcDrawFrame('rituelHarmonyCanvas');
     arc.style.strokeDashoffset = circumference*(1 - elapsed/cfg.duration);
     stepElapsed++; elapsed++;
-    if (stepElapsed >= step.duration) { stepElapsed=0; stepIdx++; }
+    if (stepElapsed >= step.duration) { stepElapsed=0; stepIdx++; _stepStartTime=Date.now(); }
     if (elapsed >= cfg.duration) { finishRituel(cfg.pts); return; }
     _rituelTimer = setTimeout(tick, 1000);
   }
@@ -12573,18 +12573,22 @@ function startRituel(type) {
   var currentBreathPhase = 0;
   var currentCalm = 0.3;
 
-  // Boucle visuelle 60fps completement independante
+  // Boucle visuelle 60fps — breathPhase calcule en temps reel
+  var _startTime = Date.now();
+  var _stepStartTime = Date.now();
   function animLoop() {
     if (!_rituelAnimRunning) return;
     var step = cfg.steps[stepIdx % cfg.steps.length];
-    var stepPct = stepElapsed / step.duration;
+    var stepDurMs = step.duration * 1000;
+    var stepElapsedMs = Date.now() - _stepStartTime;
+    var stepPct = Math.min(stepElapsedMs / stepDurMs, 1.0);
     var isInspire = step.calm > 0.5;
-    // breathPhase : monte sur inspire, descend sur expire, via sin doux
-    currentBreathPhase = isInspire
+    // breathPhase continu 0->1 ou 1->0 via sin
+    var bp = isInspire
       ? Math.sin(stepPct * Math.PI * 0.5)
-      : Math.cos(stepPct * Math.PI * 0.5);
-    currentCalm = 0.25 + 0.70 * (elapsed / totalDuration);
-    drawRituelHeart(rc, currentBreathPhase, currentCalm);
+      : 1.0 - Math.sin(stepPct * Math.PI * 0.5);
+    var calm = 0.25 + 0.70 * Math.min((Date.now()-_startTime)/(totalDuration*1000), 1.0);
+    drawRituelHeart(rc, bp, calm);
     requestAnimationFrame(animLoop);
   }
   animLoop();
