@@ -12440,20 +12440,18 @@ var _rituelConfig = {
   soir:      { title:'Rituel du Soir',      pts:25, duration:420, steps:[{text:'Relacher la journee...', duration:7, calm:0.4},{text:'Respirez lentement...', duration:7, calm:0.65},{text:'Soyez reconnaissant...', duration:7, calm:0.9}] }
 };
 
-var _rituelT = 0;
 var _rituelParticles = [];
 
 function initRituelParticles() {
   _rituelParticles = [];
-  for (var i = 0; i < 18; i++) {
+  for (var i = 0; i < 20; i++) {
     _rituelParticles.push({
-      angle: Math.random() * Math.PI * 2,
-      r: 80 + Math.random() * 40,
-      speed: (Math.random() - 0.5) * 0.004,
+      angle: (Math.PI*2*i/20) + Math.random()*0.3,
+      orbitR: 85 + Math.random() * 35,
+      speed: 0.003 + Math.random() * 0.004,
       size: 1.5 + Math.random() * 2.5,
-      alpha: Math.random(),
-      alphaSpeed: 0.01 + Math.random() * 0.02,
-      life: Math.random()
+      life: Math.random() * Math.PI * 2,
+      lifeSpeed: 0.02 + Math.random() * 0.03
     });
   }
 }
@@ -12468,89 +12466,110 @@ function drawRituelHeart(canvas, breathPhase, globalCalm) {
   var ctx = canvas.getContext('2d');
   ctx.setTransform(dpr,0,0,dpr,0,0);
   ctx.clearRect(0,0,W,H);
-  var cx = W/2, cy = H/2;
-  _rituelT += 0.008;
+  var cx=W/2, cy=H/2;
+  var T = Date.now()/1000;
 
-  // Taille fluide via sin continu
-  var baseR = 55 + 20 * breathPhase;
+  // Taille : gonfle sur inspire (breathPhase 0->1), se vide sur expire (1->0)
+  var baseR = 48 + 26 * breathPhase;
 
-  // Couleur interpolee corail -> rose-violet doux
-  var r1=255, g1=120, b1=100;
-  var r2=200, g2=130, b2=210;
-  var rc = Math.round(r1 + (r2-r1)*globalCalm);
-  var gc = Math.round(g1 + (g2-g1)*globalCalm);
-  var bc = Math.round(b1 + (b2-b1)*globalCalm);
+  // Couleur : corail chaud -> violet doux au fil du temps
+  var rc = Math.round(255 - 55*globalCalm);
+  var gc = Math.round(110 + 20*globalCalm);
+  var bc = Math.round(90 + 150*globalCalm);
 
-  // Halos doux
+  // Halos qui pulsent avec la respiration
   for (var ring=3; ring>0; ring--) {
-    var hr = baseR*(1.3+ring*0.4+0.2*breathPhase);
-    var ha = (0.03+0.08*breathPhase)*(1-ring/4);
-    var hg = ctx.createRadialGradient(cx,cy,0,cx,cy,hr);
-    hg.addColorStop(0,'rgba('+rc+','+gc+','+bc+','+(ha*1.5)+')');
+    var hr = baseR*(1.25+ring*0.38+0.25*breathPhase);
+    var ha = (0.035+0.09*breathPhase)*(1-ring/3.5)*(0.4+0.6*globalCalm);
+    var hg=ctx.createRadialGradient(cx,cy,baseR*0.2,cx,cy,hr);
+    hg.addColorStop(0,'rgba('+rc+','+gc+','+bc+','+(ha*1.8)+')');
+    hg.addColorStop(0.6,'rgba('+rc+','+gc+','+bc+','+ha+')');
     hg.addColorStop(1,'rgba('+rc+','+gc+','+bc+',0)');
     ctx.fillStyle=hg; ctx.beginPath(); ctx.arc(cx,cy,hr,0,Math.PI*2); ctx.fill();
   }
 
-  // Forme organique lente
+  // Blob organique - deformation lente comme le coeur d'harmonie
   ctx.save();
   ctx.translate(cx,cy);
-  ctx.rotate(_rituelT * 0.08);
+  ctx.rotate(T*0.06);
   ctx.beginPath();
-  var pts = 80;
-  for (var i=0; i<=pts; i++) {
-    var a = (Math.PI*2*i)/pts;
-    var rr = baseR
-      + Math.sin(a*2+_rituelT*0.4)*baseR*0.08
-      + Math.sin(a*3-_rituelT*0.25)*baseR*0.05;
+  var N=120;
+  for(var i=0;i<=N;i++){
+    var a=(Math.PI*2*i)/N;
+    var rr=baseR;
+    // Meme style que _hcDrawFrame mais ralenti
+    rr+=Math.sin(a*2+T*0.35)*baseR*0.13*(1-0.5*globalCalm);
+    rr+=Math.sin(a*3-T*0.22)*baseR*0.08*(1-0.4*globalCalm);
+    rr+=Math.sin(a*5+T*0.45)*baseR*0.04;
     var x=Math.cos(a)*rr, y=Math.sin(a)*rr;
     if(i===0) ctx.moveTo(x,y); else ctx.lineTo(x,y);
   }
   ctx.closePath();
 
-  // Gradient 3D zenith
-  var cg=ctx.createRadialGradient(-baseR*0.15,-baseR*0.38,baseR*0.04,baseR*0.05,baseR*0.12,baseR*1.15);
-  cg.addColorStop(0,'rgba(255,245,235,0.98)');
-  cg.addColorStop(0.2,'rgba('+(rc+30)+','+(gc+20)+','+bc+',0.94)');
-  cg.addColorStop(0.55,'rgba('+rc+','+gc+','+bc+',0.91)');
-  cg.addColorStop(0.85,'rgba('+Math.round(rc*0.65)+','+Math.round(gc*0.5)+','+Math.round(bc*0.7)+',0.9)');
-  cg.addColorStop(1,'rgba('+Math.round(rc*0.4)+','+Math.round(gc*0.3)+','+Math.round(bc*0.5)+',0.92)');
+  // Gradient 3D comme le vrai coeur
+  var cg=ctx.createRadialGradient(0,-baseR*0.38,baseR*0.04,0,baseR*0.08,baseR*1.2);
+  cg.addColorStop(0,'rgba(255,242,228,0.98)');
+  cg.addColorStop(0.18,'rgba('+(rc+25)+','+(gc+15)+','+bc+',0.94)');
+  cg.addColorStop(0.5,'rgba('+rc+','+gc+','+bc+',0.91)');
+  cg.addColorStop(0.82,'rgba('+Math.round(rc*0.6)+','+Math.round(gc*0.5)+','+Math.round(bc*0.65)+',0.90)');
+  cg.addColorStop(1,'rgba('+Math.round(rc*0.35)+','+Math.round(gc*0.28)+','+Math.round(bc*0.45)+',0.92)');
   ctx.fillStyle=cg;
-  ctx.shadowColor='rgba('+rc+','+gc+','+bc+',0.6)';
-  ctx.shadowBlur=18+28*breathPhase;
+  ctx.shadowColor='rgba('+rc+','+gc+','+bc+',0.55)';
+  ctx.shadowBlur=16+32*breathPhase+(20*globalCalm);
   ctx.fill();
 
-  // Reflet speculaire
+  // Ombre directionnelle
+  ctx.save();
+  ctx.clip();
+  var dg=ctx.createLinearGradient(-baseR*0.6,-baseR*0.6,baseR*0.8,baseR*0.8);
+  dg.addColorStop(0,'rgba(0,0,0,0)');
+  dg.addColorStop(0.6,'rgba(0,0,0,0)');
+  dg.addColorStop(1,'rgba(20,5,5,0.18)');
+  ctx.fillStyle=dg; ctx.fillRect(-baseR*1.3,-baseR*1.3,baseR*2.6,baseR*2.6);
+  ctx.restore();
+
+  // Reflet zenithal
   ctx.beginPath();
-  ctx.ellipse(-baseR*0.08,-baseR*0.36,baseR*0.16,baseR*0.07,0,0,Math.PI*2);
-  var sg=ctx.createRadialGradient(-baseR*0.08,-baseR*0.36,0,-baseR*0.08,-baseR*0.36,baseR*0.16);
-  sg.addColorStop(0,'rgba(255,255,255,0.7)');
+  ctx.ellipse(0,-baseR*0.36,baseR*0.17,baseR*0.075,0,0,Math.PI*2);
+  var sg=ctx.createRadialGradient(0,-baseR*0.36,0,0,-baseR*0.36,baseR*0.17);
+  sg.addColorStop(0,'rgba(255,255,255,0.68)');
   sg.addColorStop(1,'rgba(255,255,255,0)');
   ctx.fillStyle=sg; ctx.shadowBlur=0; ctx.fill();
   ctx.restore();
 
-  // Anneau respiration anime
-  var ar=baseR*(1.12+0.1*breathPhase);
+  // Anneau de respiration pulsant
+  var ar=baseR*(1.1+0.12*breathPhase);
   ctx.beginPath(); ctx.arc(cx,cy,ar,0,Math.PI*2);
-  ctx.strokeStyle='rgba('+rc+','+gc+','+bc+','+(0.12+0.3*breathPhase)+')';
-  ctx.lineWidth=1+2.5*breathPhase; ctx.stroke();
+  ctx.strokeStyle='rgba('+rc+','+gc+','+bc+','+(0.1+0.35*breathPhase)+')';
+  ctx.lineWidth=1+3*breathPhase; ctx.stroke();
 
-  // Particules flottantes
-  _rituelParticles.forEach(function(p) {
-    p.angle += p.speed;
-    p.life += p.alphaSpeed;
-    var pal = 0.1 + 0.5*Math.abs(Math.sin(p.life)) * globalCalm * (0.5+0.5*breathPhase);
-    var pr2 = p.r * (0.9 + 0.2*breathPhase);
-    var px2=cx+Math.cos(p.angle)*pr2, py2=cy+Math.sin(p.angle)*pr2;
-    var ps=p.size*(0.7+0.5*breathPhase);
-    // Glow
-    var pg=ctx.createRadialGradient(px2,py2,0,px2,py2,ps*2.5);
+  // Particules orbitales qui se rapprochent/eloignent avec la respiration
+  if (_rituelParticles.length === 0) initRituelParticles();
+  _rituelParticles.forEach(function(p){
+    p.angle += p.speed*(0.6+0.6*breathPhase);
+    p.life += p.lifeSpeed;
+    var sparkle = 0.3+0.7*Math.abs(Math.sin(p.life));
+    var orb = p.orbitR*(0.85+0.3*breathPhase);
+    var px2=cx+Math.cos(p.angle)*orb;
+    var py2=cy+Math.sin(p.angle)*orb;
+    var pal=(0.08+0.55*sparkle*globalCalm*(0.4+0.6*breathPhase));
+    var ps=p.size*(0.6+0.7*breathPhase);
+    // Halo particule
+    var pg=ctx.createRadialGradient(px2,py2,0,px2,py2,ps*3);
     pg.addColorStop(0,'rgba('+rc+','+gc+','+bc+','+pal+')');
     pg.addColorStop(1,'rgba('+rc+','+gc+','+bc+',0)');
-    ctx.fillStyle=pg; ctx.beginPath(); ctx.arc(px2,py2,ps*2.5,0,Math.PI*2); ctx.fill();
-    // Point central
-    ctx.beginPath(); ctx.arc(px2,py2,ps*0.6,0,Math.PI*2);
-    ctx.fillStyle='rgba(255,255,255,'+(pal*0.8)+')'; ctx.fill();
+    ctx.fillStyle=pg; ctx.beginPath(); ctx.arc(px2,py2,ps*3,0,Math.PI*2); ctx.fill();
+    // Coeur lumineux
+    ctx.beginPath(); ctx.arc(px2,py2,ps*0.55,0,Math.PI*2);
+    ctx.fillStyle='rgba(255,255,255,'+(pal*0.9)+')'; ctx.fill();
   });
+
+  // Anneau shimmer tournant
+  var sAngle = T*0.4;
+  ctx.beginPath();
+  ctx.arc(cx,cy,baseR*(1.18+0.06*Math.sin(T*1.5)),sAngle,sAngle+Math.PI*1.1);
+  ctx.strokeStyle='rgba(255,'+(200+Math.round(30*globalCalm))+',180,'+(0.08+0.18*breathPhase*globalCalm)+')';
+  ctx.lineWidth=0.8+1.5*globalCalm; ctx.stroke();
 }
 
 function startRituel(type) {
@@ -12573,21 +12592,27 @@ function startRituel(type) {
   var currentBreathPhase = 0;
   var currentCalm = 0.3;
 
-  // Boucle visuelle 60fps — breathPhase calcule en temps reel
+  // Animation 60fps basee sur Date.now() uniquement
   var _startTime = Date.now();
-  var _stepStartTime = Date.now();
+  var CYCLE = 8000; // 4s inspire + 4s expire
   function animLoop() {
     if (!_rituelAnimRunning) return;
-    var step = cfg.steps[stepIdx % cfg.steps.length];
-    var stepDurMs = step.duration * 1000;
-    var stepElapsedMs = Date.now() - _stepStartTime;
-    var stepPct = Math.min(stepElapsedMs / stepDurMs, 1.0);
-    var isInspire = step.calm > 0.5;
-    // breathPhase continu 0->1 ou 1->0 via sin
-    var bp = isInspire
-      ? Math.sin(stepPct * Math.PI * 0.5)
-      : 1.0 - Math.sin(stepPct * Math.PI * 0.5);
-    var calm = 0.25 + 0.70 * Math.min((Date.now()-_startTime)/(totalDuration*1000), 1.0);
+    var now = Date.now();
+    var totalElapsedMs = now - _startTime;
+    // Cycle continu : position dans le cycle 0->1
+    var cyclePos = (totalElapsedMs % CYCLE) / CYCLE;
+    // breathPhase : monte 0->1 sur 1ere moitie, descend 1->0 sur 2eme moitie
+    var bp = cyclePos < 0.5
+      ? cyclePos * 2  // 0->1 inspire
+      : 2 - cyclePos * 2; // 1->0 expire
+    // calm monte progressivement sur toute la duree
+    var calm = 0.2 + 0.75 * Math.min(totalElapsedMs / (totalDuration * 1000), 1.0);
+    // instruction basee sur cyclePos
+    if (cyclePos < 0.5) {
+      document.getElementById('rituelInstruction').textContent = 'Inspirez...';
+    } else {
+      document.getElementById('rituelInstruction').textContent = 'Expirez...';
+    }
     drawRituelHeart(rc, bp, calm);
     requestAnimationFrame(animLoop);
   }
