@@ -12329,6 +12329,7 @@ function openSubscriptionModal(context) {
   @keyframes rituelPulse2 { 0%,100%{opacity:0.15;transform:translate(-50%,-50%) scale(1)} 50%{opacity:0.35;transform:translate(-50%,-50%) scale(1.35)} }
   @keyframes rituelTwinkle { 0%,100%{opacity:0.15;transform:scale(0.6)} 50%{opacity:1;transform:scale(1.5)} }
   @keyframes rituelFloat { 0%,100%{transform:translateY(0px)} 50%{transform:translateY(-6px)} }
+  @keyframes rituelCountdownPop { 0%{opacity:0;transform:scale(2)} 30%{opacity:1;transform:scale(1)} 80%{opacity:1;transform:scale(1)} 100%{opacity:0;transform:scale(0.5)} }
   </style>
   <!-- ECRAN INTRO -->
   <div id="rituelIntroScreen" style="display:none;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:40px 32px;max-width:380px;width:100%;position:relative">
@@ -12381,6 +12382,11 @@ function openSubscriptionModal(context) {
     <button id="rituelIntroBtn" onclick="launchRituelExercise()" style="display:none;margin-top:28px;padding:16px 52px;border:none;border-radius:20px;background:linear-gradient(135deg,#FF9A6C,#FF6B6B);color:white;font-size:1rem;font-weight:700;cursor:pointer;letter-spacing:0.5px;box-shadow:0 6px 28px rgba(255,100,80,0.35);opacity:0;transition:opacity 0.6s ease;font-family:inherit;position:relative;z-index:1">Commencer</button>
   </div>
 
+    <!-- ECRAN COUNTDOWN -->
+  <div id="rituelCountdownScreen" style="display:none;flex-direction:column;align-items:center;justify-content:center;text-align:center">
+    <div id="rituelCountdownNumber" style="color:white;font-size:6rem;font-weight:900;line-height:1;text-shadow:0 0 40px rgba(255,150,100,0.8)"></div>
+    <div style="color:rgba(255,255,255,0.6);font-size:1rem;margin-top:12px;letter-spacing:2px">PRÊT ?</div>
+  </div>
     <!-- ECRAN EXERCICE -->
   <div id="rituelExerciseScreen" style="display:none;flex-direction:column;align-items:center;justify-content:center">
   <div id="rituelTitle" style="color:white;font-size:1.1rem;font-weight:700;margin-bottom:8px;letter-spacing:1px"></div>
@@ -12636,8 +12642,32 @@ function launchRituelExercise() {
   var cfg = window._currentRituelCfg;
   if (!cfg) return;
 
-  // Cacher intro, montrer exercice
+  // Décompte avant exercice
   document.getElementById('rituelIntroScreen').style.display = 'none';
+  var cdScreen = document.getElementById('rituelCountdownScreen');
+  cdScreen.style.display = 'flex';
+  var cdNum = document.getElementById('rituelCountdownNumber');
+  var count = 5;
+  function tick() {
+    cdNum.textContent = count;
+    cdNum.style.animation = 'none';
+    void cdNum.offsetWidth;
+    cdNum.style.animation = 'rituelCountdownPop 1s ease-out forwards';
+    if (count === 0) {
+      setTimeout(function() {
+        cdScreen.style.display = 'none';
+        _startRituelExercise();
+      }, 900);
+      return;
+    }
+    count--;
+    setTimeout(tick, 1000);
+  }
+  tick();
+}
+function _startRituelExercise() {
+  var cfg = window._currentRituelCfg;
+  // Montrer exercice
   document.getElementById('rituelExerciseScreen').style.display = 'flex';
   document.getElementById('rituelTitle').textContent = cfg.title;
   document.getElementById('rituelDone').style.display = 'none';
