@@ -12338,6 +12338,7 @@ function openSubscriptionModal(context) {
     <div id="rituelPtsGained" style="color:#FF9090;font-size:0.9rem;margin-top:4px"></div>
     <button onclick="closeRituel()" style="margin-top:16px;background:linear-gradient(135deg,#FF6B6B,#FF9A3C);color:white;border:none;border-radius:14px;padding:12px 28px;font-size:0.95rem;font-weight:700;cursor:pointer">Fermer</button>
   </div>
+  </div><!-- fin rituelExerciseScreen -->
 </div>
 
 <script>
@@ -12409,8 +12410,26 @@ function closeRituel() {
 </script>
 
 <!-- OVERLAY RITUEL -->
+<style>
+@keyframes rituelBlink { 0%,100%{opacity:1} 50%{opacity:0} }
+@keyframes rituelHaloBreath { 0%,100%{transform:scale(1);opacity:0.15} 50%{transform:scale(1.15);opacity:0.25} }
+</style>
 <div id="rituelOverlay" style="display:none;position:fixed;inset:0;z-index:9999;background:rgba(10,5,20,0.92);backdrop-filter:blur(8px);flex-direction:column;align-items:center;justify-content:center">
-  <button onclick="closeRituel()" style="position:absolute;top:20px;right:20px;background:rgba(255,255,255,0.1);border:none;color:white;width:40px;height:40px;border-radius:50%;font-size:1.2rem;cursor:pointer">✕</button>
+  <button onclick="closeRituel()" style="position:absolute;top:20px;right:20px;background:rgba(255,255,255,0.1);border:none;color:white;width:40px;height:40px;border-radius:50%;font-size:1.2rem;cursor:pointer;z-index:2">✕</button>
+
+  <!-- ECRAN INTRO -->
+  <div id="rituelIntroScreen" style="display:none;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:40px 32px;max-width:380px;width:100%;position:relative">
+    <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:320px;height:320px;border-radius:50%;background:radial-gradient(circle,rgba(255,120,80,0.18) 0%,transparent 70%);animation:rituelHaloBreath 4s ease-in-out infinite;pointer-events:none"></div>
+    <div id="rituelIntroIcon" style="font-size:2.4rem;margin-bottom:14px;opacity:0;transition:opacity 0.6s ease"></div>
+    <div id="rituelIntroTitle" style="color:white;font-size:1.45rem;font-weight:800;letter-spacing:1px;margin-bottom:6px;opacity:0;transition:opacity 0.6s ease"></div>
+    <div id="rituelIntroDuration" style="color:rgba(255,150,100,0.8);font-size:0.75rem;font-weight:700;letter-spacing:3px;text-transform:uppercase;margin-bottom:36px;opacity:0;transition:opacity 0.6s ease"></div>
+    <div id="rituelIntroText" style="color:rgba(255,255,255,0.72);font-size:0.97rem;line-height:1.75;min-height:90px;font-family:monospace;text-align:left;width:100%;position:relative;z-index:1"></div>
+    <div id="rituelIntroPts" style="display:none;margin-top:28px;background:rgba(255,140,90,0.1);border:1px solid rgba(255,140,90,0.3);border-radius:16px;padding:13px 24px;color:#FF9A6C;font-size:0.87rem;font-weight:600;letter-spacing:0.5px;opacity:0;transition:opacity 0.8s ease">✦ &nbsp;<span id="rituelIntroPtsValue"></span> pts d'harmonie à gagner</div>
+    <button id="rituelIntroBtn" onclick="launchRituelExercise()" style="display:none;margin-top:28px;padding:16px 52px;border:none;border-radius:20px;background:linear-gradient(135deg,#FF9A6C,#FF6B6B);color:white;font-size:1rem;font-weight:700;cursor:pointer;letter-spacing:0.5px;box-shadow:0 6px 28px rgba(255,100,80,0.35);opacity:0;transition:opacity 0.6s ease;font-family:inherit">Commencer</button>
+  </div>
+
+  <!-- ECRAN EXERCICE -->
+  <div id="rituelExerciseScreen" style="display:none;flex-direction:column;align-items:center;justify-content:center">
   <div id="rituelTitle" style="color:white;font-size:1.1rem;font-weight:700;margin-bottom:8px;letter-spacing:1px"></div>
   <div id="rituelPhase" style="color:rgba(255,255,255,0.6);font-size:0.85rem;margin-bottom:24px;min-height:1.2em"></div>
   <div style="position:relative;width:300px;height:300px">
@@ -12589,10 +12608,84 @@ function drawRituelHeart(canvas, breathPhase, globalCalm, progress) {
 
 function startRituel(type) {
   var cfg = _rituelConfig[type];
-  if (type === '478') cfg = _rituelConfig['r478'];
+  if (type === '478') cfg = _rituelConfig['478'];
   if (!cfg) return;
+
+  // Descriptions par type pour l'intro
+  var introData = {
+    coherence: { icon: '❤️', text: 'La cohérence cardiaque synchronise votre respiration et votre rythme cardiaque. En respirant à 6 cycles par minute, vous activez votre système nerveux parasympathique et réduisez le cortisol.', duration: '5 min' },
+    '478':     { icon: '🌬️', text: 'La technique 4-7-8 est une méthode de respiration puissante. Inspirez 4 secondes, retenez 7 secondes, expirez 8 secondes. Elle calme rapidement le système nerveux.', duration: '3 min' },
+    bodyscan:  { icon: '🧘', text: 'Le body scan est une pratique de pleine conscience. Vous parcourez mentalement chaque partie de votre corps, relâchant les tensions accumulées au fil de la journée.', duration: '10 min' },
+    reveil:    { icon: '🌅', text: 'Ce rituel doux prépare votre corps et votre esprit à accueillir la journée. Des étirements et respirations simples pour démarrer avec énergie et sérénité.', duration: '5 min' },
+    soir:      { icon: '🌙', text: 'Ce rituel du soir vous aide à déposer le poids de la journée. Relâchez les tensions, ralentissez votre souffle et préparez votre corps à un sommeil réparateur.', duration: '7 min' }
+  };
+  var intro = introData[type] || { icon: '✨', text: '', duration: '' };
+
   var overlay = document.getElementById('rituelOverlay');
   overlay.style.display = 'flex';
+
+  // Cacher l'écran exercice, montrer l'intro
+  document.getElementById('rituelExerciseScreen').style.display = 'none';
+  document.getElementById('rituelDone').style.display = 'none';
+  var introScreen = document.getElementById('rituelIntroScreen');
+  introScreen.style.display = 'flex';
+
+  // Remplir l'intro
+  document.getElementById('rituelIntroIcon').textContent = intro.icon;
+  document.getElementById('rituelIntroTitle').textContent = cfg.title;
+  document.getElementById('rituelIntroDuration').textContent = intro.duration;
+  document.getElementById('rituelIntroPtsValue').textContent = cfg.pts;
+
+  // Reset opacités
+  var iconEl = document.getElementById('rituelIntroIcon');
+  var titleEl = document.getElementById('rituelIntroTitle');
+  var durEl = document.getElementById('rituelIntroDuration');
+  var ptsEl = document.getElementById('rituelIntroPts');
+  var btnEl = document.getElementById('rituelIntroBtn');
+  var textEl = document.getElementById('rituelIntroText');
+  iconEl.style.opacity = '0'; titleEl.style.opacity = '0'; durEl.style.opacity = '0';
+  ptsEl.style.display = 'none'; ptsEl.style.opacity = '0';
+  btnEl.style.display = 'none'; btnEl.style.opacity = '0';
+  textEl.textContent = '';
+
+  // Apparition header
+  setTimeout(function(){ iconEl.style.opacity = '1'; }, 200);
+  setTimeout(function(){ titleEl.style.opacity = '1'; }, 500);
+  setTimeout(function(){ durEl.style.opacity = '1'; }, 750);
+
+  // Effet machine à écrire
+  var txt = intro.text;
+  var i = 0;
+  var cursor = '<span style="display:inline-block;width:2px;height:1em;background:#FF9A6C;margin-left:2px;vertical-align:middle;animation:rituelBlink 0.7s infinite"></span>';
+  function typeChar() {
+    if (i <= txt.length) {
+      textEl.innerHTML = txt.slice(0, i) + cursor;
+      i++;
+      setTimeout(typeChar, 28);
+    } else {
+      textEl.innerHTML = txt;
+      // Apparition pts puis bouton
+      ptsEl.style.display = 'block';
+      setTimeout(function(){ ptsEl.style.opacity = '1'; }, 100);
+      setTimeout(function(){
+        btnEl.style.display = 'block';
+        setTimeout(function(){ btnEl.style.opacity = '1'; }, 50);
+      }, 700);
+    }
+  }
+  setTimeout(typeChar, 1100);
+
+  // Stocker cfg pour le lancement
+  window._currentRituelCfg = cfg;
+}
+
+function launchRituelExercise() {
+  var cfg = window._currentRituelCfg;
+  if (!cfg) return;
+
+  // Cacher intro, montrer exercice
+  document.getElementById('rituelIntroScreen').style.display = 'none';
+  document.getElementById('rituelExerciseScreen').style.display = 'flex';
   document.getElementById('rituelTitle').textContent = cfg.title;
   document.getElementById('rituelDone').style.display = 'none';
   document.getElementById('rituelInstruction').style.display = 'block';
@@ -12604,39 +12697,28 @@ function startRituel(type) {
   var circumference = 879.6;
   var totalDuration = cfg.duration;
   var _rituelAnimRunning = true;
-  var currentBreathPhase = 0;
-  var currentCalm = 0.3;
 
-  // Animation 60fps basee sur Date.now() uniquement
   var _startTime = Date.now();
-  var CYCLE = 8000; // 4s inspire + 4s expire
+  var CYCLE = 8000;
   function animLoop() {
     if (!_rituelAnimRunning) return;
     var now = Date.now();
     var totalElapsedMs = now - _startTime;
-    // Cycle continu : position dans le cycle 0->1
     var cyclePos = (totalElapsedMs % CYCLE) / CYCLE;
-    // breathPhase : monte 0->1 sur 1ere moitie, descend 1->0 sur 2eme moitie
-    var bp = cyclePos < 0.5
-      ? cyclePos * 2  // 0->1 inspire
-      : 2 - cyclePos * 2; // 1->0 expire
-    // calm monte progressivement sur toute la duree
+    var bp = cyclePos < 0.5 ? cyclePos * 2 : 2 - cyclePos * 2;
     var calm = 0.2 + 0.75 * Math.min(totalElapsedMs / (totalDuration * 1000), 1.0);
-    // instruction basee sur cyclePos
     if (cyclePos < 0.5) {
       document.getElementById('rituelInstruction').textContent = 'Inspirez...';
     } else {
       document.getElementById('rituelInstruction').textContent = 'Expirez...';
     }
-    // Incrementer blobT exactement comme _hcT dans _hcDrawFrame
-    _rituelBlobT += 0.018 * 0.6; // vitesse reduite x0.6 pour effet calme
+    _rituelBlobT += 0.018 * 0.6;
     var progress = Math.min(totalElapsedMs / (totalDuration * 1000), 1.0);
     drawRituelHeart(rc, bp, calm, progress);
     requestAnimationFrame(animLoop);
   }
   animLoop();
 
-  // Tick 1s
   function tick() {
     var step = cfg.steps[stepIdx % cfg.steps.length];
     document.getElementById('rituelInstruction').textContent = step.text;
