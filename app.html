@@ -12835,6 +12835,7 @@ function start478Exercise() {
 }
 
 function closeRituel() {
+  if (window._stop478) { window._stop478(); window._stop478 = null; }
   clearTimeout(_rituelTimer);
   document.getElementById('rituelOverlay').style.display = 'none';
   _hcState.calm=0; _hcState.sleep=0; _hcState.hydra=0; _hcState.activ=0;
