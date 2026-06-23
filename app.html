@@ -12544,6 +12544,53 @@ function drawRituelHeart(canvas, breathPhase, globalCalm) {
   ctx.strokeStyle='rgba('+rc+','+gc+','+bc+','+(0.1+0.35*breathPhase)+')';
   ctx.lineWidth=1+3*breathPhase; ctx.stroke();
 
+  // Timer arc couleur dynamique
+  var timerArc = document.getElementById('rituelTimerArc');
+  if (timerArc) {
+    timerArc.style.stroke = 'rgba('+rc+','+gc+','+bc+',0.85)';
+    timerArc.style.filter = 'drop-shadow(0 0 '+(4+8*breathPhase)+'px rgba('+rc+','+gc+','+bc+',0.7))';
+  }
+
+  // Arcs electriques
+  if (globalCalm > 0.3) {
+    var nArcs = Math.floor(2 + globalCalm * 4);
+    for (var ai = 0; ai < nArcs; ai++) {
+      var arcSeed = Math.floor(T * 3 + ai * 7.3);
+      var arcAngle = (Math.PI*2*ai/nArcs) + T*0.25 + arcSeed*0.4;
+      var arcLife = (Math.sin(T*4.5 + ai*2.1)*0.5+0.5);
+      if (arcLife < 0.3) continue;
+      var arcStartR = baseR*0.98;
+      var arcEndR = baseR*(1.35 + 0.4*arcLife + 0.2*breathPhase);
+      var arcAlpha = arcLife * globalCalm * (0.3+0.5*breathPhase);
+      var sx2 = cx+Math.cos(arcAngle)*arcStartR;
+      var sy2 = cy+Math.sin(arcAngle)*arcStartR;
+      ctx.save();
+      ctx.strokeStyle = 'rgba('+rc+','+gc+','+bc+','+arcAlpha+')';
+      ctx.lineWidth = 0.8 + arcLife*1.5;
+      ctx.shadowColor = 'rgba('+rc+','+gc+','+bc+','+(arcAlpha*0.9)+')';
+      ctx.shadowBlur = 6 + arcLife*12;
+      ctx.beginPath();
+      ctx.moveTo(sx2, sy2);
+      var segs = 4 + Math.floor(arcLife*3);
+      for (var s=1; s<=segs; s++) {
+        var st = s/segs;
+        var sr2 = arcStartR + (arcEndR-arcStartR)*st;
+        var perp = arcAngle + Math.PI/2;
+        var dev = Math.sin(st*Math.PI)*baseR*0.22*(Math.sin(arcSeed*3.7+s*1.9));
+        var px3 = cx+Math.cos(arcAngle)*sr2+Math.cos(perp)*dev;
+        var py3 = cy+Math.sin(arcAngle)*sr2+Math.sin(perp)*dev;
+        ctx.lineTo(px3, py3);
+      }
+      ctx.stroke();
+      // Point lumineux au bout
+      var ex = cx+Math.cos(arcAngle)*arcEndR;
+      var ey = cy+Math.sin(arcAngle)*arcEndR;
+      ctx.beginPath(); ctx.arc(ex,ey,1.5+arcLife*2,0,Math.PI*2);
+      ctx.fillStyle='rgba(255,255,255,'+(arcAlpha*1.2)+')'; ctx.fill();
+      ctx.restore();
+    }
+  }
+
   // Particules orbitales qui se rapprochent/eloignent avec la respiration
   if (_rituelParticles.length === 0) initRituelParticles();
   _rituelParticles.forEach(function(p){
