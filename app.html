@@ -13783,12 +13783,40 @@ function ajouterRoutineAgenda() {
   var r = ROUTINES_DATA[idx];
   var dateDebut = document.getElementById('routineStartDate').value;
   if (!dateDebut) { alert('Choisissez une date de debut'); return; }
-  // Sauvegarder en localStorage
-  var routinesActives = JSON.parse(localStorage.getItem('routines_actives') || '[]');
-  routinesActives.push({ idx: idx, title: r.title, icon: r.icon, debut: dateDebut, duree: r.duree });
-  localStorage.setItem('routines_actives', JSON.stringify(routinesActives));
+
+  // Nombre de jours de la routine
+  var nbJours = parseInt(r.duree) || 7;
+
+  // Ajouter un événement par jour dans mirella_planning
+  var events = JSON.parse(localStorage.getItem('mirella_planning') || '[]');
+  var start = new Date(dateDebut);
+  for (var d = 0; d < nbJours; d++) {
+    var day = new Date(start.getTime() + d * 86400000);
+    var ds = day.getFullYear() + '-' + String(day.getMonth()+1).padStart(2,'0') + '-' + String(day.getDate()).padStart(2,'0');
+    events.push({
+      id: Date.now().toString() + '_' + d,
+      type: 'rappel',
+      ico: r.icon,
+      emoji: r.icon,
+      title: r.title + ' - Jour ' + (d+1),
+      date: ds,
+      time: '08:00',
+      rec: 'none',
+      notif: false
+    });
+  }
+  localStorage.setItem('mirella_planning', JSON.stringify(events));
+
+  // Mettre à jour window.planningEvents si déjà chargé
+  if (window.planningEvents) {
+    window.planningEvents = events;
+  }
+
   closeRoutineModal();
-  alert('Routine ajoutee a votre agenda !');
+  alert('Routine ajoutee a votre agenda sur ' + nbJours + ' jours !');
+
+  // Aller directement au planning
+  if (typeof showView === 'function') showView('planning');
 }
 
 function genererMenusRoutine() {
