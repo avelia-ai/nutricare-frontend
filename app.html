@@ -186,7 +186,7 @@ window.addEventListener("error", function(e) {
   .wcal-day.wactive.wtoday .wcal-num{color:white}
   /* ── CHAT VIEW ── */
   #chatView { display: none; flex-direction: column; background: var(--cream); overflow: hidden; }
-  .chat-header { padding: 16px 20px; border-bottom: 1px solid rgba(255,107,107,0.1); display: flex; align-items: center; justify-content: space-between; background: white; box-shadow: 0 2px 8px rgba(0,0,0,0.04); width: 100%; box-sizing: border-box; flex-shrink: 0; }
+  .chat-header { padding: 16px 20px; border-bottom: 1px solid rgba(255,107,107,0.1); display: flex; align-items: center; justify-content: space-between; background: white; box-shadow: 0 2px 8px rgba(0,0,0,0.04); width: 100vw; box-sizing: border-box; flex-shrink: 0; position: relative; left: 0; }
   .chat-header-info h2 { font-size: 1rem; font-weight: 700; color: #2D2D2D; }
   .chat-header-info p { font-size: 0.75rem; color: #999; margin-top: 2px; }
   .status-pill { display: flex; align-items: center; gap: 6px; background: rgba(255,107,107,0.08); padding: 6px 14px; border-radius: 20px; font-size: 0.72rem; color: var(--coral); font-weight: 600; }
@@ -210,7 +210,7 @@ window.addEventListener("error", function(e) {
   .typing-dot:nth-child(3){animation:bounce .8s .3s infinite}
   @keyframes bounce{0%,80%,100%{transform:translateY(0)}40%{transform:translateY(-6px)}}
   .limit-banner { background: #FFF3E0; border: 1px solid #FFB74D; border-radius: 12px; padding: 12px 16px; font-size: 0.82rem; color: #E65100; display: flex; align-items: center; gap: 10px; margin: 0 16px; }
-  .chat-input-area { padding: 12px 16px 16px; border-top: 1px solid rgba(255,107,107,0.1); background: white; display: flex; gap: 10px; align-items: flex-end; position: sticky; bottom: 0; z-index: 10; }
+  .chat-input-area { width: 100vw !important; box-sizing: border-box !important; position: relative !important; left: 0 !important; padding: 12px 16px 16px; border-top: 1px solid rgba(255,107,107,0.1); background: white; display: flex; gap: 10px; align-items: flex-end; position: sticky; bottom: 0; z-index: 10; }
   .chat-input { flex: 1; border: 2px solid #F0F0F0; border-radius: 20px; padding: 11px 16px; font-size: 0.9rem; font-family: 'DM Sans', sans-serif; outline: none; resize: none; max-height: 120px; transition: all .2s; background: #FAFAFA; }
   .chat-input:focus { border-color: var(--coral); background: white; box-shadow: 0 0 0 4px rgba(255,107,107,0.08); }
   .btn-send { background: linear-gradient(135deg, var(--coral), var(--accent)); border: none; border-radius: 50%; width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all .2s; flex-shrink: 0; color: white; font-size: 1.1rem; box-shadow: 0 4px 12px rgba(255,107,107,0.35); }
