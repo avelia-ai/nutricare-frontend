@@ -11071,20 +11071,20 @@ function toggleQuickMenu() {
         <ellipse cx="110" cy="40" rx="30" ry="36" fill="url(#bsBodyGrad)" stroke="rgba(180,160,255,0.3)" stroke-width="1.5"/>
         <!-- Cou -->
         <path d="M98,72 Q98,86 110,88 Q122,86 122,72 L118,70 Q110,73 102,70 Z" fill="url(#bsBodyGrad)" stroke="rgba(180,160,255,0.2)" stroke-width="1"/>
-        <!-- Trapèzes / épaules -->
-        <path d="M60,92 Q60,82 80,80 Q110,78 140,80 Q160,82 160,92 Q168,96 170,108 L158,110 Q148,96 110,94 Q72,96 62,110 L50,108 Q52,96 60,92 Z" fill="url(#bsBodyGrad)" stroke="rgba(180,160,255,0.25)" stroke-width="1.5"/>
-        <!-- Torse -->
-        <path d="M62,108 Q58,120 57,150 Q56,170 58,188 Q74,196 110,197 Q146,196 162,188 Q164,170 163,150 Q162,120 158,108 Q134,114 110,114 Q86,114 62,108 Z" fill="url(#bsBodyGrad)" stroke="rgba(180,160,255,0.25)" stroke-width="1.5"/>
-        <!-- Bras gauche haut -->
-        <path d="M50,108 Q38,112 32,128 Q26,146 28,162 Q30,172 38,174 Q46,176 50,164 Q54,150 56,134 Q60,118 62,108 Z" fill="url(#bsBodyGrad)" stroke="rgba(180,160,255,0.2)" stroke-width="1.5"/>
-        <!-- Bras gauche bas -->
-        <path d="M28,162 Q24,178 24,194 Q24,208 30,212 Q38,216 42,204 Q44,192 44,178 Q44,168 38,174 Z" fill="url(#bsBodyGrad)" stroke="rgba(180,160,255,0.2)" stroke-width="1.5"/>
-        <!-- Bras droit haut -->
-        <path d="M170,108 Q182,112 188,128 Q194,146 192,162 Q190,172 182,174 Q174,176 170,164 Q166,150 164,134 Q160,118 158,108 Z" fill="url(#bsBodyGrad)" stroke="rgba(180,160,255,0.2)" stroke-width="1.5"/>
-        <!-- Bras droit bas -->
-        <path d="M192,162 Q196,178 196,194 Q196,208 190,212 Q182,216 178,204 Q176,192 176,178 Q176,168 182,174 Z" fill="url(#bsBodyGrad)" stroke="rgba(180,160,255,0.2)" stroke-width="1.5"/>
-        <!-- Bassin -->
-        <path d="M58,188 Q54,202 56,214 Q62,224 80,228 Q110,232 140,228 Q158,224 164,214 Q166,202 162,188 Q146,196 110,197 Q74,196 58,188 Z" fill="url(#bsBodyGrad)" stroke="rgba(180,160,255,0.22)" stroke-width="1.5"/>
+        <!-- Trapèzes / épaules fines -->
+        <path d="M72,90 Q75,82 90,80 Q110,78 130,80 Q145,82 148,90 Q154,95 156,106 L148,108 Q140,96 110,94 Q80,96 72,108 L64,106 Q66,95 72,90 Z" fill="url(#bsBodyGrad)" stroke="rgba(180,160,255,0.25)" stroke-width="1.5"/>
+        <!-- Torse fin -->
+        <path d="M72,106 Q69,124 68,152 Q67,170 69,186 Q82,193 110,194 Q138,193 151,186 Q153,170 152,152 Q151,124 148,106 Q130,112 110,112 Q90,112 72,106 Z" fill="url(#bsBodyGrad)" stroke="rgba(180,160,255,0.25)" stroke-width="1.5"/>
+        <!-- Bras gauche haut fin -->
+        <path d="M64,106 Q55,110 50,124 Q45,140 46,156 Q47,166 54,168 Q61,169 63,158 Q66,144 68,128 Q70,114 72,106 Z" fill="url(#bsBodyGrad)" stroke="rgba(180,160,255,0.2)" stroke-width="1.5"/>
+        <!-- Bras gauche bas fin -->
+        <path d="M46,156 Q43,170 43,184 Q43,196 48,199 Q55,202 58,192 Q59,180 59,168 Q59,160 54,168 Z" fill="url(#bsBodyGrad)" stroke="rgba(180,160,255,0.2)" stroke-width="1.5"/>
+        <!-- Bras droit haut fin -->
+        <path d="M156,106 Q165,110 170,124 Q175,140 174,156 Q173,166 166,168 Q159,169 157,158 Q154,144 152,128 Q150,114 148,106 Z" fill="url(#bsBodyGrad)" stroke="rgba(180,160,255,0.2)" stroke-width="1.5"/>
+        <!-- Bras droit bas fin -->
+        <path d="M174,156 Q177,170 177,184 Q177,196 172,199 Q165,202 162,192 Q161,180 161,168 Q161,160 166,168 Z" fill="url(#bsBodyGrad)" stroke="rgba(180,160,255,0.2)" stroke-width="1.5"/>
+        <!-- Bassin fin -->
+        <path d="M69,184 Q67,196 68,208 Q74,218 86,222 Q110,226 134,222 Q146,218 152,208 Q153,196 151,184 Q138,193 110,194 Q82,193 69,184 Z" fill="url(#bsBodyGrad)" stroke="rgba(180,160,255,0.22)" stroke-width="1.5"/>
         <!-- Cuisse gauche -->
         <path d="M60,220 Q52,226 50,244 Q47,268 48,296 Q49,310 58,314 Q68,318 72,304 Q74,284 74,258 Q74,236 70,222 Z" fill="url(#bsBodyGrad)" stroke="rgba(180,160,255,0.2)" stroke-width="1.5"/>
         <!-- Cuisse droite -->
@@ -13119,7 +13119,7 @@ function startBodyScanExercise() {
 
   // Logique zones
   var zoneIdx = 0, _running = true, elapsed = 0;
-  var _zoneStart = null;
+  var _zoneStart = null, _activating = false;
 
   var MOTIVS = [
     'Continuez, vous faites du bien à votre corps 💜',
@@ -13143,8 +13143,8 @@ function startBodyScanExercise() {
   }
 
   function activateZone(z, cb) {
-    // Afficher message motivant de la zone précédente
-    var motiv = z.motiv || (_motivIdx % 3 === 0 ? MOTIVS[_motivIdx % MOTIVS.length] : '');
+    // Afficher message motivant seulement à partir de la 2e zone
+    var motiv = (zoneIdx > 0) ? (z.motiv || (_motivIdx % 3 === 0 ? MOTIVS[_motivIdx % MOTIVS.length] : '')) : '';
     _motivIdx++;
     showMotivMsg(motiv, function() {
       // Reset toutes les zones
@@ -13166,11 +13166,11 @@ function startBodyScanExercise() {
   function bsLoop(ts) {
     if (!_running) return;
     var z = ZONES[zoneIdx];
-    if (_zoneStart === null) {
-      var _waiting = true;
-      activateZone(z, function() { _zoneStart = ts; _waiting = false; });
+    if (_zoneStart === null && !_activating) {
+      _activating = true;
+      activateZone(z, function() { _zoneStart = performance.now(); _activating = false; });
     }
-    if (_waiting) { requestAnimationFrame(bsLoop); return; }
+    if (_activating) { requestAnimationFrame(bsLoop); return; }
     var ms = ts - _zoneStart;
     var remaining = Math.max(0, Math.ceil((z.dur*1000 - ms)/1000));
     document.getElementById('bsTimer').textContent = remaining;
