@@ -185,8 +185,8 @@ window.addEventListener("error", function(e) {
   .wcal-day.wtoday .wcal-num{color:var(--coral)}
   .wcal-day.wactive.wtoday .wcal-num{color:white}
   /* ── CHAT VIEW ── */
-  #chatView { display: flex; flex-direction: column; height: 100vh; background: transparent; }
-  .chat-header { padding: 16px 20px; border-bottom: 1px solid rgba(255,107,107,0.1); display: flex; align-items: center; justify-content: space-between; background: white; box-shadow: 0 2px 8px rgba(0,0,0,0.04); margin-left: calc(-1 * var(--page-padding, 0px)); margin-right: calc(-1 * var(--page-padding, 0px)); width: 100vw; box-sizing: border-box; }
+  #chatView { display: flex; flex-direction: column; height: 100vh; background: transparent; position: fixed; top: 56px; left: 0; right: 0; bottom: 60px; }
+  .chat-header { padding: 16px 20px; border-bottom: 1px solid rgba(255,107,107,0.1); display: flex; align-items: center; justify-content: space-between; background: white; box-shadow: 0 2px 8px rgba(0,0,0,0.04); width: 100%; box-sizing: border-box; flex-shrink: 0; }
   .chat-header-info h2 { font-size: 1rem; font-weight: 700; color: #2D2D2D; }
   .chat-header-info p { font-size: 0.75rem; color: #999; margin-top: 2px; }
   .status-pill { display: flex; align-items: center; gap: 6px; background: rgba(255,107,107,0.08); padding: 6px 14px; border-radius: 20px; font-size: 0.72rem; color: var(--coral); font-weight: 600; }
@@ -533,11 +533,10 @@ button[style*="background:linear-gradient(135deg,var(--coral),var(--accent))"] {
 
 @media (max-width: 768px) {
   .bottom-nav { display: block; }
-  #chatView { padding-bottom: 0 !important; display: flex; flex-direction: column; height: calc(100vh - 60px) !important; position: relative; }
-  #chatView .chat-header { padding-top: 12px !important; padding-left: 20px !important; padding-right: 20px !important; width: 100% !important; box-sizing: border-box !important; margin: 0 !important; }
-  #chatView .chat-messages { flex: 1; overflow-y: auto; padding-bottom: 80px !important; }
-  #chatView .chat-input-area { position: fixed !important; bottom: 60px !important; left: 0 !important; right: 0 !important; z-index: 100 !important; background: white !important; border-top: 1px solid rgba(255,107,107,0.1) !important; padding: 10px 16px !important; box-sizing: border-box !important; }
-  .chat-input-area { position: relative !important; bottom: auto !important; flex-shrink: 0; padding-bottom: 8px !important; }
+  #chatView { position: fixed !important; top: 56px !important; left: 0 !important; right: 0 !important; bottom: 60px !important; height: auto !important; padding: 0 !important; display: flex !important; flex-direction: column !important; }
+  #chatView .chat-header { width: 100% !important; box-sizing: border-box !important; margin: 0 !important; flex-shrink: 0 !important; }
+  #chatView .chat-messages { flex: 1 !important; overflow-y: auto !important; padding-bottom: 16px !important; }
+  #chatView .chat-input-area { flex-shrink: 0 !important; position: relative !important; bottom: auto !important; padding: 10px 16px !important; background: white !important; border-top: 1px solid rgba(255,107,107,0.1) !important; box-sizing: border-box !important; }
   .sidebar { display: none !important; }
   #mainContent { padding-bottom: 80px !important; }
 }
