@@ -13737,12 +13737,32 @@ window.ROUTINES_DATA = [
 var ROUTINES_DATA = window.ROUTINES_DATA;
 
 window.addRoutineToPlanning = function(idx) {
-  var RDATA = (typeof ROUTINES_DATA !== "undefined") ? ROUTINES_DATA : (window.ROUTINES_DATA || []);
-  var r = RDATA[idx];
-  if (!r) { alert('Routine introuvable'); return; }
+  var ROUTINES = [
+    { nom: "Perdre du poids", duree: "7 jours", icone: "🥗" },
+    { nom: "Améliorer le sommeil", duree: "7 jours", icone: "😴" },
+    { nom: "Prendre du muscle", duree: "14 jours", icone: "💪" },
+    { nom: "Detox", duree: "7 jours", icone: "🌿" },
+    { nom: "Skincare quotidien", duree: "14 jours", icone: "🧴" },
+    { nom: "Anti-stress", duree: "7 jours", icone: "🧘" },
+    { nom: "Santé cardiovasculaire", duree: "14 jours", icone: "❤️" },
+    { nom: "Santé des os", duree: "21 jours", icone: "🦴" },
+    { nom: "Boost cognitif", duree: "14 jours", icone: "🧠" },
+    { nom: "Équilibre hormonal", duree: "21 jours", icone: "🌱" },
+    { nom: "Anti-inflammation", duree: "14 jours", icone: "🟡" },
+    { nom: "Hydratation optimale", duree: "7 jours", icone: "💧" },
+    { nom: "Cardio débutant", duree: "21 jours", icone: "🚶" },
+    { nom: "Jeûne intermittent 16/8", duree: "14 jours", icone: "⏰" },
+    { nom: "Hygiène bucco-dentaire", duree: "14 jours", icone: "🦷" },
+    { nom: "Boost énergie", duree: "7 jours", icone: "⚡" },
+    { nom: "Santé respiratoire", duree: "7 jours", icone: "🫁" },
+    { nom: "Santé digestive", duree: "14 jours", icone: "🥣" },
+    { nom: "Cheveux et ongles", duree: "21 jours", icone: "💅" },
+    { nom: "Boost immunité", duree: "14 jours", icone: "🛡️" }
+  ];
+  var r = ROUTINES[idx];
+  if (!r) { alert('Routine introuvable (idx=' + idx + ')'); return; }
   var nbJours = parseInt(r.duree) || 7;
   var today = new Date();
-  var ds_today = today.getFullYear() + '-' + String(today.getMonth()+1).padStart(2,'0') + '-' + String(today.getDate()).padStart(2,'0');
   var events = JSON.parse(localStorage.getItem('mirella_planning') || '[]');
   for (var d = 0; d < nbJours; d++) {
     var day = new Date(today.getTime() + d * 86400000);
@@ -13750,9 +13770,9 @@ window.addRoutineToPlanning = function(idx) {
     events.push({
       id: Date.now().toString() + '_' + d,
       type: 'rappel',
-      ico: r.icon,
-      emoji: r.icon,
-      title: r.title + ' - Jour ' + (d+1),
+      ico: r.icone,
+      emoji: r.icone,
+      title: r.nom + ' - Jour ' + (d+1),
       date: ds,
       time: '08:00',
       rec: 'none',
@@ -13763,7 +13783,7 @@ window.addRoutineToPlanning = function(idx) {
   if (window.planningEvents) window.planningEvents = events;
   var modal = document.getElementById('routineDetailModal');
   if (modal) modal.remove();
-  alert('Routine ajoutee sur ' + nbJours + ' jours !');
+  alert('Routine ajoutée sur ' + nbJours + ' jours !');
   if (typeof showView === 'function') showView('planning');
 };
 </script>
