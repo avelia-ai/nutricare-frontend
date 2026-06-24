@@ -4495,7 +4495,7 @@ function switchLang(lang) {
   </div>
   <div id="leaderboardPagination" style="display:none;justify-content:space-between;align-items:center;margin-top:16px;gap:8px"></div>
 </div>
-<div id="visualView" style="display:none;padding:32px;background:var(--cream);width:100%">
+<div id="visualView" style="display:none;position:fixed;top:56px;left:0;right:0;bottom:60px;overflow-y:auto;overflow-x:hidden;background:var(--cream);z-index:10;padding:32px 32px 80px;box-sizing:border-box">
   <div class="view-header" style="background:linear-gradient(135deg,var(--coral),var(--accent));margin:-32px -32px 32px -32px;padding:32px 32px 28px">
     <div style="font-family:'Open Sans',serif;font-size:2rem;font-weight:700;color:white;margin-bottom:6px">Detection et analyse visuelle</div>
     <div style="font-size:0.85rem;color:rgba(255,255,255,0.85)">Analysez votre peau, yeux et ongles avec l'IA</div>
@@ -7851,6 +7851,7 @@ Réponds UNIQUEMENT en JSON valide avec cette structure exacte:
     var hv = document.getElementById('homeView'); if(hv) { hv.style.display = view === 'home' ? 'block' : 'none'; if(view === 'home') { setTimeout(function(){ if(typeof window.initHome==='function') window.initHome(); }, 100); var mc2=document.querySelector('.main-content'); if(mc2){mc2.style.overflow='auto';mc2.style.height='100%';} } }
     var mc = document.querySelector('.main-content');
     if (mc) mc.style.overflow = ['home','cycle','planning','catalogue','menus','chrono','mes-recettes','leaderboard','visual'].includes(view) ? 'auto' : 'hidden';
+    if (view === 'visual') { mc.style.overflow = 'visible'; }
     var catv = document.getElementById('catalogueView'); if(catv) { catv.style.display = view === 'catalogue' ? 'block' : 'none'; if(view === 'catalogue') {  setTimeout(function(){ if(typeof window.initCatalogue==='function') window.initCatalogue(); }, 100); } }
     var mrv = document.getElementById('mesRecettesView'); if(mrv) { mrv.style.display = view === 'mes-recettes' ? 'block' : 'none'; if(view === 'mes-recettes') setTimeout(function(){ loadMesRecettes(); }, 100); }
     var cv = document.getElementById('cycleView'); if(cv) { cv.style.display = view === 'cycle' ? 'block' : 'none'; if(view === 'cycle') { var mc2 = document.querySelector('.main-content'); if(mc2) mc2.style.overflow = view === 'cycle' ? 'auto' : 'hidden'; setTimeout(function(){ if(typeof initCycle === 'function') initCycle(); }, 100); } }
