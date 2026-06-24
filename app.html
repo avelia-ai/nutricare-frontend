@@ -152,14 +152,14 @@ window.addEventListener("error", function(e) {
   .alerte-conseil { font-size: 0.78rem; color: #888; font-style: italic; line-height: 1.4; }
 
   @media(max-width:768px) {
-    [id$="View"]:not(#homeView):not(#mesRecettesView):not(#chatView):not(#catalogueView) {
+    [id$="View"]:not(#homeView):not(#mesRecettesView):not(#chatView):not(#catalogueView):not(#visualView) {
       padding: 16px !important;
     }
     #homeView {
       padding: 0 !important;
       overflow-y: auto !important;
     }
-    [id$="View"] > div.view-header {
+    [id$="View"]:not(#visualView) > div.view-header {
       margin: -16px -16px 20px -16px !important;
       padding: 80px 16px 20px !important;
     }
