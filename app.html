@@ -13666,6 +13666,69 @@ function closeRituel() {
   _hcState.calm=0; _hcState.sleep=0; _hcState.hydra=0; _hcState.activ=0;
 }
 </script>
+
+<script>
+window.showRoutineDetail = function(idx) {
+  var ROUTINES = [
+    { nom: "Perdre du poids", duree: "7 jours", icone: "🥗", couleur: "#FFF0EC", action: "🍽️ Petit-dej proteiné", desc: "Une routine alimentaire pour démarrer votre perte de poids en douceur, avec un petit-déjeuner riche en protéines pour tenir toute la matinée.", etapes: ["Petit-déjeuner protéiné (œufs, fromage blanc)", "Boire 500ml d'eau au réveil", "Éviter les sucres raffinés le matin", "Marche 15min après le déjeuner"] },
+    { nom: "Améliorer le sommeil", duree: "7 jours", icone: "😴", couleur: "#F0F0FF", action: "🌙 Tisane camomille 21h", desc: "Préparez votre corps au repos avec une routine apaisante du soir pour un sommeil profond et réparateur.", etapes: ["Tisane camomille à 21h", "Écrans éteints à 21h30", "Lecture 20min avant dormir", "Température chambre 18°C"] },
+    { nom: "Prendre du muscle", duree: "14 jours", icone: "💪", couleur: "#F0FFEC", action: "💪 Entrainement 45min", desc: "Associez nutrition et exercice pour une prise de masse musculaire progressive et durable.", etapes: ["Entrainement 45min / jour", "Protéines à chaque repas", "Collation post-effort", "Sommeil 8h minimum"] },
+    { nom: "Detox", duree: "7 jours", icone: "🌿", couleur: "#F0FFF4", action: "🥤 Jus vert matin", desc: "Nettoyez votre organisme avec une semaine de détox douce basée sur les légumes verts et l'hydratation.", etapes: ["Jus vert au réveil", "2L d'eau par jour", "Supprimer alcool et café", "Légumes verts à chaque repas"] },
+    { nom: "Skincare quotidien", duree: "14 jours", icone: "🧴", couleur: "#FFF5F0", action: "🧴 Nettoyant visage matin", desc: "Adoptez une routine beauté simple et efficace pour une peau saine et lumineuse.", etapes: ["Nettoyant doux matin et soir", "Crème hydratante SPF", "Boire 1.5L d'eau", "Alimentation riche en oméga-3"] },
+    { nom: "Anti-stress", duree: "7 jours", icone: "🧘", couleur: "#F5F0FF", action: "🧘 Méditation 10min matin", desc: "Réduisez votre niveau de stress avec des techniques de relaxation et une alimentation adaptée.", etapes: ["Méditation 10min au réveil", "Éviter la caféine après 14h", "Magnésium le soir", "Marche en nature 20min"] },
+    { nom: "Santé cardiovasculaire", duree: "14 jours", icone: "❤️", couleur: "#FFF0F0", action: "🏃 Marche rapide 30min", desc: "Prenez soin de votre cœur avec une routine d'activité physique modérée et une alimentation cardioprotectrice.", etapes: ["Marche rapide 30min/jour", "Oméga-3 à chaque repas", "Sel limité", "Fruits rouges quotidiens"] },
+    { nom: "Santé des os", duree: "21 jours", icone: "🦴", couleur: "#FFFAF0", action: "☀️ 15min soleil matin", desc: "Renforcez vos os avec un apport suffisant en calcium, vitamine D et une activité physique adaptée.", etapes: ["15min de soleil le matin", "Produits laitiers ou alternatives", "Vitamine D si carence", "Exercices portés 3x/semaine"] },
+    { nom: "Boost cognitif", duree: "14 jours", icone: "🧠", couleur: "#F0F8FF", action: "🫐 Smoothie bleuets matin", desc: "Améliorez votre concentration et mémoire grâce aux superaliments et à une hygiène de vie optimale.", etapes: ["Smoothie bleuets + noix matin", "Oméga-3 quotidien", "Lecture ou puzzles 20min", "Sommeil régulier 7-8h"] },
+    { nom: "Équilibre hormonal", duree: "21 jours", icone: "🌱", couleur: "#F0FFF4", action: "🌱 Graines de lin matin", desc: "Soutenez votre équilibre hormonal naturel par l'alimentation et les bonnes habitudes de vie.", etapes: ["Graines de lin moulues matin", "Réduire sucres raffinés", "Sport modéré 3x/semaine", "Gestion du stress"] },
+    { nom: "Anti-inflammation", duree: "14 jours", icone: "🟡", couleur: "#FFFBF0", action: "🟡 Latte curcuma matin", desc: "Réduisez l'inflammation chronique avec les épices et aliments anti-inflammatoires.", etapes: ["Latte curcuma + poivre noir matin", "Oméga-3 quotidien", "Éviter gluten et laitages", "Gingembre en cuisine"] },
+    { nom: "Hydratation optimale", duree: "7 jours", icone: "💧", couleur: "#F0F8FF", action: "💧 1 verre dès le réveil", desc: "Réapprenez à bien vous hydrater pour une énergie optimale et une peau rayonnante.", etapes: ["1 grand verre dès le réveil", "Rappels toutes les 2h", "Eau avant chaque repas", "Réduire sodas et alcool"] },
+    { nom: "Cardio débutant", duree: "21 jours", icone: "🚶", couleur: "#F0FFF4", action: "🚶 Marche 20min", desc: "Démarrez une activité cardio en douceur pour améliorer votre endurance et votre forme générale.", etapes: ["Marche 20min/jour", "Augmenter 5min chaque semaine", "Étirements après effort", "Petit-déjeuner complet"] },
+    { nom: "Jeûne intermittent 16/8", duree: "14 jours", icone: "⏰", couleur: "#FFF8F0", action: "⏰ Dernier repas 20h", desc: "Adoptez le jeûne intermittent pour réguler votre glycémie et favoriser la perte de poids.", etapes: ["Dernier repas avant 20h", "Premier repas à 12h", "Café/thé sans sucre autorisé", "Hydratation renforcée"] },
+    { nom: "Hygiène bucco-dentaire", duree: "14 jours", icone: "🦷", couleur: "#F0FAFF", action: "🪥 Brossage 2min x2", desc: "Installez une routine bucco-dentaire complète pour une bouche saine et un sourire éclatant.", etapes: ["Brossage 2min matin et soir", "Fil dentaire quotidien", "Bain de bouche le soir", "Réduire sucres entre repas"] },
+    { nom: "Boost énergie", duree: "7 jours", icone: "⚡", couleur: "#FFFBF0", action: "☀️ Lever 6h30", desc: "Retrouvez votre vitalité avec un lever matinal et une alimentation énergisante.", etapes: ["Lever à 6h30", "Lumière naturelle 10min", "Petit-déjeuner complet", "Sieste courte 20min si besoin"] },
+    { nom: "Santé respiratoire", duree: "7 jours", icone: "🫁", couleur: "#F0F8FF", action: "🫁 Cohérence cardiaque 5min", desc: "Améliorez votre capacité respiratoire et réduisez le stress avec des exercices de respiration.", etapes: ["Cohérence cardiaque 5min matin", "Aérer son logement", "Éviter tabac et polluants", "Marche en air frais"] },
+    { nom: "Santé digestive", duree: "14 jours", icone: "🥣", couleur: "#F5FFF0", action: "🥣 Kéfir ou yaourt matin", desc: "Prenez soin de votre microbiote pour une digestion optimale et un bien-être général.", etapes: ["Kéfir ou yaourt nature matin", "Fibres à chaque repas", "Manger lentement", "Probiotiques si nécessaire"] },
+    { nom: "Cheveux et ongles", duree: "21 jours", icone: "💅", couleur: "#FFF0F8", action: "💊 Biotine matin", desc: "Renforcez vos cheveux et ongles de l'intérieur avec les bons compléments et nutriments.", etapes: ["Biotine matin avec repas", "Protéines à chaque repas", "Zinc et fer vérifiés", "Éviter colorations agressives"] },
+    { nom: "Boost immunité", duree: "14 jours", icone: "🛡️", couleur: "#FFF8F0", action: "🍊 Jus orange frais", desc: "Renforcez vos défenses naturelles avec vitamines, minéraux et bonnes habitudes de vie.", etapes: ["Jus d'orange frais le matin", "Vitamine C + Zinc", "Sommeil 8h", "Réduire le sucre"] }
+  ];
+
+  var r = ROUTINES[idx];
+  if (!r) return;
+
+  var existing = document.getElementById('routineDetailModal');
+  if (existing) existing.remove();
+
+  var modal = document.createElement('div');
+  modal.id = 'routineDetailModal';
+  modal.style.cssText = 'position:fixed;top:0;left:0;right:0;bottom:0;z-index:9999;display:flex;align-items:flex-end;background:rgba(0,0,0,0.4);backdrop-filter:blur(4px)';
+  modal.innerHTML = '<div style="background:white;border-radius:28px 28px 0 0;padding:28px 24px 40px;width:100%;max-height:85vh;overflow-y:auto">' +
+    '<div style="width:40px;height:4px;background:#E0D8D0;border-radius:2px;margin:0 auto 24px"></div>' +
+    '<div style="display:flex;align-items:center;gap:14px;margin-bottom:16px">' +
+      '<div style="width:56px;height:56px;background:' + r.couleur + ';border-radius:18px;display:flex;align-items:center;justify-content:center;font-size:1.8rem;flex-shrink:0">' + r.icone + '</div>' +
+      '<div><div style="font-family:'Open Sans',serif;font-size:1.3rem;font-weight:700;color:#1a1a1a">' + r.nom + '</div>' +
+      '<div style="font-size:0.8rem;color:var(--coral);font-weight:600;margin-top:2px">⏱ ' + r.duree + ' · ' + r.action + '</div></div>' +
+    '</div>' +
+    '<div style="font-size:0.85rem;color:#666;line-height:1.6;margin-bottom:20px">' + r.desc + '</div>' +
+    '<div style="font-weight:700;font-size:0.85rem;color:#1a1a1a;margin-bottom:12px;text-transform:uppercase;letter-spacing:.06em">Étapes clés</div>' +
+    '<div style="display:flex;flex-direction:column;gap:10px;margin-bottom:28px">' +
+      r.etapes.map(function(e, i) {
+        return '<div style="display:flex;gap:12px;align-items:center">' +
+          '<span style="width:26px;height:26px;border-radius:50%;background:linear-gradient(135deg,var(--coral),var(--accent));color:white;font-size:0.7rem;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0">' + (i+1) + '</span>' +
+          '<span style="font-size:0.85rem;color:#333">' + e + '</span></div>';
+      }).join('') +
+    '</div>' +
+    '<button onclick="addRoutineToPlanning(' + idx + ')" style="width:100%;background:linear-gradient(135deg,var(--coral),var(--accent));color:white;border:none;border-radius:14px;padding:15px;font-family:'DM Sans',sans-serif;font-size:0.95rem;font-weight:600;cursor:pointer;margin-bottom:10px">Ajouter à mon planning ✓</button>' +
+    '<button onclick="document.getElementById('routineDetailModal').remove()" style="width:100%;background:transparent;color:#999;border:none;padding:10px;font-size:0.85rem;cursor:pointer">Fermer</button>' +
+  '</div>';
+  modal.addEventListener('click', function(e) { if(e.target===modal) modal.remove(); });
+  document.body.appendChild(modal);
+};
+
+window.addRoutineToPlanning = function(idx) {
+  document.getElementById('routineDetailModal').remove();
+  alert('Routine ajoutée à votre planning !');
+};
+</script>
 </body>
 </html>
  
