@@ -13383,6 +13383,7 @@ function startReveilExercise() {
     skyCanvas.height = window.innerHeight;
   }
   resizeSky();
+  window.addEventListener('resize', resizeSky);
 
   // --- CANVAS SOLEIL ---
   var sunCanvas = document.getElementById('reveilSunCanvas');
@@ -13418,15 +13419,20 @@ function startReveilExercise() {
     skyCtx.fillStyle = grad;
     skyCtx.fillRect(0, 0, W, H);
 
-    // Étoiles qui s'effacent
+    // Étoiles scintillantes qui s'effacent
     if (t < 0.7) {
       var starAlpha = Math.max(0, 1 - t/0.7);
       var starPositions = [[0.1,0.08],[0.85,0.12],[0.4,0.06],[0.7,0.18],[0.25,0.15],[0.9,0.08],[0.55,0.03],[0.15,0.22],[0.78,0.05],[0.6,0.2],[0.35,0.25],[0.92,0.22]];
       starPositions.forEach(function(s, i) {
+        var twinkle = 0.5 + 0.5 * Math.sin(skyT * (1.5 + i * 0.3) + i * 1.1);
+        var a = starAlpha * (0.4 + 0.6 * twinkle);
         skyCtx.beginPath();
-        skyCtx.arc(s[0]*W, s[1]*H, 1.2 + (i%3)*0.5, 0, Math.PI*2);
-        skyCtx.fillStyle = 'rgba(255,255,255,' + (starAlpha * (0.5 + (i%4)*0.15)) + ')';
+        skyCtx.arc(s[0]*W, s[1]*H, (1.2 + (i%3)*0.5) * (0.7 + 0.3*twinkle), 0, Math.PI*2);
+        skyCtx.fillStyle = 'rgba(255,255,255,' + a + ')';
+        skyCtx.shadowColor = 'rgba(200,220,255,' + a + ')';
+        skyCtx.shadowBlur = 4 * twinkle;
         skyCtx.fill();
+        skyCtx.shadowBlur = 0;
       });
     }
 
@@ -13671,17 +13677,22 @@ function startReveilExercise() {
     });
   }
 
-  var lastTs = null, lastStepTs = null;
+  var lastTs = null;
   var breathPhase = 0;
+  var _startTs = null;
   function animLoop(ts) {
     if (!_running) return;
     if (!lastTs) lastTs = ts;
+    if (!_startTs) _startTs = ts;
     var dt = Math.min((ts - lastTs) / 1000, 0.05);
     lastTs = ts;
     skyT += dt;
-    sunT += dt * 60;
-    var progress = Math.min(totalElapsed / TOTAL, 1);
+    // Progress FLUIDE basé sur le temps réel écoulé depuis le début
+    var realElapsed = (ts - _startTs) / 1000;
+    var progress = Math.min(realElapsed / TOTAL, 1);
     breathPhase = (Math.sin(skyT * 1.2) + 1) / 2;
+    // Redimensionner si nécessaire
+    if (skyCanvas.width !== window.innerWidth || skyCanvas.height !== window.innerHeight) resizeSky();
     drawSky(progress);
     drawSun(progress, breathPhase);
     requestAnimationFrame(animLoop);
