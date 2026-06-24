@@ -13447,8 +13447,9 @@ function startReveilExercise() {
 
     // === SOLEIL dans le ciel canvas, qui monte de derrière les montagnes ===
     var sunCX = W * 0.5;
-    // Le soleil part de H*0.72 (horizon montagne) et monte vers H*0.28
-    var sunCY = H * 0.72 - H * 0.44 * t;
+    // Phase 0: soleil caché sous H*0.78 (montagne), monte jusqu'à H*0.25
+    // t=0 -> caché, t=0.3 -> commence à pointer, t=1 -> haut dans le ciel
+    var sunCY = H * 0.80 - H * 0.55 * t;
     var sunRadius = 28 + 38 * t;
 
     // Halo lointain (lueur derrière les monts)
@@ -13496,76 +13497,95 @@ function startReveilExercise() {
     skyCtx.beginPath(); skyCtx.arc(sunCX, sunCY, sunRadius, 0, Math.PI*2); skyCtx.fill();
     skyCtx.shadowBlur = 0;
 
-    // === MONTAGNES — plan arrière (plus hautes, derrière) ===
-    var mDark = 'rgba('+Math.round(12+45*t)+','+Math.round(8+28*t)+','+Math.round(18+20*t)+',0.92)';
-    var mMid  = 'rgba('+Math.round(10+35*t)+','+Math.round(6+20*t)+','+Math.round(15+15*t)+',0.96)';
-    var mFront= 'rgba('+Math.round(8+22*t)+','+Math.round(5+12*t)+','+Math.round(12+8*t)+',1)';
+    // === MONTAGNES — occupent le tiers bas de l'écran ===
+    var mDark = 'rgba('+Math.round(10+30*t)+','+Math.round(7+18*t)+','+Math.round(20+15*t)+',0.95)';
+    var mMid  = 'rgba('+Math.round(8+22*t)+','+Math.round(5+14*t)+','+Math.round(18+12*t)+',0.97)';
+    var mFront= 'rgba('+Math.round(6+15*t)+','+Math.round(4+9*t)+','+Math.round(14+8*t)+',1)';
 
-    // Plan 1 — montagnes lointaines hautes
+    // Lueur dorée sur les crêtes (apparaît quand le soleil monte)
+    if (t > 0.2) {
+      var creteAlpha = Math.min((t-0.2)/0.4, 1) * 0.55;
+      var creteGrad = skyCtx.createLinearGradient(0, H*0.72, 0, H*0.82);
+      creteGrad.addColorStop(0, 'rgba(255,200,80,'+creteAlpha+')');
+      creteGrad.addColorStop(1, 'rgba(255,140,40,0)');
+      // Dessiner une forme de crête illuminée
+      skyCtx.beginPath();
+      skyCtx.moveTo(0, H*0.82);
+      skyCtx.lineTo(W*0.10, H*0.74); skyCtx.lineTo(W*0.20, H*0.80);
+      skyCtx.lineTo(W*0.32, H*0.72); skyCtx.lineTo(W*0.44, H*0.79);
+      skyCtx.lineTo(W*0.50, H*0.73); skyCtx.lineTo(W*0.56, H*0.79);
+      skyCtx.lineTo(W*0.68, H*0.74); skyCtx.lineTo(W*0.80, H*0.80);
+      skyCtx.lineTo(W*0.90, H*0.75); skyCtx.lineTo(W, H*0.80);
+      skyCtx.lineTo(W, H*0.76); skyCtx.lineTo(W*0.90, H*0.71);
+      skyCtx.lineTo(W*0.80, H*0.76); skyCtx.lineTo(W*0.68, H*0.70);
+      skyCtx.lineTo(W*0.56, H*0.75); skyCtx.lineTo(W*0.50, H*0.69);
+      skyCtx.lineTo(W*0.44, H*0.75); skyCtx.lineTo(W*0.32, H*0.68);
+      skyCtx.lineTo(W*0.20, H*0.76); skyCtx.lineTo(W*0.10, H*0.70);
+      skyCtx.lineTo(0, H*0.78); skyCtx.closePath();
+      skyCtx.fillStyle = creteGrad;
+      skyCtx.fill();
+    }
+
+    // Plan 1 — chaîne de montagnes lointaines (pics à ~72% hauteur écran)
     skyCtx.beginPath();
-    skyCtx.moveTo(0, H*0.82);
-    skyCtx.lineTo(W*0.08, H*0.58);
-    skyCtx.lineTo(W*0.18, H*0.72);
-    skyCtx.lineTo(W*0.28, H*0.48);  // pic central gauche
-    skyCtx.lineTo(W*0.38, H*0.64);
-    skyCtx.lineTo(W*0.50, H*0.42);  // pic principal (derrière soleil)
-    skyCtx.lineTo(W*0.62, H*0.60);
-    skyCtx.lineTo(W*0.72, H*0.52);  // pic droit
-    skyCtx.lineTo(W*0.82, H*0.66);
-    skyCtx.lineTo(W*0.92, H*0.55);
-    skyCtx.lineTo(W, H*0.68);
-    skyCtx.lineTo(W, H); skyCtx.lineTo(0, H); skyCtx.closePath();
+    skyCtx.moveTo(0, H);
+    skyCtx.lineTo(0, H*0.82);
+    skyCtx.lineTo(W*0.10, H*0.74);
+    skyCtx.lineTo(W*0.20, H*0.80);
+    skyCtx.lineTo(W*0.32, H*0.72);
+    skyCtx.lineTo(W*0.44, H*0.79);
+    skyCtx.lineTo(W*0.50, H*0.73);
+    skyCtx.lineTo(W*0.56, H*0.79);
+    skyCtx.lineTo(W*0.68, H*0.74);
+    skyCtx.lineTo(W*0.80, H*0.80);
+    skyCtx.lineTo(W*0.90, H*0.75);
+    skyCtx.lineTo(W, H*0.80);
+    skyCtx.lineTo(W, H); skyCtx.closePath();
     skyCtx.fillStyle = mDark;
     skyCtx.fill();
 
-    // Plan 2 — montagnes milieu
-    skyCtx.beginPath();
-    skyCtx.moveTo(0, H*0.88);
-    skyCtx.lineTo(W*0.06, H*0.72);
-    skyCtx.lineTo(W*0.14, H*0.82);
-    skyCtx.lineTo(W*0.22, H*0.65);
-    skyCtx.lineTo(W*0.32, H*0.76);
-    skyCtx.lineTo(W*0.42, H*0.60);  // pic
-    skyCtx.lineTo(W*0.52, H*0.70);
-    skyCtx.lineTo(W*0.63, H*0.63);
-    skyCtx.lineTo(W*0.74, H*0.74);
-    skyCtx.lineTo(W*0.85, H*0.67);
-    skyCtx.lineTo(W*0.93, H*0.78);
-    skyCtx.lineTo(W, H*0.72);
-    skyCtx.lineTo(W, H); skyCtx.lineTo(0, H); skyCtx.closePath();
-    skyCtx.fillStyle = mMid;
-    skyCtx.fill();
-
-    // Plan 3 — premier plan sombre et proche
+    // Plan 2 — montagnes milieu (pics à ~78%)
     skyCtx.beginPath();
     skyCtx.moveTo(0, H);
     skyCtx.lineTo(0, H*0.88);
-    skyCtx.bezierCurveTo(W*0.1, H*0.82, W*0.2, H*0.86, W*0.3, H*0.80);
-    skyCtx.bezierCurveTo(W*0.4, H*0.74, W*0.5, H*0.78, W*0.6, H*0.76);
-    skyCtx.bezierCurveTo(W*0.72, H*0.73, W*0.85, H*0.82, W, H*0.85);
+    skyCtx.lineTo(W*0.08, H*0.83);
+    skyCtx.lineTo(W*0.18, H*0.78);
+    skyCtx.lineTo(W*0.28, H*0.85);
+    skyCtx.lineTo(W*0.40, H*0.79);
+    skyCtx.lineTo(W*0.52, H*0.84);
+    skyCtx.lineTo(W*0.62, H*0.80);
+    skyCtx.lineTo(W*0.74, H*0.86);
+    skyCtx.lineTo(W*0.85, H*0.81);
+    skyCtx.lineTo(W*0.94, H*0.87);
+    skyCtx.lineTo(W, H*0.84);
+    skyCtx.lineTo(W, H); skyCtx.closePath();
+    skyCtx.fillStyle = mMid;
+    skyCtx.fill();
+
+    // Plan 3 — premier plan très sombre, formes douces (bas de l'écran)
+    skyCtx.beginPath();
+    skyCtx.moveTo(0, H);
+    skyCtx.lineTo(0, H*0.93);
+    skyCtx.bezierCurveTo(W*0.15, H*0.88, W*0.3, H*0.91, W*0.45, H*0.89);
+    skyCtx.bezierCurveTo(W*0.6, H*0.87, W*0.75, H*0.92, W, H*0.90);
     skyCtx.lineTo(W, H); skyCtx.closePath();
     skyCtx.fillStyle = mFront;
     skyCtx.fill();
 
-    // Neige sur les pics (apparaît avec la lumière)
-    if (t > 0.4) {
-      var snowAlpha = Math.min((t-0.4)/0.3, 1) * 0.7;
-      // Pic central H*0.50
-      skyCtx.beginPath();
-      skyCtx.moveTo(W*0.50, H*0.42);
-      skyCtx.lineTo(W*0.455, H*0.52);
-      skyCtx.lineTo(W*0.545, H*0.52);
-      skyCtx.closePath();
-      skyCtx.fillStyle = 'rgba(255,245,235,'+snowAlpha+')';
-      skyCtx.fill();
-      // Pic droit H*0.52
-      skyCtx.beginPath();
-      skyCtx.moveTo(W*0.72, H*0.52);
-      skyCtx.lineTo(W*0.69, H*0.60);
-      skyCtx.lineTo(W*0.75, H*0.60);
-      skyCtx.closePath();
-      skyCtx.fillStyle = 'rgba(255,245,235,'+(snowAlpha*0.7)+')';
-      skyCtx.fill();
+    // Neige sur les crêtes (apparaît doucement)
+    if (t > 0.5) {
+      var snowA = Math.min((t-0.5)/0.35, 1) * 0.65;
+      var snowPics = [[W*0.50,H*0.73],[W*0.32,H*0.72],[W*0.68,H*0.74],[W*0.10,H*0.74],[W*0.90,H*0.75]];
+      snowPics.forEach(function(p, si) {
+        var sz = [8,6,6,5,5][si];
+        skyCtx.beginPath();
+        skyCtx.moveTo(p[0], p[1]);
+        skyCtx.lineTo(p[0]-sz, p[1]+sz*1.5);
+        skyCtx.lineTo(p[0]+sz, p[1]+sz*1.5);
+        skyCtx.closePath();
+        skyCtx.fillStyle = 'rgba(255,248,240,'+(snowA*(si===0?1:0.6))+')';
+        skyCtx.fill();
+      });
     }
   }
 
