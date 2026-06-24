@@ -13035,13 +13035,11 @@ function startBodyScanExercise() {
   ];
   var TOTAL_SEC = ZONES.reduce(function(s,z){return s+z.dur;},0);
 
-  // Afficher l'écran
+  // Afficher l'écran plein écran, cacher tout le reste
   var bsScreen = document.getElementById('rituelBodyScanScreen');
-  document.getElementById('rituelExerciseScreen').style.display = 'flex';
+  document.getElementById('rituelExerciseScreen').style.display = 'none';
+  document.getElementById('rituelOverlay').style.display = 'none';
   bsScreen.style.display = 'flex';
-  document.getElementById('rituelTitle') && (document.getElementById('rituelTitle').style.display = 'none');
-  document.getElementById('rituelPhase') && (document.getElementById('rituelPhase').style.display = 'none');
-  document.getElementById('rituelHarmonyCanvas') && (document.getElementById('rituelHarmonyCanvas').parentElement.style.display = 'none');
 
   // Aurore boréale
   var ac = document.getElementById('bsAuroraCanvas');
