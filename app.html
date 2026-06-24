@@ -185,7 +185,7 @@ window.addEventListener("error", function(e) {
   .wcal-day.wtoday .wcal-num{color:var(--coral)}
   .wcal-day.wactive.wtoday .wcal-num{color:white}
   /* ── CHAT VIEW ── */
-  #chatView { display: flex; flex-direction: column; height: calc(100vh - 116px); background: transparent; }
+  #chatView { display: none; flex-direction: column; height: calc(100vh - 116px); background: transparent; overflow: hidden; }
   .chat-header { padding: 16px 20px; border-bottom: 1px solid rgba(255,107,107,0.1); display: flex; align-items: center; justify-content: space-between; background: white; box-shadow: 0 2px 8px rgba(0,0,0,0.04); width: 100%; box-sizing: border-box; flex-shrink: 0; }
   .chat-header-info h2 { font-size: 1rem; font-weight: 700; color: #2D2D2D; }
   .chat-header-info p { font-size: 0.75rem; color: #999; margin-top: 2px; }
@@ -533,7 +533,7 @@ button[style*="background:linear-gradient(135deg,var(--coral),var(--accent))"] {
 
 @media (max-width: 768px) {
   .bottom-nav { display: block; }
-  #chatView { height: calc(100vh - 116px) !important; padding: 0 !important; display: flex !important; flex-direction: column !important; overflow: hidden !important; }
+  #chatView { height: calc(100vh - 116px) !important; padding: 0 !important; flex-direction: column !important; overflow: hidden !important; }
   #chatView .chat-header { width: 100% !important; box-sizing: border-box !important; margin: 0 !important; flex-shrink: 0 !important; }
   #chatView .chat-messages { flex: 1 !important; overflow-y: auto !important; padding-bottom: 16px !important; }
   #chatView .chat-input-area { flex-shrink: 0 !important; position: relative !important; bottom: auto !important; padding: 10px 16px !important; background: white !important; border-top: 1px solid rgba(255,107,107,0.1) !important; box-sizing: border-box !important; }
