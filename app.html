@@ -7493,7 +7493,11 @@ Réponds UNIQUEMENT en JSON valide avec cette structure exacte:
   async function showView(view, btn) {
     window._currentView = view;
     var waveCanvas = document.getElementById('wavesBg');
-    if (waveCanvas) waveCanvas.style.opacity = (view === 'chat') ? '0' : '1';
+    if (waveCanvas) {
+      waveCanvas.style.opacity = (view === 'chat') ? '0' : '1';
+      waveCanvas.style.pointerEvents = 'none';
+    }
+    document.body.style.background = (view === 'chat') ? 'white' : '';
     if (view === 'menus') setTimeout(buildWeekSelector, 50);
     if (view === 'health') { loadInfoDuJour(); loadHydrationFromStorage(); setTimeout(renderEvolutionGallery, 100); }
     if (view === 'fitness') { loadFitnessView(); }
