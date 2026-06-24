@@ -140,7 +140,7 @@ window.addEventListener("error", function(e) {
   .alerte-conseil { font-size: 0.78rem; color: #888; font-style: italic; line-height: 1.4; }
 
   @media(max-width:768px) {
-    [id$="View"]:not(#homeView):not(#mesRecettesView):not(#chatView):not(#catalogueView):not(#analysisView) {
+    [id$="View"]:not(#homeView):not(#mesRecettesView):not(#chatView):not(#catalogueView) {
       padding: 16px !important;
     }
     #homeView {
@@ -151,7 +151,7 @@ window.addEventListener("error", function(e) {
       margin: -16px -16px 20px -16px !important;
       padding: 80px 16px 20px !important;
     }
-    #frigoView > div.view-header, #cycleView > div.view-header, #mesRecettesView > div.view-header, #visageView > div.view-header {
+    #frigoView > div.view-header, #cycleView > div.view-header, #mesRecettesView > div.view-header, #visageView > div.view-header, #analysisView > div.view-header {
       padding: 16px !important;
       min-height: auto !important;
       justify-content: flex-start !important;
@@ -3588,7 +3588,7 @@ function switchLang(lang) {
     <!-- HEALTH DASHBOARD VIEW -->
      <!-- MENUS VIEW -->
       <!-- ANALYSIS VIEW -->
-<div id="analysisView" style="display:none;position:fixed;top:56px;left:0;right:0;bottom:60px;overflow-y:auto;background:var(--cream);z-index:10">
+<div id="analysisView" style="display:none;position:fixed;top:56px;left:0;right:0;bottom:60px;padding:16px;overflow-y:auto;background:var(--cream);z-index:10;box-sizing:border-box">
   <div class="view-header" style="font-family:'Open Sans',serif;font-size:2rem;font-weight:700;margin-bottom:6px;color:#2D2D2D">Analyse photo de repas</div>
   <div style="font-size:0.85rem;color:var(--accent);margin-bottom:16px">Photographiez votre repas pour une analyse nutritionnelle instantanée</div>
   <div style="border-radius:16px;overflow:hidden;margin-bottom:20px;position:relative;height:180px;background:url(https://raw.githubusercontent.com/avelia-ai/nutricare-frontend/main/analyse_repas.png) center/cover">
