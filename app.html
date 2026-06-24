@@ -12697,6 +12697,9 @@ function _startRituelExercise() {
   var cfg = window._currentRituelCfg;
   // Rituel 4-7-8 : écran dédié
   if (window._currentRituelType === '478') {
+      document.getElementById('rituelExerciseScreen').style.display = 'flex';
+      document.getElementById('rituelTitle').style.display = 'none';
+      document.getElementById('rituelPhase').style.display = 'none';
       document.getElementById('rituelInstruction').style.display = 'none';
       document.getElementById('rituelCounter').style.display = 'none';
       start478Exercise();
