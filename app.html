@@ -13533,14 +13533,14 @@ function startReveilExercise() {
       });
     }
 
-    // Lueur dorée sur les crêtes — simple glow sans forme fermée
+    // Lueur dorée sur les crêtes — radial glow propre sans bande
     if (t > 0.2) {
-      var creteAlpha = Math.min((t - 0.2) / 0.4, 1) * 0.4;
-      var creteGlow = skyCtx.createLinearGradient(0, H * 0.68, 0, H * 0.80);
-      creteGlow.addColorStop(0, 'rgba(255,210,80,' + creteAlpha + ')');
+      var creteAlpha = Math.min((t - 0.2) / 0.4, 1) * 0.35;
+      var creteGlow = skyCtx.createRadialGradient(W*0.5, H*0.73, 0, W*0.5, H*0.73, W*0.6);
+      creteGlow.addColorStop(0, 'rgba(255,200,80,' + creteAlpha + ')');
       creteGlow.addColorStop(1, 'rgba(255,140,40,0)');
       skyCtx.fillStyle = creteGlow;
-      skyCtx.fillRect(0, H * 0.68, W, H * 0.12);
+      skyCtx.beginPath(); skyCtx.arc(W*0.5, H*0.73, W*0.6, 0, Math.PI*2); skyCtx.fill();
     }
 
     // Plan 1 — chaîne de montagnes lointaines (pics à ~72% hauteur écran)
@@ -13679,7 +13679,7 @@ function startReveilExercise() {
     });
   }
 
-  var lastTs = null;
+  var lastTs = null, lastStepTs = null;
   var breathPhase = 0;
   function animLoop(ts) {
     if (!_running) return;
@@ -13688,7 +13688,7 @@ function startReveilExercise() {
     lastTs = ts;
     skyT += dt;
     sunT += dt * 60;
-    var progress = totalElapsed / TOTAL;
+    var progress = Math.min((totalElapsed + (ts - (lastStepTs||ts)) / 1000) / TOTAL, 1);
     breathPhase = (Math.sin(skyT * 1.2) + 1) / 2;
     drawSky(progress);
     drawSun(progress, breathPhase);
