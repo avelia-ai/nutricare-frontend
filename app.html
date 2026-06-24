@@ -12781,7 +12781,7 @@ function start478Exercise() {
     { label: 'Expirez', sub: '8 secondes · par la bouche', dur: 8, color: 'rgba(100,220,180,0.9)', glow: 'rgba(100,220,180,0.4)', arcColor: 'rgba(100,220,180,0.8)', scale: 'scale(0.82)', hold: false }
   ];
   var TOTAL_CYCLES = 4;
-  var TOTAL_SEC = PHASES.reduce(function(s,p){return s+p.dur;},0) * TOTAL_CYCLES; // 76s
+  var TOTAL_SEC = PHASES.reduce(function(s,p){return s+p.dur;},0) * TOTAL_CYCLES;
   var screen = document.getElementById('rituel478Screen');
   var circle = document.getElementById('rituel478Circle');
   var counter = document.getElementById('rituel478Counter');
@@ -12791,55 +12791,149 @@ function start478Exercise() {
   var progress = document.getElementById('rituel478Progress');
   var cycleEl = document.getElementById('rituel478CycleCount');
   var halo = document.getElementById('rituel478Halo');
+
+  // Cacher le canvas générique du haut
+  var harmonyCanvas = document.getElementById('rituelHarmonyCanvas');
+  if (harmonyCanvas) harmonyCanvas.parentElement.style.display = 'none';
+  document.getElementById('rituelTitle') && (document.getElementById('rituelTitle').style.display = 'none');
+  document.getElementById('rituelPhase') && (document.getElementById('rituelPhase').style.display = 'none');
+
+  // Fond ciel étoilé animé
+  var existingCanvas = document.getElementById('rituel478StarCanvas');
+  if (!existingCanvas) {
+    var starCanvas = document.createElement('canvas');
+    starCanvas.id = 'rituel478StarCanvas';
+    starCanvas.style.cssText = 'position:fixed;inset:0;width:100%;height:100%;z-index:-1;pointer-events:none';
+    document.getElementById('rituelOverlay').prepend(starCanvas);
+    var ctx = starCanvas.getContext('2d');
+    var W = starCanvas.width = window.innerWidth;
+    var H = starCanvas.height = window.innerHeight;
+    // Générer étoiles
+    var stars = Array.from({length: 120}, function() {
+      return { x: Math.random()*W, y: Math.random()*H, r: Math.random()*1.5+0.3, speed: Math.random()*0.8+0.2, phase: Math.random()*Math.PI*2 };
+    });
+    // Étoiles filantes
+    var shootingStars = [];
+    function spawnShootingStar() {
+      shootingStars.push({ x: Math.random()*W*0.7, y: Math.random()*H*0.4, len: Math.random()*80+60, angle: Math.PI/5, speed: Math.random()*6+6, alpha: 1, active: true });
+    }
+    var _starRunning = true;
+    var lastShoot = 0;
+    function drawStars(ts) {
+      if (!_starRunning) return;
+      ctx.clearRect(0,0,W,H);
+      // Fond dégradé nuit
+      var grad = ctx.createLinearGradient(0,0,0,H);
+      grad.addColorStop(0, 'rgba(5,8,30,1)');
+      grad.addColorStop(1, 'rgba(10,5,25,1)');
+      ctx.fillStyle = grad;
+      ctx.fillRect(0,0,W,H);
+      // Étoiles scintillantes
+      stars.forEach(function(s) {
+        s.phase += 0.02 * s.speed;
+        var alpha = 0.4 + 0.6 * Math.abs(Math.sin(s.phase));
+        ctx.beginPath();
+        ctx.arc(s.x, s.y, s.r, 0, Math.PI*2);
+        ctx.fillStyle = 'rgba(255,255,255,' + alpha + ')';
+        ctx.shadowBlur = 4;
+        ctx.shadowColor = 'rgba(180,200,255,0.8)';
+        ctx.fill();
+      });
+      ctx.shadowBlur = 0;
+      // Étoiles filantes
+      if (ts - lastShoot > 3500 + Math.random()*3000) { spawnShootingStar(); lastShoot = ts; }
+      shootingStars.forEach(function(ss, i) {
+        if (!ss.active) return;
+        ss.x += Math.cos(ss.angle) * ss.speed;
+        ss.y += Math.sin(ss.angle) * ss.speed;
+        ss.alpha -= 0.025;
+        if (ss.alpha <= 0) { ss.active = false; return; }
+        ctx.beginPath();
+        ctx.moveTo(ss.x, ss.y);
+        ctx.lineTo(ss.x - Math.cos(ss.angle)*ss.len, ss.y - Math.sin(ss.angle)*ss.len);
+        var g = ctx.createLinearGradient(ss.x, ss.y, ss.x - Math.cos(ss.angle)*ss.len, ss.y - Math.sin(ss.angle)*ss.len);
+        g.addColorStop(0, 'rgba(255,255,255,' + ss.alpha + ')');
+        g.addColorStop(1, 'rgba(255,255,255,0)');
+        ctx.strokeStyle = g;
+        ctx.lineWidth = 1.5;
+        ctx.stroke();
+      });
+      shootingStars = shootingStars.filter(function(ss){ return ss.active; });
+      requestAnimationFrame(drawStars);
+    }
+    requestAnimationFrame(drawStars);
+    window._stopStars478 = function() { _starRunning = false; starCanvas.remove(); };
+  }
+
   screen.style.display = 'flex';
-  var phaseIdx = 0, cycle = 1, elapsed = 0, phaseElapsed = 0;
+  var phaseIdx = 0, cycle = 1, elapsed = 0;
   var _running = true;
+  var _phaseStart = null, _phaseElapsed = 0;
+  var circumference = 753.98;
+
   function applyPhase(ph) {
     phaseEl.textContent = ph.label;
     subEl.textContent = ph.sub;
     circle.style.background = 'radial-gradient(circle,' + ph.color + ' 0%,rgba(40,40,80,0.3) 100%)';
     circle.style.boxShadow = '0 0 50px ' + ph.glow + ', 0 0 20px ' + ph.glow;
     circle.style.transform = ph.scale;
+    circle.style.transition = 'transform 0.8s ease, background 0.8s ease, box-shadow 0.8s ease';
     circle.style.animation = ph.hold ? 'rituel478Hold 2s ease-in-out infinite' : 'none';
     halo.style.background = 'radial-gradient(circle,' + ph.glow.replace('0.5','0.12') + ' 0%,transparent 70%)';
     arc.style.stroke = ph.arcColor;
+    arc.style.transition = 'stroke 0.8s ease';
   }
-  function tick478() {
+
+  // Tick par seconde pour le compteur
+  var _lastSec = -1;
+  function animLoop(ts) {
     if (!_running) return;
     var ph = PHASES[phaseIdx];
-    if (phaseElapsed === 0) applyPhase(ph);
-    var remaining = ph.dur - phaseElapsed;
-    counter.textContent = remaining;
-    cycleEl.textContent = 'Cycle ' + cycle + ' / ' + TOTAL_CYCLES;
-    // Arc de phase (reset à chaque phase)
-    var circumference = 753.98;
-    arc.style.strokeDashoffset = circumference * (1 - phaseElapsed / ph.dur);
-    // Progression globale
-    progress.style.width = Math.min(100, Math.round(elapsed / TOTAL_SEC * 100)) + '%';
-    phaseElapsed++; elapsed++;
-    if (phaseElapsed >= ph.dur) {
-      phaseElapsed = 0;
+    if (_phaseStart === null) { _phaseStart = ts; applyPhase(ph); }
+    var phaseMs = ts - _phaseStart;
+    var phaseSec = Math.floor(phaseMs / 1000);
+    // Arc fluide via rAF
+    var ratio = Math.min(phaseMs / (ph.dur * 1000), 1);
+    arc.style.strokeDashoffset = circumference * (1 - ratio);
+    // Compteur chaque seconde
+    if (phaseSec !== _lastSec) {
+      _lastSec = phaseSec;
+      var remaining = ph.dur - phaseSec;
+      counter.textContent = remaining > 0 ? remaining : 0;
+      elapsed++;
+      cycleEl.textContent = 'Cycle ' + cycle + ' / ' + TOTAL_CYCLES;
+      progress.style.width = Math.min(100, Math.round(elapsed / TOTAL_SEC * 100)) + '%';
+    }
+    // Fin de phase
+    if (phaseMs >= ph.dur * 1000) {
       phaseIdx++;
+      _phaseStart = null;
+      _lastSec = -1;
       if (phaseIdx >= PHASES.length) {
         phaseIdx = 0;
         cycle++;
         if (cycle > TOTAL_CYCLES) {
           _running = false;
+          if (window._stopStars478) { window._stopStars478(); window._stopStars478 = null; }
           screen.style.display = 'none';
+          if (harmonyCanvas) harmonyCanvas.parentElement.style.display = '';
           var done = document.getElementById('rituelDone');
           done.style.display = 'block';
           document.getElementById('rituelPtsGained').textContent = "+15 pts d'harmonie gagnés";
-          // Sauvegarde points
           if (typeof addHarmonyPoints === 'function') addHarmonyPoints(15);
           return;
         }
       }
     }
-    setTimeout(tick478, 1000);
+    requestAnimationFrame(animLoop);
   }
-  tick478();
-  // Stoppe si on ferme l'overlay
-  window._stop478 = function() { _running = false; };
+  requestAnimationFrame(animLoop);
+
+  window._stop478 = function() {
+    _running = false;
+    if (window._stopStars478) { window._stopStars478(); window._stopStars478 = null; }
+    if (harmonyCanvas) harmonyCanvas.parentElement.style.display = '';
+  };
 }
 
 function closeRituel() {
