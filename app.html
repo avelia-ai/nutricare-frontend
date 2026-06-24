@@ -12331,6 +12331,9 @@ function openSubscriptionModal(context) {
   @keyframes rituelFloat { 0%,100%{transform:translateY(0px)} 50%{transform:translateY(-6px)} }
   @keyframes rituelCountdownPop { 0%{opacity:0;transform:scale(2)} 30%{opacity:1;transform:scale(1)} 80%{opacity:1;transform:scale(1)} 100%{opacity:0;transform:scale(0.5)} }
   @keyframes rituel478Hold { 0%,100%{transform:scale(1)} 50%{transform:scale(1.04)} }
+  @keyframes bsGlow { 0%,100%{opacity:0.4;filter:blur(2px)} 50%{opacity:1;filter:blur(0px)} }
+  @keyframes bsZoneIn { 0%{opacity:0;transform:scale(0.8)} 100%{opacity:1;transform:scale(1)} }
+  @keyframes bsPulseZone { 0%,100%{opacity:0.7} 50%{opacity:1} }
   </style>
   <!-- ECRAN INTRO -->
   <div id="rituelIntroScreen" style="display:none;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:40px 32px;max-width:380px;width:100%;position:relative">
@@ -12425,6 +12428,72 @@ function openSubscriptionModal(context) {
     <!-- Barre de progression globale -->
     <div style="width:200px;height:3px;background:rgba(255,255,255,0.1);border-radius:2px;margin-top:28px;overflow:hidden">
       <div id="rituel478Progress" style="height:100%;width:0%;background:linear-gradient(90deg,rgba(120,180,255,0.8),rgba(180,120,255,0.8));border-radius:2px;transition:width 1s linear"></div>
+    </div>
+  </div>
+  <!-- ECRAN BODY SCAN -->
+  <div id="rituelBodyScanScreen" style="display:none;flex-direction:column;align-items:center;justify-content:center;width:100%;height:100%;position:relative;overflow:hidden">
+    <canvas id="bsAuroraCanvas" style="position:absolute;inset:0;width:100%;height:100%;z-index:0;pointer-events:none"></canvas>
+    <div style="position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;width:100%;padding:20px 0">
+      <!-- Header -->
+      <div style="color:rgba(255,255,255,0.5);font-size:0.75rem;letter-spacing:3px;text-transform:uppercase;margin-bottom:4px">Body Scan</div>
+      <div id="bsZoneLabel" style="color:white;font-size:1.3rem;font-weight:700;letter-spacing:0.5px;min-height:1.8em;text-align:center;margin-bottom:2px"></div>
+      <div id="bsZoneSub" style="color:rgba(255,255,255,0.45);font-size:0.8rem;letter-spacing:1px;min-height:1.2em;text-align:center;margin-bottom:12px"></div>
+      <!-- Silhouette SVG -->
+      <div style="position:relative;width:160px;height:340px">
+        <svg id="bsSilhouette" viewBox="0 0 160 340" width="160" height="340" style="position:absolute;inset:0">
+          <!-- Silhouette base -->
+          <g opacity="0.18" fill="white">
+            <ellipse cx="80" cy="22" rx="16" ry="18"/>
+            <rect x="62" y="38" width="36" height="8" rx="4"/>
+            <rect x="54" y="46" width="52" height="70" rx="14"/>
+            <rect x="30" y="50" width="22" height="58" rx="10"/>
+            <rect x="108" y="50" width="22" height="58" rx="10"/>
+            <rect x="58" y="114" width="20" height="80" rx="10"/>
+            <rect x="82" y="114" width="20" height="80" rx="10"/>
+            <rect x="54" y="190" width="22" height="90" rx="10"/>
+            <rect x="84" y="190" width="22" height="90" rx="10"/>
+            <ellipse cx="65" cy="285" rx="13" ry="8"/>
+            <ellipse cx="95" cy="285" rx="13" ry="8"/>
+          </g>
+          <!-- Zones illuminées (cachées par défaut) -->
+          <!-- 0: Crâne -->
+          <ellipse id="bsZ0" cx="80" cy="22" rx="16" ry="18" fill="rgba(255,220,100,0)" style="transition:all 0.8s ease"/>
+          <!-- 1: Visage/Mâchoire -->
+          <ellipse id="bsZ1" cx="80" cy="36" rx="12" ry="7" fill="rgba(255,220,100,0)" style="transition:all 0.8s ease"/>
+          <!-- 2: Nuque/Épaules -->
+          <rect id="bsZ2" x="50" y="44" width="60" height="16" rx="8" fill="rgba(255,220,100,0)" style="transition:all 0.8s ease"/>
+          <!-- 3: Poitrine -->
+          <rect id="bsZ3" x="56" y="60" width="48" height="32" rx="10" fill="rgba(255,220,100,0)" style="transition:all 0.8s ease"/>
+          <!-- 4: Bras gauche -->
+          <rect id="bsZ4" x="30" y="52" width="22" height="52" rx="10" fill="rgba(255,220,100,0)" style="transition:all 0.8s ease"/>
+          <!-- 5: Bras droit -->
+          <rect id="bsZ5" x="108" y="52" width="22" height="52" rx="10" fill="rgba(255,220,100,0)" style="transition:all 0.8s ease"/>
+          <!-- 6: Ventre -->
+          <rect id="bsZ6" x="58" y="92" width="44" height="34" rx="10" fill="rgba(255,220,100,0)" style="transition:all 0.8s ease"/>
+          <!-- 7: Bas du dos / hanches -->
+          <rect id="bsZ7" x="56" y="124" width="48" height="30" rx="10" fill="rgba(255,220,100,0)" style="transition:all 0.8s ease"/>
+          <!-- 8: Cuisse gauche -->
+          <rect id="bsZ8" x="58" y="154" width="20" height="56" rx="10" fill="rgba(255,220,100,0)" style="transition:all 0.8s ease"/>
+          <!-- 9: Cuisse droite -->
+          <rect id="bsZ9" x="82" y="154" width="20" height="56" rx="10" fill="rgba(255,220,100,0)" style="transition:all 0.8s ease"/>
+          <!-- 10: Mollets -->
+          <rect id="bsZ10" x="56" y="210" width="48" height="60" rx="10" fill="rgba(255,220,100,0)" style="transition:all 0.8s ease"/>
+          <!-- 11: Pieds -->
+          <ellipse id="bsZ11" cx="80" cy="285" rx="28" ry="9" fill="rgba(255,220,100,0)" style="transition:all 0.8s ease"/>
+        </svg>
+        <!-- Halo lumineux sur zone active -->
+        <div id="bsZoneHalo" style="position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:60px;height:60px;border-radius:50%;background:radial-gradient(circle,rgba(255,200,80,0.3) 0%,transparent 70%);pointer-events:none;opacity:0;transition:all 0.8s ease;filter:blur(8px)"></div>
+      </div>
+      <!-- Timer zone -->
+      <div style="margin-top:14px;display:flex;align-items:center;gap:10px">
+        <div id="bsTimer" style="color:rgba(255,255,255,0.6);font-size:2rem;font-weight:200;font-family:monospace;min-width:2ch;text-align:center"></div>
+        <div style="font-size:0.75rem;color:rgba(255,255,255,0.3);letter-spacing:1px">sec</div>
+      </div>
+      <!-- Barre progression globale -->
+      <div style="width:180px;height:2px;background:rgba(255,255,255,0.1);border-radius:2px;margin-top:14px;overflow:hidden">
+        <div id="bsProgress" style="height:100%;width:0%;background:linear-gradient(90deg,rgba(120,180,255,0.8),rgba(200,120,255,0.8));border-radius:2px;transition:width 0.5s linear"></div>
+      </div>
+      <div id="bsStepCount" style="color:rgba(255,255,255,0.25);font-size:0.7rem;letter-spacing:2px;margin-top:6px"></div>
     </div>
   </div>
   <div id="rituelDone" style="display:none;text-align:center;margin-top:20px">
@@ -12696,6 +12765,7 @@ function launchRituelExercise() {
 function _startRituelExercise() {
   var cfg = window._currentRituelCfg;
   // Rituel 4-7-8 : écran dédié
+  if (window._currentRituelType === 'bodyscan') { startBodyScanExercise(); return; }
   if (window._currentRituelType === '478') {
       document.getElementById('rituelExerciseScreen').style.display = 'flex';
       document.getElementById('rituelTitle').style.display = 'none';
@@ -12936,8 +13006,142 @@ function start478Exercise() {
   };
 }
 
+function startBodyScanExercise() {
+  var ZONES = [
+    { id:'bsZ0',  label:'Crâne',         sub:'Sentez le sommet de votre tête se détendre',       dur:45, hy:0.15 },
+    { id:'bsZ1',  label:'Visage',         sub:'Relâchez la mâchoire, les yeux, le front',         dur:45, hy:0.25 },
+    { id:'bsZ2',  label:'Nuque & épaules',sub:'Déposez toute la tension accumulée',               dur:45, hy:0.22 },
+    { id:'bsZ3',  label:'Poitrine',       sub:'Respirez profondément, sentez votre cœur',         dur:45, hy:0.28 },
+    { id:'bsZ4',  label:'Bras gauche',    sub:'Du haut du bras jusqu'aux doigts',                dur:35, hy:0.15 },
+    { id:'bsZ5',  label:'Bras droit',     sub:'Du haut du bras jusqu'aux doigts',                dur:35, hy:0.15 },
+    { id:'bsZ6',  label:'Ventre',         sub:'Laissez votre ventre se gonfler et se vider',      dur:50, hy:0.32 },
+    { id:'bsZ7',  label:'Bas du dos',     sub:'Relâchez les lombaires et les hanches',            dur:45, hy:0.25 },
+    { id:'bsZ8',  label:'Cuisse gauche',  sub:'Sentez le poids de votre jambe sur le sol',       dur:35, hy:0.15 },
+    { id:'bsZ9',  label:'Cuisse droite',  sub:'Sentez le poids de votre jambe sur le sol',       dur:35, hy:0.15 },
+    { id:'bsZ10', label:'Mollets',        sub:'Détendez les muscles du mollet et du tibia',       dur:35, hy:0.18 },
+    { id:'bsZ11', label:'Pieds',          sub:'Jusqu'aux orteils… tout le corps est détendu',   dur:45, hy:0.2  }
+  ];
+  var TOTAL_SEC = ZONES.reduce(function(s,z){return s+z.dur;},0);
+
+  // Afficher l'écran
+  var bsScreen = document.getElementById('rituelBodyScanScreen');
+  document.getElementById('rituelExerciseScreen').style.display = 'flex';
+  bsScreen.style.display = 'flex';
+  document.getElementById('rituelTitle') && (document.getElementById('rituelTitle').style.display = 'none');
+  document.getElementById('rituelPhase') && (document.getElementById('rituelPhase').style.display = 'none');
+  document.getElementById('rituelHarmonyCanvas') && (document.getElementById('rituelHarmonyCanvas').parentElement.style.display = 'none');
+
+  // Aurore boréale
+  var ac = document.getElementById('bsAuroraCanvas');
+  var actx = ac.getContext('2d');
+  ac.width = window.innerWidth; ac.height = window.innerHeight;
+  var _auroraRunning = true;
+  var auroraT = 0;
+  function drawAurora() {
+    if (!_auroraRunning) return;
+    auroraT += 0.004;
+    var W = ac.width, H = ac.height;
+    actx.clearRect(0,0,W,H);
+    // Fond nuit
+    var bg = actx.createLinearGradient(0,0,0,H);
+    bg.addColorStop(0,'rgb(4,6,28)');
+    bg.addColorStop(1,'rgb(8,4,22)');
+    actx.fillStyle = bg; actx.fillRect(0,0,W,H);
+    // Bandes aurore
+    var bands = [
+      { y:H*0.25, color1:'rgba(60,20,180,', color2:'rgba(100,40,220,', amp:70, freq:0.6, speed:1.0 },
+      { y:H*0.40, color1:'rgba(20,80,200,',  color2:'rgba(60,160,255,', amp:90, freq:0.5, speed:0.7 },
+      { y:H*0.55, color1:'rgba(40,120,180,', color2:'rgba(80,200,220,', amp:60, freq:0.8, speed:1.3 },
+      { y:H*0.35, color1:'rgba(100,20,160,', color2:'rgba(160,60,220,', amp:50, freq:0.4, speed:0.5 }
+    ];
+    bands.forEach(function(b) {
+      for (var x=0; x<=W; x+=4) {
+        var wave = Math.sin(x*b.freq*0.01 + auroraT*b.speed) * b.amp
+                 + Math.sin(x*b.freq*0.007 + auroraT*b.speed*0.6) * b.amp*0.4;
+        var cy = b.y + wave;
+        var grad = actx.createLinearGradient(x, cy-80, x, cy+80);
+        grad.addColorStop(0, b.color1+'0)');
+        grad.addColorStop(0.5, b.color2+'0.18)');
+        grad.addColorStop(1, b.color1+'0)');
+        actx.fillStyle = grad;
+        actx.fillRect(x, cy-80, 5, 160);
+      }
+    });
+    // Étoiles fixes
+    if (!drawAurora._stars) {
+      drawAurora._stars = Array.from({length:80}, function(){
+        return {x:Math.random()*W, y:Math.random()*H*0.6, r:Math.random()*1.2+0.3, p:Math.random()*Math.PI*2};
+      });
+    }
+    drawAurora._stars.forEach(function(s) {
+      s.p += 0.02;
+      var a = 0.3 + 0.5*Math.abs(Math.sin(s.p));
+      actx.beginPath(); actx.arc(s.x,s.y,s.r,0,Math.PI*2);
+      actx.fillStyle='rgba(255,255,255,'+a+')'; actx.fill();
+    });
+    requestAnimationFrame(drawAurora);
+  }
+  requestAnimationFrame(drawAurora);
+
+  // Logique zones
+  var zoneIdx = 0, _running = true, elapsed = 0;
+  var _zoneStart = null;
+
+  function activateZone(z) {
+    // Reset toutes les zones
+    ZONES.forEach(function(zz) {
+      var el = document.getElementById(zz.id);
+      if (el) el.style.fill = 'rgba(255,220,100,0)';
+    });
+    var el = document.getElementById(z.id);
+    if (el) {
+      el.style.fill = 'rgba(255,220,100,0.7)';
+      el.style.filter = 'drop-shadow(0 0 8px rgba(255,200,80,0.9))';
+    }
+    document.getElementById('bsZoneLabel').textContent = z.label;
+    document.getElementById('bsZoneSub').textContent = z.sub;
+    // Vibration
+    if (navigator.vibrate) navigator.vibrate([80, 40, 40]);
+  }
+
+  function bsLoop(ts) {
+    if (!_running) return;
+    var z = ZONES[zoneIdx];
+    if (_zoneStart === null) { _zoneStart = ts; activateZone(z); }
+    var ms = ts - _zoneStart;
+    var remaining = Math.max(0, Math.ceil((z.dur*1000 - ms)/1000));
+    document.getElementById('bsTimer').textContent = remaining;
+    document.getElementById('bsStepCount').textContent = (zoneIdx+1) + ' / ' + ZONES.length;
+    var totalElapsed = ZONES.slice(0,zoneIdx).reduce(function(s,zz){return s+zz.dur;},0) + Math.min(ms/1000, z.dur);
+    document.getElementById('bsProgress').style.width = Math.min(100, totalElapsed/TOTAL_SEC*100) + '%';
+    if (ms >= z.dur*1000) {
+      zoneIdx++;
+      _zoneStart = null;
+      if (zoneIdx >= ZONES.length) {
+        _running = false; _auroraRunning = false;
+        bsScreen.style.display = 'none';
+        document.getElementById('rituelHarmonyCanvas') && (document.getElementById('rituelHarmonyCanvas').parentElement.style.display = '');
+        var done = document.getElementById('rituelDone');
+        done.style.display = 'block';
+        document.getElementById('rituelPtsGained').textContent = "+30 pts d'harmonie gagnés";
+        if (typeof addHarmonyPoints === 'function') addHarmonyPoints(30);
+        return;
+      }
+    }
+    requestAnimationFrame(bsLoop);
+  }
+  requestAnimationFrame(bsLoop);
+
+  window._stopBodyScan = function() {
+    _running = false; _auroraRunning = false;
+    bsScreen.style.display = 'none';
+    document.getElementById('rituelHarmonyCanvas') && (document.getElementById('rituelHarmonyCanvas').parentElement.style.display = '');
+  };
+}
+
 function closeRituel() {
   if (window._stop478) { window._stop478(); window._stop478 = null; }
+  if (window._stopBodyScan) { window._stopBodyScan(); window._stopBodyScan = null; }
   clearTimeout(_rituelTimer);
   document.getElementById('rituelOverlay').style.display = 'none';
   _hcState.calm=0; _hcState.sleep=0; _hcState.hydra=0; _hcState.activ=0;
