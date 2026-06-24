@@ -13729,6 +13729,73 @@ window.addRoutineToPlanning = function(idx) {
   alert('Routine ajoutée à votre planning !');
 };
 </script>
+
+// ── ROUTINES PREDEFINIES ───────────────────────────────────────────────────
+var ROUTINES_DATA = [
+  { icon:'🥗', title:'Perdre du poids', duree:'7 jours', desc:'Une routine alimentaire et sportive pour perdre du poids progressivement et sainement.', activites:['🍽️ Petit-déj protéiné (oeufs, yaourt grec)','💧 2L d eau par jour','🚶 Marche 30min apres le dejeuner','⏰ Dernier repas avant 19h30','📝 Logger ses repas dans l app'] },
+  { icon:'😴', title:'Ameliorer le sommeil', duree:'7 jours', desc:'Une routine du soir pour retrouver un sommeil profond et reparateur.', activites:['🌙 Tisane camomille a 21h','📵 Pas d ecran apres 21h30','🧘 5min de respiration 4-7-8','😴 Coucher avant 22h30','☀️ Lever a heure fixe le matin'] },
+  { icon:'💪', title:'Prendre du muscle', duree:'14 jours', desc:'Programme musculation et nutrition pour gagner en masse musculaire efficacement.', activites:['💪 Entrainement 45min (alternance haut/bas)','🥩 Proteines a chaque repas (1.6g/kg)','🥛 Shaker proteines post-entrainement','😴 8h de sommeil minimum','📊 Peser ses aliments les 7 premiers jours'] },
+  { icon:'🌿', title:'Detox', duree:'7 jours', desc:'Eliminer les toxines et repartir du bon pied avec une alimentation epuree.', activites:['🥤 Jus vert (concombre, epinards, citron) le matin','🚫 Zero sucre raffine et alcool','🥗 Legumes vapeur et proteines maigres','💧 2.5L d eau citron par jour','🧘 Marche 20min le soir'] },
+  { icon:'✨', title:'Skincare quotidien', duree:'14 jours', desc:'Routine beaute complete pour une peau lumineuse et hydratee.', activites:['🧴 Nettoyant doux matin et soir','☀️ SPF 50 chaque matin','💊 Omega-3 et vitamine C','💧 1.5L d eau minimum','🥑 Avocats, noix, poissons gras au menu'] },
+  { icon:'🧘', title:'Anti-stress', duree:'7 jours', desc:'Techniques quotidiennes pour reduire le cortisol et retrouver la serenite.', activites:['🧘 Meditation guidee 10min au reveil','🫁 Coherence cardiaque 5min apres dejeuner','📵 Pause sans ecran 12h-13h','🍵 Adaptogenes : ashwagandha ou rhodiola','📓 Journal de gratitude le soir'] },
+  { icon:'🫀', title:'Sante cardiovasculaire', duree:'14 jours', desc:'Renforcer votre coeur et ameliorer votre endurance avec une approche globale.', activites:['🏃 Marche rapide 30min (FC cible 60-70%)','🐟 Poissons gras 3x/semaine','🧄 Ail cru ou supplement ail','🚫 Limiter sel et graisses saturees','💊 Omega-3 si pas assez de poisson'] },
+  { icon:'🦴', title:'Sante des os', duree:'21 jours', desc:'Renforcer la densite osseuse avec nutrition et exposition solaire adaptees.', activites:['☀️ 15min de soleil direct le matin','🥛 3 produits laitiers ou alternatives enrichies','💊 Vitamine D3 + K2','🏋️ Exercices en charge (marche, squat leger)','🥦 Brocolis, chou kale, sardines'] },
+  { icon:'🧠', title:'Boost cognitif', duree:'14 jours', desc:'Optimiser concentration, memoire et clarte mentale au quotidien.', activites:['🫐 Smoothie bleuets + noix le matin','☕ The vert plutot que cafe l apres-midi','🧩 15min de jeu cognitif (sudoku, lecture)','😴 7-8h de sommeil strict','🐟 Omega-3 DHA quotidien'] },
+  { icon:'🌸', title:'Equilibre hormonal', duree:'21 jours', desc:'Soutenir l equilibre hormonal naturellement par l alimentation et le mode de vie.', activites:['🌱 1cs graines de lin moulues le matin','🥦 Cruciferes quotidiens (brocoli, chou)','🚫 Reduire sucre et alcool','🧘 Gestion stress : yoga ou coherence cardiaque','😴 Coucher avant 22h30 obligatoire'] },
+  { icon:'🔥', title:'Anti-inflammation', duree:'14 jours', desc:'Reduire l inflammation chronique avec une alimentation anti-inflammatoire.', activites:['🟡 Latte curcuma + poivre noir le matin','🐟 Poissons gras 4x/semaine','🫐 Fruits rouges quotidiens','🚫 Zero gluten et produits laitiers conventionnels','💊 Omega-3 et magnesium'] },
+  { icon:'💧', title:'Hydratation optimale', duree:'7 jours', desc:'Retrouver une hydratation optimale pour l energie, la peau et la digestion.', activites:['💧 1 grand verre d eau des le reveil','⏰ Verre d eau avant chaque repas','📱 Alarme toutes les 2h pour boire','🍉 Fruits et legumes riches en eau','🚫 Limiter cafe, the et sodas'] },
+  { icon:'🏃', title:'Cardio debutant', duree:'21 jours', desc:'Programme progressif pour debuter l activite physique en douceur.', activites:['🚶 Marche 20min (semaine 1)','🏃 Marche rapide 25min (semaine 2)','🏃 Jogging/marche alternee 30min (semaine 3)','💧 S hydrater avant et apres','😴 Repos 2 jours/semaine'] },
+  { icon:'🍽️', title:'Jeune intermittent 16/8', duree:'14 jours', desc:'Protocole de jeune intermittent pour ameliorer la sensibilite a l insuline.', activites:['⏰ Dernier repas a 20h maximum','🌅 Premier repas a midi (fenetre 12h-20h)','💧 Eau, the, cafe noir pendant le jeune','🥗 Repas riches et nutritifs dans la fenetre','📊 Peser chaque matin a jeun'] },
+  { icon:'🦷', title:'Hygiene bucco-dentaire', duree:'14 jours', desc:'Protocole complet pour une sante dentaire et gingivale optimale.', activites:['🪥 Brossage 2min x2/jour (technique Bass)','🦷 Fil dentaire ou brossettes chaque soir','🌊 Bain de bouche fluorure apres brossage soir','🚫 Pas de sucre entre les repas','👨‍⚕️ Bilan dentaire si douleur'] },
+  { icon:'🌞', title:'Boost energie', duree:'7 jours', desc:'Retrouver une energie durable tout au long de la journee.', activites:['☀️ Lever a 6h30 et exposition lumiere naturelle','🥗 Petit-dejeuner proteines + bons glucides','🚫 Zero sucre raffine avant 12h','💧 2L d eau par jour','🧘 5min de coherence cardiaque apres dejeuner'] },
+  { icon:'🫁', title:'Sante respiratoire', duree:'7 jours', desc:'Ameliorer la capacite respiratoire et reduire le stress par la respiration.', activites:['🫁 Coherence cardiaque 5min matin','🌬️ Technique 4-7-8 avant le coucher','🏃 Cardio doux 20min (veloeliptique)','🚫 Eviter les polluants interieurs','🌿 Plantes depolluantes dans la chambre'] },
+  { icon:'🌾', title:'Sante digestive', duree:'14 jours', desc:'Restaurer un microbiote sain et ameliorer le confort digestif.', activites:['🥣 Kefir ou yaourt nature le matin','🌾 30g de fibres par jour (legumineuses, graines)','💧 Eau tiede citronnee a jeun','🚫 Limiter aliments ultra-transformes','🧘 Marche 10min apres chaque repas'] },
+  { icon:'💅', title:'Cheveux et ongles', duree:'21 jours', desc:'Nourrir de l interieur pour des cheveux forts et des ongles solides.', activites:['💊 Biotine 5000mcg le matin','🥚 Oeufs et proteines animales quotidiens','🌰 Noix du Bresil (selenium) x3/jour','💆 Massage cuir chevelu 2min le soir','🚫 Eviter shampooings avec sulfates'] },
+  { icon:'🛡️', title:'Boost immunite', duree:'14 jours', desc:'Renforcer les defenses immunitaires naturellement.', activites:['🍊 Jus d orange frais le matin (vit C)','💊 Vitamine D3 2000UI/jour','🧄 1 gousse d ail cru par jour','🥦 Cruciferes et baies quotidiens','😴 8h de sommeil : l immunite se construit la nuit'] }
+];
+
+function showRoutineDetail(idx) {
+  var r = ROUTINES_DATA[idx];
+  if (!r) return;
+  document.getElementById('routineModalTitle').textContent = r.icon + ' ' + r.title;
+  document.getElementById('routineModalDesc').textContent = r.desc;
+  document.getElementById('routineModalDureeInfo').textContent = 'Duree : ' + r.duree;
+  var actEl = document.getElementById('routineModalActivites');
+  actEl.innerHTML = r.activites.map(function(a) {
+    return '<div style="display:flex;align-items:center;gap:8px;font-size:0.85rem;color:#444;padding:4px 0">' +
+      '<span style="flex-shrink:0">•</span><span>' + a + '</span></div>';
+  }).join('');
+  // Date du jour par defaut
+  var today = new Date().toISOString().split('T')[0];
+  document.getElementById('routineStartDate').value = today;
+  // Stocker l index courant
+  window._currentRoutineIdx = idx;
+  var modal = document.getElementById('routineModal');
+  modal.style.display = 'flex';
+}
+
+function closeRoutineModal() {
+  document.getElementById('routineModal').style.display = 'none';
+}
+
+function ajouterRoutineAgenda() {
+  var idx = window._currentRoutineIdx;
+  var r = ROUTINES_DATA[idx];
+  var dateDebut = document.getElementById('routineStartDate').value;
+  if (!dateDebut) { alert('Choisissez une date de debut'); return; }
+  // Sauvegarder en localStorage
+  var routinesActives = JSON.parse(localStorage.getItem('routines_actives') || '[]');
+  routinesActives.push({ idx: idx, title: r.title, icon: r.icon, debut: dateDebut, duree: r.duree });
+  localStorage.setItem('routines_actives', JSON.stringify(routinesActives));
+  closeRoutineModal();
+  alert('Routine ajoutee a votre agenda !');
+}
+
+function genererMenusRoutine() {
+  closeRoutineModal();
+  showView('menus');
+}
+// ── FIN ROUTINES ───────────────────────────────────────────────────────────
 </body>
 </html>
  
