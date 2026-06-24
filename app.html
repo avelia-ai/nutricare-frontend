@@ -13725,13 +13725,39 @@ window.showRoutineDetail = function(idx) {
 };
 
 window.addRoutineToPlanning = function(idx) {
-  document.getElementById('routineDetailModal').remove();
-  alert('Routine ajoutée à votre planning !');
+  var RDATA = window.ROUTINES_DATA || [];
+  var r = RDATA[idx];
+  if (!r) { alert('Routine introuvable'); return; }
+  var nbJours = parseInt(r.duree) || 7;
+  var today = new Date();
+  var ds_today = today.getFullYear() + '-' + String(today.getMonth()+1).padStart(2,'0') + '-' + String(today.getDate()).padStart(2,'0');
+  var events = JSON.parse(localStorage.getItem('mirella_planning') || '[]');
+  for (var d = 0; d < nbJours; d++) {
+    var day = new Date(today.getTime() + d * 86400000);
+    var ds = day.getFullYear() + '-' + String(day.getMonth()+1).padStart(2,'0') + '-' + String(day.getDate()).padStart(2,'0');
+    events.push({
+      id: Date.now().toString() + '_' + d,
+      type: 'rappel',
+      ico: r.icon,
+      emoji: r.icon,
+      title: r.title + ' - Jour ' + (d+1),
+      date: ds,
+      time: '08:00',
+      rec: 'none',
+      notif: false
+    });
+  }
+  localStorage.setItem('mirella_planning', JSON.stringify(events));
+  if (window.planningEvents) window.planningEvents = events;
+  var modal = document.getElementById('routineDetailModal');
+  if (modal) modal.remove();
+  alert('Routine ajoutee sur ' + nbJours + ' jours !');
+  if (typeof showView === 'function') showView('planning');
 };
 </script>
 
 // ── ROUTINES PREDEFINIES ───────────────────────────────────────────────────
-var ROUTINES_DATA = [
+window.ROUTINES_DATA = [
   { icon:'🥗', title:'Perdre du poids', duree:'7 jours', desc:'Une routine alimentaire et sportive pour perdre du poids progressivement et sainement.', activites:['🍽️ Petit-déj protéiné (oeufs, yaourt grec)','💧 2L d eau par jour','🚶 Marche 30min apres le dejeuner','⏰ Dernier repas avant 19h30','📝 Logger ses repas dans l app'] },
   { icon:'😴', title:'Ameliorer le sommeil', duree:'7 jours', desc:'Une routine du soir pour retrouver un sommeil profond et reparateur.', activites:['🌙 Tisane camomille a 21h','📵 Pas d ecran apres 21h30','🧘 5min de respiration 4-7-8','😴 Coucher avant 22h30','☀️ Lever a heure fixe le matin'] },
   { icon:'💪', title:'Prendre du muscle', duree:'14 jours', desc:'Programme musculation et nutrition pour gagner en masse musculaire efficacement.', activites:['💪 Entrainement 45min (alternance haut/bas)','🥩 Proteines a chaque repas (1.6g/kg)','🥛 Shaker proteines post-entrainement','😴 8h de sommeil minimum','📊 Peser ses aliments les 7 premiers jours'] },
