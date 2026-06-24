@@ -3628,39 +3628,37 @@ function switchLang(lang) {
   </div>
 
   <div id="analysisContent" style="display:none">
-    <!-- Zone upload photo -->
-    <div style="background:white;border-radius: 4px;padding:28px;border:1px solid rgba(255,107,107,0.15);margin-bottom:24px;text-align:center">
-      <style>
-      .repUpload{position:relative;border-radius:18px;padding:2px;margin-bottom:0;background:linear-gradient(135deg, rgba(255,180,130,0.9), rgba(255,255,255,0.6) 35%, rgba(255,110,90,0.8) 70%, rgba(255,255,255,0.6));background-size:300% 300%;animation:repBorderFlow 6s ease infinite;box-shadow:0 16px 40px rgba(230,110,70,0.16), 0 2px 8px rgba(0,0,0,0.04)}
-      @keyframes repBorderFlow{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
-      .repUploadInner{background:#fffcfa;border-radius:16px;padding:30px 22px 24px;text-align:center;position:relative;overflow:hidden;cursor:pointer}
-      .repSparkles{position:absolute;inset:0;pointer-events:none}
-      .repSparkle{position:absolute;border-radius:50%;background:#FF9A6C;box-shadow:0 0 6px rgba(255,154,108,0.7);animation:repTwinkle ease-in-out infinite}
-      @keyframes repTwinkle{0%,100%{opacity:0;transform:scale(0.4)}50%{opacity:1;transform:scale(1)}}
-      .repBadge{display:inline-flex;align-items:center;gap:6px;background:rgba(255,154,108,0.13);border:1px solid rgba(255,154,108,0.35);color:#C2604A;font-size:0.65rem;font-weight:700;letter-spacing:0.07em;text-transform:uppercase;padding:5px 12px;border-radius:999px;margin-bottom:18px}
-      .repScanWrap{position:relative;width:96px;height:96px;margin:0 auto 18px}
-      .repScanRing{position:absolute;inset:0;border-radius:50%;background:conic-gradient(from 0deg, transparent, #FF9A6C, transparent 35%);animation:repRotate 3s linear infinite}
-      .repScanRing::before{content:'';position:absolute;inset:5px;border-radius:50%;background:#fffcfa}
-      @keyframes repRotate{to{transform:rotate(360deg)}}
-      .repIconCore{position:absolute;inset:8px;border-radius:50%;background:radial-gradient(circle at 35% 30%, #FFC9A0, #FF7A5C 60%, #E85A45);display:flex;align-items:center;justify-content:center;box-shadow:0 0 0 1px rgba(255,255,255,0.15) inset, 0 10px 24px rgba(255,100,70,0.45)}
-      .repIconCore svg{width:30px;height:30px}
-      .repScanLine{position:absolute;left:16%;right:16%;height:2px;background:linear-gradient(90deg,transparent,#fff,transparent);box-shadow:0 0 10px rgba(255,255,255,0.8);animation:repScanMove 2.4s ease-in-out infinite;opacity:0.85}
-      @keyframes repScanMove{0%,100%{top:26%}50%{top:70%}}
-      .repTitle{font-weight:700;color:#2b2320;font-size:1.05rem;margin-bottom:6px}
-      .repSub{font-size:0.82rem;color:#9a8b82;margin-bottom:20px;line-height:1.45}
-      .repBtnRow{display:flex;flex-direction:column;gap:9px;margin-top:4px}
-      .repBtnPrimary{position:relative;width:100%;padding:14px 0;border-radius:14px;border:none;background:linear-gradient(135deg,var(--coral),var(--accent));color:#fff;font-size:0.9rem;font-weight:700;display:flex;align-items:center;justify-content:center;gap:8px;cursor:pointer;overflow:hidden;box-shadow:0 8px 20px rgba(255,107,107,0.35)}
-      .repBtnPrimary::after{content:'';position:absolute;top:0;left:-60%;width:40%;height:100%;background:linear-gradient(120deg,transparent,rgba(255,255,255,0.45),transparent);transform:skewX(-20deg);animation:repSheen 3.2s ease-in-out infinite}
-      @keyframes repSheen{0%{left:-60%}50%{left:120%}100%{left:120%}}
-      .repBtnPrimary svg{width:17px;height:17px;position:relative;z-index:1}
-      .repBtnPrimary span{position:relative;z-index:1}
-      .repBtnSecondary{width:100%;padding:13px 0;border-radius:14px;background:#FFF3ED;border:1px solid #FFE0D2;color:#C2604A;font-size:0.84rem;font-weight:600;display:flex;align-items:center;justify-content:center;gap:8px;cursor:pointer}
-      .repBtnSecondary svg{width:16px;height:16px}
-      .repTip{font-size:0.7rem;color:#b5a89f;display:flex;align-items:center;justify-content:center;gap:5px;padding-bottom:6px}
-      </style>
-
+    <style>
+    .repUpload{position:relative;border-radius:18px;padding:2px;margin-bottom:16px;background:linear-gradient(135deg, rgba(255,180,130,0.9), rgba(255,255,255,0.6) 35%, rgba(255,110,90,0.8) 70%, rgba(255,255,255,0.6));background-size:300% 300%;animation:repBorderFlow 6s ease infinite;box-shadow:0 16px 40px rgba(230,110,70,0.16), 0 2px 8px rgba(0,0,0,0.04)}
+    @keyframes repBorderFlow{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
+    .repUploadInner{background:#fffcfa;border-radius:16px;padding:30px 22px 24px;text-align:center;position:relative;overflow:hidden}
+    .repSparkles{position:absolute;inset:0;pointer-events:none}
+    .repSparkle{position:absolute;border-radius:50%;background:#FF9A6C;box-shadow:0 0 6px rgba(255,154,108,0.7);animation:repTwinkle ease-in-out infinite}
+    @keyframes repTwinkle{0%,100%{opacity:0;transform:scale(0.4)}50%{opacity:1;transform:scale(1)}}
+    .repBadge{display:inline-flex;align-items:center;gap:6px;background:rgba(255,154,108,0.13);border:1px solid rgba(255,154,108,0.35);color:#C2604A;font-size:0.65rem;font-weight:700;letter-spacing:0.07em;text-transform:uppercase;padding:5px 12px;border-radius:999px;margin-bottom:18px}
+    .repScanWrap{position:relative;width:96px;height:96px;margin:0 auto 18px}
+    .repScanRing{position:absolute;inset:0;border-radius:50%;background:conic-gradient(from 0deg, transparent, #FF9A6C, transparent 35%);animation:repRotate 3s linear infinite}
+    .repScanRing::before{content:'';position:absolute;inset:5px;border-radius:50%;background:#fffcfa}
+    @keyframes repRotate{to{transform:rotate(360deg)}}
+    .repIconCore{position:absolute;inset:8px;border-radius:50%;background:radial-gradient(circle at 35% 30%, #FFC9A0, #FF7A5C 60%, #E85A45);display:flex;align-items:center;justify-content:center;box-shadow:0 0 0 1px rgba(255,255,255,0.15) inset, 0 10px 24px rgba(255,100,70,0.45)}
+    .repIconCore svg{width:30px;height:30px}
+    .repScanLine{position:absolute;left:16%;right:16%;height:2px;background:linear-gradient(90deg,transparent,#fff,transparent);box-shadow:0 0 10px rgba(255,255,255,0.8);animation:repScanMove 2.4s ease-in-out infinite;opacity:0.85}
+    @keyframes repScanMove{0%,100%{top:26%}50%{top:70%}}
+    .repTitle{font-weight:700;color:#2b2320;font-size:1.05rem;margin-bottom:6px}
+    .repSub{font-size:0.82rem;color:#9a8b82;margin-bottom:20px;line-height:1.45}
+    .repBtnRow{display:flex;flex-direction:column;gap:9px}
+    .repBtnPrimary{position:relative;width:100%;padding:14px 0;border-radius:14px;border:none;background:linear-gradient(135deg,var(--coral),var(--accent));color:#fff;font-size:0.9rem;font-weight:700;display:flex;align-items:center;justify-content:center;gap:8px;cursor:pointer;overflow:hidden;box-shadow:0 8px 20px rgba(255,107,107,0.35)}
+    .repBtnPrimary::after{content:'';position:absolute;top:0;left:-60%;width:40%;height:100%;background:linear-gradient(120deg,transparent,rgba(255,255,255,0.45),transparent);transform:skewX(-20deg);animation:repSheen 3.2s ease-in-out infinite}
+    @keyframes repSheen{0%{left:-60%}50%{left:120%}100%{left:120%}}
+    .repBtnPrimary svg{width:17px;height:17px;position:relative;z-index:1}
+    .repBtnPrimary span{position:relative;z-index:1}
+    .repBtnSecondary{width:100%;padding:13px 0;border-radius:14px;background:#FFF3ED;border:1px solid #FFE0D2;color:#C2604A;font-size:0.84rem;font-weight:600;display:flex;align-items:center;justify-content:center;gap:8px;cursor:pointer}
+    .repBtnSecondary svg{width:16px;height:16px}
+    .repTip{margin-top:16px;font-size:0.7rem;color:#b5a89f;display:flex;align-items:center;justify-content:center;gap:5px}
+    </style>
+    <div id="repasUploadZone" style="margin-bottom:16px">
       <div class="repUpload">
-        <div class="repUploadInner" id="analysisDropzone" onclick="document.getElementById('analysisFileInput').click()">
+        <div class="repUploadInner">
           <div class="repSparkles" id="repSparkles"></div>
           <div class="repBadge">
             <svg viewBox="0 0 24 24" fill="none" stroke="#C2604A" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" width="10" height="10"><path d="M12 2l1.5 4.5L18 8l-4.5 1.5L12 14l-1.5-4.5L6 8l4.5-1.5z"/></svg>
@@ -3675,7 +3673,7 @@ function switchLang(lang) {
           </div>
           <div class="repTitle">Prenez ou importez une photo</div>
           <div class="repSub">Cliquez ici ou glissez une photo de votre repas</div>
-          <div class="repBtnRow" onclick="event.stopPropagation()">
+          <div class="repBtnRow">
             <button class="repBtnPrimary" onclick="document.getElementById('analysisFileInput').click()">
               <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
               <span>Prendre une photo</span>
@@ -3684,16 +3682,15 @@ function switchLang(lang) {
               <svg viewBox="0 0 24 24" fill="none" stroke="#C2604A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
               Choisir depuis la galerie
             </button>
-            <div class="repTip">
-              <svg viewBox="0 0 24 24" fill="none" stroke="#b5a89f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="13" height="13"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-              Vos photos restent privées et sécurisées
-            </div>
+          </div>
+          <div class="repTip">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#b5a89f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="13" height="13"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+            Vos photos restent privées et sécurisées
           </div>
         </div>
       </div>
       <input type="file" id="analysisFileInput" accept="image/*" capture="environment" style="display:none" onchange="previewAndAnalyze(event)">
       <input type="file" id="analysisGalleryInput" accept="image/*" style="display:none" onchange="previewAndAnalyze(event)">
-
       <script>
       (function(){
         var sp = document.getElementById('repSparkles');
@@ -3712,10 +3709,8 @@ function switchLang(lang) {
         }
       })();
       </script>
-      <img id="analysisPreview" style="display:none;max-width:300px;max-height:300px;border-radius: 4px;margin-top:16px;object-fit:cover">
+      <img id="analysisPreview" style="display:none;max-width:300px;max-height:300px;border-radius:12px;margin-top:16px;object-fit:cover">
     </div>
-
-    <!-- Résultat analyse -->
     <div id="analysisResult" style="display:none">
       <!-- Header avec scores -->
       <div style="background:linear-gradient(135deg,var(--coral),var(--accent));border-radius:16px;padding:18px 20px;margin-bottom:12px">
