@@ -11494,7 +11494,7 @@ function toggleQuickMenu() {
   <!-- Contenu centré -->
   <div style="position:relative;z-index:2;display:flex;flex-direction:column;align-items:center;width:100%;padding:0 32px">
     <!-- Soleil canvas -->
-    <canvas id="reveilSunCanvas" style="width:220px;height:220px;margin-bottom:8px"></canvas>
+    <canvas id="reveilSunCanvas" style="display:none;width:220px;height:220px"></canvas>
     <!-- Étape -->
     <div id="reveilStepLabel" style="color:rgba(255,220,150,0.8);font-size:0.7rem;font-weight:700;letter-spacing:3px;text-transform:uppercase;margin-bottom:10px;animation:reveilTextIn 0.6s ease both"></div>
     <!-- Instruction principale -->
@@ -13502,28 +13502,45 @@ function startReveilExercise() {
     var mMid  = 'rgba('+Math.round(8+22*t)+','+Math.round(5+14*t)+','+Math.round(18+12*t)+',0.97)';
     var mFront= 'rgba('+Math.round(6+15*t)+','+Math.round(4+9*t)+','+Math.round(14+8*t)+',1)';
 
-    // Lueur dorée sur les crêtes (apparaît quand le soleil monte)
+    // Lune qui disparaît au fur et à mesure que le soleil monte
+    var moonAlpha = Math.max(0, 1 - t * 3.5);
+    if (moonAlpha > 0) {
+      var moonX = W * 0.75, moonY = H * 0.18, moonR = 18;
+      // Halo lune
+      var moonHalo = skyCtx.createRadialGradient(moonX, moonY, 0, moonX, moonY, moonR * 3);
+      moonHalo.addColorStop(0, 'rgba(220,230,255,' + moonAlpha * 0.25 + ')');
+      moonHalo.addColorStop(1, 'rgba(180,200,255,0)');
+      skyCtx.fillStyle = moonHalo;
+      skyCtx.beginPath(); skyCtx.arc(moonX, moonY, moonR * 3, 0, Math.PI * 2); skyCtx.fill();
+      // Corps lune (croissant)
+      skyCtx.save();
+      skyCtx.globalAlpha = moonAlpha;
+      skyCtx.fillStyle = 'rgba(230,240,255,0.95)';
+      skyCtx.shadowColor = 'rgba(180,210,255,0.8)';
+      skyCtx.shadowBlur = 12;
+      skyCtx.beginPath(); skyCtx.arc(moonX, moonY, moonR, 0, Math.PI * 2); skyCtx.fill();
+      // Ombre croissant
+      skyCtx.fillStyle = 'rgba(10,8,40,0.92)';
+      skyCtx.shadowBlur = 0;
+      skyCtx.beginPath(); skyCtx.arc(moonX + moonR * 0.38, moonY - moonR * 0.08, moonR * 0.88, 0, Math.PI * 2); skyCtx.fill();
+      skyCtx.restore();
+      // Étoiles autour de la lune
+      [[moonX-50, moonY-12],[moonX+38, moonY-28],[moonX-30, moonY+25],[moonX+55, moonY+10]].forEach(function(pos, i) {
+        skyCtx.beginPath();
+        skyCtx.arc(pos[0], pos[1], 1 + (i%2)*0.6, 0, Math.PI*2);
+        skyCtx.fillStyle = 'rgba(255,255,255,' + moonAlpha * (0.6 + i*0.1) + ')';
+        skyCtx.fill();
+      });
+    }
+
+    // Lueur dorée sur les crêtes — simple glow sans forme fermée
     if (t > 0.2) {
-      var creteAlpha = Math.min((t-0.2)/0.4, 1) * 0.55;
-      var creteGrad = skyCtx.createLinearGradient(0, H*0.72, 0, H*0.82);
-      creteGrad.addColorStop(0, 'rgba(255,200,80,'+creteAlpha+')');
-      creteGrad.addColorStop(1, 'rgba(255,140,40,0)');
-      // Dessiner une forme de crête illuminée
-      skyCtx.beginPath();
-      skyCtx.moveTo(0, H*0.82);
-      skyCtx.lineTo(W*0.10, H*0.74); skyCtx.lineTo(W*0.20, H*0.80);
-      skyCtx.lineTo(W*0.32, H*0.72); skyCtx.lineTo(W*0.44, H*0.79);
-      skyCtx.lineTo(W*0.50, H*0.73); skyCtx.lineTo(W*0.56, H*0.79);
-      skyCtx.lineTo(W*0.68, H*0.74); skyCtx.lineTo(W*0.80, H*0.80);
-      skyCtx.lineTo(W*0.90, H*0.75); skyCtx.lineTo(W, H*0.80);
-      skyCtx.lineTo(W, H*0.76); skyCtx.lineTo(W*0.90, H*0.71);
-      skyCtx.lineTo(W*0.80, H*0.76); skyCtx.lineTo(W*0.68, H*0.70);
-      skyCtx.lineTo(W*0.56, H*0.75); skyCtx.lineTo(W*0.50, H*0.69);
-      skyCtx.lineTo(W*0.44, H*0.75); skyCtx.lineTo(W*0.32, H*0.68);
-      skyCtx.lineTo(W*0.20, H*0.76); skyCtx.lineTo(W*0.10, H*0.70);
-      skyCtx.lineTo(0, H*0.78); skyCtx.closePath();
-      skyCtx.fillStyle = creteGrad;
-      skyCtx.fill();
+      var creteAlpha = Math.min((t - 0.2) / 0.4, 1) * 0.4;
+      var creteGlow = skyCtx.createLinearGradient(0, H * 0.68, 0, H * 0.80);
+      creteGlow.addColorStop(0, 'rgba(255,210,80,' + creteAlpha + ')');
+      creteGlow.addColorStop(1, 'rgba(255,140,40,0)');
+      skyCtx.fillStyle = creteGlow;
+      skyCtx.fillRect(0, H * 0.68, W, H * 0.12);
     }
 
     // Plan 1 — chaîne de montagnes lointaines (pics à ~72% hauteur écran)
