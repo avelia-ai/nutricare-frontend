@@ -13725,7 +13725,7 @@ window.showRoutineDetail = function(idx) {
 };
 
 window.addRoutineToPlanning = function(idx) {
-  var RDATA = window.ROUTINES_DATA || [];
+  var RDATA = (typeof ROUTINES_DATA !== "undefined") ? ROUTINES_DATA : (window.ROUTINES_DATA || []);
   var r = RDATA[idx];
   if (!r) { alert('Routine introuvable'); return; }
   var nbJours = parseInt(r.duree) || 7;
@@ -13757,7 +13757,7 @@ window.addRoutineToPlanning = function(idx) {
 </script>
 
 // ── ROUTINES PREDEFINIES ───────────────────────────────────────────────────
-window.ROUTINES_DATA = [
+var ROUTINES_DATA = window.ROUTINES_DATA = [
   { icon:'🥗', title:'Perdre du poids', duree:'7 jours', desc:'Une routine alimentaire et sportive pour perdre du poids progressivement et sainement.', activites:['🍽️ Petit-déj protéiné (oeufs, yaourt grec)','💧 2L d eau par jour','🚶 Marche 30min apres le dejeuner','⏰ Dernier repas avant 19h30','📝 Logger ses repas dans l app'] },
   { icon:'😴', title:'Ameliorer le sommeil', duree:'7 jours', desc:'Une routine du soir pour retrouver un sommeil profond et reparateur.', activites:['🌙 Tisane camomille a 21h','📵 Pas d ecran apres 21h30','🧘 5min de respiration 4-7-8','😴 Coucher avant 22h30','☀️ Lever a heure fixe le matin'] },
   { icon:'💪', title:'Prendre du muscle', duree:'14 jours', desc:'Programme musculation et nutrition pour gagner en masse musculaire efficacement.', activites:['💪 Entrainement 45min (alternance haut/bas)','🥩 Proteines a chaque repas (1.6g/kg)','🥛 Shaker proteines post-entrainement','😴 8h de sommeil minimum','📊 Peser ses aliments les 7 premiers jours'] },
