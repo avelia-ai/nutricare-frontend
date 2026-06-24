@@ -13508,7 +13508,7 @@ function startReveilExercise() {
     particles.forEach(function(p) {
       p.x += p.vx; p.y += p.vy; p.life -= p.decay;
       sunCtx.beginPath();
-      sunCtx.arc(p.x, p.y, p.r * p.life, 0, Math.PI*2);
+      var pr = p.r * p.life; if (pr > 0.1) { sunCtx.arc(p.x, p.y, pr, 0, Math.PI*2); }
       sunCtx.fillStyle = 'rgba(255,220,100,' + p.life * 0.8 + ')';
       sunCtx.fill();
     });
