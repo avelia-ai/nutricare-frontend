@@ -10529,12 +10529,90 @@ function closeMirellaNotif() {
       <div style="font-size:0.85rem;color:white;font-weight:600;text-shadow:0 1px 3px rgba(0,0,0,0.4)">Prenez un selfie et laissez Mirella analyser votre état de santé visible ✨</div>
     </div>
   </div>
-  <div id="visageUploadZone" onclick="document.getElementById('visageInput').click()" style="border:2px dashed rgba(255,107,107,0.4);border-radius:16px;padding:40px 20px;text-align:center;background:white;cursor:pointer;margin-bottom:16px">
-    <div style="font-size:2.5rem;margin-bottom:12px">🤳</div>
-    <div style="font-weight:600;color:#1a1a1a;margin-bottom:6px">Prenez une photo de votre visage</div>
-    <div style="font-size:0.82rem;color:#888">Photo de face, bonne luminosité</div>
+  <style>
+  .visUpload{position:relative;border-radius:18px;padding:2px;margin-bottom:16px;background:linear-gradient(135deg, rgba(255,180,130,0.9), rgba(255,255,255,0.6) 35%, rgba(255,110,90,0.8) 70%, rgba(255,255,255,0.6));background-size:300% 300%;animation:visBorderFlow 6s ease infinite;box-shadow:0 16px 40px rgba(230,110,70,0.16), 0 2px 8px rgba(0,0,0,0.04)}
+  @keyframes visBorderFlow{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
+  .visUploadInner{background:#fffcfa;border-radius:16px;padding:30px 22px 24px;text-align:center;position:relative;overflow:hidden}
+  .visSparkles{position:absolute;inset:0;pointer-events:none}
+  .visSparkle{position:absolute;border-radius:50%;background:#FF9A6C;box-shadow:0 0 6px rgba(255,154,108,0.7);animation:visTwinkle ease-in-out infinite}
+  @keyframes visTwinkle{0%,100%{opacity:0;transform:scale(0.4)}50%{opacity:1;transform:scale(1)}}
+  .visBadge{display:inline-flex;align-items:center;gap:6px;background:rgba(255,154,108,0.13);border:1px solid rgba(255,154,108,0.35);color:#C2604A;font-size:0.65rem;font-weight:700;letter-spacing:0.07em;text-transform:uppercase;padding:5px 12px;border-radius:999px;margin-bottom:18px}
+  .visScanWrap{position:relative;width:96px;height:96px;margin:0 auto 18px}
+  .visScanRing{position:absolute;inset:0;border-radius:50%;background:conic-gradient(from 0deg, transparent, #FF9A6C, transparent 35%);animation:visRotate 3s linear infinite}
+  .visScanRing::before{content:'';position:absolute;inset:5px;border-radius:50%;background:#fffcfa}
+  @keyframes visRotate{to{transform:rotate(360deg)}}
+  .visIconCore{position:absolute;inset:8px;border-radius:50%;background:radial-gradient(circle at 35% 30%, #FFC9A0, #FF7A5C 60%, #E85A45);display:flex;align-items:center;justify-content:center;box-shadow:0 0 0 1px rgba(255,255,255,0.15) inset, 0 10px 24px rgba(255,100,70,0.45)}
+  .visIconCore svg{width:30px;height:30px}
+  .visScanLine{position:absolute;left:16%;right:16%;height:2px;background:linear-gradient(90deg,transparent,#fff,transparent);box-shadow:0 0 10px rgba(255,255,255,0.8);animation:visScanMove 2.4s ease-in-out infinite;opacity:0.85}
+  @keyframes visScanMove{0%,100%{top:26%}50%{top:70%}}
+  .visTitle{font-weight:700;color:#2b2320;font-size:1.05rem;margin-bottom:6px}
+  .visSub{font-size:0.82rem;color:#9a8b82;margin-bottom:20px;line-height:1.45}
+  .visBtnRow{display:flex;flex-direction:column;gap:9px}
+  .visBtnPrimary{position:relative;width:100%;padding:14px 0;border-radius:14px;border:none;background:linear-gradient(135deg,var(--coral),var(--accent));color:#fff;font-size:0.9rem;font-weight:700;display:flex;align-items:center;justify-content:center;gap:8px;cursor:pointer;overflow:hidden;box-shadow:0 8px 20px rgba(255,107,107,0.35)}
+  .visBtnPrimary::after{content:'';position:absolute;top:0;left:-60%;width:40%;height:100%;background:linear-gradient(120deg,transparent,rgba(255,255,255,0.45),transparent);transform:skewX(-20deg);animation:visSheen 3.2s ease-in-out infinite}
+  @keyframes visSheen{0%{left:-60%}50%{left:120%}100%{left:120%}}
+  .visBtnPrimary svg{width:17px;height:17px;position:relative;z-index:1}
+  .visBtnPrimary span{position:relative;z-index:1}
+  .visBtnSecondary{width:100%;padding:13px 0;border-radius:14px;background:#FFF3ED;border:1px solid #FFE0D2;color:#C2604A;font-size:0.84rem;font-weight:600;display:flex;align-items:center;justify-content:center;gap:8px;cursor:pointer}
+  .visBtnSecondary svg{width:16px;height:16px}
+  .visTip{margin-top:16px;font-size:0.7rem;color:#b5a89f;display:flex;align-items:center;justify-content:center;gap:5px}
+  </style>
+
+  <div id="visageUploadZone" style="margin-bottom:16px">
+    <div class="visUpload">
+      <div class="visUploadInner">
+        <div class="visSparkles" id="visSparkles"></div>
+        <div class="visBadge">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#C2604A" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" width="10" height="10"><path d="M12 2l1.5 4.5L18 8l-4.5 1.5L12 14l-1.5-4.5L6 8l4.5-1.5z"/></svg>
+          Analyse IA en 10 secondes
+        </div>
+        <div class="visScanWrap">
+          <div class="visScanRing"></div>
+          <div class="visIconCore">
+            <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+          </div>
+          <div class="visScanLine"></div>
+        </div>
+        <div class="visTitle">Prenez une photo de votre visage</div>
+        <div class="visSub">Visage face caméra, bonne luminosité</div>
+        <div class="visBtnRow">
+          <button class="visBtnPrimary" onclick="document.getElementById('visageInput').click()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+            <span>Prendre une photo</span>
+          </button>
+          <button class="visBtnSecondary" onclick="document.getElementById('visageGalleryInput').click()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#C2604A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
+            Choisir depuis la galerie
+          </button>
+        </div>
+        <div class="visTip">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#b5a89f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="13" height="13"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+          Vos photos restent privées et sécurisées
+        </div>
+      </div>
+    </div>
     <input type="file" id="visageInput" accept="image/*" capture="user" style="display:none" onchange="window.analyseVisage(this.files[0])">
+    <input type="file" id="visageGalleryInput" accept="image/*" style="display:none" onchange="window.analyseVisage(this.files[0])">
   </div>
+
+  <script>
+  (function(){
+    var sp = document.getElementById('visSparkles');
+    if (sp && !sp.children.length) {
+      for(var i=0;i<8;i++){
+        var s=document.createElement('div');
+        s.className='visSparkle';
+        var size=2+Math.random()*2;
+        s.style.width=size+'px';s.style.height=size+'px';
+        s.style.left=(Math.random()*100)+'%';
+        s.style.top=(Math.random()*100)+'%';
+        s.style.animationDuration=(2+Math.random()*2.5)+'s';
+        s.style.animationDelay=(Math.random()*3)+'s';
+        sp.appendChild(s);
+      }
+    }
+  })();
+  </script>
   <div id="visageExampleLocked" style="display:none;position:relative;margin-bottom:16px">
     <div style="filter:blur(5px);pointer-events:none">
       <div style="background:white;border-radius:16px;padding:20px;margin-bottom:12px;box-shadow:0 2px 8px rgba(0,0,0,0.06)">
