@@ -11028,6 +11028,83 @@ function toggleQuickMenu() {
     </div>
   </div>
 </div>
+
+<!-- BODY SCAN PLEIN ECRAN -->
+<div id="rituelBodyScanScreen" style="display:none;position:fixed;inset:0;z-index:10000;flex-direction:column;align-items:center;justify-content:center;overflow:hidden">
+  <canvas id="bsAuroraCanvas" style="position:absolute;inset:0;width:100%;height:100%;z-index:0;pointer-events:none"></canvas>
+  <!-- Bouton fermer -->
+  <button onclick="closeRituel()" style="position:absolute;top:20px;right:20px;background:rgba(255,255,255,0.1);border:none;color:white;width:40px;height:40px;border-radius:50%;font-size:1.2rem;cursor:pointer;z-index:3">✕</button>
+  <div style="position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;width:100%;height:100%;padding:50px 20px 30px;box-sizing:border-box">
+    <!-- Header -->
+    <div style="color:rgba(255,255,255,0.45);font-size:0.7rem;letter-spacing:4px;text-transform:uppercase;margin-bottom:6px">Body Scan</div>
+    <div id="bsZoneLabel" style="color:white;font-size:1.35rem;font-weight:700;letter-spacing:0.5px;min-height:1.8em;text-align:center;margin-bottom:2px;text-shadow:0 0 20px rgba(180,140,255,0.8)"></div>
+    <div id="bsZoneSub" style="color:rgba(255,255,255,0.4);font-size:0.78rem;letter-spacing:0.5px;min-height:1.4em;text-align:center;margin-bottom:0"></div>
+    <!-- Silhouette SVG humaine -->
+    <div style="flex:1;display:flex;align-items:center;justify-content:center;position:relative">
+      <svg id="bsSilhouette" viewBox="0 0 200 420" style="height:min(55vh,380px);width:auto;filter:drop-shadow(0 0 18px rgba(120,100,255,0.3))">
+        <defs>
+          <radialGradient id="bsBodyGrad" cx="50%" cy="40%" r="55%">
+            <stop offset="0%" stop-color="rgba(140,120,200,0.35)"/>
+            <stop offset="100%" stop-color="rgba(60,50,120,0.15)"/>
+          </radialGradient>
+        </defs>
+        <!-- SILHOUETTE BASE - forme humaine organique -->
+        <!-- Tête -->
+        <ellipse cx="100" cy="38" rx="28" ry="34" fill="url(#bsBodyGrad)" stroke="rgba(180,160,255,0.25)" stroke-width="1.5"/>
+        <!-- Cou -->
+        <rect x="88" y="68" width="24" height="18" rx="8" fill="url(#bsBodyGrad)" stroke="rgba(180,160,255,0.2)" stroke-width="1"/>
+        <!-- Épaules + torse -->
+        <path d="M38,90 Q38,82 60,80 L100,78 L140,80 Q162,82 162,90 L158,180 Q155,192 140,194 L60,194 Q45,192 42,180 Z" fill="url(#bsBodyGrad)" stroke="rgba(180,160,255,0.25)" stroke-width="1.5"/>
+        <!-- Bras gauche -->
+        <path d="M42,90 Q32,94 28,106 L22,158 Q20,170 26,174 Q34,178 38,166 L46,116 Q50,100 58,94 Z" fill="url(#bsBodyGrad)" stroke="rgba(180,160,255,0.2)" stroke-width="1.5"/>
+        <!-- Avant-bras gauche -->
+        <path d="M22,158 Q18,172 20,186 L24,208 Q26,216 32,214 Q38,212 36,204 L34,182 Q32,170 26,174 Z" fill="url(#bsBodyGrad)" stroke="rgba(180,160,255,0.2)" stroke-width="1.5"/>
+        <!-- Bras droit -->
+        <path d="M158,90 Q168,94 172,106 L178,158 Q180,170 174,174 Q166,178 162,166 L154,116 Q150,100 142,94 Z" fill="url(#bsBodyGrad)" stroke="rgba(180,160,255,0.2)" stroke-width="1.5"/>
+        <!-- Avant-bras droit -->
+        <path d="M178,158 Q182,172 180,186 L176,208 Q174,216 168,214 Q162,212 164,204 L166,182 Q168,170 174,174 Z" fill="url(#bsBodyGrad)" stroke="rgba(180,160,255,0.2)" stroke-width="1.5"/>
+        <!-- Bassin -->
+        <path d="M52,188 Q50,198 52,208 L60,216 L140,216 L148,208 Q150,198 148,188 L140,194 L60,194 Z" fill="url(#bsBodyGrad)" stroke="rgba(180,160,255,0.2)" stroke-width="1.5"/>
+        <!-- Cuisse gauche -->
+        <path d="M60,210 Q52,214 50,228 L48,290 Q48,304 56,308 Q66,312 70,298 L72,240 Q74,224 68,214 Z" fill="url(#bsBodyGrad)" stroke="rgba(180,160,255,0.2)" stroke-width="1.5"/>
+        <!-- Cuisse droite -->
+        <path d="M140,210 Q148,214 150,228 L152,290 Q152,304 144,308 Q134,312 130,298 L128,240 Q126,224 132,214 Z" fill="url(#bsBodyGrad)" stroke="rgba(180,160,255,0.2)" stroke-width="1.5"/>
+        <!-- Mollet gauche -->
+        <path d="M50,290 Q48,308 50,328 L52,358 Q54,368 62,368 Q70,368 70,358 L68,328 Q68,310 56,308 Z" fill="url(#bsBodyGrad)" stroke="rgba(180,160,255,0.2)" stroke-width="1.5"/>
+        <!-- Mollet droit -->
+        <path d="M150,290 Q152,308 150,328 L148,358 Q146,368 138,368 Q130,368 130,358 L132,328 Q132,310 144,308 Z" fill="url(#bsBodyGrad)" stroke="rgba(180,160,255,0.2)" stroke-width="1.5"/>
+        <!-- Pied gauche -->
+        <path d="M50,358 Q46,368 44,378 Q42,388 54,390 Q66,392 72,382 Q76,372 70,362 Z" fill="url(#bsBodyGrad)" stroke="rgba(180,160,255,0.2)" stroke-width="1.5"/>
+        <!-- Pied droit -->
+        <path d="M150,358 Q154,368 156,378 Q158,388 146,390 Q134,392 128,382 Q124,372 130,362 Z" fill="url(#bsBodyGrad)" stroke="rgba(180,160,255,0.2)" stroke-width="1.5"/>
+
+        <!-- ZONES ACTIVES (transparentes par défaut, s'illuminent) -->
+        <ellipse id="bsZ0" cx="100" cy="38" rx="28" ry="34" fill="rgba(255,220,100,0)" style="transition:fill 1s ease,filter 1s ease"/>
+        <ellipse id="bsZ1" cx="100" cy="52" rx="20" ry="18" fill="rgba(255,220,100,0)" style="transition:fill 1s ease"/>
+        <rect id="bsZ2" x="40" y="76" width="120" height="22" rx="10" fill="rgba(255,220,100,0)" style="transition:fill 1s ease"/>
+        <path id="bsZ3" d="M58,96 L142,96 L150,150 L50,150 Z" fill="rgba(255,220,100,0)" style="transition:fill 1s ease"/>
+        <path id="bsZ4" d="M22,88 L58,96 L46,120 L18,112 Z" fill="rgba(255,220,100,0)" style="transition:fill 1s ease"/>
+        <path id="bsZ5" d="M178,88 L142,96 L154,120 L182,112 Z" fill="rgba(255,220,100,0)" style="transition:fill 1s ease"/>
+        <path id="bsZ6" d="M52,148 L148,148 L146,188 L54,188 Z" fill="rgba(255,220,100,0)" style="transition:fill 1s ease"/>
+        <path id="bsZ7" d="M54,186 L146,186 L148,216 L52,216 Z" fill="rgba(255,220,100,0)" style="transition:fill 1s ease"/>
+        <path id="bsZ8" d="M48,210 L80,210 L76,300 L44,296 Z" fill="rgba(255,220,100,0)" style="transition:fill 1s ease"/>
+        <path id="bsZ9" d="M120,210 L152,210 L156,296 L124,300 Z" fill="rgba(255,220,100,0)" style="transition:fill 1s ease"/>
+        <path id="bsZ10" d="M46,296 L76,300 L70,368 L44,360 Z M124,300 L156,296 L156,360 L130,368 Z" fill="rgba(255,220,100,0)" style="transition:fill 1s ease"/>
+        <path id="bsZ11" d="M40,358 L76,364 L76,392 L38,390 Z M124,364 L160,358 L162,390 L124,392 Z" fill="rgba(255,220,100,0)" style="transition:fill 1s ease"/>
+      </svg>
+    </div>
+    <!-- Timer + progression -->
+    <div style="display:flex;align-items:baseline;gap:8px;margin-bottom:12px">
+      <div id="bsTimer" style="color:white;font-size:2.4rem;font-weight:200;font-family:monospace;text-shadow:0 0 20px rgba(180,140,255,0.6)"></div>
+      <div style="font-size:0.75rem;color:rgba(255,255,255,0.3);letter-spacing:1px">sec</div>
+    </div>
+    <div style="width:220px;height:2px;background:rgba(255,255,255,0.08);border-radius:2px;margin-bottom:8px;overflow:hidden">
+      <div id="bsProgress" style="height:100%;width:0%;background:linear-gradient(90deg,rgba(120,100,255,0.9),rgba(200,120,255,0.9));border-radius:2px;transition:width 0.5s linear"></div>
+    </div>
+    <div id="bsStepCount" style="color:rgba(255,255,255,0.2);font-size:0.68rem;letter-spacing:2px"></div>
+  </div>
+</div>
+
 <script>
 window._recettesTab = 'mes';
 window.switchRecettesTab = function(tab) {
@@ -12430,72 +12507,7 @@ function openSubscriptionModal(context) {
       <div id="rituel478Progress" style="height:100%;width:0%;background:linear-gradient(90deg,rgba(120,180,255,0.8),rgba(180,120,255,0.8));border-radius:2px;transition:width 1s linear"></div>
     </div>
   </div>
-  <!-- ECRAN BODY SCAN -->
-  <div id="rituelBodyScanScreen" style="display:none;flex-direction:column;align-items:center;justify-content:center;width:100%;height:100%;position:relative;overflow:hidden">
-    <canvas id="bsAuroraCanvas" style="position:absolute;inset:0;width:100%;height:100%;z-index:0;pointer-events:none"></canvas>
-    <div style="position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;width:100%;padding:20px 0">
-      <!-- Header -->
-      <div style="color:rgba(255,255,255,0.5);font-size:0.75rem;letter-spacing:3px;text-transform:uppercase;margin-bottom:4px">Body Scan</div>
-      <div id="bsZoneLabel" style="color:white;font-size:1.3rem;font-weight:700;letter-spacing:0.5px;min-height:1.8em;text-align:center;margin-bottom:2px"></div>
-      <div id="bsZoneSub" style="color:rgba(255,255,255,0.45);font-size:0.8rem;letter-spacing:1px;min-height:1.2em;text-align:center;margin-bottom:12px"></div>
-      <!-- Silhouette SVG -->
-      <div style="position:relative;width:160px;height:340px">
-        <svg id="bsSilhouette" viewBox="0 0 160 340" width="160" height="340" style="position:absolute;inset:0">
-          <!-- Silhouette base -->
-          <g opacity="0.18" fill="white">
-            <ellipse cx="80" cy="22" rx="16" ry="18"/>
-            <rect x="62" y="38" width="36" height="8" rx="4"/>
-            <rect x="54" y="46" width="52" height="70" rx="14"/>
-            <rect x="30" y="50" width="22" height="58" rx="10"/>
-            <rect x="108" y="50" width="22" height="58" rx="10"/>
-            <rect x="58" y="114" width="20" height="80" rx="10"/>
-            <rect x="82" y="114" width="20" height="80" rx="10"/>
-            <rect x="54" y="190" width="22" height="90" rx="10"/>
-            <rect x="84" y="190" width="22" height="90" rx="10"/>
-            <ellipse cx="65" cy="285" rx="13" ry="8"/>
-            <ellipse cx="95" cy="285" rx="13" ry="8"/>
-          </g>
-          <!-- Zones illuminées (cachées par défaut) -->
-          <!-- 0: Crâne -->
-          <ellipse id="bsZ0" cx="80" cy="22" rx="16" ry="18" fill="rgba(255,220,100,0)" style="transition:all 0.8s ease"/>
-          <!-- 1: Visage/Mâchoire -->
-          <ellipse id="bsZ1" cx="80" cy="36" rx="12" ry="7" fill="rgba(255,220,100,0)" style="transition:all 0.8s ease"/>
-          <!-- 2: Nuque/Épaules -->
-          <rect id="bsZ2" x="50" y="44" width="60" height="16" rx="8" fill="rgba(255,220,100,0)" style="transition:all 0.8s ease"/>
-          <!-- 3: Poitrine -->
-          <rect id="bsZ3" x="56" y="60" width="48" height="32" rx="10" fill="rgba(255,220,100,0)" style="transition:all 0.8s ease"/>
-          <!-- 4: Bras gauche -->
-          <rect id="bsZ4" x="30" y="52" width="22" height="52" rx="10" fill="rgba(255,220,100,0)" style="transition:all 0.8s ease"/>
-          <!-- 5: Bras droit -->
-          <rect id="bsZ5" x="108" y="52" width="22" height="52" rx="10" fill="rgba(255,220,100,0)" style="transition:all 0.8s ease"/>
-          <!-- 6: Ventre -->
-          <rect id="bsZ6" x="58" y="92" width="44" height="34" rx="10" fill="rgba(255,220,100,0)" style="transition:all 0.8s ease"/>
-          <!-- 7: Bas du dos / hanches -->
-          <rect id="bsZ7" x="56" y="124" width="48" height="30" rx="10" fill="rgba(255,220,100,0)" style="transition:all 0.8s ease"/>
-          <!-- 8: Cuisse gauche -->
-          <rect id="bsZ8" x="58" y="154" width="20" height="56" rx="10" fill="rgba(255,220,100,0)" style="transition:all 0.8s ease"/>
-          <!-- 9: Cuisse droite -->
-          <rect id="bsZ9" x="82" y="154" width="20" height="56" rx="10" fill="rgba(255,220,100,0)" style="transition:all 0.8s ease"/>
-          <!-- 10: Mollets -->
-          <rect id="bsZ10" x="56" y="210" width="48" height="60" rx="10" fill="rgba(255,220,100,0)" style="transition:all 0.8s ease"/>
-          <!-- 11: Pieds -->
-          <ellipse id="bsZ11" cx="80" cy="285" rx="28" ry="9" fill="rgba(255,220,100,0)" style="transition:all 0.8s ease"/>
-        </svg>
-        <!-- Halo lumineux sur zone active -->
-        <div id="bsZoneHalo" style="position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:60px;height:60px;border-radius:50%;background:radial-gradient(circle,rgba(255,200,80,0.3) 0%,transparent 70%);pointer-events:none;opacity:0;transition:all 0.8s ease;filter:blur(8px)"></div>
-      </div>
-      <!-- Timer zone -->
-      <div style="margin-top:14px;display:flex;align-items:center;gap:10px">
-        <div id="bsTimer" style="color:rgba(255,255,255,0.6);font-size:2rem;font-weight:200;font-family:monospace;min-width:2ch;text-align:center"></div>
-        <div style="font-size:0.75rem;color:rgba(255,255,255,0.3);letter-spacing:1px">sec</div>
-      </div>
-      <!-- Barre progression globale -->
-      <div style="width:180px;height:2px;background:rgba(255,255,255,0.1);border-radius:2px;margin-top:14px;overflow:hidden">
-        <div id="bsProgress" style="height:100%;width:0%;background:linear-gradient(90deg,rgba(120,180,255,0.8),rgba(200,120,255,0.8));border-radius:2px;transition:width 0.5s linear"></div>
-      </div>
-      <div id="bsStepCount" style="color:rgba(255,255,255,0.25);font-size:0.7rem;letter-spacing:2px;margin-top:6px"></div>
-    </div>
-  </div>
+  <!-- ECRAN BODY SCAN (plein écran, hors rituelExerciseScreen) -->
   <div id="rituelDone" style="display:none;text-align:center;margin-top:20px">
     <div style="font-size:2rem;margin-bottom:8px">✨</div>
     <div style="color:white;font-size:1rem;font-weight:700">Rituel termine</div>
