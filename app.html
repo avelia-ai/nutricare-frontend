@@ -13533,15 +13533,7 @@ function startReveilExercise() {
       });
     }
 
-    // Lueur dorée sur les crêtes — radial glow propre sans bande
-    if (t > 0.2) {
-      var creteAlpha = Math.min((t - 0.2) / 0.4, 1) * 0.35;
-      var creteGlow = skyCtx.createRadialGradient(W*0.5, H*0.73, 0, W*0.5, H*0.73, W*0.6);
-      creteGlow.addColorStop(0, 'rgba(255,200,80,' + creteAlpha + ')');
-      creteGlow.addColorStop(1, 'rgba(255,140,40,0)');
-      skyCtx.fillStyle = creteGlow;
-      skyCtx.beginPath(); skyCtx.arc(W*0.5, H*0.73, W*0.6, 0, Math.PI*2); skyCtx.fill();
-    }
+    // Pas de lueur de crête séparée — le halo du soleil suffit
 
     // Plan 1 — chaîne de montagnes lointaines (pics à ~72% hauteur écran)
     skyCtx.beginPath();
@@ -13688,7 +13680,7 @@ function startReveilExercise() {
     lastTs = ts;
     skyT += dt;
     sunT += dt * 60;
-    var progress = Math.min((totalElapsed + (ts - (lastStepTs||ts)) / 1000) / TOTAL, 1);
+    var progress = Math.min(totalElapsed / TOTAL, 1);
     breathPhase = (Math.sin(skyT * 1.2) + 1) / 2;
     drawSky(progress);
     drawSun(progress, breathPhase);
@@ -13698,17 +13690,31 @@ function startReveilExercise() {
 
   // Timer étapes
   updateUI();
-  function tick() {
+  var _stepStart = null, _lastSecShown = -1;
+  function tick(ts) {
     if (!_running) return;
+    if (_stepStart === null) _stepStart = ts;
     var step = STEPS[stepIdx];
-    var remaining = step.duration - stepElapsed;
-    document.getElementById('reveilCounter').textContent = remaining;
+    var stepMs = ts - _stepStart;
+    var stepSec = Math.floor(stepMs / 1000);
+    var remaining = Math.max(0, step.duration - stepSec);
+    // Mise à jour UI chaque seconde
+    if (stepSec !== _lastSecShown) {
+      _lastSecShown = stepSec;
+      document.getElementById('reveilCounter').textContent = remaining;
+      totalElapsed = STEPS.slice(0, stepIdx).reduce(function(s,st){return s+st.duration;},0) + stepSec;
+    }
+    // Arc et barre fluides
     var arcCirc = 175.9;
-    document.getElementById('reveilTimerArc').style.strokeDashoffset = arcCirc * (stepElapsed / step.duration);
-    document.getElementById('reveilProgressBar').style.width = (totalElapsed / TOTAL * 100) + '%';
-    stepElapsed++; totalElapsed++;
-    if (stepElapsed >= step.duration) {
-      stepElapsed = 0; stepIdx++;
+    var stepRatio = Math.min(stepMs / (step.duration * 1000), 1);
+    document.getElementById('reveilTimerArc').style.strokeDashoffset = arcCirc * stepRatio;
+    var totalMs = STEPS.slice(0, stepIdx).reduce(function(s,st){return s+st.duration;},0) * 1000 + stepMs;
+    document.getElementById('reveilProgressBar').style.width = Math.min(100, totalMs / (TOTAL * 1000) * 100) + '%';
+    // Fin d'étape
+    if (stepMs >= step.duration * 1000) {
+      stepIdx++;
+      _stepStart = null;
+      _lastSecShown = -1;
       if (stepIdx >= STEPS.length) {
         _running = false;
         screen.style.display = 'none';
@@ -13719,10 +13725,10 @@ function startReveilExercise() {
       }
       updateUI();
     }
-    setTimeout(tick, 1000);
+    requestAnimationFrame(tick);
   }
-  tick();
 
+  requestAnimationFrame(tick);
   window._stopReveil = function() { _running = false; };
 }
 
