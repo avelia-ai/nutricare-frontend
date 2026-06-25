@@ -5980,6 +5980,7 @@ function switchLang(lang) {
       if (profile.referral_code) {
         window._referralCode = profile.referral_code;
         window._activeReferrals = profile.referral_count || profile.active_referrals || 0;
+        checkReferralMilestone(window._activeReferrals);
       }
       updateReferralBlock();
       updatePricingDisplay();
@@ -6018,6 +6019,56 @@ function switchLang(lang) {
         });
     }
   }
+  function checkReferralMilestone(newCount) {
+    var oldCount = parseInt(localStorage.getItem('mirella_referral_count') || '0');
+    localStorage.setItem('mirella_referral_count', newCount);
+    if (newCount <= oldCount) return;
+
+    var milestones = [
+      { min: 1,  discount: 20, label: '1 filleul actif',   emoji: '🎉' },
+      { min: 5,  discount: 30, label: '5 filleuls actifs',  emoji: '🔥' },
+      { min: 10, discount: 50, label: '10 filleuls actifs', emoji: '⭐' },
+      { min: 20, discount: 70, label: '20 filleuls actifs', emoji: '🚀' },
+      { min: 50, discount: 100, label: '50 filleuls actifs', emoji: '👑' }
+    ];
+
+    var reached = null;
+    for (var i = milestones.length - 1; i >= 0; i--) {
+      if (newCount >= milestones[i].min && oldCount < milestones[i].min) {
+        reached = milestones[i];
+        break;
+      }
+    }
+    if (!reached) return;
+
+    var stdPrice = reached.discount === 100 ? 'Gratuit' : (3.99 * (1 - reached.discount/100)).toFixed(2).replace('.',',') + '€';
+    var prmPrice = reached.discount === 100 ? 'Gratuit' : (6.90 * (1 - reached.discount/100)).toFixed(2).replace('.',',') + '€';
+    var msg = reached.discount === 100
+      ? 'Vos abonnements sont désormais <b>gratuits à vie</b> ! 🎁'
+      : 'Vous bénéficiez désormais de <b>-' + reached.discount + '%</b> sur tous vos abonnements !';
+
+    var overlay = document.createElement('div');
+    overlay.id = 'referralMilestonePopup';
+    overlay.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.65);z-index:99999;display:flex;align-items:center;justify-content:center';
+    overlay.innerHTML =
+      '<div style="background:white;border-radius:24px;padding:32px 24px;max-width:340px;width:92%;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,0.3)">' +
+        '<div style="font-size:3.5rem;margin-bottom:10px">' + reached.emoji + '</div>' +
+        '<div style="font-size:1.25rem;font-weight:800;color:#2D2D2D;margin-bottom:8px">Nouveau palier atteint !</div>' +
+        '<div style="font-size:0.9rem;color:var(--coral);font-weight:700;margin-bottom:6px">' + reached.label + '</div>' +
+        '<div style="font-size:0.88rem;color:#555;margin-bottom:20px;line-height:1.5">' + msg + '</div>' +
+        '<div style="display:flex;gap:10px;margin-bottom:16px">' +
+          '<button onclick="document.getElementById('referralMilestonePopup').remove();selectPlan('standard')" style="flex:1;background:#1a1a2e;color:white;border:none;border-radius:14px;padding:12px 8px;font-size:0.82rem;font-weight:700;cursor:pointer">' +
+            'Standard<br><span style="font-size:1rem;color:var(--coral)">' + stdPrice + '</span><span style="font-size:0.7rem;color:rgba(255,255,255,0.5)">/mois</span>' +
+          '</button>' +
+          '<button onclick="document.getElementById('referralMilestonePopup').remove();selectPlan('premium')" style="flex:1;background:linear-gradient(135deg,#f5a623,#e8821a);color:white;border:none;border-radius:14px;padding:12px 8px;font-size:0.82rem;font-weight:700;cursor:pointer">' +
+            'Premium<br><span style="font-size:1rem">' + prmPrice + '</span><span style="font-size:0.7rem;color:rgba(255,255,255,0.6)">/mois</span>' +
+          '</button>' +
+        '</div>' +
+        '<button onclick="document.getElementById('referralMilestonePopup').remove()" style="background:none;border:none;color:#aaa;font-size:0.82rem;cursor:pointer">Plus tard</button>' +
+      '</div>';
+    document.body.appendChild(overlay);
+  }
+
   function updatePricingDisplay() {
     var referrals = window._activeReferrals || 0;
     var discountPercent = 0;
