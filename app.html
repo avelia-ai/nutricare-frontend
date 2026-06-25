@@ -13531,6 +13531,40 @@ function startReveilExercise() {
       });
     }
 
+    // Oiseaux aleatoires a partir de l'etape 4 (Ancrage) jusqu'a la fin du rituel
+    if (stepIdx >= 3) {
+      if (Math.random() < 0.006 && birds.length < 3) {
+        birds.push({
+          spawnT: skyT,
+          speed: 65 + Math.random() * 45,
+          y: H * (0.12 + Math.random() * 0.22),
+          scale: 0.6 + Math.random() * 0.5,
+          bob: Math.random() * Math.PI * 2
+        });
+      }
+      birds = birds.filter(function(b) {
+        var elapsed = skyT - b.spawnT;
+        var bx = -80 + elapsed * b.speed;
+        if (bx > W + 100) return false;
+        var by = b.y + Math.sin(skyT * 0.6 + b.bob) * 8;
+        var flap = Math.sin(skyT * 9 + b.bob * 2) * 6 * b.scale;
+        skyCtx.save();
+        skyCtx.translate(bx, by);
+        skyCtx.scale(b.scale, b.scale);
+        skyCtx.strokeStyle = 'rgba(40,30,60,0.5)';
+        skyCtx.lineWidth = 1.8;
+        skyCtx.lineCap = 'round';
+        skyCtx.beginPath();
+        skyCtx.moveTo(-12, 0);
+        skyCtx.quadraticCurveTo(-5, -8 - flap, 0, 0);
+        skyCtx.quadraticCurveTo(5, -8 - flap, 12, 0);
+        skyCtx.stroke();
+        skyCtx.restore();
+        return true;
+      });
+    } else if (birds.length) {
+      birds = [];
+    }
     // Pas de lueur de crête séparée — le halo du soleil suffit
 
     // Plan 1 — chaîne de montagnes lointaines (pics à ~72% hauteur écran)
