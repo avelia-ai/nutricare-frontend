@@ -5953,12 +5953,10 @@ function switchLang(lang) {
 
       // Bloc parrainage
       if (profile.referral_code) {
-        var el = document.getElementById('profileReferralCode');
-        if (el) el.textContent = profile.referral_code;
-        var countEl = document.getElementById('profileReferralCount');
-        if (countEl) countEl.textContent = profile.active_referrals || 0;
         window._referralCode = profile.referral_code;
+        window._activeReferrals = profile.active_referrals || 0;
       }
+      updateReferralBlock();
       // Update pricing buttons
       updatePricingButtons(plan);
 
@@ -5974,6 +5972,13 @@ function switchLang(lang) {
     }
   }
 
+  function updateReferralBlock() {
+    if (!window._referralCode) return;
+    var el = document.getElementById('profileReferralCode');
+    if (el) el.textContent = window._referralCode;
+    var countEl = document.getElementById('profileReferralCount');
+    if (countEl) countEl.textContent = window._activeReferrals || 0;
+  }
   function copyReferralCode() {
     var code = window._referralCode;
     if (!code) return;
