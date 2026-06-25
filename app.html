@@ -13380,7 +13380,7 @@ function startReveilExercise() {
   var skyCtx = skyCanvas.getContext('2d');
   function resizeSky() {
     skyCanvas.width = window.innerWidth;
-    skyCanvas.height = Math.max(window.innerHeight, screen.height);
+    skyCanvas.height = window.innerHeight;
   }
   resizeSky();
   window.addEventListener('resize', resizeSky);
@@ -13692,7 +13692,7 @@ function startReveilExercise() {
     var progress = Math.min(realElapsed / TOTAL, 1);
     breathPhase = (Math.sin(skyT * 1.2) + 1) / 2;
     // Redimensionner si nécessaire
-    if (skyCanvas.width !== window.innerWidth || skyCanvas.height !== window.innerHeight) resizeSky();
+    // resize géré par event listener uniquement
     drawSky(progress);
     drawSun(progress, breathPhase);
     requestAnimationFrame(animLoop);
