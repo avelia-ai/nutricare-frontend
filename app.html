@@ -6047,6 +6047,20 @@ function switchLang(lang) {
       ? 'Vos abonnements sont désormais <b>gratuits à vie</b> ! 🎁'
       : 'Vous bénéficiez désormais de <b>-' + reached.discount + '%</b> sur tous vos abonnements !';
 
+    var hasPlan = window.currentPlan && window.currentPlan !== 'free';
+    var ctaHtml = hasPlan
+      ? '<div style="font-size:0.85rem;color:#444;margin-bottom:20px;line-height:1.6;background:#f9f9f9;border-radius:12px;padding:14px">✅ Votre réduction est <b>automatiquement appliquée</b> à votre prochain renouvellement.<br>Aucune action requise !</div>' +
+        '<button onclick="document.getElementById(&apos;referralMilestonePopup&apos;).remove()" style="background:linear-gradient(135deg,var(--coral),#e8821a);color:white;border:none;border-radius:14px;padding:13px 24px;font-size:0.9rem;font-weight:700;cursor:pointer;width:100%">Super, merci ! 🙌</button>'
+      : '<div style="display:flex;gap:10px;margin-bottom:16px">' +
+          '<button onclick="document.getElementById(&apos;referralMilestonePopup&apos;).remove();selectPlan(&apos;standard&apos;)" style="flex:1;background:#1a1a2e;color:white;border:none;border-radius:14px;padding:12px 8px;font-size:0.82rem;font-weight:700;cursor:pointer">' +
+            'Standard<br><span style="font-size:1rem;color:var(--coral)">' + stdPrice + '</span><span style="font-size:0.7rem;color:rgba(255,255,255,0.5)">/mois</span>' +
+          '</button>' +
+          '<button onclick="document.getElementById(&apos;referralMilestonePopup&apos;).remove();selectPlan(&apos;premium&apos;)" style="flex:1;background:linear-gradient(135deg,#f5a623,#e8821a);color:white;border:none;border-radius:14px;padding:12px 8px;font-size:0.82rem;font-weight:700;cursor:pointer">' +
+            'Premium<br><span style="font-size:1rem">' + prmPrice + '</span><span style="font-size:0.7rem;color:rgba(255,255,255,0.6)">/mois</span>' +
+          '</button>' +
+        '</div>' +
+        '<button onclick="document.getElementById(&apos;referralMilestonePopup&apos;).remove()" style="background:none;border:none;color:#aaa;font-size:0.82rem;cursor:pointer">Plus tard</button>';
+
     var overlay = document.createElement('div');
     overlay.id = 'referralMilestonePopup';
     overlay.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.65);z-index:99999;display:flex;align-items:center;justify-content:center';
@@ -6056,15 +6070,7 @@ function switchLang(lang) {
         '<div style="font-size:1.25rem;font-weight:800;color:#2D2D2D;margin-bottom:8px">Nouveau palier atteint !</div>' +
         '<div style="font-size:0.9rem;color:var(--coral);font-weight:700;margin-bottom:6px">' + reached.label + '</div>' +
         '<div style="font-size:0.88rem;color:#555;margin-bottom:20px;line-height:1.5">' + msg + '</div>' +
-        '<div style="display:flex;gap:10px;margin-bottom:16px">' +
-          '<button onclick="document.getElementById(&apos;referralMilestonePopup&apos;).remove();selectPlan(&apos;standard&apos;)" style="flex:1;background:#1a1a2e;color:white;border:none;border-radius:14px;padding:12px 8px;font-size:0.82rem;font-weight:700;cursor:pointer">' +
-            'Standard<br><span style="font-size:1rem;color:var(--coral)">' + stdPrice + '</span><span style="font-size:0.7rem;color:rgba(255,255,255,0.5)">/mois</span>' +
-          '</button>' +
-          '<button onclick="document.getElementById(&apos;referralMilestonePopup&apos;).remove();selectPlan(&apos;premium&apos;)" style="flex:1;background:linear-gradient(135deg,#f5a623,#e8821a);color:white;border:none;border-radius:14px;padding:12px 8px;font-size:0.82rem;font-weight:700;cursor:pointer">' +
-            'Premium<br><span style="font-size:1rem">' + prmPrice + '</span><span style="font-size:0.7rem;color:rgba(255,255,255,0.6)">/mois</span>' +
-          '</button>' +
-        '</div>' +
-        '<button onclick="document.getElementById(&apos;referralMilestonePopup&apos;).remove()" style="background:none;border:none;color:#aaa;font-size:0.82rem;cursor:pointer">Plus tard</button>' +
+        ctaHtml +
       '</div>';
     document.body.appendChild(overlay);
   }
