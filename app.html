@@ -3541,12 +3541,13 @@ function switchLang(lang) {
               <!-- Bloc parrainage -->
     <div style="background:white;border-radius:16px;padding:20px;box-shadow:0 2px 8px rgba(0,0,0,0.06);margin-bottom:24px">
       <div style="font-size:0.75rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--accent);margin-bottom:12px">🎁 Parrainage</div>
-      <div style="font-size:0.85rem;color:#555;margin-bottom:14px;line-height:1.5">Invitez vos proches sur Mirella et recevez <b style="color:var(--coral)">-50% sur votre prochain mois</b> dès qu'ils s'inscrivent avec votre lien.</div>
+      <div style="font-size:0.85rem;color:#555;margin-bottom:14px;line-height:1.5">Invitez vos proches sur Mirella et recevez <b style="color:var(--coral)">l'accès Premium gratuit à vie</b> dès 50 filleuls actifs !</div>
       <div style="background:#FFF8F3;border-radius:12px;padding:14px;margin-bottom:12px">
         <div style="font-size:0.7rem;color:#aaa;margin-bottom:4px">Votre code personnel</div>
-        <div style="display:flex;align-items:center;gap:10px">
+        <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
           <div id="profileReferralCode" style="font-size:1.3rem;font-weight:800;color:var(--coral);letter-spacing:0.15em">—</div>
-          <button onclick="copyReferralLink()" style="padding:6px 12px;border-radius:8px;border:none;background:var(--coral);color:white;font-size:0.72rem;font-weight:700;cursor:pointer">Copier le lien</button>
+          <button onclick="copyReferralCode()" style="padding:6px 12px;border-radius:8px;border:none;background:#fff;color:var(--coral);border:1.5px solid var(--coral);font-size:0.72rem;font-weight:700;cursor:pointer" id="btnCopyCode">Copier le code</button>
+          <button onclick="copyReferralLink()" style="padding:6px 12px;border-radius:8px;border:none;background:var(--coral);color:white;font-size:0.72rem;font-weight:700;cursor:pointer" id="btnCopyLink">Copier le lien</button>
         </div>
       </div>
       <div style="display:flex;align-items:center;gap:8px;font-size:0.82rem;color:#888">
@@ -5955,7 +5956,7 @@ function switchLang(lang) {
         var el = document.getElementById('profileReferralCode');
         if (el) el.textContent = profile.referral_code;
         var countEl = document.getElementById('profileReferralCount');
-        if (countEl) countEl.textContent = profile.referral_count || 0;
+        if (countEl) countEl.textContent = profile.active_referrals || 0;
         window._referralCode = profile.referral_code;
       }
       // Update pricing buttons
@@ -5973,6 +5974,16 @@ function switchLang(lang) {
     }
   }
 
+  function copyReferralCode() {
+    var code = window._referralCode;
+    if (!code) return;
+    navigator.clipboard.writeText(code).then(function() {
+      var btn = document.getElementById('btnCopyCode');
+      if (btn) { btn.textContent = 'Copié !'; setTimeout(function(){ btn.textContent = 'Copier le code'; }, 2000); }
+    }).catch(function() {
+      prompt('Votre code de parrainage :', code);
+    });
+  }
   function copyReferralLink() {
     var code = window._referralCode;
     if (!code) return;
