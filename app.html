@@ -3598,8 +3598,8 @@ function switchLang(lang) {
         <div class="plan-card dark">
           <div class="plan-badge">Standard</div>
           <div class="plan-name">Complet</div>
-          <div class="plan-price">3,99€</div>
-          <div class="plan-period">/ mois</div>
+          <div class="plan-price" id="standardPrice">3,99€</div>
+          <div class="plan-period">/ mois</div><div id="standardDiscount" style="display:none;font-size:0.75rem;font-weight:700;color:#4ade80;margin-top:2px"></div>
           <ul class="plan-features-list">
             <li><span class="plan-check"></span> Chat IA illimité</li>
             <li><span class="plan-check"></span> Plans personnalisés</li>
@@ -3613,8 +3613,8 @@ function switchLang(lang) {
         <div class="plan-card gold">
           <div class="plan-badge">Premium</div>
           <div class="plan-name">Excellence</div>
-          <div class="plan-price">6,90€</div>
-          <div class="plan-period">/ mois</div>
+          <div class="plan-price" id="premiumPrice">6,90€</div>
+          <div class="plan-period">/ mois</div><div id="premiumDiscount" style="display:none;font-size:0.75rem;font-weight:700;color:#4ade80;margin-top:2px"></div>
           <ul class="plan-features-list">
             <li><span class="plan-check"></span> Tout du Standard</li>
             <li><span class="plan-check"></span> Analyse photo repas</li>
@@ -5982,6 +5982,7 @@ function switchLang(lang) {
         window._activeReferrals = profile.referral_count || profile.active_referrals || 0;
       }
       updateReferralBlock();
+      updatePricingDisplay();
       // Update pricing buttons
       updatePricingButtons(plan);
 
@@ -6017,6 +6018,43 @@ function switchLang(lang) {
         });
     }
   }
+  function updatePricingDisplay() {
+    var referrals = window._activeReferrals || 0;
+    var discountPercent = 0;
+    if (referrals >= 50) discountPercent = 100;
+    else if (referrals >= 20) discountPercent = 70;
+    else if (referrals >= 10) discountPercent = 50;
+    else if (referrals >= 5) discountPercent = 30;
+    else if (referrals >= 1) discountPercent = 20;
+
+    var stdEl = document.getElementById('standardPrice');
+    var prmEl = document.getElementById('premiumPrice');
+    var stdDisc = document.getElementById('standardDiscount');
+    var prmDisc = document.getElementById('premiumDiscount');
+
+    if (discountPercent === 0) {
+      if (stdEl) stdEl.textContent = '3,99€';
+      if (prmEl) prmEl.textContent = '6,90€';
+      if (stdDisc) stdDisc.style.display = 'none';
+      if (prmDisc) prmDisc.style.display = 'none';
+      return;
+    }
+    if (discountPercent === 100) {
+      if (stdEl) stdEl.textContent = '0€';
+      if (prmEl) prmEl.textContent = '0€';
+      if (stdDisc) { stdDisc.textContent = '🎁 Gratuit à vie (50 filleuls)'; stdDisc.style.display = 'block'; }
+      if (prmDisc) { prmDisc.textContent = '🎁 Gratuit à vie (50 filleuls)'; prmDisc.style.display = 'block'; }
+      return;
+    }
+    var stdRed = (3.99 * (1 - discountPercent/100)).toFixed(2).replace('.', ',');
+    var prmRed = (6.90 * (1 - discountPercent/100)).toFixed(2).replace('.', ',');
+    var label = referrals >= 20 ? '(-70% · 20 filleuls)' : referrals >= 10 ? '(-50% · 10 filleuls)' : referrals >= 5 ? '(-30% · 5 filleuls)' : '(-20% · 1 filleul)';
+    if (stdEl) stdEl.textContent = stdRed + '€';
+    if (prmEl) prmEl.textContent = prmRed + '€';
+    if (stdDisc) { stdDisc.textContent = '🎁 ' + label; stdDisc.style.display = 'block'; }
+    if (prmDisc) { prmDisc.textContent = '🎁 ' + label; prmDisc.style.display = 'block'; }
+  }
+
   function copyReferralCode() {
     var code = window._referralCode;
     if (!code) return;
