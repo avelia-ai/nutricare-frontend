@@ -5858,10 +5858,29 @@ function switchLang(lang) {
   async function showApp() {
     document.getElementById('authPage').classList.remove('active');
     document.getElementById('appPage').classList.add('active');
+    try { const cached = JSON.parse(localStorage.getItem('nutricare_profile') || 'null'); if (cached) renderProfileQuick(cached); } catch (e) {}
     await loadProfile();
 
   }
 
+  function renderProfileQuick(profile) {
+    try {
+      const name = profile.full_name || currentUser?.email?.split('@')[0] || 'Utilisateur';
+      const initials = name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2);
+      let plan = profile.plan || 'free';
+      if (plan === 'trial') plan = 'premium';
+      const planLabels = { free: ' Gratuit', standard: '⭐ Standard', premium: ' Premium' };
+      const mobileAvatar = document.getElementById('mobileUserAvatar');
+      if (mobileAvatar) mobileAvatar.textContent = initials;
+      if (document.getElementById('sidebarAvatar')) document.getElementById('sidebarAvatar').textContent = initials;
+      if (document.getElementById('sidebarName')) document.getElementById('sidebarName').textContent = name;
+      if (document.getElementById('sidebarPlan')) document.getElementById('sidebarPlan').textContent = planLabels[plan] || 'Gratuit';
+      if (document.getElementById('dashName')) document.getElementById('dashName').textContent = name.split(' ')[0] + ' !';
+      if (document.getElementById('dashPlan')) document.getElementById('dashPlan').textContent = planLabels[plan] || 'Gratuit';
+    } catch (e) {
+      console.error('renderProfileQuick error:', e);
+    }
+  }
   async function loadProfile() {
     try {
       const res = await fetch(`${BACKEND_URL}/api/profile`, {
