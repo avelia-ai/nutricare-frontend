@@ -6048,6 +6048,19 @@ function switchLang(lang) {
       : 'Vous bénéficiez désormais de <b>-' + reached.discount + '%</b> sur tous vos abonnements !';
 
     var hasPlan = window.currentPlan && window.currentPlan !== 'free';
+
+    // Si abonnement actif, appliquer la réduction automatiquement côté Stripe
+    if (hasPlan) {
+      var authToken = localStorage.getItem('nutricare_token') || localStorage.getItem('sb-access-token');
+      fetch('/api/billing/apply-referral-discount', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + authToken }
+      }).then(function(r) { return r.json(); }).then(function(d) {
+        console.log('Réduction parrainage appliquée:', d);
+      }).catch(function(e) {
+        console.error('Erreur apply-referral-discount:', e);
+      });
+    }
     var ctaHtml = hasPlan
       ? '<div style="font-size:0.85rem;color:#444;margin-bottom:20px;line-height:1.6;background:#f9f9f9;border-radius:12px;padding:14px">✅ Votre réduction est <b>automatiquement appliquée</b> à votre prochain renouvellement.<br>Aucune action requise !</div>' +
         '<button onclick="document.getElementById(&apos;referralMilestonePopup&apos;).remove()" style="background:linear-gradient(135deg,var(--coral),#e8821a);color:white;border:none;border-radius:14px;padding:13px 24px;font-size:0.9rem;font-weight:700;cursor:pointer;width:100%">Super, merci ! 🙌</button>'
