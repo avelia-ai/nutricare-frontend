@@ -5892,6 +5892,11 @@ function switchLang(lang) {
         window.currentPlan = plan;
         window.isTrial = false;
       }
+      // Parrainage : free_forever = accès premium permanent
+      if (profile.free_forever === true) {
+        window.currentPlan = 'premium';
+        window.freeForever = true;
+      }
       localStorage.setItem('nutricare_profile', JSON.stringify(profile));
       // Mettre à jour avatar mobile
       const mobileAvatar = document.getElementById('mobileUserAvatar');
