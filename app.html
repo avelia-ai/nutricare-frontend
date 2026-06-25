@@ -5624,7 +5624,12 @@ function switchLang(lang) {
       if (!lv || lv === 'oracle' || lv === 'pro') localStorage.setItem('nutricare_last_view', 'chat');
     }
     if (authToken && currentUser) {
-      await showApp();
+      document.getElementById('authPage').classList.remove('active');
+      document.getElementById('appPage').classList.add('active');
+      try {
+        const cached = JSON.parse(localStorage.getItem('nutricare_profile') || 'null');
+        if (cached) renderProfileQuick(cached);
+      } catch (e) {}
       var _savedTheme = localStorage.getItem('mirella_theme');
       setTimeout(async function() {
         // Demander permission notifications
@@ -5681,6 +5686,7 @@ function switchLang(lang) {
       const savedV = localStorage.getItem('nutricare_last_view'); const targetView = urlView || (['chat','health','menus','profile','home'].includes(savedV) ? savedV : 'home');
       if (urlEntreprise === 'create') await showView('entreprise');
       else { await showView(targetView); if (urlPathologie) window.selectedPathologie = urlPathologie; }
+      loadProfile();
     }
   };
 
