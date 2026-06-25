@@ -7944,7 +7944,28 @@ Réponds UNIQUEMENT en JSON valide avec cette structure exacte:
 
     if (view === 'menus') setTimeout(buildWeekSelector, 50);
     if (view === 'health') { loadInfoDuJour(); loadHydrationFromStorage(); setTimeout(renderEvolutionGallery, 100); }
-    if (view === 'profile') { setTimeout(updateReferralBlock, 100); }
+    if (view === 'profile') {
+      setTimeout(function() {
+        updateReferralBlock();
+        // Fallback : si toujours vide, re-fetch
+        var el = document.getElementById('profileReferralCode');
+        if (el && el.textContent === '—') {
+          if (authToken) {
+            fetch(BACKEND_URL + '/api/profile', { headers: { 'Authorization': 'Bearer ' + authToken } })
+              .then(function(r){ return r.json(); })
+              .then(function(profile){
+                if (profile.referral_code) {
+                  window._referralCode = profile.referral_code;
+                  window._activeReferrals = profile.referral_count || profile.active_referrals || 0;
+                  el.textContent = window._referralCode;
+                  var countEl = document.getElementById('profileReferralCount');
+                  if (countEl) countEl.textContent = window._activeReferrals;
+                }
+              });
+          }
+        }
+      }, 200);
+    }
     if (view === 'fitness') { loadFitnessView(); }
     if (wcalViews.includes(view)) setTimeout(function(){ wcalInit(view); }, 50);
 
