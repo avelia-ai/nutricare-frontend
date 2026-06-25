@@ -11486,9 +11486,9 @@ function toggleQuickMenu() {
 </div>
 
 <!-- BODY SCAN PLEIN ECRAN -->
-<div id="rituelReveilScreen" style="display:none;position:fixed;inset:0;z-index:10001;flex-direction:column;align-items:center;justify-content:center;overflow:hidden;background:#06040e">
+<div id="rituelReveilScreen" style="display:none;position:fixed;inset:0;z-index:10001;flex-direction:column;align-items:center;justify-content:center;overflow:hidden;background:#080510">
   <!-- Canvas fond ciel -->
-  <canvas id="reveilSkyCanvas" style="position:absolute;top:0;left:0;width:100%;height:calc(100% + 80px)"></canvas>
+  <canvas id="reveilSkyCanvas" style="position:absolute;top:0;left:0;width:100%;height:100%"></canvas>
   <!-- Bouton fermer -->
   <button onclick="closeRituel()" style="position:absolute;top:20px;right:20px;background:rgba(255,255,255,0.15);border:none;color:white;width:40px;height:40px;border-radius:50%;font-size:1.2rem;cursor:pointer;z-index:10">✕</button>
   <!-- Contenu centré -->
@@ -13380,7 +13380,7 @@ function startReveilExercise() {
   var skyCtx = skyCanvas.getContext('2d');
   function resizeSky() {
     skyCanvas.width = window.innerWidth;
-    skyCanvas.height = window.innerHeight + 80;
+    skyCanvas.height = window.innerHeight;
   }
   resizeSky();
   window.addEventListener('resize', resizeSky);
@@ -13583,7 +13583,7 @@ function startReveilExercise() {
     skyCtx.lineTo(0, H*0.93);
     skyCtx.bezierCurveTo(W*0.15, H*0.88, W*0.3, H*0.91, W*0.45, H*0.89);
     skyCtx.bezierCurveTo(W*0.6, H*0.87, W*0.75, H*0.92, W, H*0.90);
-    skyCtx.lineTo(W, H); skyCtx.closePath();
+    skyCtx.lineTo(W, H*1.1); skyCtx.lineTo(0, H*1.1); skyCtx.closePath();
     skyCtx.fillStyle = mFront;
     skyCtx.fill();
 
