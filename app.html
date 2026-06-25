@@ -5998,12 +5998,24 @@ function switchLang(lang) {
   }
 
   function updateReferralBlock() {
-    console.log("updateReferralBlock appelé, code:", window._referralCode);
-    if (!window._referralCode) return;
     var el = document.getElementById('profileReferralCode');
-    if (el) el.textContent = window._referralCode;
     var countEl = document.getElementById('profileReferralCount');
-    if (countEl) countEl.textContent = window._activeReferrals || 0;
+    if (!el) return;
+    if (window._referralCode) {
+      el.textContent = window._referralCode;
+      if (countEl) countEl.textContent = window._activeReferrals || 0;
+    } else if (authToken) {
+      fetch(BACKEND_URL + '/api/profile', { headers: { 'Authorization': 'Bearer ' + authToken } })
+        .then(function(r){ return r.json(); })
+        .then(function(profile){
+          if (profile.referral_code) {
+            window._referralCode = profile.referral_code;
+            window._activeReferrals = profile.referral_count || profile.active_referrals || 0;
+            el.textContent = window._referralCode;
+            if (countEl) countEl.textContent = window._activeReferrals;
+          }
+        });
+    }
   }
   function copyReferralCode() {
     var code = window._referralCode;
