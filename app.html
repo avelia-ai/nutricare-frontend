@@ -11486,30 +11486,26 @@ function toggleQuickMenu() {
 </div>
 
 <!-- BODY SCAN PLEIN ECRAN -->
-<div id="rituelReveilScreen" style="display:none;position:fixed;inset:0;z-index:10001;flex-direction:column;align-items:center;justify-content:center;overflow:hidden;background:#000">
-  <!-- Canvas fond ciel -->
+<div id="rituelReveilScreen" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;z-index:10001;overflow:hidden;background:#000">
   <canvas id="reveilSkyCanvas" style="position:absolute;top:0;left:0;width:100%;height:100%"></canvas>
-  <!-- Bouton fermer -->
   <button onclick="closeRituel()" style="position:absolute;top:20px;right:20px;background:rgba(255,255,255,0.15);border:none;color:white;width:40px;height:40px;border-radius:50%;font-size:1.2rem;cursor:pointer;z-index:10">✕</button>
-  <!-- Contenu centré -->
-  <div style="position:absolute;top:0;left:0;right:0;bottom:0;z-index:2;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:0 32px;pointer-events:none">
-    <canvas id="reveilSunCanvas" style="display:none;width:220px;height:220px"></canvas>
-    <div id="reveilStepLabel" style="color:rgba(255,220,150,0.8);font-size:0.7rem;font-weight:700;letter-spacing:3px;text-transform:uppercase;margin-bottom:10px;animation:reveilTextIn 0.6s ease both"></div>
-    <div id="reveilInstruction" style="color:white;font-size:1.5rem;font-weight:800;text-align:center;letter-spacing:0.5px;text-shadow:0 2px 20px rgba(255,160,60,0.6);margin-bottom:8px;animation:reveilTextIn 0.6s ease both"></div>
-    <div id="reveilSubText" style="color:rgba(255,255,255,0.65);font-size:0.92rem;text-align:center;line-height:1.6;max-width:280px;margin-bottom:24px;animation:reveilTextIn 0.7s ease both"></div>
-    <div style="position:relative;width:64px;height:64px;margin-bottom:20px;pointer-events:all">
+  <div style="position:absolute;top:0;left:0;right:0;bottom:0;z-index:2;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:0 32px">
+    <canvas id="reveilSunCanvas" style="display:none"></canvas>
+    <div id="reveilStepLabel" style="color:rgba(255,220,150,0.8);font-size:0.7rem;font-weight:700;letter-spacing:3px;text-transform:uppercase;margin-bottom:10px"></div>
+    <div id="reveilInstruction" style="color:white;font-size:1.5rem;font-weight:800;text-align:center;text-shadow:0 2px 20px rgba(255,160,60,0.6);margin-bottom:8px"></div>
+    <div id="reveilSubText" style="color:rgba(255,255,255,0.65);font-size:0.92rem;text-align:center;line-height:1.6;max-width:280px;margin-bottom:24px"></div>
+    <div style="position:relative;width:64px;height:64px;margin-bottom:20px">
       <svg viewBox="0 0 64 64" style="width:64px;height:64px;transform:rotate(-90deg)">
         <circle cx="32" cy="32" r="28" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="3"/>
         <circle id="reveilTimerArc" cx="32" cy="32" r="28" fill="none" stroke="rgba(255,210,100,0.85)" stroke-width="3" stroke-linecap="round" stroke-dasharray="175.9" stroke-dashoffset="0" style="transition:stroke-dashoffset 0.9s linear"/>
       </svg>
-      <div id="reveilCounter" style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:white;font-size:1.1rem;font-weight:800;text-shadow:0 0 10px rgba(255,200,80,0.8)"></div>
+      <div id="reveilCounter" style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:white;font-size:1.1rem;font-weight:800"></div>
     </div>
     <div style="width:180px;height:3px;background:rgba(255,255,255,0.12);border-radius:4px;overflow:hidden">
       <div id="reveilProgressBar" style="height:3px;background:linear-gradient(90deg,#FFD060,#FF9A3C);border-radius:4px;width:0%;transition:width 0.8s ease"></div>
     </div>
   </div>
 </div>
-
 <div id="rituelBodyScanScreen" style="display:none;position:fixed;inset:0;z-index:10000;flex-direction:column;align-items:center;justify-content:flex-start;overflow:hidden">
   <canvas id="bsAuroraCanvas" style="position:absolute;inset:0;width:100%;height:100%;z-index:0;pointer-events:none"></canvas>
   <button onclick="closeRituel()" style="position:absolute;top:20px;right:20px;background:rgba(255,255,255,0.1);border:none;color:white;width:40px;height:40px;border-radius:50%;font-size:1.2rem;cursor:pointer;z-index:3">✕</button>
