@@ -5979,7 +5979,7 @@ function switchLang(lang) {
       // Bloc parrainage
       if (profile.referral_code) {
         window._referralCode = profile.referral_code;
-        window._activeReferrals = profile.active_referrals || 0;
+        window._activeReferrals = profile.referral_count || profile.active_referrals || 0;
       }
       updateReferralBlock();
       // Update pricing buttons
@@ -5998,6 +5998,7 @@ function switchLang(lang) {
   }
 
   function updateReferralBlock() {
+    console.log("updateReferralBlock appelé, code:", window._referralCode);
     if (!window._referralCode) return;
     var el = document.getElementById('profileReferralCode');
     if (el) el.textContent = window._referralCode;
