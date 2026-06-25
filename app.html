@@ -7932,6 +7932,7 @@ Réponds UNIQUEMENT en JSON valide avec cette structure exacte:
 
     if (view === 'menus') setTimeout(buildWeekSelector, 50);
     if (view === 'health') { loadInfoDuJour(); loadHydrationFromStorage(); setTimeout(renderEvolutionGallery, 100); }
+    if (view === 'profile') { setTimeout(updateReferralBlock, 100); }
     if (view === 'fitness') { loadFitnessView(); }
     if (wcalViews.includes(view)) setTimeout(function(){ wcalInit(view); }, 50);
 
