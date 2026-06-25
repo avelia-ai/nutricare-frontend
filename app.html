@@ -2789,6 +2789,10 @@ function switchLang(lang) {
         <label class="form-label">Mot de passe</label>
         <input type="password" class="form-input" id="registerPassword" placeholder="Minimum 6 caractères">
       </div>
+      <div class="form-group" id="refGroup" style="display:none">
+        <label class="form-label">Code de parrainage <span style="color:#aaa;font-weight:400">(optionnel)</span></label>
+        <input type="text" class="form-input" id="registerRef" placeholder="Ex: ABCD1234" style="text-transform:uppercase;letter-spacing:0.1em">
+      </div>
       <button class="btn-auth" onclick="register()">Créer mon compte →</button>
     </div>
   </div>
@@ -3648,6 +3652,22 @@ function switchLang(lang) {
       <div style="font-size:0.9rem;font-weight:700;color:#2D2D2D;margin-bottom:4px">Fonctionnalité Standard & Premium</div>
       <div style="font-size:0.78rem;color:#888;margin-bottom:12px">Débloquez l'analyse nutritionnelle de vos repas en photo</div>
       <div style="background:linear-gradient(135deg,var(--coral),var(--accent));color:white;border-radius:10px;padding:8px 20px;font-size:0.82rem;font-weight:700">Voir les offres →</div>
+    </div>
+    <!-- Bloc parrainage -->
+    <div style="background:white;border-radius:16px;padding:20px;box-shadow:0 2px 8px rgba(0,0,0,0.06);margin-bottom:24px">
+      <div style="font-size:0.75rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--accent);margin-bottom:12px">🎁 Parrainage</div>
+      <div style="font-size:0.85rem;color:#555;margin-bottom:14px;line-height:1.5">Invitez vos proches sur Mirella et recevez <b style="color:var(--coral)">-50% sur votre prochain mois</b> dès qu'ils s'inscrivent avec votre lien.</div>
+      <div style="background:#FFF8F3;border-radius:12px;padding:14px;margin-bottom:12px">
+        <div style="font-size:0.7rem;color:#aaa;margin-bottom:4px">Votre code personnel</div>
+        <div style="display:flex;align-items:center;gap:10px">
+          <div id="profileReferralCode" style="font-size:1.3rem;font-weight:800;color:var(--coral);letter-spacing:0.15em">—</div>
+          <button onclick="copyReferralLink()" style="padding:6px 12px;border-radius:8px;border:none;background:var(--coral);color:white;font-size:0.72rem;font-weight:700;cursor:pointer">Copier le lien</button>
+        </div>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px;font-size:0.82rem;color:#888">
+        <span>👥</span>
+        <span><b id="profileReferralCount" style="color:#2D2D2D">0</b> filleul(s) parrainé(s)</span>
+      </div>
     </div>
   </div>
 
@@ -5730,7 +5750,7 @@ function switchLang(lang) {
       const res = await fetch(`${BACKEND_URL}/api/auth/register`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password, full_name: name })
+        body: JSON.stringify({ email, password, full_name: name, ref: (document.getElementById('registerRef')?.value.trim().toUpperCase() || sessionStorage.getItem('referral_ref') || '') || undefined })
       });
       const data = await res.json();
       if (!res.ok) return showAuthError(data.error || 'Erreur lors de l\'inscription');
@@ -5748,6 +5768,28 @@ function switchLang(lang) {
     document.getElementById('loginForm').style.display = tab === 'login' ? 'flex' : 'none';
     document.getElementById('registerForm').style.display = tab === 'register' ? 'flex' : 'none';
   }
+  // Capture du code de parrainage dans l'URL (?ref=XXXX)
+  (function() {
+    var urlRef = new URLSearchParams(window.location.search).get('ref');
+    if (urlRef) {
+      sessionStorage.setItem('referral_ref', urlRef.toUpperCase());
+      var refInput = document.getElementById('registerRef');
+      var refGroup = document.getElementById('refGroup');
+      if (refInput) refInput.value = urlRef.toUpperCase();
+      if (refGroup) refGroup.style.display = 'block';
+      // Basculer automatiquement sur l'onglet inscription
+      if (typeof switchTabByName === 'function') switchTabByName('register');
+    } else {
+      // Afficher quand même le champ si l'utilisateur vient de cliquer sur "Inscription"
+      var origSwitch = window.switchTab;
+      document.querySelectorAll('.auth-tab').forEach(function(btn) {
+        btn.addEventListener('click', function() {
+          var refGroup = document.getElementById('refGroup');
+          if (refGroup) refGroup.style.display = 'block';
+        });
+      });
+    }
+  })();
 
   function logout() {
     authToken = null;
@@ -5902,6 +5944,14 @@ function switchLang(lang) {
         }
       }
 
+      // Bloc parrainage
+      if (profile.referral_code) {
+        var el = document.getElementById('profileReferralCode');
+        if (el) el.textContent = profile.referral_code;
+        var countEl = document.getElementById('profileReferralCount');
+        if (countEl) countEl.textContent = profile.referral_count || 0;
+        window._referralCode = profile.referral_code;
+      }
       // Update pricing buttons
       updatePricingButtons(plan);
 
@@ -5917,6 +5967,17 @@ function switchLang(lang) {
     }
   }
 
+  function copyReferralLink() {
+    var code = window._referralCode;
+    if (!code) return;
+    var link = window.location.origin + window.location.pathname + '?ref=' + code;
+    navigator.clipboard.writeText(link).then(function() {
+      var btn = document.querySelector('[onclick="copyReferralLink()"]');
+      if (btn) { btn.textContent = 'Copié !'; setTimeout(function(){ btn.textContent = 'Copier le lien'; }, 2000); }
+    }).catch(function() {
+      prompt('Copiez ce lien de parrainage :', link);
+    });
+  }
   async function buyProgram(priceId, programName) {
     try {
       const res = await fetch(`${BACKEND_URL}/api/billing/create-program-checkout`, {
