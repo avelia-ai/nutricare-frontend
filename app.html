@@ -13758,6 +13758,10 @@ function startReveilExercise() {
         screen.style.display = 'none';
         document.getElementById('rituelOverlay').style.display = 'flex';
         document.getElementById('rituelExerciseScreen').style.display = 'flex';
+        var heartCanvas = document.getElementById('rituelHarmonyCanvas');
+        if (heartCanvas && typeof drawRituelHeart === 'function') {
+          drawRituelHeart(heartCanvas, 0.6, 1, 1);
+        }
         finishRituel(20);
         return;
       }
