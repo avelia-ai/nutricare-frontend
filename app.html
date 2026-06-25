@@ -13436,7 +13436,8 @@ function startReveilExercise() {
 
     // Sol doux
     var groundGrad = skyCtx.createLinearGradient(0, H*0.72, 0, H);
-    groundGrad.addColorStop(0, 'rgba('+Math.round(40+160*t)+','+Math.round(20+80*t)+','+Math.round(20+20*t)+',0.6)');
+    groundGrad.addColorStop(0, 'rgba('+Math.round(40+160*t)+','+Math.round(20+80*t)+','+Math.round(20+20*t)+',0)');
+    groundGrad.addColorStop(0.4, 'rgba('+Math.round(40+160*t)+','+Math.round(20+80*t)+','+Math.round(20+20*t)+',0.45)');
     groundGrad.addColorStop(1, 'rgba('+Math.round(20+100*t)+','+Math.round(10+50*t)+',10,0.8)');
     skyCtx.fillStyle = groundGrad;
     skyCtx.fillRect(0, H*0.72, W, H*0.28);
