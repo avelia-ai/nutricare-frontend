@@ -763,8 +763,14 @@ window.onPersoMenusToggle = function() {
   localStorage.setItem('mirella_perso_menus_enabled', enabled ? '1' : '0');
   var track = document.getElementById('persoToggleTrack');
   var thumb = document.getElementById('persoToggleThumb');
+  var persoContent = document.getElementById('persoMenusContent');
+  var addBtn = document.getElementById('persoAddBtnWrap');
+  var chevron = document.getElementById('persoMenusChevron');
   if (track) track.style.background = enabled ? '#FF6B6B' : '#e0dbd8';
   if (thumb) thumb.style.transform = enabled ? 'translateX(20px)' : 'translateX(0)';
+  if (persoContent) { persoContent.style.display = enabled ? 'block' : 'none'; if (enabled) window.renderPersoMenus(); }
+  if (addBtn) addBtn.style.display = enabled ? 'block' : 'none';
+  if (chevron) chevron.style.transform = enabled ? 'rotate(180deg)' : '';
   if (typeof updateNutritionPanel === 'function') updateNutritionPanel();
 };
 window.initPersoMenus = function() {
@@ -946,8 +952,12 @@ window.onIaMenusToggle = function() {
   localStorage.setItem('mirella_ia_menus_enabled', enabled ? '1' : '0');
   var track = document.getElementById('iaToggleTrack');
   var thumb = document.getElementById('iaToggleThumb');
+  var iaContent = document.getElementById('iaMenusContent');
+  var chevron = document.getElementById('iaMenusChevron');
   if (track) track.style.background = enabled ? '#FF6B6B' : '#e0dbd8';
   if (thumb) thumb.style.transform = enabled ? 'translateX(20px)' : 'translateX(0)';
+  if (iaContent) iaContent.style.display = enabled ? 'block' : 'none';
+  if (chevron) chevron.style.transform = enabled ? 'rotate(180deg)' : '';
   if (typeof updateNutritionPanel === 'function') updateNutritionPanel();
 };
 window.initIaMenus = function() {
