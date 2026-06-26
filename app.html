@@ -13356,6 +13356,7 @@ function openSubscriptionModal(context) {
     <div style="width:200px;height:3px;background:rgba(255,255,255,0.1);border-radius:2px;margin-top:28px;overflow:hidden">
       <div id="rituel478Progress" style="height:100%;width:0%;background:linear-gradient(90deg,rgba(120,180,255,0.8),rgba(180,120,255,0.8));border-radius:2px;transition:width 1s linear"></div>
     </div>
+    <div id="rituel478CycleCount" style="color:rgba(255,255,255,0.4);font-size:0.75rem;margin-top:10px;letter-spacing:1px"></div>
   </div>
   <!-- ECRAN BODY SCAN (plein écran, hors rituelExerciseScreen) -->
   <div id="rituelDone" style="display:none;text-align:center;padding:32px 24px;max-width:360px;margin:0 auto">
@@ -14342,10 +14343,10 @@ function start478Exercise() {
     if (phaseSec !== _lastSec) {
       _lastSec = phaseSec;
       var remaining = ph.dur - phaseSec;
-      counter.textContent = remaining > 0 ? remaining : 0;
+      if (counter) counter.textContent = remaining > 0 ? remaining : 0;
       elapsed++;
-      cycleEl.textContent = 'Cycle ' + cycle + ' / ' + TOTAL_CYCLES;
-      progress.style.width = Math.min(100, Math.round(elapsed / TOTAL_SEC * 100)) + '%';
+      if (cycleEl) cycleEl.textContent = 'Cycle ' + cycle + ' / ' + TOTAL_CYCLES;
+      if (progress) progress.style.width = Math.min(100, Math.round(elapsed / TOTAL_SEC * 100)) + '%';
     }
     // Fin de phase
     if (phaseMs >= ph.dur * 1000) {
