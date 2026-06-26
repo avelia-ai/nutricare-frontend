@@ -9307,7 +9307,25 @@ function calcDayPoints(log, prevLogExists) {
 }
 
 function _gamiKey() {
-  var u = (typeof currentUser !== "undefined" && currentUser && currentUser.id) ? currentUser.id : "anon";
+  var u = "anon";
+  if (typeof currentUser !== "undefined" && currentUser && currentUser.id) {
+    u = currentUser.id;
+  } else {
+    try {
+      var token = localStorage.getItem('nutricare_token') || '';
+      if (token) {
+        var payload = JSON.parse(atob(token.split('.')[1]));
+        if (payload && payload.sub) u = payload.sub;
+      }
+    } catch(e) {}
+    if (u === "anon") {
+      try {
+        var profile = JSON.parse(localStorage.getItem('nutricare_profile') || '{}');
+        if (profile.id) u = profile.id;
+        else if (profile.email) u = profile.email;
+      } catch(e) {}
+    }
+  }
   return "gami_bonus_total_" + u;
 }
 function calcHarmonyFromLogs(logs) {
@@ -14197,6 +14215,9 @@ function finishRituel(pts) {
     var total = (typeof calcHarmonyFromLogs==='function' ? calcHarmonyFromLogs(logs) : 0) + bonus;
     updateHarmonyUI(total);
   }
+  setTimeout(function() {
+    if (typeof loadGamification === 'function') loadGamification();
+  }, 500);
 }
 
 function start478Exercise() {
