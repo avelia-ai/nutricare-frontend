@@ -13329,7 +13329,12 @@ function openSubscriptionModal(context) {
   <!-- ECRAN 478 -->
   <div id="rituel478Screen" style="display:none;flex-direction:column;align-items:center;justify-content:center;text-align:center">
     <div style="color:white;font-size:1.1rem;font-weight:700;margin-bottom:4px;letter-spacing:1px">Technique 4-7-8</div>
-    <div id="rituel478CycleCount" style="color:rgba(255,255,255,0.4);font-size:0.8rem;margin-bottom:32px;letter-spacing:1px"></div>
+    <div style="display:flex;gap:8px;margin-bottom:32px;align-items:center" id="rituel478CycleDots">
+      <div class="r478dot" id="r478dot1" style="width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,0.15);transition:all 0.4s ease"></div>
+      <div class="r478dot" id="r478dot2" style="width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,0.15);transition:all 0.4s ease"></div>
+      <div class="r478dot" id="r478dot3" style="width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,0.15);transition:all 0.4s ease"></div>
+      <div class="r478dot" id="r478dot4" style="width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,0.15);transition:all 0.4s ease"></div>
+    </div>
     <!-- Cercle de respiration -->
     <div style="position:relative;width:260px;height:260px;display:flex;align-items:center;justify-content:center">
       <!-- Halo externe -->
@@ -13353,11 +13358,25 @@ function openSubscriptionModal(context) {
     </div>
   </div>
   <!-- ECRAN BODY SCAN (plein écran, hors rituelExerciseScreen) -->
-  <div id="rituelDone" style="display:none;text-align:center;margin-top:20px">
-    <div style="font-size:2rem;margin-bottom:8px">✨</div>
-    <div style="color:white;font-size:1rem;font-weight:700">Rituel termine</div>
-    <div id="rituelPtsGained" style="color:#FF9090;font-size:0.9rem;margin-top:4px"></div>
-    <button onclick="closeRituel()" style="margin-top:16px;background:linear-gradient(135deg,#FF6B6B,#FF9A3C);color:white;border:none;border-radius:14px;padding:12px 28px;font-size:0.95rem;font-weight:700;cursor:pointer">Fermer</button>
+  <div id="rituelDone" style="display:none;text-align:center;padding:32px 24px;max-width:360px;margin:0 auto">
+    <div style="font-size:3.5rem;margin-bottom:16px;animation:rituelFloat 3s ease-in-out infinite">🌟</div>
+    <div style="color:white;font-size:1.4rem;font-weight:800;margin-bottom:8px;letter-spacing:0.5px">Bravo !</div>
+    <div id="rituelDoneMsg" style="color:rgba(255,255,255,0.7);font-size:0.92rem;line-height:1.6;margin-bottom:20px">Vous avez complété votre rituel de respiration.</div>
+    <div style="display:flex;gap:12px;justify-content:center;margin-bottom:24px">
+      <div style="background:rgba(255,255,255,0.08);border-radius:14px;padding:12px 16px;text-align:center">
+        <div id="rituelDoneCycles" style="color:white;font-size:1.6rem;font-weight:800">4</div>
+        <div style="color:rgba(255,255,255,0.45);font-size:0.68rem;text-transform:uppercase;letter-spacing:1px;margin-top:2px">cycles</div>
+      </div>
+      <div style="background:rgba(255,255,255,0.08);border-radius:14px;padding:12px 16px;text-align:center">
+        <div id="rituelDoneTime" style="color:white;font-size:1.6rem;font-weight:800">3:00</div>
+        <div style="color:rgba(255,255,255,0.45);font-size:0.68rem;text-transform:uppercase;letter-spacing:1px;margin-top:2px">minutes</div>
+      </div>
+      <div style="background:rgba(255,255,255,0.08);border-radius:14px;padding:12px 16px;text-align:center">
+        <div id="rituelPtsGained" style="color:#FF9A6C;font-size:1.6rem;font-weight:800">+15</div>
+        <div style="color:rgba(255,255,255,0.45);font-size:0.68rem;text-transform:uppercase;letter-spacing:1px;margin-top:2px">pts</div>
+      </div>
+    </div>
+    <button onclick="closeRituel()" style="width:100%;padding:16px;background:linear-gradient(135deg,#FF9A6C,#FF6B6B);color:white;border:none;border-radius:16px;font-size:1rem;font-weight:700;cursor:pointer;box-shadow:0 6px 24px rgba(255,100,80,0.35)">Terminer ✦</button>
   </div>
 </div>
 
@@ -14226,6 +14245,62 @@ function start478Exercise() {
   var _running = true;
   var _phaseStart = null, _phaseElapsed = 0;
   var circumference = 753.98;
+  var _478StartTime = Date.now();
+
+  // Web Audio API — sons doux par phase
+  var _478AudioCtx = null;
+  function play478Tone(freq, dur, vol) {
+    try {
+      if (!_478AudioCtx) _478AudioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      var osc = _478AudioCtx.createOscillator();
+      var gain = _478AudioCtx.createGain();
+      osc.connect(gain); gain.connect(_478AudioCtx.destination);
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(freq, _478AudioCtx.currentTime);
+      gain.gain.setValueAtTime(0, _478AudioCtx.currentTime);
+      gain.gain.linearRampToValueAtTime(vol || 0.12, _478AudioCtx.currentTime + 0.05);
+      gain.gain.linearRampToValueAtTime(0, _478AudioCtx.currentTime + dur);
+      osc.start(_478AudioCtx.currentTime);
+      osc.stop(_478AudioCtx.currentTime + dur);
+    } catch(e) {}
+  }
+
+  // Flash lumineux au changement de phase
+  function flash478(color) {
+    var overlay = document.getElementById('rituelOverlay');
+    if (!overlay) return;
+    var fl = document.createElement('div');
+    fl.style.cssText = 'position:fixed;inset:0;background:' + color + ';pointer-events:none;z-index:9998;opacity:0;transition:opacity 0.08s ease';
+    overlay.appendChild(fl);
+    requestAnimationFrame(function() {
+      fl.style.opacity = '0.18';
+      setTimeout(function() { fl.style.opacity = '0'; setTimeout(function(){ fl.remove(); }, 200); }, 80);
+    });
+  }
+
+  // Mise à jour des indicateurs de cycles
+  function updateDots(currentCycle) {
+    for (var d = 1; d <= 4; d++) {
+      var dot = document.getElementById('r478dot' + d);
+      if (!dot) continue;
+      if (d < currentCycle) {
+        dot.style.background = 'rgba(100,220,180,0.9)';
+        dot.style.boxShadow = '0 0 8px rgba(100,220,180,0.6)';
+        dot.style.width = '8px';
+      } else if (d === currentCycle) {
+        dot.style.background = 'rgba(255,255,255,0.9)';
+        dot.style.boxShadow = '0 0 12px rgba(255,255,255,0.7)';
+        dot.style.width = '12px';
+        dot.style.height = '12px';
+        dot.style.borderRadius = '6px';
+      } else {
+        dot.style.background = 'rgba(255,255,255,0.15)';
+        dot.style.boxShadow = 'none';
+        dot.style.width = '8px';
+        dot.style.height = '8px';
+      }
+    }
+  }
 
   function applyPhase(ph) {
     phaseEl.textContent = ph.label;
@@ -14238,6 +14313,18 @@ function start478Exercise() {
     halo.style.background = 'radial-gradient(circle,' + ph.glow.replace('0.5','0.12') + ' 0%,transparent 70%)';
     arc.style.stroke = ph.arcColor;
     arc.style.transition = 'stroke 0.8s ease';
+    // Son doux selon phase
+    var tones = { 'Inspirez': [220, 0.4], 'Retenez': [180, 0.3], 'Expirez': [160, 0.6] };
+    var t = tones[ph.label] || [200, 0.4];
+    play478Tone(t[0], t[1], 0.10);
+    // Vibration haptique
+    var vibs = { 'Inspirez': [40], 'Retenez': [30, 60, 30], 'Expirez': [20, 40, 20, 40, 20] };
+    if (navigator.vibrate) navigator.vibrate(vibs[ph.label] || [30]);
+    // Flash coloré
+    var flashes = { 'Inspirez': 'rgba(100,180,255,1)', 'Retenez': 'rgba(180,130,255,1)', 'Expirez': 'rgba(100,220,180,1)' };
+    flash478(flashes[ph.label] || 'rgba(255,255,255,1)');
+    // Mise à jour dots
+    updateDots(cycle);
   }
 
   // Tick par seconde pour le compteur
@@ -14275,8 +14362,22 @@ function start478Exercise() {
           if (harmonyCanvas) harmonyCanvas.parentElement.style.display = '';
           var done = document.getElementById('rituelDone');
           done.style.display = 'block';
-          document.getElementById('rituelPtsGained').textContent = "+15 pts d'harmonie gagnés";
+          var totalSec = Math.round((Date.now() - _478StartTime) / 1000);
+          var mins = Math.floor(totalSec / 60);
+          var secs = totalSec % 60;
+          var doneTimeEl = document.getElementById('rituelDoneTime');
+          if (doneTimeEl) doneTimeEl.textContent = mins + ':' + (secs < 10 ? '0' : '') + secs;
+          var doneCyclesEl = document.getElementById('rituelDoneCycles');
+          if (doneCyclesEl) doneCyclesEl.textContent = TOTAL_CYCLES;
+          var doneMsgEl = document.getElementById('rituelDoneMsg');
+          if (doneMsgEl) doneMsgEl.textContent = 'Votre système nerveux est apaisé. La technique 4-7-8 réduit le cortisol et prépare un sommeil profond.';
+          document.getElementById('rituelPtsGained').textContent = '+15';
           if (typeof addHarmonyPoints === 'function') addHarmonyPoints(15);
+          // Son de fin doux
+          play478Tone(262, 0.3, 0.08);
+          setTimeout(function(){ play478Tone(330, 0.3, 0.08); }, 300);
+          setTimeout(function(){ play478Tone(392, 0.6, 0.10); }, 600);
+          if (navigator.vibrate) navigator.vibrate([50, 100, 50, 100, 80]);
           return;
         }
       }
