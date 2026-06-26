@@ -838,15 +838,41 @@ window.openAddPersoRepas = function(key) {
 };
 window.analyzePersoPhoto = async function(input) {
   if (!input.files || !input.files[0]) return;
+  var file = input.files[0];
   var key = window.PERSO_JOURS[window._persoSelectedDayIdx||0] + '_' + Object.keys(window.PERSO_REPAS)[0];
   window.openAddPersoRepas(key);
-  setTimeout(function() {
-    var hiddenInput = document.getElementById('persoRepasPhoto');
-    var dataTransfer = new DataTransfer();
-    dataTransfer.items.add(input.files[0]);
-    hiddenInput.files = dataTransfer.files;
-    window.analyzeRepasPhoto(hiddenInput);
-  }, 300);
+  var reader = new FileReader();
+  reader.onload = async function(e) {
+    var b64 = e.target.result;
+    var preview = document.getElementById('persoRepasPhotoPreview');
+    var img = document.getElementById('persoRepasPhotoImg');
+    var status = document.getElementById('persoRepasPhotoStatus');
+    if (img) img.src = b64;
+    if (preview) preview.style.display = 'block';
+    if (status) status.textContent = 'Mirella analyse votre repas...';
+    try {
+      var token = localStorage.getItem('nutricare_token') || '';
+      var mediaType = file.type || 'image/jpeg';
+      var base64Data = b64.split(',')[1];
+      var res = await fetch(BACKEND_URL + '/api/analysis', {
+        method: 'POST',
+        headers: {'Content-Type':'application/json','Authorization':'Bearer '+token},
+        body: JSON.stringify({image_base64: base64Data, media_type: mediaType, profile: {}})
+      });
+      var data = await res.json();
+      if (data.repas_identifie) document.getElementById('persoRepasNom').value = data.repas_identifie;
+      var m = data.macronutriments || {};
+      if (data.calories_estimees) document.getElementById('persoRepasKcal').value = data.calories_estimees;
+      if (m.glucides_g) document.getElementById('persoRepasGlu').value = m.glucides_g;
+      if (m.proteines_g) document.getElementById('persoRepasPro').value = m.proteines_g;
+      if (m.lipides_g) document.getElementById('persoRepasLip').value = m.lipides_g;
+      window._detectedMicros = data.micronutriments || {};
+      if (status) status.textContent = 'Detecte : ' + (data.repas_identifie||'repas') + ' — ' + (data.calories_estimees||0) + ' kcal';
+    } catch(err) {
+      if (status) status.textContent = 'Erreur : ' + err.message;
+    }
+  };
+  reader.readAsDataURL(file);
 };
 window.analyzeRepasPhoto = async function(input) {
   if (!input.files || !input.files[0]) return;
@@ -4106,15 +4132,11 @@ function switchLang(lang) {
         </select>
       </div>
       <div id="persoMenusContent" style="display:none;padding:18px;padding-top:0"></div>
-      <div id="persoAddBtnWrap" style="display:none;padding:0 18px 18px;display:flex;flex-direction:column;gap:8px">
-        <button onclick="window.openAddPersoRepas(window.PERSO_JOURS[window._persoSelectedDayIdx||0]+'_'+Object.keys(window.PERSO_REPAS)[0])" style="width:100%;background:white;color:#FF6B6B;border:1.5px solid rgba(255,107,107,0.3);border-radius:14px;padding:12px;font-size:13px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px">
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#FF6B6B" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-          Ajouter un repas manuellement
-        </button>
+      <div id="persoAddBtnWrap" style="display:none;padding:0 18px 18px">
         <input type="file" id="persoPhotoInput" accept="image/*" style="display:none" onchange="window.analyzePersoPhoto(this)">
-        <button onclick="document.getElementById('persoPhotoInput').click()" style="width:100%;background:#FFF0E8;color:#FF6B6B;border:1.5px dashed rgba(255,107,107,0.35);border-radius:14px;padding:12px;font-size:13px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px">
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#FF6B6B" stroke-width="2" stroke-linecap="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
-          Prendre ou charger une photo
+        <button onclick="document.getElementById('persoPhotoInput').click()" style="width:100%;background:#FFF0E8;color:#FF6B6B;border:1.5px dashed rgba(255,107,107,0.35);border-radius:14px;padding:13px;font-size:13px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#FF6B6B" stroke-width="2" stroke-linecap="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+          Analyser un repas par photo
         </button>
       </div>
     </div>
