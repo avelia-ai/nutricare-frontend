@@ -14360,9 +14360,6 @@ function start478Exercise() {
         if(cycle>TOTAL_CYCLES){
           _running=false; bgRunning=false;
           screen.style.display='none';
-          document.getElementById('rituelOverlay').style.display = 'none';
-          var done=document.getElementById('rituelDone');
-          done.style.display='block';
           var totalSec=Math.round((Date.now()-_478StartTime)/1000);
           var mins=Math.floor(totalSec/60), secs=totalSec%60;
           var doneTimeEl=document.getElementById('rituelDoneTime');
@@ -14371,8 +14368,9 @@ function start478Exercise() {
           if(doneCyclesEl)doneCyclesEl.textContent=TOTAL_CYCLES;
           var doneMsgEl=document.getElementById('rituelDoneMsg');
           if(doneMsgEl)doneMsgEl.textContent='Votre système nerveux est apaisé. La technique 4-7-8 réduit le cortisol et prépare un sommeil profond.';
-          document.getElementById('rituelPtsGained').textContent='+15';
-          if(typeof addHarmonyPoints==='function')addHarmonyPoints(15);
+          document.getElementById('rituelExerciseScreen').style.display='none';
+          document.getElementById('rituelOverlay').style.display='flex';
+          finishRituel(15);
           play478Tone(262,0.3,0.08);
           setTimeout(function(){play478Tone(330,0.3,0.08);},300);
           setTimeout(function(){play478Tone(392,0.6,0.10);},600);
