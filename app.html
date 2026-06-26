@@ -777,6 +777,16 @@ window.initPersoMenus = function() {
   var enabled = localStorage.getItem('mirella_perso_menus_enabled') === '1';
   var cb = document.getElementById('persoMenusEnabled');
   if (cb) cb.checked = enabled;
+  var track = document.getElementById('persoToggleTrack');
+  var thumb = document.getElementById('persoToggleThumb');
+  if (track) track.style.background = enabled ? '#FF6B6B' : '#e0dbd8';
+  if (thumb) thumb.style.transform = enabled ? 'translateX(20px)' : 'translateX(0)';
+  var addBtn = document.getElementById('persoAddBtnWrap');
+  var content = document.getElementById('persoMenusContent');
+  var chevron = document.getElementById('persoMenusChevron');
+  if (enabled && addBtn) { addBtn.style.display = 'flex'; addBtn.style.flexDirection = 'column'; }
+  if (enabled && content) { content.style.display = 'block'; window.renderPersoMenus(); }
+  if (enabled && chevron) chevron.style.transform = 'rotate(180deg)';
 };
 window.PERSO_JOURS = ["Lundi","Mardi","Mercredi","Jeudi","Vendredi","Samedi","Dimanche"];
 window.PERSO_REPAS = [["petit_dejeuner","Petit-dejeuner"],["dejeuner","Dejeuner"],["collation","Collation"],["diner","Diner"]];
@@ -857,7 +867,7 @@ window.analyzePersoPhoto = async function(input) {
       var profileData = {};
       try { profileData = JSON.parse(localStorage.getItem('nutricare_profile') || '{}'); } catch(e) {}
       var apiUrl = (typeof BACKEND_URL !== 'undefined' ? BACKEND_URL : 'https://nutricare-backend-production.up.railway.app');
-      var res = await fetch(apiUrl + '/api/analysis', {
+      var res = await fetch(apiUrl + '/api/analysis/photo', {
         method: 'POST',
         headers: {'Content-Type':'application/json','Authorization':'Bearer '+token},
         body: JSON.stringify({image_base64: base64Data, media_type: mediaType, profile: profileData})
