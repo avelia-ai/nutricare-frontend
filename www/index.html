@@ -751,8 +751,10 @@ window.renderSportSeances = function() {
 window.togglePersoMenus = function() {
   var content = document.getElementById('persoMenusContent');
   var chevron = document.getElementById('persoMenusChevron');
+  var addBtn = document.getElementById('persoAddBtnWrap');
   var isOpen = content.style.display !== 'none';
   content.style.display = isOpen ? 'none' : 'block';
+  if (addBtn) addBtn.style.display = isOpen ? 'none' : 'block';
   if (!isOpen) window.renderPersoMenus();
   chevron.style.transform = isOpen ? '' : 'rotate(180deg)';
 };
@@ -3956,7 +3958,7 @@ function switchLang(lang) {
         </div>
         <div style="display:flex;align-items:center;gap:10px">
           <div id="iaMenusChevron" style="color:rgba(255,255,255,0.3);transition:transform 0.2s;font-size:18px">▾</div>
-          <div onclick="event.stopPropagation()" style="position:relative;width:44px;height:24px;cursor:pointer" onclick="event.stopPropagation();window.onIaMenusToggle()">
+          <div onclick="event.stopPropagation();window.onIaMenusToggle()" style="position:relative;width:44px;height:24px;cursor:pointer">
             <input type="checkbox" id="iaMenusEnabled" onchange="window.onIaMenusToggle()" style="opacity:0;width:0;height:0;position:absolute">
             <div id="iaToggleTrack" style="position:absolute;inset:0;background:#FF6B6B;border-radius:12px;transition:.2s"></div>
             <div id="iaToggleThumb" style="position:absolute;top:3px;right:3px;width:18px;height:18px;background:white;border-radius:50%;transition:.2s"></div>
@@ -3986,7 +3988,7 @@ function switchLang(lang) {
       <div style="border-top:1px solid rgba(255,154,108,0.1);padding-top:14px;display:grid;grid-template-columns:1fr 1fr;gap:10px" id="menuFiltersGrid">
         <div style="grid-column:1/-1;font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#FF6B6B;margin-bottom:2px">Filtres</div>
         <div>
-          <div style="font-size:0.68rem;font-weight:700;text-transform:uppercase;letter-spacing:0.8px;color:#aaa;margin-bottom:6px">🚫 Exclusions</div>
+          <div style="font-size:0.68rem;font-weight:700;text-transform:uppercase;letter-spacing:0.8px;color:#aaa;margin-bottom:6px">Exclusions</div>
           <select id="filterExclusions" onchange="window.applySelectFilter('filterExclusions')" style="width:100%;padding:9px 12px;border:1.5px solid #e8e8e8;border-radius:10px;font-size:0.82rem;color:#2D2D2D;background:white;cursor:pointer;font-family:DM Sans,sans-serif">
             <option value="">Aucune exclusion</option>
             <option value="sans_gluten">Sans gluten</option>
@@ -4003,7 +4005,7 @@ function switchLang(lang) {
           </select>
         </div>
         <div>
-          <div style="font-size:0.68rem;font-weight:700;text-transform:uppercase;letter-spacing:0.8px;color:#aaa;margin-bottom:6px">🌍 Cuisine</div>
+          <div style="font-size:0.68rem;font-weight:700;text-transform:uppercase;letter-spacing:0.8px;color:#aaa;margin-bottom:6px">Cuisine</div>
           <select id="filterCuisine" onchange="window.applySelectFilter('filterCuisine')" style="width:100%;padding:9px 12px;border:1.5px solid #e8e8e8;border-radius:10px;font-size:0.82rem;color:#2D2D2D;background:white;cursor:pointer;font-family:DM Sans,sans-serif">
             <option value="">Toutes cuisines</option>
             <option value="cuisine_africaine">Africaine</option>
@@ -4016,7 +4018,7 @@ function switchLang(lang) {
           </select>
         </div>
         <div>
-          <div style="font-size:0.68rem;font-weight:700;text-transform:uppercase;letter-spacing:0.8px;color:#aaa;margin-bottom:6px">✨ Objectif santé</div>
+          <div style="font-size:0.68rem;font-weight:700;text-transform:uppercase;letter-spacing:0.8px;color:#aaa;margin-bottom:6px">Objectif sante</div>
           <select id="filterSante" onchange="window.applySelectFilter('filterSante')" style="width:100%;padding:9px 12px;border:1.5px solid #e8e8e8;border-radius:10px;font-size:0.82rem;color:#2D2D2D;background:white;cursor:pointer;font-family:DM Sans,sans-serif">
             <option value="">Aucun objectif spécifique</option>
             <option value="skincare">🌿 Skincare</option>
@@ -4026,7 +4028,7 @@ function switchLang(lang) {
           </select>
         </div>
         <div id="filterCycleWrap">
-          <div style="font-size:0.68rem;font-weight:700;text-transform:uppercase;letter-spacing:0.8px;color:#aaa;margin-bottom:6px">🌸 Cycle menstruel</div>
+          <div style="font-size:0.68rem;font-weight:700;text-transform:uppercase;letter-spacing:0.8px;color:#aaa;margin-bottom:6px">Cycle menstruel</div>
           <select id="filterCycle" onchange="window.applySelectFilter('filterCycle')" style="width:100%;padding:9px 12px;border:1.5px solid #e8e8e8;border-radius:10px;font-size:0.82rem;color:#2D2D2D;background:white;cursor:pointer;font-family:DM Sans,sans-serif">
             <option value="">Non renseigné</option>
             <option value="cycle_menstrues">🔴 Menstrues (J1-J5)</option>
@@ -4082,6 +4084,12 @@ function switchLang(lang) {
         </select>
       </div>
       <div id="persoMenusContent" style="display:none;padding:18px;padding-top:0"></div>
+      <div id="persoAddBtnWrap" style="display:none;padding:0 18px 18px">
+        <button onclick="window.openAddPersoRepas(window.PERSO_JOURS[window._persoSelectedDayIdx||0]+'_'+Object.keys(window.PERSO_REPAS)[0])" style="width:100%;background:white;color:#FF6B6B;border:1.5px solid rgba(255,107,107,0.3);border-radius:14px;padding:12px;font-size:13px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#FF6B6B" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          Ajouter un repas
+        </button>
+      </div>
     </div>
     <!-- Conseils Mirella en haut -->
     <div id="menusConseils" style="display:none;margin-bottom:16px">
