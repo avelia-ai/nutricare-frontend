@@ -3788,7 +3788,7 @@ function switchLang(lang) {
           <div style="position:absolute;inset:0;background:linear-gradient(170deg,rgba(0,0,0,0.05) 0%,rgba(8,3,1,0.97) 100%)"></div>
         </div>
         <div style="position:absolute;top:0;left:0;right:0;padding:14px 16px">
-          <div style="display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.15);border-radius:20px;padding:5px 13px">
+          <div style="display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.15);border-radius:20px;padding:5px 13px;margin-bottom:12px">
             <span style="font-size:10px;font-weight:700;color:white;letter-spacing:1px">ANALYSE IA</span>
           </div>
         </div>
@@ -3813,6 +3813,40 @@ function switchLang(lang) {
             </div>
           </div>
         </div>
+      </div>
+      <div id="analysisImpactPsycho" style="background:#FFFCFA;border-radius:22px;border:1px solid rgba(255,154,108,0.2);box-shadow:0 2px 20px rgba(230,110,70,0.07);padding:18px;display:none">
+        <div style="font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#FF6B6B;margin-bottom:14px">Impact psycho-physique</div>
+        <div style="display:flex;align-items:center;gap:14px;margin-bottom:12px">
+          <div id="analysisImpactIcon" style="width:44px;height:44px;border-radius:14px;display:flex;align-items:center;justify-content:center;flex-shrink:0">
+            <svg id="analysisImpactSvg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round"></svg>
+          </div>
+          <div>
+            <div id="analysisImpactTitre" style="font-size:14px;font-weight:700;color:#2D2D2D;line-height:1.3"></div>
+            <div id="analysisImpactDetail" style="font-size:12px;color:#888;margin-top:4px;line-height:1.5"></div>
+          </div>
+        </div>
+        <div style="height:6px;background:#f0ece8;border-radius:3px;overflow:hidden">
+          <div id="analysisImpactBar" style="height:100%;border-radius:3px;width:50%;transition:width 1s"></div>
+        </div>
+      </div>
+      <div id="analysisSwap" style="background:#FFFCFA;border-radius:22px;border:1px solid rgba(255,154,108,0.2);box-shadow:0 2px 20px rgba(230,110,70,0.07);padding:18px;display:none">
+        <div style="font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#FF6B6B;margin-bottom:12px">Recommandation Mirella</div>
+        <div style="display:flex;align-items:center;gap:10px">
+          <div style="flex:1;background:#fef2f2;border-radius:12px;padding:10px 14px;text-align:center">
+            <div style="font-size:10px;color:#999;margin-bottom:4px">Remplacer</div>
+            <div id="analysisSwapOut" style="font-size:13px;font-weight:700;color:#dc2626"></div>
+          </div>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#FF6B6B" stroke-width="2.5" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+          <div style="flex:1;background:#f0fdf4;border-radius:12px;padding:10px 14px;text-align:center">
+            <div style="font-size:10px;color:#999;margin-bottom:4px">Par</div>
+            <div id="analysisSwapIn" style="font-size:13px;font-weight:700;color:#16a34a"></div>
+          </div>
+        </div>
+        <div id="analysisSwapBenefice" style="margin-top:10px;font-size:12px;color:#666;text-align:center;font-style:italic"></div>
+      </div>
+      <div id="analysisComportement" style="background:#FFFCFA;border-radius:22px;border:1px solid rgba(255,154,108,0.2);box-shadow:0 2px 20px rgba(230,110,70,0.07);padding:18px;display:none">
+        <div style="font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#FF6B6B;margin-bottom:14px">Analyse comportementale</div>
+        <div style="display:flex;flex-direction:column;gap:12px" id="analysisComportementBars"></div>
       </div>
       <div style="background:#FFFCFA;border-radius:22px;border:1px solid rgba(255,154,108,0.2);padding:20px">
         <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px">
@@ -8369,6 +8403,56 @@ function renderAnalysis(a) {
   document.getElementById('analysisAmeliorer').innerHTML = (a.points_amelioration||[]).map(function(p){return '<div style="display:flex;align-items:flex-start;gap:10px;padding:11px 0;border-bottom:1px solid rgba(220,38,38,0.08)"><div style="width:20px;height:20px;border-radius:50%;background:#fef2f2;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px"><svg width=\'10\' height=\'10\' viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'#dc2626\' stroke-width=\'3\' stroke-linecap=\'round\'><line x1=\'12\' y1=\'5\' x2=\'12\' y2=\'12\'/><line x1=\'12\' y1=\'16\' x2=\'12.01\' y2=\'16\'/></svg></div><span style="font-size:13px;color:#2D2D2D;line-height:1.6">'+p+'</span></div>';}).join('');
   var conseilEl = document.getElementById("analysisConseil"); var ct = (a.conseil_personnalise || ""); conseilEl.innerHTML = "<p style=\"font-size:12.5px;color:#444;line-height:1.8;margin:0\">" + ct.replace(/([A-Z][A-Z ]{3,} *:)/g, "</p><p style=\"font-size:11px;font-weight:700;color:#FF6B6B;letter-spacing:.5px;margin:12px 0 4px\">$1</p><p style=\"font-size:12.5px;color:#444;line-height:1.8;margin:0\">") + "</p>";
   if (a.alerte_allergie) { document.getElementById('analysisAlerteZone').style.display='block'; document.getElementById('analysisAlerteMsg').textContent = a.alerte_message||''; }
+  var ip = a.impact_psycho || {};
+  if (ip.titre) {
+    document.getElementById('analysisImpactPsycho').style.display = 'block';
+    var isPos = ip.type === 'positif';
+    var isNeg = ip.type === 'negatif';
+    var iconEl = document.getElementById('analysisImpactIcon');
+    var svgEl = document.getElementById('analysisImpactSvg');
+    iconEl.style.background = isPos ? 'linear-gradient(135deg,#4ade80,#16a34a)' : isNeg ? 'linear-gradient(135deg,#f87171,#dc2626)' : 'linear-gradient(135deg,#fbbf24,#f59e0b)';
+    svgEl.innerHTML = isPos ? '<path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>' : isNeg ? '<path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/>' : '<circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>';
+    document.getElementById('analysisImpactTitre').textContent = ip.titre || '';
+    document.getElementById('analysisImpactDetail').textContent = ip.detail || '';
+    var score = ip.score || 0;
+    var barPct = Math.round((score + 10) / 20 * 100);
+    var barEl = document.getElementById('analysisImpactBar');
+    barEl.style.background = isPos ? 'linear-gradient(90deg,#4ade80,#16a34a)' : isNeg ? 'linear-gradient(90deg,#f87171,#dc2626)' : 'linear-gradient(90deg,#fbbf24,#f59e0b)';
+    setTimeout(function(){ barEl.style.width = barPct + '%'; }, 200);
+  }
+  var sw = a.swap_recommandation || {};
+  if (sw.ingredient_a_remplacer) {
+    document.getElementById('analysisSwap').style.display = 'block';
+    document.getElementById('analysisSwapOut').textContent = sw.ingredient_a_remplacer || '';
+    document.getElementById('analysisSwapIn').textContent = sw.ingredient_remplacement || '';
+    document.getElementById('analysisSwapBenefice').textContent = sw.benefice ? '✦ ' + sw.benefice : '';
+  }
+  var ac = a.analyse_comportementale || {};
+  var acKeys = [{k:'energie',l:'Energie',c:'#f97316'},{k:'humeur',l:'Humeur',c:'#a78bfa'},{k:'sommeil',l:'Sommeil',c:'#3b82f6'},{k:'concentration',l:'Concentration',c:'#16a34a'}];
+  var hasAc = acKeys.some(function(x){ return ac[x.k] !== undefined; });
+  if (hasAc) {
+    document.getElementById('analysisComportement').style.display = 'block';
+    document.getElementById('analysisComportementBars').innerHTML = acKeys.map(function(x) {
+      var v = ac[x.k] || 0;
+      var id = 'acbar_' + x.k;
+      return '<div><div style="display:flex;justify-content:space-between;margin-bottom:5px"><span style="font-size:12px;color:#555;font-weight:500">'+x.l+'</span><span style="font-size:12px;font-weight:700;color:#2D2D2D">'+v+'/10</span></div><div style="height:5px;background:#f0ece8;border-radius:3px;overflow:hidden"><div id="'+id+'" style="height:100%;border-radius:3px;background:'+x.c+';width:0%;transition:width 1.1s"></div></div></div>';
+    }).join('');
+    setTimeout(function(){ acKeys.forEach(function(x){ var el=document.getElementById('acbar_'+x.k); if(el) el.style.width=(ac[x.k]||0)*10+'%'; }); }, 250);
+  }
+  var pts = a.points_harmonie || 0;
+  if (pts !== 0) {
+    var token = localStorage.getItem('nutricare_token');
+    if (token) {
+      var curBonus = parseInt(localStorage.getItem(_gamiKey())||'0');
+      var newBonus = curBonus + pts;
+      if (newBonus < 0) newBonus = 0;
+      localStorage.setItem(_gamiKey(), newBonus);
+      var logs = JSON.parse(localStorage.getItem('nutricare_logs')||'[]');
+      var total = (typeof calcHarmonyFromLogs==='function' ? calcHarmonyFromLogs(logs) : 0) + newBonus;
+      if (typeof updateHarmonyUI === 'function') updateHarmonyUI(total);
+      setTimeout(function(){ if(typeof loadGamification==='function') loadGamification(); }, 500);
+    }
+  }
   loadAnalysisHistory();
 }
 
