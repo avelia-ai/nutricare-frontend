@@ -13405,8 +13405,8 @@ function openSubscriptionModal(context) {
         <div style="color:rgba(255,255,255,0.45);font-size:0.68rem;text-transform:uppercase;letter-spacing:1px;margin-top:2px">minutes</div>
       </div>
       <div style="background:rgba(255,255,255,0.08);border-radius:14px;padding:12px 16px;text-align:center;flex:1">
-        <div id="rituelPtsGained" style="color:#FF9A6C;font-size:1.4rem;font-weight:800">+15</div>
-        <div style="color:rgba(255,255,255,0.45);font-size:0.62rem;text-transform:uppercase;letter-spacing:1px;margin-top:2px;line-height:1.3">pts<br>harmonie</div>
+        <div id="rituelPtsGained" style="color:#FF9A6C;font-size:1.6rem;font-weight:800">+15</div>
+        <div style="color:rgba(255,255,255,0.45);font-size:0.62rem;text-transform:uppercase;letter-spacing:1px;margin-top:2px">pts harmonie</div>
       </div>
     </div>
     <button onclick="closeRituel()" style="width:100%;max-width:320px;padding:16px;background:linear-gradient(135deg,#FF9A6C,#FF6B6B);color:white;border:none;border-radius:16px;font-size:1rem;font-weight:700;cursor:pointer;box-shadow:0 6px 24px rgba(255,100,80,0.35);margin-bottom:16px">Terminer ✦</button>
@@ -14179,7 +14179,7 @@ function finishRituel(pts) {
   if (exScreen) exScreen.style.display = 'none';
   var illus = document.getElementById('rituelDoneIllustration');
   if (illus) illus.innerHTML = getRituelIllustrationSVG(window._currentRituelType || '478');
-  document.getElementById('rituelPtsGained').textContent = '+' + pts + ' pts harmonie gagnes';
+  document.getElementById('rituelPtsGained').textContent = '+' + pts;
   _hcState.calm=1; _hcState.sleep=1; _hcState.hydra=1; _hcState.activ=1;
   var bonus = parseInt(localStorage.getItem(_gamiKey())||'0') + pts;
   localStorage.setItem(_gamiKey(), bonus);
@@ -14579,7 +14579,7 @@ function startBodyScanExercise() {
         document.getElementById('rituelHarmonyCanvas') && (document.getElementById('rituelHarmonyCanvas').parentElement.style.display = '');
         var done = document.getElementById('rituelDone');
         done.style.display = 'block';
-        document.getElementById('rituelPtsGained').textContent = "+30 pts d'harmonie gagnés";
+        document.getElementById('rituelPtsGained').textContent = '+30';
         if (typeof addHarmonyPoints === 'function') addHarmonyPoints(30);
         return;
       }
