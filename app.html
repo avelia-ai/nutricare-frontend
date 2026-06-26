@@ -14368,9 +14368,17 @@ function start478Exercise() {
           if(doneCyclesEl)doneCyclesEl.textContent=TOTAL_CYCLES;
           var doneMsgEl=document.getElementById('rituelDoneMsg');
           if(doneMsgEl)doneMsgEl.textContent='Votre système nerveux est apaisé. La technique 4-7-8 réduit le cortisol et prépare un sommeil profond.';
-          document.getElementById('rituelExerciseScreen').style.display='none';
-          document.getElementById('rituelOverlay').style.display='flex';
-          finishRituel(15);
+          var ov=document.getElementById('rituelOverlay');
+          var exSc=document.getElementById('rituelExerciseScreen');
+          if(exSc)exSc.style.display='none';
+          if(ov){ov.style.display='flex';}
+          var doneEl=document.getElementById('rituelDone');
+          if(doneEl)doneEl.style.display='block';
+          var ptsEl=document.getElementById('rituelPtsGained');
+          if(ptsEl)ptsEl.textContent='+15 pts harmonie gagnés';
+          var bonus=parseInt(localStorage.getItem('nutricare_gami_'+new Date().toISOString().slice(0,7))||'0')+15;
+          localStorage.setItem('nutricare_gami_'+new Date().toISOString().slice(0,7), bonus);
+          if(typeof addHarmonyPoints==='function')addHarmonyPoints(15);
           play478Tone(262,0.3,0.08);
           setTimeout(function(){play478Tone(330,0.3,0.08);},300);
           setTimeout(function(){play478Tone(392,0.6,0.10);},600);
