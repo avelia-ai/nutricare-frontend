@@ -3829,21 +3829,19 @@ function switchLang(lang) {
         <div style="font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#FF6B6B;margin-bottom:14px">Aliments identifies</div>
         <div id="analysisAliments" style="display:flex;flex-wrap:wrap;gap:8px"></div>
       </div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
-        <div style="background:#FFFCFA;border-radius:22px;border:1px solid rgba(255,154,108,0.2);padding:16px">
-          <div style="display:flex;align-items:center;gap:8px;margin-bottom:14px">
-            <div style="width:30px;height:30px;border-radius:9px;background:#f0fdf4;display:flex;align-items:center;justify-content:center;flex-shrink:0"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="2.2" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg></div>
-            <span style="font-size:10px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;color:#16a34a">Points forts</span>
-          </div>
-          <div id="analysisPositifs" style="display:flex;flex-direction:column;gap:10px"></div>
+      <div style="background:#FFFCFA;border-radius:22px;border:1px solid rgba(255,154,108,0.2);box-shadow:0 2px 20px rgba(230,110,70,0.07);padding:18px">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:14px">
+          <div style="width:28px;height:28px;border-radius:8px;background:#f0fdf4;display:flex;align-items:center;justify-content:center;flex-shrink:0"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+          <span style="font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#16a34a">Points forts</span>
         </div>
-        <div style="background:#FFFCFA;border-radius:22px;border:1px solid rgba(255,154,108,0.2);padding:16px">
-          <div style="display:flex;align-items:center;gap:8px;margin-bottom:14px">
-            <div style="width:30px;height:30px;border-radius:9px;background:#fef2f2;display:flex;align-items:center;justify-content:center;flex-shrink:0"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="2.2" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg></div>
-            <span style="font-size:10px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;color:#dc2626">A corriger</span>
-          </div>
-          <div id="analysisAmeliorer" style="display:flex;flex-direction:column;gap:10px"></div>
+        <div id="analysisPositifs" style="display:flex;flex-direction:column;gap:0"></div>
+      </div>
+      <div style="background:#FFFCFA;border-radius:22px;border:1px solid rgba(255,154,108,0.2);box-shadow:0 2px 20px rgba(230,110,70,0.07);padding:18px">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:14px">
+          <div style="width:28px;height:28px;border-radius:8px;background:#fef2f2;display:flex;align-items:center;justify-content:center;flex-shrink:0"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg></div>
+          <span style="font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#dc2626">A corriger</span>
         </div>
+        <div id="analysisAmeliorer" style="display:flex;flex-direction:column;gap:0"></div>
       </div>
       <div style="background:#FFFCFA;border-radius:22px;border:1px solid rgba(255,154,108,0.2);overflow:hidden">
         <div style="background:linear-gradient(135deg,#FF6B6B,#FF9A3C);padding:16px 20px;display:flex;gap:12px;align-items:center">
@@ -8367,8 +8365,8 @@ function renderAnalysis(a) {
     return '<div style="display:flex;justify-content:space-between;align-items:center;padding:10px 0;'+border+'"><div style="display:flex;align-items:center;gap:10px"><div style="width:26px;height:26px;border-radius:7px;background:'+mc.bg+';flex-shrink:0;display:flex;align-items:center;justify-content:center">'+(mc.icon||'')+'</div><div><div style="font-size:13px;font-weight:600;color:#2D2D2D">'+mc.label+'</div><div style="font-size:10px;color:#bbb">'+mc.role+'</div></div></div><div style="display:flex;align-items:center;gap:10px"><span style="font-size:13px;font-weight:700;color:#2D2D2D">'+(val||'--')+(val?mc.unit:'')+'</span><span style="font-size:10px;font-weight:700;padding:3px 9px;border-radius:10px;'+bs+'">'+bt+'</span></div></div>';
   }).join('');
   document.getElementById('analysisAliments').innerHTML = (a.aliments||[]).map(function(item){return '<div style="display:flex;align-items:center;gap:6px;background:#FFF0E8;border:1px solid rgba(255,107,107,0.15);border-radius:24px;padding:7px 13px"><svg width="7" height="7" viewBox="0 0 8 8"><circle cx="4" cy="4" r="3" fill="#FF6B6B"/></svg><span style="font-size:12px;font-weight:500;color:#712B13">'+item+'</span></div>';}).join('');
-  document.getElementById('analysisPositifs').innerHTML = (a.points_positifs||[]).map(function(p){return '<div style="display:flex;gap:8px"><div style="width:3px;border-radius:2px;background:#bbf7d0;flex-shrink:0"></div><span style="font-size:12px;color:#333;line-height:1.5">'+p+'</span></div>';}).join('');
-  document.getElementById('analysisAmeliorer').innerHTML = (a.points_amelioration||[]).map(function(p){return '<div style="display:flex;gap:8px"><div style="width:3px;border-radius:2px;background:#fecaca;flex-shrink:0"></div><span style="font-size:12px;color:#333;line-height:1.5">'+p+'</span></div>';}).join('');
+  document.getElementById('analysisPositifs').innerHTML = (a.points_positifs||[]).map(function(p){return '<div style="display:flex;align-items:flex-start;gap:10px;padding:11px 0;border-bottom:1px solid rgba(22,163,74,0.08)"><div style="width:20px;height:20px;border-radius:50%;background:#f0fdf4;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px"><svg width=\'10\' height=\'10\' viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'#16a34a\' stroke-width=\'3\' stroke-linecap=\'round\'><polyline points=\'20 6 9 17 4 12\'/></svg></div><span style="font-size:13px;color:#2D2D2D;line-height:1.6">'+p+'</span></div>';}).join('');
+  document.getElementById('analysisAmeliorer').innerHTML = (a.points_amelioration||[]).map(function(p){return '<div style="display:flex;align-items:flex-start;gap:10px;padding:11px 0;border-bottom:1px solid rgba(220,38,38,0.08)"><div style="width:20px;height:20px;border-radius:50%;background:#fef2f2;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px"><svg width=\'10\' height=\'10\' viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'#dc2626\' stroke-width=\'3\' stroke-linecap=\'round\'><line x1=\'12\' y1=\'5\' x2=\'12\' y2=\'12\'/><line x1=\'12\' y1=\'16\' x2=\'12.01\' y2=\'16\'/></svg></div><span style="font-size:13px;color:#2D2D2D;line-height:1.6">'+p+'</span></div>';}).join('');
   document.getElementById('analysisConseil').textContent = a.conseil_personnalise || '';
   if (a.alerte_allergie) { document.getElementById('analysisAlerteZone').style.display='block'; document.getElementById('analysisAlerteMsg').textContent = a.alerte_message||''; }
   loadAnalysisHistory();
