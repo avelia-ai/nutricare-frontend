@@ -3860,8 +3860,19 @@ function switchLang(lang) {
         <div id="analysisMicros" style="display:flex;flex-direction:column"></div>
       </div>
       <div style="background:#FFFCFA;border-radius:22px;border:1px solid rgba(255,154,108,0.2);padding:18px">
-        <div style="font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#FF6B6B;margin-bottom:14px">Aliments identifies</div>
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
+          <div style="font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#FF6B6B">Aliments identifies</div>
+          <button id="analysisAlimentsEditBtn" onclick="toggleAlimentsEdit()" style="font-size:11px;font-weight:600;color:#FF6B6B;background:rgba(255,107,107,0.08);border:1px solid rgba(255,107,107,0.2);border-radius:20px;padding:4px 12px;cursor:pointer">Modifier</button>
+        </div>
         <div id="analysisAliments" style="display:flex;flex-wrap:wrap;gap:8px"></div>
+        <div id="analysisAlimentsEdit" style="display:none;margin-top:12px">
+          <div id="analysisAlimentsList" style="display:flex;flex-direction:column;gap:6px;margin-bottom:10px"></div>
+          <div style="display:flex;gap:8px;margin-bottom:12px">
+            <input id="analysisAlimentsInput" type="text" placeholder="Ajouter un aliment..." style="flex:1;border:1px solid rgba(255,154,108,0.3);border-radius:12px;padding:8px 14px;font-size:13px;outline:none;background:#fff">
+            <button onclick="addAlimentEdit()" style="background:linear-gradient(135deg,#FF6B6B,#FF9A3C);color:white;border:none;border-radius:12px;padding:8px 16px;font-size:13px;font-weight:600;cursor:pointer">+</button>
+          </div>
+          <button onclick="recalculerAnalyse()" style="width:100%;background:linear-gradient(135deg,#FF6B6B,#FF9A3C);color:white;border:none;border-radius:14px;padding:12px;font-size:13px;font-weight:700;cursor:pointer;letter-spacing:.5px">Recalculer avec Mirella</button>
+        </div>
       </div>
       <div style="background:#FFFCFA;border-radius:22px;border:1px solid rgba(255,154,108,0.2);box-shadow:0 2px 20px rgba(230,110,70,0.07);padding:18px">
         <div style="display:flex;align-items:center;gap:8px;margin-bottom:14px">
@@ -8398,6 +8409,8 @@ function renderAnalysis(a) {
     var border=i<microDefs.length-1?'border-bottom:1px solid rgba(255,154,108,0.08)':'';
     return '<div style="display:flex;justify-content:space-between;align-items:center;padding:10px 0;'+border+'"><div style="display:flex;align-items:center;gap:10px"><div style="width:26px;height:26px;border-radius:7px;background:'+mc.bg+';flex-shrink:0;display:flex;align-items:center;justify-content:center">'+(mc.icon||'')+'</div><div><div style="font-size:13px;font-weight:600;color:#2D2D2D">'+mc.label+'</div><div style="font-size:10px;color:#bbb">'+mc.role+'</div></div></div><div style="display:flex;align-items:center;gap:10px"><span style="font-size:13px;font-weight:700;color:#2D2D2D">'+(val||'--')+(val?mc.unit:'')+'</span><span style="font-size:10px;font-weight:700;padding:3px 9px;border-radius:10px;'+bs+'">'+bt+'</span></div></div>';
   }).join('');
+  _currentAnalysisAliments = (a.aliments||[]).slice();
+  _currentAnalysisRepasNom = a.repas_identifie || "";
   document.getElementById('analysisAliments').innerHTML = (a.aliments||[]).map(function(item){return '<div style="display:flex;align-items:center;gap:6px;background:#FFF0E8;border:1px solid rgba(255,107,107,0.15);border-radius:24px;padding:7px 13px"><svg width="7" height="7" viewBox="0 0 8 8"><circle cx="4" cy="4" r="3" fill="#FF6B6B"/></svg><span style="font-size:12px;font-weight:500;color:#712B13">'+item+'</span></div>';}).join('');
   document.getElementById('analysisPositifs').innerHTML = (a.points_positifs||[]).map(function(p){return '<div style="display:flex;align-items:flex-start;gap:10px;padding:11px 0;border-bottom:1px solid rgba(22,163,74,0.08)"><div style="width:20px;height:20px;border-radius:50%;background:#f0fdf4;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px"><svg width=\'10\' height=\'10\' viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'#16a34a\' stroke-width=\'3\' stroke-linecap=\'round\'><polyline points=\'20 6 9 17 4 12\'/></svg></div><span style="font-size:13px;color:#2D2D2D;line-height:1.6">'+p+'</span></div>';}).join('');
   document.getElementById('analysisAmeliorer').innerHTML = (a.points_amelioration||[]).map(function(p){return '<div style="display:flex;align-items:flex-start;gap:10px;padding:11px 0;border-bottom:1px solid rgba(220,38,38,0.08)"><div style="width:20px;height:20px;border-radius:50%;background:#fef2f2;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px"><svg width=\'10\' height=\'10\' viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'#dc2626\' stroke-width=\'3\' stroke-linecap=\'round\'><line x1=\'12\' y1=\'5\' x2=\'12\' y2=\'12\'/><line x1=\'12\' y1=\'16\' x2=\'12.01\' y2=\'16\'/></svg></div><span style="font-size:13px;color:#2D2D2D;line-height:1.6">'+p+'</span></div>';}).join('');
@@ -8456,6 +8469,68 @@ function renderAnalysis(a) {
   loadAnalysisHistory();
 }
 
+var _currentAnalysisAliments = [];
+var _currentAnalysisRepasNom = '';
+
+function toggleAlimentsEdit() {
+  var editZone = document.getElementById('analysisAlimentsEdit');
+  var pills = document.getElementById('analysisAliments');
+  var btn = document.getElementById('analysisAlimentsEditBtn');
+  var isOpen = editZone.style.display !== 'none';
+  if (isOpen) {
+    editZone.style.display = 'none';
+    pills.style.display = 'flex';
+    btn.textContent = 'Modifier';
+  } else {
+    editZone.style.display = 'block';
+    pills.style.display = 'none';
+    btn.textContent = 'Annuler';
+    renderAlimentsEditList();
+  }
+}
+
+function renderAlimentsEditList() {
+  var list = document.getElementById('analysisAlimentsList');
+  list.innerHTML = _currentAnalysisAliments.map(function(a, i) {
+    return '<div style="display:flex;align-items:center;justify-content:space-between;background:#FFF0E8;border:1px solid rgba(255,107,107,0.15);border-radius:12px;padding:8px 12px">' +
+      '<span style="font-size:13px;color:#712B13;font-weight:500">' + a + '</span>' +
+      '<button onclick="removeAlimentEdit(' + i + ')" style="background:none;border:none;color:#dc2626;font-size:16px;cursor:pointer;line-height:1;padding:0 4px">&times;</button>' +
+      '</div>';
+  }).join('');
+}
+
+function removeAlimentEdit(i) {
+  _currentAnalysisAliments.splice(i, 1);
+  renderAlimentsEditList();
+}
+
+function addAlimentEdit() {
+  var input = document.getElementById('analysisAlimentsInput');
+  var val = input.value.trim();
+  if (!val) return;
+  _currentAnalysisAliments.push(val);
+  input.value = '';
+  renderAlimentsEditList();
+}
+
+function recalculerAnalyse() {
+  if (!_currentAnalysisAliments.length) return;
+  var btn = document.querySelector('#analysisAlimentsEdit button:last-child');
+  if (btn) { btn.textContent = 'Recalcul en cours...'; btn.disabled = true; }
+  var token = localStorage.getItem('nutricare_token');
+  fetch(BACKEND_URL + '/api/analysis/recalculate', {
+    method: 'POST',
+    headers: {'Content-Type':'application/json','Authorization':'Bearer '+token},
+    body: JSON.stringify({aliments: _currentAnalysisAliments, repas_identifie: _currentAnalysisRepasNom})
+  }).then(function(r){ return r.json(); }).then(function(a) {
+    toggleAlimentsEdit();
+    renderAnalysis(a);
+    if (btn) { btn.textContent = 'Recalculer avec Mirella'; btn.disabled = false; }
+  }).catch(function(e) {
+    alert('Erreur recalcul');
+    if (btn) { btn.textContent = 'Recalculer avec Mirella'; btn.disabled = false; }
+  });
+}
 async function loadAnalysisHistory() {
   try {
     const res = await fetch(`${BACKEND_URL}/api/analysis/history`, {
