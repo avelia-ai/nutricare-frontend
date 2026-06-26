@@ -3958,7 +3958,7 @@ function switchLang(lang) {
         </div>
         <div style="display:flex;align-items:center;gap:10px">
           <div id="iaMenusChevron" style="color:rgba(255,255,255,0.3);transition:transform 0.2s;font-size:18px">▾</div>
-          <div onclick="event.stopPropagation();window.onIaMenusToggle()" style="position:relative;width:44px;height:24px;cursor:pointer">
+          <div onclick="event.stopPropagation();var cb=document.getElementById('iaMenusEnabled');cb.checked=!cb.checked;window.onIaMenusToggle();" style="position:relative;width:44px;height:24px;cursor:pointer">
             <input type="checkbox" id="iaMenusEnabled" onchange="window.onIaMenusToggle()" style="opacity:0;width:0;height:0;position:absolute">
             <div id="iaToggleTrack" style="position:absolute;inset:0;background:#FF6B6B;border-radius:12px;transition:.2s"></div>
             <div id="iaToggleThumb" style="position:absolute;top:3px;right:3px;width:18px;height:18px;background:white;border-radius:50%;transition:.2s"></div>
@@ -4064,7 +4064,7 @@ function switchLang(lang) {
           </div>
           <div style="display:flex;align-items:center;gap:10px">
             <div id="persoMenusChevron" style="color:#ccc;transition:transform 0.2s;font-size:18px">▾</div>
-            <div onclick="event.stopPropagation();window.onPersoMenusToggle()" style="position:relative;width:44px;height:24px;cursor:pointer">
+            <div onclick="event.stopPropagation();var cb=document.getElementById('persoMenusEnabled');cb.checked=!cb.checked;window.onPersoMenusToggle();" style="position:relative;width:44px;height:24px;cursor:pointer">
               <input type="checkbox" id="persoMenusEnabled" onchange="window.onPersoMenusToggle()" style="opacity:0;width:0;height:0;position:absolute">
               <div id="persoToggleTrack" style="position:absolute;inset:0;background:#e0dbd8;border-radius:12px;transition:.2s"></div>
               <div id="persoToggleThumb" style="position:absolute;top:3px;left:3px;width:18px;height:18px;background:white;border-radius:50%;transition:.2s"></div>
