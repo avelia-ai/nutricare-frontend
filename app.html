@@ -14519,8 +14519,7 @@ function _initSoirCanvas() {
     // Horizon — montagne silhouette
     _drawLandscape(ctx, W, H, prog);
 
-    // Eau avec reflets
-    _drawWater(ctx, W, H, prog, wavePhase);
+    // Eau supprimée : le ciel descend jusqu'en bas de l'écran
 
     requestAnimationFrame(drawFrame);
   }
@@ -14626,18 +14625,18 @@ function _drawMoon(ctx, W, H, t) {
 }
 
 function _drawLandscape(ctx, W, H, t) {
-  var horizonY = H * 0.90;
+  var horizonY = H * 0.78;
   var col = _lerpColor([60,30,20], [8,5,25], t);
   ctx.fillStyle = _rgb(col);
   ctx.beginPath();
   ctx.moveTo(0, H);
   // Collines douces
-  ctx.lineTo(0, horizonY + H*0.02);
-  ctx.quadraticCurveTo(W*0.12, horizonY - H*0.05, W*0.22, horizonY + H*0.01);
-  ctx.quadraticCurveTo(W*0.32, horizonY - H*0.09, W*0.42, horizonY + H*0.015);
-  ctx.quadraticCurveTo(W*0.52, horizonY - H*0.06, W*0.58, horizonY + H*0.01);
-  ctx.quadraticCurveTo(W*0.68, horizonY - H*0.12, W*0.78, horizonY - H*0.01);
-  ctx.quadraticCurveTo(W*0.88, horizonY - H*0.07, W, horizonY + H*0.02);
+  ctx.lineTo(0, horizonY + H*0.03);
+  ctx.quadraticCurveTo(W*0.12, horizonY - H*0.07, W*0.22, horizonY + H*0.015);
+  ctx.quadraticCurveTo(W*0.32, horizonY - H*0.13, W*0.42, horizonY + H*0.02);
+  ctx.quadraticCurveTo(W*0.52, horizonY - H*0.08, W*0.58, horizonY + H*0.015);
+  ctx.quadraticCurveTo(W*0.68, horizonY - H*0.17, W*0.78, horizonY - H*0.015);
+  ctx.quadraticCurveTo(W*0.88, horizonY - H*0.10, W, horizonY + H*0.03);
   ctx.lineTo(W, H);
   ctx.closePath();
   ctx.fill();
@@ -14646,9 +14645,9 @@ function _drawLandscape(ctx, W, H, t) {
   var treeAlpha = Math.min(1, t*1.5);
   ctx.fillStyle = _rgba(_lerpColor([45,20,10],[5,3,18],t), treeAlpha);
   var trees = [
-    {x:0.08,h:0.09,w:0.022},{x:0.13,h:0.12,w:0.02},{x:0.18,h:0.08,w:0.018},
-    {x:0.78,h:0.10,w:0.021},{x:0.83,h:0.13,w:0.019},{x:0.88,h:0.09,w:0.02},
-    {x:0.92,h:0.075,w:0.017}
+    {x:0.08,h:0.14,w:0.026},{x:0.13,h:0.18,w:0.023},{x:0.18,h:0.12,w:0.021},
+    {x:0.78,h:0.16,w:0.024},{x:0.83,h:0.20,w:0.022},{x:0.88,h:0.14,w:0.023},
+    {x:0.92,h:0.11,w:0.02}
   ];
   trees.forEach(function(tree) {
     var tx = W*tree.x, th = H*tree.h, tw = W*tree.w;
