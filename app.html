@@ -14369,20 +14369,12 @@ function start478Exercise() {
           var doneMsgEl=document.getElementById('rituelDoneMsg');
           if(doneMsgEl)doneMsgEl.textContent='Votre système nerveux est apaisé. La technique 4-7-8 réduit le cortisol et prépare un sommeil profond.';
           var ov=document.getElementById('rituelOverlay');
-          if(ov){
-            ov.style.display='flex';
-            ov.style.flexDirection='column';
-            ov.style.alignItems='center';
-            ov.style.justifyContent='center';
-            Array.from(ov.children).forEach(function(ch){ ch.style.display='none'; });
-          }
-          var doneEl=document.getElementById('rituelDone');
-          if(doneEl){doneEl.style.display='block';}
-          var ptsEl=document.getElementById('rituelPtsGained');
-          if(ptsEl)ptsEl.textContent='+15 pts harmonie gagnés';
-          var bonus=parseInt(localStorage.getItem('nutricare_gami_'+new Date().toISOString().slice(0,7))||'0')+15;
-          localStorage.setItem('nutricare_gami_'+new Date().toISOString().slice(0,7), bonus);
-          if(typeof addHarmonyPoints==='function')addHarmonyPoints(15);
+          if(ov){ ov.style.display='flex'; }
+          var exSc=document.getElementById('rituelExerciseScreen');
+          if(exSc){ exSc.style.display='flex'; }
+          var hc=document.getElementById('rituelHarmonyCanvas');
+          if(hc && typeof drawRituelHeart==='function'){ hc.parentElement.style.display=''; drawRituelHeart(hc,0.6,1,1); }
+          if(typeof finishRituel==='function')finishRituel(15);
           play478Tone(262,0.3,0.08);
           setTimeout(function(){play478Tone(330,0.3,0.08);},300);
           setTimeout(function(){play478Tone(392,0.6,0.10);},600);
