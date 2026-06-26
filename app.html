@@ -754,7 +754,7 @@ window.togglePersoMenus = function() {
   var addBtn = document.getElementById('persoAddBtnWrap');
   var isOpen = content.style.display !== 'none';
   content.style.display = isOpen ? 'none' : 'block';
-  if (addBtn) addBtn.style.display = isOpen ? 'none' : 'block';
+  if (addBtn) addBtn.style.display = isOpen ? 'none' : 'flex'; if (addBtn && !isOpen) addBtn.style.flexDirection = 'column';
   if (!isOpen) window.renderPersoMenus();
   chevron.style.transform = isOpen ? '' : 'rotate(180deg)';
 };
@@ -769,7 +769,7 @@ window.onPersoMenusToggle = function() {
   if (track) track.style.background = enabled ? '#FF6B6B' : '#e0dbd8';
   if (thumb) thumb.style.transform = enabled ? 'translateX(20px)' : 'translateX(0)';
   if (persoContent) { persoContent.style.display = enabled ? 'block' : 'none'; if (enabled) window.renderPersoMenus(); }
-  if (addBtn) addBtn.style.display = enabled ? 'block' : 'none';
+  if (addBtn) { addBtn.style.display = enabled ? 'flex' : 'none'; if(enabled) addBtn.style.flexDirection='column'; }
   if (chevron) chevron.style.transform = enabled ? 'rotate(180deg)' : '';
   if (typeof updateNutritionPanel === 'function') updateNutritionPanel();
 };
@@ -854,12 +854,17 @@ window.analyzePersoPhoto = async function(input) {
       var token = localStorage.getItem('nutricare_token') || '';
       var mediaType = file.type || 'image/jpeg';
       var base64Data = b64.split(',')[1];
-      var res = await fetch(BACKEND_URL + '/api/analysis', {
+      var profileData = {};
+      try { profileData = JSON.parse(localStorage.getItem('nutricare_profile') || '{}'); } catch(e) {}
+      var apiUrl = (typeof BACKEND_URL !== 'undefined' ? BACKEND_URL : 'https://nutricare-backend-production.up.railway.app');
+      var res = await fetch(apiUrl + '/api/analysis', {
         method: 'POST',
         headers: {'Content-Type':'application/json','Authorization':'Bearer '+token},
-        body: JSON.stringify({image_base64: base64Data, media_type: mediaType, profile: {}})
+        body: JSON.stringify({image_base64: base64Data, media_type: mediaType, profile: profileData})
       });
-      var data = await res.json();
+      if (!res.ok) throw new Error('Erreur serveur ' + res.status);
+      var text = await res.text();
+      var data = JSON.parse(text);
       if (data.repas_identifie) document.getElementById('persoRepasNom').value = data.repas_identifie;
       var m = data.macronutriments || {};
       if (data.calories_estimees) document.getElementById('persoRepasKcal').value = data.calories_estimees;
@@ -4132,7 +4137,7 @@ function switchLang(lang) {
         </select>
       </div>
       <div id="persoMenusContent" style="display:none;padding:18px;padding-top:0"></div>
-      <div id="persoAddBtnWrap" style="display:none;padding:0 18px 18px">
+      <div id="persoAddBtnWrap" style="display:none;padding:0 18px 18px" data-flex="1">
         <input type="file" id="persoPhotoInput" accept="image/*" style="display:none" onchange="window.analyzePersoPhoto(this)">
         <button onclick="document.getElementById('persoPhotoInput').click()" style="width:100%;background:#FFF0E8;color:#FF6B6B;border:1.5px dashed rgba(255,107,107,0.35);border-radius:14px;padding:13px;font-size:13px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#FF6B6B" stroke-width="2" stroke-linecap="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
