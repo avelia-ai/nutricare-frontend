@@ -14191,9 +14191,11 @@ function start478Exercise() {
   var ring1 = document.getElementById('r478ring1');
   var ring2 = document.getElementById('r478ring2');
   var harmonyCanvas = document.getElementById('rituelHarmonyCanvas');
-  if (harmonyCanvas) harmonyCanvas.parentElement.style.display = 'none';
-  document.getElementById('rituelTitle') && (document.getElementById('rituelTitle').style.display = 'none');
-  document.getElementById('rituelPhase') && (document.getElementById('rituelPhase').style.display = 'none');
+  document.getElementById('rituelOverlay').style.display = 'none';
+  screen.style.position = 'fixed';
+  screen.style.inset = '0';
+  screen.style.zIndex = '9999';
+  screen.style.background = '#03050f';
   screen.style.display = 'flex';
 
   var _running = true, phaseIdx = 0, cycle = 1, elapsed = 0;
@@ -14360,7 +14362,9 @@ function start478Exercise() {
         if(cycle>TOTAL_CYCLES){
           _running=false; bgRunning=false;
           screen.style.display='none';
-          if(harmonyCanvas)harmonyCanvas.parentElement.style.display='';
+          screen.style.position='';
+          screen.style.inset='';
+          screen.style.zIndex='';
           var done=document.getElementById('rituelDone');
           done.style.display='block';
           var totalSec=Math.round((Date.now()-_478StartTime)/1000);
