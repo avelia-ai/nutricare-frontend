@@ -837,6 +837,20 @@ window.removePersoRepas = function(key, idx) {
     if (typeof updateNutritionPanel === 'function') updateNutritionPanel();
   }
 };
+window.selectRepasType = function(type, btn) {
+  document.getElementById('persoRepasTypeSelected').value = type;
+  var btns = document.querySelectorAll('#persoRepasTypeGrid button');
+  btns.forEach(function(b) {
+    b.style.background = '#fff';
+    b.style.color = '#555';
+    b.style.borderColor = 'rgba(255,154,108,0.25)';
+  });
+  btn.style.background = 'linear-gradient(135deg,#FF6B6B,#FF9A3C)';
+  btn.style.color = 'white';
+  btn.style.borderColor = 'transparent';
+  var jour = window._persoMenusJour || window.PERSO_JOURS[0];
+  document.getElementById('persoRepasTarget').value = jour + '_' + type;
+};
 window.openAddPersoRepas = function(key) {
   document.getElementById('persoRepasTarget').value = key;
   document.getElementById('persoRepasNom').value = '';
@@ -844,6 +858,18 @@ window.openAddPersoRepas = function(key) {
   document.getElementById('persoRepasGlu').value = '';
   document.getElementById('persoRepasPro').value = '';
   document.getElementById('persoRepasLip').value = '';
+  var preview = document.getElementById('persoRepasPhotoPreview');
+  if (preview) preview.style.display = 'none';
+  var typeSelected = document.getElementById('persoRepasTypeSelected');
+  if (typeSelected) typeSelected.value = '';
+  var btns = document.querySelectorAll('#persoRepasTypeGrid button');
+  btns.forEach(function(b) { b.style.background='#fff'; b.style.color='#555'; b.style.borderColor='rgba(255,154,108,0.25)'; });
+  if (key) {
+    var parts = key.split('_');
+    var repasKey = parts[parts.length-1];
+    var btn = document.querySelector('#persoRepasTypeGrid button[onclick*="' + repasKey + '"]');
+    if (btn) { btn.style.background='linear-gradient(135deg,#FF6B6B,#FF9A3C)'; btn.style.color='white'; btn.style.borderColor='transparent'; if(typeSelected) typeSelected.value=repasKey; }
+  }
   document.getElementById('persoRepasModal').style.display = 'flex';
 };
 window.analyzePersoPhoto = async function(input) {
@@ -13412,32 +13438,52 @@ document.addEventListener('deviceready', function() {
   </div>
 </div>
       <!-- Modal ajout sport -->
-      <div id="persoRepasModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:99999;align-items:flex-end;justify-content:center">
-  <div style="background:white;border-radius:24px 24px 0 0;padding:24px;width:100%;max-width:600px">
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
-      <div style="font-size:1rem;font-weight:700">Ajouter un repas</div>
-      <button onclick="document.getElementById('persoRepasModal').style.display='none'" style="background:#f5f5f5;border:none;border-radius:50%;width:32px;height:32px;cursor:pointer">x</button>
+      <div id="persoRepasModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:99999;align-items:flex-end;justify-content:center">
+  <div style="background:#FFFCFA;border-radius:28px 28px 0 0;width:100%;max-width:600px;overflow:hidden">
+    <div style="background:linear-gradient(135deg,#FF6B6B,#FF9A3C);padding:20px 22px 18px">
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <div>
+          <div style="font-size:10px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,0.65);margin-bottom:4px">Mes propres menus</div>
+          <div style="font-size:17px;font-weight:800;color:white">Ajouter un repas</div>
+        </div>
+        <button onclick="document.getElementById('persoRepasModal').style.display='none'" style="background:rgba(255,255,255,0.2);border:none;border-radius:50%;width:34px;height:34px;cursor:pointer;color:white;font-size:16px;display:flex;align-items:center;justify-content:center">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
     </div>
-    <div style="margin-bottom:14px">
-      <div style="font-size:0.8rem;font-weight:600;color:#555;margin-bottom:6px">Nom du repas</div>
-      <input type="text" id="persoRepasNom" placeholder="Ex: Salade de quinoa" style="width:100%;padding:12px;border:1px solid #eee;border-radius:10px;font-size:0.9rem;box-sizing:border-box">
+    <div style="padding:20px 22px;max-height:75vh;overflow-y:auto">
+      <input type="file" id="persoRepasPhoto" accept="image/*" style="display:none" onchange="window.analyzeRepasPhoto(this)">
+      <div id="persoRepasPhotoPreview" style="display:none;margin-bottom:16px;border-radius:16px;overflow:hidden;position:relative">
+        <img id="persoRepasPhotoImg" style="width:100%;height:160px;object-fit:cover;display:block">
+        <div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,0.6),transparent)"></div>
+        <div id="persoRepasPhotoStatus" style="position:absolute;bottom:10px;left:12px;right:12px;font-size:12px;color:white;font-weight:500"></div>
+      </div>
+      <div style="margin-bottom:16px">
+        <div style="font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#FF6B6B;margin-bottom:8px">Nom du repas</div>
+        <input type="text" id="persoRepasNom" placeholder="Ex: Salade de quinoa" style="width:100%;padding:13px 14px;border:1px solid rgba(255,154,108,0.25);border-radius:12px;font-size:14px;box-sizing:border-box;background:#fff;outline:none;font-family:inherit">
+      </div>
+      <div style="margin-bottom:16px">
+        <div style="font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#FF6B6B;margin-bottom:8px">Type de repas</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px" id="persoRepasTypeGrid">
+          <button onclick="window.selectRepasType('petit_dejeuner',this)" style="padding:10px;border-radius:12px;border:1.5px solid rgba(255,154,108,0.25);background:#fff;font-size:13px;font-weight:600;color:#555;cursor:pointer;transition:all .15s">Petit-dejeuner</button>
+          <button onclick="window.selectRepasType('dejeuner',this)" style="padding:10px;border-radius:12px;border:1.5px solid rgba(255,154,108,0.25);background:#fff;font-size:13px;font-weight:600;color:#555;cursor:pointer;transition:all .15s">Dejeuner</button>
+          <button onclick="window.selectRepasType('collation',this)" style="padding:10px;border-radius:12px;border:1.5px solid rgba(255,154,108,0.25);background:#fff;font-size:13px;font-weight:600;color:#555;cursor:pointer;transition:all .15s">Collation</button>
+          <button onclick="window.selectRepasType('diner',this)" style="padding:10px;border-radius:12px;border:1.5px solid rgba(255,154,108,0.25);background:#fff;font-size:13px;font-weight:600;color:#555;cursor:pointer;transition:all .15s">Diner</button>
+        </div>
+      </div>
+      <div style="margin-bottom:16px">
+        <div style="font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#FF6B6B;margin-bottom:10px">Valeurs nutritionnelles <span style="font-weight:400;color:#bbb">(optionnel)</span></div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+          <div><div style="font-size:11px;color:#aaa;margin-bottom:5px">Calories</div><input type="number" id="persoRepasKcal" min="0" max="3000" placeholder="0" style="width:100%;padding:11px 12px;border:1px solid rgba(255,154,108,0.2);border-radius:10px;font-size:14px;box-sizing:border-box;font-family:inherit"></div>
+          <div><div style="font-size:11px;color:#aaa;margin-bottom:5px">Glucides (g)</div><input type="number" id="persoRepasGlu" min="0" max="500" placeholder="0" style="width:100%;padding:11px 12px;border:1px solid rgba(255,154,108,0.2);border-radius:10px;font-size:14px;box-sizing:border-box;font-family:inherit"></div>
+          <div><div style="font-size:11px;color:#aaa;margin-bottom:5px">Proteines (g)</div><input type="number" id="persoRepasPro" min="0" max="300" placeholder="0" style="width:100%;padding:11px 12px;border:1px solid rgba(255,154,108,0.2);border-radius:10px;font-size:14px;box-sizing:border-box;font-family:inherit"></div>
+          <div><div style="font-size:11px;color:#aaa;margin-bottom:5px">Lipides (g)</div><input type="number" id="persoRepasLip" min="0" max="300" placeholder="0" style="width:100%;padding:11px 12px;border:1px solid rgba(255,154,108,0.2);border-radius:10px;font-size:14px;box-sizing:border-box;font-family:inherit"></div>
+        </div>
+      </div>
+      <input type="hidden" id="persoRepasTarget">
+      <input type="hidden" id="persoRepasTypeSelected">
+      <button onclick="window.savePersoRepas()" style="width:100%;background:linear-gradient(135deg,#FF6B6B,#FF9A3C);color:white;border:none;border-radius:16px;padding:15px;font-size:15px;font-weight:800;cursor:pointer;letter-spacing:.3px">Ajouter ce repas</button>
     </div>
-    <input type="file" id="persoRepasPhoto" accept="image/*" style="display:none" onchange="window.analyzeRepasPhoto(this)">
-    <div id="persoRepasPhotoPreview" style="display:none;margin-bottom:14px;text-align:center">
-      <img id="persoRepasPhotoImg" style="max-height:120px;border-radius:10px;object-fit:cover">
-      <div id="persoRepasPhotoStatus" style="font-size:0.78rem;color:#888;margin-top:6px"></div>
-    </div>
-    <div style="font-size:0.78rem;color:#888;margin-bottom:8px">Valeurs nutritionnelles (optionnel)</div>
-    <div style="display:flex;gap:10px;margin-bottom:16px">
-      <div style="flex:1"><div style="font-size:0.75rem;color:#888;margin-bottom:4px">Kcal</div><input type="number" id="persoRepasKcal" min="0" max="3000" placeholder="0" style="width:100%;padding:10px;border:1px solid #eee;border-radius:8px;font-size:0.85rem;box-sizing:border-box"></div>
-      <div style="flex:1"><div style="font-size:0.75rem;color:#888;margin-bottom:4px">Glucides (g)</div><input type="number" id="persoRepasGlu" min="0" max="500" placeholder="0" style="width:100%;padding:10px;border:1px solid #eee;border-radius:8px;font-size:0.85rem;box-sizing:border-box"></div>
-    </div>
-    <div style="display:flex;gap:10px;margin-bottom:16px">
-      <div style="flex:1"><div style="font-size:0.75rem;color:#888;margin-bottom:4px">Proteines (g)</div><input type="number" id="persoRepasPro" min="0" max="300" placeholder="0" style="width:100%;padding:10px;border:1px solid #eee;border-radius:8px;font-size:0.85rem;box-sizing:border-box"></div>
-      <div style="flex:1"><div style="font-size:0.75rem;color:#888;margin-bottom:4px">Lipides (g)</div><input type="number" id="persoRepasLip" min="0" max="300" placeholder="0" style="width:100%;padding:10px;border:1px solid #eee;border-radius:8px;font-size:0.85rem;box-sizing:border-box"></div>
-    </div>
-    <input type="hidden" id="persoRepasTarget">
-    <button onclick="window.savePersoRepas()" style="width:100%;background:linear-gradient(135deg,var(--coral),var(--accent));color:white;border:none;border-radius:12px;padding:14px;font-size:0.95rem;font-weight:700;cursor:pointer">Ajouter</button>
   </div>
 </div>
 <div id="objectifsModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:99999;align-items:flex-end;justify-content:center">
