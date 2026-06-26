@@ -2885,23 +2885,21 @@ function switchLang(lang) {
 
     <!-- HOME VIEW -->
     <div id="homeView" style="display:none;position:fixed;top:56px;left:0;right:0;bottom:60px;overflow-y:auto;overflow-x:hidden;background:var(--cream);z-index:10;padding-bottom:20px">
-      <div style="position:relative;overflow:hidden;background:linear-gradient(150deg,#FF8A65 0%,var(--coral) 45%,var(--accent) 100%);padding:16px 20px 10px;margin:0 -0px;width:100%;box-sizing:border-box;display:block">
-        <div style="position:absolute;inset:0;pointer-events:none;background:radial-gradient(circle at 88% 8%, rgba(255,255,255,0.4) 0%, transparent 45%),radial-gradient(circle at 8% 95%, rgba(255,200,150,0.45) 0%, transparent 55%),radial-gradient(circle at 60% 60%, rgba(255,255,255,0.18) 0%, transparent 50%)"></div>
-        <div style="position:relative;display:flex;align-items:center;gap:12px;margin-bottom:14px">
+      <div style="background:linear-gradient(135deg,var(--coral),var(--accent));padding:16px 20px 10px;margin:0 -0px;width:100%;box-sizing:border-box;display:block">
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:14px">
           <div id="homeAvatar" style="width:42px;height:42px;border-radius:50%;background:rgba(255,255,255,0.3);display:flex;align-items:center;justify-content:center;font-size:1rem;font-weight:700;color:white;flex-shrink:0">?</div>
           <div>
             <div id="homeGreeting" style="font-size:1.1rem;font-weight:700;color:white">Bonjour !</div>
             <div id="homeDate" style="font-size:0.78rem;color:rgba(255,255,255,0.8)"></div>
           </div>
         </div>
-        <div id="homeScoreResume" style="position:relative;background:rgba(255,255,255,0.18);border-radius:12px;padding:10px 14px">
+        <div id="homeScoreResume" style="background:rgba(255,255,255,0.18);border-radius:12px;padding:10px 14px">
           <div style="font-size:0.82rem;color:white;line-height:1.5" id="homeScoreText">Chargement...</div>
         </div>
       </div>
       <div style="padding:4px 16px 16px;width:100%;box-sizing:border-box">
         <!-- SECTION COEUR D'HARMONIE -->
-        <div style="margin-bottom:16px;border-radius:20px;padding:2px;background:linear-gradient(160deg, rgba(255,180,130,0.55), rgba(255,255,255,0.9) 40%, rgba(255,110,90,0.4) 75%, rgba(255,255,255,0.9));box-shadow:0 16px 38px rgba(230,110,70,0.14)">
-        <div style="background:#FFFCFA;border-radius:18px;padding:14px 16px 6px">
+        <div style="margin-bottom:16px;background:white;border-radius:18px;padding:14px 16px 6px;box-shadow:0 2px 10px rgba(0,0,0,0.06)">
           <div style="font-size:0.65rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--accent);margin-bottom:0px">✨ Cœur d'Harmonie</div>
           <div style="display:flex;align-items:center;width:100%;gap:6px;margin-left:-32px">
             <!-- Canvas gauche -->
@@ -2949,11 +2947,9 @@ function switchLang(lang) {
             </div>
           </div>
         </div>
-        </div>
         <!-- FIN COEUR D'HARMONIE -->
 
-        <div style="margin-bottom:12px;border-radius:18px;padding:2px;background:linear-gradient(160deg, rgba(255,180,130,0.55), rgba(255,255,255,0.9) 40%, rgba(255,110,90,0.4) 75%, rgba(255,255,255,0.9));box-shadow:0 16px 38px rgba(230,110,70,0.14)">
-        <div id="homeJourneeCard" style="background:#FFFCFA;border-radius:16px;overflow:hidden">
+        <div id="homeJourneeCard" style="background:white;border-radius:16px;overflow:hidden;margin-bottom:12px;box-shadow:0 2px 8px rgba(0,0,0,0.06)">
           <div id="homeJourneePhoto" style="height:120px;background:#f0f0f0;background-size:cover;background-position:center;position:relative">
             <div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,0.6),transparent)"></div>
             <div style="position:absolute;bottom:10px;left:14px">
@@ -2965,9 +2961,7 @@ function switchLang(lang) {
             <div id="homeJourneeDesc" style="font-size:0.82rem;color:#555;line-height:1.5"></div>
           </div>
         </div>
-        </div>
-<div style="margin-bottom:24px;border-radius:18px;padding:2px;background:linear-gradient(160deg, rgba(255,180,130,0.55), rgba(255,255,255,0.9) 40%, rgba(255,110,90,0.4) 75%, rgba(255,255,255,0.9));box-shadow:0 16px 38px rgba(230,110,70,0.14)">
-        <div style="background:#FFFCFA;border-radius:16px;overflow:hidden">
+<div style="background:white;border-radius:16px;overflow:hidden;margin-bottom:24px;box-shadow:0 2px 8px rgba(0,0,0,0.06)">
           <div style="display:flex">
             <div id="homeConseilPhoto" style="width:100px;min-height:100px;background:#ECFDF5;background-size:cover;background-position:center;flex-shrink:0"></div>
             <div style="padding:14px;flex:1">
@@ -2977,7 +2971,6 @@ function switchLang(lang) {
             </div>
           </div>
 
-        </div>
         </div>
         <!-- DÉFIS DU JOUR (gamification) -->
         <div style="margin-bottom:16px">
@@ -4540,9 +4533,9 @@ function switchLang(lang) {
 
 <div id="leaderboardView" style="display:none;position:fixed;top:56px;left:0;right:0;bottom:60px;padding:20px;padding-bottom:120px;overflow-y:auto;-webkit-overflow-scrolling:touch;background:var(--cream);z-index:10;box-sizing:border-box">
   <div class="view-header">
-    <div style="font-size:2rem;font-weight:700">🏆 Classement d'activité</div>
+    <div style="font-size:2rem;font-weight:700">🏆 Classement</div>
   </div>
-  <div style="font-size:0.82rem;color:#888;margin-bottom:20px">Les utilisateurs les plus assidus de Mirella, classés selon leurs points d'activité (messages envoyés, jours de connexion consécutifs, menus générés, photos de repas analysées et suivi santé). Ces points sont différents de vos points d'harmonie.</div>
+  <div style="font-size:0.82rem;color:#888;margin-bottom:20px">Les utilisateurs les plus assidus de Mirella, classés selon leur activité dans l'app : messages envoyés, jours de connexion consécutifs, menus générés, photos de repas analysées et suivi santé.</div>
   <div style="display:flex;flex-direction:column;gap:10px" id="leaderboardList">
     <div style="text-align:center;padding:40px;color:#ccc;font-size:0.85rem">Chargement du classement...</div>
   </div>
@@ -6472,7 +6465,7 @@ function switchLang(lang) {
     const sorted = [...logs].sort((a,b) => new Date(a.date) - new Date(b.date));
 
     // ── Points d'harmonie (réutilise le moteur existant) ─────────────────────
-    const defiBonus = parseInt(localStorage.getItem(_gamiKey()) || '0', 10);
+    const defiBonus = parseInt(localStorage.getItem('gami_bonus_total') || '0', 10);
     const totalPoints = (typeof calcHarmonyFromLogs === 'function' ? calcHarmonyFromLogs(logs) : (profile.harmony_points || 0)) + defiBonus;
     const lvlData = typeof getHarmonyLevel === 'function' ? getHarmonyLevel(totalPoints) : { name: 'Éveil', level: 1, min: 0, max: 199 };
     const LEVEL_ICONS = ['🌱','🌿','🌸','🌟','✨'];
@@ -6641,7 +6634,7 @@ function switchLang(lang) {
 
       const sorted = [...logs].sort((a,b) => new Date(a.date) - new Date(b.date));
       const profile = JSON.parse(localStorage.getItem('nutricare_profile') || '{}');
-      const defiBonus = parseInt(localStorage.getItem(_gamiKey()) || '0', 10);
+      const defiBonus = parseInt(localStorage.getItem('gami_bonus_total') || '0', 10);
     const totalPoints = (typeof calcHarmonyFromLogs === 'function' ? calcHarmonyFromLogs(logs) : (profile.harmony_points || 0)) + defiBonus;
       const lvlData = typeof getHarmonyLevel === 'function' ? getHarmonyLevel(totalPoints) : { level: 1, min: 0 };
 
@@ -6802,10 +6795,10 @@ function switchLang(lang) {
     state[defiId] = !wasDone;
     localStorage.setItem('gami_defis_' + _uid + '_' + dateKey, JSON.stringify(state));
     var pts = DEFI_POINTS_MAP[defiId] || 0;
-    var bonus = parseInt(localStorage.getItem(_gamiKey()) || '0', 10);
+    var bonus = parseInt(localStorage.getItem('gami_bonus_total') || '0', 10);
     bonus += wasDone ? -pts : pts;
     if (bonus < 0) bonus = 0;
-    localStorage.setItem(_gamiKey(), String(bonus));
+    localStorage.setItem('gami_bonus_total', String(bonus));
     loadGamification();
     setTimeout(() => checkAndShowNewBadges(), 800);
   }
@@ -9249,10 +9242,6 @@ function calcDayPoints(log, prevLogExists) {
   return Math.min(pts, 10);
 }
 
-function _gamiKey() {
-  var u = (typeof currentUser !== "undefined" && currentUser && currentUser.id) ? currentUser.id : "anon";
-  return "gami_bonus_total_" + u;
-}
 function calcHarmonyFromLogs(logs) {
   if (!logs || !logs.length) return 0;
   const sorted = [...logs].sort((a, b) => new Date(a.date) - new Date(b.date));
@@ -9828,7 +9817,7 @@ function loadLeaderboard(page) {
       return '<div style="background:' + bg + ';border-radius:14px;padding:14px 16px;box-shadow:0 2px 8px rgba(0,0,0,0.06);display:flex;align-items:center;gap:14px;border:' + border + '">' +
         '<div style="font-size:1.1rem;font-weight:800;color:#1a1a1a;min-width:36px;text-align:center">' + medal + '</div>' +
         '<div style="flex:1;font-weight:700;color:#1a1a1a;font-size:0.9rem">' + u.display_name + (u.is_you ? ' (vous)' : '') + '</div>' +
-        '<div style="font-weight:700;color:var(--coral);font-size:0.92rem">' + u.points + ' pts d&#39;activité</div>' +
+        '<div style="font-weight:700;color:var(--coral);font-size:0.92rem">' + u.points + ' pts</div>' +
       '</div>';
     }).join('');
 
@@ -9851,7 +9840,7 @@ function loadLeaderboard(page) {
 }
 
 function refreshHarmonyAvatar(logs) {
-  const defiBonus = parseInt(localStorage.getItem(_gamiKey()) || '0', 10);
+  const defiBonus = parseInt(localStorage.getItem('gami_bonus_total') || '0', 10);
   const totalPoints = calcHarmonyFromLogs(logs) + defiBonus;
   updateHarmonyUI(totalPoints);
   // Valeurs du dernier log pour l'avatar visuel
@@ -11768,48 +11757,6 @@ function toggleQuickMenu() {
     </div>
   </div>
 </div>
-<div id="rituelSoirScreen" style="display:none;position:fixed;inset:0;z-index:10000;overflow:hidden">
-  <canvas id="soirCanvas" style="position:absolute;inset:0;width:100%;height:100%;z-index:0"></canvas>
-  <div id="soirStars" style="position:absolute;inset:0;z-index:1;pointer-events:none"></div>
-  <button onclick="closeRituel()" style="position:absolute;top:20px;right:20px;background:rgba(255,255,255,0.13);border:none;color:white;width:44px;height:44px;border-radius:50%;font-size:1.2rem;cursor:pointer;z-index:10;backdrop-filter:blur(8px)">✕</button>
-  <div id="soirContent" style="position:absolute;inset:0;z-index:5;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;padding:0 24px 56px">
-    <div id="soirPhaseLabel" style="font-size:0.68rem;font-weight:700;letter-spacing:0.18em;color:rgba(255,210,130,0.85);text-transform:uppercase;margin-bottom:8px;opacity:0;transition:opacity 1.2s"></div>
-    <div id="soirTitle" style="font-family:Georgia,serif;font-size:1.9rem;font-weight:700;color:white;text-align:center;line-height:1.25;margin-bottom:12px;text-shadow:0 2px 28px rgba(0,0,0,0.5);opacity:0;transition:opacity 1.4s"></div>
-    <div id="soirSubtitle" style="font-size:0.93rem;color:rgba(255,255,255,0.82);text-align:center;line-height:1.65;max-width:310px;margin-bottom:26px;text-shadow:0 1px 14px rgba(0,0,0,0.4);opacity:0;transition:opacity 1.4s"></div>
-
-    <!-- Respiration -->
-    <div id="soirBreathWrap" style="display:none;flex-direction:column;align-items:center;margin-bottom:26px">
-      <div id="soirBreathCircle" style="width:96px;height:96px;border-radius:50%;background:radial-gradient(circle,rgba(255,170,70,0.3),rgba(255,90,40,0.08));border:2px solid rgba(255,170,70,0.45);margin-bottom:14px;transition:transform 4s ease-in-out;box-shadow:0 0 38px rgba(255,130,50,0.25)"></div>
-      <div id="soirBreathLabel" style="font-size:0.82rem;color:rgba(255,210,130,0.9);letter-spacing:0.12em;text-transform:uppercase;font-weight:600"></div>
-      <div id="soirBreathTimer" style="font-size:2.2rem;font-weight:700;color:white;margin-top:6px;text-shadow:0 0 20px rgba(255,150,60,0.4)"></div>
-    </div>
-
-    <!-- Relaxation musculaire -->
-    <div id="soirMuscleWrap" style="display:none;flex-direction:column;align-items:center;width:100%;max-width:330px;margin-bottom:26px">
-      <div id="soirMuscleIcon" style="font-size:3rem;margin-bottom:8px"></div>
-      <div id="soirMuscleName" style="font-size:1rem;font-weight:700;color:rgba(255,210,130,1);margin-bottom:6px;text-align:center"></div>
-      <div id="soirMuscleInstruction" style="font-size:0.87rem;color:rgba(255,255,255,0.82);text-align:center;line-height:1.55;margin-bottom:14px"></div>
-      <div id="soirMuscleTimerNum" style="font-size:2.4rem;font-weight:700;color:white;margin-bottom:12px;text-shadow:0 0 20px rgba(255,150,60,0.4)"></div>
-      <div style="width:100%;height:4px;background:rgba(255,255,255,0.12);border-radius:2px;overflow:hidden">
-        <div id="soirMuscleBarFill" style="height:100%;width:0%;background:linear-gradient(90deg,#FFB347,#FF6B35);border-radius:2px;transition:width 0.5s linear"></div>
-      </div>
-    </div>
-
-    <!-- Gratitude -->
-    <div id="soirGratitudeWrap" style="display:none;flex-direction:column;align-items:center;width:100%;max-width:330px;margin-bottom:26px">
-      <div id="soirGratitudeItems" style="display:flex;flex-direction:column;gap:12px;width:100%"></div>
-    </div>
-
-    <!-- Visualisation -->
-    <div id="soirVisuWrap" style="display:none;flex-direction:column;align-items:center;width:100%;max-width:330px;margin-bottom:26px;text-align:center">
-      <div id="soirVisuIcon" style="font-size:3.4rem;margin-bottom:12px"></div>
-      <div id="soirVisuText" style="font-size:0.92rem;color:rgba(255,255,255,0.88);line-height:1.7;font-style:italic"></div>
-    </div>
-
-    <button id="soirNextBtn" onclick="soirNext()" style="display:none;background:rgba(255,255,255,0.16);border:1.5px solid rgba(255,255,255,0.38);color:white;border-radius:50px;padding:13px 38px;font-size:0.93rem;font-weight:600;cursor:pointer;backdrop-filter:blur(10px);letter-spacing:0.04em;margin-bottom:18px">Continuer</button>
-    <div id="soirProgressDots" style="display:flex;gap:8px"></div>
-  </div>
-</div>
 <div id="rituelBodyScanScreen" style="display:none;position:fixed;inset:0;z-index:10000;flex-direction:column;align-items:center;justify-content:flex-start;overflow:hidden">
   <canvas id="bsAuroraCanvas" style="position:absolute;inset:0;width:100%;height:100%;z-index:0;pointer-events:none"></canvas>
   <button onclick="closeRituel()" style="position:absolute;top:20px;right:20px;background:rgba(255,255,255,0.1);border:none;color:white;width:40px;height:40px;border-radius:50%;font-size:1.2rem;cursor:pointer;z-index:3">✕</button>
@@ -13589,7 +13536,6 @@ function _startRituelExercise() {
   // Rituel 4-7-8 : écran dédié
   if (window._currentRituelType === 'reveil') { startReveilExercise(); return; }
   if (window._currentRituelType === 'bodyscan') { startBodyScanExercise(); return; }
-  if (window._currentRituelType === 'soir') { startSoirExercise(); return; }
   if (window._currentRituelType === '478') {
       document.getElementById('rituelExerciseScreen').style.display = 'flex';
       document.getElementById('rituelTitle').style.display = 'none';
@@ -14086,8 +14032,8 @@ function finishRituel(pts) {
   document.getElementById('rituelDone').style.display = 'block';
   document.getElementById('rituelPtsGained').textContent = '+' + pts + ' pts harmonie gagnes';
   _hcState.calm=1; _hcState.sleep=1; _hcState.hydra=1; _hcState.activ=1;
-  var bonus = parseInt(localStorage.getItem(_gamiKey())||'0') + pts;
-  localStorage.setItem(_gamiKey(), bonus);
+  var bonus = parseInt(localStorage.getItem('gami_bonus_total')||'0') + pts;
+  localStorage.setItem('gami_bonus_total', bonus);
   if (typeof updateHarmonyUI === 'function') {
     var logs = JSON.parse(localStorage.getItem('nutricare_logs')||'[]');
     var total = (typeof calcHarmonyFromLogs==='function' ? calcHarmonyFromLogs(logs) : 0) + bonus;
@@ -14417,754 +14363,10 @@ function startBodyScanExercise() {
   };
 }
 
-
-// ============================================================
-// RITUEL DU SOIR
-// ============================================================
-
-function startSoirExercise() {
-  var screen = document.getElementById('rituelSoirScreen');
-  screen.style.display = 'block';
-  document.getElementById('rituelOverlay').style.display = 'none';
-  window._soirPhaseIndex = 0;
-  window._soirRunning = true;
-  _initSoirCanvas();
-  _buildSoirStars();
-  setTimeout(function() { _runSoirPhase(0); }, 800);
-}
-
-// ---------- Canvas coucher de soleil ----------
-function _lerpColor(a, b, t) {
-  return [
-    Math.round(a[0] + (b[0]-a[0])*t),
-    Math.round(a[1] + (b[1]-a[1])*t),
-    Math.round(a[2] + (b[2]-a[2])*t)
-  ];
-}
-function _rgb(c) { return 'rgb('+c[0]+','+c[1]+','+c[2]+')'; }
-function _rgba(c, a) { return 'rgba('+c[0]+','+c[1]+','+c[2]+','+a+')'; }
-
-function _initSoirCanvas() {
-  var canvas = document.getElementById('soirCanvas');
-  var ctx = canvas.getContext('2d');
-  var W, H;
-  var prog = 0;
-  var running = true;
-  var cloudOffsets = [0,0,0,0];
-  var wavePhase = 0;
-  var lastTime = performance.now();
-
-  window._stopSoir = function() { running = false; };
-
-  function resize() {
-    W = canvas.width = window.innerWidth;
-    H = canvas.height = window.innerHeight;
-  }
-  resize();
-  window.addEventListener('resize', resize);
-
-  // Accélération progressive
-  var speedSchedule = [
-    { at: 0,     speed: 0.0000035 },
-    { at: 0.35,  speed: 0.0000045 },
-    { at: 0.7,   speed: 0.0000038 },
-    { at: 0.9,   speed: 0.0000018 }
-  ];
-
-  function getSpeed() {
-    var s = speedSchedule[0].speed;
-    for (var i = speedSchedule.length-1; i >= 0; i--) {
-      if (prog >= speedSchedule[i].at) { s = speedSchedule[i].speed; break; }
-    }
-    return s;
-  }
-
-  // Palettes ciel (4 états)
-  var SKY = [
-    // 0.0 — coucher doré
-    { top:[255,185,55], mid:[255,115,35], bot:[255,75,25] },
-    // 0.3 — crépuscule rose-violet
-    { top:[120,50,140], mid:[200,80,100], bot:[255,100,60] },
-    // 0.6 — bleu nuit
-    { top:[20,15,80],   mid:[50,25,110],  bot:[90,40,80] },
-    // 1.0 — nuit profonde
-    { top:[5,5,30],     mid:[12,8,50],    bot:[8,5,35] }
-  ];
-
-  function skyAt(t) {
-    var n = SKY.length - 1;
-    var i = Math.min(Math.floor(t * n), n-1);
-    var f = t * n - i;
-    var a = SKY[i], b = SKY[i+1];
-    return {
-      top: _lerpColor(a.top, b.top, f),
-      mid: _lerpColor(a.mid, b.mid, f),
-      bot: _lerpColor(a.bot, b.bot, f)
-    };
-  }
-
-  function drawFrame(now) {
-    if (!running) return;
-    var dt = now - lastTime; lastTime = now;
-    prog = Math.min(1, prog + getSpeed() * dt);
-    wavePhase += 0.001 * dt;
-    for (var ci = 0; ci < cloudOffsets.length; ci++) cloudOffsets[ci] += 0.006;
-
-    var sky = skyAt(prog);
-    var grad = ctx.createLinearGradient(0, 0, 0, H);
-    grad.addColorStop(0, _rgb(sky.top));
-    grad.addColorStop(0.5, _rgb(sky.mid));
-    grad.addColorStop(1, _rgb(sky.bot));
-    ctx.fillStyle = grad;
-    ctx.fillRect(0, 0, W, H);
-
-    // Nuages crépuscule
-    if (prog < 0.72) _drawClouds(ctx, W, H, prog, cloudOffsets);
-
-    // Soleil
-    _drawSun(ctx, W, H, prog);
-
-    // Lune qui apparaît
-    if (prog > 0.5) _drawMoon(ctx, W, H, prog);
-
-    // Horizon — montagne silhouette
-    _drawLandscape(ctx, W, H, prog);
-
-    // Eau supprimée : le ciel descend jusqu'en bas de l'écran
-
-    requestAnimationFrame(drawFrame);
-  }
-  requestAnimationFrame(function(t) { lastTime = t; drawFrame(t); });
-}
-
-function _drawClouds(ctx, W, H, t, offsets) {
-  var clouds = [
-    { bx:0.15, y:0.2,  w:0.22, h:0.055 },
-    { bx:0.5,  y:0.15, w:0.18, h:0.045 },
-    { bx:0.72, y:0.25, w:0.16, h:0.04  },
-    { bx:0.05, y:0.3,  w:0.14, h:0.035 }
-  ];
-  var alpha = Math.max(0, (0.72-t)/0.72) * 0.6;
-  clouds.forEach(function(c, i) {
-    var cx = W * (c.bx + offsets[i]*0.00003) % (W*1.2) - W*0.1;
-    var cy = H * c.y;
-    var cw = W * c.w, ch = H * c.h;
-    var r1 = _lerpColor([255,190,80], [160,70,130], t/0.72);
-    var r2 = _lerpColor([255,130,50], [100,50,150], t/0.72);
-    var g = ctx.createLinearGradient(cx, cy-ch, cx, cy+ch);
-    g.addColorStop(0, _rgba(r1, alpha));
-    g.addColorStop(1, _rgba(r2, alpha*0.35));
-    ctx.fillStyle = g;
-    ctx.beginPath();
-    ctx.ellipse(cx, cy, cw/2, ch/2, 0, 0, Math.PI*2);
-    ctx.fill();
-    // bump secondaire
-    ctx.beginPath();
-    ctx.ellipse(cx-cw*0.22, cy+ch*0.15, cw*0.28, ch*0.4, 0, 0, Math.PI*2);
-    ctx.fill();
-    ctx.beginPath();
-    ctx.ellipse(cx+cw*0.25, cy+ch*0.2, cw*0.22, ch*0.38, 0, 0, Math.PI*2);
-    ctx.fill();
-  });
-}
-
-function _drawSun(ctx, W, H, t) {
-  var sunX = W * 0.5;
-  var sunY0 = H * 0.26, sunY1 = H * 0.62;
-  var sy = sunY0 + (sunY1-sunY0) * Math.min(t/0.75, 1);
-  var r = 36 + t * 18;
-  var alpha = Math.max(0, 1 - t*1.45);
-  if (alpha < 0.01) return;
-
-  // Rayons
-  ctx.save();
-  ctx.globalAlpha = alpha * 0.18;
-  for (var i = 0; i < 12; i++) {
-    var angle = (i/12)*Math.PI*2;
-    var g = ctx.createLinearGradient(sunX, sy, sunX+Math.cos(angle)*(r*4.5), sy+Math.sin(angle)*(r*4.5));
-    g.addColorStop(0, 'rgba(255,220,80,1)');
-    g.addColorStop(1, 'rgba(255,130,30,0)');
-    ctx.fillStyle = g;
-    ctx.beginPath();
-    ctx.moveTo(sunX, sy);
-    ctx.arc(sunX, sy, r*4.5, angle-0.05, angle+0.05);
-    ctx.closePath();
-    ctx.fill();
-  }
-  ctx.restore();
-
-  // Halo
-  var halo = ctx.createRadialGradient(sunX, sy, 0, sunX, sy, r*3.8);
-  halo.addColorStop(0,   _rgba([255,210,80], alpha*0.52));
-  halo.addColorStop(0.4, _rgba([255,120,40], alpha*0.22));
-  halo.addColorStop(1,   _rgba([255,70,20],  0));
-  ctx.fillStyle = halo;
-  ctx.beginPath(); ctx.arc(sunX, sy, r*3.8, 0, Math.PI*2); ctx.fill();
-
-  // Disque
-  var disc = ctx.createRadialGradient(sunX, sy-r*0.2, 0, sunX, sy, r);
-  disc.addColorStop(0,   _rgba([255,245,200], alpha));
-  disc.addColorStop(0.5, _rgba([255,180,60],  alpha));
-  disc.addColorStop(1,   _rgba([255,90,20],   alpha*0.7));
-  ctx.fillStyle = disc;
-  ctx.beginPath(); ctx.arc(sunX, sy, r, 0, Math.PI*2); ctx.fill();
-}
-
-function _drawMoon(ctx, W, H, t) {
-  var moonAlpha = Math.min(1, (t-0.5)/0.35);
-  var mx = W * 0.72, my = H * (0.2 - moonAlpha*0.06);
-  var mr = 18 + moonAlpha*6;
-
-  // Halo lune
-  var mHalo = ctx.createRadialGradient(mx, my, 0, mx, my, mr*3);
-  mHalo.addColorStop(0,   _rgba([200,210,255], moonAlpha*0.15));
-  mHalo.addColorStop(1,   _rgba([150,170,255], 0));
-  ctx.fillStyle = mHalo;
-  ctx.beginPath(); ctx.arc(mx, my, mr*3, 0, Math.PI*2); ctx.fill();
-
-  // Disque lune
-  var mGrad = ctx.createRadialGradient(mx-mr*0.2, my-mr*0.2, 0, mx, my, mr);
-  mGrad.addColorStop(0,   _rgba([255,250,230], moonAlpha));
-  mGrad.addColorStop(0.7, _rgba([220,225,210], moonAlpha));
-  mGrad.addColorStop(1,   _rgba([180,190,175], moonAlpha*0.8));
-  ctx.fillStyle = mGrad;
-  ctx.beginPath(); ctx.arc(mx, my, mr, 0, Math.PI*2); ctx.fill();
-
-  // Ombre portée (croissant)
-  ctx.fillStyle = _rgba([20,15,60], moonAlpha*0.88);
-  ctx.beginPath(); ctx.arc(mx+mr*0.28, my-mr*0.05, mr*0.85, 0, Math.PI*2); ctx.fill();
-}
-
-function _drawLandscape(ctx, W, H, t) {
-  var horizonY = H * 0.78;
-  // Arbres silhouette
-  var treeAlpha = Math.min(1, t*1.5);
-  ctx.fillStyle = _rgba(_lerpColor([45,20,10],[5,3,18],t), treeAlpha);
-  var trees = [
-    {x:0.06,h:0.16,w:0.034},{x:0.11,h:0.21,w:0.03},{x:0.16,h:0.14,w:0.027},{x:0.21,h:0.18,w:0.029},
-    {x:0.74,h:0.15,w:0.028},{x:0.79,h:0.20,w:0.031},{x:0.85,h:0.13,w:0.026},{x:0.91,h:0.19,w:0.03}
-  ];
-  trees.forEach(function(tree) {
-    var tx = W*tree.x, th = H*tree.h, tw = W*tree.w;
-    var ty = horizonY - th + H*0.015;
-    // tronc
-    ctx.fillRect(tx-tw*0.12, ty+th*0.7, tw*0.24, th*0.4);
-    // feuillage triangulaire (3 étages, sapin net)
-    ctx.beginPath();
-    ctx.moveTo(tx, ty);
-    ctx.lineTo(tx-tw*0.55, ty+th*0.42);
-    ctx.lineTo(tx+tw*0.55, ty+th*0.42);
-    ctx.closePath();
-    ctx.fill();
-    ctx.beginPath();
-    ctx.moveTo(tx, ty+th*0.18);
-    ctx.lineTo(tx-tw*0.7, ty+th*0.62);
-    ctx.lineTo(tx+tw*0.7, ty+th*0.62);
-    ctx.closePath();
-    ctx.fill();
-    ctx.beginPath();
-    ctx.moveTo(tx, ty+th*0.38);
-    ctx.lineTo(tx-tw*0.85, ty+th*0.85);
-    ctx.lineTo(tx+tw*0.85, ty+th*0.85);
-    ctx.closePath();
-    ctx.fill();
-  });
-  var colBack = _lerpColor([110,65,42], [28,17,42], t);
-  ctx.fillStyle = _rgb(colBack);
-  ctx.beginPath();
-  ctx.moveTo(0, H);
-  ctx.lineTo(0, horizonY - H*0.04);
-  ctx.quadraticCurveTo(W*0.22, horizonY - H*0.135, W*0.45, horizonY - H*0.05);
-  ctx.quadraticCurveTo(W*0.65, horizonY - H*0.15, W*0.85, horizonY - H*0.052);
-  ctx.quadraticCurveTo(W*0.94, horizonY - H*0.07, W, horizonY - H*0.04);
-  ctx.lineTo(W, H);
-  ctx.closePath();
-  ctx.fill();
-
-  var col = _lerpColor([60,30,20], [8,5,25], t);
-  ctx.fillStyle = _rgb(col);
-  ctx.beginPath();
-  ctx.moveTo(0, H);
-  // Collines douces et espacées
-  ctx.lineTo(0, horizonY + H*0.02);
-  ctx.quadraticCurveTo(W*0.22, horizonY - H*0.075, W*0.45, horizonY + H*0.01);
-  ctx.quadraticCurveTo(W*0.65, horizonY - H*0.09, W*0.85, horizonY + H*0.008);
-  ctx.quadraticCurveTo(W*0.94, horizonY - H*0.03, W, horizonY + H*0.02);
-  ctx.lineTo(W, H);
-  ctx.closePath();
-  ctx.fill();
-
-}
-
-function _drawWater(ctx, W, H, t, wavePhase) {
-  var waterY = H * 0.90;
-  var wGrad = ctx.createLinearGradient(0, waterY, 0, H);
-  var wTop = _lerpColor([255,130,50], [8,12,45], t);
-  var wBot = _lerpColor([180,70,25], [4,6,28], t);
-  wGrad.addColorStop(0, _rgb(wTop));
-  wGrad.addColorStop(1, _rgb(wBot));
-  ctx.fillStyle = wGrad;
-  ctx.fillRect(0, waterY, W, H-waterY);
-
-  // Reflet soleil/lune sur l'eau
-  var refX = W*0.5, refAlpha = Math.max(0, 1-t*1.45)*0.45;
-  if (refAlpha > 0.01) {
-    var refG = ctx.createLinearGradient(refX, waterY, refX, H);
-    refG.addColorStop(0, _rgba([255,190,70], refAlpha));
-    refG.addColorStop(0.5, _rgba([255,120,40], refAlpha*0.4));
-    refG.addColorStop(1, 'rgba(255,80,0,0)');
-    ctx.fillStyle = refG;
-    ctx.beginPath();
-    ctx.moveTo(refX-55, waterY);
-    ctx.lineTo(refX+55, waterY);
-    ctx.lineTo(refX+18, H);
-    ctx.lineTo(refX-18, H);
-    ctx.closePath();
-    ctx.fill();
-  }
-
-  // Reflet lune
-  if (t > 0.55) {
-    var mRefAlpha = Math.min(1,(t-0.55)/0.3)*0.3;
-    var mRefX = W*0.72;
-    var mRefG = ctx.createLinearGradient(mRefX, waterY, mRefX, H*0.85);
-    mRefG.addColorStop(0, _rgba([200,215,255], mRefAlpha));
-    mRefG.addColorStop(1, 'rgba(180,200,255,0)');
-    ctx.fillStyle = mRefG;
-    ctx.beginPath();
-    ctx.moveTo(mRefX-30, waterY);
-    ctx.lineTo(mRefX+30, waterY);
-    ctx.lineTo(mRefX+8, H*0.85);
-    ctx.lineTo(mRefX-8, H*0.85);
-    ctx.closePath();
-    ctx.fill();
-  }
-
-  // Vaguelettes
-  ctx.strokeStyle = 'rgba(255,255,255,0.055)';
-  ctx.lineWidth = 1;
-  for (var i = 0; i < 6; i++) {
-    var wy = waterY + 22 + i*32 + Math.sin(wavePhase*2+i*0.8)*3;
-    ctx.beginPath();
-    ctx.moveTo(0, wy);
-    for (var x = 0; x <= W; x += 30) {
-      ctx.lineTo(x, wy + Math.sin(wavePhase + x*0.015 + i)*2.5);
-    }
-    ctx.stroke();
-  }
-}
-
-// ---------- Étoiles ----------
-function _buildSoirStars() {
-  var container = document.getElementById('soirStars');
-  container.innerHTML = '';
-  var frag = document.createDocumentFragment();
-  for (var i = 0; i < 110; i++) {
-    var star = document.createElement('div');
-    var size = Math.random() < 0.15 ? 2.5 : Math.random() < 0.4 ? 1.8 : 1.2;
-    var top = Math.random() * 62;
-    var left = Math.random() * 100;
-    var delay = Math.random() * 6;
-    var dur = 2.5 + Math.random() * 3;
-    star.style.cssText = 'position:absolute;border-radius:50%;background:white;' +
-      'top:'+top+'%;left:'+left+'%;' +
-      'width:'+size+'px;height:'+size+'px;' +
-      'opacity:0;animation:soirStarTwinkle '+dur+'s '+delay+'s infinite alternate;';
-    frag.appendChild(star);
-  }
-  container.appendChild(frag);
-
-  if (!document.getElementById('soirStarStyle')) {
-    var style = document.createElement('style');
-    style.id = 'soirStarStyle';
-    style.textContent = '@keyframes soirStarTwinkle{0%{opacity:0}60%{opacity:0}100%{opacity:0.9}}';
-    document.head.appendChild(style);
-  }
-}
-
-// ---------- Phases du rituel ----------
-var _soirPhases = [
-  {
-    type: 'intro',
-    phase: '',
-    title: 'Rituel du soir',
-    subtitle: 'Déposez le poids de la journée. Ce moment vous appartient entièrement.',
-    btn: 'Commencer',
-    duration: 0
-  },
-  {
-    type: 'breath',
-    phase: 'Respiration apaisante',
-    title: 'Ralentissez votre souffle',
-    subtitle: 'Laissez chaque expiration emporter les tensions de la journée.',
-    cycles: 4,
-    inhale: 4, hold: 2, exhale: 6
-  },
-  {
-    type: 'muscle',
-    phase: 'Relaxation musculaire',
-    title: 'Relâchement progressif',
-    subtitle: 'Contractez puis relâchez chaque groupe musculaire.',
-    groups: [
-      { name: 'Pieds & mollets', icon: '🦶', contract: 'Contractez vos pieds et mollets, retenez...', release: 'Relâchez complètement. Sentez la chaleur se diffuser.', duration: 12 },
-      { name: 'Cuisses & fessiers', icon: '🦵', contract: 'Serrez vos cuisses et fessiers fort...', release: 'Relâchez. Vos jambes deviennent lourdes et chaudes.', duration: 12 },
-      { name: 'Ventre', icon: '🫁', contract: 'Contractez votre abdomen, respirez peu...', release: 'Soufflez et relâchez. Votre ventre se détend.', duration: 12 },
-      { name: 'Mains & bras', icon: '✋', contract: 'Serrez les poings fort, tendez les bras...', release: 'Ouvrez les mains. Laissez les bras s\'alourdir.', duration: 12 },
-      { name: 'Épaules', icon: '💆', contract: 'Remontez les épaules vers les oreilles...', release: 'Laissez tomber. Sentez la détente dans le cou.', duration: 12 },
-      { name: 'Visage', icon: '😌', contract: 'Plissez les yeux, serrez la mâchoire...', release: 'Relâchez tout. Laissez votre visage fondre.', duration: 12 }
-    ]
-  },
-  {
-    type: 'breath',
-    phase: 'Respiration douce',
-    title: 'Ancrez votre calme',
-    subtitle: 'Une dernière série pour préparer votre corps au sommeil.',
-    cycles: 3,
-    inhale: 4, hold: 0, exhale: 8
-  },
-  {
-    type: 'gratitude',
-    phase: 'Gratitude',
-    title: 'Trois lumières du jour',
-    subtitle: 'Chaque journée contient des trésors. Prenez un instant pour les voir.',
-    items: [
-      { icon: '✨', prompt: 'Une chose belle que j\'ai vécue aujourd\'hui...' },
-      { icon: '🤝', prompt: 'Une personne qui m\'a apporté quelque chose...' },
-      { icon: '🌱', prompt: 'Une chose dont je suis fier(e) ou reconnaissant(e)...' }
-    ],
-    btn: 'Continuer',
-    duration: 18
-  },
-  {
-    type: 'visu',
-    phase: 'Visualisation',
-    title: 'Votre havre de paix',
-    subtitle: '',
-    steps: [
-      { icon: '🌊', text: 'Imaginez un endroit où vous vous sentez absolument en sécurité. Une plage déserte au crépuscule, une forêt silencieuse, votre chambre baignée de douce lumière...' },
-      { icon: '🌬️', text: 'Vous entendez les sons de cet endroit. Le vent, l\'eau, le silence. Votre corps s\'y enfonce doucement, chaque muscle libéré.' },
-      { icon: '🌙', text: 'Vous êtes en sécurité. La journée est terminée. Votre seule mission maintenant est de vous laisser porter vers un sommeil profond et réparateur.' }
-    ],
-    stepDuration: 16
-  },
-  {
-    type: 'end',
-    phase: '',
-    title: 'Bonne nuit 🌙',
-    subtitle: 'Votre corps et votre esprit sont prêts pour un sommeil réparateur. Fermez les yeux et laissez-vous aller.',
-    btn: 'Terminer',
-    duration: 0
-  }
-];
-
-var _soirPhaseIndex = 0;
-var _soirTimers = [];
-
-function _soirClearTimers() {
-  _soirTimers.forEach(function(t) { clearTimeout(t); clearInterval(t); });
-  _soirTimers = [];
-}
-
-function _soirFade(elId, show, cb) {
-  var el = document.getElementById(elId);
-  if (!el) { if(cb) cb(); return; }
-  if (show) {
-    el.style.opacity = '0';
-    el.style.display = 'flex';
-    setTimeout(function() { el.style.opacity = '1'; if(cb) setTimeout(cb, 500); }, 30);
-  } else {
-    el.style.opacity = '0';
-    setTimeout(function() { el.style.display = 'none'; if(cb) cb(); }, 600);
-  }
-}
-
-function _soirSetText(id, val, show) {
-  var el = document.getElementById(id);
-  if (!el) return;
-  el.innerHTML = val || '';
-  el.style.opacity = show ? '1' : '0';
-  if (show) el.style.transition = 'opacity 1.3s';
-}
-
-function _updateSoirDots() {
-  var dots = document.getElementById('soirProgressDots');
-  if (!dots) return;
-  dots.innerHTML = '';
-  for (var i = 0; i < _soirPhases.length; i++) {
-    var d = document.createElement('div');
-    d.style.cssText = 'width:6px;height:6px;border-radius:50%;background:' +
-      (i === _soirPhaseIndex ? 'rgba(255,210,130,1)' : 'rgba(255,255,255,0.28)') +
-      ';transition:background 0.4s';
-    dots.appendChild(d);
-  }
-}
-
-function _runSoirPhase(idx) {
-  if (!window._soirRunning) return;
-  _soirPhaseIndex = idx;
-  _soirClearTimers();
-  _updateSoirDots();
-
-  // Masquer tout
-  var wraps = ['soirBreathWrap','soirMuscleWrap','soirGratitudeWrap','soirVisuWrap'];
-  wraps.forEach(function(id) {
-    var el = document.getElementById(id);
-    if (el) { el.style.display = 'none'; el.style.opacity = '0'; }
-  });
-  document.getElementById('soirNextBtn').style.display = 'none';
-
-  var phase = _soirPhases[idx];
-
-  // Labels
-  _soirSetText('soirPhaseLabel', phase.phase, !!phase.phase);
-  _soirSetText('soirTitle', phase.title, true);
-  _soirSetText('soirSubtitle', phase.subtitle, true);
-
-  if (phase.type === 'intro' || phase.type === 'end') {
-    var btn = document.getElementById('soirNextBtn');
-    btn.textContent = phase.btn || 'Continuer';
-    btn.style.display = 'block';
-  } else if (phase.type === 'breath') {
-    _startSoirBreath(phase);
-  } else if (phase.type === 'muscle') {
-    _startSoirMuscle(phase);
-  } else if (phase.type === 'gratitude') {
-    _startSoirGratitude(phase);
-  } else if (phase.type === 'visu') {
-    _startSoirVisu(phase);
-  }
-}
-
-function soirNext() {
-  if (_soirPhaseIndex >= _soirPhases.length - 1) {
-    closeRituel();
-    return;
-  }
-  _runSoirPhase(_soirPhaseIndex + 1);
-}
-
-// ---------- Respiration ----------
-function _startSoirBreath(phase) {
-  var wrap = document.getElementById('soirBreathWrap');
-  wrap.style.display = 'flex';
-  setTimeout(function() { wrap.style.opacity = '1'; wrap.style.transition = 'opacity 1s'; }, 30);
-
-  var circle = document.getElementById('soirBreathCircle');
-  var label = document.getElementById('soirBreathLabel');
-  var timer = document.getElementById('soirBreathTimer');
-
-  var cyclesLeft = phase.cycles;
-  var running = true;
-
-  window._soirBreathRunning = true;
-
-  function runCycle() {
-    if (!running || !window._soirRunning) return;
-    if (cyclesLeft <= 0) {
-      wrap.style.opacity = '0';
-      var t = setTimeout(function() {
-        wrap.style.display = 'none';
-        soirNext();
-      }, 800);
-      _soirTimers.push(t);
-      return;
-    }
-    cyclesLeft--;
-
-    // Inspiration
-    label.textContent = 'Inspirez';
-    circle.style.transform = 'scale(1.55)';
-    circle.style.boxShadow = '0 0 55px rgba(255,140,60,0.45)';
-    var countdown = phase.inhale;
-    timer.textContent = countdown;
-    var inhaleInt = setInterval(function() {
-      countdown--;
-      timer.textContent = Math.max(0, countdown);
-      if (countdown <= 0) clearInterval(inhaleInt);
-    }, 1000);
-    _soirTimers.push(inhaleInt);
-
-    var t1 = setTimeout(function() {
-      if (!running) return;
-      // Rétention
-      if (phase.hold > 0) {
-        label.textContent = 'Retenez';
-        circle.style.transform = 'scale(1.55)';
-        var holdCount = phase.hold;
-        timer.textContent = holdCount;
-        var holdInt = setInterval(function() {
-          holdCount--;
-          timer.textContent = Math.max(0, holdCount);
-          if (holdCount <= 0) clearInterval(holdInt);
-        }, 1000);
-        _soirTimers.push(holdInt);
-        var t2 = setTimeout(startExhale, phase.hold * 1000);
-        _soirTimers.push(t2);
-      } else {
-        startExhale();
-      }
-    }, phase.inhale * 1000);
-    _soirTimers.push(t1);
-
-    function startExhale() {
-      if (!running) return;
-      label.textContent = 'Expirez';
-      circle.style.transform = 'scale(1)';
-      circle.style.boxShadow = '0 0 20px rgba(255,130,50,0.18)';
-      var exCount = phase.exhale;
-      timer.textContent = exCount;
-      var exInt = setInterval(function() {
-        exCount--;
-        timer.textContent = Math.max(0, exCount);
-        if (exCount <= 0) clearInterval(exInt);
-      }, 1000);
-      _soirTimers.push(exInt);
-      var t3 = setTimeout(runCycle, phase.exhale * 1000 + 200);
-      _soirTimers.push(t3);
-    }
-  }
-
-  // Stopper si on quitte
-  var origStop = window._stopSoir;
-  window._stopSoir = function() { running = false; if(origStop) origStop(); };
-
-  runCycle();
-}
-
-// ---------- Relaxation musculaire ----------
-function _startSoirMuscle(phase) {
-  var wrap = document.getElementById('soirMuscleWrap');
-  wrap.style.display = 'flex';
-  setTimeout(function() { wrap.style.opacity = '1'; wrap.style.transition = 'opacity 1s'; }, 30);
-  _soirSetText('soirTitle', '', false);
-  _soirSetText('soirSubtitle', '', false);
-
-  var groupIdx = 0;
-
-  function runGroup() {
-    if (!window._soirRunning || groupIdx >= phase.groups.length) {
-      wrap.style.opacity = '0';
-      var t = setTimeout(function() { wrap.style.display = 'none'; soirNext(); }, 800);
-      _soirTimers.push(t);
-      return;
-    }
-    var g = phase.groups[groupIdx++];
-    var totalDur = g.duration * 1000;
-    var contractDur = Math.floor(totalDur * 0.38);
-    var releaseDur = Math.floor(totalDur * 0.52);
-    var pauseDur = totalDur - contractDur - releaseDur;
-
-    document.getElementById('soirMuscleIcon').textContent = g.icon;
-    document.getElementById('soirMuscleName').textContent = g.name;
-    document.getElementById('soirMuscleInstruction').textContent = g.contract;
-    document.getElementById('soirMuscleBarFill').style.width = '0%';
-
-    // Barre de progression
-    var elapsed = 0;
-    var barInt = setInterval(function() {
-      elapsed += 200;
-      var pct = Math.min(100, (elapsed / totalDur) * 100);
-      document.getElementById('soirMuscleBarFill').style.width = pct + '%';
-      if (pct >= 100) clearInterval(barInt);
-    }, 200);
-    _soirTimers.push(barInt);
-
-    // Compte à rebours
-    var secLeft = g.duration;
-    document.getElementById('soirMuscleTimerNum').textContent = secLeft;
-    var secInt = setInterval(function() {
-      secLeft--;
-      document.getElementById('soirMuscleTimerNum').textContent = Math.max(0, secLeft);
-      if (secLeft <= 0) clearInterval(secInt);
-    }, 1000);
-    _soirTimers.push(secInt);
-
-    var t1 = setTimeout(function() {
-      document.getElementById('soirMuscleInstruction').textContent = g.release;
-      var t2 = setTimeout(runGroup, releaseDur + pauseDur);
-      _soirTimers.push(t2);
-    }, contractDur);
-    _soirTimers.push(t1);
-  }
-
-  runGroup();
-}
-
-// ---------- Gratitude ----------
-function _startSoirGratitude(phase) {
-  var wrap = document.getElementById('soirGratitudeWrap');
-  wrap.style.display = 'flex';
-  setTimeout(function() { wrap.style.opacity = '1'; wrap.style.transition = 'opacity 1s'; }, 30);
-
-  var container = document.getElementById('soirGratitudeItems');
-  container.innerHTML = '';
-  phase.items.forEach(function(item, i) {
-    var card = document.createElement('div');
-    card.style.cssText = 'background:rgba(255,255,255,0.1);border-radius:16px;padding:14px 18px;display:flex;align-items:center;gap:14px;opacity:0;transition:opacity 0.8s;backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,0.12)';
-    card.innerHTML = '<span style="font-size:1.6rem;flex-shrink:0">'+item.icon+'</span><span style="font-size:0.85rem;color:rgba(255,255,255,0.82);line-height:1.5;font-style:italic">'+item.prompt+'</span>';
-    container.appendChild(card);
-    var t = setTimeout(function() { card.style.opacity = '1'; }, 400 + i*600);
-    _soirTimers.push(t);
-  });
-
-  var btn = document.getElementById('soirNextBtn');
-  btn.textContent = 'Continuer';
-  var t = setTimeout(function() { btn.style.display = 'block'; }, phase.duration * 1000);
-  _soirTimers.push(t);
-}
-
-// ---------- Visualisation ----------
-function _startSoirVisu(phase) {
-  var wrap = document.getElementById('soirVisuWrap');
-  wrap.style.display = 'flex';
-  setTimeout(function() { wrap.style.opacity = '1'; wrap.style.transition = 'opacity 1s'; }, 30);
-
-  var stepIdx = 0;
-
-  function runStep() {
-    if (!window._soirRunning || stepIdx >= phase.steps.length) {
-      wrap.style.opacity = '0';
-      var t = setTimeout(function() { wrap.style.display = 'none'; soirNext(); }, 800);
-      _soirTimers.push(t);
-      return;
-    }
-    var s = phase.steps[stepIdx++];
-    var iconEl = document.getElementById('soirVisuIcon');
-    var textEl = document.getElementById('soirVisuText');
-
-    iconEl.style.opacity = '0';
-    textEl.style.opacity = '0';
-    iconEl.textContent = s.icon;
-    textEl.textContent = s.text;
-
-    setTimeout(function() {
-      iconEl.style.transition = 'opacity 1.2s';
-      iconEl.style.opacity = '1';
-    }, 100);
-    setTimeout(function() {
-      textEl.style.transition = 'opacity 1.4s';
-      textEl.style.opacity = '1';
-    }, 500);
-
-    var t = setTimeout(function() {
-      iconEl.style.opacity = '0';
-      textEl.style.opacity = '0';
-      var t2 = setTimeout(runStep, 1200);
-      _soirTimers.push(t2);
-    }, phase.stepDuration * 1000);
-    _soirTimers.push(t);
-  }
-
-  runStep();
-}
-
 function closeRituel() {
   if (window._stop478) { window._stop478(); window._stop478 = null; }
   if (window._stopBodyScan) { window._stopBodyScan(); window._stopBodyScan = null; }
   if (window._stopReveil) { window._stopReveil(); window._stopReveil = null; }
-  if (window._stopSoir) { window._stopSoir(); window._stopSoir = null; }
-  var soirScreen = document.getElementById('rituelSoirScreen');
-  if (soirScreen) soirScreen.style.display = 'none';
   var reveilScreen = document.getElementById('rituelReveilScreen');
   if (reveilScreen) reveilScreen.style.display = 'none';
   clearTimeout(_rituelTimer);
