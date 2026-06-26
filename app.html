@@ -6465,7 +6465,7 @@ function switchLang(lang) {
     const sorted = [...logs].sort((a,b) => new Date(a.date) - new Date(b.date));
 
     // ── Points d'harmonie (réutilise le moteur existant) ─────────────────────
-    const defiBonus = parseInt(localStorage.getItem('gami_bonus_total') || '0', 10);
+    const defiBonus = parseInt(localStorage.getItem(_gamiKey()) || '0', 10);
     const totalPoints = (typeof calcHarmonyFromLogs === 'function' ? calcHarmonyFromLogs(logs) : (profile.harmony_points || 0)) + defiBonus;
     const lvlData = typeof getHarmonyLevel === 'function' ? getHarmonyLevel(totalPoints) : { name: 'Éveil', level: 1, min: 0, max: 199 };
     const LEVEL_ICONS = ['🌱','🌿','🌸','🌟','✨'];
@@ -6634,7 +6634,7 @@ function switchLang(lang) {
 
       const sorted = [...logs].sort((a,b) => new Date(a.date) - new Date(b.date));
       const profile = JSON.parse(localStorage.getItem('nutricare_profile') || '{}');
-      const defiBonus = parseInt(localStorage.getItem('gami_bonus_total') || '0', 10);
+      const defiBonus = parseInt(localStorage.getItem(_gamiKey()) || '0', 10);
     const totalPoints = (typeof calcHarmonyFromLogs === 'function' ? calcHarmonyFromLogs(logs) : (profile.harmony_points || 0)) + defiBonus;
       const lvlData = typeof getHarmonyLevel === 'function' ? getHarmonyLevel(totalPoints) : { level: 1, min: 0 };
 
@@ -6795,10 +6795,10 @@ function switchLang(lang) {
     state[defiId] = !wasDone;
     localStorage.setItem('gami_defis_' + _uid + '_' + dateKey, JSON.stringify(state));
     var pts = DEFI_POINTS_MAP[defiId] || 0;
-    var bonus = parseInt(localStorage.getItem('gami_bonus_total') || '0', 10);
+    var bonus = parseInt(localStorage.getItem(_gamiKey()) || '0', 10);
     bonus += wasDone ? -pts : pts;
     if (bonus < 0) bonus = 0;
-    localStorage.setItem('gami_bonus_total', String(bonus));
+    localStorage.setItem(_gamiKey(), String(bonus));
     loadGamification();
     setTimeout(() => checkAndShowNewBadges(), 800);
   }
@@ -9242,6 +9242,10 @@ function calcDayPoints(log, prevLogExists) {
   return Math.min(pts, 10);
 }
 
+function _gamiKey() {
+  var u = (typeof currentUser !== "undefined" && currentUser && currentUser.id) ? currentUser.id : "anon";
+  return "gami_bonus_total_" + u;
+}
 function calcHarmonyFromLogs(logs) {
   if (!logs || !logs.length) return 0;
   const sorted = [...logs].sort((a, b) => new Date(a.date) - new Date(b.date));
@@ -9840,7 +9844,7 @@ function loadLeaderboard(page) {
 }
 
 function refreshHarmonyAvatar(logs) {
-  const defiBonus = parseInt(localStorage.getItem('gami_bonus_total') || '0', 10);
+  const defiBonus = parseInt(localStorage.getItem(_gamiKey()) || '0', 10);
   const totalPoints = calcHarmonyFromLogs(logs) + defiBonus;
   updateHarmonyUI(totalPoints);
   // Valeurs du dernier log pour l'avatar visuel
@@ -14075,8 +14079,8 @@ function finishRituel(pts) {
   document.getElementById('rituelDone').style.display = 'block';
   document.getElementById('rituelPtsGained').textContent = '+' + pts + ' pts harmonie gagnes';
   _hcState.calm=1; _hcState.sleep=1; _hcState.hydra=1; _hcState.activ=1;
-  var bonus = parseInt(localStorage.getItem('gami_bonus_total')||'0') + pts;
-  localStorage.setItem('gami_bonus_total', bonus);
+  var bonus = parseInt(localStorage.getItem(_gamiKey())||'0') + pts;
+  localStorage.setItem(_gamiKey(), bonus);
   if (typeof updateHarmonyUI === 'function') {
     var logs = JSON.parse(localStorage.getItem('nutricare_logs')||'[]');
     var total = (typeof calcHarmonyFromLogs==='function' ? calcHarmonyFromLogs(logs) : 0) + bonus;
