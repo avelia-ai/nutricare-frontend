@@ -14369,11 +14369,15 @@ function start478Exercise() {
           var doneMsgEl=document.getElementById('rituelDoneMsg');
           if(doneMsgEl)doneMsgEl.textContent='Votre système nerveux est apaisé. La technique 4-7-8 réduit le cortisol et prépare un sommeil profond.';
           var ov=document.getElementById('rituelOverlay');
-          var exSc=document.getElementById('rituelExerciseScreen');
-          if(exSc)exSc.style.display='none';
-          if(ov){ov.style.display='flex';}
+          if(ov){
+            ov.style.display='flex';
+            ov.style.flexDirection='column';
+            ov.style.alignItems='center';
+            ov.style.justifyContent='center';
+            Array.from(ov.children).forEach(function(ch){ ch.style.display='none'; });
+          }
           var doneEl=document.getElementById('rituelDone');
-          if(doneEl)doneEl.style.display='block';
+          if(doneEl){doneEl.style.display='block';}
           var ptsEl=document.getElementById('rituelPtsGained');
           if(ptsEl)ptsEl.textContent='+15 pts harmonie gagnés';
           var bonus=parseInt(localStorage.getItem('nutricare_gami_'+new Date().toISOString().slice(0,7))||'0')+15;
