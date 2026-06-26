@@ -14186,11 +14186,15 @@ function start478Exercise() {
   var ring1 = document.getElementById('r478ring1');
   var ring2 = document.getElementById('r478ring2');
   var harmonyCanvas = document.getElementById('rituelHarmonyCanvas');
-  document.getElementById('rituelOverlay').style.display = 'none';
-  screen.style.position = 'fixed';
-  screen.style.inset = '0';
-  screen.style.zIndex = '9999';
-  screen.style.background = '#03050f';
+  var rituelOverlay = document.getElementById('rituelOverlay');
+  rituelOverlay.style.background = '#03050f';
+  rituelOverlay.style.backdropFilter = 'none';
+  var introScreen = document.getElementById('rituelIntroScreen');
+  var cdScreen = document.getElementById('rituelCountdownScreen');
+  var exScreen = document.getElementById('rituelExerciseScreen');
+  if (introScreen) introScreen.style.display = 'none';
+  if (cdScreen) cdScreen.style.display = 'none';
+  if (exScreen) exScreen.style.display = 'none';
   screen.style.display = 'flex';
 
   var _running = true, phaseIdx = 0, cycle = 1, elapsed = 0;
@@ -14357,9 +14361,9 @@ function start478Exercise() {
         if(cycle>TOTAL_CYCLES){
           _running=false; bgRunning=false;
           screen.style.display='none';
-          screen.style.position='';
-          screen.style.inset='';
-          screen.style.zIndex='';
+          var ov=document.getElementById('rituelOverlay');
+          if(ov){ov.style.background='rgba(10,5,20,0.92)';ov.style.backdropFilter='blur(8px)';}
+          if(harmonyCanvas)harmonyCanvas.parentElement.style.display='';
           var done=document.getElementById('rituelDone');
           done.style.display='block';
           var totalSec=Math.round((Date.now()-_478StartTime)/1000);
