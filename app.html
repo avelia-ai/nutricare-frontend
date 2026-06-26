@@ -3781,81 +3781,56 @@ function switchLang(lang) {
       </script>
       <img id="analysisPreview" style="display:none;max-width:300px;max-height:300px;border-radius:12px;margin-top:16px;object-fit:cover">
     </div>
-    <div id="analysisResult" style="display:none;flex-direction:column;gap:14px">
-      <div id="analysisHeroCard" style="border-radius:24px;overflow:hidden;position:relative;box-shadow:0 12px 48px rgba(200,70,30,0.22)">
-        <div id="analysisPhotoWrap" style="position:relative;height:220px;background:#1a1a1a">
-          <img id="analysisPhoto" src="" alt="" style="width:100%;height:100%;object-fit:cover;display:none">
-          <div style="position:absolute;inset:0;background:linear-gradient(170deg,rgba(0,0,0,0.05) 0%,rgba(8,3,1,0.97) 100%)"></div>
-        </div>
-        <div style="position:absolute;top:0;left:0;right:0;padding:14px 16px">
-          <div style="display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.15);border-radius:20px;padding:5px 13px">
-            <svg width="7" height="7" viewBox="0 0 8 8"><circle cx="4" cy="4" r="3" fill="#FF6B6B"><animate attributeName="opacity" values="1;0.3;1" dur="1.5s" repeatCount="indefinite"/></circle></svg>
-            <span style="font-size:10px;font-weight:700;color:white;letter-spacing:1px">ANALYSE IA</span>
+    <div id="analysisResult" style="display:none">
+      <!-- Header avec scores -->
+      <div style="background:linear-gradient(135deg,var(--coral),var(--accent));border-radius:16px;padding:18px 20px;margin-bottom:12px">
+        <div style="font-size:1rem;font-weight:700;color:white;margin-bottom:14px" id="analysisRepasNom">Analyse en cours...</div>
+        <div style="display:flex;gap:8px">
+          <div style="flex:1;background:rgba(255,255,255,0.2);border-radius:12px;padding:10px;text-align:center">
+            <div style="font-size:1.4rem;font-weight:800;color:white" id="analysisScoreSante">—</div>
+            <div style="font-size:0.6rem;color:rgba(255,255,255,0.85);text-transform:uppercase;letter-spacing:.05em">Score santé</div>
           </div>
-        </div>
-        <div style="position:absolute;bottom:0;left:0;right:0;padding:18px 18px 20px">
-          <div style="font-size:10px;font-weight:600;letter-spacing:2.5px;color:rgba(255,154,108,0.85);margin-bottom:5px;text-transform:uppercase">Repas identifie</div>
-          <div id="analysisRepasNom" style="font-size:17px;font-weight:800;color:white;line-height:1.3;margin-bottom:18px">Analyse en cours...</div>
-          <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px">
-            <div style="background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.1);border-radius:14px;padding:12px 8px;text-align:center">
-              <div style="font-size:9px;color:rgba(255,255,255,0.35);text-transform:uppercase;letter-spacing:1px;margin-bottom:5px">Sante</div>
-              <div id="analysisScoreSante" style="font-size:26px;font-weight:900;line-height:1;color:#FF6B6B">--</div>
-              <div style="margin-top:7px;height:3px;background:rgba(255,255,255,0.08);border-radius:2px"><div id="analysisScoreSanteBarFill" style="height:100%;background:#FF6B6B;border-radius:2px;width:0%;transition:width 1s"></div></div>
-            </div>
-            <div style="background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.1);border-radius:14px;padding:12px 8px;text-align:center">
-              <div style="font-size:9px;color:rgba(255,255,255,0.35);text-transform:uppercase;letter-spacing:1px;margin-bottom:5px">Pathologie</div>
-              <div id="analysisScorePatho" style="font-size:26px;font-weight:900;line-height:1;color:#FF9A3C">--</div>
-              <div style="margin-top:7px;height:3px;background:rgba(255,255,255,0.08);border-radius:2px"><div id="analysisScorePathoBarFill" style="height:100%;background:#FF9A3C;border-radius:2px;width:0%;transition:width 1s"></div></div>
-            </div>
-            <div style="background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.1);border-radius:14px;padding:12px 8px;text-align:center">
-              <div style="font-size:9px;color:rgba(255,255,255,0.35);text-transform:uppercase;letter-spacing:1px;margin-bottom:5px">Calories</div>
-              <div id="analysisCalories" style="font-size:22px;font-weight:900;color:white;line-height:1">--</div>
-              <div style="font-size:9px;color:rgba(255,255,255,0.3);margin-top:4px">kcal</div>
-            </div>
+          <div style="flex:1;background:rgba(255,255,255,0.2);border-radius:12px;padding:10px;text-align:center">
+            <div style="font-size:1.4rem;font-weight:800;color:white" id="analysisScorePatho">—</div>
+            <div style="font-size:0.6rem;color:rgba(255,255,255,0.85);text-transform:uppercase;letter-spacing:.05em">Score patho</div>
+          </div>
+          <div style="flex:1;background:rgba(255,255,255,0.2);border-radius:12px;padding:10px;text-align:center">
+            <div style="font-size:1.4rem;font-weight:800;color:white" id="analysisCalories">—</div>
+            <div style="font-size:0.6rem;color:rgba(255,255,255,0.85);text-transform:uppercase;letter-spacing:.05em">Calories</div>
           </div>
         </div>
       </div>
-      <div style="background:#FFFCFA;border-radius:22px;border:1px solid rgba(255,154,108,0.2);box-shadow:0 2px 20px rgba(230,110,70,0.07);padding:20px">
-        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px">
-          <div style="font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#FF6B6B">Macronutriments</div>
-          <div style="font-size:11px;color:#ccc" id="analysisPortion">1 portion</div>
+      <!-- Aliments + Macros -->
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px">
+        <div style="background:#FFFCFA;border-radius:14px;padding:14px;box-shadow:0 0 0 1.5px rgba(255,154,108,0.22),0 14px 32px rgba(230,110,70,0.14)">
+          <div style="font-size:0.65rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--coral);margin-bottom:10px">🍽️ Aliments</div>
+          <div id="analysisAliments"></div>
         </div>
-        <div id="analysisMacros" style="display:flex;flex-direction:column;gap:16px"></div>
-      </div>
-      <div style="background:#FFFCFA;border-radius:22px;border:1px solid rgba(255,154,108,0.2);box-shadow:0 2px 20px rgba(230,110,70,0.07);padding:20px">
-        <div style="font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#FF6B6B;margin-bottom:16px">Micronutriments</div>
-        <div id="analysisMicros" style="display:flex;flex-direction:column"></div>
-      </div>
-      <div style="background:#FFFCFA;border-radius:22px;border:1px solid rgba(255,154,108,0.2);box-shadow:0 2px 20px rgba(230,110,70,0.07);padding:18px">
-        <div style="font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#FF6B6B;margin-bottom:14px">Aliments identifies</div>
-        <div id="analysisAliments" style="display:flex;flex-wrap:wrap;gap:8px"></div>
-      </div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
-        <div style="background:#FFFCFA;border-radius:22px;border:1px solid rgba(255,154,108,0.2);box-shadow:0 2px 20px rgba(230,110,70,0.07);padding:16px">
-          <div style="display:flex;align-items:center;gap:8px;margin-bottom:14px">
-            <div style="width:30px;height:30px;border-radius:9px;background:#f0fdf4;display:flex;align-items:center;justify-content:center"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="2.2" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg></div>
-            <span style="font-size:10px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;color:#16a34a">Points forts</span>
-          </div>
-          <div id="analysisPositifs" style="display:flex;flex-direction:column;gap:10px"></div>
-        </div>
-        <div style="background:#FFFCFA;border-radius:22px;border:1px solid rgba(255,154,108,0.2);box-shadow:0 2px 20px rgba(230,110,70,0.07);padding:16px">
-          <div style="display:flex;align-items:center;gap:8px;margin-bottom:14px">
-            <div style="width:30px;height:30px;border-radius:9px;background:#fef2f2;display:flex;align-items:center;justify-content:center"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="2.2" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg></div>
-            <span style="font-size:10px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;color:#dc2626">A corriger</span>
-          </div>
-          <div id="analysisAmeliorer" style="display:flex;flex-direction:column;gap:10px"></div>
+        <div style="background:#FFFCFA;border-radius:14px;padding:14px;box-shadow:0 0 0 1.5px rgba(255,154,108,0.22),0 14px 32px rgba(230,110,70,0.14)">
+          <div style="font-size:0.65rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--coral);margin-bottom:10px">📊 Macros</div>
+          <div id="analysisMacros"></div>
         </div>
       </div>
-      <div style="background:#FFFCFA;border-radius:22px;border:1px solid rgba(255,154,108,0.2);box-shadow:0 2px 20px rgba(230,110,70,0.07);overflow:hidden">
-        <div style="background:linear-gradient(135deg,#FF6B6B,#FF9A3C);padding:16px 20px;display:flex;gap:12px;align-items:center">
-          <div style="width:38px;height:38px;border-radius:12px;background:rgba(255,255,255,0.18);display:flex;align-items:center;justify-content:center;flex-shrink:0"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg></div>
-          <div><div style="font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,0.65)">Conseil personnalise</div><div style="font-size:14px;font-weight:800;color:white;margin-top:2px">Mirella recommande</div></div>
+      <!-- Points positifs + À améliorer -->
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px">
+        <div style="background:#f0fdf4;border-radius:14px;padding:14px;box-shadow:0 2px 8px rgba(0,0,0,0.04)">
+          <div style="font-size:0.65rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#10B981;margin-bottom:10px">✅ Points positifs</div>
+          <div id="analysisPositifs"></div>
         </div>
-        <div style="padding:18px 20px"><div id="analysisConseil" style="font-size:13.5px;color:#333;line-height:1.8"></div></div>
+        <div style="background:#fff8f3;border-radius:14px;padding:14px;box-shadow:0 2px 8px rgba(0,0,0,0.04)">
+          <div style="font-size:0.65rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--coral);margin-bottom:10px">⚠️ À améliorer</div>
+          <div id="analysisAmeliorer"></div>
+        </div>
       </div>
-      <div id="analysisAlerteZone" style="display:none;background:#FFFCFA;border-radius:22px;border:1px solid rgba(239,68,68,0.25);overflow:hidden">
-        <div style="background:linear-gradient(135deg,#ef4444,#dc2626);padding:14px 18px;display:flex;gap:10px;align-items:center"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg><span style="font-size:12px;font-weight:700;color:white">Alerte sante</span></div>
-        <div style="padding:14px 18px"><div id="analysisAlerteMsg" style="font-size:13px;color:#333;line-height:1.7"></div></div></div>
+      <!-- Conseil Mirella -->
+      <div style="background:#FFFCFA;border-radius:14px;padding:16px;margin-bottom:10px;box-shadow:0 0 0 1.5px rgba(255,154,108,0.22),0 14px 32px rgba(230,110,70,0.14);border-left:4px solid var(--coral)">
+        <div style="font-size:0.65rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--coral);margin-bottom:8px">💡 Conseil Mirella</div>
+        <div style="font-size:0.83rem;color:#333;line-height:1.7" id="analysisConseil"></div>
+      </div>
+      <!-- Alerte -->
+      <div id="analysisAlerteZone" style="display:none;background:#fff0f0;border-radius:14px;padding:16px;margin-bottom:10px;border-left:4px solid #ef4444">
+        <div style="font-size:0.65rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#ef4444;margin-bottom:8px">🚨 Alerte</div>
+        <div style="font-size:0.83rem;color:#333;line-height:1.7" id="analysisAlerteMsg"></div>
       </div>
     </div>
 
@@ -8320,56 +8295,28 @@ async function previewAndAnalyze(event) {
 }
 
 function renderAnalysis(a) {
-  document.getElementById('analysisResult').style.display = 'flex';
-  document.getElementById('analysisRepasNom').textContent = a.repas_identifie || 'Repas analyse';
-  const ss = a.score_sante || 0;
-  const sp = a.score_pathologie || 0;
-  document.getElementById('analysisScoreSante').textContent = ss + '/10';
-  document.getElementById('analysisScorePatho').textContent = sp + '/10';
-  document.getElementById('analysisCalories').textContent = (a.calories_estimees || '--');
-  setTimeout(function() {
-    var bf1 = document.getElementById('analysisScoreSanteBarFill');
-    var bf2 = document.getElementById('analysisScorePathoBarFill');
-    if (bf1) bf1.style.width = (ss * 10) + '%';
-    if (bf2) bf2.style.width = (sp * 10) + '%';
-  }, 100);
-  var m = a.macronutriments || {};
-  var macros = [
-    {label:'Proteines',val:m.proteines_g,unit:'g',sub:'Acides amines essentiels',ajr:50,color:'#16a34a',bg:'#f0fdf4',barC:'linear-gradient(90deg,#4ade80,#16a34a)'},
-    {label:'Glucides',val:m.glucides_g,unit:'g',sub:'Dont sucres',ajr:300,color:'#3b82f6',bg:'#eff6ff',barC:'linear-gradient(90deg,#93c5fd,#3b82f6)'},
-    {label:'Lipides',val:m.lipides_g,unit:'g',sub:'Dont satures',ajr:70,color:'#f97316',bg:'#fff7ed',barC:'linear-gradient(90deg,#fdba74,#f97316)'},
-    {label:'Fibres',val:m.fibres_g,unit:'g',sub:'Solubles et insolubles',ajr:25,color:'#7c3aed',bg:'#faf5ff',barC:'linear-gradient(90deg,#c4b5fd,#7c3aed)'}
-  ];
-  document.getElementById('analysisMacros').innerHTML = macros.map(function(mac) {
-    var p = Math.min(100, Math.round((mac.val||0)/mac.ajr*100));
-    var id = 'mbar'+mac.label.replace(/[^a-z]/gi,'');
-    return '<div><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px"><div style="display:flex;align-items:center;gap:10px"><div style="width:32px;height:32px;border-radius:10px;background:'+mac.bg+';flex-shrink:0"></div><div><div style="font-size:13px;font-weight:600;color:#2D2D2D">'+mac.label+'</div><div style="font-size:10px;color:#bbb">'+mac.sub+'</div></div></div><div style="text-align:right"><span style="font-size:20px;font-weight:800;color:#2D2D2D">'+(mac.val||0)+'</span><span style="font-size:11px;color:#bbb">'+mac.unit+'</span><div style="font-size:10px;font-weight:600;color:'+mac.color+'">'+p+'% AJR</div></div></div><div style="height:6px;background:#f0ece8;border-radius:3px;overflow:hidden"><div id="'+id+'" style="height:100%;background:'+mac.barC+';border-radius:3px;width:0%;transition:width 1.2s"></div></div></div>';
-  }).join('');
-  setTimeout(function() { macros.forEach(function(mac) { var el=document.getElementById('mbar'+mac.label.replace(/[^a-z]/gi,'')); if(el) el.style.width=Math.min(100,Math.round((mac.val||0)/mac.ajr*100))+'%'; }); }, 150);
-  var microDefs = [
-    {label:'Vitamine C',key:'vitamine_c_mg',unit:'mg',role:'Immunite · Antioxydant',ajr:90,color:'#f97316',bg:'#fff7ed'},
-    {label:'Vitamine K',key:'vitamine_k_mcg',unit:'µg',role:'Coagulation · Os',ajr:120,color:'#16a34a',bg:'#f0fdf4'},
-    {label:'Calcium',key:'calcium_mg',unit:'mg',role:'Os · Muscles',ajr:1000,color:'#3b82f6',bg:'#eff6ff'},
-    {label:'Sodium',key:'sodium_mg',unit:'mg',role:'Pression arterielle',ajr:1500,color:'#dc2626',bg:'#fef2f2'},
-    {label:'Fer',key:'fer_mg',unit:'mg',role:'Oxygenation · Energie',ajr:14,color:'#ca8a04',bg:'#fefce8'},
-    {label:'Magnesium',key:'magnesium_mg',unit:'mg',role:'Stress · Sommeil',ajr:375,color:'#7c3aed',bg:'#faf5ff'},
-    {label:'Potassium',key:'potassium_mg',unit:'mg',role:'Coeur · Pression arterielle',ajr:2000,color:'#16a34a',bg:'#f0fdf4'},
-    {label:'Vitamine A',key:'vitamine_a_mcg',unit:'µg',role:'Vision · Peau',ajr:800,color:'#f97316',bg:'#fff7ed'}
-  ];
-  var micro = a.micronutriments || {};
-  document.getElementById('analysisMicros').innerHTML = microDefs.map(function(mc,i) {
-    var val = micro[mc.key] || 0;
-    var pct = Math.round(val/mc.ajr*100);
-    var bs,bt;
-    if (mc.label==='Sodium' && pct>60){bs='color:#b91c1c;background:#fef2f2;border:1px solid #fecaca';bt=pct+'% AJR';}    else if(pct>=80){bs='color:#15803d;background:#f0fdf4;border:1px solid #bbf7d0';bt=pct+'% AJR';}    else if(pct>=30){bs='color:#b45309;background:#fffbeb;border:1px solid #fde68a';bt=pct+'% AJR';}    else{bs='color:#b91c1c;background:#fef2f2;border:1px solid #fecaca';bt=(pct||'--')+'% AJR';}
-    var border=i<microDefs.length-1?'border-bottom:1px solid rgba(255,154,108,0.08)':'';
-    return '<div style="display:flex;justify-content:space-between;align-items:center;padding:10px 0;'+border+'"><div style="display:flex;align-items:center;gap:10px"><div style="width:26px;height:26px;border-radius:7px;background:'+mc.bg+';flex-shrink:0"></div><div><div style="font-size:13px;font-weight:600;color:#2D2D2D">'+mc.label+'</div><div style="font-size:10px;color:#bbb">'+mc.role+'</div></div></div><div style="display:flex;align-items:center;gap:10px"><span style="font-size:13px;font-weight:700;color:#2D2D2D">'+(val||'--')+(val?mc.unit:'')+'</span><span style="font-size:10px;font-weight:700;padding:3px 9px;border-radius:10px;'+bs+'">'+bt+'</span></div></div>';
-  }).join('');
-  document.getElementById('analysisAliments').innerHTML = (a.aliments||[]).map(function(item){return '<div style="display:flex;align-items:center;gap:6px;background:#FFF0E8;border:1px solid rgba(255,107,107,0.15);border-radius:24px;padding:7px 13px"><svg width="7" height="7" viewBox="0 0 8 8"><circle cx="4" cy="4" r="3" fill="#FF6B6B"/></svg><span style="font-size:12px;font-weight:500;color:#712B13">'+item+'</span></div>';}).join('');
-  document.getElementById('analysisPositifs').innerHTML = (a.points_positifs||[]).map(function(p){return '<div style="display:flex;gap:8px"><div style="width:3px;border-radius:2px;background:#bbf7d0;flex-shrink:0"></div><span style="font-size:12px;color:#333;line-height:1.5">'+p+'</span></div>';}).join('');
-  document.getElementById('analysisAmeliorer').innerHTML = (a.points_amelioration||[]).map(function(p){return '<div style="display:flex;gap:8px"><div style="width:3px;border-radius:2px;background:#fecaca;flex-shrink:0"></div><span style="font-size:12px;color:#333;line-height:1.5">'+p+'</span></div>';}).join('');
-  document.getElementById('analysisConseil').textContent = a.conseil_personnalise || '';
-  if (a.alerte_allergie) { document.getElementById('analysisAlerteZone').style.display='block'; document.getElementById('analysisAlerteMsg').textContent = a.alerte_message||''; }
+  document.getElementById('analysisResult').style.display = 'block';
+  document.getElementById('analysisRepasNom').textContent = a.repas_identifie || 'Repas analysé';
+  document.getElementById('analysisScoreSante').textContent = `${a.score_sante}/10`;
+  document.getElementById('analysisScorePatho').textContent = `${a.score_pathologie}/10`;
+  document.getElementById('analysisCalories').textContent = `${a.calories_estimees} kcal`;
+  document.getElementById('analysisAliments').innerHTML = (a.aliments || []).map(i => `<div style="font-size:0.82rem;padding:3px 0;border-bottom:1px solid #E6F1FB;color:#2D2D2D">• ${i}</div>`).join('');
+  const m = a.macronutriments || {};
+  document.getElementById('analysisMacros').innerHTML = `
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+      ${[['Protéines', m.proteines_g, 'g'], ['Glucides', m.glucides_g, 'g'], ['Lipides', m.lipides_g, 'g'], ['Fibres', m.fibres_g, 'g']].map(([label, val, unit]) => `
+      <div style="background:#F0F6FF;border-radius: 4px;padding:10px;text-align:center">
+        <div style="font-family:'DM Mono',monospace;font-size:1.1rem;font-weight:700;color:#2D2D2D">${val || 0}${unit}</div>
+        <div style="font-size:0.7rem;color:var(--accent)">${label}</div>
+      </div>`).join('')}
+    </div>`;
+  document.getElementById('analysisPositifs').innerHTML = (a.points_positifs || []).map(p => `<div style="font-size:0.82rem;padding:4px 0;color:#2D2D2D"> ${p}</div>`).join('');
+  document.getElementById('analysisAmeliorer').innerHTML = (a.points_amelioration || []).map(p => `<div style="font-size:0.82rem;padding:4px 0;color:#2D2D2D"> ${p}</div>`).join('');
+  document.getElementById('analysisConseil').textContent = ' ' + (a.conseil_personnalise || '');
+  if (a.alerte_allergie) {
+    document.getElementById('analysisAlerteZone').style.display = 'block';
+    document.getElementById('analysisAlerteMsg').textContent = ' ' + a.alerte_message;
+  }
   loadAnalysisHistory();
 }
 
