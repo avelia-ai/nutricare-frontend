@@ -14197,6 +14197,13 @@ function start478Exercise() {
   if (exScreen) exScreen.style.display = 'none';
   screen.style.display = 'flex';
 
+  setTimeout(function() {
+    var bgCvResize = document.getElementById('r478bg');
+    var pCvResize = document.getElementById('r478particles');
+    if (bgCvResize) { bgCvResize.width = screen.offsetWidth || window.innerWidth; bgCvResize.height = screen.offsetHeight || window.innerHeight; }
+    if (pCvResize) { pCvResize.width = screen.offsetWidth || window.innerWidth; pCvResize.height = screen.offsetHeight || window.innerHeight; }
+  }, 50);
+
   var _running = true, phaseIdx = 0, cycle = 1, elapsed = 0;
   var _phaseStart = null, _lastSec = -1;
   var _478StartTime = Date.now();
@@ -14223,7 +14230,7 @@ function start478Exercise() {
   var bgCtx = bgCv ? bgCv.getContext('2d') : null;
   var bgRunning = true;
   if (bgCtx) {
-    bgCv.width = window.innerWidth; bgCv.height = window.innerHeight;
+    bgCv.width = screen.offsetWidth || window.innerWidth; bgCv.height = screen.offsetHeight || window.innerHeight;
     var stars478 = Array.from({length:140}, function() {
       return {x:Math.random()*bgCv.width, y:Math.random()*bgCv.height,
               r:Math.random()*1.6+0.2, ph:Math.random()*Math.PI*2,
@@ -14273,7 +14280,7 @@ function start478Exercise() {
   var pCtx = pCv ? pCv.getContext('2d') : null;
   var particles478 = [];
   if (pCtx) {
-    pCv.width = window.innerWidth; pCv.height = window.innerHeight;
+    pCv.width = screen.offsetWidth || window.innerWidth; pCv.height = screen.offsetHeight || window.innerHeight;
     var pSpawnT=0;
     function spawnP478() {
       if (!currentPhase) return;
