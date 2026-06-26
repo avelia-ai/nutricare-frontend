@@ -947,7 +947,7 @@ window.onIaMenusToggle = function() {
   var track = document.getElementById('iaToggleTrack');
   var thumb = document.getElementById('iaToggleThumb');
   if (track) track.style.background = enabled ? '#FF6B6B' : '#e0dbd8';
-  if (thumb) { thumb.style.transform = enabled ? 'translateX(20px)' : 'translateX(0)'; thumb.style.right = 'auto'; thumb.style.left = '3px'; }
+  if (thumb) thumb.style.transform = enabled ? 'translateX(20px)' : 'translateX(0)';
   if (typeof updateNutritionPanel === 'function') updateNutritionPanel();
 };
 window.initIaMenus = function() {
@@ -3961,7 +3961,7 @@ function switchLang(lang) {
           <div onclick="event.stopPropagation();var cb=document.getElementById('iaMenusEnabled');cb.checked=!cb.checked;window.onIaMenusToggle();" style="position:relative;width:44px;height:24px;cursor:pointer">
             <input type="checkbox" id="iaMenusEnabled" onchange="window.onIaMenusToggle()" style="opacity:0;width:0;height:0;position:absolute">
             <div id="iaToggleTrack" style="position:absolute;inset:0;background:#FF6B6B;border-radius:12px;transition:.2s"></div>
-            <div id="iaToggleThumb" style="position:absolute;top:3px;right:3px;width:18px;height:18px;background:white;border-radius:50%;transition:.2s"></div>
+            <div id="iaToggleThumb" style="position:absolute;top:3px;left:3px;width:18px;height:18px;background:white;border-radius:50%;transition:.2s;transform:translateX(20px)"></div>
           </div>
         </div>
       </div>
