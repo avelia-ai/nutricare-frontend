@@ -14625,9 +14625,9 @@ function _drawMoon(ctx, W, H, t) {
 }
 
 function _drawLandscape(ctx, W, H, t) {
-  var horizonY = H * 0.82;
+  var horizonY = H * 0.78;
   var colBack = _lerpColor([110,65,42], [28,17,42], t);
-  ctx.fillStyle = _rgba(colBack, 0.85);
+  ctx.fillStyle = _rgb(colBack);
   ctx.beginPath();
   ctx.moveTo(0, H);
   ctx.lineTo(0, horizonY - H*0.035);
@@ -14642,12 +14642,11 @@ function _drawLandscape(ctx, W, H, t) {
   ctx.fillStyle = _rgb(col);
   ctx.beginPath();
   ctx.moveTo(0, H);
-  // Trois collines distinctes avec creux nets entre elles
-  ctx.lineTo(0, horizonY + H*0.015);
-  ctx.quadraticCurveTo(W*0.14, horizonY - H*0.075, W*0.28, horizonY + H*0.02);
-  ctx.quadraticCurveTo(W*0.40, horizonY + H*0.04, W*0.50, horizonY + H*0.015);
-  ctx.quadraticCurveTo(W*0.62, horizonY - H*0.085, W*0.76, horizonY + H*0.015);
-  ctx.quadraticCurveTo(W*0.88, horizonY + H*0.03, W, horizonY + H*0.01);
+  // Collines douces et espacées
+  ctx.lineTo(0, horizonY + H*0.02);
+  ctx.quadraticCurveTo(W*0.22, horizonY - H*0.075, W*0.45, horizonY + H*0.01);
+  ctx.quadraticCurveTo(W*0.65, horizonY - H*0.09, W*0.85, horizonY + H*0.008);
+  ctx.quadraticCurveTo(W*0.94, horizonY - H*0.03, W, horizonY + H*0.02);
   ctx.lineTo(W, H);
   ctx.closePath();
   ctx.fill();
@@ -14661,7 +14660,7 @@ function _drawLandscape(ctx, W, H, t) {
   ];
   trees.forEach(function(tree) {
     var tx = W*tree.x, th = H*tree.h, tw = W*tree.w;
-    var ty = horizonY - th + H*0.04;
+    var ty = horizonY - th - H*0.03;
     // tronc
     ctx.fillRect(tx-tw*0.12, ty+th*0.7, tw*0.24, th*0.4);
     // feuillage triangulaire (3 étages, sapin net)
