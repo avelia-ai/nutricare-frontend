@@ -11845,6 +11845,39 @@ function toggleQuickMenu() {
     <div id="soirProgressDots" style="display:flex;gap:8px"></div>
   </div>
 </div>
+<div id="rituel478Screen" style="display:none;position:fixed;inset:0;z-index:10001;flex-direction:column;align-items:center;justify-content:center;text-align:center;background:#03050f;overflow:hidden">
+  <canvas id="r478bg" style="position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:0"></canvas>
+  <canvas id="r478particles" style="position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:1"></canvas>
+  <div style="position:relative;z-index:2;display:flex;flex-direction:column;align-items:center">
+    <div id="rituel478Phase" style="color:white;font-size:1.4rem;font-weight:300;letter-spacing:4px;text-transform:uppercase;min-height:2rem;opacity:1;transition:opacity 0.3s"></div>
+    <div id="rituel478Sub" style="color:rgba(255,255,255,0.35);font-size:0.7rem;letter-spacing:3px;text-transform:uppercase;margin-top:6px;margin-bottom:28px;min-height:1rem"></div>
+    <div style="position:relative;width:240px;height:240px;display:flex;align-items:center;justify-content:center">
+      <div id="rituel478Halo" style="position:absolute;inset:-60px;border-radius:50%;opacity:0;transition:background 1.2s ease"></div>
+      <div id="r478ring1" style="position:absolute;width:240px;height:240px;border-radius:50%;border:1px solid rgba(255,255,255,0.06);left:50%;top:50%;transform:translate(-50%,-50%);transition:border-color 1.2s"></div>
+      <div id="r478ring2" style="position:absolute;width:280px;height:280px;border-radius:50%;border:1px solid rgba(255,255,255,0.03);left:50%;top:50%;transform:translate(-50%,-50%);transition:border-color 1.2s"></div>
+      <div id="r478ring3" style="position:absolute;width:330px;height:330px;border-radius:50%;border:1px solid rgba(255,255,255,0.015);left:50%;top:50%;transform:translate(-50%,-50%)"></div>
+      <svg style="position:absolute;inset:0;width:240px;height:240px;transform:rotate(-90deg)" viewBox="0 0 240 240">
+        <circle cx="120" cy="120" r="113" fill="none" stroke="rgba(255,255,255,0.04)" stroke-width="1.5"/>
+        <circle id="rituel478Arc" cx="120" cy="120" r="113" fill="none" stroke="rgba(140,210,255,0.9)" stroke-width="2" stroke-linecap="round" stroke-dasharray="710" stroke-dashoffset="710" style="transition:stroke-dashoffset 0.1s linear,stroke 1.2s ease"/>
+        <circle id="r478pw1" cx="120" cy="120" r="100" fill="none" stroke="rgba(140,210,255,0.18)" stroke-width="1.5" stroke-dasharray="628" stroke-dashoffset="628" style="transition:stroke 1.2s ease"/>
+        <circle id="r478pw2" cx="120" cy="120" r="87" fill="none" stroke="rgba(140,210,255,0.09)" stroke-width="1" stroke-dasharray="546" stroke-dashoffset="546" style="transition:stroke 1.2s ease"/>
+      </svg>
+      <div id="rituel478Circle" style="width:190px;height:190px;border-radius:50%;display:flex;align-items:center;justify-content:center;position:relative;z-index:2;transition:transform 4s cubic-bezier(0.25,0.1,0.25,1),background 1.2s ease,box-shadow 1.5s ease">
+        <div id="rituel478Counter" style="color:white;font-size:3rem;font-weight:100;font-family:monospace;line-height:1"></div>
+      </div>
+    </div>
+    <div style="display:flex;gap:10px;margin-top:32px;align-items:center">
+      <div id="r478dot1" style="width:7px;height:7px;border-radius:50%;background:rgba(255,255,255,0.12);transition:all 0.5s ease"></div>
+      <div id="r478dot2" style="width:7px;height:7px;border-radius:50%;background:rgba(255,255,255,0.12);transition:all 0.5s ease"></div>
+      <div id="r478dot3" style="width:7px;height:7px;border-radius:50%;background:rgba(255,255,255,0.12);transition:all 0.5s ease"></div>
+      <div id="r478dot4" style="width:7px;height:7px;border-radius:50%;background:rgba(255,255,255,0.12);transition:all 0.5s ease"></div>
+    </div>
+    <div id="rituel478CycleCount" style="color:rgba(255,255,255,0.25);font-size:0.68rem;letter-spacing:2px;margin-top:10px"></div>
+    <div style="width:180px;height:2px;background:rgba(255,255,255,0.06);border-radius:1px;margin-top:14px;overflow:hidden">
+      <div id="rituel478Progress" style="height:100%;width:0%;border-radius:1px;transition:width 1s linear"></div>
+    </div>
+  </div>
+</div>
 <div id="rituelBodyScanScreen" style="display:none;position:fixed;inset:0;z-index:10000;flex-direction:column;align-items:center;justify-content:flex-start;overflow:hidden">
   <canvas id="bsAuroraCanvas" style="position:absolute;inset:0;width:100%;height:100%;z-index:0;pointer-events:none"></canvas>
   <button onclick="closeRituel()" style="position:absolute;top:20px;right:20px;background:rgba(255,255,255,0.1);border:none;color:white;width:40px;height:40px;border-radius:50%;font-size:1.2rem;cursor:pointer;z-index:3">✕</button>
@@ -13326,40 +13359,7 @@ function openSubscriptionModal(context) {
   </div>
   <div id="rituelInstruction" style="color:white;font-size:1.3rem;font-weight:600;margin-top:28px;min-height:2em;text-align:center"></div>
   <div id="rituelCounter" style="color:rgba(255,255,255,0.5);font-size:2.5rem;font-weight:300;font-family:monospace;margin-top:8px"></div>
-  <!-- ECRAN 478 -->
-  <div id="rituel478Screen" style="display:none;flex-direction:column;align-items:center;justify-content:center;text-align:center;position:relative;overflow:hidden;min-height:100vh">
-    <canvas id="r478bg" style="position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:0"></canvas>
-    <canvas id="r478particles" style="position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:1"></canvas>
-    <div style="position:relative;z-index:2;display:flex;flex-direction:column;align-items:center">
-      <div id="rituel478Phase" style="color:white;font-size:1.4rem;font-weight:300;letter-spacing:4px;text-transform:uppercase;min-height:2rem;opacity:1;transition:opacity 0.3s"></div>
-      <div id="rituel478Sub" style="color:rgba(255,255,255,0.35);font-size:0.7rem;letter-spacing:3px;text-transform:uppercase;margin-top:6px;margin-bottom:28px;min-height:1rem"></div>
-      <div style="position:relative;width:240px;height:240px;display:flex;align-items:center;justify-content:center">
-        <div id="rituel478Halo" style="position:absolute;inset:-60px;border-radius:50%;opacity:0;transition:background 1.2s ease"></div>
-        <div id="r478ring1" style="position:absolute;width:240px;height:240px;border-radius:50%;border:1px solid rgba(255,255,255,0.06);left:50%;top:50%;transform:translate(-50%,-50%);transition:border-color 1.2s"></div>
-        <div id="r478ring2" style="position:absolute;width:280px;height:280px;border-radius:50%;border:1px solid rgba(255,255,255,0.03);left:50%;top:50%;transform:translate(-50%,-50%);transition:border-color 1.2s"></div>
-        <div id="r478ring3" style="position:absolute;width:330px;height:330px;border-radius:50%;border:1px solid rgba(255,255,255,0.015);left:50%;top:50%;transform:translate(-50%,-50%)"></div>
-        <svg style="position:absolute;inset:0;width:240px;height:240px;transform:rotate(-90deg)" viewBox="0 0 240 240">
-          <circle cx="120" cy="120" r="113" fill="none" stroke="rgba(255,255,255,0.04)" stroke-width="1.5"/>
-          <circle id="rituel478Arc" cx="120" cy="120" r="113" fill="none" stroke="rgba(140,210,255,0.9)" stroke-width="2" stroke-linecap="round" stroke-dasharray="710" stroke-dashoffset="710" style="transition:stroke-dashoffset 0.1s linear,stroke 1.2s ease"/>
-          <circle id="r478pw1" cx="120" cy="120" r="100" fill="none" stroke="rgba(140,210,255,0.18)" stroke-width="1.5" stroke-dasharray="628" stroke-dashoffset="628" style="transition:stroke 1.2s ease"/>
-          <circle id="r478pw2" cx="120" cy="120" r="87" fill="none" stroke="rgba(140,210,255,0.09)" stroke-width="1" stroke-dasharray="546" stroke-dashoffset="546" style="transition:stroke 1.2s ease"/>
-        </svg>
-        <div id="rituel478Circle" style="width:190px;height:190px;border-radius:50%;display:flex;align-items:center;justify-content:center;position:relative;z-index:2;transition:transform 4s cubic-bezier(0.25,0.1,0.25,1),background 1.2s ease,box-shadow 1.5s ease">
-          <div id="rituel478Counter" style="color:white;font-size:3rem;font-weight:100;font-family:monospace;line-height:1"></div>
-        </div>
-      </div>
-      <div style="display:flex;gap:10px;margin-top:32px;align-items:center" id="rituel478CycleDots">
-        <div id="r478dot1" style="width:7px;height:7px;border-radius:50%;background:rgba(255,255,255,0.12);transition:all 0.5s ease"></div>
-        <div id="r478dot2" style="width:7px;height:7px;border-radius:50%;background:rgba(255,255,255,0.12);transition:all 0.5s ease"></div>
-        <div id="r478dot3" style="width:7px;height:7px;border-radius:50%;background:rgba(255,255,255,0.12);transition:all 0.5s ease"></div>
-        <div id="r478dot4" style="width:7px;height:7px;border-radius:50%;background:rgba(255,255,255,0.12);transition:all 0.5s ease"></div>
-      </div>
-      <div id="rituel478CycleCount" style="color:rgba(255,255,255,0.25);font-size:0.68rem;letter-spacing:2px;margin-top:10px"></div>
-      <div style="width:180px;height:2px;background:rgba(255,255,255,0.06);border-radius:1px;margin-top:14px;overflow:hidden">
-        <div id="rituel478Progress" style="height:100%;width:0%;border-radius:1px;transition:width 1s linear"></div>
-      </div>
-    </div>
-  </div>
+
   <!-- ECRAN BODY SCAN (plein écran, hors rituelExerciseScreen) -->
   <div id="rituelDone" style="display:none;text-align:center;padding:32px 24px;max-width:360px;margin:0 auto">
     <div style="font-size:3.5rem;margin-bottom:16px;animation:rituelFloat 3s ease-in-out infinite">🌟</div>
@@ -14186,15 +14186,7 @@ function start478Exercise() {
   var ring1 = document.getElementById('r478ring1');
   var ring2 = document.getElementById('r478ring2');
   var harmonyCanvas = document.getElementById('rituelHarmonyCanvas');
-  var rituelOverlay = document.getElementById('rituelOverlay');
-  rituelOverlay.style.background = '#03050f';
-  rituelOverlay.style.backdropFilter = 'none';
-  var introScreen = document.getElementById('rituelIntroScreen');
-  var cdScreen = document.getElementById('rituelCountdownScreen');
-  var exScreen = document.getElementById('rituelExerciseScreen');
-  if (introScreen) introScreen.style.display = 'none';
-  if (cdScreen) cdScreen.style.display = 'none';
-  if (exScreen) exScreen.style.display = 'none';
+  document.getElementById('rituelOverlay').style.display = 'none';
   screen.style.display = 'flex';
 
   setTimeout(function() {
@@ -14368,9 +14360,7 @@ function start478Exercise() {
         if(cycle>TOTAL_CYCLES){
           _running=false; bgRunning=false;
           screen.style.display='none';
-          var ov=document.getElementById('rituelOverlay');
-          if(ov){ov.style.background='rgba(10,5,20,0.92)';ov.style.backdropFilter='blur(8px)';}
-          if(harmonyCanvas)harmonyCanvas.parentElement.style.display='';
+          document.getElementById('rituelOverlay').style.display = 'none';
           var done=document.getElementById('rituelDone');
           done.style.display='block';
           var totalSec=Math.round((Date.now()-_478StartTime)/1000);
