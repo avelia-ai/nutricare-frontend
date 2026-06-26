@@ -13327,36 +13327,38 @@ function openSubscriptionModal(context) {
   <div id="rituelInstruction" style="color:white;font-size:1.3rem;font-weight:600;margin-top:28px;min-height:2em;text-align:center"></div>
   <div id="rituelCounter" style="color:rgba(255,255,255,0.5);font-size:2.5rem;font-weight:300;font-family:monospace;margin-top:8px"></div>
   <!-- ECRAN 478 -->
-  <div id="rituel478Screen" style="display:none;flex-direction:column;align-items:center;justify-content:center;text-align:center">
-    <div style="color:white;font-size:1.1rem;font-weight:700;margin-bottom:4px;letter-spacing:1px">Technique 4-7-8</div>
-    <div style="display:flex;gap:8px;margin-bottom:32px;align-items:center" id="rituel478CycleDots">
-      <div class="r478dot" id="r478dot1" style="width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,0.15);transition:all 0.4s ease"></div>
-      <div class="r478dot" id="r478dot2" style="width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,0.15);transition:all 0.4s ease"></div>
-      <div class="r478dot" id="r478dot3" style="width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,0.15);transition:all 0.4s ease"></div>
-      <div class="r478dot" id="r478dot4" style="width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,0.15);transition:all 0.4s ease"></div>
-    </div>
-    <!-- Cercle de respiration -->
-    <div style="position:relative;width:260px;height:260px;display:flex;align-items:center;justify-content:center">
-      <!-- Halo externe -->
-      <div id="rituel478Halo" style="position:absolute;width:260px;height:260px;border-radius:50%;background:radial-gradient(circle,rgba(120,180,255,0.15) 0%,transparent 70%);transition:all 0.3s ease"></div>
-      <!-- Anneau de progression -->
-      <svg style="position:absolute;inset:0" viewBox="0 0 260 260">
-        <circle cx="130" cy="130" r="120" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
-        <circle id="rituel478Arc" cx="130" cy="130" r="120" fill="none" stroke="rgba(120,180,255,0.6)" stroke-width="3" stroke-linecap="round" stroke-dasharray="753.98" stroke-dashoffset="753.98" transform="rotate(-90 130 130)" style="transition:stroke 0.8s ease"/>
-      </svg>
-      <!-- Cercle central qui respire -->
-      <div id="rituel478Circle" style="position:relative;width:140px;height:140px;border-radius:50%;background:radial-gradient(circle,rgba(120,180,255,0.9) 0%,rgba(80,120,255,0.6) 60%,transparent 100%);box-shadow:0 0 40px rgba(120,180,255,0.5);transition:transform 0.3s ease,background 0.8s ease,box-shadow 0.8s ease;display:flex;align-items:center;justify-content:center">
-        <div id="rituel478Counter" style="color:white;font-size:2.8rem;font-weight:200;font-family:monospace;line-height:1"></div>
+  <div id="rituel478Screen" style="display:none;flex-direction:column;align-items:center;justify-content:center;text-align:center;position:relative;overflow:hidden;min-height:100vh">
+    <canvas id="r478bg" style="position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:0"></canvas>
+    <canvas id="r478particles" style="position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:1"></canvas>
+    <div style="position:relative;z-index:2;display:flex;flex-direction:column;align-items:center">
+      <div id="rituel478Phase" style="color:white;font-size:1.4rem;font-weight:300;letter-spacing:4px;text-transform:uppercase;min-height:2rem;opacity:1;transition:opacity 0.3s"></div>
+      <div id="rituel478Sub" style="color:rgba(255,255,255,0.35);font-size:0.7rem;letter-spacing:3px;text-transform:uppercase;margin-top:6px;margin-bottom:28px;min-height:1rem"></div>
+      <div style="position:relative;width:240px;height:240px;display:flex;align-items:center;justify-content:center">
+        <div id="rituel478Halo" style="position:absolute;inset:-60px;border-radius:50%;opacity:0;transition:background 1.2s ease"></div>
+        <div id="r478ring1" style="position:absolute;width:240px;height:240px;border-radius:50%;border:1px solid rgba(255,255,255,0.06);left:50%;top:50%;transform:translate(-50%,-50%);transition:border-color 1.2s"></div>
+        <div id="r478ring2" style="position:absolute;width:280px;height:280px;border-radius:50%;border:1px solid rgba(255,255,255,0.03);left:50%;top:50%;transform:translate(-50%,-50%);transition:border-color 1.2s"></div>
+        <div id="r478ring3" style="position:absolute;width:330px;height:330px;border-radius:50%;border:1px solid rgba(255,255,255,0.015);left:50%;top:50%;transform:translate(-50%,-50%)"></div>
+        <svg style="position:absolute;inset:0;width:240px;height:240px;transform:rotate(-90deg)" viewBox="0 0 240 240">
+          <circle cx="120" cy="120" r="113" fill="none" stroke="rgba(255,255,255,0.04)" stroke-width="1.5"/>
+          <circle id="rituel478Arc" cx="120" cy="120" r="113" fill="none" stroke="rgba(140,210,255,0.9)" stroke-width="2" stroke-linecap="round" stroke-dasharray="710" stroke-dashoffset="710" style="transition:stroke-dashoffset 0.1s linear,stroke 1.2s ease"/>
+          <circle id="r478pw1" cx="120" cy="120" r="100" fill="none" stroke="rgba(140,210,255,0.18)" stroke-width="1.5" stroke-dasharray="628" stroke-dashoffset="628" style="transition:stroke 1.2s ease"/>
+          <circle id="r478pw2" cx="120" cy="120" r="87" fill="none" stroke="rgba(140,210,255,0.09)" stroke-width="1" stroke-dasharray="546" stroke-dashoffset="546" style="transition:stroke 1.2s ease"/>
+        </svg>
+        <div id="rituel478Circle" style="width:190px;height:190px;border-radius:50%;display:flex;align-items:center;justify-content:center;position:relative;z-index:2;transition:transform 4s cubic-bezier(0.25,0.1,0.25,1),background 1.2s ease,box-shadow 1.5s ease">
+          <div id="rituel478Counter" style="color:white;font-size:3rem;font-weight:100;font-family:monospace;line-height:1"></div>
+        </div>
+      </div>
+      <div style="display:flex;gap:10px;margin-top:32px;align-items:center" id="rituel478CycleDots">
+        <div id="r478dot1" style="width:7px;height:7px;border-radius:50%;background:rgba(255,255,255,0.12);transition:all 0.5s ease"></div>
+        <div id="r478dot2" style="width:7px;height:7px;border-radius:50%;background:rgba(255,255,255,0.12);transition:all 0.5s ease"></div>
+        <div id="r478dot3" style="width:7px;height:7px;border-radius:50%;background:rgba(255,255,255,0.12);transition:all 0.5s ease"></div>
+        <div id="r478dot4" style="width:7px;height:7px;border-radius:50%;background:rgba(255,255,255,0.12);transition:all 0.5s ease"></div>
+      </div>
+      <div id="rituel478CycleCount" style="color:rgba(255,255,255,0.25);font-size:0.68rem;letter-spacing:2px;margin-top:10px"></div>
+      <div style="width:180px;height:2px;background:rgba(255,255,255,0.06);border-radius:1px;margin-top:14px;overflow:hidden">
+        <div id="rituel478Progress" style="height:100%;width:0%;border-radius:1px;transition:width 1s linear"></div>
       </div>
     </div>
-    <!-- Phase et instruction -->
-    <div id="rituel478Phase" style="color:white;font-size:1.4rem;font-weight:600;margin-top:28px;min-height:1.8em;letter-spacing:0.5px"></div>
-    <div id="rituel478Sub" style="color:rgba(255,255,255,0.45);font-size:0.82rem;margin-top:6px;letter-spacing:1px"></div>
-    <!-- Barre de progression globale -->
-    <div style="width:200px;height:3px;background:rgba(255,255,255,0.1);border-radius:2px;margin-top:28px;overflow:hidden">
-      <div id="rituel478Progress" style="height:100%;width:0%;background:linear-gradient(90deg,rgba(120,180,255,0.8),rgba(180,120,255,0.8));border-radius:2px;transition:width 1s linear"></div>
-    </div>
-    <div id="rituel478CycleCount" style="color:rgba(255,255,255,0.4);font-size:0.75rem;margin-top:10px;letter-spacing:1px"></div>
   </div>
   <!-- ECRAN BODY SCAN (plein écran, hors rituelExerciseScreen) -->
   <div id="rituelDone" style="display:none;text-align:center;padding:32px 24px;max-width:360px;margin:0 auto">
@@ -14152,103 +14154,54 @@ function finishRituel(pts) {
 
 function start478Exercise() {
   var PHASES = [
-    { label: 'Inspirez', sub: '4 secondes · par le nez', dur: 4, color: 'rgba(100,180,255,0.9)', glow: 'rgba(100,180,255,0.5)', arcColor: 'rgba(100,180,255,0.8)', scale: 'scale(1.28)', hold: false },
-    { label: 'Retenez', sub: '7 secondes · poumons pleins', dur: 7, color: 'rgba(180,130,255,0.9)', glow: 'rgba(180,130,255,0.5)', arcColor: 'rgba(180,130,255,0.8)', scale: 'scale(1.28)', hold: true },
-    { label: 'Expirez', sub: '8 secondes · par la bouche', dur: 8, color: 'rgba(100,220,180,0.9)', glow: 'rgba(100,220,180,0.4)', arcColor: 'rgba(100,220,180,0.8)', scale: 'scale(0.82)', hold: false }
+    {label:'Inspirez',sub:'par le nez · doucement',dur:4,
+     orb:'radial-gradient(circle at 38% 32%,rgba(160,210,255,0.95),rgba(60,130,230,0.75) 55%,rgba(10,30,100,0.3))',
+     shadow:'0 0 80px rgba(80,160,255,0.5),0 0 160px rgba(80,160,255,0.15)',
+     halo:'radial-gradient(circle,rgba(80,150,255,0.3),transparent 70%)',
+     arc:'rgba(140,210,255,0.9)',bar:'rgba(140,210,255,0.8)',pw:'rgba(100,180,255,',
+     ring1:'rgba(100,180,255,0.12)',scale:1.32,pColor:[100,180,255]},
+    {label:'Retenez',sub:'poumons pleins · immobile',dur:7,
+     orb:'radial-gradient(circle at 38% 32%,rgba(210,160,255,0.95),rgba(140,70,230,0.75) 55%,rgba(40,10,100,0.3))',
+     shadow:'0 0 80px rgba(160,100,255,0.5),0 0 160px rgba(160,100,255,0.15)',
+     halo:'radial-gradient(circle,rgba(150,90,255,0.3),transparent 70%)',
+     arc:'rgba(210,170,255,0.9)',bar:'rgba(210,170,255,0.8)',pw:'rgba(180,130,255,',
+     ring1:'rgba(180,130,255,0.12)',scale:1.32,pColor:[180,130,255]},
+    {label:'Expirez',sub:'par la bouche · lentement',dur:8,
+     orb:'radial-gradient(circle at 38% 32%,rgba(100,240,200,0.95),rgba(30,160,130,0.75) 55%,rgba(5,50,50,0.3))',
+     shadow:'0 0 80px rgba(60,200,160,0.5),0 0 160px rgba(60,200,160,0.15)',
+     halo:'radial-gradient(circle,rgba(40,180,140,0.3),transparent 70%)',
+     arc:'rgba(100,240,200,0.9)',bar:'rgba(100,240,200,0.8)',pw:'rgba(80,210,170,',
+     ring1:'rgba(80,210,170,0.12)',scale:0.75,pColor:[80,210,170]}
   ];
   var TOTAL_CYCLES = 4;
   var TOTAL_SEC = PHASES.reduce(function(s,p){return s+p.dur;},0) * TOTAL_CYCLES;
+  var CIRC=710, CW1=628, CW2=546;
+
   var screen = document.getElementById('rituel478Screen');
   var circle = document.getElementById('rituel478Circle');
   var counter = document.getElementById('rituel478Counter');
   var phaseEl = document.getElementById('rituel478Phase');
   var subEl = document.getElementById('rituel478Sub');
   var arc = document.getElementById('rituel478Arc');
+  var pw1 = document.getElementById('r478pw1');
+  var pw2 = document.getElementById('r478pw2');
   var progress = document.getElementById('rituel478Progress');
   var cycleEl = document.getElementById('rituel478CycleCount');
   var halo = document.getElementById('rituel478Halo');
-
-  // Cacher le canvas générique du haut
+  var ring1 = document.getElementById('r478ring1');
+  var ring2 = document.getElementById('r478ring2');
   var harmonyCanvas = document.getElementById('rituelHarmonyCanvas');
   if (harmonyCanvas) harmonyCanvas.parentElement.style.display = 'none';
   document.getElementById('rituelTitle') && (document.getElementById('rituelTitle').style.display = 'none');
   document.getElementById('rituelPhase') && (document.getElementById('rituelPhase').style.display = 'none');
-
-  // Fond ciel étoilé animé
-  var existingCanvas = document.getElementById('rituel478StarCanvas');
-  if (!existingCanvas) {
-    var starCanvas = document.createElement('canvas');
-    starCanvas.id = 'rituel478StarCanvas';
-    starCanvas.style.cssText = 'position:fixed;inset:0;width:100%;height:100%;z-index:-1;pointer-events:none';
-    document.getElementById('rituelOverlay').prepend(starCanvas);
-    var ctx = starCanvas.getContext('2d');
-    var W = starCanvas.width = window.innerWidth;
-    var H = starCanvas.height = window.innerHeight;
-    // Générer étoiles
-    var stars = Array.from({length: 120}, function() {
-      return { x: Math.random()*W, y: Math.random()*H, r: Math.random()*1.5+0.3, speed: Math.random()*0.8+0.2, phase: Math.random()*Math.PI*2 };
-    });
-    // Étoiles filantes
-    var shootingStars = [];
-    function spawnShootingStar() {
-      shootingStars.push({ x: Math.random()*W*0.7, y: Math.random()*H*0.4, len: Math.random()*80+60, angle: Math.PI/5, speed: Math.random()*6+6, alpha: 1, active: true });
-    }
-    var _starRunning = true;
-    var lastShoot = 0;
-    function drawStars(ts) {
-      if (!_starRunning) return;
-      ctx.clearRect(0,0,W,H);
-      // Fond dégradé nuit
-      var grad = ctx.createLinearGradient(0,0,0,H);
-      grad.addColorStop(0, 'rgba(5,8,30,1)');
-      grad.addColorStop(1, 'rgba(10,5,25,1)');
-      ctx.fillStyle = grad;
-      ctx.fillRect(0,0,W,H);
-      // Étoiles scintillantes
-      stars.forEach(function(s) {
-        s.phase += 0.02 * s.speed;
-        var alpha = 0.4 + 0.6 * Math.abs(Math.sin(s.phase));
-        ctx.beginPath();
-        ctx.arc(s.x, s.y, s.r, 0, Math.PI*2);
-        ctx.fillStyle = 'rgba(255,255,255,' + alpha + ')';
-        ctx.shadowBlur = 4;
-        ctx.shadowColor = 'rgba(180,200,255,0.8)';
-        ctx.fill();
-      });
-      ctx.shadowBlur = 0;
-      // Étoiles filantes
-      if (ts - lastShoot > 3500 + Math.random()*3000) { spawnShootingStar(); lastShoot = ts; }
-      shootingStars.forEach(function(ss, i) {
-        if (!ss.active) return;
-        ss.x += Math.cos(ss.angle) * ss.speed;
-        ss.y += Math.sin(ss.angle) * ss.speed;
-        ss.alpha -= 0.025;
-        if (ss.alpha <= 0) { ss.active = false; return; }
-        ctx.beginPath();
-        ctx.moveTo(ss.x, ss.y);
-        ctx.lineTo(ss.x - Math.cos(ss.angle)*ss.len, ss.y - Math.sin(ss.angle)*ss.len);
-        var g = ctx.createLinearGradient(ss.x, ss.y, ss.x - Math.cos(ss.angle)*ss.len, ss.y - Math.sin(ss.angle)*ss.len);
-        g.addColorStop(0, 'rgba(255,255,255,' + ss.alpha + ')');
-        g.addColorStop(1, 'rgba(255,255,255,0)');
-        ctx.strokeStyle = g;
-        ctx.lineWidth = 1.5;
-        ctx.stroke();
-      });
-      shootingStars = shootingStars.filter(function(ss){ return ss.active; });
-      requestAnimationFrame(drawStars);
-    }
-    requestAnimationFrame(drawStars);
-    window._stopStars478 = function() { _starRunning = false; starCanvas.remove(); };
-  }
-
   screen.style.display = 'flex';
-  var phaseIdx = 0, cycle = 1, elapsed = 0;
-  var _running = true;
-  var _phaseStart = null, _phaseElapsed = 0;
-  var circumference = 753.98;
-  var _478StartTime = Date.now();
 
-  // Web Audio API — sons doux par phase
+  var _running = true, phaseIdx = 0, cycle = 1, elapsed = 0;
+  var _phaseStart = null, _lastSec = -1;
+  var _478StartTime = Date.now();
+  var currentPhase = null;
+
+  // Web Audio
   var _478AudioCtx = null;
   function play478Tone(freq, dur, vol) {
     try {
@@ -14256,129 +14209,173 @@ function start478Exercise() {
       var osc = _478AudioCtx.createOscillator();
       var gain = _478AudioCtx.createGain();
       osc.connect(gain); gain.connect(_478AudioCtx.destination);
-      osc.type = 'sine';
-      osc.frequency.setValueAtTime(freq, _478AudioCtx.currentTime);
+      osc.type = 'sine'; osc.frequency.setValueAtTime(freq, _478AudioCtx.currentTime);
       gain.gain.setValueAtTime(0, _478AudioCtx.currentTime);
-      gain.gain.linearRampToValueAtTime(vol || 0.12, _478AudioCtx.currentTime + 0.05);
-      gain.gain.linearRampToValueAtTime(0, _478AudioCtx.currentTime + dur);
-      osc.start(_478AudioCtx.currentTime);
-      osc.stop(_478AudioCtx.currentTime + dur);
-    } catch(e) {}
+      gain.gain.linearRampToValueAtTime(vol||0.1, _478AudioCtx.currentTime+0.05);
+      gain.gain.linearRampToValueAtTime(0, _478AudioCtx.currentTime+dur);
+      osc.start(_478AudioCtx.currentTime); osc.stop(_478AudioCtx.currentTime+dur);
+    } catch(e){}
   }
 
-  // Flash lumineux au changement de phase
-  function flash478(color) {
-    var overlay = document.getElementById('rituelOverlay');
-    if (!overlay) return;
-    var fl = document.createElement('div');
-    fl.style.cssText = 'position:fixed;inset:0;background:' + color + ';pointer-events:none;z-index:9998;opacity:0;transition:opacity 0.08s ease';
-    overlay.appendChild(fl);
-    requestAnimationFrame(function() {
-      fl.style.opacity = '0.18';
-      setTimeout(function() { fl.style.opacity = '0'; setTimeout(function(){ fl.remove(); }, 200); }, 80);
+  // Fond nébuleuse
+  var bgCv = document.getElementById('r478bg');
+  var bgCtx = bgCv ? bgCv.getContext('2d') : null;
+  var bgRunning = true;
+  if (bgCtx) {
+    bgCv.width = window.innerWidth; bgCv.height = window.innerHeight;
+    var stars478 = Array.from({length:140}, function() {
+      return {x:Math.random()*bgCv.width, y:Math.random()*bgCv.height,
+              r:Math.random()*1.6+0.2, ph:Math.random()*Math.PI*2,
+              sp:Math.random()*0.012+0.003, hue:Math.random()<0.3?220:Math.random()<0.5?270:190};
     });
+    var nebPh=0, aurPh=[0,1.4,2.8];
+    function drawBg478(ts) {
+      if (!bgRunning) return;
+      var W=bgCv.width, H=bgCv.height, cx=W/2, cy=H/2;
+      bgCtx.clearRect(0,0,W,H);
+      bgCtx.fillStyle='#03050f'; bgCtx.fillRect(0,0,W,H);
+      nebPh+=0.003; aurPh=aurPh.map(function(p){return p+0.004;});
+      var col=currentPhase?currentPhase.pColor:[60,120,200];
+      [[col[0],col[1],col[2]],[Math.max(0,col[0]-60),Math.max(0,col[1]-40),Math.min(255,col[2]+30)],[Math.min(255,col[0]+40),Math.max(0,col[1]-60),Math.min(255,col[2]+20)]].forEach(function(rgb,i){
+        var ox=Math.sin(nebPh+i*2.1)*W*0.18, oy=Math.cos(nebPh*0.7+i*1.8)*H*0.15;
+        var rad=W*0.38+Math.sin(nebPh*0.5+i)*W*0.06;
+        var grd=bgCtx.createRadialGradient(cx+ox,cy+oy,0,cx+ox,cy+oy,rad);
+        grd.addColorStop(0,'rgba('+rgb[0]+','+rgb[1]+','+rgb[2]+',0.055)');
+        grd.addColorStop(0.4,'rgba('+rgb[0]+','+rgb[1]+','+rgb[2]+',0.025)');
+        grd.addColorStop(1,'rgba('+rgb[0]+','+rgb[1]+','+rgb[2]+',0)');
+        bgCtx.fillStyle=grd; bgCtx.fillRect(0,0,W,H);
+      });
+      aurPh.forEach(function(p,i){
+        var rgb=[[col[0],col[1],col[2]],[Math.max(0,col[0]-60),Math.max(0,col[1]-40),Math.min(255,col[2]+30)],[Math.min(255,col[0]+40),Math.max(0,col[1]-60),Math.min(255,col[2]+20)]][i%3];
+        var x=cx+Math.sin(p*0.7)*W*0.3, y=cy*0.3+Math.cos(p*0.5)*cy*0.15;
+        var yw=W*0.6+Math.sin(p)*W*0.1, yh=H*0.18;
+        var grd=bgCtx.createRadialGradient(x,y,0,x,y+yh*0.5,yh);
+        grd.addColorStop(0,'rgba('+rgb[0]+','+rgb[1]+','+rgb[2]+',0.045)');
+        grd.addColorStop(0.6,'rgba('+rgb[0]+','+rgb[1]+','+rgb[2]+',0.018)');
+        grd.addColorStop(1,'rgba('+rgb[0]+','+rgb[1]+','+rgb[2]+',0)');
+        bgCtx.fillStyle=grd; bgCtx.fillRect(x-yw/2,y-yh,yw,yh*2);
+      });
+      stars478.forEach(function(s){
+        s.ph+=s.sp;
+        var a=0.25+0.75*Math.abs(Math.sin(s.ph));
+        bgCtx.beginPath(); bgCtx.arc(s.x,s.y,s.r,0,Math.PI*2);
+        bgCtx.fillStyle=s.hue===220?'rgba(160,200,255,'+a*0.9+')':s.hue===270?'rgba(200,170,255,'+a*0.8+')':'rgba(160,255,230,'+a*0.7+')';
+        bgCtx.fill();
+      });
+      requestAnimationFrame(drawBg478);
+    }
+    requestAnimationFrame(drawBg478);
   }
 
-  // Mise à jour des indicateurs de cycles
-  function updateDots(currentCycle) {
-    for (var d = 1; d <= 4; d++) {
-      var dot = document.getElementById('r478dot' + d);
-      if (!dot) continue;
-      if (d < currentCycle) {
-        dot.style.background = 'rgba(100,220,180,0.9)';
-        dot.style.boxShadow = '0 0 8px rgba(100,220,180,0.6)';
-        dot.style.width = '8px';
-      } else if (d === currentCycle) {
-        dot.style.background = 'rgba(255,255,255,0.9)';
-        dot.style.boxShadow = '0 0 12px rgba(255,255,255,0.7)';
-        dot.style.width = '12px';
-        dot.style.height = '12px';
-        dot.style.borderRadius = '6px';
-      } else {
-        dot.style.background = 'rgba(255,255,255,0.15)';
-        dot.style.boxShadow = 'none';
-        dot.style.width = '8px';
-        dot.style.height = '8px';
-      }
+  // Particules
+  var pCv = document.getElementById('r478particles');
+  var pCtx = pCv ? pCv.getContext('2d') : null;
+  var particles478 = [];
+  if (pCtx) {
+    pCv.width = window.innerWidth; pCv.height = window.innerHeight;
+    var pSpawnT=0;
+    function spawnP478() {
+      if (!currentPhase) return;
+      var col=currentPhase.pColor, cx=pCv.width/2, cy=pCv.height/2;
+      var angle=Math.random()*Math.PI*2, dist=95+Math.random()*20;
+      var sc=currentPhase.scale, isIn=currentPhase.label==='Inspirez', isEx=currentPhase.label==='Expirez';
+      var spd=isIn?-(Math.random()*0.6+0.3):isEx?(Math.random()*0.6+0.3):0;
+      particles478.push({x:cx+Math.cos(angle)*dist*sc, y:cy+Math.sin(angle)*dist*sc,
+        vx:Math.cos(angle)*spd*(0.5+Math.random()), vy:Math.sin(angle)*spd*(0.5+Math.random()),
+        life:1, decay:isEx?0.008:0.012, r:Math.random()*2.5+0.5,
+        color:col[0]+','+col[1]+','+col[2], drift:(Math.random()-0.5)*0.4, angle:angle});
+    }
+    function drawP478(ts) {
+      if (!bgRunning) return;
+      pCtx.clearRect(0,0,pCv.width,pCv.height);
+      if (ts-pSpawnT>40 && _running) { pSpawnT=ts; for(var i=0;i<3;i++) spawnP478(); }
+      particles478.forEach(function(p){
+        p.x+=p.vx+Math.cos(p.angle+Math.PI/2)*p.drift;
+        p.y+=p.vy+Math.sin(p.angle+Math.PI/2)*p.drift;
+        p.life-=p.decay;
+        if(p.life<=0)return;
+        pCtx.beginPath(); pCtx.arc(p.x,p.y,p.r,0,Math.PI*2);
+        pCtx.fillStyle='rgba('+p.color+','+p.life*0.7+')'; pCtx.fill();
+      });
+      particles478=particles478.filter(function(p){return p.life>0;});
+      requestAnimationFrame(drawP478);
+    }
+    requestAnimationFrame(drawP478);
+  }
+
+  function updateDots(c) {
+    for(var d=1;d<=4;d++){
+      var dot=document.getElementById('r478dot'+d);
+      if(!dot)continue;
+      if(d<c){dot.style.background='rgba(100,220,180,0.8)';dot.style.width='7px';dot.style.height='7px';dot.style.borderRadius='50%';dot.style.boxShadow='0 0 6px rgba(100,220,180,0.5)';}
+      else if(d===c){dot.style.background='white';dot.style.width='16px';dot.style.height='7px';dot.style.borderRadius='4px';dot.style.boxShadow='0 0 10px rgba(255,255,255,0.8)';}
+      else{dot.style.background='rgba(255,255,255,0.12)';dot.style.width='7px';dot.style.height='7px';dot.style.borderRadius='50%';dot.style.boxShadow='none';}
     }
   }
 
   function applyPhase(ph) {
-    phaseEl.textContent = ph.label;
-    subEl.textContent = ph.sub;
-    circle.style.background = 'radial-gradient(circle,' + ph.color + ' 0%,rgba(40,40,80,0.3) 100%)';
-    circle.style.boxShadow = '0 0 50px ' + ph.glow + ', 0 0 20px ' + ph.glow;
-    circle.style.transform = ph.scale;
-    circle.style.transition = 'transform 0.8s ease, background 0.8s ease, box-shadow 0.8s ease';
-    circle.style.animation = ph.hold ? 'rituel478Hold 2s ease-in-out infinite' : 'none';
-    halo.style.background = 'radial-gradient(circle,' + ph.glow.replace('0.5','0.12') + ' 0%,transparent 70%)';
-    arc.style.stroke = ph.arcColor;
-    arc.style.transition = 'stroke 0.8s ease';
-    // Son doux selon phase
-    var tones = { 'Inspirez': [220, 0.4], 'Retenez': [180, 0.3], 'Expirez': [160, 0.6] };
-    var t = tones[ph.label] || [200, 0.4];
-    play478Tone(t[0], t[1], 0.10);
-    // Vibration haptique
-    var vibs = { 'Inspirez': [40], 'Retenez': [30, 60, 30], 'Expirez': [20, 40, 20, 40, 20] };
-    if (navigator.vibrate) navigator.vibrate(vibs[ph.label] || [30]);
-    // Flash coloré
-    var flashes = { 'Inspirez': 'rgba(100,180,255,1)', 'Retenez': 'rgba(180,130,255,1)', 'Expirez': 'rgba(100,220,180,1)' };
-    flash478(flashes[ph.label] || 'rgba(255,255,255,1)');
-    // Mise à jour dots
+    currentPhase = ph;
+    phaseEl.style.opacity='0';
+    setTimeout(function(){phaseEl.textContent=ph.label;phaseEl.style.opacity='1';},200);
+    subEl.textContent=ph.sub;
+    var dur=ph.scale>1?ph.dur*0.85:ph.dur*0.9;
+    circle.style.background=ph.orb;
+    circle.style.boxShadow=ph.shadow;
+    circle.style.transform='scale('+ph.scale+')';
+    circle.style.transition='transform '+dur+'s cubic-bezier(0.25,0.1,0.25,1),box-shadow 1.5s ease,background 1.2s ease';
+    halo.style.background=ph.halo; halo.style.opacity='1';
+    arc.style.stroke=ph.arc; arc.style.strokeDashoffset=CIRC;
+    if(pw1){pw1.style.stroke=ph.pw+'0.2)';} if(pw2){pw2.style.stroke=ph.pw+'0.1)';}
+    if(progress)progress.style.background=ph.bar;
+    if(ring1)ring1.style.borderColor=ph.ring1;
+    var tones={'Inspirez':[220,0.4],'Retenez':[180,0.3],'Expirez':[160,0.6]};
+    var t=tones[ph.label]||[200,0.4]; play478Tone(t[0],t[1],0.10);
+    var vibs={'Inspirez':[50],'Retenez':[30,80,30],'Expirez':[20,50,20,50,20]};
+    if(navigator.vibrate)navigator.vibrate(vibs[ph.label]||[30]);
     updateDots(cycle);
+    if(cycleEl)cycleEl.textContent='cycle '+cycle+' / '+TOTAL_CYCLES;
   }
 
-  // Tick par seconde pour le compteur
-  var _lastSec = -1;
   function animLoop(ts) {
-    if (!_running) return;
-    var ph = PHASES[phaseIdx];
-    if (_phaseStart === null) { _phaseStart = ts; applyPhase(ph); }
-    var phaseMs = ts - _phaseStart;
-    var phaseSec = Math.floor(phaseMs / 1000);
-    // Arc fluide via rAF
-    var ratio = Math.min(phaseMs / (ph.dur * 1000), 1);
-    arc.style.strokeDashoffset = circumference * (1 - ratio);
-    // Compteur chaque seconde
-    if (phaseSec !== _lastSec) {
-      _lastSec = phaseSec;
-      var remaining = ph.dur - phaseSec;
-      if (counter) counter.textContent = remaining > 0 ? remaining : 0;
+    if(!_running)return;
+    var ph=PHASES[phaseIdx];
+    if(_phaseStart===null){_phaseStart=ts;applyPhase(ph);}
+    var phaseMs=ts-_phaseStart, phaseSec=Math.floor(phaseMs/1000);
+    var ratio=Math.min(phaseMs/(ph.dur*1000),1);
+    arc.style.strokeDashoffset=CIRC*(1-ratio);
+    if(pw1)pw1.style.strokeDashoffset=CW1*(1-(ratio*0.6));
+    if(pw2)pw2.style.strokeDashoffset=CW2*(1-(ratio*0.35));
+    if(phaseSec!==_lastSec){
+      _lastSec=phaseSec;
+      var remaining=ph.dur-phaseSec;
+      if(counter)counter.textContent=remaining>0?remaining:0;
       elapsed++;
-      if (cycleEl) cycleEl.textContent = 'Cycle ' + cycle + ' / ' + TOTAL_CYCLES;
-      if (progress) progress.style.width = Math.min(100, Math.round(elapsed / TOTAL_SEC * 100)) + '%';
+      if(cycleEl)cycleEl.textContent='cycle '+cycle+' / '+TOTAL_CYCLES;
+      if(progress)progress.style.width=Math.min(100,Math.round(elapsed/TOTAL_SEC*100))+'%';
     }
-    // Fin de phase
-    if (phaseMs >= ph.dur * 1000) {
-      phaseIdx++;
-      _phaseStart = null;
-      _lastSec = -1;
-      if (phaseIdx >= PHASES.length) {
-        phaseIdx = 0;
-        cycle++;
-        if (cycle > TOTAL_CYCLES) {
-          _running = false;
-          if (window._stopStars478) { window._stopStars478(); window._stopStars478 = null; }
-          screen.style.display = 'none';
-          if (harmonyCanvas) harmonyCanvas.parentElement.style.display = '';
-          var done = document.getElementById('rituelDone');
-          done.style.display = 'block';
-          var totalSec = Math.round((Date.now() - _478StartTime) / 1000);
-          var mins = Math.floor(totalSec / 60);
-          var secs = totalSec % 60;
-          var doneTimeEl = document.getElementById('rituelDoneTime');
-          if (doneTimeEl) doneTimeEl.textContent = mins + ':' + (secs < 10 ? '0' : '') + secs;
-          var doneCyclesEl = document.getElementById('rituelDoneCycles');
-          if (doneCyclesEl) doneCyclesEl.textContent = TOTAL_CYCLES;
-          var doneMsgEl = document.getElementById('rituelDoneMsg');
-          if (doneMsgEl) doneMsgEl.textContent = 'Votre système nerveux est apaisé. La technique 4-7-8 réduit le cortisol et prépare un sommeil profond.';
-          document.getElementById('rituelPtsGained').textContent = '+15';
-          if (typeof addHarmonyPoints === 'function') addHarmonyPoints(15);
-          // Son de fin doux
-          play478Tone(262, 0.3, 0.08);
-          setTimeout(function(){ play478Tone(330, 0.3, 0.08); }, 300);
-          setTimeout(function(){ play478Tone(392, 0.6, 0.10); }, 600);
-          if (navigator.vibrate) navigator.vibrate([50, 100, 50, 100, 80]);
+    if(phaseMs>=ph.dur*1000){
+      phaseIdx++;_phaseStart=null;_lastSec=-1;
+      if(phaseIdx>=PHASES.length){
+        phaseIdx=0;cycle++;
+        if(cycle>TOTAL_CYCLES){
+          _running=false; bgRunning=false;
+          screen.style.display='none';
+          if(harmonyCanvas)harmonyCanvas.parentElement.style.display='';
+          var done=document.getElementById('rituelDone');
+          done.style.display='block';
+          var totalSec=Math.round((Date.now()-_478StartTime)/1000);
+          var mins=Math.floor(totalSec/60), secs=totalSec%60;
+          var doneTimeEl=document.getElementById('rituelDoneTime');
+          if(doneTimeEl)doneTimeEl.textContent=mins+':'+(secs<10?'0':'')+secs;
+          var doneCyclesEl=document.getElementById('rituelDoneCycles');
+          if(doneCyclesEl)doneCyclesEl.textContent=TOTAL_CYCLES;
+          var doneMsgEl=document.getElementById('rituelDoneMsg');
+          if(doneMsgEl)doneMsgEl.textContent='Votre système nerveux est apaisé. La technique 4-7-8 réduit le cortisol et prépare un sommeil profond.';
+          document.getElementById('rituelPtsGained').textContent='+15';
+          if(typeof addHarmonyPoints==='function')addHarmonyPoints(15);
+          play478Tone(262,0.3,0.08);
+          setTimeout(function(){play478Tone(330,0.3,0.08);},300);
+          setTimeout(function(){play478Tone(392,0.6,0.10);},600);
           return;
         }
       }
@@ -14388,8 +14385,7 @@ function start478Exercise() {
   requestAnimationFrame(animLoop);
 
   window._stop478 = function() {
-    _running = false;
-    if (window._stopStars478) { window._stopStars478(); window._stopStars478 = null; }
+    _running = false; bgRunning = false;
     if (harmonyCanvas) harmonyCanvas.parentElement.style.display = '';
   };
 }
