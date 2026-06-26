@@ -14625,14 +14625,15 @@ function _drawMoon(ctx, W, H, t) {
 }
 
 function _drawLandscape(ctx, W, H, t) {
-  var horizonY = H * 0.80;
-  var colBack = _lerpColor([95,55,35], [20,12,38], t);
-  ctx.fillStyle = _rgba(colBack, 0.6);
+  var horizonY = H * 0.82;
+  var colBack = _lerpColor([110,65,42], [28,17,42], t);
+  ctx.fillStyle = _rgba(colBack, 0.85);
   ctx.beginPath();
   ctx.moveTo(0, H);
-  ctx.lineTo(0, horizonY - H*0.02);
-  ctx.quadraticCurveTo(W*0.25, horizonY - H*0.11, W*0.5, horizonY - H*0.025);
-  ctx.quadraticCurveTo(W*0.75, horizonY - H*0.13, W, horizonY - H*0.015);
+  ctx.lineTo(0, horizonY - H*0.035);
+  ctx.quadraticCurveTo(W*0.15, horizonY - H*0.10, W*0.30, horizonY - H*0.04);
+  ctx.quadraticCurveTo(W*0.50, horizonY - H*0.005, W*0.65, horizonY - H*0.085);
+  ctx.quadraticCurveTo(W*0.85, horizonY - H*0.12, W, horizonY - H*0.03);
   ctx.lineTo(W, H);
   ctx.closePath();
   ctx.fill();
@@ -14641,11 +14642,12 @@ function _drawLandscape(ctx, W, H, t) {
   ctx.fillStyle = _rgb(col);
   ctx.beginPath();
   ctx.moveTo(0, H);
-  // Collines douces et espacées
-  ctx.lineTo(0, horizonY + H*0.02);
-  ctx.quadraticCurveTo(W*0.22, horizonY - H*0.075, W*0.45, horizonY + H*0.01);
-  ctx.quadraticCurveTo(W*0.65, horizonY - H*0.09, W*0.85, horizonY + H*0.008);
-  ctx.quadraticCurveTo(W*0.94, horizonY - H*0.03, W, horizonY + H*0.02);
+  // Trois collines distinctes avec creux nets entre elles
+  ctx.lineTo(0, horizonY + H*0.015);
+  ctx.quadraticCurveTo(W*0.14, horizonY - H*0.075, W*0.28, horizonY + H*0.02);
+  ctx.quadraticCurveTo(W*0.40, horizonY + H*0.04, W*0.50, horizonY + H*0.015);
+  ctx.quadraticCurveTo(W*0.62, horizonY - H*0.085, W*0.76, horizonY + H*0.015);
+  ctx.quadraticCurveTo(W*0.88, horizonY + H*0.03, W, horizonY + H*0.01);
   ctx.lineTo(W, H);
   ctx.closePath();
   ctx.fill();
@@ -14654,23 +14656,29 @@ function _drawLandscape(ctx, W, H, t) {
   var treeAlpha = Math.min(1, t*1.5);
   ctx.fillStyle = _rgba(_lerpColor([45,20,10],[5,3,18],t), treeAlpha);
   var trees = [
-    {x:0.10,h:0.10,w:0.028},{x:0.15,h:0.075,w:0.024},
-    {x:0.83,h:0.095,w:0.027},{x:0.90,h:0.07,w:0.023}
+    {x:0.06,h:0.16,w:0.034},{x:0.11,h:0.21,w:0.03},{x:0.16,h:0.14,w:0.027},{x:0.21,h:0.18,w:0.029},
+    {x:0.74,h:0.15,w:0.028},{x:0.79,h:0.20,w:0.031},{x:0.85,h:0.13,w:0.026},{x:0.91,h:0.19,w:0.03}
   ];
   trees.forEach(function(tree) {
     var tx = W*tree.x, th = H*tree.h, tw = W*tree.w;
-    var ty = horizonY - th + H*0.02;
+    var ty = horizonY - th + H*0.04;
     // tronc
-    ctx.fillRect(tx-tw*0.15, ty+th*0.65, tw*0.3, th*0.35);
-    // feuillage triangulaire
+    ctx.fillRect(tx-tw*0.12, ty+th*0.7, tw*0.24, th*0.4);
+    // feuillage triangulaire (3 étages, sapin net)
     ctx.beginPath();
     ctx.moveTo(tx, ty);
-    ctx.lineTo(tx-tw*0.7, ty+th*0.7);
-    ctx.lineTo(tx+tw*0.7, ty+th*0.7);
+    ctx.lineTo(tx-tw*0.55, ty+th*0.42);
+    ctx.lineTo(tx+tw*0.55, ty+th*0.42);
     ctx.closePath();
     ctx.fill();
     ctx.beginPath();
-    ctx.moveTo(tx, ty+th*0.2);
+    ctx.moveTo(tx, ty+th*0.18);
+    ctx.lineTo(tx-tw*0.7, ty+th*0.62);
+    ctx.lineTo(tx+tw*0.7, ty+th*0.62);
+    ctx.closePath();
+    ctx.fill();
+    ctx.beginPath();
+    ctx.moveTo(tx, ty+th*0.38);
     ctx.lineTo(tx-tw*0.85, ty+th*0.85);
     ctx.lineTo(tx+tw*0.85, ty+th*0.85);
     ctx.closePath();
