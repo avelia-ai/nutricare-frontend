@@ -6098,8 +6098,7 @@ function switchLang(lang) {
       });
     }
     var ctaHtml = hasPlan
-      ? '<div style="font-size:0.85rem;color:#444;margin-bottom:20px;line-height:1.6;background:#f9f9f9;border-radius:12px;padding:14px">✅ Votre réduction est <b>automatiquement appliquée</b> à votre prochain renouvellement.<br>Aucune action requise !</div>' +
-        '<button onclick="document.getElementById(&apos;referralMilestonePopup&apos;).remove()" style="background:linear-gradient(135deg,var(--coral),#e8821a);color:white;border:none;border-radius:14px;padding:13px 24px;font-size:0.9rem;font-weight:700;cursor:pointer;width:100%">Super, merci ! 🙌</button>'
+      ? '<button onclick="document.getElementById(&apos;referralMilestonePopup&apos;).remove()" style="background:linear-gradient(135deg,#FF6B6B,#FF9A3C);color:white;border:none;border-radius:12px;padding:14px;font-size:0.9rem;font-weight:700;cursor:pointer;width:100%">Super, merci</button>'
       : '<div style="display:flex;gap:10px;margin-bottom:16px">' +
           '<button onclick="document.getElementById(&apos;referralMilestonePopup&apos;).remove();selectPlan(&apos;standard&apos;)" style="flex:1;background:#1a1a2e;color:white;border:none;border-radius:14px;padding:12px 8px;font-size:0.82rem;font-weight:700;cursor:pointer">' +
             'Standard<br><span style="font-size:1rem;color:var(--coral)">' + stdPrice + '</span><span style="font-size:0.7rem;color:rgba(255,255,255,0.5)">/mois</span>' +
@@ -6110,17 +6109,46 @@ function switchLang(lang) {
         '</div>' +
         '<button onclick="document.getElementById(&apos;referralMilestonePopup&apos;).remove()" style="background:none;border:none;color:#aaa;font-size:0.82rem;cursor:pointer">Plus tard</button>';
 
+    var nextMilestones = milestones.filter(function(m){ return m.min > newCount; }).slice(0,2);
+    var nextPaliersHtml = nextMilestones.map(function(m){
+      return '<div style="display:flex;align-items:center;justify-content:space-between;opacity:0.4;margin-top:8px">' +
+        '<div style="display:flex;align-items:center;gap:8px">' +
+        '<div style="width:6px;height:6px;border-radius:50%;background:#888"></div>' +
+        '<span style="font-size:0.8rem;color:#555">' + m.label + '</span></div>' +
+        '<span style="font-size:0.8rem;color:#555">-' + m.discount + '%</span></div>';
+    }).join('');
     var overlay = document.createElement('div');
     overlay.id = 'referralMilestonePopup';
     overlay.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.65);z-index:99999;display:flex;align-items:center;justify-content:center';
     overlay.innerHTML =
-      '<div style="background:#FFFCFA;border-radius:24px;padding:32px 24px;max-width:340px;width:92%;text-align:center;box-shadow:0 0 0 1.5px rgba(255,154,108,0.22),0 14px 32px rgba(230,110,70,0.14)">' +
-        '<div style="font-size:3.5rem;margin-bottom:10px">' + reached.emoji + '</div>' +
-        '<div style="font-size:1.25rem;font-weight:800;color:#2D2D2D;margin-bottom:8px">Nouveau palier atteint !</div>' +
-        '<div style="font-size:0.9rem;color:var(--coral);font-weight:700;margin-bottom:6px">' + reached.label + '</div>' +
-        '<div style="font-size:0.88rem;color:#555;margin-bottom:20px;line-height:1.5">' + msg + '</div>' +
-        ctaHtml +
-      '</div>';
+      '<div style="background:white;border-radius:20px;max-width:340px;width:92%;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,0.3)">' +
+      '<div style="background:linear-gradient(135deg,#1a1a2e 0%,#16213e 50%,#0f3460 100%);padding:28px 24px 20px;text-align:center">' +
+      '<div style="font-size:2.4rem;margin-bottom:12px">🎁</div>' +
+      '<div style="font-size:0.65rem;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,0.45);margin-bottom:6px">Programme parrainage</div>' +
+      '<div style="font-size:1.3rem;font-weight:700;color:white;margin-bottom:10px">Palier atteint</div>' +
+      '<div style="display:inline-flex;align-items:center;gap:6px;background:rgba(255,154,60,0.2);border:1px solid rgba(255,154,60,0.4);border-radius:20px;padding:4px 14px">' +
+      '<div style="width:6px;height:6px;border-radius:50%;background:#FF9A3C"></div>' +
+      '<span style="font-size:0.75rem;font-weight:600;color:#FF9A3C">' + reached.label + '</span></div>' +
+      '</div>' +
+      '<div style="padding:24px">' +
+      '<div style="text-align:center;margin-bottom:20px">' +
+      '<div style="font-size:3rem;font-weight:800;color:#2D2D2D;letter-spacing:-2px">-' + reached.discount + '%</div>' +
+      '<div style="font-size:0.85rem;color:#888;margin-top:2px">sur tous vos abonnements</div></div>' +
+      '<div style="background:#f5faf5;border-radius:12px;padding:14px 16px;margin-bottom:16px;display:flex;gap:10px;align-items:flex-start">' +
+      '<div style="width:26px;height:26px;border-radius:50%;background:#dcfce7;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:0.75rem">✓</div>' +
+      '<div><div style="font-size:0.82rem;font-weight:700;color:#2D2D2D;margin-bottom:2px">Reduction automatique</div>' +
+      '<div style="font-size:0.78rem;color:#666;line-height:1.5">Appliquee a votre prochain renouvellement, sans action de votre part.</div></div></div>' +
+      '<div style="border:1px solid #f0f0f0;border-radius:12px;padding:14px 16px;margin-bottom:20px">' +
+      '<div style="font-size:0.6rem;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:#aaa;margin-bottom:10px">Vos paliers</div>' +
+      '<div style="display:flex;align-items:center;justify-content:space-between">' +
+      '<div style="display:flex;align-items:center;gap:8px">' +
+      '<div style="width:6px;height:6px;border-radius:50%;background:#FF9A3C"></div>' +
+      '<span style="font-size:0.8rem;font-weight:600;color:#2D2D2D">' + reached.label + '</span></div>' +
+      '<span style="font-size:0.8rem;font-weight:600;color:#FF9A3C">-' + reached.discount + '%</span></div>' +
+      nextPaliersHtml +
+      '</div>' +
+      ctaHtml +
+      '</div></div>';
     document.body.appendChild(overlay);
   }
 
