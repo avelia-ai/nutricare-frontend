@@ -9285,7 +9285,7 @@ function renderMenu(menu) {
       imgWrap.appendChild(img);
       const info = document.createElement('div');
       info.style.cssText = 'flex:1;min-width:0';
-      info.innerHTML = '<div style="display:inline-flex;align-items:center;gap:4px;background:#FFF0E8;border-radius:6px;padding:2px 7px;margin-bottom:4px"><span style="color:#FF6B6B">' + repasIcons[repas] + '</span><span style="font-size:9px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:#FF6B6B">' + repasLabels[repas] + '</span></div>' +
+      info.innerHTML = '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px"><div style="display:inline-flex;align-items:center;gap:4px;background:#FFF0E8;border-radius:6px;padding:2px 7px"><span style="color:#FF6B6B">' + repasIcons[repas] + '</span><span style="font-size:9px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:#FF6B6B">' + repasLabels[repas] + '</span></div><div id="btnswrap_' + idx + '_' + repas + '" style="display:flex;gap:6px"></div></div>' +
         '<div style="font-size:0.88rem;font-weight:700;color:#2D2D2D;margin-bottom:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">' + r.nom + '</div>' +
         '<div style="display:flex;align-items:center;gap:10px;margin-top:5px">' +
         '<div style="display:flex;align-items:center;gap:3px"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#FF6B6B" stroke-width="2.5" stroke-linecap="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg><span style="font-size:11px;color:#FF6B6B;font-weight:700">' + (r.calories||0) + ' kcal</span></div>' +
@@ -9325,9 +9325,10 @@ function renderMenu(menu) {
       delRepasBtn.title = 'Supprimer ce repas';
       row.appendChild(imgWrap);
       row.appendChild(info);
-      row.appendChild(checkBtn);
-      row.appendChild(recipeBtn);
       row.appendChild(delRepasBtn);
+      var btnsWrap = info.querySelector('#btnswrap_' + idx + '_' + repas);
+      if (btnsWrap) { btnsWrap.appendChild(checkBtn); btnsWrap.appendChild(recipeBtn); }
+      else { row.appendChild(checkBtn); row.appendChild(recipeBtn); }
       body.appendChild(row);
       // Impact sante par repas
       if (r.impact) {
