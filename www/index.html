@@ -2518,7 +2518,25 @@ window.analyseFrigo = async function(file) {
           html += '<div style="display:flex;gap:8px;margin-bottom:7px"><div style="width:20px;height:20px;border-radius:50%;background:linear-gradient(135deg,#FF6B6B,#FF9A3C);color:white;font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0">' + (ei+1) + '</div><div style="font-size:12px;color:#444;line-height:1.5">' + e + '</div></div>';
         });
       }
-      if (r.conseil_sante) html += '<div style="margin-top:10px;padding:10px;background:#FFF0E8;border-radius:10px;font-size:11px;color:#FF6B6B;font-weight:500;display:flex;gap:6px"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>' + r.conseil_sante + '</div>';
+      if (r.macros) {
+        html += '<div style="margin-top:10px;margin-bottom:8px">';
+        html += '<div style="font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:#FF6B6B;margin-bottom:6px">Macronutriments</div>';
+        html += '<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px">';
+        html += '<div style="background:#eff6ff;border-radius:8px;padding:7px;text-align:center"><div style="font-size:13px;font-weight:800;color:#3b82f6">' + (r.macros.glucides_g||0) + 'g</div><div style="font-size:9px;color:#94a3b8">Glucides</div></div>';
+        html += '<div style="background:#f0fdf4;border-radius:8px;padding:7px;text-align:center"><div style="font-size:13px;font-weight:800;color:#16a34a">' + (r.macros.proteines_g||0) + 'g</div><div style="font-size:9px;color:#94a3b8">Protéines</div></div>';
+        html += '<div style="background:#fff7ed;border-radius:8px;padding:7px;text-align:center"><div style="font-size:13px;font-weight:800;color:#f97316">' + (r.macros.lipides_g||0) + 'g</div><div style="font-size:9px;color:#94a3b8">Lipides</div></div>';
+        html += '</div></div>';
+      }
+      if (r.micros) {
+        html += '<div style="margin-bottom:8px"><div style="font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:#FF6B6B;margin-bottom:6px">Micronutriments</div><div style="display:flex;flex-wrap:wrap;gap:5px">';
+        if (r.micros.fibres_g) html += '<span style="background:#f0fdf4;color:#16a34a;font-size:10px;font-weight:600;padding:3px 8px;border-radius:20px">Fibres ' + r.micros.fibres_g + 'g</span>';
+        if (r.micros.calcium_mg) html += '<span style="background:#eff6ff;color:#3b82f6;font-size:10px;font-weight:600;padding:3px 8px;border-radius:20px">Ca ' + r.micros.calcium_mg + 'mg</span>';
+        if (r.micros.fer_mg) html += '<span style="background:#fef2f2;color:#dc2626;font-size:10px;font-weight:600;padding:3px 8px;border-radius:20px">Fer ' + r.micros.fer_mg + 'mg</span>';
+        if (r.micros.vitamine_c_mg) html += '<span style="background:#fff7ed;color:#f97316;font-size:10px;font-weight:600;padding:3px 8px;border-radius:20px">Vit C ' + r.micros.vitamine_c_mg + 'mg</span>';
+        if (r.micros.magnesium_mg) html += '<span style="background:#faf5ff;color:#7c3aed;font-size:10px;font-weight:600;padding:3px 8px;border-radius:20px">Mg ' + r.micros.magnesium_mg + 'mg</span>';
+        html += '</div></div>';
+      }
+      if (r.conseil_sante) html += '<div style="padding:10px;background:#FFF0E8;border-radius:10px;font-size:11px;color:#FF6B6B;font-weight:500;display:flex;gap:6px"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>' + r.conseil_sante + '</div>';
       html += '</div></div>';
     });
     html += '</div>';
