@@ -9108,15 +9108,10 @@ window._currentMenu = null;
 let _donutChart = null;
 
 function updateNutritionPanel(dayIndex) {
-  var idx = dayIndex !== undefined ? dayIndex : parseInt(document.getElementById('menusDaySelector')?.value || 0);
-  // Synchroniser avec le jour perso selectionne si pas d'argument explicite
-  if (dayIndex === undefined && window._persoMenusJour && window.PERSO_JOURS) {
-    var persoIdx = window.PERSO_JOURS.indexOf(window._persoMenusJour);
-    if (persoIdx >= 0) idx = persoIdx;
-  }
+  const idx = dayIndex !== undefined ? dayIndex : parseInt(document.getElementById('menusDaySelector')?.value || 0);
+  const jourNom = window.PERSO_JOURS ? window.PERSO_JOURS[idx] : null;
   const hasMenu = window._currentMenu && window._currentMenu.semaine;
-  const jourNomSelector = window.PERSO_JOURS ? window.PERSO_JOURS[idx] : null;
-  const jour = hasMenu ? (window._currentMenu.semaine.find(function(j){ return j.jour === jourNomSelector; }) || window._currentMenu.semaine[idx] || {}) : {};
+  const jour = hasMenu ? (window._currentMenu.semaine.find(function(j){ return j.jour === jourNom; }) || window._currentMenu.semaine[idx] || {}) : {};
   const persoEnabledCheck = document.getElementById('persoMenusEnabled') ? document.getElementById('persoMenusEnabled').checked : false;
   var hasPersoMeals = Object.keys(JSON.parse(localStorage.getItem('mirella_checked_meals') || '{}')).some(function(k){ return k.startsWith('mealcheck_perso_'); });
   if (!hasMenu && !persoEnabledCheck && !hasPersoMeals) { if (typeof window.updateCaloriesFromMeals === 'function') window.updateCaloriesFromMeals(); return; }
@@ -9151,7 +9146,7 @@ function updateNutritionPanel(dayIndex) {
     });
   }
   // Ajouter les repas perso coches (toujours, si coche)
-  const jourNom = window.PERSO_JOURS[idx];
+  // jourNom already defined above
   if (true) {
     const persoData = window.getPersoMenus();
     const persoJour = persoData[jourNom] || {};
