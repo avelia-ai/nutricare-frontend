@@ -9203,7 +9203,12 @@ function updateNutritionPanel(dayIndex) {
 }
 
 function renderMenu(menu) {
-  const repasIcons = { petit_dejeuner: '🌅', dejeuner: '☀️', collation: '🍎', diner: '🌙' };
+  const repasIcons = {
+    petit_dejeuner: '<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/></svg>',
+    dejeuner: '<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>',
+    collation: '<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>',
+    diner: '<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>'
+  };
   const repasLabels = { petit_dejeuner: 'Petit-déjeuner', dejeuner: 'Déjeuner', collation: 'Collation', diner: 'Dîner' };
   window._currentMenu = menu;
   _currentMenu = menu;
@@ -9257,7 +9262,7 @@ function renderMenu(menu) {
     const delJourBtn = document.createElement('button');
     delJourBtn.onclick = function(e) { e.stopPropagation(); window.deleteMenuJour(idx); };
     delJourBtn.style.cssText = 'flex-shrink:0;background:none;border:none;color:#ccc;font-size:0.85rem;cursor:pointer;padding:6px;margin-right:6px';
-    delJourBtn.textContent = '\ud83d\uddd1\ufe0f';
+    delJourBtn.innerHTML = '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#ccc" stroke-width="2" stroke-linecap="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6M14 11v6"/></svg>';
     delJourBtn.title = 'Supprimer ce jour';
     header.appendChild(titleDiv);
     header.appendChild(delJourBtn);
@@ -9280,7 +9285,7 @@ function renderMenu(menu) {
       imgWrap.appendChild(img);
       const info = document.createElement('div');
       info.style.cssText = 'flex:1;min-width:0';
-      info.innerHTML = '<div style="font-size:0.7rem;color:var(--accent);font-weight:600;text-transform:uppercase;margin-bottom:2px">' + repasIcons[repas] + ' ' + repasLabels[repas] + '</div>' +
+      info.innerHTML = '<div style="display:inline-flex;align-items:center;gap:4px;background:#FFF0E8;border-radius:6px;padding:2px 7px;margin-bottom:4px"><span style="color:#FF6B6B">' + repasIcons[repas] + '</span><span style="font-size:9px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:#FF6B6B">' + repasLabels[repas] + '</span></div>' +
         '<div style="font-size:0.88rem;font-weight:700;color:#2D2D2D;margin-bottom:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">' + r.nom + '</div>' +
         '<div style="display:flex;gap:8px">' +
         '<span style="font-size:0.72rem;color:var(--accent);font-weight:600">' + (r.calories||0) + ' kcal</span>' +
@@ -9290,8 +9295,8 @@ function renderMenu(menu) {
       const recipeBtn = document.createElement('button');
       recipeBtn.setAttribute('data-recipe', rJson);
       recipeBtn.onclick = function() { showRecipeModal(this); };
-      recipeBtn.style.cssText = 'flex-shrink:0;background:#F8F4F0;color:#2D2D2D;border:none;border-radius:10px;padding:8px 12px;font-size:0.72rem;cursor:pointer;font-weight:600';
-      recipeBtn.textContent = '📖';
+      recipeBtn.style.cssText = 'flex-shrink:0;background:#FFF0E8;border:1px solid rgba(255,107,107,0.2);color:#FF6B6B;border-radius:10px;padding:8px 10px;font-size:0.72rem;cursor:pointer;font-weight:600;display:flex;align-items:center;justify-content:center';
+      recipeBtn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#FF6B6B" stroke-width="2" stroke-linecap="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>';
       // Bouton cocher repas
       const checkKey = 'mealcheck_' + jour.jour + '_' + repas;
       const checkedMeals = JSON.parse(localStorage.getItem('mirella_checked_meals') || '{}');
@@ -9328,14 +9333,14 @@ function renderMenu(menu) {
       if (r.impact) {
         const imp = r.impact;
         const impRow = document.createElement('div');
-        impRow.style.cssText = 'margin:0 12px 2px;padding:10px 14px;background:linear-gradient(135deg,var(--cream),#FFF0EC);border-radius:10px;border-left:3px solid var(--coral);display:flex;flex-wrap:wrap;gap:8px;align-items:flex-start';
+        impRow.style.cssText = 'margin:0 12px 8px;padding:10px 12px;background:#FFFCFA;border-radius:10px;border:1px solid rgba(255,154,108,0.15);display:flex;flex-wrap:wrap;gap:4px;align-items:flex-start';
         impRow.innerHTML =
-          '<div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;width:100%">' +
-          '<span style="background:white;border-radius:6px;padding:3px 8px;font-size:0.7rem;font-weight:700;color:var(--accent)">⚡ ' + (imp.se||imp.score_energie||0) + '% energie</span>' +
-          '<span style="background:white;border-radius:6px;padding:3px 8px;font-size:0.7rem;font-weight:700;color:#22c55e">🛡️ ' + (imp.ai||imp.score_anti_inflammatoire||0) + '% anti-inflam.</span>' +
+          '<div style="display:flex;gap:7px;align-items:center;flex-wrap:wrap;width:100%;margin-bottom:6px">' +
+          '<span style="display:inline-flex;align-items:center;gap:4px;background:white;border-radius:6px;padding:3px 8px;font-size:10px;font-weight:700;color:#f97316"><svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>' + (imp.se||imp.score_energie||0) + '% energie</span>' +
+          '<span style="display:inline-flex;align-items:center;gap:4px;background:white;border-radius:6px;padding:3px 8px;font-size:10px;font-weight:700;color:#16a34a"><svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>' + (imp.ai||imp.score_anti_inflammatoire||0) + '% anti-inflam.</span>' +
           '</div>' +
-          ((imp.b||imp.benefice) ? '<div style="font-size:0.75rem;color:#444;width:100%">🎯 ' + (imp.b||imp.benefice) + '</div>' : '') +
-          ((imp.c||imp.conseil) ? '<div style="font-size:0.75rem;color:var(--coral);font-weight:500;width:100%">💡 ' + (imp.c||imp.conseil) + '</div>' : '');
+          ((imp.b||imp.benefice) ? '<div style="display:flex;align-items:flex-start;gap:5px;font-size:11px;color:#444;width:100%;margin-bottom:3px"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#FF6B6B" stroke-width="2.5" stroke-linecap="round" style="flex-shrink:0;margin-top:1px"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>' + (imp.b||imp.benefice) + '</div>' : '') +
+          ((imp.c||imp.conseil) ? '<div style="display:flex;align-items:flex-start;gap:5px;font-size:11px;color:#FF6B6B;font-weight:500;width:100%"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" style="flex-shrink:0;margin-top:1px"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>' + (imp.c||imp.conseil) + '</div>' : '');
         body.appendChild(impRow);
       }
     });
