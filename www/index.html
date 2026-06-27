@@ -4232,20 +4232,18 @@ function switchLang(lang) {
 
     <!-- Résumé nutritionnel du jour -->
     <div id="menusNutritionPanel" style="display:none;background:#FFFCFA;border-radius:22px;border:1px solid rgba(255,154,108,0.2);box-shadow:0 2px 20px rgba(230,110,70,0.07);margin-bottom:16px;overflow:hidden">
-      <div id="menusBudgetBar" style="display:none;padding:12px 16px;background:#f8fbff;border-bottom:1px solid rgba(255,154,108,0.1)">
-        <div style="display:flex;align-items:center;justify-content:space-between">
-          <div style="display:flex;align-items:center;gap:8px">
-            <div style="width:28px;height:28px;border-radius:8px;background:#dbeafe;display:flex;align-items:center;justify-content:center;flex-shrink:0">
-              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#3b82f6" stroke-width="2" stroke-linecap="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
-            </div>
-            <div>
-              <div style="font-size:10px;color:#94a3b8;text-transform:uppercase;letter-spacing:.8px;font-weight:600">Budget semaine</div>
-              <div style="font-size:14px;font-weight:800;color:#1e40af"><span id="menusBudgetTotal">—</span></div>
-            </div>
+      <div id="menusBudgetBar" style="display:none;padding:14px 18px;background:#f8fbff;border-bottom:1px solid rgba(255,154,108,0.1)">
+        <div style="display:flex;align-items:center;gap:10px">
+          <div style="width:32px;height:32px;border-radius:9px;background:#dbeafe;display:flex;align-items:center;justify-content:center;flex-shrink:0">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#3b82f6" stroke-width="2" stroke-linecap="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
           </div>
-          <div style="text-align:right">
-            <div style="font-size:10px;color:#94a3b8">Mensuel : <span id="menusBudgetMensuel" style="color:#3b82f6;font-weight:600">—</span></div>
-            <div id="menusBudgetStatus" style="font-size:10px;font-weight:700;margin-top:3px"></div>
+          <div style="flex:1">
+            <div style="font-size:10px;color:#94a3b8;text-transform:uppercase;letter-spacing:.8px;font-weight:600;margin-bottom:2px">Budget semaine estimé</div>
+            <div style="display:flex;align-items:center;justify-content:space-between">
+              <div style="font-size:16px;font-weight:800;color:#1e40af"><span id="menusBudgetTotal">—</span></div>
+              <div id="menusBudgetStatus" style="font-size:10px;font-weight:700;padding:3px 10px;border-radius:20px"></div>
+            </div>
+            <div style="font-size:11px;color:#94a3b8;margin-top:3px">Budget mensuel : <span id="menusBudgetMensuel" style="color:#3b82f6;font-weight:600">—</span></div>
           </div>
         </div>
       </div>
@@ -9227,14 +9225,14 @@ function renderMenu(menu) {
     const budgetSemaine = budgetMensuel / 4;
     const status = document.getElementById('menusBudgetStatus');
     if (budgetMensuel && totalCout > budgetSemaine * 1.1) {
-      status.textContent = '⚠️ Au-dessus du budget';
-      status.style.background = '#FFEBEE'; status.style.color = '#C62828';
+      status.innerHTML = '<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" style="margin-right:4px"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>Au-dessus du budget';
+      status.style.cssText = 'background:#fef2f2;color:#dc2626;font-size:10px;font-weight:700;padding:4px 10px;border-radius:20px;border:1px solid #fecaca;display:flex;align-items:center';
     } else if (budgetMensuel && totalCout < budgetSemaine * 0.9) {
-      status.textContent = '✅ Dans le budget';
-      status.style.background = '#E8F5E9'; status.style.color = '#2E7D32';
+      status.innerHTML = '<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" style="margin-right:4px"><polyline points="20 6 9 17 4 12"/></svg>Dans le budget';
+      status.style.cssText = 'background:#f0fdf4;color:#16a34a;font-size:10px;font-weight:700;padding:4px 10px;border-radius:20px;border:1px solid #bbf7d0;display:flex;align-items:center';
     } else {
-      status.textContent = '✅ Budget respecté';
-      status.style.background = '#E8F5E9'; status.style.color = '#2E7D32';
+      status.innerHTML = '<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" style="margin-right:4px"><polyline points="20 6 9 17 4 12"/></svg>Budget respecte';
+      status.style.cssText = 'background:#f0fdf4;color:#16a34a;font-size:10px;font-weight:700;padding:4px 10px;border-radius:20px;border:1px solid #bbf7d0;display:flex;align-items:center';
     }
     document.getElementById('menusBudgetBar').style.display = 'flex';
   }
