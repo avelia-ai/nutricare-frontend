@@ -3684,26 +3684,52 @@ function switchLang(lang) {
     </div>
 
     <!-- PROFILE VIEW -->
-    <div id="profileView">
-      <div class="view-header"><div style="font-size:1.6rem;font-weight:700;color:white;font-family:'Open Sans',sans-serif">Mon profil de santé</div><div style="font-size:0.9rem;color:rgba(255,255,255,0.8);margin-top:4px">Ces informations permettent à Mirella de personnaliser ses conseils</div></div>
-      <div class="profile-sub">Ces informations permettent à Mirella de personnaliser ses conseils</div>
-
-      <!-- Photo de profil -->
-      <div style="display:flex;flex-direction:column;align-items:center;margin-bottom:24px">
-        <div style="position:relative;cursor:pointer" onclick="document.getElementById('profilePhotoInput').click()">
-          <div id="profileAvatarDisplay" style="width:90px;height:90px;border-radius:50%;background:linear-gradient(135deg,var(--coral),var(--accent));display:flex;align-items:center;justify-content:center;font-size:2.5rem;overflow:hidden;border:3px solid white;box-shadow:0 4px 16px rgba(255,107,107,0.3)">
-            <span id="profileAvatarEmoji">👤</span>
-            <img id="profileAvatarImg" src="" style="display:none;width:100%;height:100%;object-fit:cover" />
+    <div id="profileView" style="padding:0 !important">
+      <!-- Hero header sombre -->
+      <div style="background:linear-gradient(135deg,#1a1a1a,#2d2d2d);padding:28px 20px 24px;position:relative;overflow:hidden">
+        <div style="position:absolute;top:-40px;right:-40px;width:150px;height:150px;border-radius:50%;background:rgba(255,107,107,0.07)"></div>
+        <div style="position:absolute;bottom:-30px;left:40px;width:100px;height:100px;border-radius:50%;background:rgba(255,154,60,0.05)"></div>
+        <div style="display:flex;align-items:center;gap:16px;position:relative">
+          <div style="position:relative;flex-shrink:0;cursor:pointer" onclick="document.getElementById('profilePhotoInput').click()">
+            <div id="profileAvatarDisplay" style="width:76px;height:76px;border-radius:50%;background:linear-gradient(135deg,#FF6B6B,#FF9A3C);display:flex;align-items:center;justify-content:center;overflow:hidden;border:3px solid rgba(255,255,255,0.15)">
+              <span id="profileAvatarEmoji" style="font-size:2rem">👤</span>
+              <img id="profileAvatarImg" src="" style="display:none;width:100%;height:100%;object-fit:cover"/>
+            </div>
+            <div style="position:absolute;bottom:0;right:0;width:24px;height:24px;background:#FF6B6B;border-radius:50%;display:flex;align-items:center;justify-content:center;border:2px solid #1a1a1a">
+              <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+            </div>
           </div>
-          <div style="position:absolute;bottom:0;right:0;width:28px;height:28px;background:var(--coral);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.8rem;border:2px solid white">📷</div>
+          <input type="file" id="profilePhotoInput" accept="image/*" style="display:none" onchange="handleProfilePhoto(this)">
+          <div style="flex:1;min-width:0">
+            <div style="display:flex;align-items:center;gap:8px;margin-bottom:5px">
+              <div id="profileNameDisplay" style="font-size:17px;font-weight:800;color:white">Mon profil</div>
+              <div style="display:flex;align-items:center;gap:4px;background:rgba(255,107,107,0.2);border-radius:20px;padding:3px 9px">
+                <svg width="8" height="8" viewBox="0 0 24 24" fill="#FF9A3C"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                <span id="profilePlanBadge" style="font-size:9px;font-weight:700;color:#FF9A3C;letter-spacing:.5px">PREMIUM</span>
+              </div>
+            </div>
+            <div style="display:flex;gap:16px">
+              <div><div id="profileAgeDisplay" style="font-size:15px;font-weight:700;color:white">—</div><div style="font-size:9px;color:rgba(255,255,255,0.3);letter-spacing:.5px;margin-top:1px">ANS</div></div>
+              <div style="width:1px;background:rgba(255,255,255,0.08)"></div>
+              <div><div id="profilePathoCount" style="font-size:15px;font-weight:700;color:white">0</div><div style="font-size:9px;color:rgba(255,255,255,0.3);letter-spacing:.5px;margin-top:1px">PATHOS</div></div>
+              <div style="width:1px;background:rgba(255,255,255,0.08)"></div>
+              <div><div id="profileMedCount" style="font-size:15px;font-weight:700;color:white">0</div><div style="font-size:9px;color:rgba(255,255,255,0.3);letter-spacing:.5px;margin-top:1px">MÉDICS</div></div>
+            </div>
+          </div>
         </div>
-        <input type="file" id="profilePhotoInput" accept="image/*" style="display:none" onchange="handleProfilePhoto(this)">
-        <div style="font-size:0.78rem;color:#888;margin-top:8px">Appuyez pour changer la photo</div>
-        <button id="removePhotoBtn" onclick="removeProfilePhoto()" style="display:none;margin-top:6px;background:none;border:none;color:#FF6B6B;font-size:0.78rem;cursor:pointer">Supprimer la photo</button>
+        <button id="removePhotoBtn" onclick="removeProfilePhoto()" style="display:none;margin-top:10px;background:rgba(255,255,255,0.1);border:none;border-radius:8px;padding:5px 12px;color:rgba(255,255,255,0.5);font-size:11px;cursor:pointer;position:relative;z-index:1">Supprimer la photo</button>
       </div>
 
-      <div class="profile-card">
-        <div class="profile-section-title">Informations personnelles</div>
+      <div style="padding:14px 16px 32px">
+
+      <!-- Carte infos perso -->
+      <div style="background:white;border-radius:22px;border:1px solid rgba(255,154,108,0.15);padding:20px;margin-bottom:12px">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:18px">
+          <div style="width:32px;height:32px;border-radius:10px;background:linear-gradient(135deg,#FF6B6B,#FF9A3C);display:flex;align-items:center;justify-content:center;flex-shrink:0">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.2" stroke-linecap="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          </div>
+          <div><div style="font-size:13px;font-weight:700;color:#1a1a1a">Informations personnelles</div><div style="font-size:10px;color:#aaa;margin-top:1px">Identité et données physiques</div></div>
+        </div>
         <div class="profile-grid">
           <div class="profile-field" style="grid-column:span 2">
             <label class="profile-label">Nom complet</label>
@@ -3752,67 +3778,115 @@ function switchLang(lang) {
               <option value="autre">Autre</option>
             </select>
           </div>
-          <div class="profile-field" style="grid-column:span 2">
-            <label class="profile-label">Pathologies (séparées par des virgules)</label>
-            <input type="text" class="profile-input" id="profilePathologies" placeholder="ex: diabète type 2, hypertension">
-          </div>
-          <div class="profile-field" style="grid-column:span 2">
-            <label class="profile-label">Allergies alimentaires</label>
-            <input type="text" class="profile-input" id="profileAllergies" placeholder="ex: gluten, lactose, noix">
-          </div>
-          <div class="profile-field" style="grid-column:span 2">
-            <label class="profile-label">Médicaments en cours</label>
-            <input type="text" class="profile-input" id="profileMedications" placeholder="ex: metformine, lisinopril">
-          </div>
-          <div class="profile-field" style="grid-column:span 2">
-            <label class="profile-label">Contraintes culturelles/religieuses</label>
-            <input type="text" class="profile-input" id="profileCultural" placeholder="ex: halal, végétarien">
-          </div>
-          <div class="profile-field" style="grid-column:span 2">
-            <label class="profile-label">Budget alimentaire mensuel</label>
-            <input type="text" class="profile-input" id="profileBudget" placeholder="ex: 200€/mois">
-          </div>
-
-        </div>
-
-
-        <div style="margin-top:20px;display:flex;align-items:stretch;gap:12px;flex-wrap:wrap">
-              <!-- Bloc parrainage -->
-    <div style="background:#FFFCFA;border-radius:16px;padding:20px;box-shadow:0 0 0 1.5px rgba(255,154,108,0.22),0 14px 32px rgba(230,110,70,0.14);margin-bottom:24px">
-      <div style="font-size:0.75rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--accent);margin-bottom:12px">🎁 Parrainage</div>
-      <div style="font-size:0.85rem;color:#555;margin-bottom:14px;line-height:1.5">Invitez vos proches sur Mirella et recevez <b style="color:var(--coral)">l'accès Premium gratuit à vie</b> dès 50 filleuls actifs !</div>
-      <div style="background:#FFF8F3;border-radius:12px;padding:14px;margin-bottom:12px">
-        <div style="font-size:0.7rem;color:#aaa;margin-bottom:4px">Votre code personnel</div>
-        <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
-          <div id="profileReferralCode" style="font-size:1.3rem;font-weight:800;color:var(--coral);letter-spacing:0.15em">—</div>
-          <button onclick="copyReferralCode()" style="padding:6px 12px;border-radius:8px;border:none;background:#fff;color:var(--coral);border:1.5px solid var(--coral);font-size:0.72rem;font-weight:700;cursor:pointer" id="btnCopyCode">Copier le code</button>
-          <button onclick="copyReferralLink()" style="padding:6px 12px;border-radius:8px;border:none;background:var(--coral);color:white;font-size:0.72rem;font-weight:700;cursor:pointer" id="btnCopyLink">Copier le lien</button>
         </div>
       </div>
-      <div style="display:flex;align-items:center;gap:8px;font-size:0.82rem;color:#888">
-        <span>👥</span>
-        <span><b id="profileReferralCount" style="color:#2D2D2D">0</b> filleul(s) parrainé(s)</span>
-      </div>
-    </div>
-          <!-- Personnalisation -->
-          <div style="width:100%;margin-bottom:16px;padding:16px;background:var(--cream);border-radius:12px">
-            <div style="font-size:0.82rem;font-weight:700;color:var(--coral);margin-bottom:10px">🎨 Thème de couleur</div>
-            <div style="display:flex;gap:10px;flex-wrap:wrap">
-              <button class="theme-btn" data-theme="coral" onclick="window.applyTheme('coral')" style="width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,var(--coral),var(--accent));border:3px solid #1a1a1a;cursor:pointer" title="Corail"></button>
-              <button class="theme-btn" data-theme="violet" onclick="window.applyTheme('violet')" style="width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,#8B5CF6,#A78BFA);border:3px solid transparent;cursor:pointer" title="Violet"></button>
-              <button class="theme-btn" data-theme="mint" onclick="window.applyTheme('mint')" style="width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,#10B981,#34D399);border:3px solid transparent;cursor:pointer" title="Menthe"></button>
-              <button class="theme-btn" data-theme="ocean" onclick="window.applyTheme('ocean')" style="width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,#3B82F6,#60A5FA);border:3px solid transparent;cursor:pointer" title="Ocean"></button>
-              <button class="theme-btn" data-theme="gold" onclick="window.applyTheme('gold')" style="width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,#F59E0B,#FBBF24);border:3px solid transparent;cursor:pointer" title="Or"></button>
-              <button class="theme-btn" data-theme="rose" onclick="window.applyTheme('rose')" style="width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,#EC4899,#F472B6);border:3px solid transparent;cursor:pointer" title="Rose"></button>
-            </div>
+
+      <!-- Carte santé -->
+      <div style="background:white;border-radius:22px;border:1px solid rgba(255,154,108,0.15);padding:20px;margin-bottom:12px">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:18px">
+          <div style="width:32px;height:32px;border-radius:10px;background:linear-gradient(135deg,#FF6B6B,#FF9A3C);display:flex;align-items:center;justify-content:center;flex-shrink:0">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.2" stroke-linecap="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
           </div>
-          <button class="btn-save" style="flex:1;min-width:140px" onclick="saveProfile()">Sauvegarder le profil</button>
-          <button class="btn-save" style="flex:1;min-width:140px;background:linear-gradient(135deg,var(--coral),var(--accent));color:#2D2D2D" onclick="showView('passeport')">Passeport Santé</button>
-          <span class="save-success" id="saveSuccess"> Profil sauvegardé !</span>
+          <div><div style="font-size:13px;font-weight:700;color:#1a1a1a">Sante et pathologies</div><div style="font-size:10px;color:#aaa;margin-top:1px">Conditions medicales suivies par Mirella</div></div>
+        </div>
+        <div style="margin-bottom:14px">
+          <div style="font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#aaa;margin-bottom:6px">Pathologies</div>
+          <input type="text" class="profile-input" id="profilePathologies" placeholder="ex: diabete type 2, hypertension" style="border-radius:12px;border:1px solid rgba(255,154,108,0.2);background:#FFFCFA;padding:12px 14px;font-size:13px">
+        </div>
+        <div>
+          <div style="font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#aaa;margin-bottom:6px">Allergies alimentaires</div>
+          <input type="text" class="profile-input" id="profileAllergies" placeholder="ex: gluten, lactose, noix" style="border-radius:12px;border:1px solid rgba(255,154,108,0.2);background:#FFFCFA;padding:12px 14px;font-size:13px">
         </div>
       </div>
-      <p style="font-size:0.75rem;color:var(--soft);max-width:500px"> Vos données sont chiffrées et ne sont jamais partagées sans votre consentement. Mirella utilise ces informations uniquement pour personnaliser vos conseils nutritionnels.</p>
 
+      <!-- Carte traitement -->
+      <div style="background:white;border-radius:22px;border:1px solid rgba(255,154,108,0.15);padding:20px;margin-bottom:12px">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:18px">
+          <div style="width:32px;height:32px;border-radius:10px;background:linear-gradient(135deg,#FF6B6B,#FF9A3C);display:flex;align-items:center;justify-content:center;flex-shrink:0">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.2" stroke-linecap="round"><path d="m10.5 20.5 10-10a4.95 4.95 0 1 0-7-7l-10 10a4.95 4.95 0 1 0 7 7Z"/><path d="m8.5 8.5 7 7"/></svg>
+          </div>
+          <div><div style="font-size:13px;font-weight:700;color:#1a1a1a">Traitement medical</div><div style="font-size:10px;color:#aaa;margin-top:1px">Medicaments et interactions alimentaires</div></div>
+        </div>
+        <div style="margin-bottom:12px">
+          <div style="font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#aaa;margin-bottom:6px">Medicaments en cours</div>
+          <input type="text" class="profile-input" id="profileMedications" placeholder="ex: metformine, lisinopril" style="border-radius:12px;border:1px solid rgba(255,154,108,0.2);background:#FFFCFA;padding:12px 14px;font-size:13px">
+        </div>
+        <div style="display:flex;align-items:center;gap:8px;padding:10px 12px;background:#FFF0E8;border-radius:12px">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#FF6B6B" stroke-width="2.5" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+          <span style="font-size:11px;color:#993C1D;font-weight:500">Interactions alimentaires verifiees automatiquement</span>
+        </div>
+      </div>
+
+      <!-- Carte budget et prefs -->
+      <div style="background:white;border-radius:22px;border:1px solid rgba(255,154,108,0.15);padding:20px;margin-bottom:12px">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:18px">
+          <div style="width:32px;height:32px;border-radius:10px;background:linear-gradient(135deg,#FF6B6B,#FF9A3C);display:flex;align-items:center;justify-content:center;flex-shrink:0">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.2" stroke-linecap="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+          </div>
+          <div><div style="font-size:13px;font-weight:700;color:#1a1a1a">Budget et preferences</div><div style="font-size:10px;color:#aaa;margin-top:1px">Personnalisation des menus et conseils</div></div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px">
+          <div>
+            <div style="font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#aaa;margin-bottom:6px">Budget mensuel</div>
+            <input type="text" class="profile-input" id="profileBudget" placeholder="ex: 400" style="border-radius:12px;border:1px solid rgba(255,154,108,0.2);background:#FFFCFA;padding:12px 14px;font-size:13px">
+          </div>
+          <div>
+            <div style="font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#aaa;margin-bottom:6px">Contraintes</div>
+            <input type="text" class="profile-input" id="profileCultural" placeholder="ex: halal" style="border-radius:12px;border:1px solid rgba(255,154,108,0.2);background:#FFFCFA;padding:12px 14px;font-size:13px">
+          </div>
+        </div>
+      </div>
+
+      <!-- Parrainage -->
+      <div style="background:white;border-radius:22px;border:1px solid rgba(255,154,108,0.15);padding:20px;margin-bottom:12px">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px">
+          <div style="width:32px;height:32px;border-radius:10px;background:linear-gradient(135deg,#FF6B6B,#FF9A3C);display:flex;align-items:center;justify-content:center;flex-shrink:0">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.2" stroke-linecap="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+          </div>
+          <div><div style="font-size:13px;font-weight:700;color:#1a1a1a">Parrainage</div><div style="font-size:10px;color:#aaa;margin-top:1px">Premium gratuit a vie des 50 filleuls</div></div>
+        </div>
+        <div style="background:#FFFCFA;border-radius:14px;padding:14px;margin-bottom:12px;border:1px solid rgba(255,154,108,0.12)">
+          <div style="font-size:9px;color:#aaa;text-transform:uppercase;letter-spacing:1px;margin-bottom:6px">Votre code personnel</div>
+          <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+            <div id="profileReferralCode" style="font-size:1.4rem;font-weight:800;color:#FF6B6B;letter-spacing:0.15em">—</div>
+            <button onclick="copyReferralCode()" style="padding:6px 12px;border-radius:20px;border:1.5px solid #FF6B6B;background:white;color:#FF6B6B;font-size:11px;font-weight:700;cursor:pointer" id="btnCopyCode">Copier le code</button>
+            <button onclick="copyReferralLink()" style="padding:6px 12px;border-radius:20px;border:none;background:linear-gradient(135deg,#FF6B6B,#FF9A3C);color:white;font-size:11px;font-weight:700;cursor:pointer" id="btnCopyLink">Copier le lien</button>
+          </div>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px;font-size:12px;color:#888">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#FF6B6B" stroke-width="2" stroke-linecap="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+          <span><b id="profileReferralCount" style="color:#1a1a1a">0</b> filleul(s) parrains</span>
+        </div>
+      </div>
+
+      <!-- Theme -->
+      <div style="background:white;border-radius:22px;border:1px solid rgba(255,154,108,0.15);padding:20px;margin-bottom:12px">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px">
+          <div style="width:32px;height:32px;border-radius:10px;background:linear-gradient(135deg,#FF6B6B,#FF9A3C);display:flex;align-items:center;justify-content:center;flex-shrink:0">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><path d="m4.9 4.9 14.2 14.2"/></svg>
+          </div>
+          <div><div style="font-size:13px;font-weight:700;color:#1a1a1a">Theme de couleur</div></div>
+        </div>
+        <div style="display:flex;gap:10px;flex-wrap:wrap">
+          <button class="theme-btn" data-theme="coral" onclick="window.applyTheme('coral')" style="width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,#FF6B6B,#FF9A3C);border:3px solid #1a1a1a;cursor:pointer"></button>
+          <button class="theme-btn" data-theme="violet" onclick="window.applyTheme('violet')" style="width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,#8B5CF6,#A78BFA);border:3px solid transparent;cursor:pointer"></button>
+          <button class="theme-btn" data-theme="mint" onclick="window.applyTheme('mint')" style="width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,#10B981,#34D399);border:3px solid transparent;cursor:pointer"></button>
+          <button class="theme-btn" data-theme="ocean" onclick="window.applyTheme('ocean')" style="width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,#3B82F6,#60A5FA);border:3px solid transparent;cursor:pointer"></button>
+          <button class="theme-btn" data-theme="gold" onclick="window.applyTheme('gold')" style="width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,#F59E0B,#FBBF24);border:3px solid transparent;cursor:pointer"></button>
+          <button class="theme-btn" data-theme="rose" onclick="window.applyTheme('rose')" style="width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,#EC4899,#F472B6);border:3px solid transparent;cursor:pointer"></button>
+        </div>
+      </div>
+
+      <!-- Boutons action -->
+      <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:8px">
+        <button onclick="saveProfile()" style="width:100%;background:linear-gradient(135deg,#FF6B6B,#FF9A3C);color:white;border:none;border-radius:18px;padding:16px;font-size:15px;font-weight:800;cursor:pointer;letter-spacing:.3px">Enregistrer les modifications</button>
+        <button onclick="showView('passeport')" style="width:100%;background:white;color:#FF6B6B;border:1.5px solid rgba(255,107,107,0.3);border-radius:18px;padding:14px;font-size:14px;font-weight:700;cursor:pointer">Passeport Sante</button>
+        <span class="save-success" id="saveSuccess" style="text-align:center"> Profil sauvegarde !</span>
+      </div>
+
+      <p style="font-size:11px;color:#ccc;text-align:center;line-height:1.5;padding:8px 0">Vos donnees sont chiffrees et ne sont jamais partagees sans votre consentement.</p>
+
+      </div>
     </div>
 
     <!-- PRICING VIEW -->
@@ -6322,6 +6396,17 @@ function switchLang(lang) {
       document.getElementById('profileAllergies').value = profile.allergies?.join(', ') || '';
       document.getElementById('profileMedications').value = profile.medications?.join(', ') || '';
       document.getElementById('profileCultural').value = profile.cultural_constraints || '';
+      // Update hero header
+      var nd = document.getElementById('profileNameDisplay');
+      if (nd && profile.full_name) nd.textContent = profile.full_name;
+      var ad = document.getElementById('profileAgeDisplay');
+      if (ad && profile.age) ad.textContent = profile.age;
+      var pc = document.getElementById('profilePathoCount');
+      if (pc) pc.textContent = (profile.pathologies||[]).length;
+      var mc = document.getElementById('profileMedCount');
+      if (mc) mc.textContent = (profile.medications||[]).length;
+      var pb = document.getElementById('profilePlanBadge');
+      if (pb) pb.textContent = (profile.plan||'free').toUpperCase();
       document.getElementById('profileBudget').value = profile.budget_alimentaire || '';
       if (document.getElementById('profileEthnicity')) document.getElementById('profileEthnicity').value = profile.ethnicity || '';
       if (document.getElementById('profileSexe')) document.getElementById('profileSexe').value = profile.sexe || '';
