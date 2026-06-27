@@ -9113,28 +9113,24 @@ window._currentMenu = null;
 let _donutChart = null;
 
 function updateNutritionPanel(dayIndex) {
-  const idx = dayIndex !== undefined ? dayIndex : parseInt(document.getElementById('menusDaySelector')?.value || 0);
-  const jourNom = window.PERSO_JOURS ? window.PERSO_JOURS[idx] : null;
-  const hasMenu = window._currentMenu && window._currentMenu.semaine;
-  const jour = hasMenu ? (window._currentMenu.semaine.find(function(j){ return j.jour === jourNom; }) || window._currentMenu.semaine[idx] || {}) : {};
-  const persoEnabledCheck = document.getElementById('persoMenusEnabled') ? document.getElementById('persoMenusEnabled').checked : false;
-  var hasPersoMeals = Object.keys(JSON.parse(localStorage.getItem('mirella_checked_meals') || '{}')).some(function(k){ return k.startsWith('mealcheck_perso_'); });
-  if (!hasMenu && !persoEnabledCheck && !hasPersoMeals) { if (typeof window.updateCaloriesFromMeals === 'function') window.updateCaloriesFromMeals(); return; }
+  var idx = dayIndex !== undefined ? dayIndex : parseInt(document.getElementById('menusDaySelector')?.value || 0);
+  var jourNom = window.PERSO_JOURS ? window.PERSO_JOURS[idx] : null;
+  var hasMenu = window._currentMenu && window._currentMenu.semaine;
+  var semaine = hasMenu ? window._currentMenu.semaine : [];
+  var jour = semaine.find(function(j){ return j.jour === jourNom; }) || semaine[idx] || {};
+  var persoEnabled = document.getElementById('persoMenusEnabled') ? document.getElementById('persoMenusEnabled').checked : false;
+  var checkedMeals = JSON.parse(localStorage.getItem('mirella_checked_meals') || '{}');
+  var hasPersoMeals = Object.keys(checkedMeals).some(function(k){ return k.startsWith('mealcheck_perso_'); });
+  if (!hasMenu && !persoEnabled && !hasPersoMeals) { if (typeof window.updateCaloriesFromMeals === 'function') window.updateCaloriesFromMeals(); return; }
   document.getElementById('menusNutritionPanel').style.display = 'block';
-  document.getElementById('menusNutritionPanel').style.display = 'block';
-  document.getElementById('menusNutritionPanel').style.display = 'block';
-
-  // Calculer totaux consommes (repas coches uniquement)
-  const repas = ['petit_dejeuner','dejeuner','collation','diner'];
-  const iaEnabled = (window._currentMenu && window._currentMenu.semaine) ? true : (document.getElementById('iaMenusEnabled') ? document.getElementById('iaMenusEnabled').checked : false);
-  const checkedMeals = JSON.parse(localStorage.getItem('mirella_checked_meals') || '{}');
-  const totals = {cal:0, lip:0, glu:0, pro:0, fib:0, suc:0, sel:0, cal_mg:0, fer:0, vitc:0, mag:0, potassium:0, vita:0};
-  if (iaEnabled && jour.jour) {
-    repas.forEach(r => {
-      const m = jour[r];
+  var repas = ['petit_dejeuner','dejeuner','collation','diner'];
+  var totals = {cal:0,lip:0,glu:0,pro:0,fib:0,suc:0,sel:0,cal_mg:0,fer:0,vitc:0,mag:0,potassium:0,vita:0};
+  // Repas IA Mirella
+  if (hasMenu && jour.jour) {
+    repas.forEach(function(r) {
+      var m = jour[r];
       if (!m) return;
-      const ck = 'mealcheck_' + jour.jour + '_' + r;
-      if (!checkedMeals[ck]) return;
+      if (!checkedMeals['mealcheck_' + jour.jour + '_' + r]) return;
       totals.cal += m.calories || 0;
       totals.lip += m.lipides || 0;
       totals.glu += m.glucides || 0;
@@ -9150,39 +9146,28 @@ function updateNutritionPanel(dayIndex) {
       totals.vita += m.vitamine_a_mcg || 0;
     });
   }
-  // Ajouter les repas perso coches (toujours, si coche)
-  // jourNom already defined above
-  if (true) {
-    const persoData = window.getPersoMenus();
-    const persoJour = persoData[jourNom] || {};
-    repas.forEach(r => {
-      (persoJour[r] || []).forEach((item, pidx) => {
-        const ck = 'mealcheck_perso_' + jourNom + '_' + r + '_' + pidx;
-        if (!checkedMeals[ck]) return;
-        totals.cal += item.kcal || 0;
-        totals.glu += item.glu || 0;
-        totals.pro += item.pro || 0;
-        totals.lip += item.lip || 0;
-        totals.fib += item.fib || 0;
-        totals.suc += item.suc || 0;
-        totals.sel += item.sel || 0;
-        totals.cal_mg += item.cal_mg || 0;
-        totals.fer += item.fer || 0;
-        totals.vitc += item.vitc || 0;
-        totals.mag += item.mag || 0;
-        totals.potassium += item.potassium || 0;
-        totals.vita += item.vita || 0;
-      });
+  // Repas perso
+  var persoData = window.getPersoMenus ? window.getPersoMenus() : {};
+  var persoJour = persoData[jourNom] || {};
+  repas.forEach(function(r) {
+    (persoJour[r] || []).forEach(function(item, pidx) {
+      if (!checkedMeals['mealcheck_perso_' + jourNom + '_' + r + '_' + pidx]) return;
+      totals.cal += item.kcal || 0;
+      totals.glu += item.glu || 0;
+      totals.pro += item.pro || 0;
+      totals.lip += item.lip || 0;
+      totals.fib += item.fib || 0;
+      totals.suc += item.suc || 0;
+      totals.sel += item.sel || 0;
+      totals.cal_mg += item.cal_mg || 0;
+      totals.fer += item.fer || 0;
+      totals.vitc += item.vitc || 0;
+      totals.mag += item.mag || 0;
+      totals.potassium += item.potassium || 0;
+      totals.vita += item.vita || 0;
     });
-  }
-
-  // Besoins estimés (personnalisables)
-  const besoins = window.getObjectifsNutrition();
-  const calPct = Math.min(100, Math.round(totals.cal / besoins.cal * 100));
-
-  // Donut chart géré uniquement par updateCaloriesFromMeals
-
-  // Macros barres horizontales
+  });
+  var besoins = window.getObjectifsNutrition ? window.getObjectifsNutrition() : {cal:2000,glu:250,pro:60,lip:70};
   var gluPct = Math.min(100, Math.round(totals.glu / besoins.glu * 100));
   var proPct = Math.min(100, Math.round(totals.pro / besoins.pro * 100));
   var lipPct = Math.min(100, Math.round(totals.lip / besoins.lip * 100));
@@ -9195,35 +9180,29 @@ function updateNutritionPanel(dayIndex) {
   if (document.getElementById('barGlucides')) document.getElementById('barGlucides').style.width = gluPct + '%';
   if (document.getElementById('barProteines')) document.getElementById('barProteines').style.width = proPct + '%';
   if (document.getElementById('barLipides')) document.getElementById('barLipides').style.width = lipPct + '%';
-
-  // Micronutriments carte separee
-  var microCard = document.getElementById('micronutrimentsCard');
-  if (microCard) microCard.style.display = 'block';
-  var micros = [
-    {id:'Fibres', val: totals.fib, max:25, unit:'g'},
-    {id:'Sucres', val: totals.suc, max:50, unit:'g'},
-    {id:'Sel',    val: totals.sel, max:6,  unit:'g'},
-    {id:'Calcium',val: totals.cal_mg, max:1000, unit:'mg'},
-    {id:'Fer',    val: totals.fer, max:16, unit:'mg'},
-    {id:'VitC',   val: totals.vitc, max:90, unit:'mg'},
-    {id:'Mag',    val: totals.mag, max:375, unit:'mg'},
-    {id:'K',      val: totals.potassium, max:2000, unit:'mg'},
-    {id:'VitA',   val: totals.vita, max:800, unit:'µg'}
+  var microsList = [
+    {id:'Fibres',val:totals.fib,max:25,unit:'g'},
+    {id:'Sucres',val:totals.suc,max:50,unit:'g'},
+    {id:'Sel',val:totals.sel,max:6,unit:'g'},
+    {id:'Calcium',val:totals.cal_mg,max:1000,unit:'mg'},
+    {id:'Fer',val:totals.fer,max:16,unit:'mg'},
+    {id:'VitC',val:totals.vitc,max:90,unit:'mg'},
+    {id:'Mag',val:totals.mag,max:375,unit:'mg'},
+    {id:'K',val:totals.potassium,max:2000,unit:'mg'},
+    {id:'VitA',val:totals.vita,max:800,unit:'µg'}
   ];
-  micros.forEach(function(m) {
-    var microPct = Math.min(100, Math.round(m.val / m.max * 100));
+  microsList.forEach(function(m) {
+    var mp = Math.min(100, Math.round(m.val / m.max * 100));
     if (document.getElementById('micro'+m.id+'Val')) document.getElementById('micro'+m.id+'Val').textContent = Math.round(m.val);
     if (document.getElementById('micro'+m.id+'Max')) document.getElementById('micro'+m.id+'Max').textContent = '/ '+m.max+' '+m.unit;
-    if (document.getElementById('bar'+m.id)) document.getElementById('bar'+m.id).style.width = microPct + '%';
+    if (document.getElementById('bar'+m.id)) document.getElementById('bar'+m.id).style.width = mp + '%';
   });
-  var adviceTxt = totals.cal === 0 ? 'Cochez vos repas pour mettre à jour' : calPct < 70 ? 'Apports caloriques insuffisants' : calPct > 110 ? 'Apports caloriques élevés' : 'Apports bien équilibrés';
+  var calPct = Math.min(110, Math.round(totals.cal / besoins.cal * 100));
+  var adviceTxt = totals.cal === 0 ? 'Cochez vos repas pour mettre a jour' : calPct < 70 ? 'Apports caloriques insuffisants' : calPct > 110 ? 'Apports caloriques eleves' : 'Apports bien equilibres';
   if (document.getElementById('nutritionAdvice')) document.getElementById('nutritionAdvice').textContent = adviceTxt;
-  window.updateCaloriesFromMeals();
-  if (document.getElementById('donutObjectif')) document.getElementById('donutObjectif').textContent = besoins.cal + ' kcal';
-
-  // Sélectionner le bon jour dans le dropdown
-  const sel = document.getElementById('menusDaySelector');
+  var sel = document.getElementById('menusDaySelector');
   if (sel) sel.value = idx;
+  window.updateCaloriesFromMeals();
 }
 
 function renderMenu(menu) {
