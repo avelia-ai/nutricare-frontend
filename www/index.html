@@ -9129,8 +9129,6 @@ function updateNutritionPanel(dayIndex) {
   const iaEnabled = (window._currentMenu && window._currentMenu.semaine) ? true : (document.getElementById('iaMenusEnabled') ? document.getElementById('iaMenusEnabled').checked : false);
   const checkedMeals = JSON.parse(localStorage.getItem('mirella_checked_meals') || '{}');
   const totals = {cal:0, lip:0, glu:0, pro:0, fib:0, suc:0, sel:0, cal_mg:0, fer:0, vitc:0, mag:0, potassium:0, vita:0};
-  var dbgEl = document.getElementById('nutritionAdvice');
-  if (dbgEl) dbgEl.textContent = 'IA:' + (jour.jour||'NONE') + ' idx:' + idx + ' jourNom:' + jourNom;
   if (iaEnabled && jour.jour) {
     repas.forEach(r => {
       const m = jour[r];
@@ -9180,7 +9178,7 @@ function updateNutritionPanel(dayIndex) {
 
   // Besoins estimés (personnalisables)
   const besoins = window.getObjectifsNutrition();
-  const pct = Math.min(100, Math.round(totals.cal / besoins.cal * 100));
+  const calPct = Math.min(100, Math.round(totals.cal / besoins.cal * 100));
 
   // Donut chart géré uniquement par updateCaloriesFromMeals
 
@@ -9213,10 +9211,10 @@ function updateNutritionPanel(dayIndex) {
     {id:'VitA',   val: totals.vita, max:800, unit:'µg'}
   ];
   micros.forEach(function(m) {
-    var pct = Math.min(100, Math.round(m.val / m.max * 100));
+    var microPct = Math.min(100, Math.round(m.val / m.max * 100));
     if (document.getElementById('micro'+m.id+'Val')) document.getElementById('micro'+m.id+'Val').textContent = Math.round(m.val);
     if (document.getElementById('micro'+m.id+'Max')) document.getElementById('micro'+m.id+'Max').textContent = '/ '+m.max+' '+m.unit;
-    if (document.getElementById('bar'+m.id)) document.getElementById('bar'+m.id).style.width = pct + '%';
+    if (document.getElementById('bar'+m.id)) document.getElementById('bar'+m.id).style.width = microPct + '%';
   });
   var calPct = Math.min(110, Math.round(totals.cal / (window.getObjectifsNutrition ? window.getObjectifsNutrition().cal : 2000) * 100));
   var adviceTxt = totals.cal === 0 ? 'Cochez vos repas pour mettre à jour' : calPct < 70 ? 'Apports caloriques insuffisants' : calPct > 110 ? 'Apports caloriques élevés' : 'Apports bien équilibrés';
