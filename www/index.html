@@ -791,6 +791,13 @@ window.initPersoMenus = function() {
 window.PERSO_JOURS = ["Lundi","Mardi","Mercredi","Jeudi","Vendredi","Samedi","Dimanche"];
 window.PERSO_REPAS = [["petit_dejeuner","Petit-dejeuner"],["dejeuner","Dejeuner"],["collation","Collation"],["diner","Diner"]];
 window._persoMenusJour = window._persoMenusJour || "Lundi";
+window._syncDaySelector = function(jourNom) {
+  var sel = document.getElementById('menusDaySelector');
+  if (sel && window.PERSO_JOURS) {
+    var idx = window.PERSO_JOURS.indexOf(jourNom);
+    if (idx >= 0) sel.value = idx;
+  }
+};
 window.getPersoMenus = function() {
   return JSON.parse(localStorage.getItem('mirella_menus_perso') || '{}');
 };
@@ -9101,7 +9108,12 @@ window._currentMenu = null;
 let _donutChart = null;
 
 function updateNutritionPanel(dayIndex) {
-  const idx = dayIndex !== undefined ? dayIndex : parseInt(document.getElementById('menusDaySelector')?.value || 0);
+  var idx = dayIndex !== undefined ? dayIndex : parseInt(document.getElementById('menusDaySelector')?.value || 0);
+  // Synchroniser avec le jour perso selectionne si pas d'argument explicite
+  if (dayIndex === undefined && window._persoMenusJour && window.PERSO_JOURS) {
+    var persoIdx = window.PERSO_JOURS.indexOf(window._persoMenusJour);
+    if (persoIdx >= 0) idx = persoIdx;
+  }
   const hasMenu = window._currentMenu && window._currentMenu.semaine;
   const jourNomSelector = window.PERSO_JOURS ? window.PERSO_JOURS[idx] : null;
   const jour = hasMenu ? (window._currentMenu.semaine.find(function(j){ return j.jour === jourNomSelector; }) || window._currentMenu.semaine[idx] || {}) : {};
