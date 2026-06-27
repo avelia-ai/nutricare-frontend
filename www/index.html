@@ -790,7 +790,10 @@ window.initPersoMenus = function() {
 };
 window.PERSO_JOURS = ["Lundi","Mardi","Mercredi","Jeudi","Vendredi","Samedi","Dimanche"];
 window.PERSO_REPAS = [["petit_dejeuner","Petit-dejeuner"],["dejeuner","Dejeuner"],["collation","Collation"],["diner","Diner"]];
-window._persoMenusJour = window._persoMenusJour || "Lundi";
+window._persoMenusJour = window._persoMenusJour || (function() {
+  var jours = ["Dimanche","Lundi","Mardi","Mercredi","Jeudi","Vendredi","Samedi"];
+  return jours[new Date().getDay()];
+})();
 window._syncDaySelector = function(jourNom) {
   var sel = document.getElementById('menusDaySelector');
   if (sel && window.PERSO_JOURS) {
@@ -1069,11 +1072,7 @@ window.togglePersoRepasChecked = function(checkKey, repasKey, idx) {
   }
   localStorage.setItem('mirella_checked_meals', JSON.stringify(meals));
   window.renderPersoMenus();
-  // Synchroniser le sélecteur de jour avec le jour perso actif
-  var jourIdx = window.PERSO_JOURS ? window.PERSO_JOURS.indexOf(jour) : -1;
-  var sel = document.getElementById('menusDaySelector');
-  if (sel && jourIdx >= 0) sel.value = jourIdx;
-  if (typeof updateNutritionPanel === 'function') updateNutritionPanel(jourIdx >= 0 ? jourIdx : undefined);
+  if (typeof updateNutritionPanel === 'function') updateNutritionPanel();
 };
 window.selectPersoJour = function(jour) {
   window._persoMenusJour = jour;
@@ -9146,25 +9145,27 @@ function updateNutritionPanel(dayIndex) {
       totals.vita += m.vitamine_a_mcg || 0;
     });
   }
-  // Repas perso
+  // Repas perso - tous les jours confondus (car bloc perso independant)
   var persoData = window.getPersoMenus ? window.getPersoMenus() : {};
-  var persoJour = persoData[jourNom] || {};
-  repas.forEach(function(r) {
-    (persoJour[r] || []).forEach(function(item, pidx) {
-      if (!checkedMeals['mealcheck_perso_' + jourNom + '_' + r + '_' + pidx]) return;
-      totals.cal += item.kcal || 0;
-      totals.glu += item.glu || 0;
-      totals.pro += item.pro || 0;
-      totals.lip += item.lip || 0;
-      totals.fib += item.fib || 0;
-      totals.suc += item.suc || 0;
-      totals.sel += item.sel || 0;
-      totals.cal_mg += item.cal_mg || 0;
-      totals.fer += item.fer || 0;
-      totals.vitc += item.vitc || 0;
-      totals.mag += item.mag || 0;
-      totals.potassium += item.potassium || 0;
-      totals.vita += item.vita || 0;
+  window.PERSO_JOURS.forEach(function(j) {
+    var persoJour = persoData[j] || {};
+    repas.forEach(function(r) {
+      (persoJour[r] || []).forEach(function(item, pidx) {
+        if (!checkedMeals['mealcheck_perso_' + j + '_' + r + '_' + pidx]) return;
+        totals.cal += item.kcal || 0;
+        totals.glu += item.glu || 0;
+        totals.pro += item.pro || 0;
+        totals.lip += item.lip || 0;
+        totals.fib += item.fib || 0;
+        totals.suc += item.suc || 0;
+        totals.sel += item.sel || 0;
+        totals.cal_mg += item.cal_mg || 0;
+        totals.fer += item.fer || 0;
+        totals.vitc += item.vitc || 0;
+        totals.mag += item.mag || 0;
+        totals.potassium += item.potassium || 0;
+        totals.vita += item.vita || 0;
+      });
     });
   });
   var besoins = window.getObjectifsNutrition ? window.getObjectifsNutrition() : {cal:2000,glu:250,pro:60,lip:70};
