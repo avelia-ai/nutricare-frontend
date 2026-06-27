@@ -9259,12 +9259,17 @@ async function showRecipeModal(btn) {
     document.getElementById('recipeModalEtapes').innerHTML = '<div style="color:#e74c3c;font-size:0.85rem">Erreur de génération</div>';
   }
 }
-// Nettoyer une fois les entrees frigo mal sauvees dans visage_historique
+// Nettoyer les historiques mal croises
 (function() {
   try {
     var vh = JSON.parse(localStorage.getItem('mirella_visage_historique') || '[]');
-    var cleaned = vh.filter(function(h){ return h.score !== undefined && h.score > 0; });
-    if (cleaned.length !== vh.length) localStorage.setItem('mirella_visage_historique', JSON.stringify(cleaned));
+    var cleanedV = vh.filter(function(h){ return h.score !== undefined && h.score >= 0; });
+    if (cleanedV.length !== vh.length) localStorage.setItem('mirella_visage_historique', JSON.stringify(cleanedV));
+  } catch(e) {}
+  try {
+    var fh = JSON.parse(localStorage.getItem('mirella_frigo_historique') || '[]');
+    var cleanedF = fh.filter(function(h){ return h.score === undefined; });
+    if (cleanedF.length !== fh.length) localStorage.setItem('mirella_frigo_historique', JSON.stringify(cleanedF));
   } catch(e) {}
 })();
 window._currentMenu = null;
