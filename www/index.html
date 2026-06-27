@@ -2353,7 +2353,12 @@ window.analyseVisage = async function(file) {
       headers: {'Content-Type':'application/json','Authorization':'Bearer '+token},
       body: JSON.stringify({image_base64: base64, pathologies: profile.pathologies||[], medications: profile.medications||[]})
     });
-    var data = await res.json();
+    var text = await res.text();
+    var data;
+    try { data = JSON.parse(text); } catch(e) {
+      var m = text.match(/\{[\s\S]*\}/);
+      if (m) { try { data = JSON.parse(m[0]); } catch(e2) { data = {}; } } else { data = {}; }
+    }
     loading.style.display = 'none';
     result.style.display = 'block';
     var html = '';
