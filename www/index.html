@@ -8510,7 +8510,15 @@ Réponds UNIQUEMENT en JSON valide avec cette structure exacte:
     document.getElementById('ordonnanceView').style.display = view === 'ordonnance' ? 'block' : 'none';
     document.getElementById('scanproduitView').style.display = view === 'scanproduit' ? 'block' : 'none'; if (view === 'scanproduit') applyScanproduitPlanGates();
     document.getElementById('insightsView').style.display = view === 'insights' ? 'block' : 'none';
-    var vv = document.getElementById('visageView'); if(vv) { vv.style.display = view === 'visage' ? 'block' : 'none'; if(view==='visage') { var mc = document.querySelector('.main-content'); if(mc) mc.style.overflow = 'auto'; setTimeout(window.renderVisageHistorique, 200); applyVisagePlanGates(); } }
+    var vv = document.getElementById('visageView'); if(vv) { vv.style.display = view === 'visage' ? 'block' : 'none'; if(view==='visage') { var mc = document.querySelector('.main-content'); if(mc) mc.style.overflow = 'auto'; setTimeout(function(){
+  // Nettoyer les entrees frigo (sans score) qui auraient ete sauvees dans visage_historique
+  try {
+    var vh = JSON.parse(localStorage.getItem('mirella_visage_historique') || '[]');
+    vh = vh.filter(function(h){ return h.score !== undefined && h.score !== null; });
+    localStorage.setItem('mirella_visage_historique', JSON.stringify(vh));
+  } catch(e) {}
+  window.renderVisageHistorique();
+}, 200); applyVisagePlanGates(); } }
     var fv = document.getElementById('frigoView'); if(fv) { fv.style.display = view === 'frigo' ? 'block' : 'none'; var mc = document.querySelector('.main-content'); if(mc) mc.style.overflow = view === 'frigo' ? 'auto' : 'hidden'; if(view==='frigo') { applyFrigoPlanGates(); setTimeout(function(){ if(typeof window.renderFrigoHistorique==='function') window.renderFrigoHistorique(); },100); } }
     var hv = document.getElementById('homeView'); if(hv) { hv.style.display = view === 'home' ? 'block' : 'none'; if(view === 'home') { setTimeout(function(){ if(typeof window.initHome==='function') window.initHome(); }, 100); var mc2=document.querySelector('.main-content'); if(mc2){mc2.style.overflow='auto';mc2.style.height='100%';} } }
     var mc = document.querySelector('.main-content');
