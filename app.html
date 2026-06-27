@@ -2426,18 +2426,16 @@ window.analyseVisage = async function(file) {
     result.innerHTML = html;
     result.appendChild(resetBtn);
 
-    // Sauvegarder dans l'historique
+    // Sauvegarder dans l'historique frigo
     var historique = [];
-    try { historique = JSON.parse(localStorage.getItem('mirella_visage_historique') || '[]'); } catch(x){}
+    try { historique = JSON.parse(localStorage.getItem('mirella_frigo_historique') || '[]'); } catch(x){}
     historique.unshift({
       date: new Date().toISOString(),
-      score: data.score_global || 0,
-      resume: data.peau || data.bien_etre || 'Analyse complète',
+      aliments: (data.aliments||[]).slice(0,3).join(', '),
       photo: compressed
     });
     if(historique.length > 5) historique = historique.slice(0,5);
-    localStorage.setItem('mirella_visage_historique', JSON.stringify(historique));
-    window.renderVisageHistorique();
+    localStorage.setItem('mirella_frigo_historique', JSON.stringify(historique));
 
   } catch(e) {
     loading.style.display = 'none';
