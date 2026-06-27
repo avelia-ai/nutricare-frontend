@@ -9129,6 +9129,8 @@ function updateNutritionPanel(dayIndex) {
   const iaEnabled = (window._currentMenu && window._currentMenu.semaine) ? true : (document.getElementById('iaMenusEnabled') ? document.getElementById('iaMenusEnabled').checked : false);
   const checkedMeals = JSON.parse(localStorage.getItem('mirella_checked_meals') || '{}');
   const totals = {cal:0, lip:0, glu:0, pro:0, fib:0, suc:0, sel:0, cal_mg:0, fer:0, vitc:0, mag:0, potassium:0, vita:0};
+  var dbgEl = document.getElementById('nutritionAdvice');
+  if (dbgEl) dbgEl.textContent = 'IA:' + (jour.jour||'NONE') + ' idx:' + idx + ' jourNom:' + jourNom;
   if (iaEnabled && jour.jour) {
     repas.forEach(r => {
       const m = jour[r];
