@@ -9287,10 +9287,10 @@ function renderMenu(menu) {
       info.style.cssText = 'flex:1;min-width:0';
       info.innerHTML = '<div style="display:inline-flex;align-items:center;gap:4px;background:#FFF0E8;border-radius:6px;padding:2px 7px;margin-bottom:4px"><span style="color:#FF6B6B">' + repasIcons[repas] + '</span><span style="font-size:9px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:#FF6B6B">' + repasLabels[repas] + '</span></div>' +
         '<div style="font-size:0.88rem;font-weight:700;color:#2D2D2D;margin-bottom:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">' + r.nom + '</div>' +
-        '<div style="display:flex;gap:8px">' +
-        '<span style="font-size:0.72rem;color:var(--accent);font-weight:600">' + (r.calories||0) + ' kcal</span>' +
-        '<span style="font-size:0.72rem;color:#999">⏱ ' + (r.prep_minutes||0) + ' min</span>' +
-        (r.cout_estime ? '<span style="font-size:0.72rem;color:#28C840;font-weight:600">💰 ' + r.cout_estime.toFixed(2) + '€</span>' : '') +
+        '<div style="display:flex;align-items:center;gap:10px;margin-top:5px">' +
+        '<div style="display:flex;align-items:center;gap:3px"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#FF6B6B" stroke-width="2.5" stroke-linecap="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg><span style="font-size:11px;color:#FF6B6B;font-weight:700">' + (r.calories||0) + ' kcal</span></div>' +
+        '<div style="display:flex;align-items:center;gap:3px"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#aaa" stroke-width="2.5" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg><span style="font-size:11px;color:#aaa">' + (r.prep_minutes||0) + ' min</span></div>' +
+        (r.cout_estime ? '<div style="display:flex;align-items:center;gap:3px"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg><span style="font-size:11px;color:#16a34a;font-weight:600">' + r.cout_estime.toFixed(2) + '€</span></div>' : '') +
         '</div>';
       const recipeBtn = document.createElement('button');
       recipeBtn.setAttribute('data-recipe', rJson);
