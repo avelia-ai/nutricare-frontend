@@ -9268,7 +9268,7 @@ async function showRecipeModal(btn) {
   } catch(e) {}
   try {
     var fh = JSON.parse(localStorage.getItem('mirella_frigo_historique') || '[]');
-    var cleanedF = fh.filter(function(h){ return h.score === undefined; });
+    var cleanedF = fh.filter(function(h){ return h.aliments !== undefined || h.resume === undefined; });
     if (cleanedF.length !== fh.length) localStorage.setItem('mirella_frigo_historique', JSON.stringify(cleanedF));
   } catch(e) {}
 })();
