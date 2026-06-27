@@ -934,7 +934,18 @@ window.analyzePersoPhoto = async function(input) {
       if (m.glucides_g) document.getElementById('persoRepasGlu').value = m.glucides_g;
       if (m.proteines_g) document.getElementById('persoRepasPro').value = m.proteines_g;
       if (m.lipides_g) document.getElementById('persoRepasLip').value = m.lipides_g;
-      window._detectedMicros = data.micronutriments || {};
+      var mn = data.micronutriments || {};
+      window._detectedMicros = {
+        fib: mn.fibres_g || 0,
+        suc: 0,
+        sel: (mn.sodium_mg || 0) / 400,
+        cal_mg: mn.calcium_mg || 0,
+        fer: mn.fer_mg || 0,
+        vitc: mn.vitamine_c_mg || 0,
+        mag: mn.magnesium_mg || 0,
+        potassium: mn.potassium_mg || 0,
+        vita: mn.vitamine_a_mcg || 0
+      };
       if (status) status.textContent = (data.repas_identifie||'repas') + ' — ' + (data.calories_estimees||0) + ' kcal';
       window._persoAliments = (data.aliments || []).slice();
       var alZone = document.getElementById('persoAlimentsDetectes');
@@ -1025,7 +1036,7 @@ window.savePersoRepas = async function() {
   var jour = window._persoMenusJour;
   if (!data[jour]) data[jour] = {};
   if (!data[jour][key]) data[jour][key] = [];
-  data[jour][key].push({nom: nom, kcal: kcal, glu: glu, pro: pro, lip: lip, fib: micros.fib, suc: micros.suc, sel: micros.sel, cal_mg: micros.cal_mg, fer: micros.fer});
+  data[jour][key].push({nom: nom, kcal: kcal, glu: glu, pro: pro, lip: lip, fib: micros.fib||0, suc: micros.suc||0, sel: micros.sel||0, cal_mg: micros.cal_mg||0, fer: micros.fer||0, vitc: micros.vitc||0, mag: micros.mag||0, potassium: micros.potassium||0, vita: micros.vita||0});
   window.savePersoMenus(data);
   document.getElementById('persoRepasModal').style.display = 'none';
   if (btn) { btn.textContent = 'Ajouter'; btn.disabled = false; }
