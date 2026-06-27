@@ -9275,9 +9275,7 @@ async function showRecipeModal(btn) {
     if (cleanedV.length !== vh.length) localStorage.setItem('mirella_visage_historique', JSON.stringify(cleanedV));
   } catch(e) {}
   try {
-    var fh = JSON.parse(localStorage.getItem('mirella_frigo_historique') || '[]');
-    var cleanedF = fh.filter(function(h){ return h.aliments !== undefined || h.resume === undefined; });
-    if (cleanedF.length !== fh.length) localStorage.setItem('mirella_frigo_historique', JSON.stringify(cleanedF));
+    localStorage.removeItem('mirella_frigo_historique');
   } catch(e) {}
 })();
 window._currentMenu = null;
