@@ -8626,7 +8626,15 @@ Réponds UNIQUEMENT en JSON valide avec cette structure exacte:
   } catch(e) {}
   window.renderVisageHistorique();
 }, 200); applyVisagePlanGates(); } }
-    var fv = document.getElementById('frigoView'); if(fv) { fv.style.display = view === 'frigo' ? 'block' : 'none'; var mc = document.querySelector('.main-content'); if(mc) mc.style.overflow = view === 'frigo' ? 'auto' : 'hidden'; if(view==='frigo') { applyFrigoPlanGates(); setTimeout(function(){ if(typeof window.renderFrigoHistorique==='function') window.renderFrigoHistorique(); },100); } }
+    var fv = document.getElementById('frigoView'); if(fv) { fv.style.display = view === 'frigo' ? 'block' : 'none'; var mc = document.querySelector('.main-content'); if(mc) mc.style.overflow = view === 'frigo' ? 'auto' : 'hidden'; if(view==='frigo') { applyFrigoPlanGates();
+  setTimeout(function(){
+    try {
+      var fh = JSON.parse(localStorage.getItem('mirella_frigo_historique') || '[]');
+      var clean = fh.filter(function(h){ return typeof h.aliments === 'string' || Array.isArray(h.aliments); });
+      localStorage.setItem('mirella_frigo_historique', JSON.stringify(clean));
+    } catch(e) {}
+    if(typeof window.renderFrigoHistorique==='function') window.renderFrigoHistorique();
+  },100); } }
     var hv = document.getElementById('homeView'); if(hv) { hv.style.display = view === 'home' ? 'block' : 'none'; if(view === 'home') { setTimeout(function(){ if(typeof window.initHome==='function') window.initHome(); }, 100); var mc2=document.querySelector('.main-content'); if(mc2){mc2.style.overflow='auto';mc2.style.height='100%';} } }
     var mc = document.querySelector('.main-content');
     if (mc) mc.style.overflow = ['home','cycle','planning','catalogue','menus','chrono','mes-recettes','leaderboard','visual'].includes(view) ? 'auto' : 'hidden';
