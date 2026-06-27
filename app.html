@@ -2275,13 +2275,31 @@ window.updateCycle = function() {
   };
 
   var phase = phases[result.phase];
-  document.getElementById('cyclePhaseName').textContent = phase.emoji + ' ' + phase.name;
-  document.getElementById('cyclePhaseName').style.color = phase.color;
+  document.getElementById('cyclePhaseName').textContent = phase.name;
+  document.getElementById('cyclePhaseName').style.color = 'white';
   document.getElementById('cyclePhaseDesc').textContent = phase.desc;
+
+  // Jour du cycle
+  var dayEl = document.getElementById('cyclePhaseDay');
+  if (dayEl) dayEl.textContent = 'Jour ' + result.dayOfCycle + ' sur ' + cycleLength;
+
+  // Stats countdown
+  var ovulDay = Math.round(cycleLength / 2);
+  var daysToOvul = ovulDay - result.dayOfCycle;
+  var daysToNext = cycleLength - result.dayOfCycle;
+  var el1 = document.getElementById('statJoursRestants');
+  var el2 = document.getElementById('statOvulation');
+  var el3 = document.getElementById('statProchRegles');
+  if (el1) el1.textContent = (cycleLength - result.dayOfCycle) + 'j';
+  if (el2) el2.textContent = (daysToOvul > 0 ? 'J-' + daysToOvul : 'Aujourd'hui');
+  if (el3) el3.textContent = 'J-' + daysToNext;
 
   var adviceEl = document.getElementById('cycleAdvice');
   adviceEl.innerHTML = phase.conseils.map(function(c) {
-    return '<div style="display:flex;align-items:flex-start;gap:10px;padding:10px;background:var(--cream);border-radius:10px"><span style="color:var(--coral);font-weight:700;flex-shrink:0">✓</span><span style="font-size:0.85rem;color:#444">'+c+'</span></div>';
+    return '<div style="display:flex;align-items:flex-start;gap:10px;padding:11px 14px;background:#FFFCFA;border-radius:12px;border:1px solid rgba(255,154,108,0.1)">' +
+      '<div style="width:20px;height:20px;border-radius:6px;background:linear-gradient(135deg,#FF6B6B,#FF9A3C);display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px">' +
+      '<svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg></div>' +
+      '<span style="font-size:12px;color:#333;line-height:1.5">' + c + '</span></div>';
   }).join('');
 
   // Calendrier
@@ -12142,12 +12160,21 @@ function toggleQuickMenu() {
     </div>
 
     <!-- Phase actuelle -->
-    <div id="cyclePhaseCard" style="background:linear-gradient(135deg,#1a1a1a,#2d2d2d);border-radius:22px;padding:22px;margin-bottom:12px;overflow:hidden;position:relative">
-      <div style="position:absolute;top:-20px;right:-20px;width:100px;height:100px;border-radius:50%;background:rgba(255,107,107,0.08)"></div>
-      <div style="font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:rgba(255,154,108,0.6);margin-bottom:6px">Phase actuelle</div>
-      <div id="cyclePhaseName" style="font-size:22px;font-weight:800;color:white;margin-bottom:6px">--</div>
-      <div id="cyclePhaseDesc" style="font-size:12px;color:rgba(255,255,255,0.5);line-height:1.5;margin-bottom:14px"></div>
-      <div id="cyclePhaseIcons" style="display:flex;gap:8px;flex-wrap:wrap"></div>
+    <div id="cyclePhaseCard" style="background:linear-gradient(135deg,#1a1a1a,#2a2a2a);border-radius:24px;padding:24px;margin-bottom:12px;position:relative;overflow:hidden">
+      <div style="position:absolute;top:-30px;right:-30px;width:130px;height:130px;border-radius:50%;background:rgba(255,107,107,0.08)"></div>
+      <div style="position:absolute;bottom:-20px;left:50px;width:80px;height:80px;border-radius:50%;background:rgba(255,154,60,0.06)"></div>
+      <div style="font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:rgba(255,154,108,0.5);margin-bottom:10px;position:relative">Phase actuelle</div>
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:10px;position:relative">
+        <div id="cyclePhaseIconWrap" style="width:46px;height:46px;border-radius:14px;background:rgba(255,107,107,0.15);border:1px solid rgba(255,107,107,0.2);display:flex;align-items:center;justify-content:center;flex-shrink:0">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#FF6B6B" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+        </div>
+        <div>
+          <div id="cyclePhaseName" style="font-size:22px;font-weight:800;color:white;line-height:1">--</div>
+          <div id="cyclePhaseDay" style="font-size:11px;color:rgba(255,154,108,0.6);margin-top:3px;font-weight:600"></div>
+        </div>
+      </div>
+      <div id="cyclePhaseDesc" style="font-size:12px;color:rgba(255,255,255,0.45);line-height:1.6;position:relative;margin-bottom:16px"></div>
+      <div id="cyclePhaseIcons" style="display:flex;gap:8px;position:relative"></div>
     </div>
 
     <!-- Paramètres cycle -->
@@ -12206,7 +12233,7 @@ function toggleQuickMenu() {
         <div><div style="font-size:13px;font-weight:700;color:#1a1a1a">Conseils Mirella pour cette phase</div></div>
       </div>
       <div id="cycleAdvice" style="display:flex;flex-direction:column;gap:8px">
-        <div style="font-size:12px;color:#ccc;text-align:center;padding:20px">Renseignez votre cycle pour obtenir des conseils</div>
+        <div style="font-size:12px;color:#ccc;text-align:center;padding:20px">Renseignez votre cycle pour obtenir des conseils personnalises</div>
       </div>
       <div style="margin-top:16px">
         <div style="font-size:9px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#aaa;margin-bottom:8px">Comment vous sentez-vous ? <span style="font-weight:400;color:#ddd">(facultatif)</span></div>
@@ -12228,11 +12255,16 @@ function toggleQuickMenu() {
         <div style="font-size:11px;color:#aaa;margin-bottom:14px">Previsions de votre cycle sur 4 semaines</div>
         <div style="background:linear-gradient(135deg,#FF6B6B,#FF9A3C);color:white;border-radius:20px;padding:8px 20px;font-size:12px;font-weight:700">Voir les offres</div>
       </div>
-      <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px">
         <div style="width:32px;height:32px;border-radius:10px;background:linear-gradient(135deg,#FF6B6B,#FF9A3C);display:flex;align-items:center;justify-content:center;flex-shrink:0">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.2" stroke-linecap="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
         </div>
-        <div><div style="font-size:13px;font-weight:700;color:#1a1a1a">Previsions du cycle</div></div>
+        <div><div style="font-size:13px;font-weight:700;color:#1a1a1a">Previsions du cycle</div><div style="font-size:10px;color:#aaa;margin-top:1px">Planning sur 4 semaines</div></div>
+      </div>
+      <div id="cycleCountdownStats" style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:16px">
+        <div style="background:#FFFCFA;border:1px solid rgba(255,154,108,0.15);border-radius:14px;padding:10px;text-align:center"><div id="statJoursRestants" style="font-size:17px;font-weight:800;color:#FF6B6B">--</div><div style="font-size:9px;color:#aaa;text-transform:uppercase;letter-spacing:.5px;margin-top:2px">Restants</div></div>
+        <div style="background:#FFFCFA;border:1px solid rgba(255,154,108,0.15);border-radius:14px;padding:10px;text-align:center"><div id="statOvulation" style="font-size:17px;font-weight:800;color:#FF9A3C">--</div><div style="font-size:9px;color:#aaa;text-transform:uppercase;letter-spacing:.5px;margin-top:2px">Ovulation</div></div>
+        <div style="background:#FFFCFA;border:1px solid rgba(255,154,108,0.15);border-radius:14px;padding:10px;text-align:center"><div id="statProchRegles" style="font-size:17px;font-weight:800;color:#DDA0DD">--</div><div style="font-size:9px;color:#aaa;text-transform:uppercase;letter-spacing:.5px;margin-top:2px">Regles</div></div>
       </div>
       <div id="cycleCalendar" style="display:grid;grid-template-columns:repeat(7,1fr);gap:4px;text-align:center"></div>
       <div style="display:flex;gap:12px;margin-top:14px;flex-wrap:wrap">
