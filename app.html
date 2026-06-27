@@ -1048,7 +1048,12 @@ window.savePersoRepas = async function() {
   document.getElementById('persoRepasModal').style.display = 'none';
   if (btn) { btn.textContent = 'Ajouter'; btn.disabled = false; }
   window.renderPersoMenus();
-  if (typeof updateNutritionPanel === 'function') updateNutritionPanel();
+  if (typeof updateNutritionPanel === 'function') {
+    var jourIdx = window.PERSO_JOURS ? window.PERSO_JOURS.indexOf(window._persoMenusJour) : -1;
+    var sel = document.getElementById('menusDaySelector');
+    if (sel && jourIdx >= 0) sel.value = jourIdx;
+    updateNutritionPanel(jourIdx >= 0 ? jourIdx : undefined);
+  }
 };
 window.togglePersoRepasChecked = function(checkKey, repasKey, idx) {
   var data = window.getPersoMenus();
