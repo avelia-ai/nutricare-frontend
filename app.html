@@ -2441,6 +2441,10 @@ window.analyseVisage = async function(file) {
   }
 };
 
+window.toggleFrigoRecette = function(id) {
+  var b = document.getElementById(id);
+  if (b) b.style.display = b.style.display === 'none' ? 'block' : 'none';
+};
 window.analyseFrigo = async function(file) {
   if (!file) return;
   var preview = document.getElementById('frigoPreview');
@@ -2492,7 +2496,7 @@ window.analyseFrigo = async function(file) {
       var ouverte = i === 0;
       var rid = 'frigo-recette-' + i;
       html += '<div style="border-radius:14px;overflow:hidden;margin-bottom:10px;border:1px solid rgba(255,154,108,0.12)">';
-      html += '<div onclick="var b=document.getElementById(\"' + rid + '\");b.style.display=b.style.display===\"none\"?\"block\":\"none\"" style="display:flex;align-items:center;justify-content:space-between;padding:12px 14px;background:' + (i===0?'linear-gradient(135deg,#FF6B6B,#FF9A3C)':'#FFFCFA') + ';cursor:pointer">';
+      html += '<div onclick="window.toggleFrigoRecette(\'' + rid + '\')" style="display:flex;align-items:center;justify-content:space-between;padding:12px 14px;background:' + (i===0?'linear-gradient(135deg,#FF6B6B,#FF9A3C)':'#FFFCFA') + ';cursor:pointer">';
       html += '<div style="display:flex;align-items:center;gap:10px">';
       html += '<div style="width:28px;height:28px;border-radius:8px;background:' + (i===0?'rgba(255,255,255,0.2)':'rgba(255,107,107,0.1)') + ';display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:12px;font-weight:800;color:' + (i===0?'white':'#FF6B6B') + '">' + (i+1) + '</div>';
       html += '<div><div style="font-size:13px;font-weight:700;color:' + (i===0?'white':'#1a1a1a') + '">' + r.nom + '</div>';
