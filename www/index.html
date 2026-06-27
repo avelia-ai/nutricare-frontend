@@ -9216,7 +9216,6 @@ function updateNutritionPanel(dayIndex) {
     if (document.getElementById('micro'+m.id+'Max')) document.getElementById('micro'+m.id+'Max').textContent = '/ '+m.max+' '+m.unit;
     if (document.getElementById('bar'+m.id)) document.getElementById('bar'+m.id).style.width = microPct + '%';
   });
-  var calPct = Math.min(110, Math.round(totals.cal / (window.getObjectifsNutrition ? window.getObjectifsNutrition().cal : 2000) * 100));
   var adviceTxt = totals.cal === 0 ? 'Cochez vos repas pour mettre à jour' : calPct < 70 ? 'Apports caloriques insuffisants' : calPct > 110 ? 'Apports caloriques élevés' : 'Apports bien équilibrés';
   if (document.getElementById('nutritionAdvice')) document.getElementById('nutritionAdvice').textContent = adviceTxt;
   window.updateCaloriesFromMeals();
