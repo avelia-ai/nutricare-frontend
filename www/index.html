@@ -12142,107 +12142,121 @@ function toggleQuickMenu() {
     </div>
 
     <!-- Phase actuelle -->
-    <div id="cyclePhaseCard" style="background:#FFFCFA;border-radius:20px;padding:24px;margin-bottom:16px;box-shadow:0 0 0 1.5px rgba(255,154,108,0.22),0 14px 32px rgba(230,110,70,0.14);text-align:center">
-      <div style="font-size:0.8rem;font-weight:600;text-transform:uppercase;letter-spacing:.1em;color:#888;margin-bottom:8px">Phase actuelle</div>
-      <div id="cyclePhaseName" style="font-size:1.8rem;font-weight:800;color:var(--coral)">--</div>
-      <div id="cyclePhaseDesc" style="font-size:0.85rem;color:#666;margin-top:8px;line-height:1.5"></div>
-      <div style="margin-top:16px;display:flex;justify-content:center;gap:8px" id="cyclePhaseIcons"></div>
+    <div id="cyclePhaseCard" style="background:linear-gradient(135deg,#1a1a1a,#2d2d2d);border-radius:22px;padding:22px;margin-bottom:12px;overflow:hidden;position:relative">
+      <div style="position:absolute;top:-20px;right:-20px;width:100px;height:100px;border-radius:50%;background:rgba(255,107,107,0.08)"></div>
+      <div style="font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:rgba(255,154,108,0.6);margin-bottom:6px">Phase actuelle</div>
+      <div id="cyclePhaseName" style="font-size:22px;font-weight:800;color:white;margin-bottom:6px">--</div>
+      <div id="cyclePhaseDesc" style="font-size:12px;color:rgba(255,255,255,0.5);line-height:1.5;margin-bottom:14px"></div>
+      <div id="cyclePhaseIcons" style="display:flex;gap:8px;flex-wrap:wrap"></div>
     </div>
 
     <!-- Paramètres cycle -->
-    <div style="background:#FFFCFA;border-radius:20px;padding:24px;margin-bottom:16px;box-shadow:0 0 0 1.5px rgba(255,154,108,0.22),0 14px 32px rgba(230,110,70,0.14)">
-      <div style="font-size:1rem;font-weight:700;color:#1a1a1a;margin-bottom:16px">Paramètres de mon cycle</div>
-      
-      <div style="margin-bottom:14px">
-        <div style="font-size:0.82rem;font-weight:600;color:#555;margin-bottom:6px">Date des dernières règles</div>
-        <input type="date" id="cycleLastPeriod" style="width:100%;padding:12px;border:1.5px solid #eee;border-radius:10px;font-size:0.9rem;box-sizing:border-box" onchange="window.updateCycle()">
-      </div>
-      
-      <div style="margin-bottom:14px">
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
-          <div style="font-size:0.82rem;font-weight:600;color:#555">Durée du cycle (jours)</div>
-          <div id="cycleLengthVal" style="font-size:0.9rem;font-weight:700;color:var(--coral)">28j</div>
+    <div style="background:white;border-radius:22px;padding:20px;margin-bottom:12px;border:1px solid rgba(255,154,108,0.15)">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:18px">
+        <div style="width:32px;height:32px;border-radius:10px;background:linear-gradient(135deg,#FF6B6B,#FF9A3C);display:flex;align-items:center;justify-content:center;flex-shrink:0">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.2" stroke-linecap="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
         </div>
-        <input type="range" min="21" max="40" value="28" id="cycleLength" oninput="document.getElementById('cycleLengthVal').textContent=this.value+'j';window.updateCycle()" style="width:100%;accent-color:var(--coral)">
+        <div><div style="font-size:13px;font-weight:700;color:#1a1a1a">Parametres de mon cycle</div><div style="font-size:10px;color:#aaa;margin-top:1px">Configurez votre cycle menstruel</div></div>
       </div>
-
       <div style="margin-bottom:14px">
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
-          <div style="font-size:0.82rem;font-weight:600;color:#555">Durée des règles (jours)</div>
-          <div id="periodLengthVal" style="font-size:0.9rem;font-weight:700;color:var(--coral)">5j</div>
-        </div>
-        <input type="range" min="2" max="10" value="5" id="periodLength" oninput="document.getElementById('periodLengthVal').textContent=this.value+'j';window.updateCycle()" style="width:100%;accent-color:var(--coral)">
+        <div style="font-size:9px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#aaa;margin-bottom:6px">Dernieres regles</div>
+        <input type="date" id="cycleLastPeriod" style="width:100%;padding:12px 14px;border:1px solid rgba(255,154,108,0.2);border-radius:12px;font-size:13px;box-sizing:border-box;background:#FFFCFA;font-family:inherit;outline:none" onchange="window.updateCycle()">
       </div>
-
-      <!-- Symptômes -->
+      <div style="margin-bottom:14px">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+          <div style="font-size:9px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#aaa">Duree du cycle</div>
+          <div id="cycleLengthVal" style="font-size:13px;font-weight:700;color:#FF6B6B">28j</div>
+        </div>
+        <input type="range" min="21" max="40" value="28" id="cycleLength" oninput="document.getElementById('cycleLengthVal').textContent=this.value+'j';window.updateCycle()" style="width:100%;accent-color:#FF6B6B">
+      </div>
+      <div style="margin-bottom:18px">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+          <div style="font-size:9px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#aaa">Duree des regles</div>
+          <div id="periodLengthVal" style="font-size:13px;font-weight:700;color:#FF6B6B">5j</div>
+        </div>
+        <input type="range" min="2" max="10" value="5" id="periodLength" oninput="document.getElementById('periodLengthVal').textContent=this.value+'j';window.updateCycle()" style="width:100%;accent-color:#FF6B6B">
+      </div>
       <div>
-        <div style="font-size:0.82rem;font-weight:600;color:#555;margin-bottom:8px">Symptômes actuels (facultatif)</div>
+        <div style="font-size:9px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#aaa;margin-bottom:10px">Symptomes actuels <span style="font-weight:400;color:#ddd">(facultatif)</span></div>
         <div style="display:flex;flex-wrap:wrap;gap:8px" id="symptomsSelector">
-          <button onclick="window.toggleSymptom('fatigue',this)" style="padding:6px 12px;border-radius:20px;border:1.5px solid #eee;background:white;font-size:0.78rem;cursor:pointer">😴 Fatigue</button>
-          <button onclick="window.toggleSymptom('douleurs',this)" style="padding:6px 12px;border-radius:20px;border:1.5px solid #eee;background:white;font-size:0.78rem;cursor:pointer">😣 Douleurs</button>
-          <button onclick="window.toggleSymptom('humeur',this)" style="padding:6px 12px;border-radius:20px;border:1.5px solid #eee;background:white;font-size:0.78rem;cursor:pointer">😔 Humeur</button>
-          <button onclick="window.toggleSymptom('gonflement',this)" style="padding:6px 12px;border-radius:20px;border:1.5px solid #eee;background:white;font-size:0.78rem;cursor:pointer">🫧 Gonflement</button>
-          <button onclick="window.toggleSymptom('fringales',this)" style="padding:6px 12px;border-radius:20px;border:1.5px solid #eee;background:white;font-size:0.78rem;cursor:pointer">🍫 Fringales</button>
-          <button onclick="window.toggleSymptom('energie',this)" style="padding:6px 12px;border-radius:20px;border:1.5px solid #eee;background:white;font-size:0.78rem;cursor:pointer">⚡ Énergie+</button>
+          <button onclick="window.toggleSymptom('fatigue',this)" style="padding:8px 14px;border-radius:20px;border:1px solid rgba(255,154,108,0.25);background:#FFFCFA;font-size:12px;cursor:pointer;color:#555;font-family:inherit">Fatigue</button>
+          <button onclick="window.toggleSymptom('douleurs',this)" style="padding:8px 14px;border-radius:20px;border:1px solid rgba(255,154,108,0.25);background:#FFFCFA;font-size:12px;cursor:pointer;color:#555;font-family:inherit">Douleurs</button>
+          <button onclick="window.toggleSymptom('humeur',this)" style="padding:8px 14px;border-radius:20px;border:1px solid rgba(255,154,108,0.25);background:#FFFCFA;font-size:12px;cursor:pointer;color:#555;font-family:inherit">Humeur</button>
+          <button onclick="window.toggleSymptom('gonflement',this)" style="padding:8px 14px;border-radius:20px;border:1px solid rgba(255,154,108,0.25);background:#FFFCFA;font-size:12px;cursor:pointer;color:#555;font-family:inherit">Gonflement</button>
+          <button onclick="window.toggleSymptom('fringales',this)" style="padding:8px 14px;border-radius:20px;border:1px solid rgba(255,154,108,0.25);background:#FFFCFA;font-size:12px;cursor:pointer;color:#555;font-family:inherit">Fringales</button>
+          <button onclick="window.toggleSymptom('energie',this)" style="padding:8px 14px;border-radius:20px;border:1px solid rgba(255,154,108,0.25);background:#FFFCFA;font-size:12px;cursor:pointer;color:#555;font-family:inherit">Energie+</button>
         </div>
       </div>
     </div>
 
     <!-- Conseils Mirella -->
-    <div id="cycleAdviceCard" style="background:#FFFCFA;border-radius:20px;padding:24px;margin-bottom:16px;box-shadow:0 0 0 1.5px rgba(255,154,108,0.22),0 14px 32px rgba(230,110,70,0.14);position:relative">
-      <div id="cycleAdviceLockOverlay" style="display:none;position:absolute;inset:0;background:rgba(255,255,255,0.6);backdrop-filter:blur(3px);border-radius:20px;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:20px;cursor:pointer;z-index:5" onclick="openSubscriptionModal('lock')">
-        <div style="font-size:1.8rem;margin-bottom:8px">🔒</div>
-        <div style="font-size:0.9rem;font-weight:700;color:#2D2D2D;margin-bottom:4px">Fonctionnalité Premium</div>
-        <div style="font-size:0.78rem;color:#888;margin-bottom:12px">Débloquez les conseils nutritionnels personnalisés selon votre phase</div>
-        <div style="background:linear-gradient(135deg,var(--coral),var(--accent));color:white;border-radius:10px;padding:8px 20px;font-size:0.82rem;font-weight:700">Voir les offres →</div>
+    <div id="cycleAdviceCard" style="background:white;border-radius:22px;padding:20px;margin-bottom:12px;border:1px solid rgba(255,154,108,0.15);position:relative">
+      <div id="cycleAdviceLockOverlay" style="display:none;position:absolute;inset:0;background:rgba(255,255,255,0.85);backdrop-filter:blur(4px);border-radius:22px;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:20px;cursor:pointer;z-index:5" onclick="openSubscriptionModal('lock')">
+        <div style="width:44px;height:44px;border-radius:50%;background:#FFF0E8;display:flex;align-items:center;justify-content:center;margin:0 auto 10px">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#FF6B6B" stroke-width="2.2" stroke-linecap="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+        </div>
+        <div style="font-size:14px;font-weight:700;color:#1a1a1a;margin-bottom:4px">Fonctionnalite Premium</div>
+        <div style="font-size:11px;color:#aaa;margin-bottom:14px">Conseilsnutritionnels personnalises selon votre phase</div>
+        <div style="background:linear-gradient(135deg,#FF6B6B,#FF9A3C);color:white;border-radius:20px;padding:8px 20px;font-size:12px;font-weight:700">Voir les offres</div>
       </div>
-      <div style="font-size:1rem;font-weight:700;color:#1a1a1a;margin-bottom:16px">Conseils Mirella pour cette phase</div>
-      <div id="cycleAdvice" style="display:flex;flex-direction:column;gap:10px">
-        <div style="font-size:0.85rem;color:#ccc;text-align:center;padding:20px">Renseignez votre cycle pour obtenir des conseils personnalisés</div>
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px">
+        <div style="width:32px;height:32px;border-radius:10px;background:linear-gradient(135deg,#FF6B6B,#FF9A3C);display:flex;align-items:center;justify-content:center;flex-shrink:0">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+        </div>
+        <div><div style="font-size:13px;font-weight:700;color:#1a1a1a">Conseils Mirella pour cette phase</div></div>
       </div>
-      <!-- Ressenti libre -->
+      <div id="cycleAdvice" style="display:flex;flex-direction:column;gap:8px">
+        <div style="font-size:12px;color:#ccc;text-align:center;padding:20px">Renseignez votre cycle pour obtenir des conseils</div>
+      </div>
       <div style="margin-top:16px">
-        <div style="font-size:0.82rem;font-weight:600;color:#555;margin-bottom:8px">Comment vous sentez-vous ? (facultatif)</div>
-        <textarea id="cycleRessenti" placeholder="Ex: Je me sens fatiguée, j ai des crampes légères, mon humeur est instable..." style="width:100%;padding:12px;border:1.5px solid #eee;border-radius:12px;font-size:0.85rem;font-family:DM Sans,sans-serif;resize:none;height:80px;box-sizing:border-box;outline:none" onfocus="this.style.borderColor='var(--coral)'" onblur="this.style.borderColor='#eee'"></textarea>
+        <div style="font-size:9px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#aaa;margin-bottom:8px">Comment vous sentez-vous ? <span style="font-weight:400;color:#ddd">(facultatif)</span></div>
+        <textarea id="cycleRessenti" placeholder="Je me sens fatiguee, j ai des crampes legeres..." style="width:100%;padding:12px 14px;border:1px solid rgba(255,154,108,0.2);border-radius:12px;font-size:13px;font-family:inherit;resize:none;height:80px;box-sizing:border-box;outline:none;background:#FFFCFA" onfocus="this.style.borderColor='#FF6B6B'" onblur="this.style.borderColor='rgba(255,154,108,0.2)'"></textarea>
       </div>
-
-      <button onclick="window.analyseCycle()" id="cycleAnalyseBtn" style="width:100%;margin-top:16px;background:linear-gradient(135deg,var(--coral),var(--accent));color:white;border:none;border-radius:14px;padding:14px;font-size:0.95rem;font-weight:700;cursor:pointer">
-        Analyse IA personnalisée ✨
+      <button onclick="window.analyseCycle()" id="cycleAnalyseBtn" style="width:100%;margin-top:14px;background:linear-gradient(135deg,#FF6B6B,#FF9A3C);color:white;border:none;border-radius:16px;padding:14px;font-size:14px;font-weight:700;cursor:pointer;letter-spacing:.3px">
+        Analyse IA personnalisee
       </button>
-      <div id="cycleAIComment" style="display:none;margin-top:16px;padding:20px;background:linear-gradient(135deg,var(--cream),#FFF0EC);border-radius:0 16px 16px 16px;font-size:0.85rem;color:#333;line-height:1.7;border-left:3px solid var(--coral);box-shadow:0 2px 12px rgba(255,107,107,0.08)"></div>
+      <div id="cycleAIComment" style="display:none;margin-top:14px;padding:16px;background:#FFFCFA;border-radius:12px;font-size:13px;color:#333;line-height:1.7;border-left:3px solid #FF6B6B"></div>
     </div>
 
-    <!-- Calendrier 4 semaines -->
-    <div id="cycleCalendarCard" style="background:#FFFCFA;border-radius:20px;padding:24px;box-shadow:0 0 0 1.5px rgba(255,154,108,0.22),0 14px 32px rgba(230,110,70,0.14);margin-bottom:16px;position:relative">
-      <div id="cycleCalendarLockOverlay" style="display:none;position:absolute;inset:0;background:rgba(255,255,255,0.6);backdrop-filter:blur(3px);border-radius:20px;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:20px;cursor:pointer;z-index:5" onclick="openSubscriptionModal('lock')">
-        <div style="font-size:1.8rem;margin-bottom:8px">🔒</div>
-        <div style="font-size:0.9rem;font-weight:700;color:#2D2D2D;margin-bottom:4px">Fonctionnalité Premium</div>
-        <div style="font-size:0.78rem;color:#888;margin-bottom:12px">Débloquez les prévisions de votre cycle sur 4 semaines</div>
-        <div style="background:linear-gradient(135deg,var(--coral),var(--accent));color:white;border-radius:10px;padding:8px 20px;font-size:0.82rem;font-weight:700">Voir les offres →</div>
+    <!-- Calendrier -->
+    <div id="cycleCalendarCard" style="background:white;border-radius:22px;padding:20px;margin-bottom:12px;border:1px solid rgba(255,154,108,0.15);position:relative">
+      <div id="cycleCalendarLockOverlay" style="display:none;position:absolute;inset:0;background:rgba(255,255,255,0.85);backdrop-filter:blur(4px);border-radius:22px;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:20px;cursor:pointer;z-index:5" onclick="openSubscriptionModal('lock')">
+        <div style="width:44px;height:44px;border-radius:50%;background:#FFF0E8;display:flex;align-items:center;justify-content:center;margin:0 auto 10px">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#FF6B6B" stroke-width="2.2" stroke-linecap="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+        </div>
+        <div style="font-size:14px;font-weight:700;color:#1a1a1a;margin-bottom:4px">Fonctionnalite Premium</div>
+        <div style="font-size:11px;color:#aaa;margin-bottom:14px">Previsions de votre cycle sur 4 semaines</div>
+        <div style="background:linear-gradient(135deg,#FF6B6B,#FF9A3C);color:white;border-radius:20px;padding:8px 20px;font-size:12px;font-weight:700">Voir les offres</div>
       </div>
-      <div style="font-size:1rem;font-weight:700;color:#1a1a1a;margin-bottom:16px">Prévisions du cycle</div>
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px">
+        <div style="width:32px;height:32px;border-radius:10px;background:linear-gradient(135deg,#FF6B6B,#FF9A3C);display:flex;align-items:center;justify-content:center;flex-shrink:0">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.2" stroke-linecap="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+        </div>
+        <div><div style="font-size:13px;font-weight:700;color:#1a1a1a">Previsions du cycle</div></div>
+      </div>
       <div id="cycleCalendar" style="display:grid;grid-template-columns:repeat(7,1fr);gap:4px;text-align:center"></div>
-      <div style="display:flex;gap:12px;margin-top:12px;flex-wrap:wrap">
-        <div style="display:flex;align-items:center;gap:4px;font-size:0.72rem;color:#666"><div style="width:12px;height:12px;border-radius:50%;background:var(--coral)"></div>Règles</div>
-        <div style="display:flex;align-items:center;gap:4px;font-size:0.72rem;color:#666"><div style="width:12px;height:12px;border-radius:50%;background:#FFB347"></div>Folliculaire</div>
-        <div style="display:flex;align-items:center;gap:4px;font-size:0.72rem;color:#666"><div style="width:12px;height:12px;border-radius:50%;background:var(--accent)"></div>Ovulation</div>
-        <div style="display:flex;align-items:center;gap:4px;font-size:0.72rem;color:#666"><div style="width:12px;height:12px;border-radius:50%;background:#DDA0DD"></div>Lutéale</div>
+      <div style="display:flex;gap:12px;margin-top:14px;flex-wrap:wrap">
+        <div style="display:flex;align-items:center;gap:5px"><div style="width:10px;height:10px;border-radius:50%;background:#FF6B6B"></div><span style="font-size:11px;color:#666">Regles</span></div>
+        <div style="display:flex;align-items:center;gap:5px"><div style="width:10px;height:10px;border-radius:50%;background:#FFB347"></div><span style="font-size:11px;color:#666">Folliculaire</span></div>
+        <div style="display:flex;align-items:center;gap:5px"><div style="width:10px;height:10px;border-radius:50%;background:#FF9A3C"></div><span style="font-size:11px;color:#666">Ovulation</span></div>
+        <div style="display:flex;align-items:center;gap:5px"><div style="width:10px;height:10px;border-radius:50%;background:#DDA0DD"></div><span style="font-size:11px;color:#666">Lutéale</span></div>
       </div>
     </div>
 
     <!-- Historique des cycles -->
-    <div style="background:#FFFCFA;border-radius:20px;padding:24px;box-shadow:0 0 0 1.5px rgba(255,154,108,0.22),0 14px 32px rgba(230,110,70,0.14)">
+    <div style="background:white;border-radius:22px;padding:20px;border:1px solid rgba(255,154,108,0.15)">
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
-        <div style="font-size:1rem;font-weight:700;color:#1a1a1a">Historique des cycles</div>
-        <button onclick="window.addCycleToHistory()" style="background:linear-gradient(135deg,var(--coral),var(--accent));color:white;border:none;border-radius:10px;padding:8px 14px;font-size:0.78rem;font-weight:700;cursor:pointer">+ Ajouter règles</button>
+        <div style="display:flex;align-items:center;gap:10px">
+          <div style="width:32px;height:32px;border-radius:10px;background:linear-gradient(135deg,#FF6B6B,#FF9A3C);display:flex;align-items:center;justify-content:center;flex-shrink:0">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.2" stroke-linecap="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+          </div>
+          <div style="font-size:13px;font-weight:700;color:#1a1a1a">Historique des cycles</div>
+        </div>
+        <button onclick="window.addCycleToHistory()" style="background:linear-gradient(135deg,#FF6B6B,#FF9A3C);color:white;border:none;border-radius:20px;padding:7px 14px;font-size:11px;font-weight:700;cursor:pointer">+ Ajouter regles</button>
       </div>
-      
-      <!-- Stats -->
-      <div id="cycleStats" style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:16px"></div>
-      
-      <!-- Timeline -->
-      <div id="cycleHistory" style="display:flex;flex-direction:column;gap:10px">
-        <div style="font-size:0.82rem;color:#ccc;text-align:center;padding:20px">Aucun cycle enregistré</div>
+      <div id="cycleStats" style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:14px"></div>
+      <div id="cycleHistory" style="display:flex;flex-direction:column;gap:8px">
+        <div style="font-size:12px;color:#ccc;text-align:center;padding:20px">Aucun cycle enregistre. Cliquez sur + Ajouter regles pour commencer.</div>
       </div>
     </div>
 
