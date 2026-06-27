@@ -13501,6 +13501,8 @@ window.renderFrigoHistorique = function() {
   if (!el) return;
   var historique = [];
   try { historique = JSON.parse(localStorage.getItem('mirella_frigo_historique') || '[]'); } catch(x){}
+  historique = historique.filter(function(h){ return !h.resume && !h.peau && !h.bien_etre && (h.score === undefined || h.aliments !== undefined); });
+  localStorage.setItem('mirella_frigo_historique', JSON.stringify(historique));
   if (!historique.length) { el.innerHTML = '<div style="font-size:0.82rem;color:#bbb;text-align:center;padding:16px">Aucune analyse pour le moment</div>'; return; }
   el.innerHTML = historique.map(function(h, i) {
     var d = new Date(h.date);
