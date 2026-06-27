@@ -4232,20 +4232,20 @@ function switchLang(lang) {
 
     <!-- Résumé nutritionnel du jour -->
     <div id="menusNutritionPanel" style="display:none;background:#FFFCFA;border-radius:22px;border:1px solid rgba(255,154,108,0.2);box-shadow:0 2px 20px rgba(230,110,70,0.07);margin-bottom:16px;overflow:hidden">
-      <div id="menusBudgetBar" style="display:none;background:#f0f9ff;border-radius:14px;margin:14px 14px 0;padding:12px 16px;border:1px solid rgba(59,130,246,0.15)">
-        <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px">
+      <div id="menusBudgetBar" style="display:none;padding:12px 16px;background:#f8fbff;border-bottom:1px solid rgba(255,154,108,0.1)">
+        <div style="display:flex;align-items:center;justify-content:space-between">
           <div style="display:flex;align-items:center;gap:8px">
-            <div style="width:32px;height:32px;border-radius:9px;background:#dbeafe;display:flex;align-items:center;justify-content:center;flex-shrink:0">
-              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#3b82f6" stroke-width="2" stroke-linecap="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+            <div style="width:28px;height:28px;border-radius:8px;background:#dbeafe;display:flex;align-items:center;justify-content:center;flex-shrink:0">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#3b82f6" stroke-width="2" stroke-linecap="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
             </div>
             <div>
-              <div style="font-size:10px;color:#64748b;font-weight:600;text-transform:uppercase;letter-spacing:.8px">Budget semaine estimé</div>
-              <div style="font-size:15px;font-weight:800;color:#1e40af"><span id="menusBudgetTotal">—</span></div>
+              <div style="font-size:10px;color:#94a3b8;text-transform:uppercase;letter-spacing:.8px;font-weight:600">Budget semaine</div>
+              <div style="font-size:14px;font-weight:800;color:#1e40af"><span id="menusBudgetTotal">—</span></div>
             </div>
           </div>
           <div style="text-align:right">
-            <div style="font-size:10px;color:#94a3b8;margin-bottom:2px">Mensuel : <span id="menusBudgetMensuel" style="color:#3b82f6;font-weight:600">—</span></div>
-            <div id="menusBudgetStatus" style="font-size:10px;font-weight:700;padding:3px 10px;border-radius:20px"></div>
+            <div style="font-size:10px;color:#94a3b8">Mensuel : <span id="menusBudgetMensuel" style="color:#3b82f6;font-weight:600">—</span></div>
+            <div id="menusBudgetStatus" style="font-size:10px;font-weight:700;margin-top:3px"></div>
           </div>
         </div>
       </div>
@@ -4265,16 +4265,16 @@ function switchLang(lang) {
             <option value="6">Dimanche</option>
           </select>
         </div>
-        <div style="display:flex;align-items:center;gap:14px">
-          <div style="position:relative;width:88px;height:88px;flex-shrink:0">
-            <canvas id="caloriesDonut" width="88" height="88" style="width:88px;height:88px;display:block"></canvas>
+        <div style="display:flex;flex-direction:column;align-items:center;gap:14px">
+          <div style="position:relative;width:110px;height:110px;flex-shrink:0">
+            <canvas id="caloriesDonut" width="110" height="110" style="width:110px;height:110px;display:block"></canvas>
             <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;pointer-events:none">
-              <div id="donutCalories" style="font-size:17px;font-weight:900;color:white;line-height:1">0</div>
-              <div style="font-size:8px;color:rgba(255,255,255,0.5);margin-top:1px">kcal</div>
-              <div id="donutLabel" style="font-size:8px;font-weight:600;color:rgba(255,255,255,0.6)">consommées</div>
+              <div id="donutCalories" style="font-size:20px;font-weight:900;color:white;line-height:1">0</div>
+              <div style="font-size:9px;color:rgba(255,255,255,0.5);margin-top:2px">kcal</div>
+              <div id="donutLabel" style="font-size:9px;font-weight:600;color:rgba(255,255,255,0.6)">consommées</div>
             </div>
           </div>
-          <div style="flex:1;display:grid;grid-template-columns:1fr 1fr;gap:7px">
+          <div style="width:100%;display:grid;grid-template-columns:1fr 1fr;gap:7px">
             <div style="background:rgba(255,255,255,0.08);border-radius:10px;padding:8px 10px">
               <div style="font-size:9px;color:rgba(255,255,255,0.4);text-transform:uppercase;letter-spacing:.5px;margin-bottom:2px">Objectif</div>
               <div id="donutObjectif" style="font-size:12px;font-weight:700;color:white">— kcal</div>
