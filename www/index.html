@@ -1080,7 +1080,9 @@ window.savePersoRepas = async function() {
     var jourIdx = window.PERSO_JOURS ? window.PERSO_JOURS.indexOf(window._persoMenusJour) : -1;
     var sel = document.getElementById('menusDaySelector');
     if (sel && jourIdx >= 0) sel.value = jourIdx;
-    updateNutritionPanel(jourIdx >= 0 ? jourIdx : undefined);
+    setTimeout(function() {
+      updateNutritionPanel(jourIdx >= 0 ? jourIdx : undefined);
+    }, 100);
   }
 };
 window.togglePersoRepasChecked = function(checkKey, repasKey, idx) {
