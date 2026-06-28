@@ -1024,23 +1024,43 @@ window.savePersoRepas = async function() {
   var lip = parseInt(document.getElementById('persoRepasLip').value) || 0;
   var btn = document.querySelector('#persoRepasModal button[onclick*="savePersoRepas"]');
   if (btn) { btn.textContent = '⏳ Analyse en cours...'; btn.disabled = true; }
-  // Utiliser micros détectés par photo, sinon estimer via IA
-  var micros = {fib:0, suc:0, sel:0, cal_mg:0, fer:0};
+  // Utiliser micros détectés par photo, sinon estimer localement
+  var micros = {fib:0, suc:0, sel:0, cal_mg:0, fer:0, vitc:0, mag:0, potassium:0, vita:0};
   if (window._detectedMicros) {
     micros = window._detectedMicros;
     window._detectedMicros = null;
   } else {
+    // Estimation locale basée sur les macros (valeurs moyennes)
+    micros = {
+      fib: Math.round(glu * 0.08),
+      suc: Math.round(glu * 0.3),
+      sel: Math.round(kcal * 0.003),
+      cal_mg: Math.round(kcal * 0.4),
+      fer: Math.round(pro * 0.05),
+      vitc: Math.round(kcal * 0.02),
+      mag: Math.round(kcal * 0.08),
+      potassium: Math.round(kcal * 0.8),
+      vita: Math.round(kcal * 0.1)
+    };
+    // Appel API en arriere-plan pour affiner (non bloquant)
     try {
       var token = localStorage.getItem('nutricare_token') || '';
-      var res = await fetch('https://nutricare-backend-production.up.railway.app/api/micros/estimate', {
+      fetch('https://nutricare-backend-production.up.railway.app/api/micros/estimate', {
         method: 'POST',
         headers: {'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token},
         body: JSON.stringify({nom: nom, kcal: kcal, glu: glu, pro: pro, lip: lip})
-      });
-      micros = await res.json();
-    } catch(e) {
-      console.warn('Micros estimation failed:', e);
-    }
+      }).then(function(r){ return r.json(); }).then(function(refined) {
+        if (refined && refined.fib !== undefined) {
+          var persoData = window.getPersoMenus();
+          var j = window._persoMenusJour;
+          if (persoData[j] && persoData[j][key] && persoData[j][key].length > 0) {
+            var lastIdx = persoData[j][key].length - 1;
+            Object.assign(persoData[j][key][lastIdx], refined);
+            window.savePersoMenus(persoData);
+          }
+        }
+      }).catch(function(){});
+    } catch(e) {}
   }
   var data = window.getPersoMenus();
   var jour = window._persoMenusJour;
