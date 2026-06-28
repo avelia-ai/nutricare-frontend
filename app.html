@@ -4845,7 +4845,7 @@ function switchLang(lang) {
         <div class="hc-top" style="background:linear-gradient(90deg,#0984E3,#74b9ff)"></div>
         <div class="hc-ico" style="background:#F0F8FF"><i class="ti ti-droplet" style="color:#0984E3"></i></div>
         <div class="hc-lbl">Hydratation</div>
-        <input type="number" id="hHydration" step="0.1" placeholder="—">
+        <input type="number" id="hHydration" step="0.1" placeholder="—" oninput="var v=parseFloat(this.value);if(!isNaN(v)){_hydrationMl=Math.round(v*1000);localStorage.setItem(getHydrationKey(),_hydrationMl);if(typeof updateHydrationDisplay==='function')updateHydrationDisplay();}">
         <div class="hc-unit">litres</div>
       </div>
     </div>
