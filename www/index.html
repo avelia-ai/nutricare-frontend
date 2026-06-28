@@ -1093,6 +1093,26 @@ window.togglePersoRepasChecked = function(checkKey, repasKey, idx) {
   var jour = window._persoMenusJour;
   var item = (data[jour] && data[jour][repasKey]) ? data[jour][repasKey][idx] : null;
   if (!item) return;
+  // Si micros manquants (repas ajouté avant le fix), les recalculer et sauvegarder
+  if (!item.fib && !item.vitc && !item.mag && (item.kcal || item.glu || item.pro)) {
+    var bKcal = item.kcal || 300;
+    var bGlu = item.glu || 30;
+    var bPro = item.pro || 15;
+    item.fib = Math.max(2, Math.round(bGlu * 0.1));
+    item.suc = Math.max(2, Math.round(bGlu * 0.25));
+    item.sel = Math.max(1, Math.round(bKcal * 0.004));
+    item.cal_mg = Math.max(50, Math.round(bKcal * 0.5));
+    item.fer = Math.max(1, Math.round(bPro * 0.1));
+    item.vitc = Math.max(5, Math.round(bKcal * 0.03));
+    item.mag = Math.max(15, Math.round(bKcal * 0.1));
+    item.potassium = Math.max(150, Math.round(bKcal * 1.2));
+    item.vita = Math.max(15, Math.round(bKcal * 0.15));
+    var fixData = window.getPersoMenus();
+    if (fixData[jour] && fixData[jour][repasKey] && fixData[jour][repasKey][idx]) {
+      Object.assign(fixData[jour][repasKey][idx], item);
+      window.savePersoMenus(fixData);
+    }
+  }
   var meals = JSON.parse(localStorage.getItem('mirella_checked_meals') || '{}');
   var ck = 'mealcheck_perso_' + jour + '_' + repasKey + '_' + idx;
   if (meals[ck]) {
