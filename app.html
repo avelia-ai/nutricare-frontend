@@ -1098,7 +1098,7 @@ window.togglePersoRepasChecked = function(checkKey, repasKey, idx) {
   if (meals[ck]) {
     delete meals[ck];
   } else {
-    meals[ck] = item.kcal || 0;
+    meals[ck] = item.kcal || 1;
   }
   localStorage.setItem('mirella_checked_meals', JSON.stringify(meals));
   window.renderPersoMenus();
