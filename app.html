@@ -1030,17 +1030,21 @@ window.savePersoRepas = async function() {
     micros = window._detectedMicros;
     window._detectedMicros = null;
   } else {
-    // Estimation locale basée sur les macros (valeurs moyennes)
+    // Estimation locale - base minimale garantie
+    var baseKcal = kcal || 300;
+    var baseGlu = glu || 30;
+    var basePro = pro || 15;
     micros = {
-      fib: Math.round(glu * 0.08),
-      suc: Math.round(glu * 0.3),
-      sel: Math.round(kcal * 0.003),
-      cal_mg: Math.round(kcal * 0.4),
-      fer: Math.round(pro * 0.05),
-      vitc: Math.round(kcal * 0.02),
-      mag: Math.round(kcal * 0.08),
-      potassium: Math.round(kcal * 0.8),
-      vita: Math.round(kcal * 0.1)
+      fib: Math.max(2, Math.round(baseGlu * 0.1)),
+      suc: Math.max(2, Math.round(baseGlu * 0.25)),
+      sel: Math.max(1, Math.round(baseKcal * 0.004)),
+      cal_mg: Math.max(50, Math.round(baseKcal * 0.5)),
+      fer: Math.max(1, Math.round(basePro * 0.1)),
+      vitc: Math.max(5, Math.round(baseKcal * 0.03)),
+      mag: Math.max(15, Math.round(baseKcal * 0.1)),
+      potassium: Math.max(150, Math.round(baseKcal * 1.2)),
+      vita: Math.max(15, Math.round(baseKcal * 0.15))
+    };
     };
     // Appel API en arriere-plan pour affiner (non bloquant)
     try {
