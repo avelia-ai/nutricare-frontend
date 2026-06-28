@@ -1766,7 +1766,11 @@ window.applyTheme = function(themeKey) {
 
 
 // ── CATALOGUE RECETTES ──
-window._catalogueFilters = { categorie: '', tags: [], search: '' };
+window._catalogueFilters = { categorie: '', tags: [], search: '', free_only: false };
+window.loadCatalogueGratuit = function() {
+  window._catalogueFilters = { categorie: '', tags: [], search: '', free_only: true };
+  window.loadCatalogue(1);
+};
 window._cataloguePage = 1;
 window._cataloguePerPage = 20;
 window._catalogueTotal = 0;
@@ -12487,6 +12491,13 @@ function toggleQuickMenu() {
       <div onclick="window.setCatalogueFilter('categorie','')" style="min-width:80px;flex-shrink:0;text-align:center;cursor:pointer">
         <div style="width:80px;height:80px;border-radius:16px;overflow:hidden;margin-bottom:6px;background:url('https://images.pexels.com/photos/1640777/pexels-photo-1640777.jpeg?auto=compress&cs=tinysrgb&w=200') center/cover;border:2px solid var(--coral)"></div>
         <div style="font-size:0.7rem;font-weight:600;color:var(--coral)">Tout</div>
+      </div>
+      <div onclick="window.loadCatalogueGratuit()" id="catGratuit" style="min-width:80px;flex-shrink:0;text-align:center;cursor:pointer">
+        <div style="width:80px;height:80px;border-radius:16px;margin-bottom:6px;background:linear-gradient(135deg,#FF6B6B,#FF9A3C);display:flex;align-items:center;justify-content:center;position:relative">
+          <i class="ti ti-gift" style="font-size:28px;color:white"></i>
+          <div style="position:absolute;top:6px;right:6px;background:white;color:#FF6B6B;font-size:8px;font-weight:800;padding:2px 5px;border-radius:6px">30</div>
+        </div>
+        <div style="font-size:0.7rem;font-weight:700;color:#FF6B6B">Gratuit</div>
       </div>
       <div onclick="window.setCatalogueFilter('categorie','petit_dejeuner')" style="min-width:80px;flex-shrink:0;text-align:center;cursor:pointer">
         <div style="width:80px;height:80px;border-radius:16px;overflow:hidden;margin-bottom:6px;background:url('https://images.pexels.com/photos/376464/pexels-photo-376464.jpeg?auto=compress&cs=tinysrgb&w=200') center/cover"></div>
