@@ -1852,7 +1852,7 @@ window.loadCatalogue = async function() {
         bannerEl.id = 'catalogueFreeBanner';
         bannerEl.style.cssText = 'margin:0 16px 14px;background:linear-gradient(135deg,var(--coral),var(--accent));border-radius:14px;padding:14px 16px;color:white;display:flex;align-items:center;justify-content:space-between;gap:12px;cursor:pointer';
         bannerEl.onclick = function() { openSubscriptionModal('chat'); };
-        bannerEl.innerHTML = '<div><div style="font-size:0.85rem;font-weight:700">🔒 Accédez au catalogue complet</div><div style="font-size:0.74rem;opacity:0.9;margin-top:2px">Plus de 7000 recettes avec Standard ou Premium</div></div><div style="background:white;color:var(--coral);border-radius:8px;padding:6px 12px;font-size:0.75rem;font-weight:700;white-space:nowrap">Voir →</div>';
+        bannerEl.innerHTML = '<div style="display:flex;align-items:center;gap:10px"><div style="width:36px;height:36px;border-radius:10px;background:rgba(255,255,255,0.2);display:flex;align-items:center;justify-content:center;flex-shrink:0"><i class="ti ti-lock" style="font-size:18px;color:white"></i></div><div><div style="font-size:0.85rem;font-weight:700">6 recettes offertes · 7 000+ à débloquer</div><div style="font-size:0.74rem;opacity:0.9;margin-top:2px">Passez Standard ou Premium pour accéder au catalogue complet</div></div></div><div style="background:white;color:var(--coral);border-radius:8px;padding:6px 12px;font-size:0.75rem;font-weight:700;white-space:nowrap;flex-shrink:0">Voir →</div>';
         grid.parentNode.insertBefore(bannerEl, grid);
       }
       bannerEl.style.display = 'flex';
