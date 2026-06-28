@@ -4771,50 +4771,50 @@ function switchLang(lang) {
     </div>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px" id="healthGrid" class="health-grid">
       <div class="hcard" style="background:linear-gradient(145deg,#FFF5F5,#FFE8E8)">
-        <span class="hcard-icon">🩸</span>
+        <div class="hcard-icon" style="background:#FFF0EE;width:32px;height:32px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:15px">🩸</div>
         <div class="hcard-label" style="color:#c0392b">Glycémie</div>
         <input type="number" id="hGlycemia" step="0.1" placeholder="mmol/L" style="color:#c0392b">
         <div class="hcard-bar" style="background:linear-gradient(90deg,#FF6B6B,#ff9090)"></div>
       </div>
       <div class="hcard" style="background:linear-gradient(145deg,#F5F0FF,#EDE0FF)">
-        <span class="hcard-icon">⚖️</span>
+        <div class="hcard-icon" style="background:#F5F0FF;width:32px;height:32px;border-radius:10px;display:flex;align-items:center;justify-content:center"><i class="ti ti-scale" style="font-size:16px;color:#9B59B6"></i></div>
         <div class="hcard-label" style="color:#7d3c98">Poids</div>
         <input type="number" id="hWeight" step="0.1" placeholder="kg" oninput="window.updateIMCDisplay()" style="color:#7d3c98">
         <div class="hcard-bar" style="background:linear-gradient(90deg,#9B59B6,#c39bd3)"></div>
       </div>
       <div class="hcard" style="background:linear-gradient(145deg,#F0F7FF,#DFF0FF)">
-        <span class="hcard-icon">📏</span>
+        <div class="hcard-icon" style="background:#F0F7FF;width:32px;height:32px;border-radius:10px;display:flex;align-items:center;justify-content:center"><i class="ti ti-ruler" style="font-size:16px;color:#2E86C1"></i></div>
         <div class="hcard-label" style="color:#1a6fa0">Taille</div>
         <input type="number" id="hHeight" placeholder="cm" oninput="window.updateIMCDisplay()" style="color:#1a6fa0">
         <div class="hcard-bar" style="background:linear-gradient(90deg,#2E86C1,#7fb3d3)"></div>
       </div>
       <div class="hcard" style="background:linear-gradient(145deg,#F5FFF5,#E0FFE8)">
-        <span class="hcard-icon">📊</span>
+        <div class="hcard-icon" style="background:#F0FFF5;width:32px;height:32px;border-radius:10px;display:flex;align-items:center;justify-content:center"><i class="ti ti-chart-bar" style="font-size:16px;color:#27AE60"></i></div>
         <div class="hcard-label" style="color:#1e8449">IMC</div>
         <div id="hImcValue" style="font-size:1.25rem;font-weight:800;color:#1e8449;line-height:1.2">—</div>
         <div id="hImcLabel" style="font-size:0.65rem;color:#27AE60;margin-top:3px;font-weight:600"></div>
         <div class="hcard-bar" style="background:linear-gradient(90deg,#27AE60,#82e0aa)"></div>
       </div>
       <div class="hcard" style="background:linear-gradient(145deg,#FFFBF0,#FFF3D0)">
-        <span class="hcard-icon">⚡</span>
+        <div class="hcard-icon" style="background:#FFFBF0;width:32px;height:32px;border-radius:10px;display:flex;align-items:center;justify-content:center"><i class="ti ti-bolt" style="font-size:16px;color:#F39C12"></i></div>
         <div class="hcard-label" style="color:#b7770d">Énergie</div>
         <input type="number" id="hEnergy" min="1" max="10" placeholder="/ 10" style="color:#b7770d">
         <div class="hcard-bar" style="background:linear-gradient(90deg,#F39C12,#f8c471)"></div>
       </div>
       <div class="hcard" style="background:linear-gradient(145deg,#FFF0F8,#FFE0F0)">
-        <span class="hcard-icon">🧘</span>
+        <div class="hcard-icon" style="background:#FFF0F8;width:32px;height:32px;border-radius:10px;display:flex;align-items:center;justify-content:center"><i class="ti ti-brain" style="font-size:16px;color:#E91E8C"></i></div>
         <div class="hcard-label" style="color:#a31460">Stress</div>
         <input type="number" id="hStress" min="1" max="10" placeholder="/ 10" style="color:#a31460">
         <div class="hcard-bar" style="background:linear-gradient(90deg,#E91E8C,#f48cb6)"></div>
       </div>
       <div class="hcard" style="background:linear-gradient(145deg,#F0FFF8,#D8FFE8)">
-        <span class="hcard-icon">🏃</span>
+        <div class="hcard-icon" style="background:#F0FFF8;width:32px;height:32px;border-radius:10px;display:flex;align-items:center;justify-content:center"><i class="ti ti-run" style="font-size:16px;color:#00B894"></i></div>
         <div class="hcard-label" style="color:#00876e">Activité</div>
         <input type="number" id="hActivity" min="0" placeholder="minutes" style="color:#00876e">
         <div class="hcard-bar" style="background:linear-gradient(90deg,#00B894,#55efc4)"></div>
       </div>
       <div class="hcard" style="background:linear-gradient(145deg,#F0F0FF,#E0E0FF)">
-        <span class="hcard-icon">😴</span>
+        <div class="hcard-icon" style="background:#F0F0FF;width:32px;height:32px;border-radius:10px;display:flex;align-items:center;justify-content:center"><i class="ti ti-moon" style="font-size:16px;color:#6C5CE7"></i></div>
         <div class="hcard-label" style="color:#4834d4">Sommeil</div>
         <input type="number" id="hSleep" step="0.5" placeholder="heures" style="color:#4834d4">
         <div class="hcard-bar" style="background:linear-gradient(90deg,#6C5CE7,#a29bfe)"></div>
@@ -4822,7 +4822,7 @@ function switchLang(lang) {
     </div>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px">
       <div class="hcard" style="background:linear-gradient(145deg,#FFF8F0,#FFE8D0)">
-        <span class="hcard-icon">💓</span>
+        <div class="hcard-icon" style="background:#FFF0EE;width:32px;height:32px;border-radius:10px;display:flex;align-items:center;justify-content:center"><i class="ti ti-heart-rate-monitor" style="font-size:16px;color:#FF6B6B"></i></div>
         <div class="hcard-label" style="color:#c0392b">Tension</div>
         <div style="display:flex;gap:4px;align-items:center">
           <input type="number" id="hBpSys" placeholder="sys" style="width:44%;color:#c0392b;font-size:1rem;font-weight:800;background:transparent;border:none;outline:none;font-family:DM Sans,sans-serif">
@@ -4832,19 +4832,19 @@ function switchLang(lang) {
         <div class="hcard-bar" style="background:linear-gradient(90deg,#FF6B6B,#FF9A3C)"></div>
       </div>
       <div class="hcard" style="background:linear-gradient(145deg,#F0F8FF,#D0EEFF)">
-        <span class="hcard-icon">💧</span>
+        <div class="hcard-icon" style="background:#F0F8FF;width:32px;height:32px;border-radius:10px;display:flex;align-items:center;justify-content:center"><i class="ti ti-droplet" style="font-size:16px;color:#0984E3"></i></div>
         <div class="hcard-label" style="color:#0652a0">Hydratation</div>
         <input type="number" id="hHydration" step="0.1" placeholder="litres" style="color:#0652a0">
         <div class="hcard-bar" style="background:linear-gradient(90deg,#0984E3,#74b9ff)"></div>
       </div>
     </div>
     <div style="background:linear-gradient(145deg,#FFFCFA,#FFF5EE);border-radius:18px;padding:16px;margin-bottom:18px;border:1px solid rgba(255,154,108,0.15)">
-      <div style="font-size:0.62rem;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:#FF9A3C;margin-bottom:8px">📝 Comment vous sentez-vous ?</div>
+      <div style="font-size:0.62rem;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:#FF9A3C;margin-bottom:8px;display:flex;align-items:center;gap:6px"><i class="ti ti-pencil" style="font-size:13px"></i>Ressenti du jour</div>
       <textarea id="hNotes" placeholder="Notez vos ressentis du jour..." style="width:100%;background:transparent;border:none;font-size:0.88rem;font-family:DM Sans,sans-serif;outline:none;resize:none;height:60px;color:#2D2D2D;line-height:1.5"></textarea>
     </div>
     <button onclick="saveHealthLog()" style="background:linear-gradient(135deg,#FF6B6B,#FF9A3C);color:white;width:100%;padding:14px;border:none;border-radius:14px;font-size:0.95rem;font-weight:700;cursor:pointer;font-family:DM Sans,sans-serif;box-shadow:0 6px 20px rgba(255,107,107,0.35);letter-spacing:0.02em">Enregistrer ✓</button>
     <span id="healthSaveMsg" style="font-size:0.78rem;color:#28C840;display:none;margin-top:8px">✅ Enregistré !</span>
-    <button onclick="window.analyseHealthLog()" id="healthAnalyseBtn" style="width:100%;margin-top:10px;background:linear-gradient(135deg,#2D2D2D,#444);color:white;border:none;border-radius:14px;padding:14px;font-size:0.95rem;font-weight:700;cursor:pointer;font-family:DM Sans,sans-serif;letter-spacing:0.02em">✨ Analyser ma journée avec Mirella</button>
+    <button onclick="window.analyseHealthLog()" id="healthAnalyseBtn" style="width:100%;margin-top:10px;background:linear-gradient(135deg,#2D2D2D,#444);color:white;border:none;border-radius:14px;padding:14px;font-size:0.95rem;font-weight:700;cursor:pointer;font-family:DM Sans,sans-serif;letter-spacing:0.02em;display:flex;align-items:center;justify-content:center;gap:8px"><i class="ti ti-sparkles" style="font-size:16px"></i>Analyser ma journée avec Mirella</button>
     <div id="healthAnalyseComment" style="display:none;margin-top:16px;padding:20px;background:linear-gradient(135deg,var(--cream),#FFF0EC);border-radius:0 16px 16px 16px;font-size:0.85rem;color:#333;line-height:1.7;border-left:3px solid var(--coral);box-shadow:0 2px 12px rgba(255,107,107,0.08)"></div>
   </div>
 
