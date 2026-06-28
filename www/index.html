@@ -1048,6 +1048,11 @@ window.savePersoRepas = async function() {
   if (!data[jour][key]) data[jour][key] = [];
   data[jour][key].push({nom: nom, kcal: kcal, glu: glu, pro: pro, lip: lip, fib: micros.fib||0, suc: micros.suc||0, sel: micros.sel||0, cal_mg: micros.cal_mg||0, fer: micros.fer||0, vitc: micros.vitc||0, mag: micros.mag||0, potassium: micros.potassium||0, vita: micros.vita||0});
   window.savePersoMenus(data);
+  // Cocher automatiquement le repas ajoute
+  var newIdx = data[jour][key].length - 1;
+  var meals = JSON.parse(localStorage.getItem('mirella_checked_meals') || '{}');
+  meals['mealcheck_perso_' + jour + '_' + key + '_' + newIdx] = kcal;
+  localStorage.setItem('mirella_checked_meals', JSON.stringify(meals));
   document.getElementById('persoRepasModal').style.display = 'none';
   if (btn) { btn.textContent = 'Ajouter'; btn.disabled = false; }
   window.renderPersoMenus();
