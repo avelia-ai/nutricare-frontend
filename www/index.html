@@ -10691,52 +10691,52 @@ function _hcDrawFrameHome() {
 }
 // ── Fin moteur avatar ─────────────────────────────────────────────────────────
 
-function renderHealthChart(logs) {
+var _healthLogs = [];
+var _healthActiveKey = 'weight';
+var _healthMetrics = [
+  {key:'weight', label:'Poids (kg)', color:'#FF6B6B'},
+  {key:'energy_level', label:'Énergie (/10)', color:'#F39C12'},
+  {key:'sleep_hours', label:'Sommeil (h)', color:'#6C5CE7'},
+  {key:'hydration_liters', label:'Hydratation (L)', color:'#0984E3'},
+  {key:'glycemia', label:'Glycémie', color:'#E91E8C'}
+];
+function switchHealthChart(key, btn) {
+  _healthActiveKey = key;
+  document.querySelectorAll('.evo-pill').forEach(function(b){ b.classList.remove('active'); });
+  if (btn) btn.classList.add('active');
+  drawHealthChart(key);
+}
+function drawHealthChart(key) {
   const canvas = document.getElementById('healthChart');
-  if (!canvas || !logs.length) return;
-  const labels = logs.map(l => new Date(l.date).toLocaleDateString('fr-FR', { day:'numeric', month:'short' }));
-  const metrics = [
-    {key:'weight', label:'Poids (kg)', color:'#378ADD'},
-    {key:'energy_level', label:'Énergie (/10)', color:'#C9A84C'},
-    {key:'sleep_hours', label:'Sommeil (h)', color:'#845EC2'},
-    {key:'hydration_liters', label:'Hydratation (L)', color:'#00C9A7'},
-    {key:'glycemia', label:'Glycémie', color:'var(--coral)'}
-  ];
-  let activeKey = 'weight';
-  const wrap = canvas.parentElement;
-  if (!wrap.querySelector('.chart-selector')) {
-    const sel = document.createElement('div');
-    sel.className = 'chart-selector';
-    sel.style.cssText = 'display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px';
-    metrics.forEach(function(m) {
-      const btn = document.createElement('button');
-      btn.textContent = m.label;
-      btn.dataset.key = m.key;
-      btn.style.cssText = 'padding:4px 10px;border-radius:20px;border:none;font-size:0.72rem;font-weight:600;cursor:pointer;font-family:DM Sans,sans-serif;transition:all 0.2s;background:' + (m.key===activeKey ? m.color : '#F0F0F0') + ';color:' + (m.key===activeKey ? 'white' : '#666');
-      btn.onclick = function() {
-        activeKey = m.key;
-        sel.querySelectorAll('button').forEach(function(b) {
-          const mm = metrics.find(x=>x.key===b.dataset.key);
-          b.style.background = b.dataset.key===activeKey ? mm.color : '#F0F0F0';
-          b.style.color = b.dataset.key===activeKey ? 'white' : '#666';
-        });
-        drawHealthChart(activeKey);
-      };
-      sel.appendChild(btn);
-    });
-    wrap.insertBefore(sel, canvas);
-  }
-  function drawHealthChart(key) {
-    const ex = Chart.getChart(canvas);
-    if (ex) ex.destroy();
-    const m = metrics.find(x=>x.key===key);
-    new Chart(canvas, {
-      type: 'line',
-      data: { labels, datasets: [{ label: m.label, data: logs.map(function(l){return l[key];}), borderColor: m.color, backgroundColor: m.color+'22', tension: 0.4, fill: true, pointRadius: 3, pointHoverRadius: 5 }] },
-      options: { responsive: true, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: false, grid: { color: 'rgba(0,0,0,0.04)' } }, x: { grid: { display: false }, ticks: { font: { size: 10 }, maxRotation: 45 } } } }
-    });
-  }
-  drawHealthChart(activeKey);
+  if (!canvas || !_healthLogs.length) return;
+  const ex = Chart.getChart(canvas);
+  if (ex) ex.destroy();
+  const m = _healthMetrics.find(x=>x.key===key);
+  const labels = _healthLogs.map(l => new Date(l.date).toLocaleDateString('fr-FR', {day:'numeric', month:'short'}));
+  const ctx = canvas.getContext('2d');
+  const grad = ctx.createLinearGradient(0,0,0,110);
+  grad.addColorStop(0, m.color+'33');
+  grad.addColorStop(1, m.color+'00');
+  new Chart(canvas, {
+    type: 'line',
+    data: { labels, datasets: [{ data: _healthLogs.map(function(l){return l[key];}), borderColor: m.color, backgroundColor: grad, borderWidth: 2.5, tension: 0.4, fill: true, pointBackgroundColor: '#fff', pointBorderColor: m.color, pointBorderWidth: 2, pointRadius: 4, pointHoverRadius: 6 }] },
+    options: { responsive: true, plugins: { legend: { display: false }, tooltip: { backgroundColor: '#2D2D2D', titleColor: '#fff', bodyColor: m.color, cornerRadius: 8, padding: 10, displayColors: false } }, scales: { y: { beginAtZero: false, grid: { color: 'rgba(0,0,0,0.04)' }, border: { display: false }, ticks: { font: { size: 10 }, color: '#bbb' } }, x: { grid: { display: false }, ticks: { font: { size: 10 }, color: '#bbb', maxRotation: 45 } } } }
+  });
+}
+function renderHealthChart(logs) {
+  _healthLogs = logs;
+  if (!logs.length) return;
+  // Stats résumé
+  var last = logs[logs.length-1];
+  var avgEnergy = Math.round(logs.filter(l=>l.energy_level).reduce(function(s,l){return s+(l.energy_level||0);},0) / (logs.filter(l=>l.energy_level).length||1)*10)/10;
+  var avgSleep = Math.round(logs.filter(l=>l.sleep_hours).reduce(function(s,l){return s+(l.sleep_hours||0);},0) / (logs.filter(l=>l.sleep_hours).length||1)*10)/10;
+  var elPoids = document.getElementById('evoStatPoids');
+  var elEnergie = document.getElementById('evoStatEnergie');
+  var elSommeil = document.getElementById('evoStatSommeil');
+  if (elPoids && last.weight) elPoids.innerHTML = last.weight + ' <span style="font-size:11px;font-weight:500;color:#bbb">kg</span>';
+  if (elEnergie && avgEnergy) elEnergie.innerHTML = avgEnergy + ' <span style="font-size:11px;font-weight:500;color:#bbb">/10</span>';
+  if (elSommeil && avgSleep) elSommeil.innerHTML = avgSleep + ' <span style="font-size:11px;font-weight:500;color:#bbb">h</span>';
+  drawHealthChart(_healthActiveKey);
 }
 
 function renderHealthHistory(logs) {
