@@ -4929,56 +4929,62 @@ function switchLang(lang) {
       <div id="healthHistory"></div>
     </div>
 
-    <!-- Section évolution photos -->
-    <div id="evolutionCorpCard" style="background:#fff;border-radius:20px;border:0.5px solid rgba(0,0,0,0.07);padding:18px;margin-bottom:100px;position:relative">
+    <!-- Section évolution photos PREMIUM -->
+    <div id="evolutionCorpCard" style="background:#fff;border-radius:20px;border:0.5px solid rgba(0,0,0,0.07);overflow:hidden;margin-bottom:100px;position:relative">
       <div id="evolutionCorpLockOverlay" style="display:none;position:absolute;inset:0;background:rgba(255,255,255,0.7);backdrop-filter:blur(4px);border-radius:20px;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:20px;cursor:pointer;z-index:5" onclick="openSubscriptionModal('lock')">
         <i class="ti ti-lock" style="font-size:2rem;color:#FF6B6B;margin-bottom:8px"></i>
         <div style="font-size:0.9rem;font-weight:700;color:#2D2D2D;margin-bottom:4px">Fonctionnalité Standard</div>
         <div style="font-size:0.78rem;color:#888;margin-bottom:12px">Suivez votre évolution corporelle avec photos et analyses</div>
         <div style="background:linear-gradient(135deg,#FF6B6B,#FF9A3C);color:white;border-radius:10px;padding:8px 20px;font-size:0.82rem;font-weight:700">Voir les offres →</div>
       </div>
-      <div class="evo-eyebrow" style="margin-bottom:4px">
-        <div class="evo-eyebrow-bar"></div>
-        <span class="evo-eyebrow-text">Mon évolution corporelle</span>
-      </div>
-      <div style="font-size:0.82rem;color:#999;margin-bottom:16px">Prenez une photo régulièrement pour suivre votre évolution visuelle.</div>
-      <div id="evolutionBadges" style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px"></div>
-      <div style="display:flex;gap:12px;margin-bottom:16px;flex-wrap:wrap">
-        <label style="flex:1;min-width:120px;background:linear-gradient(135deg,#FF6B6B,#FF9A3C);color:white;border-radius:12px;padding:12px;text-align:center;cursor:pointer;font-size:0.85rem;font-weight:600">
-          📷 Prendre une photo
-          <input type="file" accept="image/*" capture="user" style="display:none" onchange="addEvolutionPhoto(this)">
-        </label>
-        <label style="flex:1;min-width:120px;background:#F8F4F0;color:#2D2D2D;border-radius:12px;padding:12px;text-align:center;cursor:pointer;font-size:0.85rem;font-weight:600;border:1px dashed #ddd">
-          🖼️ Choisir une photo
-          <input type="file" accept="image/*" style="display:none" onchange="addEvolutionPhoto(this)">
-        </label>
-      </div>
-      <div style="display:flex;gap:8px;margin-bottom:16px;border-bottom:1px solid #f0f0f0;padding-bottom:12px">
-        <button onclick="setEvolutionTab('timeline')" id="tabTimeline" style="font-size:0.78rem;padding:6px 14px;border-radius:20px;border:none;background:#2D2D2D;color:white;cursor:pointer;font-family:DM Sans,sans-serif">📅 Timeline</button>
-        <button onclick="setEvolutionTab('compare')" id="tabCompare" style="font-size:0.78rem;padding:6px 14px;border-radius:20px;border:none;background:#F8F4F0;color:#2D2D2D;cursor:pointer;font-family:DM Sans,sans-serif">⚖️ Comparer</button>
-        <button onclick="setEvolutionTab('mirella')" id="tabMirella" style="font-size:0.78rem;padding:6px 14px;border-radius:20px;border:none;background:#F8F4F0;color:#2D2D2D;cursor:pointer;font-family:DM Sans,sans-serif">🤖 Analyse Mirella</button>
-      </div>
-      <div id="tabContentTimeline">
-        <div id="evolutionGallery" style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px"></div>
-      </div>
-      <div id="tabContentCompare" style="display:none">
-        <div style="font-size:0.82rem;color:#999;margin-bottom:12px">Sélectionnez 2 photos pour les comparer côte à côte.</div>
-        <div id="compareGallery" style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:16px"></div>
-        <div id="compareResult" style="display:none">
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px">
-            <div style="text-align:center"><img id="compareImgA" style="width:100%;border-radius:12px;aspect-ratio:1;object-fit:cover"><div id="compareLabelA" style="font-size:0.75rem;color:#999;margin-top:4px"></div></div>
-            <div style="text-align:center"><img id="compareImgB" style="width:100%;border-radius:12px;aspect-ratio:1;object-fit:cover"><div id="compareLabelB" style="font-size:0.75rem;color:#999;margin-top:4px"></div></div>
-          </div>
-          <div id="compareDiff" style="text-align:center;font-size:0.88rem;font-weight:600;color:#28C840;padding:8px;background:#F0FFF4;border-radius:8px"></div>
+      <div style="padding:18px 18px 16px">
+        <div class="evo-eyebrow" style="margin-bottom:6px">
+          <div class="evo-eyebrow-bar"></div>
+          <span class="evo-eyebrow-text">Mon évolution corporelle</span>
+        </div>
+        <div style="font-size:12px;color:#bbb;margin-bottom:16px;line-height:1.4">Prenez une photo régulièrement pour visualiser votre progression.</div>
+        <div id="evolutionBadges" style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px"></div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px">
+          <label style="background:linear-gradient(135deg,#FF6B6B,#FF9A3C);color:white;border-radius:14px;padding:14px 10px;text-align:center;cursor:pointer;font-size:13px;font-weight:700;display:flex;flex-direction:column;align-items:center;gap:6px;border:none">
+            <div style="width:32px;height:32px;border-radius:10px;background:rgba(255,255,255,0.2);display:flex;align-items:center;justify-content:center"><i class="ti ti-camera" style="font-size:18px;color:white"></i></div>
+            Prendre une photo
+            <input type="file" accept="image/*" capture="user" style="display:none" onchange="addEvolutionPhoto(this)">
+          </label>
+          <label style="background:#FAFAFA;color:#2D2D2D;border-radius:14px;padding:14px 10px;text-align:center;cursor:pointer;font-size:13px;font-weight:600;display:flex;flex-direction:column;align-items:center;gap:6px;border:0.5px solid rgba(0,0,0,0.08)">
+            <div style="width:32px;height:32px;border-radius:10px;background:#FFF0EE;display:flex;align-items:center;justify-content:center"><i class="ti ti-photo" style="font-size:18px;color:#FF6B6B"></i></div>
+            Choisir une photo
+            <input type="file" accept="image/*" style="display:none" onchange="addEvolutionPhoto(this)">
+          </label>
         </div>
       </div>
-      <div id="tabContentMirella" style="display:none">
-        <div style="font-size:0.82rem;color:#999;margin-bottom:12px">Sélectionnez 2 photos pour que Mirella analyse votre progression.</div>
-        <div id="mirellaGallery" style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:16px"></div>
-        <button onclick="analyzeEvolution()" id="analyzeBtn" style="display:none;width:100%;background:#2D2D2D;color:white;border:none;border-radius:12px;padding:12px;font-size:0.85rem;font-weight:600;cursor:pointer;font-family:DM Sans,sans-serif;margin-bottom:12px">🤖 Analyser ma progression avec Mirella</button>
-        <div id="mirellaAnalysisResult" style="display:none;background:var(--cream);border-radius:12px;padding:16px;border-left:3px solid var(--accent)">
-          <div style="font-size:0.75rem;font-weight:600;color:var(--accent);margin-bottom:8px">Mirella</div>
-          <div id="mirellaAnalysisText" style="font-size:0.85rem;color:#2D2D2D;line-height:1.6"></div>
+      <div style="display:flex;gap:6px;padding:0 18px 16px">
+        <button onclick="setEvolutionTab('timeline')" id="tabTimeline" style="flex:1;padding:9px 4px;border-radius:12px;border:0.5px solid transparent;background:#2D2D2D;color:white;font-size:11px;font-weight:600;cursor:pointer;font-family:DM Sans,sans-serif;display:flex;flex-direction:column;align-items:center;gap:4px"><i class="ti ti-calendar" style="font-size:16px"></i>Timeline</button>
+        <button onclick="setEvolutionTab('compare')" id="tabCompare" style="flex:1;padding:9px 4px;border-radius:12px;border:0.5px solid rgba(0,0,0,0.08);background:#FAFAFA;color:#888;font-size:11px;font-weight:600;cursor:pointer;font-family:DM Sans,sans-serif;display:flex;flex-direction:column;align-items:center;gap:4px"><i class="ti ti-scale" style="font-size:16px"></i>Comparer</button>
+        <button onclick="setEvolutionTab('mirella')" id="tabMirella" style="flex:1;padding:9px 4px;border-radius:12px;border:0.5px solid rgba(0,0,0,0.08);background:#FAFAFA;color:#888;font-size:11px;font-weight:600;cursor:pointer;font-family:DM Sans,sans-serif;display:flex;flex-direction:column;align-items:center;gap:4px"><i class="ti ti-sparkles" style="font-size:16px"></i>Mirella IA</button>
+      </div>
+      <div style="padding:0 18px 18px">
+        <div id="tabContentTimeline">
+          <div id="evolutionGallery" style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px"></div>
+        </div>
+        <div id="tabContentCompare" style="display:none">
+          <div style="font-size:12px;color:#bbb;margin-bottom:12px">Sélectionnez 2 photos pour les comparer côte à côte.</div>
+          <div id="compareGallery" style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:16px"></div>
+          <div id="compareResult" style="display:none">
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px">
+              <div style="text-align:center"><img id="compareImgA" style="width:100%;border-radius:12px;aspect-ratio:1;object-fit:cover"><div id="compareLabelA" style="font-size:0.75rem;color:#999;margin-top:4px"></div></div>
+              <div style="text-align:center"><img id="compareImgB" style="width:100%;border-radius:12px;aspect-ratio:1;object-fit:cover"><div id="compareLabelB" style="font-size:0.75rem;color:#999;margin-top:4px"></div></div>
+            </div>
+            <div id="compareDiff" style="text-align:center;font-size:0.88rem;font-weight:600;color:#28C840;padding:8px;background:#F0FFF4;border-radius:8px"></div>
+          </div>
+        </div>
+        <div id="tabContentMirella" style="display:none">
+          <div style="font-size:12px;color:#bbb;margin-bottom:12px">Sélectionnez 2 photos pour que Mirella analyse votre progression.</div>
+          <div id="mirellaGallery" style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:16px"></div>
+          <button onclick="analyzeEvolution()" id="analyzeBtn" style="display:none;width:100%;background:#2D2D2D;color:white;border:none;border-radius:12px;padding:12px;font-size:0.85rem;font-weight:600;cursor:pointer;font-family:DM Sans,sans-serif;margin-bottom:12px;display:flex;align-items:center;justify-content:center;gap:6px"><i class="ti ti-sparkles"></i>Analyser ma progression avec Mirella</button>
+          <div id="mirellaAnalysisResult" style="display:none;background:#FAFAFA;border-radius:12px;padding:16px;border-left:3px solid #FF6B6B">
+            <div style="font-size:10px;font-weight:700;letter-spacing:0.07em;text-transform:uppercase;color:#FF6B6B;margin-bottom:8px">Mirella</div>
+            <div id="mirellaAnalysisText" style="font-size:0.85rem;color:#2D2D2D;line-height:1.6"></div>
+          </div>
         </div>
       </div>
     </div>
