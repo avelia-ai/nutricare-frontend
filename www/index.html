@@ -9398,7 +9398,7 @@ function updateNutritionPanel(dayIndex) {
       items.forEach(function(item, pidx) {
         var ck = 'mealcheck_perso_' + j + '_' + r + '_' + pidx;
         if (!checkedMeals[ck]) return;
-        if (!item.fib && !item.vitc && !item.mag) { alert('MICROS MANQUANTS dans item: ' + JSON.stringify(item).substring(0,150)); }
+
         totals.cal += item.kcal || 0;
         totals.glu += item.glu || 0;
         totals.pro += item.pro || 0;
