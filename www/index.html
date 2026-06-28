@@ -9372,15 +9372,13 @@ function updateNutritionPanel(dayIndex) {
   var persoData = window.getPersoMenus ? window.getPersoMenus() : {};
   var persoRepasKeys = ['petit_dejeuner','dejeuner','collation','diner'];
   var persoJours = window.PERSO_JOURS || [];
-  console.log('[DEBUG] persoJours=', persoJours, 'persoData=', JSON.stringify(persoData).substring(0,200));
-  console.log('[DEBUG] checkedMeals=', JSON.stringify(checkedMeals));
   persoJours.forEach(function(j) {
     persoRepasKeys.forEach(function(r) {
       var items = (persoData[j] && persoData[j][r]) ? persoData[j][r] : [];
       items.forEach(function(item, pidx) {
         var ck = 'mealcheck_perso_' + j + '_' + r + '_' + pidx;
-        console.log('[DEBUG] ck=', ck, 'checked=', !!checkedMeals[ck], 'item=', JSON.stringify(item));
         if (!checkedMeals[ck]) return;
+        if (!item.fib && !item.vitc && !item.mag) { alert('MICROS MANQUANTS dans item: ' + JSON.stringify(item).substring(0,150)); }
         totals.cal += item.kcal || 0;
         totals.glu += item.glu || 0;
         totals.pro += item.pro || 0;
