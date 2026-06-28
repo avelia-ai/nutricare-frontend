@@ -1099,7 +1099,12 @@ window.togglePersoRepasChecked = function(checkKey, repasKey, idx) {
   }
   localStorage.setItem('mirella_checked_meals', JSON.stringify(meals));
   window.renderPersoMenus();
-  if (typeof updateNutritionPanel === 'function') updateNutritionPanel();
+  if (typeof updateNutritionPanel === 'function') {
+    var jIdx = window.PERSO_JOURS ? window.PERSO_JOURS.indexOf(window._persoMenusJour) : -1;
+    var selEl = document.getElementById('menusDaySelector');
+    if (selEl && jIdx >= 0) selEl.value = jIdx;
+    setTimeout(function(){ updateNutritionPanel(jIdx >= 0 ? jIdx : undefined); }, 100);
+  }
 };
 window.selectPersoJour = function(jour) {
   window._persoMenusJour = jour;
