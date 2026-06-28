@@ -4859,89 +4859,75 @@ function switchLang(lang) {
     <div id="healthAnalyseComment" style="display:none;margin-top:16px;padding:20px;background:linear-gradient(135deg,var(--cream),#FFF0EC);border-radius:0 16px 16px 16px;font-size:0.85rem;color:#333;line-height:1.7;border-left:3px solid var(--coral);box-shadow:0 2px 12px rgba(255,107,107,0.08)"></div>
   </div>
   <!-- Graphiques et historique -->
-  <div style="display:flex;flex-direction:column;gap:16px">
-    <div id="healthChartCard" style="background:#FFFCFA;border-radius:16px;padding:22px;box-shadow:0 0 0 1.5px rgba(255,154,108,0.22),0 14px 32px rgba(230,110,70,0.14);position:relative">
-      <div style="font-size:0.72rem;font-weight:600;text-transform:uppercase;letter-spacing:1.5px;color:var(--accent);margin-bottom:16px">📈 ÉVOLUTION — 30 JOURS</div>
-      <div id="healthChartLockOverlay" style="display:none;position:absolute;inset:0;background:rgba(255,255,255,0.55);backdrop-filter:blur(3px);border-radius:16px;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:20px;cursor:pointer;z-index:5" onclick="openSubscriptionModal('lock')">
-        <div style="font-size:1.8rem;margin-bottom:8px">🔒</div>
+  <style>
+    .evo-card{background:#fff;border-radius:20px;border:0.5px solid rgba(0,0,0,0.07);overflow:hidden;margin-bottom:12px;position:relative}
+    .evo-eyebrow{display:flex;align-items:center;gap:7px;margin-bottom:14px}
+    .evo-eyebrow-bar{width:3px;height:16px;border-radius:2px;background:linear-gradient(180deg,#FF6B6B,#FF9A3C);flex-shrink:0}
+    .evo-eyebrow-text{font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#999}
+    .evo-stat-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:16px}
+    .evo-stat{background:#FAFAFA;border-radius:12px;padding:10px 12px;border:0.5px solid rgba(0,0,0,0.05)}
+    .evo-stat-val{font-size:1.1rem;font-weight:800;color:#2D2D2D;line-height:1;margin-bottom:3px}
+    .evo-stat-lbl{font-size:9px;font-weight:600;letter-spacing:0.05em;text-transform:uppercase;color:#bbb}
+    .evo-pills{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px}
+    .evo-pill{font-size:11px;font-weight:600;padding:5px 12px;border-radius:20px;cursor:pointer;border:0.5px solid rgba(0,0,0,0.08);color:#888;background:#FAFAFA;font-family:DM Sans,sans-serif}
+    .evo-pill.active{background:#2D2D2D;color:#fff;border-color:transparent}
+    .evo-hist-item{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:0.5px solid rgba(0,0,0,0.05)}
+    .evo-hist-item:last-child{border-bottom:none;padding-bottom:0}
+    .evo-hist-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+    .evo-hist-date{font-size:12px;font-weight:700;color:#2D2D2D}
+    .evo-hist-vals{font-size:11px;color:#aaa;font-weight:500;margin-top:1px}
+    .evo-hist-badge{font-size:10px;font-weight:700;padding:3px 8px;border-radius:8px;background:#FFF0EE;color:#FF6B6B;margin-left:auto;white-space:nowrap}
+  </style>
+  <div style="display:flex;flex-direction:column;gap:0">
+
+    <!-- Carte graphique -->
+    <div id="healthChartCard" class="evo-card">
+      <div id="healthChartLockOverlay" style="display:none;position:absolute;inset:0;background:rgba(255,255,255,0.7);backdrop-filter:blur(4px);border-radius:20px;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:20px;cursor:pointer;z-index:5" onclick="openSubscriptionModal('lock')">
+        <i class="ti ti-lock" style="font-size:2rem;color:#FF6B6B;margin-bottom:8px"></i>
         <div style="font-size:0.9rem;font-weight:700;color:#2D2D2D;margin-bottom:4px">Fonctionnalité Standard</div>
         <div style="font-size:0.78rem;color:#888;margin-bottom:12px">Débloquez vos graphiques d'évolution sur 30 jours</div>
-        <div style="background:linear-gradient(135deg,var(--coral),var(--accent));color:white;border-radius:10px;padding:8px 20px;font-size:0.82rem;font-weight:700">Voir les offres →</div>
+        <div style="background:linear-gradient(135deg,#FF6B6B,#FF9A3C);color:white;border-radius:10px;padding:8px 20px;font-size:0.82rem;font-weight:700">Voir les offres →</div>
       </div>
-      <canvas id="healthChart" height="120"></canvas>
-    </div>
-    <div style="background:#FFFCFA;border-radius:16px;padding:22px;box-shadow:0 0 0 1.5px rgba(255,154,108,0.22),0 14px 32px rgba(230,110,70,0.14)">
-      <div style="font-size:0.72rem;font-weight:600;text-transform:uppercase;letter-spacing:1.5px;color:var(--accent);margin-bottom:16px">🕒 HISTORIQUE RÉCENT</div>
-      <div id="healthHistory"></div>
-    </div>
-  <!-- Section évolution photos -->
-  <div id="evolutionCorpCard" style="background:#FFFCFA;border-radius:16px;padding:22px;box-shadow:0 0 0 1.5px rgba(255,154,108,0.22),0 14px 32px rgba(230,110,70,0.14);margin-top:16px;margin-bottom:100px;position:relative">
-    <div id="evolutionCorpLockOverlay" style="display:none;position:absolute;inset:0;background:rgba(255,255,255,0.6);backdrop-filter:blur(3px);border-radius:16px;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:20px;cursor:pointer;z-index:5" onclick="openSubscriptionModal('lock')">
-      <div style="font-size:1.8rem;margin-bottom:8px">🔒</div>
-      <div style="font-size:0.9rem;font-weight:700;color:#2D2D2D;margin-bottom:4px">Fonctionnalité Standard</div>
-      <div style="font-size:0.78rem;color:#888;margin-bottom:12px">Suivez votre évolution corporelle avec photos et analyses</div>
-      <div style="background:linear-gradient(135deg,var(--coral),var(--accent));color:white;border-radius:10px;padding:8px 20px;font-size:0.82rem;font-weight:700">Voir les offres →</div>
-    </div>
-    <div style="font-size:0.72rem;font-weight:600;text-transform:uppercase;letter-spacing:1.5px;color:var(--accent);margin-bottom:4px">📸 MON ÉVOLUTION CORPORELLE</div>
-    <div style="font-size:0.82rem;color:#999;margin-bottom:16px">Prenez une photo régulièrement pour suivre votre évolution visuelle.</div>
-
-    <!-- Badges -->
-    <div id="evolutionBadges" style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px"></div>
-
-    <!-- Boutons ajout -->
-    <div style="display:flex;gap:12px;margin-bottom:16px;flex-wrap:wrap">
-      <label style="flex:1;min-width:120px;background:linear-gradient(135deg,var(--coral),var(--accent));color:white;border-radius:12px;padding:12px;text-align:center;cursor:pointer;font-size:0.85rem;font-weight:600">
-        📷 Prendre une photo
-        <input type="file" accept="image/*" capture="user" style="display:none" onchange="addEvolutionPhoto(this)">
-      </label>
-      <label style="flex:1;min-width:120px;background:#F8F4F0;color:#2D2D2D;border-radius:12px;padding:12px;text-align:center;cursor:pointer;font-size:0.85rem;font-weight:600;border:1px dashed #ddd">
-        🖼️ Choisir une photo
-        <input type="file" accept="image/*" style="display:none" onchange="addEvolutionPhoto(this)">
-      </label>
-    </div>
-
-    <!-- Tabs -->
-    <div style="display:flex;gap:8px;margin-bottom:16px;border-bottom:1px solid #f0f0f0;padding-bottom:12px">
-      <button onclick="setEvolutionTab('timeline')" id="tabTimeline" style="font-size:0.78rem;padding:6px 14px;border-radius:20px;border:none;background:#2D2D2D;color:white;cursor:pointer;font-family:DM Sans,sans-serif">📅 Timeline</button>
-      <button onclick="setEvolutionTab('compare')" id="tabCompare" style="font-size:0.78rem;padding:6px 14px;border-radius:20px;border:none;background:#F8F4F0;color:#2D2D2D;cursor:pointer;font-family:DM Sans,sans-serif">⚖️ Comparer</button>
-      <button onclick="setEvolutionTab('mirella')" id="tabMirella" style="font-size:0.78rem;padding:6px 14px;border-radius:20px;border:none;background:#F8F4F0;color:#2D2D2D;cursor:pointer;font-family:DM Sans,sans-serif">🤖 Analyse Mirella</button>
-    </div>
-
-    <!-- Tab Timeline -->
-    <div id="tabContentTimeline">
-      <div id="evolutionGallery" style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px"></div>
-    </div>
-
-    <!-- Tab Comparer -->
-    <div id="tabContentCompare" style="display:none">
-      <div style="font-size:0.82rem;color:#999;margin-bottom:12px">Sélectionnez 2 photos pour les comparer côte à côte.</div>
-      <div id="compareGallery" style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:16px"></div>
-      <div id="compareResult" style="display:none">
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px">
-          <div style="text-align:center">
-            <img id="compareImgA" style="width:100%;border-radius:12px;aspect-ratio:1;object-fit:cover">
-            <div id="compareLabelA" style="font-size:0.75rem;color:#999;margin-top:4px"></div>
+      <div style="padding:18px 18px 0">
+        <div class="evo-eyebrow">
+          <div class="evo-eyebrow-bar"></div>
+          <span class="evo-eyebrow-text">Évolution — 30 jours</span>
+        </div>
+        <div class="evo-stat-row">
+          <div class="evo-stat">
+            <div class="evo-stat-val" id="evoStatPoids" style="color:#FF6B6B">— <span style="font-size:11px;font-weight:500;color:#bbb">kg</span></div>
+            <div class="evo-stat-lbl">Poids actuel</div>
           </div>
-          <div style="text-align:center">
-            <img id="compareImgB" style="width:100%;border-radius:12px;aspect-ratio:1;object-fit:cover">
-            <div id="compareLabelB" style="font-size:0.75rem;color:#999;margin-top:4px"></div>
+          <div class="evo-stat">
+            <div class="evo-stat-val" id="evoStatEnergie" style="color:#27AE60">— <span style="font-size:11px;font-weight:500;color:#bbb">/10</span></div>
+            <div class="evo-stat-lbl">Énergie moy.</div>
+          </div>
+          <div class="evo-stat">
+            <div class="evo-stat-val" id="evoStatSommeil" style="color:#6C5CE7">— <span style="font-size:11px;font-weight:500;color:#bbb">h</span></div>
+            <div class="evo-stat-lbl">Sommeil moy.</div>
           </div>
         </div>
-        <div id="compareDiff" style="text-align:center;font-size:0.88rem;font-weight:600;color:#28C840;padding:8px;background:#F0FFF4;border-radius:8px"></div>
+        <div class="evo-pills" id="healthChartPills">
+          <button class="evo-pill active" onclick="switchHealthChart('weight',this)">Poids (kg)</button>
+          <button class="evo-pill" onclick="switchHealthChart('energy',this)">Énergie (/10)</button>
+          <button class="evo-pill" onclick="switchHealthChart('sleep',this)">Sommeil (h)</button>
+          <button class="evo-pill" onclick="switchHealthChart('hydration',this)">Hydratation (L)</button>
+          <button class="evo-pill" onclick="switchHealthChart('glycemia',this)">Glycémie</button>
+        </div>
+      </div>
+      <div style="padding:0 18px 18px">
+        <canvas id="healthChart" height="110"></canvas>
       </div>
     </div>
 
-    <!-- Tab Mirella -->
-    <div id="tabContentMirella" style="display:none">
-      <div style="font-size:0.82rem;color:#999;margin-bottom:12px">Sélectionnez 2 photos pour que Mirella analyse votre progression.</div>
-      <div id="mirellaGallery" style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:16px"></div>
-      <button onclick="analyzeEvolution()" id="analyzeBtn" style="display:none;width:100%;background:#2D2D2D;color:white;border:none;border-radius:12px;padding:12px;font-size:0.85rem;font-weight:600;cursor:pointer;font-family:DM Sans,sans-serif;margin-bottom:12px">🤖 Analyser ma progression avec Mirella</button>
-      <div id="mirellaAnalysisResult" style="display:none;background:var(--cream);border-radius:12px;padding:16px;border-left:3px solid var(--accent)">
-        <div style="font-size:0.75rem;font-weight:600;color:var(--accent);margin-bottom:8px">Mirella</div>
-        <div id="mirellaAnalysisText" style="font-size:0.85rem;color:#2D2D2D;line-height:1.6"></div>
+    <!-- Historique récent -->
+    <div class="evo-card" style="padding:18px">
+      <div class="evo-eyebrow">
+        <div class="evo-eyebrow-bar"></div>
+        <span class="evo-eyebrow-text">Historique récent</span>
       </div>
+      <div id="healthHistory"></div>
     </div>
-  </div>
   </div>
 </div>
 <div id="protocolsView" style="display:none;padding:32px;overflow-y:auto;background:var(--cream);width:100%">
