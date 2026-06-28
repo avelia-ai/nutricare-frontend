@@ -4754,100 +4754,110 @@ function switchLang(lang) {
 
   </div>
 
-  <!-- Formulaire saisie PREMIUM -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+  <!-- Formulaire saisie PREMIUM v3 -->
   <style>
-    .hcard{position:relative;border-radius:18px;padding:16px 14px 14px;overflow:hidden;transition:transform 0.18s ease,box-shadow 0.18s ease}
-    .hcard:active{transform:scale(0.97)}
-    .hcard-icon{font-size:1.5rem;line-height:1;margin-bottom:8px;display:block}
-    .hcard-label{font-size:0.62rem;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;margin-bottom:6px;opacity:0.75}
-    .hcard input{width:100%;background:transparent;border:none;outline:none;font-size:1.25rem;font-weight:800;font-family:DM Sans,sans-serif;padding:0;line-height:1.2}
-    .hcard input::placeholder{font-weight:400;font-size:0.95rem;opacity:0.35}
-    .hcard-bar{position:absolute;bottom:0;left:0;right:0;height:3px;border-radius:0 0 18px 18px}
+    .hc{position:relative;background:#FFFFFF;border-radius:16px;border:0.5px solid rgba(0,0,0,0.08);padding:14px;overflow:hidden}
+    .hc-top{position:absolute;top:0;left:0;right:0;height:3px;border-radius:16px 16px 0 0}
+    .hc-ico{width:32px;height:32px;border-radius:10px;display:flex;align-items:center;justify-content:center;margin-bottom:10px;font-size:16px;flex-shrink:0}
+    .hc-ico i{font-size:16px;line-height:1}
+    .hc-lbl{font-size:10px;font-weight:700;letter-spacing:0.07em;text-transform:uppercase;color:#aaa;margin-bottom:5px}
+    .hc input{width:100%;background:transparent;border:none;outline:none;font-size:1.2rem;font-weight:800;font-family:DM Sans,sans-serif;padding:0;line-height:1.2;color:#2D2D2D}
+    .hc input::placeholder{font-weight:400;font-size:0.88rem;color:#ccc}
+    .hc-unit{font-size:10px;color:#bbb;margin-top:3px;font-weight:500}
   </style>
-  <div style="background:#FFFCFA;border-radius:22px;padding:22px;box-shadow:0 0 0 1.5px rgba(255,154,108,0.18),0 16px 40px rgba(230,110,70,0.12);margin-bottom:24px">
-    <div style="display:flex;align-items:center;gap:8px;margin-bottom:20px">
+  <div style="background:#FFFCFA;border-radius:22px;padding:20px;box-shadow:0 0 0 1.5px rgba(255,154,108,0.15),0 16px 40px rgba(230,110,70,0.1);margin-bottom:24px">
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:18px">
       <div style="width:3px;height:18px;border-radius:2px;background:linear-gradient(180deg,#FF6B6B,#FF9A3C)"></div>
-      <span style="font-size:0.72rem;font-weight:700;text-transform:uppercase;letter-spacing:1.8px;color:#2D2D2D">Saisie du jour</span>
+      <span style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:2px;color:#999">Saisie du jour</span>
     </div>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px" id="healthGrid" class="health-grid">
-      <div class="hcard" style="background:linear-gradient(145deg,#FFF5F5,#FFE8E8)">
-        <div class="hcard-icon" style="background:#FFF0EE;width:32px;height:32px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:15px">🩸</div>
-        <div class="hcard-label" style="color:#c0392b">Glycémie</div>
-        <input type="number" id="hGlycemia" step="0.1" placeholder="mmol/L" style="color:#c0392b">
-        <div class="hcard-bar" style="background:linear-gradient(90deg,#FF6B6B,#ff9090)"></div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:9px" id="healthGrid" class="health-grid">
+      <div class="hc">
+        <div class="hc-top" style="background:linear-gradient(90deg,#FF6B6B,#FF9A3C)"></div>
+        <div class="hc-ico" style="background:#FFF0EE">🩸</div>
+        <div class="hc-lbl">Glycémie</div>
+        <input type="number" id="hGlycemia" step="0.1" placeholder="—">
+        <div class="hc-unit">mmol/L</div>
       </div>
-      <div class="hcard" style="background:linear-gradient(145deg,#F5F0FF,#EDE0FF)">
-        <div class="hcard-icon" style="background:#F5F0FF;width:32px;height:32px;border-radius:10px;display:flex;align-items:center;justify-content:center"><i class="ti ti-scale" style="font-size:16px;color:#9B59B6"></i></div>
-        <div class="hcard-label" style="color:#7d3c98">Poids</div>
-        <input type="number" id="hWeight" step="0.1" placeholder="kg" oninput="window.updateIMCDisplay()" style="color:#7d3c98">
-        <div class="hcard-bar" style="background:linear-gradient(90deg,#9B59B6,#c39bd3)"></div>
+      <div class="hc">
+        <div class="hc-top" style="background:linear-gradient(90deg,#9B59B6,#c39bd3)"></div>
+        <div class="hc-ico" style="background:#F5F0FF"><i class="ti ti-scale" style="color:#9B59B6"></i></div>
+        <div class="hc-lbl">Poids</div>
+        <input type="number" id="hWeight" step="0.1" placeholder="—" oninput="window.updateIMCDisplay()">
+        <div class="hc-unit">kg</div>
       </div>
-      <div class="hcard" style="background:linear-gradient(145deg,#F0F7FF,#DFF0FF)">
-        <div class="hcard-icon" style="background:#F0F7FF;width:32px;height:32px;border-radius:10px;display:flex;align-items:center;justify-content:center"><i class="ti ti-ruler" style="font-size:16px;color:#2E86C1"></i></div>
-        <div class="hcard-label" style="color:#1a6fa0">Taille</div>
-        <input type="number" id="hHeight" placeholder="cm" oninput="window.updateIMCDisplay()" style="color:#1a6fa0">
-        <div class="hcard-bar" style="background:linear-gradient(90deg,#2E86C1,#7fb3d3)"></div>
+      <div class="hc">
+        <div class="hc-top" style="background:linear-gradient(90deg,#2E86C1,#7fb3d3)"></div>
+        <div class="hc-ico" style="background:#F0F7FF"><i class="ti ti-ruler" style="color:#2E86C1"></i></div>
+        <div class="hc-lbl">Taille</div>
+        <input type="number" id="hHeight" placeholder="—" oninput="window.updateIMCDisplay()">
+        <div class="hc-unit">cm</div>
       </div>
-      <div class="hcard" style="background:linear-gradient(145deg,#F5FFF5,#E0FFE8)">
-        <div class="hcard-icon" style="background:#F0FFF5;width:32px;height:32px;border-radius:10px;display:flex;align-items:center;justify-content:center"><i class="ti ti-chart-bar" style="font-size:16px;color:#27AE60"></i></div>
-        <div class="hcard-label" style="color:#1e8449">IMC</div>
-        <div id="hImcValue" style="font-size:1.25rem;font-weight:800;color:#1e8449;line-height:1.2">—</div>
-        <div id="hImcLabel" style="font-size:0.65rem;color:#27AE60;margin-top:3px;font-weight:600"></div>
-        <div class="hcard-bar" style="background:linear-gradient(90deg,#27AE60,#82e0aa)"></div>
+      <div class="hc">
+        <div class="hc-top" style="background:linear-gradient(90deg,#27AE60,#82e0aa)"></div>
+        <div class="hc-ico" style="background:#F0FFF5"><i class="ti ti-chart-bar" style="color:#27AE60"></i></div>
+        <div class="hc-lbl">IMC</div>
+        <div id="hImcValue" style="font-size:1.2rem;font-weight:800;color:#2D2D2D;line-height:1.2">—</div>
+        <div id="hImcLabel" style="font-size:10px;color:#27AE60;margin-top:3px;font-weight:600"></div>
       </div>
-      <div class="hcard" style="background:linear-gradient(145deg,#FFFBF0,#FFF3D0)">
-        <div class="hcard-icon" style="background:#FFFBF0;width:32px;height:32px;border-radius:10px;display:flex;align-items:center;justify-content:center"><i class="ti ti-bolt" style="font-size:16px;color:#F39C12"></i></div>
-        <div class="hcard-label" style="color:#b7770d">Énergie</div>
-        <input type="number" id="hEnergy" min="1" max="10" placeholder="/ 10" style="color:#b7770d">
-        <div class="hcard-bar" style="background:linear-gradient(90deg,#F39C12,#f8c471)"></div>
+      <div class="hc">
+        <div class="hc-top" style="background:linear-gradient(90deg,#F39C12,#f8c471)"></div>
+        <div class="hc-ico" style="background:#FFFBF0"><i class="ti ti-bolt" style="color:#F39C12"></i></div>
+        <div class="hc-lbl">Énergie</div>
+        <input type="number" id="hEnergy" min="1" max="10" placeholder="—">
+        <div class="hc-unit">sur 10</div>
       </div>
-      <div class="hcard" style="background:linear-gradient(145deg,#FFF0F8,#FFE0F0)">
-        <div class="hcard-icon" style="background:#FFF0F8;width:32px;height:32px;border-radius:10px;display:flex;align-items:center;justify-content:center"><i class="ti ti-brain" style="font-size:16px;color:#E91E8C"></i></div>
-        <div class="hcard-label" style="color:#a31460">Stress</div>
-        <input type="number" id="hStress" min="1" max="10" placeholder="/ 10" style="color:#a31460">
-        <div class="hcard-bar" style="background:linear-gradient(90deg,#E91E8C,#f48cb6)"></div>
+      <div class="hc">
+        <div class="hc-top" style="background:linear-gradient(90deg,#E91E8C,#f48cb6)"></div>
+        <div class="hc-ico" style="background:#FFF0F8"><i class="ti ti-brain" style="color:#E91E8C"></i></div>
+        <div class="hc-lbl">Stress</div>
+        <input type="number" id="hStress" min="1" max="10" placeholder="—">
+        <div class="hc-unit">sur 10</div>
       </div>
-      <div class="hcard" style="background:linear-gradient(145deg,#F0FFF8,#D8FFE8)">
-        <div class="hcard-icon" style="background:#F0FFF8;width:32px;height:32px;border-radius:10px;display:flex;align-items:center;justify-content:center"><i class="ti ti-run" style="font-size:16px;color:#00B894"></i></div>
-        <div class="hcard-label" style="color:#00876e">Activité</div>
-        <input type="number" id="hActivity" min="0" placeholder="minutes" style="color:#00876e">
-        <div class="hcard-bar" style="background:linear-gradient(90deg,#00B894,#55efc4)"></div>
+      <div class="hc">
+        <div class="hc-top" style="background:linear-gradient(90deg,#00B894,#55efc4)"></div>
+        <div class="hc-ico" style="background:#F0FFF8"><i class="ti ti-run" style="color:#00B894"></i></div>
+        <div class="hc-lbl">Activité</div>
+        <input type="number" id="hActivity" min="0" placeholder="—">
+        <div class="hc-unit">minutes</div>
       </div>
-      <div class="hcard" style="background:linear-gradient(145deg,#F0F0FF,#E0E0FF)">
-        <div class="hcard-icon" style="background:#F0F0FF;width:32px;height:32px;border-radius:10px;display:flex;align-items:center;justify-content:center"><i class="ti ti-moon" style="font-size:16px;color:#6C5CE7"></i></div>
-        <div class="hcard-label" style="color:#4834d4">Sommeil</div>
-        <input type="number" id="hSleep" step="0.5" placeholder="heures" style="color:#4834d4">
-        <div class="hcard-bar" style="background:linear-gradient(90deg,#6C5CE7,#a29bfe)"></div>
+      <div class="hc">
+        <div class="hc-top" style="background:linear-gradient(90deg,#6C5CE7,#a29bfe)"></div>
+        <div class="hc-ico" style="background:#F0F0FF"><i class="ti ti-moon" style="color:#6C5CE7"></i></div>
+        <div class="hc-lbl">Sommeil</div>
+        <input type="number" id="hSleep" step="0.5" placeholder="—">
+        <div class="hc-unit">heures</div>
       </div>
     </div>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px">
-      <div class="hcard" style="background:linear-gradient(145deg,#FFF8F0,#FFE8D0)">
-        <div class="hcard-icon" style="background:#FFF0EE;width:32px;height:32px;border-radius:10px;display:flex;align-items:center;justify-content:center"><i class="ti ti-heart-rate-monitor" style="font-size:16px;color:#FF6B6B"></i></div>
-        <div class="hcard-label" style="color:#c0392b">Tension</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:12px">
+      <div class="hc">
+        <div class="hc-top" style="background:linear-gradient(90deg,#FF6B6B,#FF9A3C)"></div>
+        <div class="hc-ico" style="background:#FFF0EE"><i class="ti ti-heart-rate-monitor" style="color:#FF6B6B"></i></div>
+        <div class="hc-lbl">Tension</div>
         <div style="display:flex;gap:4px;align-items:center">
-          <input type="number" id="hBpSys" placeholder="sys" style="width:44%;color:#c0392b;font-size:1rem;font-weight:800;background:transparent;border:none;outline:none;font-family:DM Sans,sans-serif">
-          <span style="color:#FF6B6B;font-weight:900;font-size:1.1rem">/</span>
-          <input type="number" id="hBpDia" placeholder="dia" style="width:44%;color:#c0392b;font-size:1rem;font-weight:800;background:transparent;border:none;outline:none;font-family:DM Sans,sans-serif">
+          <input type="number" id="hBpSys" placeholder="sys" style="width:44%;color:#2D2D2D;font-size:1rem;font-weight:800;background:transparent;border:none;outline:none;font-family:DM Sans,sans-serif">
+          <span style="color:#FF6B6B;font-weight:900">/</span>
+          <input type="number" id="hBpDia" placeholder="dia" style="width:44%;color:#2D2D2D;font-size:1rem;font-weight:800;background:transparent;border:none;outline:none;font-family:DM Sans,sans-serif">
         </div>
-        <div class="hcard-bar" style="background:linear-gradient(90deg,#FF6B6B,#FF9A3C)"></div>
+        <div class="hc-unit">mmHg</div>
       </div>
-      <div class="hcard" style="background:linear-gradient(145deg,#F0F8FF,#D0EEFF)">
-        <div class="hcard-icon" style="background:#F0F8FF;width:32px;height:32px;border-radius:10px;display:flex;align-items:center;justify-content:center"><i class="ti ti-droplet" style="font-size:16px;color:#0984E3"></i></div>
-        <div class="hcard-label" style="color:#0652a0">Hydratation</div>
-        <input type="number" id="hHydration" step="0.1" placeholder="litres" style="color:#0652a0">
-        <div class="hcard-bar" style="background:linear-gradient(90deg,#0984E3,#74b9ff)"></div>
+      <div class="hc">
+        <div class="hc-top" style="background:linear-gradient(90deg,#0984E3,#74b9ff)"></div>
+        <div class="hc-ico" style="background:#F0F8FF"><i class="ti ti-droplet" style="color:#0984E3"></i></div>
+        <div class="hc-lbl">Hydratation</div>
+        <input type="number" id="hHydration" step="0.1" placeholder="—">
+        <div class="hc-unit">litres</div>
       </div>
     </div>
-    <div style="background:linear-gradient(145deg,#FFFCFA,#FFF5EE);border-radius:18px;padding:16px;margin-bottom:18px;border:1px solid rgba(255,154,108,0.15)">
-      <div style="font-size:0.62rem;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:#FF9A3C;margin-bottom:8px;display:flex;align-items:center;gap:6px"><i class="ti ti-pencil" style="font-size:13px"></i>Ressenti du jour</div>
+    <div style="background:#FFF8F5;border-radius:14px;border:0.5px solid rgba(255,154,108,0.2);padding:14px;margin-bottom:16px">
+      <div style="font-size:10px;font-weight:700;letter-spacing:0.07em;text-transform:uppercase;color:#FF9A3C;margin-bottom:8px;display:flex;align-items:center;gap:6px"><i class="ti ti-pencil" style="font-size:13px"></i>Ressenti du jour</div>
       <textarea id="hNotes" placeholder="Notez vos ressentis du jour..." style="width:100%;background:transparent;border:none;font-size:0.88rem;font-family:DM Sans,sans-serif;outline:none;resize:none;height:60px;color:#2D2D2D;line-height:1.5"></textarea>
     </div>
-    <button onclick="saveHealthLog()" style="background:linear-gradient(135deg,#FF6B6B,#FF9A3C);color:white;width:100%;padding:14px;border:none;border-radius:14px;font-size:0.95rem;font-weight:700;cursor:pointer;font-family:DM Sans,sans-serif;box-shadow:0 6px 20px rgba(255,107,107,0.35);letter-spacing:0.02em">Enregistrer ✓</button>
+    <button onclick="saveHealthLog()" style="background:linear-gradient(135deg,#FF6B6B,#FF9A3C);color:white;width:100%;padding:14px;border:none;border-radius:14px;font-size:0.95rem;font-weight:700;cursor:pointer;font-family:DM Sans,sans-serif;box-shadow:0 6px 20px rgba(255,107,107,0.3);letter-spacing:0.02em;margin-bottom:8px">Enregistrer ✓</button>
     <span id="healthSaveMsg" style="font-size:0.78rem;color:#28C840;display:none;margin-top:8px">✅ Enregistré !</span>
-    <button onclick="window.analyseHealthLog()" id="healthAnalyseBtn" style="width:100%;margin-top:10px;background:linear-gradient(135deg,#2D2D2D,#444);color:white;border:none;border-radius:14px;padding:14px;font-size:0.95rem;font-weight:700;cursor:pointer;font-family:DM Sans,sans-serif;letter-spacing:0.02em;display:flex;align-items:center;justify-content:center;gap:8px"><i class="ti ti-sparkles" style="font-size:16px"></i>Analyser ma journée avec Mirella</button>
+    <button onclick="window.analyseHealthLog()" id="healthAnalyseBtn" style="width:100%;background:#2D2D2D;color:white;border:none;border-radius:14px;padding:14px;font-size:0.95rem;font-weight:700;cursor:pointer;font-family:DM Sans,sans-serif;letter-spacing:0.02em;display:flex;align-items:center;justify-content:center;gap:8px"><i class="ti ti-sparkles" style="font-size:16px"></i>Analyser ma journée avec Mirella</button>
     <div id="healthAnalyseComment" style="display:none;margin-top:16px;padding:20px;background:linear-gradient(135deg,var(--cream),#FFF0EC);border-radius:0 16px 16px 16px;font-size:0.85rem;color:#333;line-height:1.7;border-left:3px solid var(--coral);box-shadow:0 2px 12px rgba(255,107,107,0.08)"></div>
   </div>
-
   <!-- Graphiques et historique -->
   <div style="display:flex;flex-direction:column;gap:16px">
     <div id="healthChartCard" style="background:#FFFCFA;border-radius:16px;padding:22px;box-shadow:0 0 0 1.5px rgba(255,154,108,0.22),0 14px 32px rgba(230,110,70,0.14);position:relative">
