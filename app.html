@@ -801,11 +801,16 @@ window._syncDaySelector = function(jourNom) {
     if (idx >= 0) sel.value = idx;
   }
 };
+window._getPersoMenusKey = function() {
+  var user = JSON.parse(localStorage.getItem('nutricare_user') || '{}');
+  var uid = user.id || user.user_id || 'guest';
+  return 'mirella_menus_perso_' + uid;
+};
 window.getPersoMenus = function() {
-  return JSON.parse(localStorage.getItem('mirella_menus_perso') || '{}');
+  return JSON.parse(localStorage.getItem(window._getPersoMenusKey()) || '{}');
 };
 window.savePersoMenus = function(data) {
-  localStorage.setItem('mirella_menus_perso', JSON.stringify(data));
+  localStorage.setItem(window._getPersoMenusKey(), JSON.stringify(data));
 };
 window.renderPersoMenus = function() {
   var container = document.getElementById('persoMenusContent');
