@@ -9365,28 +9365,45 @@ function updateNutritionPanel(dayIndex) {
       totals.vita += m.vitamine_a_mcg || 0;
     });
   }
-  // Repas perso - tous les jours confondus (car bloc perso independant)
+  // Repas perso - tous les jours cochés (clés mealcheck_perso_*)
   var persoData = window.getPersoMenus ? window.getPersoMenus() : {};
-  window.PERSO_JOURS.forEach(function(j) {
-    var persoJour = persoData[j] || {};
-    repas.forEach(function(r) {
-      (persoJour[r] || []).forEach(function(item, pidx) {
-        if (!checkedMeals['mealcheck_perso_' + j + '_' + r + '_' + pidx]) return;
-        totals.cal += item.kcal || 0;
-        totals.glu += item.glu || 0;
-        totals.pro += item.pro || 0;
-        totals.lip += item.lip || 0;
-        totals.fib += item.fib || 0;
-        totals.suc += item.suc || 0;
-        totals.sel += item.sel || 0;
-        totals.cal_mg += item.cal_mg || 0;
-        totals.fer += item.fer || 0;
-        totals.vitc += item.vitc || 0;
-        totals.mag += item.mag || 0;
-        totals.potassium += item.potassium || 0;
-        totals.vita += item.vita || 0;
+  Object.keys(checkedMeals).forEach(function(ck) {
+    if (!ck.startsWith('mealcheck_perso_')) return;
+    var parts = ck.replace('mealcheck_perso_', '').split('_');
+    // format: jourNom_repasKey_idx (jourNom peut contenir des majuscules, repasKey peut avoir _ aussi)
+    // On cherche l'item directement
+    var found = false;
+    if (window.PERSO_JOURS) {
+      window.PERSO_JOURS.forEach(function(j) {
+        if (found) return;
+        var repasKeys = ['petit_dejeuner', 'dejeuner', 'collation', 'diner'];
+        repasKeys.forEach(function(r) {
+          if (found) return;
+          var prefix = j + '_' + r + '_';
+          if (ck === 'mealcheck_perso_' + prefix.slice(0,-1) || ck.startsWith('mealcheck_perso_' + j + '_' + r + '_')) {
+            var idxStr = ck.replace('mealcheck_perso_' + j + '_' + r + '_', '');
+            var pidx = parseInt(idxStr);
+            if (!isNaN(pidx) && persoData[j] && persoData[j][r] && persoData[j][r][pidx]) {
+              var item = persoData[j][r][pidx];
+              totals.cal += item.kcal || 0;
+              totals.glu += item.glu || 0;
+              totals.pro += item.pro || 0;
+              totals.lip += item.lip || 0;
+              totals.fib += item.fib || 0;
+              totals.suc += item.suc || 0;
+              totals.sel += item.sel || 0;
+              totals.cal_mg += item.cal_mg || 0;
+              totals.fer += item.fer || 0;
+              totals.vitc += item.vitc || 0;
+              totals.mag += item.mag || 0;
+              totals.potassium += item.potassium || 0;
+              totals.vita += item.vita || 0;
+              found = true;
+            }
+          }
+        });
       });
-    });
+    }
   });
   var besoins = window.getObjectifsNutrition ? window.getObjectifsNutrition() : {cal:2000,glu:250,pro:60,lip:70};
   var gluPct = Math.min(100, Math.round(totals.glu / besoins.glu * 100));
