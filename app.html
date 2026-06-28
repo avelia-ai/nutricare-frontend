@@ -12462,15 +12462,20 @@ function toggleQuickMenu() {
 
 
   <!-- Filtres tags -->
-  <div style="padding:10px 16px;background:white;display:flex;gap:6px;overflow-x:auto;border-bottom:1px solid #f0f0f0">
-    <button onclick="window.toggleCatalogueTag('vegetarien',this)" style="padding:4px 12px;border-radius:20px;border:1.5px solid #eee;background:white;color:#555;font-size:0.72rem;cursor:pointer;white-space:nowrap">🥦 Végétarien</button>
-    <button onclick="window.toggleCatalogueTag('vegan',this)" style="padding:4px 12px;border-radius:20px;border:1.5px solid #eee;background:white;color:#555;font-size:0.72rem;cursor:pointer;white-space:nowrap">🌱 Vegan</button>
-    <button onclick="window.toggleCatalogueTag('sans_gluten',this)" style="padding:4px 12px;border-radius:20px;border:1.5px solid #eee;background:white;color:#555;font-size:0.72rem;cursor:pointer;white-space:nowrap">🌾 Sans gluten</button>
-    <button onclick="window.toggleCatalogueTag('sans_lactose',this)" style="padding:4px 12px;border-radius:20px;border:1.5px solid #eee;background:white;color:#555;font-size:0.72rem;cursor:pointer;white-space:nowrap">🥛 Sans lactose</button>
-    <button onclick="window.toggleCatalogueTag('halal',this)" style="padding:4px 12px;border-radius:20px;border:1.5px solid #eee;background:white;color:#555;font-size:0.72rem;cursor:pointer;white-space:nowrap">☪️ Halal</button>
-    <button onclick="window.toggleCatalogueTag('sans_porc',this)" style="padding:4px 12px;border-radius:20px;border:1.5px solid #eee;background:white;color:#555;font-size:0.72rem;cursor:pointer;white-space:nowrap">🚫🐷 Sans porc</button>
-    <button onclick="window.toggleCatalogueTag('riche_proteines',this)" style="padding:4px 12px;border-radius:20px;border:1.5px solid #eee;background:white;color:#555;font-size:0.72rem;cursor:pointer;white-space:nowrap">💪 Riche en protéines</button>
-    <button onclick="window.toggleCatalogueTag('faible_calories',this)" style="padding:4px 12px;border-radius:20px;border:1.5px solid #eee;background:white;color:#555;font-size:0.72rem;cursor:pointer;white-space:nowrap">🔥 Faible calories</button>
+  <style>
+    .cat-tag{display:inline-flex;align-items:center;gap:5px;padding:6px 13px;border-radius:20px;border:0.5px solid rgba(0,0,0,0.1);background:#FAFAFA;color:#666;font-size:11px;font-weight:600;cursor:pointer;white-space:nowrap;font-family:DM Sans,sans-serif;transition:all 0.15s}
+    .cat-tag.active{background:#2D2D2D;color:#fff;border-color:transparent}
+    .cat-tag i{font-size:13px}
+  </style>
+  <div style="padding:10px 16px;background:white;display:flex;gap:6px;overflow-x:auto;border-bottom:0.5px solid rgba(0,0,0,0.06);scrollbar-width:none">
+    <button onclick="window.toggleCatalogueTag('vegetarien',this)" class="cat-tag"><i class="ti ti-leaf"></i>Végétarien</button>
+    <button onclick="window.toggleCatalogueTag('vegan',this)" class="cat-tag"><i class="ti ti-plant-2"></i>Vegan</button>
+    <button onclick="window.toggleCatalogueTag('sans_gluten',this)" class="cat-tag"><i class="ti ti-wheat-off"></i>Sans gluten</button>
+    <button onclick="window.toggleCatalogueTag('sans_lactose',this)" class="cat-tag"><i class="ti ti-milk-off"></i>Sans lactose</button>
+    <button onclick="window.toggleCatalogueTag('halal',this)" class="cat-tag"><i class="ti ti-moon-stars"></i>Halal</button>
+    <button onclick="window.toggleCatalogueTag('sans_porc',this)" class="cat-tag"><i class="ti ti-pig-off"></i>Sans porc</button>
+    <button onclick="window.toggleCatalogueTag('riche_proteines',this)" class="cat-tag"><i class="ti ti-dumbbell"></i>Protéines</button>
+    <button onclick="window.toggleCatalogueTag('faible_calories',this)" class="cat-tag"><i class="ti ti-flame"></i>Light</button>
   </div>
 
   <!-- Catégories visuelles -->
