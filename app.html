@@ -6312,20 +6312,24 @@ function switchLang(lang) {
 };
 
   // Restaurer session après changement de langue
-  // Restaurer session après retour Stripe
-  (function restoreStripeSession() {
+  // Gestion retour Stripe
+  (function handleStripeReturn() {
     var params = new URLSearchParams(window.location.search);
-    if (params.get('success') === 'true' || params.get('cancelled') === 'true') {
-      var savedToken = sessionStorage.getItem('stripe_return_token');
-      var savedUser = sessionStorage.getItem('stripe_return_user');
-      if (savedToken) {
-        localStorage.setItem('nutricare_token', savedToken);
-        if (savedUser) localStorage.setItem('nutricare_user', savedUser);
-        sessionStorage.removeItem('stripe_return_token');
-        sessionStorage.removeItem('stripe_return_user');
+    if (params.get('success') === 'true') {
+      // Token toujours en localStorage si même navigateur
+      var token = localStorage.getItem('nutricare_token');
+      if (token) {
+        window.history.replaceState({}, '', '/app');
+        // Recharger le profil pour mettre à jour le plan
+        setTimeout(function() {
+          if (typeof loadProfile === 'function') loadProfile();
+          alert('Abonnement activé ! Bienvenue dans Mirella Premium.');
+        }, 1500);
+      } else {
+        window.history.replaceState({}, '', '/app');
       }
-      // Nettoyer l'URL
-      window.history.replaceState({}, '', window.location.pathname);
+    } else if (params.get('cancelled') === 'true') {
+      window.history.replaceState({}, '', '/app');
     }
   })();
 
