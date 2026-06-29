@@ -284,7 +284,7 @@ window.addEventListener("error", function(e) {
   .save-success.show { display: inline; }
 
   /* ── PRICING VIEW ── */
-  #pricingView { display: none; padding: 16px 16px 120px; overflow-y: auto; background: transparent; }
+  #pricingView { display: none; padding: 0 !important; position: fixed; top: 56px; left: 0; right: 0; bottom: 60px; overflow-y: auto; z-index: 10; background: #FBF5F0; }
   .pricing-title { font-family: 'Open Sans', serif; font-size: 1.8rem; font-weight: 700; color: #2D2D2D; margin-bottom: 6px; }
   .pricing-sub { font-size: 0.88rem; color: #999; margin-bottom: 32px; }
   .pricing-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; max-width: 900px; }
@@ -4008,7 +4008,7 @@ function switchLang(lang) {
     </div>
 
     <!-- PRICING VIEW -->
-    <div id="pricingView">
+    <div id="pricingView"><div style="padding:16px 16px 100px">
       <div class="view-header"><div style="font-size:1.6rem;font-weight:700;color:white;font-family:'Open Sans',sans-serif">Choisissez votre plan</div><div style="font-size:0.9rem;color:rgba(255,255,255,0.8);margin-top:4px">Commencez gratuitement. Évoluez quand vous êtes prêt.</div></div>
       <div class="pricing-sub">Commencez gratuitement. Évoluez quand vous êtes prêt.</div>
 
@@ -4150,6 +4150,7 @@ function switchLang(lang) {
         <i class="ti ti-lock" style="font-size:12px"></i>
         Paiement sécurisé · Sans engagement · Remboursé 30 jours
       </div>
+    </div>
     </div>
 
   <!-- PROFESSIONALS VIEW -->
