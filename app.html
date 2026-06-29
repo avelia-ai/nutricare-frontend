@@ -2345,16 +2345,16 @@ window.updateCycle = function() {
 
   // Jour du cycle
   var dayEl = document.getElementById('cyclePhaseDay');
-  if (dayEl) dayEl.textContent = 'Jour ' + result.dayOfCycle + ' sur ' + cycleLength;
+  if (dayEl) dayEl.textContent = 'Jour ' + result.day + ' sur ' + cycleLength;
 
   // Stats countdown
   var ovulDay = Math.round(cycleLength / 2);
-  var daysToOvul = ovulDay - result.dayOfCycle;
-  var daysToNext = cycleLength - result.dayOfCycle;
+  var daysToOvul = ovulDay - result.day;
+  var daysToNext = cycleLength - result.day;
   var el1 = document.getElementById('statJoursRestants');
   var el2 = document.getElementById('statOvulation');
   var el3 = document.getElementById('statProchRegles');
-  if (el1) el1.textContent = (cycleLength - result.dayOfCycle) + 'j';
+  if (el1) el1.textContent = (cycleLength - result.day) + 'j';
   if (el2) el2.textContent = (daysToOvul > 0 ? 'J-' + daysToOvul : 'Auj.');
   if (el3) el3.textContent = 'J-' + daysToNext;
 
