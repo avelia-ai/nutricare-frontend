@@ -11551,7 +11551,7 @@ async function deleteProfessional(id) {
 
   // ── BILLING ──
   window.selectPlan = async function(plan) {
-    if (plan === 'free') return;
+    if (plan === 'free') { showView('home'); return; }
     var token = authToken || window._authToken || localStorage.getItem('nutricare_token');
     const priceId = STRIPE_PRICES[plan];
     if (!priceId) return;
