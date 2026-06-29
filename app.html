@@ -46,6 +46,7 @@ window.addEventListener("error", function(e) {
   #appPage, #dashboardView, #profileView, #chatView, #pricingView, #proView, #protocolsView { background: transparent !important; }
   #authPage, #homePage, #profilePage, #nutritionPage, #coachPage, #settingsPage { background: transparent !important; }
   body { font-family: 'DM Sans', sans-serif; background: transparent; color: var(--charcoal); overflow-x: hidden; }
+  :root { --view-top:var(--view-top); }
 
   /* ── PAGES ── */
   .page { display: none; min-height: 100vh; position: relative; z-index: 1; background: transparent !important; }
@@ -284,7 +285,7 @@ window.addEventListener("error", function(e) {
   .save-success.show { display: inline; }
 
   /* ── PRICING VIEW ── */
-  #pricingView { display: none; padding: 0 !important; position: fixed; top: 56px; left: 0; right: 0; bottom: 60px; overflow-y: auto; z-index: 10; background: #FBF5F0; }
+  #pricingView { display: none; padding: 0 !important; position: fixed; top:var(--view-top); left: 0; right: 0; bottom: 60px; overflow-y: auto; z-index: 10; background: #FBF5F0; }
   .pricing-title { font-family: 'Open Sans', serif; font-size: 1.8rem; font-weight: 700; color: #2D2D2D; margin-bottom: 6px; }
   .pricing-sub { font-size: 0.88rem; color: #999; margin-bottom: 32px; }
   .pricing-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; max-width: 900px; }
@@ -3220,7 +3221,7 @@ function switchLang(lang) {
   <div class="main-content">
 
     <!-- HOME VIEW -->
-    <div id="homeView" style="display:none;position:fixed;top:56px;left:0;right:0;bottom:60px;overflow-y:auto;overflow-x:hidden;background:var(--cream);z-index:10;padding-bottom:20px">
+    <div id="homeView" style="display:none;position:fixed;top:var(--view-top);left:0;right:0;bottom:60px;overflow-y:auto;overflow-x:hidden;background:var(--cream);z-index:10;padding-bottom:20px">
       <style>
       @keyframes headerBlobFloat1 { 0%,100%{transform:translate(0,0) scale(1)} 50%{transform:translate(-14px,12px) scale(1.08)} }
       @keyframes headerBlobFloat2 { 0%,100%{transform:translate(0,0) scale(1)} 50%{transform:translate(16px,-10px) scale(1.1)} }
@@ -3475,7 +3476,7 @@ function switchLang(lang) {
     <!-- FIN HOME VIEW -->
 
     <!-- CHAT VIEW -->
-    <div id="chatView" style="position:fixed;top:56px;left:0;right:0;bottom:70px;z-index:10;flex-direction:column;overflow:hidden">
+    <div id="chatView" style="position:fixed;top:var(--view-top);left:0;right:0;bottom:70px;z-index:10;flex-direction:column;overflow:hidden">
       <div class="chat-header">
         <div class="chat-header-info">
           <h2>Mirella </h2>
@@ -3803,7 +3804,7 @@ function switchLang(lang) {
     </div>
 
     <!-- PROFILE VIEW -->
-    <div id="profileView" style="padding:0 !important;position:fixed;top:56px;left:0;right:0;bottom:60px;overflow-y:auto;z-index:10;background:#FFFCFA">
+    <div id="profileView" style="padding:0 !important;position:fixed;top:var(--view-top);left:0;right:0;bottom:60px;overflow-y:auto;z-index:10;background:#FFFCFA">
       <!-- Hero header sombre -->
       <div style="background:linear-gradient(135deg,#1a1a1a,#2d2d2d);padding:24px 20px;position:relative;overflow:hidden">
         <div style="position:absolute;top:-40px;right:-40px;width:150px;height:150px;border-radius:50%;background:rgba(255,107,107,0.07)"></div>
@@ -4161,7 +4162,7 @@ function switchLang(lang) {
     <!-- HEALTH DASHBOARD VIEW -->
      <!-- MENUS VIEW -->
       <!-- ANALYSIS VIEW -->
-<div id="analysisView" style="display:none;position:fixed;top:56px;left:0;right:0;bottom:60px;padding:16px;overflow-y:auto;background:var(--cream);z-index:10;box-sizing:border-box">
+<div id="analysisView" style="display:none;position:fixed;top:var(--view-top);left:0;right:0;bottom:60px;padding:16px;overflow-y:auto;background:var(--cream);z-index:10;box-sizing:border-box">
   <div class="view-header" style="font-family:Open Sans,serif;font-size:2rem;font-weight:700;margin-bottom:6px;color:#2D2D2D">Analyse photo de repas</div>
   <div style="font-size:0.85rem;color:var(--accent);margin-bottom:16px">Photographiez votre repas pour une analyse nutritionnelle instantanée</div>
   <div style="position:relative;border-radius:18px;padding:2px;margin-bottom:20px;background:linear-gradient(135deg, rgba(255,180,130,0.9), rgba(255,255,255,0.6) 35%, rgba(255,110,90,0.8) 70%, rgba(255,255,255,0.6));background-size:300% 300%;animation:repBorderFlow 6s ease infinite;box-shadow:0 16px 40px rgba(230,110,70,0.16), 0 2px 8px rgba(0,0,0,0.04)">
@@ -5263,7 +5264,7 @@ function switchLang(lang) {
   </div>
 </div>
 
-<div id="leaderboardView" style="display:none;position:fixed;top:56px;left:0;right:0;bottom:60px;padding:20px;padding-bottom:120px;overflow-y:auto;-webkit-overflow-scrolling:touch;background:var(--cream);z-index:10;box-sizing:border-box">
+<div id="leaderboardView" style="display:none;position:fixed;top:var(--view-top);left:0;right:0;bottom:60px;padding:20px;padding-bottom:120px;overflow-y:auto;-webkit-overflow-scrolling:touch;background:var(--cream);z-index:10;box-sizing:border-box">
   <div class="view-header">
     <div style="font-size:2rem;font-weight:700">🏆 Classement d'activité</div>
   </div>
@@ -5273,7 +5274,7 @@ function switchLang(lang) {
   </div>
   <div id="leaderboardPagination" style="display:none;justify-content:space-between;align-items:center;margin-top:16px;gap:8px"></div>
 </div>
-<div id="visualView" style="display:none;position:fixed;top:56px;left:0;right:0;bottom:60px;overflow-y:auto;overflow-x:hidden;background:var(--cream);z-index:10;padding:0 0 80px;box-sizing:border-box">
+<div id="visualView" style="display:none;position:fixed;top:var(--view-top);left:0;right:0;bottom:60px;overflow-y:auto;overflow-x:hidden;background:var(--cream);z-index:10;padding:0 0 80px;box-sizing:border-box">
   <div class="view-header">
     <div style="font-family:Open Sans,serif;font-size:2rem;font-weight:700;color:white;margin-bottom:6px">Detection et analyse visuelle</div>
     <div style="font-size:0.85rem;color:rgba(255,255,255,0.85)">Analysez votre peau, yeux et ongles avec l'IA</div>
@@ -5614,7 +5615,7 @@ function switchLang(lang) {
   </div>
 </div>
 
-<div id="biologieView" style="display:none;position:fixed;top:56px;left:0;right:0;bottom:60px;padding:32px;padding-bottom:120px;overflow-y:auto;-webkit-overflow-scrolling:touch;background:var(--cream);box-sizing:border-box;z-index:10">
+<div id="biologieView" style="display:none;position:fixed;top:var(--view-top);left:0;right:0;bottom:60px;padding:32px;padding-bottom:120px;overflow-y:auto;-webkit-overflow-scrolling:touch;background:var(--cream);box-sizing:border-box;z-index:10">
   <div class="view-header">
     <div style="display:inline-block;font-size:0.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:white;background:rgba(255,255,255,0.2);padding:5px 14px;border-radius:20px;margin-bottom:12px">Premium</div>
     <div style="font-family:Open Sans,serif;font-size:2rem;font-weight:700;color:white">Analyse de votre bilan sanguin</div>
@@ -5890,7 +5891,7 @@ function switchLang(lang) {
   </div>
 </div>
 
-<div id="scanproduitView" style="display:none;position:fixed;top:56px;left:0;right:0;bottom:60px;padding:0px 32px 120px 32px;overflow-y:auto;-webkit-overflow-scrolling:touch;background:var(--cream);box-sizing:border-box;z-index:10">
+<div id="scanproduitView" style="display:none;position:fixed;top:var(--view-top);left:0;right:0;bottom:60px;padding:0px 32px 120px 32px;overflow-y:auto;-webkit-overflow-scrolling:touch;background:var(--cream);box-sizing:border-box;z-index:10">
   <div class="view-header" style="font-family:Open Sans,serif;font-size:2rem;font-weight:700;margin-bottom:6px;color:#2D2D2D">Scan produit</div>
   <div style="font-size:0.85rem;color:var(--accent);margin-bottom:16px">Photographiez un produit alimentaire pour analyser ses apports et compatibilité avec votre profil</div>
   <div style="position:relative;border-radius:18px;padding:2px;margin-bottom:20px;background:linear-gradient(135deg, rgba(255,180,130,0.9), rgba(255,255,255,0.6) 35%, rgba(255,110,90,0.8) 70%, rgba(255,255,255,0.6));background-size:300% 300%;animation:repBorderFlow 6s ease infinite;box-shadow:0 16px 40px rgba(230,110,70,0.16), 0 2px 8px rgba(0,0,0,0.04)">
@@ -5987,7 +5988,7 @@ function switchLang(lang) {
   <div id="produitResult" style="display:none"></div>
 </div>
 
-<div id="ordonnanceView" style="display:none;position:fixed;top:56px;left:0;right:0;bottom:60px;padding:0px 32px 120px 32px;overflow-y:auto;-webkit-overflow-scrolling:touch;background:var(--cream);box-sizing:border-box;z-index:10">
+<div id="ordonnanceView" style="display:none;position:fixed;top:var(--view-top);left:0;right:0;bottom:60px;padding:0px 32px 120px 32px;overflow-y:auto;-webkit-overflow-scrolling:touch;background:var(--cream);box-sizing:border-box;z-index:10">
   <div class="view-header" style="font-family:Open Sans,serif;font-size:2rem;font-weight:700;margin-bottom:6px;color:var(--charcoal)">Scan ordonnance </div>
   <div style="font-size:0.85rem;color:rgba(0,0,0,0.5);margin-bottom:28px">Photographiez votre ordonnance pour extraire automatiquement vos médicaments</div>
   <div style="position:relative;border-radius:18px;padding:2px;margin-bottom:20px;background:linear-gradient(135deg, rgba(255,180,130,0.9), rgba(255,255,255,0.6) 35%, rgba(255,110,90,0.8) 70%, rgba(255,255,255,0.6));background-size:300% 300%;animation:ordoBorderFlow 6s ease infinite;box-shadow:0 16px 40px rgba(230,110,70,0.16), 0 2px 8px rgba(0,0,0,0.04)">
@@ -6128,7 +6129,7 @@ function switchLang(lang) {
   </div>
 </div>
 
-<div id="programsView" style="display:none;position:fixed;top:56px;left:0;right:0;bottom:60px;padding:0px 32px 120px 32px;overflow-y:auto;-webkit-overflow-scrolling:touch;background:var(--cream);box-sizing:border-box;z-index:10">
+<div id="programsView" style="display:none;position:fixed;top:var(--view-top);left:0;right:0;bottom:60px;padding:0px 32px 120px 32px;overflow-y:auto;-webkit-overflow-scrolling:touch;background:var(--cream);box-sizing:border-box;z-index:10">
   <div class="view-header" style="font-family:Open Sans,serif;font-size:2rem;font-weight:700;margin-bottom:6px;color:var(--charcoal)">Programmes de coaching </div>
   <div style="font-size:0.85rem;color:rgba(0,0,0,0.5);margin-bottom:28px">Transformez votre santé avec un accompagnement intensif personnalisé</div>
 
@@ -6185,7 +6186,7 @@ function switchLang(lang) {
   </div>
 </div>
 
-<div id="gamificationView" style="display:none;position:fixed;top:56px;left:0;right:0;bottom:60px;padding:0px 32px 32px 32px;overflow-y:auto;-webkit-overflow-scrolling:touch;background:var(--cream);width:100%;box-sizing:border-box;z-index:10">
+<div id="gamificationView" style="display:none;position:fixed;top:var(--view-top);left:0;right:0;bottom:60px;padding:0px 32px 32px 32px;overflow-y:auto;-webkit-overflow-scrolling:touch;background:var(--cream);width:100%;box-sizing:border-box;z-index:10">
   <div class="view-header" style="font-family:Open Sans,serif;font-size:2rem;font-weight:700;margin-bottom:6px;color:var(--charcoal)">Ma progression </div>
   <div style="font-size:0.85rem;color:rgba(0,0,0,0.5);margin-bottom:28px">Vos objectifs, badges et niveau nutritionnel</div>
 
@@ -8841,8 +8842,8 @@ Réponds UNIQUEMENT en JSON valide avec cette structure exacte:
     var appPage = document.getElementById('appPage');
     if (appPage) appPage.style.paddingTop = '40px';
     // Ajuster les vues fixed pour tenir compte du banner
-    document.querySelectorAll('#homeView,#menusView,#frigoView,#cycleView,#catalogueView,#mesRecettesView,#visageView,#chatView').forEach(function(el) {
-      el.style.top = '96px';
+    document.querySelectorAll('#homeView,#menusView,#frigoView,#cycleView,#catalogueView,#mesRecettesView,#visageView,#chatView,#profileView,#analysisView,#leaderboardView,#visualView,#biologieView,#scanproduitView,#ordonnanceView,#programsView,#pricingView,#healthView,#chronoView,#gamificationView,#protocolsView').forEach(function(el) {
+      if (el) el.style.top = '96px';
     });
     window._trialBannerActive = true;
   }
@@ -12113,7 +12114,7 @@ function closeMirellaNotif() {
 </nav>
 
 <!-- VISAGE VIEW -->
-<div id="visageView" style="display:none;position:fixed;top:56px;left:0;right:0;bottom:60px;padding:16px;padding-bottom:220px;overflow-y:scroll;-webkit-overflow-scrolling:touch;background:var(--cream);box-sizing:border-box;z-index:10">
+<div id="visageView" style="display:none;position:fixed;top:var(--view-top);left:0;right:0;bottom:60px;padding:16px;padding-bottom:220px;overflow-y:scroll;-webkit-overflow-scrolling:touch;background:var(--cream);box-sizing:border-box;z-index:10">
   <div class="view-header" style="font-family:Open Sans,serif;font-size:2rem;font-weight:700;margin-bottom:6px;color:#2D2D2D">Analyse Visage</div>
   <div style="font-size:0.85rem;color:var(--accent);margin-bottom:8px">Mirella analyse votre visage et vous propose des conseils nutritionnels et d'hygiène de vie personnalisés.</div>
   <div style="position:relative;border-radius:18px;padding:2px;margin-bottom:20px;background:linear-gradient(135deg, rgba(255,180,130,0.9), rgba(255,255,255,0.6) 35%, rgba(255,110,90,0.8) 70%, rgba(255,255,255,0.6));background-size:300% 300%;animation:visBorderFlow 6s ease infinite;box-shadow:0 16px 40px rgba(230,110,70,0.16), 0 2px 8px rgba(0,0,0,0.04)">
@@ -12253,7 +12254,7 @@ function closeMirellaNotif() {
 </div>
 
 <!-- FRIGO VIEW -->
-<div id="frigoView" style="display:none;position:fixed;top:56px;left:0;right:0;bottom:60px;overflow-y:auto;background:var(--cream);z-index:10;padding:32px;box-sizing:border-box">
+<div id="frigoView" style="display:none;position:fixed;top:var(--view-top);left:0;right:0;bottom:60px;overflow-y:auto;background:var(--cream);z-index:10;padding:32px;box-sizing:border-box">
   <div class="view-header" style="font-family:Open Sans,serif;font-size:2rem;font-weight:700;margin-bottom:6px;color:#2D2D2D">Mon Frigo</div>
   <div style="font-size:0.85rem;color:var(--accent);margin-bottom:16px">Photographiez votre frigo pour obtenir des recettes personnalisées</div>
   <div style="position:relative;border-radius:18px;padding:2px;margin-bottom:20px;background:linear-gradient(135deg, rgba(255,180,130,0.9), rgba(255,255,255,0.6) 35%, rgba(255,110,90,0.8) 70%, rgba(255,255,255,0.6));background-size:300% 300%;animation:visBorderFlow 6s ease infinite;box-shadow:0 16px 40px rgba(230,110,70,0.16), 0 2px 8px rgba(0,0,0,0.04)">
@@ -12459,7 +12460,7 @@ function toggleQuickMenu() {
 
 
 <!-- CYCLE FEMININ VIEW -->
-<div id="cycleView" style="display:none;position:fixed;top:56px;left:0;right:0;bottom:60px;overflow-y:auto;background:var(--cream);z-index:10">
+<div id="cycleView" style="display:none;position:fixed;top:var(--view-top);left:0;right:0;bottom:60px;overflow-y:auto;background:var(--cream);z-index:10">
   <div class="view-header" style="background:linear-gradient(135deg,var(--coral),var(--accent));padding:32px 32px 28px">
     <div style="font-size:1.6rem;font-weight:700;color:white;font-family:'Open Sans',sans-serif">🌸 Cycle Féminin</div>
     <div style="font-size:0.9rem;color:rgba(255,255,255,0.8);margin-top:4px">Nutrition & bien-être adaptés à votre cycle</div>
@@ -12614,7 +12615,7 @@ function toggleQuickMenu() {
 
 
 <!-- CATALOGUE RECETTES VIEW -->
-<div id="catalogueView" style="display:none;position:fixed;top:56px;left:0;right:0;bottom:60px;overflow-y:auto;background:var(--cream);z-index:10">
+<div id="catalogueView" style="display:none;position:fixed;top:var(--view-top);left:0;right:0;bottom:60px;overflow-y:auto;background:var(--cream);z-index:10">
   <!-- Header -->
   <div style="background:linear-gradient(135deg,var(--coral),var(--accent));padding:20px">
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
@@ -12745,7 +12746,7 @@ function toggleQuickMenu() {
 <!-- FIN CATALOGUE RECETTES VIEW -->
 
 
-<div id="mesRecettesView" style="display:none;position:fixed;top:56px;left:0;right:0;bottom:60px;overflow-y:auto;background:var(--cream);z-index:10;padding:0">
+<div id="mesRecettesView" style="display:none;position:fixed;top:var(--view-top);left:0;right:0;bottom:60px;overflow-y:auto;background:var(--cream);z-index:10;padding:0">
   <div style="background:linear-gradient(135deg,var(--coral),var(--accent));padding:24px 20px 20px;position:sticky;top:0;z-index:10">
     <div style="font-size:1.3rem;font-weight:800;color:white;margin-bottom:4px">👨‍🍳 Mes Recettes</div>
     <div style="font-size:0.82rem;color:rgba(255,255,255,0.85)">Créez et gérez vos recettes personnelles</div>
