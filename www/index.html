@@ -1761,21 +1761,20 @@ window.applyTheme = function(themeKey) {
   root.style.setProperty('--cream2', t.cream);
   localStorage.setItem('mirella_theme', themeKey);
   if (t.waves && window.updateWaveColors) window.updateWaveColors(t.waves, t.bg);
-  // Mettre à jour dynamiquement tous les éléments avec couleurs hardcodées
-  var styleEl = document.getElementById('dynamicThemeStyle') || document.createElement('style');
-  styleEl.id = 'dynamicThemeStyle';
-  styleEl.textContent = `
-    [style*="linear-gradient(135deg,#FF6B6B"],[style*="linear-gradient(135deg, #FF6B6B"] { background: linear-gradient(135deg,${t.coral},${t.accent}) !important; }
-    [style*="background:#FF6B6B"],[style*="background: #FF6B6B"] { background: ${t.coral} !important; }
-    [style*="background:linear-gradient(135deg,var(--coral)"] { background: linear-gradient(135deg,${t.coral},${t.accent}) !important; }
-    [style*="color:#FF6B6B"],[style*="color: #FF6B6B"] { color: ${t.coral} !important; }
-    [style*="border.*#FF6B6B"] { border-color: ${t.coral} !important; }
-    [style*="box-shadow.*#FF6B6B"] { box-shadow: 0 4px 12px ${t.coral}55 !important; }
-  `;
-  document.head.appendChild(styleEl);
-  // Aussi mettre à jour les canvas/SVG via JS
   window._themeCoralHex = t.coral;
   window._themeAccentHex = t.accent;
+  // Remplacer toutes les couleurs hardcodées dans les styles inline
+  requestAnimationFrame(function() {
+    document.querySelectorAll('*').forEach(function(el) {
+      var s = el.getAttribute('style');
+      if (!s) return;
+      if (s.indexOf('#FF6B6B') === -1 && s.indexOf('#FF9A3C') === -1 && s.indexOf('#E85555') === -1) return;
+      s = s.replace(/#FF6B6B/gi, t.coral)
+            .replace(/#FF9A3C/gi, t.accent)
+            .replace(/#E85555/gi, t.dark);
+      el.setAttribute('style', s);
+    });
+  });
   document.querySelectorAll('.theme-btn').forEach(function(b){
     b.style.border = b.dataset.theme === themeKey ? '3px solid #1a1a1a' : '3px solid transparent';
   });
