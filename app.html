@@ -11522,23 +11522,23 @@ async function deleteProfessional(id) {
   }
 
   // ── BILLING ──
-  window.selectPlan = async function selectPlan(plan) {
+  window.selectPlan = async function(plan) {
     if (plan === 'free') return;
+    var token = authToken || window._authToken || localStorage.getItem('nutricare_token');
+    alert('selectPlan: ' + plan + ' | token: ' + (token ? token.substring(0,10) : 'NULL') + ' | BACKEND: ' + BACKEND_URL);
     const priceId = STRIPE_PRICES[plan];
-    if (!priceId || priceId.includes('ID')) {
-      alert('Les paiements seront disponibles prochainement. Contactez-nous pour activer votre abonnement.');
-      return;
-    }
+    if (!priceId) { alert('priceId manquant pour: ' + plan); return; }
     try {
       const res = await fetch(`${BACKEND_URL}/api/billing/create-checkout`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${authToken}` },
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
         body: JSON.stringify({ priceId, plan })
       });
       const data = await res.json();
+      alert('response: ' + JSON.stringify(data).substring(0,100));
       if (data.url) window.location.href = data.url;
     } catch (err) {
-      alert('Erreur paiement: ' + err.message + ' | token: ' + (authToken ? authToken.substring(0,10) : 'NULL'));
+      alert('Erreur: ' + err.message);
     }
   }
 
