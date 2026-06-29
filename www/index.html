@@ -2331,12 +2331,36 @@ window.initHome = async function() {
     var defiState = JSON.parse(localStorage.getItem('gami_defis_' + _uid + '_' + todayKey) || '{}');
     var seed = parseInt(todayKey.replace(/-/g,''));
     var DEFIS_POOL = [
-      { id:'d1', icon:'💧', text:"2L d'eau aujourd'hui", points:5, img:'https://images.pexels.com/photos/416528/pexels-photo-416528.jpeg?auto=compress&cs=tinysrgb&w=400', desc:"Boire 2 litres d eau dans la journee favorise l hydratation, la digestion et la concentration. Validez le defi une fois l objectif atteint." },
-      { id:'d2', icon:'🚶', text:"30 min d'activité", points:5, img:'https://images.pexels.com/photos/2526878/pexels-photo-2526878.jpeg?auto=compress&cs=tinysrgb&w=400', desc:"Marche, sport, velo... 30 minutes d activite physique par jour ameliorent l energie et la sante cardiovasculaire." },
-      { id:'d3', icon:'😴', text:'Dormir au moins 7h', points:5, img:'https://images.pexels.com/photos/3771069/pexels-photo-3771069.jpeg?auto=compress&cs=tinysrgb&w=400', desc:"Un sommeil d au moins 7h par nuit favorise la recuperation, la concentration et l equilibre hormonal." },
-      { id:'d4', icon:'🥗', text:'5 fruits et légumes', points:3, img:'https://images.pexels.com/photos/1640777/pexels-photo-1640777.jpeg?auto=compress&cs=tinysrgb&w=400', desc:"5 portions de fruits et legumes par jour apportent vitamines, fibres et antioxydants essentiels." },
-      { id:'d5', icon:'🧘', text:'10 min de méditation', points:3, img:'https://images.pexels.com/photos/3822622/pexels-photo-3822622.jpeg?auto=compress&cs=tinysrgb&w=400', desc:"10 minutes de meditation aident a reduire le stress et a ameliorer la clarte mentale." },
-      { id:'d6', icon:'📝', text:'Mon suivi santé du jour', points:4, img:'https://images.pexels.com/photos/317355/pexels-photo-317355.jpeg?auto=compress&cs=tinysrgb&w=400', desc:"Renseignez vos donnees du jour (poids, sommeil, energie...) dans l onglet Suivi pour valider ce defi." },
+      { id:'d1', icon:'💧', text:"2L d'eau aujourd'hui", points:5, img:'https://images.pexels.com/photos/416528/pexels-photo-416528.jpeg?auto=compress&cs=tinysrgb&w=400', desc:"Boire 2 litres d eau par jour favorise l hydratation et la digestion." },
+      { id:'d2', icon:'🚶', text:"30 min d'activite", points:5, img:'https://images.pexels.com/photos/2526878/pexels-photo-2526878.jpeg?auto=compress&cs=tinysrgb&w=400', desc:"30 minutes d activite physique ameliorent la sante cardiovasculaire." },
+      { id:'d3', icon:'😴', text:'Dormir au moins 7h', points:5, img:'https://images.pexels.com/photos/3771069/pexels-photo-3771069.jpeg?auto=compress&cs=tinysrgb&w=400', desc:"7h de sommeil favorisent la recuperation et l equilibre hormonal." },
+      { id:'d4', icon:'🥗', text:'5 fruits et legumes', points:3, img:'https://images.pexels.com/photos/1640777/pexels-photo-1640777.jpeg?auto=compress&cs=tinysrgb&w=400', desc:"5 portions de fruits et legumes apportent vitamines et fibres." },
+      { id:'d5', icon:'🧘', text:'10 min de meditation', points:3, img:'https://images.pexels.com/photos/3822622/pexels-photo-3822622.jpeg?auto=compress&cs=tinysrgb&w=400', desc:"10 minutes de meditation reduisent le stress." },
+      { id:'d6', icon:'📝', text:'Suivi sante du jour', points:4, img:'https://images.pexels.com/photos/317355/pexels-photo-317355.jpeg?auto=compress&cs=tinysrgb&w=400', desc:"Renseignez vos donnees du jour dans l onglet Suivi." },
+      { id:'d7', icon:'🍳', text:'Cuisiner maison', points:4, img:'https://images.pexels.com/photos/4259140/pexels-photo-4259140.jpeg?auto=compress&cs=tinysrgb&w=400', desc:"Preparer son repas maison permet de controler les ingredients." },
+      { id:'d8', icon:'🚫', text:'Zero sucre ajoute', points:5, img:'https://images.pexels.com/photos/1906439/pexels-photo-1906439.jpeg?auto=compress&cs=tinysrgb&w=400', desc:"Eviter le sucre ajoute aide a stabiliser la glycemie." },
+      { id:'d9', icon:'☀️', text:'15 min de soleil', points:3, img:'https://images.pexels.com/photos/1510392/pexels-photo-1510392.jpeg?auto=compress&cs=tinysrgb&w=400', desc:"S exposer au soleil le matin regule le rythme circadien." },
+      { id:'d10', icon:'📵', text:'Pas d ecran apres 21h', points:4, img:'https://images.pexels.com/photos/3692886/pexels-photo-3692886.jpeg?auto=compress&cs=tinysrgb&w=400', desc:"Eviter les ecrans le soir ameliore la qualite du sommeil." },
+      { id:'d11', icon:'🐟', text:'Manger du poisson', points:4, img:'https://images.pexels.com/photos/3655916/pexels-photo-3655916.jpeg?auto=compress&cs=tinysrgb&w=400', desc:"Le poisson gras apporte des omega-3 essentiels." },
+      { id:'d12', icon:'🌿', text:'1 aliment nouveau', points:3, img:'https://images.pexels.com/photos/1099680/pexels-photo-1099680.jpeg?auto=compress&cs=tinysrgb&w=400', desc:"Essayer un aliment inconnu enrichit votre microbiote." },
+      { id:'d13', icon:'💊', text:'Prendre ses complements', points:3, img:'https://images.pexels.com/photos/3683098/pexels-photo-3683098.jpeg?auto=compress&cs=tinysrgb&w=400', desc:"Prendre ses complements optimise les apports nutritionnels." },
+      { id:'d14', icon:'📓', text:'Journaling 5 min', points:3, img:'https://images.pexels.com/photos/317355/pexels-photo-317355.jpeg?auto=compress&cs=tinysrgb&w=400', desc:"Ecrire ses pensees ameliore la conscience de soi." },
+      { id:'d15', icon:'🥦', text:'Un legume vert', points:3, img:'https://images.pexels.com/photos/1640774/pexels-photo-1640774.jpeg?auto=compress&cs=tinysrgb&w=400', desc:"Les legumes verts sont riches en fer et vitamines." },
+      { id:'d16', icon:'🏃', text:'Courir 20 min', points:5, img:'https://images.pexels.com/photos/1552242/pexels-photo-1552242.jpeg?auto=compress&cs=tinysrgb&w=400', desc:"La course ameliore l endurance cardiaque." },
+      { id:'d17', icon:'🧂', text:'Moins de sel', points:3, img:'https://images.pexels.com/photos/1640777/pexels-photo-1640777.jpeg?auto=compress&cs=tinysrgb&w=400', desc:"Reduire le sel diminue la tension arterielle." },
+      { id:'d18', icon:'🥜', text:'Une poignee de noix', points:3, img:'https://images.pexels.com/photos/1906439/pexels-photo-1906439.jpeg?auto=compress&cs=tinysrgb&w=400', desc:"Les noix apportent bonnes graisses et magnesium." },
+      { id:'d19', icon:'🫁', text:'5 min de respiration', points:3, img:'https://images.pexels.com/photos/3822622/pexels-photo-3822622.jpeg?auto=compress&cs=tinysrgb&w=400', desc:"La respiration profonde reduit le stress." },
+      { id:'d20', icon:'🕐', text:'Manger lentement', points:3, img:'https://images.pexels.com/photos/4259140/pexels-photo-4259140.jpeg?auto=compress&cs=tinysrgb&w=400', desc:"Manger lentement favorise la satiete et la digestion." },
+      { id:'d21', icon:'🫐', text:'Fruits rouges', points:3, img:'https://images.pexels.com/photos/1099680/pexels-photo-1099680.jpeg?auto=compress&cs=tinysrgb&w=400', desc:"Les fruits rouges sont riches en antioxydants." },
+      { id:'d22', icon:'🧃', text:'Eviter les sodas', points:4, img:'https://images.pexels.com/photos/416528/pexels-photo-416528.jpeg?auto=compress&cs=tinysrgb&w=400', desc:"Supprimer les sodas reduit la consommation de sucre." },
+      { id:'d23', icon:'🥚', text:'Petit-dej proteine', points:4, img:'https://images.pexels.com/photos/376464/pexels-photo-376464.jpeg?auto=compress&cs=tinysrgb&w=400', desc:"Un petit-dejeuner proteine stabilise la glycemie." },
+      { id:'d24', icon:'🫀', text:'Cardio 15 min', points:4, img:'https://images.pexels.com/photos/2526878/pexels-photo-2526878.jpeg?auto=compress&cs=tinysrgb&w=400', desc:"15 minutes de cardio ameliorent la sante cardiaque." },
+      { id:'d25', icon:'🌙', text:'Coucher avant 23h', points:4, img:'https://images.pexels.com/photos/3692886/pexels-photo-3692886.jpeg?auto=compress&cs=tinysrgb&w=400', desc:"Se coucher tot favorise un sommeil reparateur." },
+      { id:'d26', icon:'🥗', text:'Repas sans viande', points:3, img:'https://images.pexels.com/photos/1640777/pexels-photo-1640777.jpeg?auto=compress&cs=tinysrgb&w=400', desc:"Un repas vegetarien apporte plus de fibres." },
+      { id:'d27', icon:'📸', text:'Photo de mon repas', points:2, img:'https://images.pexels.com/photos/1092730/pexels-photo-1092730.jpeg?auto=compress&cs=tinysrgb&w=400', desc:"Photographier ses repas aide a prendre conscience de ses habitudes." },
+      { id:'d28', icon:'🍷', text:'Pas d alcool', points:5, img:'https://images.pexels.com/photos/3822622/pexels-photo-3822622.jpeg?auto=compress&cs=tinysrgb&w=400', desc:"Eviter l alcool protege le foie et ameliore le sommeil." },
+      { id:'d29', icon:'🫚', text:'Huile d olive', points:3, img:'https://images.pexels.com/photos/1640774/pexels-photo-1640774.jpeg?auto=compress&cs=tinysrgb&w=400', desc:"L huile d olive est riche en omega-9 et antioxydants." },
+      { id:'d30', icon:'🧹', text:'Organiser son frigo', points:2, img:'https://images.pexels.com/photos/3771069/pexels-photo-3771069.jpeg?auto=compress&cs=tinysrgb&w=400', desc:"Un frigo organise encourage de meilleures habitudes." }
     ];
 
     window.showDefiJourDetail = function(id, todayKey) {
@@ -2372,7 +2396,7 @@ window.initHome = async function() {
       initHome();
       setTimeout(function(){ window.showDefiJourDetail(id, todayKey); }, 250);
     };
-    var defisDuJour = [DEFIS_POOL[seed%6], DEFIS_POOL[(seed+2)%6], DEFIS_POOL[(seed+4)%6]];
+    var n=DEFIS_POOL.length; var defisDuJour = [DEFIS_POOL[seed%n], DEFIS_POOL[(seed+7)%n], DEFIS_POOL[(seed+17)%n]];
     var heureReset = new Date(); heureReset.setDate(heureReset.getDate()+1); heureReset.setHours(0,0,0,0);
     var msLeft = heureReset - new Date();
     var hLeft = Math.floor(msLeft/3600000), mLeft = Math.floor((msLeft%3600000)/60000);
