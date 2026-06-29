@@ -5441,15 +5441,15 @@ function switchLang(lang) {
   </div>
 </div>
 
-<div id="corpoView" style="display:none;padding:0 !important;position:fixed;top:56px;left:0;right:0;bottom:60px;overflow-y:auto;z-index:10;background:#FBF5F0">
-  <div class="view-header">
-    <div style="font-size:1.6rem;font-weight:700;color:white">Evolution corporelle</div>
+<div id="corpoView" style="display:none;padding:0 !important;position:fixed;top:56px;left:0;right:0;bottom:60px;overflow-y:auto;z-index:10;background:var(--cream)">
+  <div class="view-header" style="min-height:auto !important;justify-content:flex-start !important;padding:20px 20px 20px !important">
+    <div style="font-size:2rem;font-weight:700;color:white;font-family:Open Sans,serif">Evolution corporelle</div>
     <div style="font-size:0.85rem;color:rgba(255,255,255,0.8);margin-top:4px">Suivez votre transformation avec l'IA Mirella</div>
   </div>
   <div style="padding:20px 16px 100px">
 
     <!-- Photos avant/apres -->
-    <div style="background:white;border-radius:20px;padding:18px;margin-bottom:16px;box-shadow:0 2px 12px rgba(0,0,0,0.05)">
+    <div style="background:white;border-radius:20px;padding:18px;margin-bottom:16px;box-shadow:0 0 0 1.5px rgba(255,154,108,0.18),0 16px 40px rgba(230,110,70,0.1)">
       <div style="font-size:13px;font-weight:800;color:#1a1a1a;margin-bottom:4px">Mes photos</div>
       <div style="font-size:11px;color:#aaa;margin-bottom:16px">Ajoutez vos photos pour que Mirella analyse votre progression</div>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px">
@@ -5459,10 +5459,16 @@ function switchLang(lang) {
             <i class="ti ti-user" style="font-size:28px;color:#ddd"></i>
             <div style="font-size:10px;color:#ccc;margin-top:4px">Photo avant</div>
           </div>
-          <label style="display:flex;align-items:center;justify-content:center;gap:6px;margin-top:8px;padding:9px;background:#FFF0EC;border-radius:12px;cursor:pointer;font-size:11px;font-weight:700;color:#FF6B6B">
-            <i class="ti ti-camera" style="font-size:14px"></i>Ajouter
-            <input type="file" accept="image/*" capture="user" style="display:none" onchange="corpoSetPhoto(this,'avant')">
-          </label>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:8px">
+            <label style="display:flex;align-items:center;justify-content:center;gap:4px;padding:8px;background:#FFF0EC;border-radius:10px;cursor:pointer;font-size:10px;font-weight:700;color:#FF6B6B">
+              <i class="ti ti-camera" style="font-size:13px"></i>Photo
+              <input type="file" accept="image/*" capture="user" style="display:none" onchange="corpoSetPhoto(this,'avant')">
+            </label>
+            <label style="display:flex;align-items:center;justify-content:center;gap:4px;padding:8px;background:#FFF0EC;border-radius:10px;cursor:pointer;font-size:10px;font-weight:700;color:#FF6B6B">
+              <i class="ti ti-upload" style="font-size:13px"></i>Galerie
+              <input type="file" accept="image/*" style="display:none" onchange="corpoSetPhoto(this,'avant')">
+            </label>
+          </div>
         </div>
         <div>
           <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#10B981;margin-bottom:6px">Apres</div>
@@ -5470,22 +5476,34 @@ function switchLang(lang) {
             <i class="ti ti-user" style="font-size:28px;color:#ddd"></i>
             <div style="font-size:10px;color:#ccc;margin-top:4px">Photo apres</div>
           </div>
-          <label style="display:flex;align-items:center;justify-content:center;gap:6px;margin-top:8px;padding:9px;background:#ECFDF5;border-radius:12px;cursor:pointer;font-size:11px;font-weight:700;color:#10B981">
-            <i class="ti ti-camera" style="font-size:14px"></i>Ajouter
-            <input type="file" accept="image/*" capture="user" style="display:none" onchange="corpoSetPhoto(this,'apres')">
-          </label>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:8px">
+            <label style="display:flex;align-items:center;justify-content:center;gap:4px;padding:8px;background:#ECFDF5;border-radius:10px;cursor:pointer;font-size:10px;font-weight:700;color:#10B981">
+              <i class="ti ti-camera" style="font-size:13px"></i>Photo
+              <input type="file" accept="image/*" capture="user" style="display:none" onchange="corpoSetPhoto(this,'apres')">
+            </label>
+            <label style="display:flex;align-items:center;justify-content:center;gap:4px;padding:8px;background:#ECFDF5;border-radius:10px;cursor:pointer;font-size:10px;font-weight:700;color:#10B981">
+              <i class="ti ti-upload" style="font-size:13px"></i>Galerie
+              <input type="file" accept="image/*" style="display:none" onchange="corpoSetPhoto(this,'apres')">
+            </label>
+          </div>
         </div>
       </div>
     </div>
 
     <!-- Galerie timeline -->
-    <div style="background:white;border-radius:20px;padding:18px;margin-bottom:16px;box-shadow:0 2px 12px rgba(0,0,0,0.05)">
+    <div style="background:white;border-radius:20px;padding:18px;margin-bottom:16px;box-shadow:0 0 0 1.5px rgba(255,154,108,0.18),0 16px 40px rgba(230,110,70,0.1)">
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
         <div style="font-size:13px;font-weight:800;color:#1a1a1a">Historique photos</div>
-        <label style="display:flex;align-items:center;gap:5px;padding:6px 12px;background:linear-gradient(135deg,#FF6B6B,#FF9A3C);border-radius:20px;cursor:pointer;font-size:11px;font-weight:700;color:white">
-          <i class="ti ti-plus" style="font-size:12px"></i>Ajouter
-          <input type="file" accept="image/*" capture="user" style="display:none" onchange="corpoAddPhoto(this)">
-        </label>
+        <div style="display:flex;gap:6px">
+          <label style="display:flex;align-items:center;gap:4px;padding:6px 10px;background:linear-gradient(135deg,#FF6B6B,#FF9A3C);border-radius:20px;cursor:pointer;font-size:11px;font-weight:700;color:white">
+            <i class="ti ti-camera" style="font-size:12px"></i>Photo
+            <input type="file" accept="image/*" capture="user" style="display:none" onchange="corpoAddPhoto(this)">
+          </label>
+          <label style="display:flex;align-items:center;gap:4px;padding:6px 10px;background:linear-gradient(135deg,#FF6B6B,#FF9A3C);border-radius:20px;cursor:pointer;font-size:11px;font-weight:700;color:white">
+            <i class="ti ti-upload" style="font-size:12px"></i>Galerie
+            <input type="file" accept="image/*" style="display:none" onchange="corpoAddPhoto(this)">
+          </label>
+        </div>
       </div>
       <div id="corpoGallery" style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px">
         <div style="aspect-ratio:1;border-radius:10px;background:#f5f5f5;display:flex;align-items:center;justify-content:center">
