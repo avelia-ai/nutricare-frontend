@@ -4120,7 +4120,7 @@ function switchLang(lang) {
           <div class="cs-feat"><div class="cs-feat-ico"><i class="ti ti-bulb"></i></div><span class="cs-feat-txt">Nudges & protocoles pathologies</span></div>
         </div>
         <div id="standardDiscount" style="display:none"></div>
-        <button class="cs-cta" id="standardPlanBtn" onclick="alert('click standard: '+window._pricingPeriod);selectPlan(window._pricingPeriod==='annual'?'standard_annual':'standard')"><i class="ti ti-arrow-right" style="font-size:15px"></i>Choisir Standard</button>
+        <button class="cs-cta" id="standardPlanBtn" onclick="selectPlan(window._pricingPeriod==='annual'?'standard_annual':'standard')"><i class="ti ti-arrow-right" style="font-size:15px"></i>Choisir Standard</button>
       </div>
 
       <!-- PREMIUM -->
@@ -11538,7 +11538,7 @@ async function deleteProfessional(id) {
       const data = await res.json();
       if (data.url) window.location.href = data.url;
     } catch (err) {
-      alert('Erreur: ' + err.message);
+      alert('Erreur paiement: ' + err.message + ' | token: ' + (authToken ? authToken.substring(0,10) : 'NULL'));
     }
   }
 
