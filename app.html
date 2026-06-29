@@ -11522,7 +11522,7 @@ async function deleteProfessional(id) {
   }
 
   // ── BILLING ──
-  async function selectPlan(plan) {
+  window.selectPlan = async function selectPlan(plan) {
     if (plan === 'free') return;
     const priceId = STRIPE_PRICES[plan];
     if (!priceId || priceId.includes('ID')) {
