@@ -6312,27 +6312,6 @@ function switchLang(lang) {
 };
 
   // Restaurer session après changement de langue
-  // Gestion retour Stripe
-  (function handleStripeReturn() {
-    var params = new URLSearchParams(window.location.search);
-    if (params.get('success') === 'true') {
-      // Token toujours en localStorage si même navigateur
-      var token = localStorage.getItem('nutricare_token');
-      if (token) {
-        window.history.replaceState({}, '', '/app');
-        // Recharger le profil pour mettre à jour le plan
-        setTimeout(function() {
-          if (typeof loadProfile === 'function') loadProfile();
-          alert('Abonnement activé ! Bienvenue dans Mirella Premium.');
-        }, 1500);
-      } else {
-        window.history.replaceState({}, '', '/app');
-      }
-    } else if (params.get('cancelled') === 'true') {
-      window.history.replaceState({}, '', '/app');
-    }
-  })();
-
   (function restoreSession() {
     const token = sessionStorage.getItem('transfer_token');
     if (!token) return;
