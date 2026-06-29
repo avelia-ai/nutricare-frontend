@@ -1766,6 +1766,43 @@ window.applyTheme = function(themeKey) {
 
 
 // ── CATALOGUE RECETTES ──
+
+window._pricingPeriod = 'monthly';
+window.setPricingPeriod = function(period) {
+  window._pricingPeriod = period;
+  var isAnnual = period === 'annual';
+  var tm = document.getElementById('toggleMonthly');
+  var ta = document.getElementById('toggleAnnual');
+  if (tm) { tm.style.background = isAnnual ? 'transparent' : 'white'; tm.style.color = isAnnual ? 'white' : '#2D2D2D'; }
+  if (ta) { ta.style.background = isAnnual ? 'white' : 'transparent'; ta.style.color = isAnnual ? '#2D2D2D' : 'white'; }
+  var sp = document.getElementById('standardPrice');
+  var sop = document.getElementById('standardOldPrice');
+  var sper = document.getElementById('standardPeriod');
+  var spd = document.getElementById('standardPerDay');
+  var pp = document.getElementById('premiumPrice');
+  var pop = document.getElementById('premiumOldPrice');
+  var pper = document.getElementById('premiumPeriod');
+  var ppd = document.getElementById('premiumPerDay');
+  if (isAnnual) {
+    if (sp) sp.textContent = '35,90€';
+    if (sop) sop.textContent = '71,90€';
+    if (sper) sper.innerHTML = '/ an · <span style="color:#4ade80;font-weight:700">-50%</span> · soit 2,99€/mois';
+    if (spd) spd.innerHTML = 'soit seulement <span style="color:#4ade80;font-size:0.85rem">0,09€</span> / jour';
+    if (pp) pp.textContent = '59,90€';
+    if (pop) pop.textContent = '119,90€';
+    if (pper) pper.innerHTML = '/ an · <span style="color:#4ade80;font-weight:700">-50%</span> · soit 4,99€/mois';
+    if (ppd) ppd.innerHTML = 'soit seulement <span style="color:#4ade80;font-size:0.85rem">0,16€</span> / jour';
+  } else {
+    if (sp) sp.textContent = '2,99€';
+    if (sop) sop.textContent = '5,99€';
+    if (sper) sper.innerHTML = '/ mois · <span style="color:#4ade80;font-weight:700">-50%</span>';
+    if (spd) spd.innerHTML = 'soit seulement <span style="color:#4ade80;font-size:0.85rem">0,09€</span> / jour';
+    if (pp) pp.textContent = '4,99€';
+    if (pop) pop.textContent = '9,99€';
+    if (pper) pper.innerHTML = '/ mois · <span style="color:#4ade80;font-weight:700">-50%</span>';
+    if (ppd) ppd.innerHTML = 'soit seulement <span style="color:#4ade80;font-size:0.85rem">0,16€</span> / jour';
+  }
+};
 window._catalogueFilters = { categorie: '', tags: [], search: '', free_only: false };
 window.loadCatalogueGratuit = function() {
   window._catalogueFilters = { categorie: '', tags: [], search: '', free_only: true };
@@ -3974,6 +4011,12 @@ function switchLang(lang) {
     <div id="pricingView">
       <div class="view-header"><div style="font-size:1.6rem;font-weight:700;color:white;font-family:'Open Sans',sans-serif">Choisissez votre plan</div><div style="font-size:0.9rem;color:rgba(255,255,255,0.8);margin-top:4px">Commencez gratuitement. Évoluez quand vous êtes prêt.</div></div>
       <div class="pricing-sub">Commencez gratuitement. Évoluez quand vous êtes prêt.</div>
+
+      <div style="display:flex;background:rgba(255,255,255,0.15);border-radius:30px;padding:4px;margin:0 auto 24px;width:fit-content;gap:4px">
+        <button id="toggleMonthly" onclick="window.setPricingPeriod('monthly')" style="padding:8px 20px;border-radius:26px;border:none;font-size:13px;font-weight:700;cursor:pointer;font-family:DM Sans,sans-serif;background:white;color:#2D2D2D">Mensuel</button>
+        <button id="toggleAnnual" onclick="window.setPricingPeriod('annual')" style="padding:8px 20px;border-radius:26px;border:none;font-size:13px;font-weight:700;cursor:pointer;font-family:DM Sans,sans-serif;background:transparent;color:white">Annuel <span style="font-size:10px;background:#4ade80;color:#1a1a1a;padding:2px 6px;border-radius:10px;margin-left:4px">-50%</span></button>
+      </div>
+
       <div class="pricing-grid">
         <div class="plan-card">
           <div class="plan-badge">Gratuit</div>
@@ -4007,7 +4050,7 @@ function switchLang(lang) {
             <li><span class="plan-check"></span> Protocoles pathologies</li>
             <li><span class="plan-check"></span> Nudges intelligents</li>
           </ul>
-          <button class="btn-plan" id="standardPlanBtn" onclick="selectPlan('standard')" style="margin-top:16px">Choisir Standard</button>
+          <button class="btn-plan" id="standardPlanBtn" onclick="selectPlan(window._pricingPeriod==='annual'?'standard_annual':'standard')" style="margin-top:16px">Choisir Standard</button>
         </div>
         <div class="plan-card gold">
           <div class="plan-badge">Premium</div>
@@ -4027,7 +4070,7 @@ function switchLang(lang) {
             <li><span class="plan-check"></span> Coaching comportemental</li>
             <li><span class="plan-check"></span> Programmes exclusifs</li>
           </ul>
-          <button class="btn-plan" id="premiumPlanBtn" onclick="selectPlan('premium')" style="margin-top:16px">Choisir Premium</button>
+          <button class="btn-plan" id="premiumPlanBtn" onclick="selectPlan(window._pricingPeriod==='annual'?'premium_annual':'premium')" style="margin-top:16px">Choisir Premium</button>
         </div>
       </div>
       <p style="font-size:0.75rem;color:var(--soft);margin-top:20px">Paiement sécurisé · Sans engagement · Remboursé 30 jours si non satisfait</p>
@@ -6182,8 +6225,10 @@ function switchLang(lang) {
   // ── CONFIG ──
   const BACKEND_URL = 'https://nutricare-backend-production.up.railway.app';
   const STRIPE_PRICES = {
-    standard: 'price_1ThAGSGnwCUuaHD5GSV6jUNo',
-    premium: 'price_1ThAGkGnwCUuaHD5TVhDh6nG'
+    standard: 'price_1TnaKSGnwCUuaHD5iyuBQpth',
+    premium: 'price_1TnaLUGnwCUuaHD5rwBiAH7M',
+    standard_annual: 'price_1TnaMSGnwCUuaHD5sRI8fPwZ',
+    premium_annual: 'price_1TnaNCGnwCUuaHD5Vipo5xKc'
 };
 
   // Restaurer session après changement de langue
