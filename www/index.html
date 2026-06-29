@@ -6346,6 +6346,11 @@ function switchLang(lang) {
     }
   })();
   let authToken = localStorage.getItem('nutricare_token') || null;
+  // Debug retour Stripe
+  var _sp = new URLSearchParams(window.location.search);
+  if (_sp.get('paid') || _sp.get('success')) {
+    alert('Retour Stripe | token: ' + (authToken ? authToken.substring(0,15) : 'NULL') + ' | user: ' + (localStorage.getItem('nutricare_user') ? 'OK' : 'NULL'));
+  }
   window._authToken = authToken;
   window.currentPlan = 'free';
 
