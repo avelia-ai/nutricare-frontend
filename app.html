@@ -12784,12 +12784,173 @@ function closeMirellaNotif() {
       <button id="btnCycleFeminin" onclick="toggleQuickMenu();showView('cycle')" style="display:none;align-items:center;gap:10px;padding:12px;background:#FFF5F0;border:0.5px solid rgba(255,107,107,0.15);border-radius:14px;font-size:0.82rem;font-weight:600;color:#2D2D2D;cursor:pointer"><div style="width:32px;height:32px;background:#FBEAF0;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0"><i class="ti ti-rosette" style="font-size:16px;color:#993556" aria-hidden="true"></i></div>Cycle féminin</button>
       <button id="qmBtn-catalogue" onclick="toggleQuickMenu();showView('catalogue')" style="display:flex;align-items:center;gap:10px;padding:12px;background:var(--color-background-secondary);border:0.5px solid var(--color-border-tertiary);border-radius:14px;font-size:0.82rem;font-weight:600;color:var(--color-text-primary);cursor:pointer"><div style="width:32px;height:32px;background:#EAF3DE;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0"><i class="ti ti-book" style="font-size:16px;color:#3B6D11" aria-hidden="true"></i></div>Recettes</button>
       <button id="qmBtn-mes-recettes" onclick="toggleQuickMenu();showView('mes-recettes')" style="display:flex;align-items:center;gap:10px;padding:12px;background:var(--color-background-secondary);border:0.5px solid var(--color-border-tertiary);border-radius:14px;font-size:0.82rem;font-weight:600;color:var(--color-text-primary);cursor:pointer"><div style="width:32px;height:32px;background:#FFF0EC;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0"><i class="ti ti-chef-hat" style="font-size:16px;color:#FF6B6B" aria-hidden="true"></i></div>Mes recettes</button>
-<button id="qmBtn-gamification" onclick="toggleQuickMenu();showView('gamification')" style="display:flex;align-items:center;gap:10px;padding:12px;background:var(--color-background-secondary);border:0.5px solid var(--color-border-tertiary);border-radius:14px;font-size:0.82rem;font-weight:600;color:var(--color-text-primary);cursor:pointer"><div style="width:32px;height:32px;background:#FAEEDA;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0"><i class="ti ti-trophy" style="font-size:16px;color:#854F0B" aria-hidden="true"></i></div>Progression</button>
+<button id="qmBtn-corpo" onclick="toggleQuickMenu();showView('corpo')" style="display:flex;align-items:center;gap:10px;padding:12px;background:var(--color-background-secondary);border:0.5px solid var(--color-border-tertiary);border-radius:14px;font-size:0.82rem;font-weight:600;color:var(--color-text-primary);cursor:pointer"><div style="width:32px;height:32px;background:#FFF0EC;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0"><i class="ti ti-body-scan" style="font-size:16px;color:#FF6B6B" aria-hidden="true"></i></div>Evolution corpo</button>
+      <button id="qmBtn-gamification" onclick="toggleQuickMenu();showView('gamification')" style="display:flex;align-items:center;gap:10px;padding:12px;background:var(--color-background-secondary);border:0.5px solid var(--color-border-tertiary);border-radius:14px;font-size:0.82rem;font-weight:600;color:var(--color-text-primary);cursor:pointer"><div style="width:32px;height:32px;background:#FAEEDA;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0"><i class="ti ti-trophy" style="font-size:16px;color:#854F0B" aria-hidden="true"></i></div>Progression</button>
     </div>
   </div>
 </div>
 
 <script>
+// ── EVOLUTION CORPORELLE ──
+window._corpoPhotos = JSON.parse(localStorage.getItem('mirella_corpo_photos') || '[]');
+window._corpoAvant = localStorage.getItem('mirella_corpo_avant') || null;
+window._corpoApres = localStorage.getItem('mirella_corpo_apres') || null;
+
+window.corpoSetPhoto = function(input, type) {
+  var file = input.files[0];
+  if (!file) return;
+  var reader = new FileReader();
+  reader.onload = function(e) {
+    var dataUrl = e.target.result;
+    if (type === 'avant') {
+      window._corpoAvant = dataUrl;
+      localStorage.setItem('mirella_corpo_avant', dataUrl);
+      var el = document.getElementById('corpoAvantPreview');
+      if (el) el.innerHTML = '<img src="' + dataUrl + '" style="width:100%;height:100%;object-fit:cover;border-radius:14px">';
+    } else {
+      window._corpoApres = dataUrl;
+      localStorage.setItem('mirella_corpo_apres', dataUrl);
+      var el = document.getElementById('corpoApresPreview');
+      if (el) el.innerHTML = '<img src="' + dataUrl + '" style="width:100%;height:100%;object-fit:cover;border-radius:14px">';
+    }
+  };
+  reader.readAsDataURL(file);
+};
+
+window.corpoAddPhoto = function(input) {
+  var file = input.files[0];
+  if (!file) return;
+  var reader = new FileReader();
+  reader.onload = function(e) {
+    var dataUrl = e.target.result;
+    var date = new Date().toLocaleDateString('fr-FR');
+    window._corpoPhotos.unshift({ url: dataUrl, date: date });
+    if (window._corpoPhotos.length > 20) window._corpoPhotos.pop();
+    localStorage.setItem('mirella_corpo_photos', JSON.stringify(window._corpoPhotos));
+    corpoRenderGallery();
+  };
+  reader.readAsDataURL(file);
+};
+
+window.corpoRenderGallery = function() {
+  var el = document.getElementById('corpoGallery');
+  if (!el) return;
+  if (!window._corpoPhotos.length) {
+    el.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:20px;color:#ccc;font-size:12px">Aucune photo ajoutee</div>';
+    return;
+  }
+  el.innerHTML = window._corpoPhotos.map(function(p, i) {
+    return '<div style="position:relative;aspect-ratio:1;border-radius:10px;overflow:hidden">' +
+      '<img src="' + p.url + '" style="width:100%;height:100%;object-fit:cover">' +
+      '<div style="position:absolute;bottom:0;left:0;right:0;background:rgba(0,0,0,0.5);padding:3px 6px;font-size:9px;color:white">' + p.date + '</div>' +
+    '</div>';
+  }).join('');
+};
+
+window.corpoAnalyse = function() {
+  var btn = document.getElementById('corpoAnalyseBtn');
+  var result = document.getElementById('corpoAnalyseResult');
+  if (!btn || !result) return;
+  btn.innerHTML = '<i class="ti ti-loader-2" style="font-size:16px;animation:spin 1s linear infinite"></i> Analyse en cours...';
+  btn.disabled = true;
+
+  var profile = JSON.parse(localStorage.getItem('nutricare_profile') || '{}');
+  var poids = profile.poids || '?';
+  var taille = profile.taille || '?';
+  var sexe = profile.sexe || 'non renseigne';
+  var age = profile.age || '?';
+  var objectif = profile.objectif_principal || 'forme generale';
+  var pathologies = (profile.pathologies || []).join(', ') || 'aucune';
+  var imc = poids !== '?' && taille !== '?' ? (parseFloat(poids) / Math.pow(parseFloat(taille)/100, 2)).toFixed(1) : 'inconnu';
+
+  var hasAvant = !!window._corpoAvant;
+  var hasApres = !!window._corpoApres;
+  var nbPhotos = window._corpoPhotos.length;
+
+  var prompt = 'Tu es Mirella, coach fitness et nutrition expert. Analyse la composition corporelle de cet utilisateur et donne des conseils tres personnalises. Profil: sexe=' + sexe + ', age=' + age + ' ans, poids=' + poids + 'kg, taille=' + taille + 'cm, IMC=' + imc + ', objectif=' + objectif + ', pathologies=' + pathologies + ', photos_avant=' + (hasAvant?'oui':'non') + ', photos_apres=' + (hasApres?'oui':'non') + ', nb_photos_suivi=' + nbPhotos + '. Reponds UNIQUEMENT en JSON strict sans backticks ni commentaires: {"masse_grasse_estime":22,"masse_musculaire_estime":38,"score_forme":68,"points_forts":["Point fort 1 specifique au profil","Point fort 2","Point fort 3"],"points_ameliorer":["Zone a ameliorer 1","Zone a ameliorer 2","Zone a ameliorer 3"],"exercices":[{"nom":"Nom exercice 1","desc":"Description courte","series":"3x12","muscle":"Muscle cible"},{"nom":"Nom exercice 2","desc":"Description courte","series":"3x15","muscle":"Muscle cible"},{"nom":"Nom exercice 3","desc":"Description courte","series":"4x10","muscle":"Muscle cible"},{"nom":"Nom exercice 4","desc":"Description courte","series":"3x20","muscle":"Muscle cible"}],"analyse":"Message personnalise chaleureux 3-4 phrases base sur le profil exact","conseil_nutrition":"1-2 conseils nutritionnels precis adaptes aux pathologies et objectif"}';
+
+  var token = localStorage.getItem('nutricare_token');
+  fetch(BACKEND_URL + '/api/chat/message', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
+    body: JSON.stringify({ message: prompt })
+  }).then(function(res) { return res.json(); }).then(function(data) {
+    btn.innerHTML = '<i class="ti ti-sparkles" style="font-size:16px"></i> Relancer l'analyse';
+    btn.disabled = false;
+    if (!data.reply) { result.innerHTML = '<div style="color:rgba(255,255,255,0.5);text-align:center;padding:16px">Erreur - reessayez</div>'; result.style.display='block'; return; }
+    try {
+      var r = JSON.parse(data.reply.replace(/```json|```/g,'').trim());
+      result.style.display = 'block';
+      result.innerHTML =
+        '<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px">' +
+          '<div style="background:rgba(255,255,255,0.07);border-radius:14px;padding:14px;text-align:center">' +
+            '<div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:rgba(255,255,255,0.35);margin-bottom:6px">Masse grasse est.</div>' +
+            '<div style="font-size:1.8rem;font-weight:800;color:#FF6B6B">' + r.masse_grasse_estime + '<span style="font-size:12px">%</span></div>' +
+          '</div>' +
+          '<div style="background:rgba(255,255,255,0.07);border-radius:14px;padding:14px;text-align:center">' +
+            '<div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:rgba(255,255,255,0.35);margin-bottom:6px">Masse musculaire</div>' +
+            '<div style="font-size:1.8rem;font-weight:800;color:#10B981">' + r.masse_musculaire_estime + '<span style="font-size:12px">%</span></div>' +
+          '</div>' +
+        '</div>' +
+        '<div style="background:rgba(255,255,255,0.07);border-radius:14px;padding:14px;margin-bottom:14px">' +
+          '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">' +
+            '<div style="font-size:11px;font-weight:700;color:rgba(255,255,255,0.5)">Score forme</div>' +
+            '<div style="font-size:1.2rem;font-weight:800;color:#FF9A3C">' + r.score_forme + '<span style="font-size:11px;color:rgba(255,255,255,0.3)">/100</span></div>' +
+          '</div>' +
+          '<div style="height:8px;background:rgba(255,255,255,0.08);border-radius:4px;overflow:hidden">' +
+            '<div style="height:100%;width:' + r.score_forme + '%;background:linear-gradient(90deg,#FF6B6B,#FF9A3C,#10B981);border-radius:4px"></div>' +
+          '</div>' +
+        '</div>' +
+        '<div style="font-size:12px;color:rgba(255,255,255,0.7);line-height:1.6;margin-bottom:14px;padding:14px;background:rgba(255,255,255,0.05);border-radius:14px;border-left:3px solid #FF6B6B">' + r.analyse + '</div>' +
+        '<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px">' +
+          '<div style="background:rgba(16,185,129,0.1);border-radius:14px;padding:14px">' +
+            '<div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#10B981;margin-bottom:10px">Points forts</div>' +
+            (r.points_forts||[]).map(function(p) { return '<div style="display:flex;align-items:center;gap:6px;margin-bottom:6px"><i class="ti ti-check" style="font-size:12px;color:#10B981;flex-shrink:0"></i><span style="font-size:11px;color:rgba(255,255,255,0.7)">' + p + '</span></div>'; }).join('') +
+          '</div>' +
+          '<div style="background:rgba(255,107,107,0.1);border-radius:14px;padding:14px">' +
+            '<div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#FF6B6B;margin-bottom:10px">A ameliorer</div>' +
+            (r.points_ameliorer||[]).map(function(p) { return '<div style="display:flex;align-items:center;gap:6px;margin-bottom:6px"><i class="ti ti-target" style="font-size:12px;color:#FF6B6B;flex-shrink:0"></i><span style="font-size:11px;color:rgba(255,255,255,0.7)">' + p + '</span></div>'; }).join('') +
+          '</div>' +
+        '</div>' +
+        '<div style="margin-bottom:14px">' +
+          '<div style="font-size:11px;font-weight:800;color:white;margin-bottom:10px">Exercices recommandes</div>' +
+          '<div style="display:flex;flex-direction:column;gap:8px">' +
+            (r.exercices||[]).map(function(ex) {
+              return '<div style="background:rgba(255,255,255,0.07);border-radius:12px;padding:12px;display:flex;align-items:center;gap:10px">' +
+                '<div style="width:36px;height:36px;border-radius:10px;background:rgba(255,107,107,0.15);display:flex;align-items:center;justify-content:center;flex-shrink:0"><i class="ti ti-barbell" style="font-size:16px;color:#FF6B6B"></i></div>' +
+                '<div style="flex:1"><div style="font-size:12px;font-weight:700;color:white">' + ex.nom + '</div><div style="font-size:10px;color:rgba(255,255,255,0.4);margin-top:1px">' + ex.muscle + ' · ' + ex.series + '</div></div>' +
+              '</div>';
+            }).join('') +
+          '</div>' +
+        '</div>' +
+        '<div style="background:rgba(255,154,60,0.1);border-radius:14px;padding:14px;border-left:3px solid #FF9A3C">' +
+          '<div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#FF9A3C;margin-bottom:6px">Conseil nutrition</div>' +
+          '<div style="font-size:11px;color:rgba(255,255,255,0.7);line-height:1.5">' + r.conseil_nutrition + '</div>' +
+        '</div>';
+    } catch(e) {
+      result.innerHTML = '<div style="color:rgba(255,255,255,0.5);text-align:center;padding:16px">Erreur parsing - reessayez</div>';
+    }
+  }).catch(function() {
+    btn.innerHTML = '<i class="ti ti-sparkles" style="font-size:16px"></i> Relancer l'analyse';
+    btn.disabled = false;
+    result.innerHTML = '<div style="color:rgba(255,255,255,0.5);text-align:center;padding:16px">Erreur reseau</div>';
+    result.style.display = 'block';
+  });
+};
+
+// Init corpo view
+(function() {
+  if (window._corpoAvant) {
+    var el = document.getElementById('corpoAvantPreview');
+    if (el) el.innerHTML = '<img src="' + window._corpoAvant + '" style="width:100%;height:100%;object-fit:cover;border-radius:14px">';
+  }
+  if (window._corpoApres) {
+    var el = document.getElementById('corpoApresPreview');
+    if (el) el.innerHTML = '<img src="' + window._corpoApres + '" style="width:100%;height:100%;object-fit:cover;border-radius:14px">';
+  }
+  setTimeout(corpoRenderGallery, 500);
+})();
+
 // Bottom nav visibility
 function initBottomNav() {
   if (window.innerWidth <= 768) {
