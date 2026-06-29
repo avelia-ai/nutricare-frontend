@@ -618,6 +618,12 @@ var c=document.getElementById("wavesBg");
 var ctx=c.getContext("2d");
 function resize(){c.width=window.innerWidth;c.height=window.innerHeight;}resize();
 window.addEventListener("resize",resize);
+window._waveColors = ["#FF9090","#FFAA80","#FFBE8A","#FFD4A0"];
+window._waveBg = "#FDF8F3";
+window.updateWaveColors = function(colors, bg) {
+  window._waveColors = colors;
+  window._waveBg = bg || "#FDF8F3";
+};
 var layers=[
 {color:"#FF9090",speedMult:1.0,phaseSeed:0.0,ampMult:1.0},
 {color:"#FFAA80",speedMult:1.63,phaseSeed:2.3,ampMult:0.85},
@@ -628,9 +634,10 @@ var t=0;
 function draw(){
 var W=c.width,H=c.height;
 ctx.clearRect(0,0,W,H);
-ctx.fillStyle="#FDF8F3";
+ctx.fillStyle=window._waveBg||"#FDF8F3";
 ctx.fillRect(0,0,W,H);
 layers.forEach(function(l,i){
+l.color=window._waveColors[i]||l.color;
 var baseY=H*0.55+i*(H*0.10);
 var amp=H*0.045*l.ampMult;
 var freq=0.006;
@@ -1735,12 +1742,12 @@ window.renderCycleHistory = function() {
 
 // ── THEMES ──
 window.THEMES = {
-  coral:   { coral: '#FF6B6B', accent: '#FF9A3C', cream: '#FFF5F0', dark: '#E85555', name: 'Corail', emoji: '🔴' },
-  violet:  { coral: '#8B5CF6', accent: '#A78BFA', cream: '#F5F3FF', dark: '#7C3AED', name: 'Violet', emoji: '🟣' },
-  mint:    { coral: '#10B981', accent: '#34D399', cream: '#ECFDF5', dark: '#059669', name: 'Menthe', emoji: '🟢' },
-  ocean:   { coral: '#3B82F6', accent: '#60A5FA', cream: '#EFF6FF', dark: '#2563EB', name: 'Ocean', emoji: '🔵' },
-  gold:    { coral: '#F59E0B', accent: '#FBBF24', cream: '#FFFBEB', dark: '#D97706', name: 'Or', emoji: '🟡' },
-  rose:    { coral: '#EC4899', accent: '#F472B6', cream: '#FDF2F8', dark: '#DB2777', name: 'Rose', emoji: '🩷' }
+  coral:   { coral: '#FF6B6B', accent: '#FF9A3C', cream: '#FFF5F0', dark: '#E85555', name: 'Corail', emoji: '🔴', waves: ['#FF9090','#FFAA80','#FFBE8A','#FFD4A0'], bg: '#FDF8F3' },
+  violet:  { coral: '#8B5CF6', accent: '#A78BFA', cream: '#F5F3FF', dark: '#7C3AED', name: 'Violet', emoji: '🟣', waves: ['#C4B5FD','#A78BFA','#C4B5FD','#DDD6FE'], bg: '#F8F6FF' },
+  mint:    { coral: '#10B981', accent: '#34D399', cream: '#ECFDF5', dark: '#059669', name: 'Menthe', emoji: '🟢', waves: ['#6EE7B7','#A7F3D0','#6EE7B7','#D1FAE5'], bg: '#F2FDF8' },
+  ocean:   { coral: '#3B82F6', accent: '#60A5FA', cream: '#EFF6FF', dark: '#2563EB', name: 'Ocean', emoji: '🔵', waves: ['#93C5FD','#BFDBFE','#93C5FD','#DBEAFE'], bg: '#F0F7FF' },
+  gold:    { coral: '#F59E0B', accent: '#FBBF24', cream: '#FFFBEB', dark: '#D97706', name: 'Or', emoji: '🟡', waves: ['#FCD34D','#FDE68A','#FCD34D','#FEF3C7'], bg: '#FFFDF0' },
+  rose:    { coral: '#EC4899', accent: '#F472B6', cream: '#FDF2F8', dark: '#DB2777', name: 'Rose', emoji: '🩷', waves: ['#F9A8D4','#FBCFE8','#F9A8D4','#FCE7F3'], bg: '#FFF5FA' }
 };
 
 window.applyTheme = function(themeKey) {
@@ -1753,6 +1760,7 @@ window.applyTheme = function(themeKey) {
   root.style.setProperty('--cream', t.cream);
   root.style.setProperty('--cream2', t.cream);
   localStorage.setItem('mirella_theme', themeKey);
+  if (t.waves && window.updateWaveColors) window.updateWaveColors(t.waves, t.bg);
   document.querySelectorAll('.theme-btn').forEach(function(b){
     b.style.border = b.dataset.theme === themeKey ? '3px solid #1a1a1a' : '3px solid transparent';
   });
