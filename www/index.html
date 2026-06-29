@@ -1750,6 +1750,45 @@ window.THEMES = {
   rose:    { coral: '#EC4899', accent: '#F472B6', cream: '#FDF2F8', dark: '#DB2777', name: 'Rose', emoji: '🩷', waves: ['#F9A8D4','#FBCFE8','#F9A8D4','#FCE7F3'], bg: '#FFF5FA' }
 };
 
+// Pop-up parrainage aléatoire
+window.showReferralPopup = function() {
+  var today = new Date().toISOString().split('T')[0];
+  var lastShown = localStorage.getItem('mirella_referral_popup_date');
+  if (lastShown === today) return;
+  if (Math.random() > 0.2) return; // 20% de chance
+  localStorage.setItem('mirella_referral_popup_date', today);
+  var overlay = document.createElement('div');
+  overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.6);backdrop-filter:blur(4px);z-index:9999;display:flex;align-items:center;justify-content:center;padding:20px';
+  overlay.innerHTML = `
+    <div style="background:#1a1a1a;border-radius:24px;padding:28px 24px;max-width:340px;width:100%;position:relative;border:1px solid rgba(255,255,255,0.08)">
+      <button onclick="this.closest('div[style*=fixed]').remove()" style="position:absolute;top:14px;right:14px;background:rgba(255,255,255,0.1);border:none;border-radius:50%;width:28px;height:28px;color:white;cursor:pointer;font-size:14px">✕</button>
+      <div style="text-align:center;margin-bottom:20px">
+        <div style="font-size:2.5rem;margin-bottom:10px">🎁</div>
+        <div style="font-size:1.2rem;font-weight:800;color:white;margin-bottom:6px">Parrainez & économisez !</div>
+        <div style="font-size:12px;color:rgba(255,255,255,0.5);line-height:1.5">Invitez vos proches sur Mirella et profitez de réductions à vie sur votre abonnement</div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:20px">
+        <div style="display:flex;align-items:center;gap:10px;background:rgba(255,255,255,0.06);border-radius:12px;padding:10px 14px">
+          <div style="font-size:1.1rem;font-weight:800;color:#FF6B6B;min-width:40px">-20%</div>
+          <div style="font-size:12px;color:rgba(255,255,255,0.6)">dès votre 1er filleul</div>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px;background:rgba(255,255,255,0.06);border-radius:12px;padding:10px 14px">
+          <div style="font-size:1.1rem;font-weight:800;color:#FF6B6B;min-width:40px">-50%</div>
+          <div style="font-size:12px;color:rgba(255,255,255,0.6)">dès 10 filleuls actifs</div>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px;background:rgba(255,255,255,0.06);border-radius:12px;padding:10px 14px">
+          <div style="font-size:1.1rem;font-weight:800;color:#FF6B6B;min-width:40px">100%</div>
+          <div style="font-size:12px;color:rgba(255,255,255,0.6)">gratuit à vie dès 50 filleuls</div>
+        </div>
+      </div>
+      <button onclick="this.closest('div[style*=fixed]').remove();showView('profile')" style="width:100%;background:linear-gradient(135deg,#FF6B6B,#FF9A3C);color:white;border:none;border-radius:14px;padding:14px;font-size:14px;font-weight:700;cursor:pointer;font-family:DM Sans,sans-serif">
+        Voir mon code parrainage →
+      </button>
+    </div>
+  `;
+  document.body.appendChild(overlay);
+};
+
 window.applyTheme = function(themeKey) {
   var t = window.THEMES[themeKey];
   if (!t) return;
@@ -3413,6 +3452,37 @@ function switchLang(lang) {
             <div onclick="openDefi('aliment_nouveau')" style="min-width:150px;height:200px;border-radius:14px;flex-shrink:0;position:relative;overflow:hidden;background:url('https://images.pexels.com/photos/1099680/pexels-photo-1099680.jpeg?auto=compress&cs=tinysrgb&w=400') center/cover;cursor:pointer"><div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,0.55) 40%,rgba(0,0,0,0.0) 100%)"></div><div id="defi-badge-aliment_nouveau" style="position:absolute;top:10px;left:10px;background:rgba(255,255,255,0.2);color:white;font-size:9px;font-weight:600;padding:3px 8px;border-radius:20px">7 JOURS</div><div style="position:absolute;bottom:0;left:0;right:0;padding:12px"><div style="font-size:18px;margin-bottom:4px">🌿</div><div style="font-size:13px;font-weight:700;color:white;margin-bottom:6px">1 aliment nouveau/jour</div><div id="defi-progress-bar-aliment_nouveau" style="height:3px;background:rgba(255,255,255,0.2);border-radius:4px;margin-bottom:8px"><div id="defi-progress-fill-aliment_nouveau" style="height:3px;width:0%;background:white;border-radius:4px"></div></div><div id="defi-btn-aliment_nouveau" style="width:100%;font-size:11px;padding:6px;border-radius:20px;background:white;color:#333;border:none;font-weight:600;text-align:center">Relever le défi</div></div></div>
           </div>
         </div>
+        <!-- BLOC PARRAINAGE HOME -->
+        <div onclick="showView('profile')" style="background:linear-gradient(135deg,#1a1a1a,#2a2a2a);border-radius:20px;padding:20px;margin-bottom:16px;cursor:pointer;position:relative;overflow:hidden">
+          <div style="position:absolute;top:-30px;right:-30px;width:120px;height:120px;border-radius:50%;background:radial-gradient(circle,rgba(255,107,107,0.15) 0%,transparent 70%)"></div>
+          <div style="display:flex;align-items:center;gap:12px;margin-bottom:14px">
+            <div style="width:40px;height:40px;border-radius:12px;background:linear-gradient(135deg,var(--coral),var(--accent));display:flex;align-items:center;justify-content:center;flex-shrink:0">
+              <i class="ti ti-gift" style="font-size:20px;color:white"></i>
+            </div>
+            <div>
+              <div style="font-size:14px;font-weight:800;color:white">Parrainez vos proches 🎁</div>
+              <div style="font-size:11px;color:rgba(255,255,255,0.5);margin-top:2px">Gagnez des réductions exclusives</div>
+            </div>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:14px">
+            <div style="background:rgba(255,255,255,0.07);border-radius:12px;padding:10px;text-align:center">
+              <div style="font-size:1.1rem;font-weight:800;color:var(--coral)">-20%</div>
+              <div style="font-size:9px;color:rgba(255,255,255,0.4);margin-top:2px">1 filleul</div>
+            </div>
+            <div style="background:rgba(255,255,255,0.07);border-radius:12px;padding:10px;text-align:center">
+              <div style="font-size:1.1rem;font-weight:800;color:var(--coral)">-50%</div>
+              <div style="font-size:9px;color:rgba(255,255,255,0.4);margin-top:2px">10 filleuls</div>
+            </div>
+            <div style="background:rgba(255,255,255,0.07);border-radius:12px;padding:10px;text-align:center">
+              <div style="font-size:1.1rem;font-weight:800;color:var(--coral)">Gratuit</div>
+              <div style="font-size:9px;color:rgba(255,255,255,0.4);margin-top:2px">50 filleuls</div>
+            </div>
+          </div>
+          <div style="background:linear-gradient(135deg,var(--coral),var(--accent));border-radius:12px;padding:11px;text-align:center;font-size:13px;font-weight:700;color:white">
+            Voir mon code parrainage →
+          </div>
+        </div>
+
         <!-- PANNEAU DÉTAIL DÉFI -->
         <div id="defiDetailPanel" style="display:none;background:#FFFCFA;border-radius:16px;overflow:hidden;margin-bottom:16px;box-shadow:0 0 0 1.5px rgba(255,154,108,0.22),0 14px 32px rgba(230,110,70,0.14)">
           <div id="defiDetailPhoto" style="height:160px;background:center/cover;position:relative">
