@@ -2391,7 +2391,7 @@ window.initHome = async function() {
       initHome();
       setTimeout(function(){ window.showDefiJourDetail(id, todayKey); }, 250);
     };
-    var defisDuJour = [DEFIS_POOL[seed%6], DEFIS_POOL[(seed+2)%6], DEFIS_POOL[(seed+4)%6]];
+    var defisDuJour = [allDefis[seed%allDefis.length], allDefis[(seed+2)%allDefis.length], allDefis[(seed+4)%allDefis.length]];
     var heureReset = new Date(); heureReset.setDate(heureReset.getDate()+1); heureReset.setHours(0,0,0,0);
     var msLeft = heureReset - new Date();
     var hLeft = Math.floor(msLeft/3600000), mLeft = Math.floor((msLeft%3600000)/60000);
