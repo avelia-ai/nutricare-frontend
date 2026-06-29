@@ -6741,7 +6741,11 @@ function switchLang(lang) {
       var mc = document.getElementById('profileMedCount');
       if (mc) mc.textContent = (profile.medications||[]).length;
       var pb = document.getElementById('profilePlanBadge');
-      if (pb) pb.textContent = (profile.plan||'free').toUpperCase();
+      if (pb) {
+        var resolvedPlan = resolvePlan(profile);
+        var planBadgeLabels = { free: 'GRATUIT', standard: 'STANDARD', premium: 'PREMIUM' };
+        pb.textContent = planBadgeLabels[resolvedPlan] || resolvedPlan.toUpperCase();
+      }
       document.getElementById('profileBudget').value = profile.budget_alimentaire || '';
       if (document.getElementById('profileEthnicity')) document.getElementById('profileEthnicity').value = profile.ethnicity || '';
       if (document.getElementById('profileSexe')) document.getElementById('profileSexe').value = profile.sexe || '';
