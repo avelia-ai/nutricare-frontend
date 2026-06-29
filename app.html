@@ -6578,10 +6578,18 @@ function switchLang(lang) {
     authToken = null;
     currentUser = null;
     conversationId = null;
+    window.currentPlan = 'free';
+    window.isTrial = false;
+    // Vider tout le cache utilisateur
     localStorage.removeItem('nutricare_token');
     localStorage.removeItem('nutricare_user');
+    localStorage.removeItem('nutricare_profile');
     localStorage.removeItem('mirella_checked_meals');
     localStorage.removeItem('mirella_menus_perso');
+    localStorage.removeItem('nutricare_last_view');
+    localStorage.removeItem('mirella_objectifs_nutrition');
+    localStorage.removeItem('mirella_ia_menus_enabled');
+    localStorage.removeItem('mirella_theme');
     document.getElementById('authPage').classList.add('active');
     document.getElementById('appPage').classList.remove('active');
   }
