@@ -12810,9 +12810,9 @@ function closeMirellaNotif() {
 
 <script>
 // ── EVOLUTION CORPORELLE ──
-window._corpoPhotos = JSON.parse(localStorage.getItem('mirella_corpo_photos') || '[]');
-window._corpoAvant = localStorage.getItem('mirella_corpo_avant') || null;
-window._corpoApres = localStorage.getItem('mirella_corpo_apres') || null;
+window._corpoPhotos = [];
+window._corpoAvant = null;
+window._corpoApres = null;
 
 window.corpoSetPhoto = function(input, type) {
   var file = input.files[0];
@@ -12822,12 +12822,11 @@ window.corpoSetPhoto = function(input, type) {
     var dataUrl = e.target.result;
     if (type === 'avant') {
       window._corpoAvant = dataUrl;
-      localStorage.setItem('mirella_corpo_avant', dataUrl);
+      // Pas de localStorage - trop lourd pour les photos
       var el = document.getElementById('corpoAvantPreview');
       if (el) el.innerHTML = '<img src="' + dataUrl + '" style="width:100%;height:100%;object-fit:cover;border-radius:14px">';
     } else {
       window._corpoApres = dataUrl;
-      localStorage.setItem('mirella_corpo_apres', dataUrl);
       var el = document.getElementById('corpoApresPreview');
       if (el) el.innerHTML = '<img src="' + dataUrl + '" style="width:100%;height:100%;object-fit:cover;border-radius:14px">';
     }
@@ -12843,8 +12842,12 @@ window.corpoAddPhoto = function(input) {
     var dataUrl = e.target.result;
     var date = new Date().toLocaleDateString('fr-FR');
     window._corpoPhotos.unshift({ url: dataUrl, date: date });
-    if (window._corpoPhotos.length > 20) window._corpoPhotos.pop();
-    localStorage.setItem('mirella_corpo_photos', JSON.stringify(window._corpoPhotos));
+    if (window._corpoPhotos.length > 6) window._corpoPhotos.pop(); // Max 6 photos en memoire
+    // Stocker miniatures compressees uniquement
+    try {
+      var minis = window._corpoPhotos.map(function(p) { return { url: p.url.substring(0,500), date: p.date }; });
+      localStorage.setItem('mirella_corpo_dates', JSON.stringify(window._corpoPhotos.map(function(p){ return p.date; })));
+    } catch(e) {}
     corpoRenderGallery();
   };
   reader.readAsDataURL(file);
