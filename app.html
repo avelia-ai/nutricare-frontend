@@ -11538,7 +11538,7 @@ async function deleteProfessional(id) {
       const data = await res.json();
       if (data.url) window.location.href = data.url;
     } catch (err) {
-      alert('Erreur lors de la création du paiement. Réessayez.');
+      alert('Erreur: ' + err.message);
     }
   }
 
