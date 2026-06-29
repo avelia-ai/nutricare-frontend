@@ -14013,7 +14013,7 @@ async function handleOAuthCallback(urlString) {
           window.location.reload();
           return;
         } else if (result.error) {
-          alert('Erreur connexion Google: ' + result.error.message);
+          if (!result.error.message.includes('PKCE')) alert('Erreur connexion Google: ' + result.error.message);
           console.error('exchangeCodeForSession error:', result.error);
         }
       }
