@@ -8838,9 +8838,7 @@ Réponds UNIQUEMENT en JSON valide avec cette structure exacte:
     document.body.appendChild(banner);
     // Ajouter padding-top au mobileTopbar pour ne pas masquer le contenu
     var topbar = document.getElementById('mobileTopbar');
-    if (topbar) topbar.style.marginTop = '40px';
-    var appPage = document.getElementById('appPage');
-    if (appPage) appPage.style.paddingTop = '40px';
+    if (topbar) topbar.style.top = '40px';
     // Ajuster les vues fixed pour tenir compte du banner
     document.querySelectorAll('#homeView,#menusView,#frigoView,#cycleView,#catalogueView,#mesRecettesView,#visageView,#chatView,#profileView,#analysisView,#leaderboardView,#visualView,#biologieView,#scanproduitView,#ordonnanceView,#programsView,#pricingView,#healthView,#chronoView,#gamificationView,#protocolsView').forEach(function(el) {
       if (el) el.style.top = '96px';
