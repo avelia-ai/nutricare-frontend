@@ -6312,6 +6312,23 @@ function switchLang(lang) {
 };
 
   // Restaurer session après changement de langue
+  // Restaurer session après retour Stripe
+  (function restoreStripeSession() {
+    var params = new URLSearchParams(window.location.search);
+    if (params.get('success') === 'true' || params.get('cancelled') === 'true') {
+      var savedToken = sessionStorage.getItem('stripe_return_token');
+      var savedUser = sessionStorage.getItem('stripe_return_user');
+      if (savedToken) {
+        localStorage.setItem('nutricare_token', savedToken);
+        if (savedUser) localStorage.setItem('nutricare_user', savedUser);
+        sessionStorage.removeItem('stripe_return_token');
+        sessionStorage.removeItem('stripe_return_user');
+      }
+      // Nettoyer l'URL
+      window.history.replaceState({}, '', window.location.pathname);
+    }
+  })();
+
   (function restoreSession() {
     const token = sessionStorage.getItem('transfer_token');
     if (!token) return;
@@ -11534,8 +11551,12 @@ async function deleteProfessional(id) {
         body: JSON.stringify({ priceId, plan })
       });
       const data = await res.json();
-      if (data.url) window.location.href = data.url;
-      else alert(data.error || 'Erreur paiement');
+      if (data.url) {
+        // Sauvegarder token avant redirection Stripe
+        sessionStorage.setItem('stripe_return_token', token);
+        sessionStorage.setItem('stripe_return_user', localStorage.getItem('nutricare_user') || '');
+        window.location.href = data.url;
+      } else alert(data.error || 'Erreur paiement');
     } catch (err) {
       alert('Erreur: ' + err.message);
     }
