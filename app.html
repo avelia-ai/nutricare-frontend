@@ -3665,58 +3665,149 @@ function switchLang(lang) {
       <div style="font-size:0.78rem;color:#888;margin-bottom:12px">Débloquez les routines prédéfinies et ajoutez-les automatiquement à votre agenda</div>
       <div style="background:linear-gradient(135deg,var(--coral),var(--accent));color:white;border-radius:10px;padding:8px 20px;font-size:0.82rem;font-weight:700">Voir les offres →</div>
     </div>
-    <div style="font-size:1.1rem;font-weight:800;color:#1a1a1a;margin-bottom:6px">📚 Routines prédéfinies</div>
-    <div style="font-size:0.82rem;color:#888;margin-bottom:20px">Choisissez une routine et elle s'ajoute automatiquement dans votre agenda</div>
+    <div style="font-size:1.3rem;font-weight:800;color:#1a1a1a;margin-bottom:4px">Routines prédéfinies</div>
+    <div style="font-size:0.82rem;color:#888;margin-bottom:20px">Choisissez une routine — elle s'ajoute automatiquement dans votre planning</div>
+
+    <div style="display:flex;gap:8px;overflow-x:auto;padding-bottom:8px;scrollbar-width:none;margin-bottom:16px">
+      <button onclick="filterRoutines('all')" id="rfAll" style="flex-shrink:0;padding:6px 14px;border-radius:20px;border:none;background:#1a1a1a;color:white;font-size:11px;font-weight:700;cursor:pointer;font-family:DM Sans,sans-serif">Toutes</button>
+      <button onclick="filterRoutines('corps')" id="rfCorps" style="flex-shrink:0;padding:6px 14px;border-radius:20px;border:1.5px solid #e0e0e0;background:white;color:#666;font-size:11px;font-weight:700;cursor:pointer;font-family:DM Sans,sans-serif">Corps</button>
+      <button onclick="filterRoutines('mental')" id="rfMental" style="flex-shrink:0;padding:6px 14px;border-radius:20px;border:1.5px solid #e0e0e0;background:white;color:#666;font-size:11px;font-weight:700;cursor:pointer;font-family:DM Sans,sans-serif">Mental</button>
+      <button onclick="filterRoutines('nutrition')" id="rfNutrition" style="flex-shrink:0;padding:6px 14px;border-radius:20px;border:1.5px solid #e0e0e0;background:white;color:#666;font-size:11px;font-weight:700;cursor:pointer;font-family:DM Sans,sans-serif">Nutrition</button>
+      <button onclick="filterRoutines('beaute')" id="rfBeaute" style="flex-shrink:0;padding:6px 14px;border-radius:20px;border:1.5px solid #e0e0e0;background:white;color:#666;font-size:11px;font-weight:700;cursor:pointer;font-family:DM Sans,sans-serif">Beauté</button>
+    </div>
+
     <div style="display:flex;flex-direction:column;gap:12px" id="routinesPredefList">
-      <div onclick="showRoutineDetail(0)" style="background:#FFFCFA;border-radius:16px;padding:16px;box-shadow:0 0 0 1.5px rgba(255,154,108,0.22),0 14px 32px rgba(230,110,70,0.14);cursor:pointer;display:flex;align-items:center;gap:14px">
-        <div style="width:48px;height:48px;background:#FFF0EC;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:1.5rem;flex-shrink:0">🥗</div>
-        <div style="flex:1"><div style="font-weight:700;color:#1a1a1a;font-size:0.9rem">Perdre du poids</div><div style="font-size:0.78rem;color:#888;margin-top:2px">7 jours · 🍽️ Petit-dej proteine</div></div>
-        <div style="color:#ccc;font-size:1.2rem">›</div>
+      <style>
+        .routine-card{background:white;border-radius:20px;overflow:hidden;cursor:pointer;box-shadow:0 2px 16px rgba(0,0,0,0.06);border:1px solid rgba(0,0,0,0.05);transition:transform 0.15s}
+        .routine-card:active{transform:scale(0.98)}
+        .routine-card-img{height:100px;position:relative;display:flex;align-items:center;justify-content:center;font-size:3rem}
+        .routine-card-body{padding:14px}
+        .routine-card-tag{display:inline-block;font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;padding:3px 8px;border-radius:20px;margin-bottom:6px}
+        .routine-card-title{font-size:14px;font-weight:800;color:#1a1a1a;margin-bottom:4px}
+        .routine-card-sub{font-size:11px;color:#888;margin-bottom:8px}
+        .routine-card-footer{display:flex;align-items:center;justify-content:space-between}
+        .routine-card-days{font-size:11px;font-weight:700;color:#1a1a1a;display:flex;align-items:center;gap:4px}
+        .routine-card-steps{font-size:10px;color:#bbb}
+      </style>
+      <div onclick="showRoutineDetail(0)" class="routine-card" data-cat="nutrition corps">
+        <div class="routine-card-img" style="background:linear-gradient(135deg,#FF6B6B22,#FF9A3C22)">🥗</div>
+        <div class="routine-card-body">
+          <div class="routine-card-tag" style="background:#FF6B6B15;color:#FF6B6B">Perte de poids</div>
+          <div class="routine-card-title">Perdre du poids</div>
+          <div class="routine-card-sub">Petit-dej proteine + marche + hydratation</div>
+          <div class="routine-card-footer">
+            <div class="routine-card-days"><i class="ti ti-calendar" style="font-size:12px"></i> 7 jours</div>
+            <div class="routine-card-steps">4 etapes cles</div>
+          </div>
+        </div>
       </div>
-      <div onclick="showRoutineDetail(1)" style="background:#FFFCFA;border-radius:16px;padding:16px;box-shadow:0 0 0 1.5px rgba(255,154,108,0.22),0 14px 32px rgba(230,110,70,0.14);cursor:pointer;display:flex;align-items:center;gap:14px">
-        <div style="width:48px;height:48px;background:#EEF4FF;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:1.5rem;flex-shrink:0">😴</div>
-        <div style="flex:1"><div style="font-weight:700;color:#1a1a1a;font-size:0.9rem">Ameliorer le sommeil</div><div style="font-size:0.78rem;color:#888;margin-top:2px">7 jours · 🌙 Tisane camomille 21h</div></div>
-        <div style="color:#ccc;font-size:1.2rem">›</div>
+      <div onclick="showRoutineDetail(1)" class="routine-card" data-cat="mental">
+        <div class="routine-card-img" style="background:linear-gradient(135deg,#8B5CF622,#A78BFA22)">😴</div>
+        <div class="routine-card-body">
+          <div class="routine-card-tag" style="background:#8B5CF615;color:#8B5CF6">Sommeil</div>
+          <div class="routine-card-title">Ameliorer le sommeil</div>
+          <div class="routine-card-sub">Tisane + ecrans + temperature ideale</div>
+          <div class="routine-card-footer">
+            <div class="routine-card-days"><i class="ti ti-calendar" style="font-size:12px"></i> 7 jours</div>
+            <div class="routine-card-steps">4 etapes cles</div>
+          </div>
+        </div>
       </div>
-      <div onclick="showRoutineDetail(2)" style="background:#FFFCFA;border-radius:16px;padding:16px;box-shadow:0 0 0 1.5px rgba(255,154,108,0.22),0 14px 32px rgba(230,110,70,0.14);cursor:pointer;display:flex;align-items:center;gap:14px">
-        <div style="width:48px;height:48px;background:#F0FFEC;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:1.5rem;flex-shrink:0">💪</div>
-        <div style="flex:1"><div style="font-weight:700;color:#1a1a1a;font-size:0.9rem">Prendre du muscle</div><div style="font-size:0.78rem;color:#888;margin-top:2px">14 jours · 💪 Entrainement 45min</div></div>
-        <div style="color:#ccc;font-size:1.2rem">›</div>
+      <div onclick="showRoutineDetail(2)" class="routine-card" data-cat="corps">
+        <div class="routine-card-img" style="background:linear-gradient(135deg,#10B98122,#34D39922)">💪</div>
+        <div class="routine-card-body">
+          <div class="routine-card-tag" style="background:#10B98115;color:#10B981">Musculation</div>
+          <div class="routine-card-title">Prendre du muscle</div>
+          <div class="routine-card-sub">Entrainement + proteines + recuperation</div>
+          <div class="routine-card-footer">
+            <div class="routine-card-days"><i class="ti ti-calendar" style="font-size:12px"></i> 14 jours</div>
+            <div class="routine-card-steps">4 etapes cles</div>
+          </div>
+        </div>
       </div>
-      <div onclick="showRoutineDetail(3)" style="background:#FFFCFA;border-radius:16px;padding:16px;box-shadow:0 0 0 1.5px rgba(255,154,108,0.22),0 14px 32px rgba(230,110,70,0.14);cursor:pointer;display:flex;align-items:center;gap:14px">
-        <div style="width:48px;height:48px;background:#F0FFF4;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:1.5rem;flex-shrink:0">🌿</div>
-        <div style="flex:1"><div style="font-weight:700;color:#1a1a1a;font-size:0.9rem">Detox</div><div style="font-size:0.78rem;color:#888;margin-top:2px">7 jours · 🥤 Jus vert matin</div></div>
-        <div style="color:#ccc;font-size:1.2rem">›</div>
+      <div onclick="showRoutineDetail(3)" class="routine-card" data-cat="nutrition">
+        <div class="routine-card-img" style="background:linear-gradient(135deg,#10B98122,#6EE7B722)">🌿</div>
+        <div class="routine-card-body">
+          <div class="routine-card-tag" style="background:#10B98115;color:#059669">Detox</div>
+          <div class="routine-card-title">Detox & purification</div>
+          <div class="routine-card-sub">Jus vert + hydratation + legumes</div>
+          <div class="routine-card-footer">
+            <div class="routine-card-days"><i class="ti ti-calendar" style="font-size:12px"></i> 7 jours</div>
+            <div class="routine-card-steps">4 etapes cles</div>
+          </div>
+        </div>
       </div>
-      <div onclick="showRoutineDetail(4)" style="background:#FFFCFA;border-radius:16px;padding:16px;box-shadow:0 0 0 1.5px rgba(255,154,108,0.22),0 14px 32px rgba(230,110,70,0.14);cursor:pointer;display:flex;align-items:center;gap:14px">
-        <div style="width:48px;height:48px;background:#FFF5FB;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:1.5rem;flex-shrink:0">✨</div>
-        <div style="flex:1"><div style="font-weight:700;color:#1a1a1a;font-size:0.9rem">Skincare quotidien</div><div style="font-size:0.78rem;color:#888;margin-top:2px">14 jours · 🧴 Nettoyant visage matin</div></div>
-        <div style="color:#ccc;font-size:1.2rem">›</div>
+      <div onclick="showRoutineDetail(4)" class="routine-card" data-cat="beaute">
+        <div class="routine-card-img" style="background:linear-gradient(135deg,#EC489922,#F472B622)">🧴</div>
+        <div class="routine-card-body">
+          <div class="routine-card-tag" style="background:#EC489915;color:#EC4899">Beaute</div>
+          <div class="routine-card-title">Skincare quotidien</div>
+          <div class="routine-card-sub">Nettoyant + hydratation + omega-3</div>
+          <div class="routine-card-footer">
+            <div class="routine-card-days"><i class="ti ti-calendar" style="font-size:12px"></i> 14 jours</div>
+            <div class="routine-card-steps">4 etapes cles</div>
+          </div>
+        </div>
       </div>
-      <div onclick="showRoutineDetail(5)" style="background:#FFFCFA;border-radius:16px;padding:16px;box-shadow:0 0 0 1.5px rgba(255,154,108,0.22),0 14px 32px rgba(230,110,70,0.14);cursor:pointer;display:flex;align-items:center;gap:14px">
-        <div style="width:48px;height:48px;background:#F5F0FF;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:1.5rem;flex-shrink:0">🧘</div>
-        <div style="flex:1"><div style="font-weight:700;color:#1a1a1a;font-size:0.9rem">Anti-stress</div><div style="font-size:0.78rem;color:#888;margin-top:2px">7 jours · 🧘 Meditation 10min matin</div></div>
-        <div style="color:#ccc;font-size:1.2rem">›</div>
+      <div onclick="showRoutineDetail(5)" class="routine-card" data-cat="mental">
+        <div class="routine-card-img" style="background:linear-gradient(135deg,#8B5CF622,#C4B5FD22)">🧘</div>
+        <div class="routine-card-body">
+          <div class="routine-card-tag" style="background:#8B5CF615;color:#8B5CF6">Mental</div>
+          <div class="routine-card-title">Anti-stress</div>
+          <div class="routine-card-sub">Meditation + magnesium + nature</div>
+          <div class="routine-card-footer">
+            <div class="routine-card-days"><i class="ti ti-calendar" style="font-size:12px"></i> 7 jours</div>
+            <div class="routine-card-steps">4 etapes cles</div>
+          </div>
+        </div>
       </div>
-      <div onclick="showRoutineDetail(6)" style="background:#FFFCFA;border-radius:16px;padding:16px;box-shadow:0 0 0 1.5px rgba(255,154,108,0.22),0 14px 32px rgba(230,110,70,0.14);cursor:pointer;display:flex;align-items:center;gap:14px">
-        <div style="width:48px;height:48px;background:#FFECEC;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:1.5rem;flex-shrink:0">🫀</div>
-        <div style="flex:1"><div style="font-weight:700;color:#1a1a1a;font-size:0.9rem">Sante cardiovasculaire</div><div style="font-size:0.78rem;color:#888;margin-top:2px">14 jours · 🏃 Marche rapide 30min</div></div>
-        <div style="color:#ccc;font-size:1.2rem">›</div>
+      <div onclick="showRoutineDetail(6)" class="routine-card" data-cat="corps">
+        <div class="routine-card-img" style="background:linear-gradient(135deg,#EF444422,#FCA5A522)">❤️</div>
+        <div class="routine-card-body">
+          <div class="routine-card-tag" style="background:#EF444415;color:#EF4444">Cardio</div>
+          <div class="routine-card-title">Sante cardiovasculaire</div>
+          <div class="routine-card-sub">Marche + omega-3 + fruits rouges</div>
+          <div class="routine-card-footer">
+            <div class="routine-card-days"><i class="ti ti-calendar" style="font-size:12px"></i> 14 jours</div>
+            <div class="routine-card-steps">4 etapes cles</div>
+          </div>
+        </div>
       </div>
-      <div onclick="showRoutineDetail(7)" style="background:#FFFCFA;border-radius:16px;padding:16px;box-shadow:0 0 0 1.5px rgba(255,154,108,0.22),0 14px 32px rgba(230,110,70,0.14);cursor:pointer;display:flex;align-items:center;gap:14px">
-        <div style="width:48px;height:48px;background:#FFFBEC;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:1.5rem;flex-shrink:0">🦴</div>
-        <div style="flex:1"><div style="font-weight:700;color:#1a1a1a;font-size:0.9rem">Sante des os</div><div style="font-size:0.78rem;color:#888;margin-top:2px">21 jours · ☀️ 15min soleil matin</div></div>
-        <div style="color:#ccc;font-size:1.2rem">›</div>
+      <div onclick="showRoutineDetail(7)" class="routine-card" data-cat="corps">
+        <div class="routine-card-img" style="background:linear-gradient(135deg,#F59E0B22,#FCD34D22)">🦴</div>
+        <div class="routine-card-body">
+          <div class="routine-card-tag" style="background:#F59E0B15;color:#D97706">Os & articulations</div>
+          <div class="routine-card-title">Sante des os</div>
+          <div class="routine-card-sub">Soleil + calcium + exercices portes</div>
+          <div class="routine-card-footer">
+            <div class="routine-card-days"><i class="ti ti-calendar" style="font-size:12px"></i> 21 jours</div>
+            <div class="routine-card-steps">4 etapes cles</div>
+          </div>
+        </div>
       </div>
-      <div onclick="showRoutineDetail(8)" style="background:#FFFCFA;border-radius:16px;padding:16px;box-shadow:0 0 0 1.5px rgba(255,154,108,0.22),0 14px 32px rgba(230,110,70,0.14);cursor:pointer;display:flex;align-items:center;gap:14px">
-        <div style="width:48px;height:48px;background:#EEF4FF;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:1.5rem;flex-shrink:0">🧠</div>
-        <div style="flex:1"><div style="font-weight:700;color:#1a1a1a;font-size:0.9rem">Boost cognitif</div><div style="font-size:0.78rem;color:#888;margin-top:2px">14 jours · 🫐 Smoothie bleuets matin</div></div>
-        <div style="color:#ccc;font-size:1.2rem">›</div>
+      <div onclick="showRoutineDetail(8)" class="routine-card" data-cat="mental">
+        <div class="routine-card-img" style="background:linear-gradient(135deg,#3B82F622,#93C5FD22)">🧠</div>
+        <div class="routine-card-body">
+          <div class="routine-card-tag" style="background:#3B82F615;color:#3B82F6">Cognition</div>
+          <div class="routine-card-title">Boost cognitif</div>
+          <div class="routine-card-sub">Bleuets + omega-3 + sommeil regulier</div>
+          <div class="routine-card-footer">
+            <div class="routine-card-days"><i class="ti ti-calendar" style="font-size:12px"></i> 14 jours</div>
+            <div class="routine-card-steps">4 etapes cles</div>
+          </div>
+        </div>
       </div>
-      <div onclick="showRoutineDetail(9)" style="background:#FFFCFA;border-radius:16px;padding:16px;box-shadow:0 0 0 1.5px rgba(255,154,108,0.22),0 14px 32px rgba(230,110,70,0.14);cursor:pointer;display:flex;align-items:center;gap:14px">
-        <div style="width:48px;height:48px;background:#FFF0F8;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:1.5rem;flex-shrink:0">🌸</div>
-        <div style="flex:1"><div style="font-weight:700;color:#1a1a1a;font-size:0.9rem">Equilibre hormonal</div><div style="font-size:0.78rem;color:#888;margin-top:2px">21 jours · 🌱 Graines de lin matin</div></div>
-        <div style="color:#ccc;font-size:1.2rem">›</div>
+      <div onclick="showRoutineDetail(9)" class="routine-card" data-cat="nutrition corps">
+        <div class="routine-card-img" style="background:linear-gradient(135deg,#EC489922,#F9A8D422)">🌱</div>
+        <div class="routine-card-body">
+          <div class="routine-card-tag" style="background:#EC489915;color:#EC4899">Hormones</div>
+          <div class="routine-card-title">Equilibre hormonal</div>
+          <div class="routine-card-sub">Graines de lin + sport modere + stress</div>
+          <div class="routine-card-footer">
+            <div class="routine-card-days"><i class="ti ti-calendar" style="font-size:12px"></i> 21 jours</div>
+            <div class="routine-card-steps">4 etapes cles</div>
+          </div>
+        </div>
       </div>
       <div onclick="showRoutineDetail(10)" style="background:#FFFCFA;border-radius:16px;padding:16px;box-shadow:0 0 0 1.5px rgba(255,154,108,0.22),0 14px 32px rgba(230,110,70,0.14);cursor:pointer;display:flex;align-items:center;gap:14px">
         <div style="width:48px;height:48px;background:#FFF3E0;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:1.5rem;flex-shrink:0">🔥</div>
@@ -16621,6 +16712,21 @@ window.ROUTINES_DATA = [
   { icon: '⚡', title: 'Boost énergie', duree: 7, description: 'Programme pour retrouver vitalité et énergie au quotidien.' }
 ];
 var ROUTINES_DATA = window.ROUTINES_DATA;
+
+window.filterRoutines = function(cat) {
+  document.querySelectorAll('[id^="rf"]').forEach(function(b) {
+    b.style.background = 'white';
+    b.style.color = '#666';
+    b.style.border = '1.5px solid #e0e0e0';
+  });
+  var active = document.getElementById('rf' + cat.charAt(0).toUpperCase() + cat.slice(1));
+  if (cat === 'all') active = document.getElementById('rfAll');
+  if (active) { active.style.background = '#1a1a1a'; active.style.color = 'white'; active.style.border = 'none'; }
+  document.querySelectorAll('.routine-card').forEach(function(card) {
+    var cardCat = card.getAttribute('data-cat') || '';
+    card.style.display = (cat === 'all' || cardCat.indexOf(cat) !== -1) ? 'block' : 'none';
+  });
+};
 
 window.addRoutineToPlanning = function(idx) {
   var ROUTINES = [
