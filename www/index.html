@@ -5437,67 +5437,84 @@ function switchLang(lang) {
       <div id="healthHistory"></div>
     </div>
 
-    <!-- Section évolution photos PREMIUM -->
-    <div id="evolutionCorpCard" style="background:#FFFCFA;border-radius:20px;overflow:hidden;box-shadow:0 0 0 1.5px rgba(255,154,108,0.18),0 16px 40px rgba(230,110,70,0.1);margin-bottom:100px;position:relative">
-      <div id="evolutionCorpLockOverlay" style="display:none;position:absolute;inset:0;background:rgba(255,255,255,0.7);backdrop-filter:blur(4px);border-radius:20px;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:20px;cursor:pointer;z-index:5" onclick="openSubscriptionModal('lock')">
-        <i class="ti ti-lock" style="font-size:2rem;color:#FF6B6B;margin-bottom:8px"></i>
-        <div style="font-size:0.9rem;font-weight:700;color:#2D2D2D;margin-bottom:4px">Fonctionnalité Standard</div>
-        <div style="font-size:0.78rem;color:#888;margin-bottom:12px">Suivez votre évolution corporelle avec photos et analyses</div>
-        <div style="background:linear-gradient(135deg,#FF6B6B,#FF9A3C);color:white;border-radius:10px;padding:8px 20px;font-size:0.82rem;font-weight:700">Voir les offres →</div>
-      </div>
-      <div style="padding:18px 18px 16px">
-        <div class="evo-eyebrow" style="margin-bottom:6px">
-          <div class="evo-eyebrow-bar"></div>
-          <span class="evo-eyebrow-text">Mon évolution corporelle</span>
-        </div>
-        <div style="font-size:12px;color:#bbb;margin-bottom:16px;line-height:1.4">Prenez une photo régulièrement pour visualiser votre progression.</div>
-        <div id="evolutionBadges" style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px"></div>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px">
-          <label style="background:linear-gradient(135deg,#FF6B6B,#FF9A3C);color:white;border-radius:14px;padding:14px 10px;text-align:center;cursor:pointer;font-size:13px;font-weight:700;display:flex;flex-direction:column;align-items:center;gap:6px;border:none">
-            <div style="width:32px;height:32px;border-radius:10px;background:rgba(255,255,255,0.2);display:flex;align-items:center;justify-content:center"><i class="ti ti-camera" style="font-size:18px;color:white"></i></div>
-            Prendre une photo
-            <input type="file" accept="image/*" capture="user" style="display:none" onchange="addEvolutionPhoto(this)">
-          </label>
-          <label style="background:#FAFAFA;color:#2D2D2D;border-radius:14px;padding:14px 10px;text-align:center;cursor:pointer;font-size:13px;font-weight:600;display:flex;flex-direction:column;align-items:center;gap:6px;border:0.5px solid rgba(0,0,0,0.08)">
-            <div style="width:32px;height:32px;border-radius:10px;background:#FFF0EE;display:flex;align-items:center;justify-content:center"><i class="ti ti-photo" style="font-size:18px;color:#FF6B6B"></i></div>
-            Choisir une photo
-            <input type="file" accept="image/*" style="display:none" onchange="addEvolutionPhoto(this)">
-          </label>
-        </div>
-      </div>
-      <div style="display:flex;gap:6px;padding:0 18px 16px">
-        <button onclick="setEvolutionTab('timeline')" id="tabTimeline" style="flex:1;padding:9px 4px;border-radius:12px;border:0.5px solid transparent;background:#2D2D2D;color:white;font-size:11px;font-weight:600;cursor:pointer;font-family:DM Sans,sans-serif;display:flex;flex-direction:column;align-items:center;gap:4px"><i class="ti ti-calendar" style="font-size:16px"></i>Timeline</button>
-        <button onclick="setEvolutionTab('compare')" id="tabCompare" style="flex:1;padding:9px 4px;border-radius:12px;border:0.5px solid rgba(0,0,0,0.08);background:#FAFAFA;color:#888;font-size:11px;font-weight:600;cursor:pointer;font-family:DM Sans,sans-serif;display:flex;flex-direction:column;align-items:center;gap:4px"><i class="ti ti-scale" style="font-size:16px"></i>Comparer</button>
-        <button onclick="setEvolutionTab('mirella')" id="tabMirella" style="flex:1;padding:9px 4px;border-radius:12px;border:0.5px solid rgba(0,0,0,0.08);background:#FAFAFA;color:#888;font-size:11px;font-weight:600;cursor:pointer;font-family:DM Sans,sans-serif;display:flex;flex-direction:column;align-items:center;gap:4px"><i class="ti ti-sparkles" style="font-size:16px"></i>Mirella IA</button>
-      </div>
-      <div style="padding:0 18px 18px">
-        <div id="tabContentTimeline">
-          <div id="evolutionGallery" style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px"></div>
-        </div>
-        <div id="tabContentCompare" style="display:none">
-          <div style="font-size:12px;color:#bbb;margin-bottom:12px">Sélectionnez 2 photos pour les comparer côte à côte.</div>
-          <div id="compareGallery" style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:16px"></div>
-          <div id="compareResult" style="display:none">
-            <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px">
-              <div style="text-align:center"><img id="compareImgA" style="width:100%;border-radius:12px;aspect-ratio:1;object-fit:cover"><div id="compareLabelA" style="font-size:0.75rem;color:#999;margin-top:4px"></div></div>
-              <div style="text-align:center"><img id="compareImgB" style="width:100%;border-radius:12px;aspect-ratio:1;object-fit:cover"><div id="compareLabelB" style="font-size:0.75rem;color:#999;margin-top:4px"></div></div>
-            </div>
-            <div id="compareDiff" style="text-align:center;font-size:0.88rem;font-weight:600;color:#28C840;padding:8px;background:#F0FFF4;border-radius:8px"></div>
+
+  </div>
+</div>
+
+<div id="corpoView" style="display:none;padding:0 !important;position:fixed;top:56px;left:0;right:0;bottom:60px;overflow-y:auto;z-index:10;background:#FBF5F0">
+  <div class="view-header">
+    <div style="font-size:1.6rem;font-weight:700;color:white">Evolution corporelle</div>
+    <div style="font-size:0.85rem;color:rgba(255,255,255,0.8);margin-top:4px">Suivez votre transformation avec l'IA Mirella</div>
+  </div>
+  <div style="padding:20px 16px 100px">
+
+    <!-- Photos avant/apres -->
+    <div style="background:white;border-radius:20px;padding:18px;margin-bottom:16px;box-shadow:0 2px 12px rgba(0,0,0,0.05)">
+      <div style="font-size:13px;font-weight:800;color:#1a1a1a;margin-bottom:4px">Mes photos</div>
+      <div style="font-size:11px;color:#aaa;margin-bottom:16px">Ajoutez vos photos pour que Mirella analyse votre progression</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px">
+        <div>
+          <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#FF6B6B;margin-bottom:6px">Avant</div>
+          <div id="corpoAvantPreview" style="width:100%;aspect-ratio:3/4;border-radius:14px;background:#f5f5f5;display:flex;flex-direction:column;align-items:center;justify-content:center;border:2px dashed #eee;overflow:hidden;position:relative">
+            <i class="ti ti-user" style="font-size:28px;color:#ddd"></i>
+            <div style="font-size:10px;color:#ccc;margin-top:4px">Photo avant</div>
           </div>
+          <label style="display:flex;align-items:center;justify-content:center;gap:6px;margin-top:8px;padding:9px;background:#FFF0EC;border-radius:12px;cursor:pointer;font-size:11px;font-weight:700;color:#FF6B6B">
+            <i class="ti ti-camera" style="font-size:14px"></i>Ajouter
+            <input type="file" accept="image/*" capture="user" style="display:none" onchange="corpoSetPhoto(this,'avant')">
+          </label>
         </div>
-        <div id="tabContentMirella" style="display:none">
-          <div style="font-size:12px;color:#bbb;margin-bottom:12px">Sélectionnez 2 photos pour que Mirella analyse votre progression.</div>
-          <div id="mirellaGallery" style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:16px"></div>
-          <button onclick="analyzeEvolution()" id="analyzeBtn" style="display:none;width:100%;background:#2D2D2D;color:white;border:none;border-radius:12px;padding:12px;font-size:0.85rem;font-weight:600;cursor:pointer;font-family:DM Sans,sans-serif;margin-bottom:12px;display:flex;align-items:center;justify-content:center;gap:6px"><i class="ti ti-sparkles"></i>Analyser ma progression avec Mirella</button>
-          <div id="mirellaAnalysisResult" style="display:none;background:#FAFAFA;border-radius:12px;padding:16px;border-left:3px solid #FF6B6B">
-            <div style="font-size:10px;font-weight:700;letter-spacing:0.07em;text-transform:uppercase;color:#FF6B6B;margin-bottom:8px">Mirella</div>
-            <div id="mirellaAnalysisText" style="font-size:0.85rem;color:#2D2D2D;line-height:1.6"></div>
+        <div>
+          <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#10B981;margin-bottom:6px">Apres</div>
+          <div id="corpoApresPreview" style="width:100%;aspect-ratio:3/4;border-radius:14px;background:#f5f5f5;display:flex;flex-direction:column;align-items:center;justify-content:center;border:2px dashed #eee;overflow:hidden;position:relative">
+            <i class="ti ti-user" style="font-size:28px;color:#ddd"></i>
+            <div style="font-size:10px;color:#ccc;margin-top:4px">Photo apres</div>
           </div>
+          <label style="display:flex;align-items:center;justify-content:center;gap:6px;margin-top:8px;padding:9px;background:#ECFDF5;border-radius:12px;cursor:pointer;font-size:11px;font-weight:700;color:#10B981">
+            <i class="ti ti-camera" style="font-size:14px"></i>Ajouter
+            <input type="file" accept="image/*" capture="user" style="display:none" onchange="corpoSetPhoto(this,'apres')">
+          </label>
         </div>
       </div>
     </div>
+
+    <!-- Galerie timeline -->
+    <div style="background:white;border-radius:20px;padding:18px;margin-bottom:16px;box-shadow:0 2px 12px rgba(0,0,0,0.05)">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
+        <div style="font-size:13px;font-weight:800;color:#1a1a1a">Historique photos</div>
+        <label style="display:flex;align-items:center;gap:5px;padding:6px 12px;background:linear-gradient(135deg,#FF6B6B,#FF9A3C);border-radius:20px;cursor:pointer;font-size:11px;font-weight:700;color:white">
+          <i class="ti ti-plus" style="font-size:12px"></i>Ajouter
+          <input type="file" accept="image/*" capture="user" style="display:none" onchange="corpoAddPhoto(this)">
+        </label>
+      </div>
+      <div id="corpoGallery" style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px">
+        <div style="aspect-ratio:1;border-radius:10px;background:#f5f5f5;display:flex;align-items:center;justify-content:center">
+          <i class="ti ti-photo" style="font-size:20px;color:#ddd"></i>
+        </div>
+      </div>
+    </div>
+
+    <!-- Analyse IA -->
+    <div style="background:#1a1a1a;border-radius:20px;padding:20px;margin-bottom:16px">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px">
+        <div style="width:36px;height:36px;border-radius:10px;background:rgba(255,107,107,0.15);display:flex;align-items:center;justify-content:center;flex-shrink:0">
+          <i class="ti ti-sparkles" style="font-size:18px;color:#FF6B6B"></i>
+        </div>
+        <div>
+          <div style="font-size:13px;font-weight:800;color:white">Analyse Mirella IA</div>
+          <div style="font-size:11px;color:rgba(255,255,255,0.4)">Masse grasse · Muscles · Exercices</div>
+        </div>
+      </div>
+      <div style="font-size:11px;color:rgba(255,255,255,0.4);margin-bottom:16px;line-height:1.5">Mirella analyse votre profil et vos photos pour estimer votre composition corporelle et vous proposer des exercices personnalisés</div>
+      <button onclick="corpoAnalyse()" id="corpoAnalyseBtn" style="width:100%;background:linear-gradient(135deg,#FF6B6B,#FF9A3C);color:white;border:none;border-radius:14px;padding:14px;font-size:14px;font-weight:700;cursor:pointer;font-family:DM Sans,sans-serif;display:flex;align-items:center;justify-content:center;gap:8px">
+        <i class="ti ti-sparkles" style="font-size:16px"></i>Lancer l'analyse IA
+      </button>
+      <div id="corpoAnalyseResult" style="margin-top:16px;display:none"></div>
+    </div>
+
   </div>
 </div>
+
 <div id="protocolsView" style="display:none;padding:32px;overflow-y:auto;background:var(--cream);width:100%">
   <div class="view-header" style="font-family:Open Sans,serif;font-size:2rem;font-weight:700;margin-bottom:6px;color:#2D2D2D">Mes protocoles nutritionnels</div>
   <div style="font-size:0.85rem;color:var(--accent);margin-bottom:32px;margin-top:24px">Protocoles adaptés à vos pathologies</div>
@@ -9314,6 +9331,7 @@ Réponds UNIQUEMENT en JSON valide avec cette structure exacte:
     document.getElementById('dashboardView').style.display = view === 'dashboard' ? 'block' : 'none';
     document.getElementById('profileView').style.display = view === 'profile' ? 'block' : 'none'; if (view === 'profile') loadProfile();
     document.getElementById('pricingView').style.display = view === 'pricing' ? 'block' : 'none';
+    document.getElementById('corpoView').style.display = view === 'corpo' ? 'block' : 'none';
     document.getElementById('proView').style.display = view === 'pro' ? 'block' : 'none';
     if (view === 'pro') loadProfessionals();
     document.getElementById('protocolsView').style.display = view === 'protocols' ? 'block' : 'none';
