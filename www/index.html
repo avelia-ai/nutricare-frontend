@@ -3992,8 +3992,13 @@ function switchLang(lang) {
         <div class="plan-card dark">
           <div class="plan-badge">Standard</div>
           <div class="plan-name">Complet</div>
-          <div class="plan-price" id="standardPrice">3,99€</div>
-          <div class="plan-period">/ mois</div><div id="standardDiscount" style="display:none;font-size:0.75rem;font-weight:700;color:#4ade80;margin-top:2px"></div>
+          <div style="display:flex;align-items:baseline;gap:8px;margin-top:4px">
+            <div class="plan-price" id="standardPrice">2,99€</div>
+            <div style="font-size:0.85rem;text-decoration:line-through;color:rgba(255,255,255,0.4);font-weight:500">5,99€</div>
+          </div>
+          <div class="plan-period">/ mois · <span style="color:#4ade80;font-weight:700">-50%</span></div>
+          <div style="margin-top:6px;margin-bottom:4px;font-size:0.72rem;font-weight:700;color:rgba(255,255,255,0.5);letter-spacing:0.03em">soit seulement <span style="color:#4ade80;font-size:0.85rem">0,09€</span> / jour</div>
+          <div id="standardDiscount" style="display:none;font-size:0.75rem;font-weight:700;color:#4ade80;margin-top:2px"></div>
           <ul class="plan-features-list">
             <li><span class="plan-check"></span> Chat IA illimité</li>
             <li><span class="plan-check"></span> Plans personnalisés</li>
@@ -4007,8 +4012,13 @@ function switchLang(lang) {
         <div class="plan-card gold">
           <div class="plan-badge">Premium</div>
           <div class="plan-name">Excellence</div>
-          <div class="plan-price" id="premiumPrice">6,90€</div>
-          <div class="plan-period">/ mois</div><div id="premiumDiscount" style="display:none;font-size:0.75rem;font-weight:700;color:#4ade80;margin-top:2px"></div>
+          <div style="display:flex;align-items:baseline;gap:8px;margin-top:4px">
+            <div class="plan-price" id="premiumPrice">4,99€</div>
+            <div style="font-size:0.85rem;text-decoration:line-through;color:rgba(255,255,255,0.4);font-weight:500">9,99€</div>
+          </div>
+          <div class="plan-period">/ mois · <span style="color:#4ade80;font-weight:700">-50%</span></div>
+          <div style="margin-top:6px;margin-bottom:4px;font-size:0.72rem;font-weight:700;color:rgba(255,255,255,0.5);letter-spacing:0.03em">soit seulement <span style="color:#4ade80;font-size:0.85rem">0,16€</span> / jour</div>
+          <div id="premiumDiscount" style="display:none;font-size:0.75rem;font-weight:700;color:#4ade80;margin-top:2px"></div>
           <ul class="plan-features-list">
             <li><span class="plan-check"></span> Tout du Standard</li>
             <li><span class="plan-check"></span> Analyse photo repas</li>
@@ -6756,8 +6766,8 @@ function switchLang(lang) {
     var prmDisc = document.getElementById('premiumDiscount');
 
     if (discountPercent === 0) {
-      if (stdEl) stdEl.textContent = '3,99€';
-      if (prmEl) prmEl.textContent = '6,90€';
+      if (stdEl) stdEl.textContent = '2,99€';
+      if (prmEl) prmEl.textContent = '4,99€';
       if (stdDisc) stdDisc.style.display = 'none';
       if (prmDisc) prmDisc.style.display = 'none';
       return;
