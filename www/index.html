@@ -11525,9 +11525,8 @@ async function deleteProfessional(id) {
   window.selectPlan = async function(plan) {
     if (plan === 'free') return;
     var token = authToken || window._authToken || localStorage.getItem('nutricare_token');
-    alert('selectPlan: ' + plan + ' | token: ' + (token ? token.substring(0,10) : 'NULL') + ' | BACKEND: ' + BACKEND_URL);
     const priceId = STRIPE_PRICES[plan];
-    if (!priceId) { alert('priceId manquant pour: ' + plan); return; }
+    if (!priceId) return;
     try {
       const res = await fetch(`${BACKEND_URL}/api/billing/create-checkout`, {
         method: 'POST',
@@ -11535,8 +11534,8 @@ async function deleteProfessional(id) {
         body: JSON.stringify({ priceId, plan })
       });
       const data = await res.json();
-      alert('response: ' + JSON.stringify(data).substring(0,100));
       if (data.url) window.location.href = data.url;
+      else alert(data.error || 'Erreur paiement');
     } catch (err) {
       alert('Erreur: ' + err.message);
     }
