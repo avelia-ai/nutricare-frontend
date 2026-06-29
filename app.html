@@ -12875,7 +12875,7 @@ window.corpoAnalyse = function() {
     headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
     body: JSON.stringify({ message: prompt })
   }).then(function(res) { return res.json(); }).then(function(data) {
-    btn.innerHTML = '<i class="ti ti-sparkles" style="font-size:16px"></i> Relancer l'analyse';
+    btn.innerHTML = '<i class="ti ti-sparkles" style="font-size:16px"></i> Relancer l analyse';
     btn.disabled = false;
     if (!data.reply) { result.innerHTML = '<div style="color:rgba(255,255,255,0.5);text-align:center;padding:16px">Erreur - reessayez</div>'; result.style.display='block'; return; }
     try {
