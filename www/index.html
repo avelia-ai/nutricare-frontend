@@ -6377,6 +6377,17 @@ function switchLang(lang) {
         const cached = JSON.parse(localStorage.getItem('nutricare_profile') || 'null');
         if (cached) renderProfileQuick(cached);
       } catch (e) {}
+      // Retour Stripe
+      var _stripeParams = new URLSearchParams(window.location.search);
+      if (_stripeParams.get('success') === 'true') {
+        window.history.replaceState({}, '', window.location.pathname);
+        setTimeout(async function() {
+          await loadProfile();
+          alert('🎉 Abonnement activé !');
+        }, 2000);
+      } else if (_stripeParams.get('cancelled') === 'true') {
+        window.history.replaceState({}, '', window.location.pathname);
+      }
       var _savedTheme = localStorage.getItem('mirella_theme');
       setTimeout(async function() {
         // Demander permission notifications
