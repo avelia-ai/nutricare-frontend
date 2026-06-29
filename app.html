@@ -6329,6 +6329,18 @@ function switchLang(lang) {
   })();
 
   // ── STATE ──
+  // Restaurer token depuis hash Stripe
+  (function() {
+    var hash = window.location.hash;
+    if (hash && hash.includes('stripe_success=')) {
+      var token = hash.replace('#stripe_success=', '');
+      if (token) {
+        localStorage.setItem('nutricare_token', token);
+        window.history.replaceState({}, '', window.location.pathname);
+        window._stripeJustPaid = true;
+      }
+    }
+  })();
   let authToken = localStorage.getItem('nutricare_token') || null;
   window._authToken = authToken;
   window.currentPlan = 'free';
