@@ -4840,6 +4840,15 @@ function switchLang(lang) {
           <option value="performance">Performance sportive</option>
           <option value="sante">Sante generale</option>
         </select>
+        <select id="menuJourSelect" style="width:100%;padding:12px;border-radius:14px;border:1px solid var(--color-border-tertiary);font-size:0.85rem;margin-bottom:10px;background:white">
+          <option value="Lundi">Lundi</option>
+          <option value="Mardi">Mardi</option>
+          <option value="Mercredi">Mercredi</option>
+          <option value="Jeudi">Jeudi</option>
+          <option value="Vendredi">Vendredi</option>
+          <option value="Samedi">Samedi</option>
+          <option value="Dimanche">Dimanche</option>
+        </select>
         <button onclick="generateMenu()" id="generateMenuBtn" style="background:linear-gradient(135deg,#FF6B6B,#FF9A3C);color:white;padding:13px 20px;border:none;border-radius:14px;font-size:0.88rem;cursor:pointer;font-family:DM Sans,sans-serif;display:flex;align-items:center;gap:8px;white-space:nowrap;font-weight:700;width:100%;justify-content:center">
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
           Generer mon menu IA
@@ -9679,6 +9688,11 @@ async function loadAnalysisHistory() {
   async function loadMenus() {
   window.initPersoMenus();
   window.initIaMenus();
+  (function() {
+    var joursNomsInit = ['Dimanche','Lundi','Mardi','Mercredi','Jeudi','Vendredi','Samedi'];
+    var selJour = document.getElementById('menuJourSelect');
+    if (selJour) selJour.value = joursNomsInit[new Date().getDay()];
+  })();
   // Nettoyer clés mealcheck sans menu courant chargé
   try {
     if (!window._currentMenu || !window._currentMenu.semaine) {
@@ -9756,7 +9770,7 @@ var activeMenuFilters = new Set();
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), 180000);
     const joursNoms = ['Dimanche','Lundi','Mardi','Mercredi','Jeudi','Vendredi','Samedi'];
-    const jourAujourdhui = joursNoms[new Date().getDay()];
+    const jourAujourdhui = document.getElementById('menuJourSelect')?.value || joursNoms[new Date().getDay()];
     const dateAujourdhui = new Date().toISOString().split('T')[0];
     const filtresKey = Array.from(activeMenuFilters || []).sort().join('_') + '_' + (document.getElementById('menuObjectif')?.value || '');
     const cacheKey = 'mirella_menu_jour_' + dateAujourdhui + '_' + filtresKey;
