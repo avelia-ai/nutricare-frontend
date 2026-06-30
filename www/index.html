@@ -9786,6 +9786,11 @@ var activeMenuFilters = new Set();
       });
       menu = { semaine: semaineComplete, liste_courses: { fruits_legumes:[], proteines:[], feculents:[], produits_laitiers:[], epicerie:[], autres:[] }, conseils_semaine: '' };
       localStorage.setItem(cacheKey, JSON.stringify(menu));
+      fetch(BACKEND_URL + '/api/menus/save-impacts', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + authToken },
+        body: JSON.stringify({ menu: menu })
+      }).catch(function(){});
     }
     const res = { ok: true };
     if (res.ok) {
