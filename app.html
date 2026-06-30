@@ -4829,19 +4829,10 @@ function switchLang(lang) {
       </div>
       <div style="font-size:12px;color:rgba(255,255,255,0.35);margin-top:10px">Menu personnalise selon votre profil et pathologies</div>
     </div>
-    <div id="iaMenusContent" style="display:block;padding:18px;display:flex;flex-direction:column;gap:14px">
-      <div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin-bottom:16px">
-        <select id="menuObjectif" style="padding:10px 16px;border:1.5px solid rgba(255,107,107,0.3);border-radius:8px;font-size:0.88rem;font-family:DM Sans,sans-serif;background:white;color:#2D2D2D;cursor:pointer;flex:1;min-width:200px">
-          <option value="">Objectif nutritionnel</option>
-          <option value="perte_de_poids">Perte de poids</option>
-          <option value="prise_de_masse">Prise de masse</option>
-          <option value="seche">Seche</option>
-          <option value="maintenance">Maintien du poids</option>
-          <option value="performance">Performance sportive</option>
-          <option value="sante">Sante generale</option>
-        </select>
-        <div style="font-size:0.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:#999;margin-bottom:6px">Jour a generer</div>
-        <select id="menuJourSelect" style="width:100%;padding:13px 14px;border-radius:14px;border:2px solid var(--coral);font-size:0.92rem;margin-bottom:10px;background:#FFF5F2;font-weight:700;color:#2D2D2D">
+    <div id="iaMenusContent" style="display:block;padding:20px;display:flex;flex-direction:column;background:#FFFCFA">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">
+        <div style="width:24px;height:24px;border-radius:50%;background:var(--coral);color:white;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0">1</div>
+        <select id="menuJourSelect" style="flex:1;padding:11px 12px;border-radius:12px;border:1.5px solid var(--coral);font-size:0.82rem;font-weight:700;background:#FFF5F2;color:#2D2D2D">
           <option value="Lundi">Lundi</option>
           <option value="Mardi">Mardi</option>
           <option value="Mercredi">Mercredi</option>
@@ -4850,7 +4841,20 @@ function switchLang(lang) {
           <option value="Samedi">Samedi</option>
           <option value="Dimanche">Dimanche</option>
         </select>
-        <button onclick="generateMenu()" id="generateMenuBtn" style="background:linear-gradient(135deg,#FF6B6B,#FF9A3C);color:white;padding:13px 20px;border:none;border-radius:14px;font-size:0.88rem;cursor:pointer;font-family:DM Sans,sans-serif;display:flex;align-items:center;gap:8px;white-space:nowrap;font-weight:700;width:100%;justify-content:center">
+      </div>
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:18px">
+        <div style="width:24px;height:24px;border-radius:50%;background:#f0f0f0;color:#999;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0">2</div>
+        <select id="menuObjectif" style="flex:1;padding:11px 12px;border-radius:12px;border:1px solid #eee;font-size:0.82rem;background:white;color:#666">
+          <option value="">Objectif nutritionnel</option>
+          <option value="perte_de_poids">Perte de poids</option>
+          <option value="prise_de_masse">Prise de masse</option>
+          <option value="seche">Seche</option>
+          <option value="maintenance">Maintien du poids</option>
+          <option value="performance">Performance sportive</option>
+          <option value="sante">Sante generale</option>
+        </select>
+      </div>
+      <button onclick="generateMenu()" id="generateMenuBtn" style="background:linear-gradient(135deg,#FF6B6B,#FF9A3C);color:white;padding:14px;border:none;border-radius:14px;font-size:0.88rem;cursor:pointer;font-family:DM Sans,sans-serif;display:flex;align-items:center;gap:8px;white-space:nowrap;font-weight:700;width:100%;justify-content:center;margin-bottom:14px">
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
           Generer mon menu IA
         </button>
