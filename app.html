@@ -12926,7 +12926,7 @@ window.corpoAnalyse = function() {
     if (!data.reply) { result.innerHTML = '<div style="color:rgba(255,255,255,0.5);text-align:center;padding:16px">Erreur - reessayez</div>'; result.style.display='block'; return; }
     try {
       var r = JSON.parse(data.reply.replace(/```json|```/g,'').trim());
-      alert('DEBUG: age=' + JSON.stringify(r.age_physique_apparent) + ' symetrie=' + JSON.stringify(r.symetrie) + ' posture=' + JSON.stringify(r.posture));
+      alert('DEBUG FIN BRUTE: ' + data.reply.substring(data.reply.length - 600));
       result.style.display = 'block';
       result.innerHTML =
         '<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px">' +
