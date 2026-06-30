@@ -12914,6 +12914,7 @@ window.corpoAnalyse = function() {
     headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
     body: JSON.stringify({ image_avant: window._corpoAvant, image_apres: window._corpoApres, prompt: prompt })
   }).then(function(res) {
+    alert('DEBUG checkpoint 4: reponse recue, status=' + res.status);
     if (res.status === 403) {
       return res.json().then(function(errData) {
         throw new Error(errData.error || 'Acces refuse - Premium requis ou limite atteinte');
@@ -12921,6 +12922,7 @@ window.corpoAnalyse = function() {
     }
     return res.json();
   }).then(function(rawData) {
+    alert('DEBUG checkpoint 5: json parse, result existe=' + !!rawData.result);
     var data = { reply: rawData.result };
     btn.innerHTML = '<i class="ti ti-sparkles" style="font-size:16px"></i> Relancer l analyse';
     btn.disabled = false;
