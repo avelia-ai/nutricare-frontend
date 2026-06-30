@@ -12947,6 +12947,36 @@ window.corpoAnalyse = function() {
             '<div style="height:100%;width:' + r.score_forme + '%;background:linear-gradient(90deg,#FF6B6B,#FF9A3C,#10B981);border-radius:4px"></div>' +
           '</div>' +
         '</div>' +
+        (r.age_physique_apparent ? (
+        '<div style="background:linear-gradient(135deg,rgba(255,107,107,0.15),rgba(255,154,60,0.1));border-radius:16px;padding:18px;margin-bottom:14px;border:1px solid rgba(255,154,60,0.2)">' +
+          '<div style="display:flex;align-items:center;gap:6px;margin-bottom:10px"><i class="ti ti-clock-hour-4" style="font-size:14px;color:#FF9A3C"></i><span style="font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.1em;color:#FF9A3C">Age physique estime</span></div>' +
+          '<div style="display:flex;align-items:baseline;gap:8px">' +
+            '<span style="font-size:2.4rem;font-weight:800;color:white;line-height:1">' + r.age_physique_apparent.estimation + '</span>' +
+            '<span style="font-size:0.85rem;color:rgba(255,255,255,0.4)">ans physiquement</span>' +
+          '</div>' +
+          '<div style="font-size:11px;color:rgba(255,255,255,0.5);line-height:1.5;margin-top:8px">' + r.age_physique_apparent.commentaire + '</div>' +
+        '</div>'
+        ) : '') +
+        (r.symetrie || r.posture ? (
+        '<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px">' +
+          (r.symetrie ? (
+          '<div style="background:rgba(255,255,255,0.07);border-radius:14px;padding:14px">' +
+            '<div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:rgba(255,255,255,0.4);margin-bottom:6px">Symetrie</div>' +
+            '<div style="font-size:1.4rem;font-weight:800;color:#378ADD;margin-bottom:6px">' + r.symetrie.score + '<span style="font-size:11px;color:rgba(255,255,255,0.3)">/100</span></div>' +
+            '<div style="height:5px;background:rgba(255,255,255,0.08);border-radius:3px;overflow:hidden;margin-bottom:8px"><div style="height:100%;width:' + r.symetrie.score + '%;background:#378ADD;border-radius:3px"></div></div>' +
+            '<div style="font-size:9.5px;color:rgba(255,255,255,0.4);line-height:1.4">' + r.symetrie.commentaire + '</div>' +
+          '</div>'
+          ) : '<div></div>') +
+          (r.posture ? (
+          '<div style="background:rgba(255,255,255,0.07);border-radius:14px;padding:14px">' +
+            '<div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:rgba(255,255,255,0.4);margin-bottom:6px">Posture</div>' +
+            '<div style="font-size:1.4rem;font-weight:800;color:#A855F7;margin-bottom:6px">' + r.posture.score + '<span style="font-size:11px;color:rgba(255,255,255,0.3)">/100</span></div>' +
+            '<div style="height:5px;background:rgba(255,255,255,0.08);border-radius:3px;overflow:hidden;margin-bottom:8px"><div style="height:100%;width:' + r.posture.score + '%;background:#A855F7;border-radius:3px"></div></div>' +
+            '<div style="font-size:9.5px;color:rgba(255,255,255,0.4);line-height:1.4">' + r.posture.commentaire + '</div>' +
+          '</div>'
+          ) : '<div></div>') +
+        '</div>'
+        ) : '') +
         '<div style="font-size:12px;color:rgba(255,255,255,0.7);line-height:1.6;margin-bottom:14px;padding:14px;background:rgba(255,255,255,0.05);border-radius:14px;border-left:3px solid #FF6B6B">' + r.analyse + '</div>' +
         '<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px">' +
           '<div style="background:rgba(16,185,129,0.1);border-radius:14px;padding:14px">' +
