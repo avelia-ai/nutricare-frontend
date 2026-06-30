@@ -8504,7 +8504,6 @@ function switchLang(lang) {
   }
 
   async function analyzeEvolution() {
-    alert('DEBUG: fonction appelee');
     const photos = JSON.parse(localStorage.getItem('evolution_photos') || '[]');
     const a = photos[_evoMirellaA], b = photos[_evoMirellaB];
     if (!a || !b) return;
@@ -12895,10 +12894,8 @@ window.corpoAnalyse = function() {
   var hasAvant = !!window._corpoAvant;
   var hasApres = !!window._corpoApres;
   var nbPhotos = window._corpoPhotos.length;
-  alert('DEBUG checkpoint 1: avant construction prompt');
 
   var prompt = 'Tu es Mirella, coach fitness et nutrition expert specialise en analyse visuelle de composition corporelle. Tu recois 2 photos: une photo AVANT et une photo APRES. Examine ATTENTIVEMENT et PRECISEMENT chaque photo: definition musculaire visible, visibilite des veines, contour de la taille et de labdomen, presence ou absence de graisse sous-cutanee visible, separation et striations musculaires. Base tes estimations de pourcentage de masse grasse et masse musculaire UNIQUEMENT sur ce que tu observes reellement sur les photos, pas sur des moyennes generiques. Un physique avec abdominaux tres definis et veines visibles correspond typiquement a 8-14% de masse grasse chez un homme. Un physique sans definition abdominale visible correspond plutot a 20-28%. Sois precis et differencie clairement les 2 photos si elles montrent une evolution visible. Profil complementaire: sexe=' + sexe + ', age=' + age + ' ans, poids=' + poids + 'kg, taille=' + taille + 'cm, IMC=' + imc + ', objectif=' + objectif + ', pathologies=' + pathologies + '. Reponds UNIQUEMENT en JSON strict sans backticks ni commentaires: {"masse_grasse_estime":22,"masse_musculaire_estime":38,"score_forme":68,"points_forts":["Point fort 1 specifique au profil","Point fort 2","Point fort 3"],"points_ameliorer":["Zone a ameliorer 1","Zone a ameliorer 2","Zone a ameliorer 3"],"exercices":[{"nom":"Nom exercice 1","desc":"Description courte","series":"3x12","muscle":"Muscle cible"},{"nom":"Nom exercice 2","desc":"Description courte","series":"3x15","muscle":"Muscle cible"},{"nom":"Nom exercice 3","desc":"Description courte","series":"4x10","muscle":"Muscle cible"},{"nom":"Nom exercice 4","desc":"Description courte","series":"3x20","muscle":"Muscle cible"}],"analyse":"Message personnalise chaleureux 3-4 phrases base sur le profil exact","conseil_nutrition":"1-2 conseils nutritionnels precis adaptes aux pathologies et objectif"}';
-  alert('DEBUG checkpoint 2: prompt construit, longueur=' + prompt.length);
 
   var token = localStorage.getItem('nutricare_token');
   if (!hasAvant || !hasApres) {
@@ -12908,13 +12905,11 @@ window.corpoAnalyse = function() {
     result.style.display='block';
     return;
   }
-  alert('DEBUG checkpoint 3: juste avant fetch, hasAvant=' + hasAvant + ' hasApres=' + hasApres);
   fetch(BACKEND_URL + '/api/vision/analyze-evolution', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
     body: JSON.stringify({ image_avant: window._corpoAvant, image_apres: window._corpoApres, prompt: prompt })
   }).then(function(res) {
-    alert('DEBUG checkpoint 4: reponse recue, status=' + res.status);
     if (res.status === 403) {
       return res.json().then(function(errData) {
         throw new Error(errData.error || 'Acces refuse - Premium requis ou limite atteinte');
@@ -12922,8 +12917,6 @@ window.corpoAnalyse = function() {
     }
     return res.json();
   }).then(function(rawData) {
-    alert('DEBUG checkpoint 5: json parse, result existe=' + !!rawData.result);
-    alert('DEBUG contenu brut: ' + (rawData.result || '').substring(0, 300));
     var data = { reply: rawData.result };
     btn.innerHTML = '<i class="ti ti-sparkles" style="font-size:16px"></i> Relancer l analyse';
     btn.disabled = false;
@@ -12978,11 +12971,9 @@ window.corpoAnalyse = function() {
           '<div style="font-size:11px;color:rgba(255,255,255,0.7);line-height:1.5">' + r.conseil_nutrition + '</div>' +
         '</div>';
     } catch(e) {
-      alert('DEBUG erreur parsing: ' + e.message);
       result.innerHTML = '<div style="color:rgba(255,255,255,0.5);text-align:center;padding:16px">Erreur parsing - reessayez</div>';
     }
   }).catch(function(errCatch) {
-    alert('DEBUG erreur catch globale: ' + errCatch.message);
     btn.innerHTML = '<i class="ti ti-sparkles" style="font-size:16px"></i> Relancer l analyse';
     btn.disabled = false;
     result.innerHTML = '<div style="color:rgba(255,255,255,0.5);text-align:center;padding:16px">Erreur reseau</div>';
