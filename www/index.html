@@ -9779,7 +9779,12 @@ var activeMenuFilters = new Set();
         alert(jourData.error || 'Erreur lors de la generation du menu du jour.');
         return;
       }
-      menu = { semaine: [jourData], liste_courses: { fruits_legumes:[], proteines:[], feculents:[], produits_laitiers:[], epicerie:[], autres:[] }, conseils_semaine: '' };
+      const joursOrdre = ['Lundi','Mardi','Mercredi','Jeudi','Vendredi','Samedi','Dimanche'];
+      const semaineComplete = joursOrdre.map(function(j) {
+        if (j === jourAujourdhui) return jourData;
+        return { jour: j, vide: true };
+      });
+      menu = { semaine: semaineComplete, liste_courses: { fruits_legumes:[], proteines:[], feculents:[], produits_laitiers:[], epicerie:[], autres:[] }, conseils_semaine: '' };
       localStorage.setItem(cacheKey, JSON.stringify(menu));
     }
     const res = { ok: true };
