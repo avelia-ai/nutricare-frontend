@@ -9745,6 +9745,7 @@ var activeMenuFilters = new Set();
   }
 
   async function generateMenu() {
+  Object.keys(localStorage).filter(function(k){return k.indexOf('mirella_menu_jour_')===0;}).forEach(function(k){localStorage.removeItem(k);});
   const btn = document.getElementById('generateMenuBtn');
   btn.disabled = true;
   btn.textContent = '⏳ Génération en cours...';
