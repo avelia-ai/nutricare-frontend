@@ -12877,7 +12877,6 @@ window.corpoRenderGallery = function() {
 };
 
 window.corpoAnalyse = function() {
-  alert('DEBUG corpoAnalyse appelee');
   var btn = document.getElementById('corpoAnalyseBtn');
   var result = document.getElementById('corpoAnalyseResult');
   if (!btn || !result) return;
@@ -12900,11 +12899,26 @@ window.corpoAnalyse = function() {
   var prompt = 'Tu es Mirella, coach fitness et nutrition expert. Analyse la composition corporelle de cet utilisateur et donne des conseils tres personnalises. Profil: sexe=' + sexe + ', age=' + age + ' ans, poids=' + poids + 'kg, taille=' + taille + 'cm, IMC=' + imc + ', objectif=' + objectif + ', pathologies=' + pathologies + ', photos_avant=' + (hasAvant?'oui':'non') + ', photos_apres=' + (hasApres?'oui':'non') + ', nb_photos_suivi=' + nbPhotos + '. Reponds UNIQUEMENT en JSON strict sans backticks ni commentaires: {"masse_grasse_estime":22,"masse_musculaire_estime":38,"score_forme":68,"points_forts":["Point fort 1 specifique au profil","Point fort 2","Point fort 3"],"points_ameliorer":["Zone a ameliorer 1","Zone a ameliorer 2","Zone a ameliorer 3"],"exercices":[{"nom":"Nom exercice 1","desc":"Description courte","series":"3x12","muscle":"Muscle cible"},{"nom":"Nom exercice 2","desc":"Description courte","series":"3x15","muscle":"Muscle cible"},{"nom":"Nom exercice 3","desc":"Description courte","series":"4x10","muscle":"Muscle cible"},{"nom":"Nom exercice 4","desc":"Description courte","series":"3x20","muscle":"Muscle cible"}],"analyse":"Message personnalise chaleureux 3-4 phrases base sur le profil exact","conseil_nutrition":"1-2 conseils nutritionnels precis adaptes aux pathologies et objectif"}';
 
   var token = localStorage.getItem('nutricare_token');
-  fetch(BACKEND_URL + '/api/chat/message', {
+  if (!hasAvant || !hasApres) {
+    btn.innerHTML = '<i class="ti ti-sparkles" style="font-size:16px"></i> Lancer l analyse IA';
+    btn.disabled = false;
+    result.innerHTML = '<div style="color:rgba(255,255,255,0.5);text-align:center;padding:16px">Ajoutez une photo avant et une photo apres pour lancer l analyse</div>';
+    result.style.display='block';
+    return;
+  }
+  fetch(BACKEND_URL + '/api/vision/analyze-evolution', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
-    body: JSON.stringify({ message: prompt })
-  }).then(function(res) { return res.json(); }).then(function(data) {
+    body: JSON.stringify({ image_avant: window._corpoAvant, image_apres: window._corpoApres, prompt: prompt })
+  }).then(function(res) {
+    if (res.status === 403) {
+      return res.json().then(function(errData) {
+        throw new Error(errData.error || 'Acces refuse - Premium requis ou limite atteinte');
+      });
+    }
+    return res.json();
+  }).then(function(rawData) {
+    var data = { reply: rawData.result };
     btn.innerHTML = '<i class="ti ti-sparkles" style="font-size:16px"></i> Relancer l analyse';
     btn.disabled = false;
     if (!data.reply) { result.innerHTML = '<div style="color:rgba(255,255,255,0.5);text-align:center;padding:16px">Erreur - reessayez</div>'; result.style.display='block'; return; }
