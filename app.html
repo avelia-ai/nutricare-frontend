@@ -12921,7 +12921,6 @@ window.corpoAnalyse = function() {
     }
     return res.json();
   }).then(function(rawData) {
-    alert('DEBUG2: result existe=' + !!rawData.result + ' longueur=' + ((rawData.result||'').length));
     var data = { reply: rawData.result };
     btn.innerHTML = '<i class="ti ti-sparkles" style="font-size:16px"></i> Relancer l analyse';
     btn.disabled = false;
@@ -12976,6 +12975,7 @@ window.corpoAnalyse = function() {
           '<div style="font-size:11px;color:rgba(255,255,255,0.7);line-height:1.5">' + r.conseil_nutrition + '</div>' +
         '</div>';
     } catch(e) {
+      alert('DEBUG erreur parsing exacte: ' + e.message + ' || debut texte: ' + data.reply.substring(0,150));
       result.innerHTML = '<div style="color:rgba(255,255,255,0.5);text-align:center;padding:16px">Erreur parsing - reessayez</div>';
     }
   }).catch(function(errCatch) {
