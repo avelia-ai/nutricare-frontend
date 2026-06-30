@@ -9758,7 +9758,8 @@ var activeMenuFilters = new Set();
     const joursNoms = ['Dimanche','Lundi','Mardi','Mercredi','Jeudi','Vendredi','Samedi'];
     const jourAujourdhui = joursNoms[new Date().getDay()];
     const dateAujourdhui = new Date().toISOString().split('T')[0];
-    const cacheKey = 'mirella_menu_jour_' + dateAujourdhui;
+    const filtresKey = Array.from(activeMenuFilters || []).sort().join('_') + '_' + (document.getElementById('menuObjectif')?.value || '');
+    const cacheKey = 'mirella_menu_jour_' + dateAujourdhui + '_' + filtresKey;
     const cached = localStorage.getItem(cacheKey);
     let menu;
     if (cached) {
