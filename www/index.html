@@ -9785,6 +9785,7 @@ var activeMenuFilters = new Set();
         return { jour: j, vide: true };
       });
       menu = { semaine: semaineComplete, liste_courses: { fruits_legumes:[], proteines:[], feculents:[], produits_laitiers:[], epicerie:[], autres:[] }, conseils_semaine: '' };
+      alert('DEBUG: nb jours=' + menu.semaine.length + ' jours=' + menu.semaine.map(function(j){return j.jour;}).join(','));
       localStorage.setItem(cacheKey, JSON.stringify(menu));
       fetch(BACKEND_URL + '/api/menus/save-impacts', {
         method: 'POST',
