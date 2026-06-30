@@ -1261,10 +1261,8 @@ window.applyPersoObjectif = function(val) {
   if (typeof updateNutritionPanel === 'function') updateNutritionPanel();
   if (typeof window.updateCaloriesFromMeals === 'function') window.updateCaloriesFromMeals();
 };
-window.getObjectifsNutrition = function() {
-  var custom = JSON.parse(localStorage.getItem('mirella_objectifs_nutrition') || '{}');
+window.calculerObjectifsMifflinStJeor = function(objectifOverride) {
   var profile = JSON.parse(localStorage.getItem('nutricare_profile') || '{}');
-  // Mifflin-St Jeor
   var poids = parseFloat(profile.poids) || 70;
   var taille = parseFloat(profile.taille) || 170;
   var age = parseInt(profile.age) || 30;
@@ -1275,21 +1273,23 @@ window.getObjectifsNutrition = function() {
   var facteurs = { sedentaire: 1.2, leger: 1.375, modere: 1.55, actif: 1.725, tres_actif: 1.9 };
   var facteur = facteurs[profile.niveau_activite] || 1.375;
   var tdee = Math.round(bmr * facteur);
-  // Ajuster selon objectif
-  var obj = profile.objectif_nutritionnel || '';
+  var obj = objectifOverride || profile.objectif_nutritionnel || '';
   var defaultCal = tdee;
   if (obj === 'perte_de_poids') defaultCal = Math.round(tdee * 0.8);
   else if (obj === 'seche') defaultCal = Math.round(tdee * 0.85);
   else if (obj === 'prise_de_masse') defaultCal = Math.round(tdee * 1.15);
-  // Macros proportionnelles
   var defaultGlu = Math.round(defaultCal * 0.45 / 4);
   var defaultPro = Math.round(defaultCal * 0.25 / 4);
   var defaultLip = Math.round(defaultCal * 0.30 / 9);
+  return { cal: defaultCal, glu: defaultGlu, pro: defaultPro, lip: defaultLip };
+};
+window.getObjectifsNutrition = function() {
+  var custom = JSON.parse(localStorage.getItem('mirella_objectifs_nutrition') || '{}');
   return {
-    cal: custom.cal || defaultCal,
-    glu: custom.glu || defaultGlu,
-    pro: custom.pro || defaultPro,
-    lip: custom.lip || defaultLip
+    cal: custom.cal || 0,
+    glu: custom.glu || 0,
+    pro: custom.pro || 0,
+    lip: custom.lip || 0
   };
 };
 window.openObjectifsModal = function() {
@@ -9801,6 +9801,12 @@ var activeMenuFilters = new Set();
         return { jour: j, vide: true };
       });
       menu = { semaine: semaineComplete, liste_courses: { fruits_legumes:[], proteines:[], feculents:[], produits_laitiers:[], epicerie:[], autres:[] }, conseils_semaine: '' };
+      var customExistant = JSON.parse(localStorage.getItem('mirella_objectifs_nutrition') || '{}');
+      if (!customExistant.cal) {
+        var objectifMenu = document.getElementById('menuObjectif')?.value || '';
+        var calculAuto = window.calculerObjectifsMifflinStJeor(objectifMenu);
+        localStorage.setItem('mirella_objectifs_nutrition', JSON.stringify(calculAuto));
+      }
       localStorage.setItem(cacheKey, JSON.stringify(menu));
       fetch(BACKEND_URL + '/api/menus/save-impacts', {
         method: 'POST',
