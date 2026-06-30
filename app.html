@@ -8550,12 +8550,19 @@ Réponds UNIQUEMENT en JSON valide avec cette structure exacte:
 
       const imc = poids && taille ? (parseFloat(poids) / Math.pow(parseFloat(taille)/100, 2)).toFixed(1) : null;
       const msgPrompt = 'Tu es Mirella, coach nutrition expert. Genere une analyse de composition corporelle pour un utilisateur qui suit son evolution depuis ' + days + ' jours. Profil: pathologies=' + pathologies + ', objectif=' + objectif + ', poids=' + poids + 'kg, taille=' + taille + 'cm, IMC=' + (imc||'inconnu') + '. Base-toi sur ces donnees pour estimer la composition corporelle et genere des conseils tres personnalises. Reponds UNIQUEMENT en JSON strict sans backticks: {"masse_grasse_avant":25,"masse_grasse_apres":23,"masse_musculaire_avant":35,"masse_musculaire_apres":37,"score_progression":72,"zones_evolution":"description zones amelioration selon objectif et duree","analyse":"message chaleureux motivant 3-4 phrases base sur profil duree et efforts","conseils":"2-3 conseils nutritionnels precis adaptes pathologies et objectif"}';
-      const res = await fetch(BACKEND_URL + '/api/chat/message', {
+      const res = await fetch(BACKEND_URL + '/api/vision/analyze-evolution', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
-        body: JSON.stringify({ message: msgPrompt })
+        body: JSON.stringify({ image_avant: earlier.src, image_apres: later.src, prompt: prompt })
       });
-      const data = await res.json();
+      if (res.status === 403) {
+        const errData = await res.json().catch(function(){return {};});
+        alert(errData.error || 'Cette fonctionnalite necessite un abonnement Premium, ou la limite mensuelle est atteinte.');
+        btn.textContent = '🔍 Analyser avec Mirella'; btn.disabled = false;
+        return;
+      }
+      const rawData = await res.json();
+      const data = { reply: rawData.result };
       if (data.reply) {
         try {
           const r = JSON.parse(data.reply.replace(/```json|```/g, '').trim());
