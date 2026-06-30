@@ -12905,7 +12905,6 @@ window.corpoAnalyse = function() {
     result.style.display='block';
     return;
   }
-  alert('DEBUG: avant fetch, hasAvant=' + hasAvant + ' hasApres=' + hasApres);
   fetch(BACKEND_URL + '/api/vision/analyze-evolution', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
@@ -12975,7 +12974,6 @@ window.corpoAnalyse = function() {
           '<div style="font-size:11px;color:rgba(255,255,255,0.7);line-height:1.5">' + r.conseil_nutrition + '</div>' +
         '</div>';
     } catch(e) {
-      alert('DEBUG erreur parsing exacte: ' + e.message + ' || debut texte: ' + data.reply.substring(0,150));
       result.innerHTML = '<div style="color:rgba(255,255,255,0.5);text-align:center;padding:16px">Erreur parsing - reessayez</div>';
     }
   }).catch(function(errCatch) {
