@@ -9755,14 +9755,34 @@ var activeMenuFilters = new Set();
   try {
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), 180000);
-    const res = await fetch(`${BACKEND_URL}/api/menus/generate`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${authToken}` },
-      body: JSON.stringify({ lang: 'fr', menu_filters: Array.from(activeMenuFilters || []), objectif_nutritionnel: document.getElementById('menuObjectif')?.value || '' }),
-      signal: controller.signal
-    });
-    clearTimeout(timeoutId);
-    const menu = await res.json();
+    const joursNoms = ['Dimanche','Lundi','Mardi','Mercredi','Jeudi','Vendredi','Samedi'];
+    const jourAujourdhui = joursNoms[new Date().getDay()];
+    const dateAujourdhui = new Date().toISOString().split('T')[0];
+    const cacheKey = 'mirella_menu_jour_' + dateAujourdhui;
+    const cached = localStorage.getItem(cacheKey);
+    let menu;
+    if (cached) {
+      menu = JSON.parse(cached);
+    } else {
+      const res = await fetch(`${BACKEND_URL}/api/menus/generate-day`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${authToken}` },
+        body: JSON.stringify({ lang: 'fr', menu_filters: Array.from(activeMenuFilters || []), objectif_nutritionnel: document.getElementById('menuObjectif')?.value || '', jour: jourAujourdhui }),
+        signal: controller.signal
+      });
+      clearTimeout(timeoutId);
+      const jourData = await res.json();
+      if (!res.ok) {
+        document.getElementById('menusLoading').style.display = 'none';
+        btn.disabled = false;
+        btn.textContent = '🍽️ Générer mes menus de la semaine';
+        alert(jourData.error || 'Erreur lors de la generation du menu du jour.');
+        return;
+      }
+      menu = { semaine: [jourData], liste_courses: { fruits_legumes:[], proteines:[], feculents:[], produits_laitiers:[], epicerie:[], autres:[] }, conseils_semaine: '' };
+      localStorage.setItem(cacheKey, JSON.stringify(menu));
+    }
+    const res = { ok: true };
     if (res.ok) {
         renderMenu(menu);
         showMirellaNotif('🍽️ Votre menu de la semaine est prêt ! J\'ai adapté chaque repas à votre objectif et votre profil santé. Bonne dégustation !');
