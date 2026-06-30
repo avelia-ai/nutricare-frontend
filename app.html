@@ -12916,8 +12916,12 @@ window.corpoAnalyse = function() {
         throw new Error(errData.error || 'Acces refuse - Premium requis ou limite atteinte');
       });
     }
+    if (!res.ok) {
+      return res.text().then(function(t) { throw new Error('HTTP ' + res.status + ': ' + t.substring(0,200)); });
+    }
     return res.json();
   }).then(function(rawData) {
+    alert('DEBUG2: result existe=' + !!rawData.result + ' longueur=' + ((rawData.result||'').length));
     var data = { reply: rawData.result };
     btn.innerHTML = '<i class="ti ti-sparkles" style="font-size:16px"></i> Relancer l analyse';
     btn.disabled = false;
