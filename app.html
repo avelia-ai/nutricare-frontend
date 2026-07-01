@@ -9717,7 +9717,25 @@ async function loadAnalysisHistory() {
     });
     const menu = await res.json();
     console.log('menus/current response:', res.status, JSON.stringify(menu).substring(0, 200));
-    if (menu && menu.semaine) renderMenu(menu);
+    if (menu && menu.semaine) {
+      var joursNomsR = ['Lundi','Mardi','Mercredi','Jeudi','Vendredi','Samedi','Dimanche'];
+      var dateAujourdhuiR = new Date().toISOString().split('T')[0];
+      Object.keys(localStorage).filter(function(k){ return k.startsWith('mirella_menu_jour_' + dateAujourdhuiR); }).forEach(function(k) {
+        try {
+          var cached = JSON.parse(localStorage.getItem(k));
+          if (cached && cached.semaine) {
+            cached.semaine.forEach(function(jourCache) {
+              if (!jourCache.vide) {
+                var idx = menu.semaine.findIndex(function(j){ return j.jour === jourCache.jour; });
+                if (idx !== -1) menu.semaine[idx] = jourCache;
+                else menu.semaine.push(jourCache);
+              }
+            });
+          }
+        } catch(e) {}
+      });
+      renderMenu(menu);
+    }
     else {
       // Aucun menu existant, afficher bouton de génération
       document.getElementById('menusLoading').style.display = 'none';
