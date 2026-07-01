@@ -9418,6 +9418,7 @@ Réponds UNIQUEMENT en JSON valide avec cette structure exacte:
     if (view === 'protocols') setTimeout(loadProtocols, 300);
     if (view === 'chrono') setTimeout(loadChrono, 300);
     document.getElementById('healthView').style.display = view === 'health' ? 'block' : 'none';
+    if (view === 'health') { var mcHealth = document.querySelector('.main-content'); if (mcHealth) { mcHealth.style.overflow = 'auto'; mcHealth.style.height = '100%'; } }
     if (view === 'health') loadHealthDashboard();
     if (document.getElementById('fitnessView')) document.getElementById('fitnessView').style.display = view === 'fitness' ? 'block' : 'none';
     if (view === 'fitness') loadFitnessView();
