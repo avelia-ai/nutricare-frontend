@@ -3278,7 +3278,6 @@ function switchLang(lang) {
         <button class="nav-item" onclick="showView('chrono', this)" style="display:none !important">❤️ Score de santé</button>
         <button class="nav-item" onclick="showView('fitness', this)">💪 Fitness</button>
         <button class="nav-item" onclick="showView('programs', this)">Programmes</button>
-        <button class="nav-item" onclick="showView('ordonnance', this)">Scan ordonnance</button>
         <button class="nav-item" onclick="showView('scanproduit', this)">🔍 Scan produit</button>
         <button class="nav-item" onclick="showView('analysis', this)">Analyse repas</button>
         <button class="nav-item" onclick="showView('protocols', this)">Protocoles</button>
@@ -9295,6 +9294,7 @@ Réponds UNIQUEMENT en JSON valide avec cette structure exacte:
     return plan;
   }
   async function showView(view, btn) {
+    if (view === 'ordonnance') { view = 'home'; }
     window._currentView = view;
     var waveCanvas = document.getElementById('wavesBg');
 
@@ -12864,7 +12864,6 @@ function closeMirellaNotif() {
       <button id="qmBtn-pro" onclick="toggleQuickMenu();showView('pro')" style="display:none"><div style="width:32px;height:32px;background:#EAF3DE;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0"><i class="ti ti-stethoscope" style="font-size:16px;color:#3B6D11" aria-hidden="true"></i></div>Espace médecin</button>
       <button id="qmBtn-chrono" onclick="toggleQuickMenu();showView('chrono')" style="display:none !important;display:flex;align-items:center;gap:10px;padding:12px;background:#FFF5F0;border:0.5px solid rgba(255,107,107,0.15);border-radius:14px;font-size:0.82rem;font-weight:600;color:#2D2D2D;cursor:pointer"><div style="width:32px;height:32px;background:#FBEAF0;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0"><i class="ti ti-heart" style="font-size:16px;color:#993556" aria-hidden="true"></i></div>Score de santé</button>
       <button id="qmBtn-biologie" onclick="toggleQuickMenu();showView('biologie')" style="display:flex;align-items:center;gap:10px;padding:12px;background:var(--color-background-secondary);border:0.5px solid var(--color-border-tertiary);border-radius:14px;font-size:0.82rem;font-weight:600;color:var(--color-text-primary);cursor:pointer"><div style="width:32px;height:32px;background:#EEEDFE;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0"><i class="ti ti-dna" style="font-size:16px;color:#534AB7" aria-hidden="true"></i></div>Bilan sanguin</button>
-      <button id="qmBtn-ordonnance" onclick="toggleQuickMenu();showView('ordonnance')" style="display:flex;align-items:center;gap:10px;padding:12px;background:var(--color-background-secondary);border:0.5px solid var(--color-border-tertiary);border-radius:14px;font-size:0.82rem;font-weight:600;color:var(--color-text-primary);cursor:pointer"><div style="width:32px;height:32px;background:#E6F1FB;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0"><i class="ti ti-file-description" style="font-size:16px;color:#185FA5" aria-hidden="true"></i></div>Scan ordonnance</button>
             
       <button id="qmBtn-programs" onclick="toggleQuickMenu();showView('programs')" style="display:flex;align-items:center;gap:10px;padding:12px;background:var(--color-background-secondary);border:0.5px solid var(--color-border-tertiary);border-radius:14px;font-size:0.82rem;font-weight:600;color:var(--color-text-primary);cursor:pointer"><div style="width:32px;height:32px;background:#FFF0EC;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0"><i class="ti ti-target" style="font-size:16px;color:#FF6B6B" aria-hidden="true"></i></div>Programmes</button>
       <button id="qmBtn-leaderboard" onclick="toggleQuickMenu();showView('leaderboard');loadLeaderboard()" style="display:flex;align-items:center;gap:10px;padding:12px;background:var(--color-background-secondary);border:0.5px solid var(--color-border-tertiary);border-radius:14px;font-size:0.82rem;font-weight:600;color:var(--color-text-primary);cursor:pointer"><div style="width:32px;height:32px;background:#FFF7E0;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0"><i class="ti ti-trophy" style="font-size:16px;color:#D4A017" aria-hidden="true"></i></div>Classement</button>
