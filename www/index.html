@@ -9797,10 +9797,17 @@ var activeMenuFilters = new Set();
     if (cached) {
       menu = JSON.parse(cached);
     } else {
+      const objectifMenuActuel = document.getElementById('menuObjectif')?.value || '';
+      var customExistantPourCal = JSON.parse(localStorage.getItem('mirella_objectifs_nutrition') || '{}');
+      var targetCalories = customExistantPourCal.cal || null;
+      if (!targetCalories) {
+        var calculAvantAppel = window.calculerObjectifsMifflinStJeor(objectifMenuActuel);
+        targetCalories = calculAvantAppel ? calculAvantAppel.cal : null;
+      }
       const res = await fetch(`${BACKEND_URL}/api/menus/generate-day`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${authToken}` },
-        body: JSON.stringify({ lang: 'fr', menu_filters: Array.from(activeMenuFilters || []), objectif_nutritionnel: document.getElementById('menuObjectif')?.value || '', jour: jourAujourdhui }),
+        body: JSON.stringify({ lang: 'fr', menu_filters: Array.from(activeMenuFilters || []), objectif_nutritionnel: objectifMenuActuel, target_calories: targetCalories, jour: jourAujourdhui }),
         signal: controller.signal
       });
       clearTimeout(timeoutId);
