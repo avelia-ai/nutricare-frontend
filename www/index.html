@@ -9689,12 +9689,8 @@ async function loadAnalysisHistory() {
     var selJour = document.getElementById('menuJourSelect');
     if (selJour) selJour.value = joursNomsInit[new Date().getDay()];
   })();
-  // Nettoyer clés mealcheck sans menu courant chargé
-  try {
-    if (!window._currentMenu || !window._currentMenu.semaine) {
-      localStorage.removeItem('mirella_checked_meals');
-    }
-  } catch(e) {}
+  // (Nettoyage mealcheck supprimé : il s'exécutait avant le chargement du menu
+  // et effaçait systématiquement les coches à chaque actualisation de page)
   // Lire le plan directement depuis le profil API
   let isPaid = window.currentPlan === 'standard' || window.currentPlan === 'premium' || window.isTrial;
   if (!isPaid && authToken) {
