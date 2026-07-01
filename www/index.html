@@ -4854,6 +4854,46 @@ function switchLang(lang) {
           <option value="sante">Sante generale</option>
         </select>
       </div>
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:18px">
+        <div style="width:24px;height:24px;border-radius:50%;background:#f0f0f0;color:#999;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0">3</div>
+        <select id="menuFiltresUnifie" onchange="window.applyFiltreUnifie(this.value)" style="flex:1;padding:11px 12px;border-radius:12px;border:1px solid #eee;font-size:0.82rem;background:white;color:#666">
+          <option value="">Filtres (optionnel)</option>
+          <optgroup label="Exclusions alimentaires">
+            <option value="sans_gluten">Sans gluten</option>
+            <option value="sans_lactose">Sans lactose</option>
+            <option value="sans_fruits_a_coques">Sans fruits a coques</option>
+            <option value="sans_oeufs">Sans oeufs</option>
+            <option value="sans_porc">Sans porc</option>
+            <option value="sans_poisson">Sans poisson</option>
+            <option value="vegetarien">Vegetarien</option>
+            <option value="vegan">Vegan</option>
+            <option value="halal">Halal</option>
+            <option value="casher">Casher</option>
+            <option value="sans_alcool">Sans alcool</option>
+          </optgroup>
+          <optgroup label="Type de cuisine">
+            <option value="cuisine_africaine">Africaine</option>
+            <option value="cuisine_asiatique">Asiatique</option>
+            <option value="cuisine_orientale">Orientale</option>
+            <option value="cuisine_mediterraneenne">Mediterraneenne</option>
+            <option value="cuisine_latine">Latino-americaine</option>
+            <option value="cuisine_indienne">Indienne</option>
+            <option value="cuisine_europeenne">Europeenne</option>
+          </optgroup>
+          <optgroup label="Objectif sante">
+            <option value="skincare">Skincare</option>
+            <option value="boost_cognitif">Boost cognitif</option>
+            <option value="sommeil">Sommeil</option>
+            <option value="cardio">Sante cardio</option>
+          </optgroup>
+          <optgroup label="Cycle menstruel">
+            <option value="cycle_menstrues">Menstrues J1-J5</option>
+            <option value="cycle_folliculaire">Folliculaire J6-J13</option>
+            <option value="cycle_ovulation">Ovulation J14-J16</option>
+            <option value="cycle_luteale">Luteale J17-J28</option>
+          </optgroup>
+        </select>
+      </div>
       <button onclick="generateMenu()" id="generateMenuBtn" style="background:linear-gradient(135deg,#FF6B6B,#FF9A3C);color:white;padding:14px;border:none;border-radius:14px;font-size:0.88rem;cursor:pointer;font-family:DM Sans,sans-serif;display:flex;align-items:center;gap:8px;white-space:nowrap;font-weight:700;width:100%;justify-content:center;margin-bottom:14px">
         <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
         Generer mon menu IA
@@ -9735,6 +9775,18 @@ async function loadAnalysisHistory() {
 }
 
 var activeMenuFilters = new Set();
+  window.applyFiltreUnifie = function(valeur) {
+    if (!valeur) return;
+    var excl = ['sans_gluten','sans_lactose','sans_fruits_a_coques','sans_oeufs','sans_porc','sans_poisson','vegetarien','vegan','halal','casher','sans_alcool'];
+    var cuis = ['cuisine_africaine','cuisine_asiatique','cuisine_orientale','cuisine_mediterraneenne','cuisine_latine','cuisine_indienne','cuisine_europeenne'];
+    var sant = ['skincare','boost_cognitif','sommeil','cardio'];
+    var cycl = ['cycle_menstrues','cycle_folliculaire','cycle_ovulation','cycle_luteale'];
+    excl.forEach(function(v){if(excl.indexOf(valeur)!==-1)activeMenuFilters.delete(v);});
+    cuis.forEach(function(v){if(cuis.indexOf(valeur)!==-1)activeMenuFilters.delete(v);});
+    sant.forEach(function(v){if(sant.indexOf(valeur)!==-1)activeMenuFilters.delete(v);});
+    cycl.forEach(function(v){if(cycl.indexOf(valeur)!==-1)activeMenuFilters.delete(v);});
+    activeMenuFilters.add(valeur);
+  };
   window.applySelectFilter = function() {
     activeMenuFilters.clear();
     ['filterExclusions','filterCuisine','filterSante','filterCycle'].forEach(function(id) {
