@@ -1465,6 +1465,55 @@ window.analyseHealthLog = function() {
   });
 };
 
+window.renderMirellaAnalysis = function(md) {
+  if (!md) return '';
+  var lines = md.replace(/\r/g,'').split('\n');
+  var html = '';
+  var listBuffer = [];
+
+  function flushList() {
+    if (listBuffer.length === 0) return;
+    html += '<div style="display:flex;flex-direction:column;gap:10px;margin:12px 0">' + listBuffer.join('') + '</div>';
+    listBuffer = [];
+  }
+
+  function inlineFormat(t) {
+    return t.replace(/\*\*(.+?)\*\*/g, '<strong style="color:var(--coral);font-weight:700">$1</strong>');
+  }
+
+  for (var i = 0; i < lines.length; i++) {
+    var line = lines[i].trim();
+    if (line === '') { continue; }
+
+    var h1 = line.match(/^#\s+(.*)$/);
+    var h2 = line.match(/^##\s+(.*)$/);
+    var numbered = line.match(/^(\d+)\.\s+(.*)$/);
+
+    if (h1) {
+      flushList();
+      html += '<div style="display:flex;align-items:center;gap:10px;margin-bottom:14px"><div style="width:36px;height:36px;border-radius:12px;background:linear-gradient(135deg,var(--coral),#FF8B6B);display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:0 4px 10px rgba(255,107,107,0.3)"><i class="ti ti-sparkles" style="color:white;font-size:18px"></i></div><div style="font-size:1.05rem;font-weight:800;color:#2D2D2D;font-family:DM Sans,sans-serif">' + inlineFormat(h1[1].replace(/^[\p{Emoji_Presentation}\p{Extended_Pictographic}]\s*/u,'')) + '</div></div>';
+      continue;
+    }
+
+    if (h2) {
+      flushList();
+      html += '<div style="display:flex;align-items:center;gap:8px;margin:18px 0 10px 0"><div style="width:4px;height:16px;background:var(--coral);border-radius:2px"></div><div style="font-size:0.9rem;font-weight:700;color:#2D2D2D">' + inlineFormat(h2[1].replace(/^[\p{Emoji_Presentation}\p{Extended_Pictographic}]\s*/u,'')) + '</div></div>';
+      continue;
+    }
+
+    if (numbered) {
+      listBuffer.push('<div style="display:flex;gap:12px;align-items:flex-start;background:white;padding:12px 14px;border-radius:14px;box-shadow:0 2px 8px rgba(0,0,0,0.04)"><div style="width:24px;height:24px;border-radius:8px;background:#FFF0EC;color:var(--coral);font-size:0.75rem;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0">' + numbered[1] + '</div><div style="font-size:0.85rem;color:#333;line-height:1.6">' + inlineFormat(numbered[2]) + '</div></div>');
+      continue;
+    }
+
+    flushList();
+    html += '<div style="font-size:0.85rem;color:#444;line-height:1.7;margin-bottom:10px">' + inlineFormat(line) + '</div>';
+  }
+  flushList();
+
+  return '<div style="background:white;border-radius:18px;padding:20px;box-shadow:0 4px 20px rgba(255,107,107,0.1);border:1px solid #FFE4DC">' + html + '</div>';
+};
+
 window.analyseHealthLog = function() {
   var btn = document.getElementById('healthAnalyseBtn');
   btn.textContent = 'Analyse en cours...';
@@ -1490,8 +1539,7 @@ window.analyseHealthLog = function() {
   }).then(function(r){return r.json();}).then(function(d){
     var comment = d.analyse || 'Bonne journee ! Continuez vos efforts.';
     var el = document.getElementById('healthAnalyseComment');
-    el.style.whiteSpace = 'pre-wrap';
-    el.textContent = comment;
+    el.innerHTML = window.renderMirellaAnalysis(comment);
     el.style.display = 'block';
     btn.textContent = 'Analyser ma journee avec Mirella';
     btn.disabled = false;
@@ -5375,7 +5423,7 @@ function switchLang(lang) {
     <button onclick="saveHealthLog()" style="background:linear-gradient(135deg,#FF6B6B,#FF9A3C);color:white;width:100%;padding:14px;border:none;border-radius:14px;font-size:0.95rem;font-weight:700;cursor:pointer;font-family:DM Sans,sans-serif;box-shadow:0 6px 20px rgba(255,107,107,0.3);letter-spacing:0.02em;margin-bottom:8px">Enregistrer ✓</button>
     <span id="healthSaveMsg" style="font-size:0.78rem;color:#28C840;display:none;margin-top:8px">✅ Enregistré !</span>
     <button onclick="window.analyseHealthLog()" id="healthAnalyseBtn" style="width:100%;background:#2D2D2D;color:white;border:none;border-radius:14px;padding:14px;font-size:0.95rem;font-weight:700;cursor:pointer;font-family:DM Sans,sans-serif;letter-spacing:0.02em;display:flex;align-items:center;justify-content:center;gap:8px"><i class="ti ti-sparkles" style="font-size:16px"></i>Analyser ma journée avec Mirella</button>
-    <div id="healthAnalyseComment" style="display:none;margin-top:16px;padding:20px;background:linear-gradient(135deg,var(--cream),#FFF0EC);border-radius:0 16px 16px 16px;font-size:0.85rem;color:#333;line-height:1.7;border-left:3px solid var(--coral);box-shadow:0 2px 12px rgba(255,107,107,0.08)"></div>
+    <div id="healthAnalyseComment" style="display:none;margin-top:16px"></div>
   </div>
   <!-- Graphiques et historique -->
   <style>
