@@ -2006,6 +2006,15 @@ window.loadCatalogue = async function() {
     var data = await res.json();
     var recettes = data.recettes || [];
     window._catalogueTotal = data.total || 0;
+    try {
+      var resFav = await fetch(BACKEND_URL + '/api/favoris', {
+        headers: { 'Authorization': 'Bearer ' + token }
+      });
+      var dataFav = await resFav.json();
+      window._favorisNoms = (dataFav.favoris || []).map(function(f){ return f.recette_nom; });
+    } catch (eFav) {
+      window._favorisNoms = window._favorisNoms || [];
+    }
     var totalPages = Math.ceil(window._catalogueTotal / window._cataloguePerPage);
 
     if (countEl) countEl.textContent = window._catalogueTotal + ' recettes';
@@ -2051,7 +2060,7 @@ window.loadCatalogue = async function() {
       var cardClick = r.locked ? "openSubscriptionModal('lock')" : ('window.showRecetteDetail(JSON.stringify(window._catalogueRecettes[' + rcIdx + ']))');
       return '<div id="' + cardId + '" data-photo="' + ((r.photo_keyword||r.nom).replace(/['"]/g,"")) + '" data-icon="' + icon + '" style="background:#FFFCFA;border-radius:16px;overflow:hidden;box-shadow:0 0 0 1.5px rgba(255,154,108,0.22),0 14px 32px rgba(230,110,70,0.14);position:relative">' +
         lockBadge +
-        (r.locked ? '' : '<button onclick="event.stopPropagation();toggleFavoriIdx(' + rcIdx + ',this)" id="fav-btn-' + cardId + '" style="position:absolute;top:8px;right:8px;z-index:3;background:rgba(255,255,255,0.95);border:none;border-radius:50%;width:30px;height:30px;cursor:pointer;font-size:1rem;line-height:1;display:flex;align-items:center;justify-content:center;box-shadow:0 1px 4px rgba(0,0,0,0.1)">🤍</button>') +
+        (r.locked ? '' : '<button onclick="event.stopPropagation();toggleFavoriIdx(' + rcIdx + ',this)" id="fav-btn-' + cardId + '" style="position:absolute;top:8px;right:8px;z-index:3;background:rgba(255,255,255,0.95);border:none;border-radius:50%;width:30px;height:30px;cursor:pointer;font-size:1rem;line-height:1;display:flex;align-items:center;justify-content:center;box-shadow:0 1px 4px rgba(0,0,0,0.1)">' + ((window._favorisNoms||[]).includes(r.nom) ? '❤️' : '🤍') + '</button>') +
         '<div onclick="' + cardClick + '" style="cursor:pointer' + (r.locked ? ';opacity:0.7' : '') + '">' +
         '<div class="rc-img" style="height:130px;background:linear-gradient(135deg,#FFF0EC,#FFE4D6);display:flex;align-items:center;justify-content:center;font-size:2.5rem;overflow:hidden;position:relative">' + (r.photo_url ? '<img src="'+r.photo_url+'" style="width:100%;height:130px;object-fit:cover;display:block">' : '<span style="font-size:2.5rem">'+icon+'</span>') + '</div>' +
         '<div style="padding:12px">' +
