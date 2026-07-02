@@ -2123,20 +2123,26 @@ window.toggleFavoriIdx = async function(idx, btn) {
   var isFav = btn.textContent.trim() === '❤️';
   btn.textContent = isFav ? '🤍' : '❤️';
   try {
+    var resp;
     if (isFav) {
-      await fetch(BACKEND_URL + '/api/favoris/' + encodeURIComponent(r.nom), {
+      resp = await fetch(BACKEND_URL + '/api/favoris/' + encodeURIComponent(r.nom), {
         method: 'DELETE',
         headers: { 'Authorization': 'Bearer ' + token }
       });
     } else {
-      await fetch(BACKEND_URL + '/api/favoris', {
+      resp = await fetch(BACKEND_URL + '/api/favoris', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
         body: JSON.stringify({ type: 'recette', recette_id: r.id || null, recette_nom: r.nom, recette_data: r })
       });
     }
+    if (!resp.ok) {
+      var errBody = await resp.text();
+      alert('Erreur favori (' + resp.status + '): ' + errBody);
+      btn.textContent = isFav ? '❤️' : '🤍';
+    }
   } catch (e) {
-    console.error('Erreur favori:', e);
+    alert('Erreur favori: ' + e.message);
     btn.textContent = isFav ? '❤️' : '🤍';
   }
 };
