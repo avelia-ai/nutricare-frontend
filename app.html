@@ -5505,7 +5505,8 @@ function switchLang(lang) {
     <div style="font-size:2rem;font-weight:700;color:white;font-family:Open Sans,serif">Evolution corporelle</div>
     <div style="font-size:0.85rem;color:rgba(255,255,255,0.8);margin-top:4px">Suivez votre transformation avec l'IA Mirella</div>
   </div>
-  <div style="padding:20px 16px 100px">
+  <div style="padding:20px 16px 100px;position:relative">
+    <div id="corpoBlurredContent" style="filter:blur(5px);pointer-events:none">
 
     <!-- Photos avant/apres -->
     <div style="background:white;border-radius:20px;padding:18px;margin-bottom:16px;box-shadow:0 0 0 1.5px rgba(255,154,108,0.18),0 16px 40px rgba(230,110,70,0.1)">
@@ -5589,6 +5590,13 @@ function switchLang(lang) {
       <div id="corpoAnalyseResult" style="margin-top:16px;display:none"></div>
     </div>
 
+    </div>
+    <div id="corpoLockOverlay" style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:20px;background:rgba(255,255,255,0.4);cursor:pointer" onclick="openSubscriptionModal('lock')">
+      <div style="font-size:1.8rem;margin-bottom:8px">🔒</div>
+      <div style="font-size:0.9rem;font-weight:700;color:#2D2D2D;margin-bottom:4px">Fonctionnalité Premium</div>
+      <div style="font-size:0.78rem;color:#888;margin-bottom:12px">Débloquez le suivi de votre évolution corporelle avec l'IA Mirella</div>
+      <div style="background:linear-gradient(135deg,var(--coral),var(--accent));color:white;border-radius:10px;padding:8px 20px;font-size:0.82rem;font-weight:700">Voir les offres →</div>
+    </div>
   </div>
 </div>
 
@@ -9417,7 +9425,7 @@ Réponds UNIQUEMENT en JSON valide avec cette structure exacte:
     document.getElementById('dashboardView').style.display = view === 'dashboard' ? 'block' : 'none';
     document.getElementById('profileView').style.display = view === 'profile' ? 'block' : 'none'; if (view === 'profile') loadProfile();
     document.getElementById('pricingView').style.display = view === 'pricing' ? 'block' : 'none';
-    document.getElementById('corpoView').style.display = view === 'corpo' ? 'block' : 'none';
+    document.getElementById('corpoView').style.display = view === 'corpo' ? 'block' : 'none'; if (view === 'corpo') applyCorpoPlanGates();
     document.getElementById('proView').style.display = view === 'pro' ? 'block' : 'none';
     if (view === 'pro') loadProfessionals();
     document.getElementById('protocolsView').style.display = view === 'protocols' ? 'block' : 'none';
@@ -10587,6 +10595,14 @@ function applyScanproduitPlanGates() {
   const upload = document.getElementById('scanproduitUploadCard');
   if (lock) lock.style.display = isPremium ? 'none' : 'block';
   if (upload) upload.style.display = isPremium ? 'block' : 'none';
+}
+function applyCorpoPlanGates() {
+  const isPremium = window.currentPlan === 'premium';
+  const lockOverlay = document.getElementById('corpoLockOverlay');
+  const blurred = document.getElementById('corpoBlurredContent');
+  if (lockOverlay) lockOverlay.style.display = isPremium ? 'none' : 'flex';
+  if (blurred) blurred.style.pointerEvents = isPremium ? 'auto' : 'none';
+  if (blurred) blurred.style.filter = isPremium ? 'none' : 'blur(5px)';
 }
 
 async function loadHealthDashboard() {
