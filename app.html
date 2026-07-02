@@ -2133,7 +2133,7 @@ window.toggleFavoriIdx = async function(idx, btn) {
       resp = await fetch(BACKEND_URL + '/api/favoris', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
-        body: JSON.stringify({ type: 'recette', recette_id: r.id || null, recette_nom: r.nom, recette_data: r })
+        body: JSON.stringify({ type: 'catalogue', recette_id: r.id || null, recette_nom: r.nom, recette_data: r })
       });
     }
     if (!resp.ok) {
