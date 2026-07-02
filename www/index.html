@@ -1465,6 +1465,55 @@ window.analyseHealthLog = function() {
   });
 };
 
+window.renderMirellaAnalysis = function(md) {
+  if (!md) return '';
+  var lines = md.replace(/\r/g,'').split('\n');
+  var html = '';
+  var listBuffer = [];
+
+  function flushList() {
+    if (listBuffer.length === 0) return;
+    html += '<div style="display:flex;flex-direction:column;gap:10px;margin:12px 0">' + listBuffer.join('') + '</div>';
+    listBuffer = [];
+  }
+
+  function inlineFormat(t) {
+    return t.replace(/\*\*(.+?)\*\*/g, '<strong style="color:var(--coral);font-weight:700">$1</strong>');
+  }
+
+  for (var i = 0; i < lines.length; i++) {
+    var line = lines[i].trim();
+    if (line === '') { continue; }
+
+    var h1 = line.match(/^#\s+(.*)$/);
+    var h2 = line.match(/^##\s+(.*)$/);
+    var numbered = line.match(/^(\d+)\.\s+(.*)$/);
+
+    if (h1) {
+      flushList();
+      html += '<div style="display:flex;align-items:center;gap:10px;margin-bottom:14px"><div style="width:36px;height:36px;border-radius:12px;background:linear-gradient(135deg,var(--coral),#FF8B6B);display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:0 4px 10px rgba(255,107,107,0.3)"><i class="ti ti-sparkles" style="color:white;font-size:18px"></i></div><div style="font-size:1.05rem;font-weight:800;color:#2D2D2D;font-family:DM Sans,sans-serif">' + inlineFormat(h1[1].replace(/^[\p{Emoji_Presentation}\p{Extended_Pictographic}]\s*/u,'')) + '</div></div>';
+      continue;
+    }
+
+    if (h2) {
+      flushList();
+      html += '<div style="display:flex;align-items:center;gap:8px;margin:18px 0 10px 0"><div style="width:4px;height:16px;background:var(--coral);border-radius:2px"></div><div style="font-size:0.9rem;font-weight:700;color:#2D2D2D">' + inlineFormat(h2[1].replace(/^[\p{Emoji_Presentation}\p{Extended_Pictographic}]\s*/u,'')) + '</div></div>';
+      continue;
+    }
+
+    if (numbered) {
+      listBuffer.push('<div style="display:flex;gap:12px;align-items:flex-start;background:white;padding:12px 14px;border-radius:14px;box-shadow:0 2px 8px rgba(0,0,0,0.04)"><div style="width:24px;height:24px;border-radius:8px;background:#FFF0EC;color:var(--coral);font-size:0.75rem;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0">' + numbered[1] + '</div><div style="font-size:0.85rem;color:#333;line-height:1.6">' + inlineFormat(numbered[2]) + '</div></div>');
+      continue;
+    }
+
+    flushList();
+    html += '<div style="font-size:0.85rem;color:#444;line-height:1.7;margin-bottom:10px">' + inlineFormat(line) + '</div>';
+  }
+  flushList();
+
+  return '<div style="background:white;border-radius:18px;padding:20px;box-shadow:0 4px 20px rgba(255,107,107,0.1);border:1px solid #FFE4DC">' + html + '</div>';
+};
+
 window.analyseHealthLog = function() {
   var btn = document.getElementById('healthAnalyseBtn');
   btn.textContent = 'Analyse en cours...';
@@ -1490,8 +1539,7 @@ window.analyseHealthLog = function() {
   }).then(function(r){return r.json();}).then(function(d){
     var comment = d.analyse || 'Bonne journee ! Continuez vos efforts.';
     var el = document.getElementById('healthAnalyseComment');
-    el.style.whiteSpace = 'pre-wrap';
-    el.textContent = comment;
+    el.innerHTML = window.renderMirellaAnalysis(comment);
     el.style.display = 'block';
     btn.textContent = 'Analyser ma journee avec Mirella';
     btn.disabled = false;
@@ -5143,7 +5191,7 @@ function switchLang(lang) {
     </div>
     <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:20px;background:rgba(255,255,255,0.4);cursor:pointer" onclick="openSubscriptionModal('lock')">
       <div style="font-size:1.8rem;margin-bottom:8px">🔒</div>
-      <div style="font-size:0.9rem;font-weight:700;color:#2D2D2D;margin-bottom:4px">Fonctionnalité Standard</div>
+      <div style="font-size:0.9rem;font-weight:700;color:#2D2D2D;margin-bottom:4px">Fonctionnalité Standard & Premium</div>
       <div style="font-size:0.78rem;color:#888;margin-bottom:12px">Débloquez vos menus personnalisés et le suivi calorique</div>
       <div style="background:linear-gradient(135deg,var(--coral),var(--accent));color:white;border-radius:10px;padding:8px 20px;font-size:0.82rem;font-weight:700">Voir les offres →</div>
     </div>
@@ -5375,7 +5423,7 @@ function switchLang(lang) {
     <button onclick="saveHealthLog()" style="background:linear-gradient(135deg,#FF6B6B,#FF9A3C);color:white;width:100%;padding:14px;border:none;border-radius:14px;font-size:0.95rem;font-weight:700;cursor:pointer;font-family:DM Sans,sans-serif;box-shadow:0 6px 20px rgba(255,107,107,0.3);letter-spacing:0.02em;margin-bottom:8px">Enregistrer ✓</button>
     <span id="healthSaveMsg" style="font-size:0.78rem;color:#28C840;display:none;margin-top:8px">✅ Enregistré !</span>
     <button onclick="window.analyseHealthLog()" id="healthAnalyseBtn" style="width:100%;background:#2D2D2D;color:white;border:none;border-radius:14px;padding:14px;font-size:0.95rem;font-weight:700;cursor:pointer;font-family:DM Sans,sans-serif;letter-spacing:0.02em;display:flex;align-items:center;justify-content:center;gap:8px"><i class="ti ti-sparkles" style="font-size:16px"></i>Analyser ma journée avec Mirella</button>
-    <div id="healthAnalyseComment" style="display:none;margin-top:16px;padding:20px;background:linear-gradient(135deg,var(--cream),#FFF0EC);border-radius:0 16px 16px 16px;font-size:0.85rem;color:#333;line-height:1.7;border-left:3px solid var(--coral);box-shadow:0 2px 12px rgba(255,107,107,0.08)"></div>
+    <div id="healthAnalyseComment" style="display:none;margin-top:16px"></div>
   </div>
   <!-- Graphiques et historique -->
   <style>
@@ -5403,7 +5451,7 @@ function switchLang(lang) {
     <div id="healthChartCard" style="background:#FFFCFA;border-radius:20px;padding:0;box-shadow:0 0 0 1.5px rgba(255,154,108,0.18),0 16px 40px rgba(230,110,70,0.1);margin-bottom:12px;position:relative;overflow:hidden">
       <div id="healthChartLockOverlay" style="display:none;position:absolute;inset:0;background:rgba(255,255,255,0.7);backdrop-filter:blur(4px);border-radius:20px;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:20px;cursor:pointer;z-index:5" onclick="openSubscriptionModal('lock')">
         <i class="ti ti-lock" style="font-size:2rem;color:#FF6B6B;margin-bottom:8px"></i>
-        <div style="font-size:0.9rem;font-weight:700;color:#2D2D2D;margin-bottom:4px">Fonctionnalité Standard</div>
+        <div style="font-size:0.9rem;font-weight:700;color:#2D2D2D;margin-bottom:4px">Fonctionnalité Standard & Premium</div>
         <div style="font-size:0.78rem;color:#888;margin-bottom:12px">Débloquez vos graphiques d'évolution sur 30 jours</div>
         <div style="background:linear-gradient(135deg,#FF6B6B,#FF9A3C);color:white;border-radius:10px;padding:8px 20px;font-size:0.82rem;font-weight:700">Voir les offres →</div>
       </div>
@@ -5470,16 +5518,6 @@ function switchLang(lang) {
             <i class="ti ti-user" style="font-size:28px;color:#ddd"></i>
             <div style="font-size:10px;color:#ccc;margin-top:4px">Photo avant</div>
           </div>
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:8px">
-            <label style="display:flex;align-items:center;justify-content:center;gap:4px;padding:8px;background:#FFF0EC;border-radius:10px;cursor:pointer;font-size:10px;font-weight:700;color:#FF6B6B">
-              <i class="ti ti-camera" style="font-size:13px"></i>Photo
-              <input type="file" accept="image/*" capture="user" style="display:none" onchange="corpoSetPhoto(this,'avant')">
-            </label>
-            <label style="display:flex;align-items:center;justify-content:center;gap:4px;padding:8px;background:#FFF0EC;border-radius:10px;cursor:pointer;font-size:10px;font-weight:700;color:#FF6B6B">
-              <i class="ti ti-upload" style="font-size:13px"></i>Galerie
-              <input type="file" accept="image/*" style="display:none" onchange="corpoSetPhoto(this,'avant')">
-            </label>
-          </div>
         </div>
         <div>
           <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#10B981;margin-bottom:6px">Apres</div>
@@ -5487,58 +5525,82 @@ function switchLang(lang) {
             <i class="ti ti-user" style="font-size:28px;color:#ddd"></i>
             <div style="font-size:10px;color:#ccc;margin-top:4px">Photo apres</div>
           </div>
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:8px">
-            <label style="display:flex;align-items:center;justify-content:center;gap:4px;padding:8px;background:#ECFDF5;border-radius:10px;cursor:pointer;font-size:10px;font-weight:700;color:#10B981">
-              <i class="ti ti-camera" style="font-size:13px"></i>Photo
-              <input type="file" accept="image/*" capture="user" style="display:none" onchange="corpoSetPhoto(this,'apres')">
-            </label>
-            <label style="display:flex;align-items:center;justify-content:center;gap:4px;padding:8px;background:#ECFDF5;border-radius:10px;cursor:pointer;font-size:10px;font-weight:700;color:#10B981">
-              <i class="ti ti-upload" style="font-size:13px"></i>Galerie
-              <input type="file" accept="image/*" style="display:none" onchange="corpoSetPhoto(this,'apres')">
-            </label>
+        </div>
+      </div>
+
+      <div style="position:relative">
+        <div id="corpoBlurredContent" style="filter:blur(5px);pointer-events:none">
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px">
+              <label style="display:flex;align-items:center;justify-content:center;gap:4px;padding:8px;background:#FFF0EC;border-radius:10px;cursor:pointer;font-size:10px;font-weight:700;color:#FF6B6B">
+                <i class="ti ti-camera" style="font-size:13px"></i>Photo
+                <input type="file" accept="image/*" capture="user" style="display:none" onchange="corpoSetPhoto(this,'avant')">
+              </label>
+              <label style="display:flex;align-items:center;justify-content:center;gap:4px;padding:8px;background:#FFF0EC;border-radius:10px;cursor:pointer;font-size:10px;font-weight:700;color:#FF6B6B">
+                <i class="ti ti-upload" style="font-size:13px"></i>Galerie
+                <input type="file" accept="image/*" style="display:none" onchange="corpoSetPhoto(this,'avant')">
+              </label>
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px">
+              <label style="display:flex;align-items:center;justify-content:center;gap:4px;padding:8px;background:#ECFDF5;border-radius:10px;cursor:pointer;font-size:10px;font-weight:700;color:#10B981">
+                <i class="ti ti-camera" style="font-size:13px"></i>Photo
+                <input type="file" accept="image/*" capture="user" style="display:none" onchange="corpoSetPhoto(this,'apres')">
+              </label>
+              <label style="display:flex;align-items:center;justify-content:center;gap:4px;padding:8px;background:#ECFDF5;border-radius:10px;cursor:pointer;font-size:10px;font-weight:700;color:#10B981">
+                <i class="ti ti-upload" style="font-size:13px"></i>Galerie
+                <input type="file" accept="image/*" style="display:none" onchange="corpoSetPhoto(this,'apres')">
+              </label>
+            </div>
+          </div>
+
+          <!-- Galerie timeline -->
+          <div style="background:white;border:1px solid #f0f0f0;border-radius:20px;padding:18px;margin-top:16px">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
+              <div style="font-size:13px;font-weight:800;color:#1a1a1a">Historique photos</div>
+              <div style="display:flex;gap:6px">
+                <label style="display:flex;align-items:center;gap:4px;padding:6px 10px;background:linear-gradient(135deg,#FF6B6B,#FF9A3C);border-radius:20px;cursor:pointer;font-size:11px;font-weight:700;color:white">
+                  <i class="ti ti-camera" style="font-size:12px"></i>Photo
+                  <input type="file" accept="image/*" capture="user" style="display:none" onchange="corpoAddPhoto(this)">
+                </label>
+                <label style="display:flex;align-items:center;gap:4px;padding:6px 10px;background:linear-gradient(135deg,#FF6B6B,#FF9A3C);border-radius:20px;cursor:pointer;font-size:11px;font-weight:700;color:white">
+                  <i class="ti ti-upload" style="font-size:12px"></i>Galerie
+                  <input type="file" accept="image/*" style="display:none" onchange="corpoAddPhoto(this)">
+                </label>
+              </div>
+            </div>
+            <div id="corpoGallery" style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px">
+              <div style="aspect-ratio:1;border-radius:10px;background:#f5f5f5;display:flex;align-items:center;justify-content:center">
+                <i class="ti ti-photo" style="font-size:20px;color:#ddd"></i>
+              </div>
+            </div>
+          </div>
+
+          <!-- Analyse IA -->
+          <div style="background:#1a1a1a;border-radius:20px;padding:20px;margin-top:16px">
+            <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px">
+              <div style="width:36px;height:36px;border-radius:10px;background:rgba(255,107,107,0.15);display:flex;align-items:center;justify-content:center;flex-shrink:0">
+                <i class="ti ti-sparkles" style="font-size:18px;color:#FF6B6B"></i>
+              </div>
+              <div>
+                <div style="font-size:13px;font-weight:800;color:white">Analyse Mirella IA</div>
+                <div style="font-size:11px;color:rgba(255,255,255,0.4)">Masse grasse · Muscles · Exercices</div>
+              </div>
+            </div>
+            <div style="font-size:11px;color:rgba(255,255,255,0.4);margin-bottom:16px;line-height:1.5">Mirella analyse votre profil et vos photos pour estimer votre composition corporelle et vous proposer des exercices personnalisés</div>
+            <button onclick="corpoAnalyse()" id="corpoAnalyseBtn" style="width:100%;background:linear-gradient(135deg,#FF6B6B,#FF9A3C);color:white;border:none;border-radius:14px;padding:14px;font-size:14px;font-weight:700;cursor:pointer;font-family:DM Sans,sans-serif;display:flex;align-items:center;justify-content:center;gap:8px">
+              <i class="ti ti-sparkles" style="font-size:16px"></i>Lancer l analyse IA
+            </button>
+            <div id="corpoAnalyseResult" style="margin-top:16px;display:none"></div>
           </div>
         </div>
-      </div>
-    </div>
 
-    <!-- Galerie timeline -->
-    <div style="background:white;border-radius:20px;padding:18px;margin-bottom:16px;box-shadow:0 0 0 1.5px rgba(255,154,108,0.18),0 16px 40px rgba(230,110,70,0.1)">
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
-        <div style="font-size:13px;font-weight:800;color:#1a1a1a">Historique photos</div>
-        <div style="display:flex;gap:6px">
-          <label style="display:flex;align-items:center;gap:4px;padding:6px 10px;background:linear-gradient(135deg,#FF6B6B,#FF9A3C);border-radius:20px;cursor:pointer;font-size:11px;font-weight:700;color:white">
-            <i class="ti ti-camera" style="font-size:12px"></i>Photo
-            <input type="file" accept="image/*" capture="user" style="display:none" onchange="corpoAddPhoto(this)">
-          </label>
-          <label style="display:flex;align-items:center;gap:4px;padding:6px 10px;background:linear-gradient(135deg,#FF6B6B,#FF9A3C);border-radius:20px;cursor:pointer;font-size:11px;font-weight:700;color:white">
-            <i class="ti ti-upload" style="font-size:12px"></i>Galerie
-            <input type="file" accept="image/*" style="display:none" onchange="corpoAddPhoto(this)">
-          </label>
+        <div id="corpoLockOverlay" style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:20px;background:rgba(255,255,255,0.55);border-radius:16px;cursor:pointer" onclick="openSubscriptionModal('lock')">
+          <div style="font-size:1.8rem;margin-bottom:8px">🔒</div>
+          <div style="font-size:0.9rem;font-weight:700;color:#2D2D2D;margin-bottom:4px">Fonctionnalité Premium</div>
+          <div style="font-size:0.78rem;color:#888;margin-bottom:12px">Débloquez le suivi de votre évolution corporelle avec l'IA Mirella</div>
+          <div style="background:linear-gradient(135deg,var(--coral),var(--accent));color:white;border-radius:10px;padding:8px 20px;font-size:0.82rem;font-weight:700">Voir les offres →</div>
         </div>
       </div>
-      <div id="corpoGallery" style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px">
-        <div style="aspect-ratio:1;border-radius:10px;background:#f5f5f5;display:flex;align-items:center;justify-content:center">
-          <i class="ti ti-photo" style="font-size:20px;color:#ddd"></i>
-        </div>
-      </div>
-    </div>
-
-    <!-- Analyse IA -->
-    <div style="background:#1a1a1a;border-radius:20px;padding:20px;margin-bottom:16px">
-      <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px">
-        <div style="width:36px;height:36px;border-radius:10px;background:rgba(255,107,107,0.15);display:flex;align-items:center;justify-content:center;flex-shrink:0">
-          <i class="ti ti-sparkles" style="font-size:18px;color:#FF6B6B"></i>
-        </div>
-        <div>
-          <div style="font-size:13px;font-weight:800;color:white">Analyse Mirella IA</div>
-          <div style="font-size:11px;color:rgba(255,255,255,0.4)">Masse grasse · Muscles · Exercices</div>
-        </div>
-      </div>
-      <div style="font-size:11px;color:rgba(255,255,255,0.4);margin-bottom:16px;line-height:1.5">Mirella analyse votre profil et vos photos pour estimer votre composition corporelle et vous proposer des exercices personnalisés</div>
-      <button onclick="corpoAnalyse()" id="corpoAnalyseBtn" style="width:100%;background:linear-gradient(135deg,#FF6B6B,#FF9A3C);color:white;border:none;border-radius:14px;padding:14px;font-size:14px;font-weight:700;cursor:pointer;font-family:DM Sans,sans-serif;display:flex;align-items:center;justify-content:center;gap:8px">
-        <i class="ti ti-sparkles" style="font-size:16px"></i>Lancer l analyse IA
-      </button>
-      <div id="corpoAnalyseResult" style="margin-top:16px;display:none"></div>
     </div>
 
   </div>
@@ -6333,7 +6395,7 @@ function switchLang(lang) {
     </div>
     <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:20px;background:rgba(255,255,255,0.4);cursor:pointer" onclick="openSubscriptionModal('lock')">
       <div style="font-size:1.8rem;margin-bottom:8px">🔒</div>
-      <div style="font-size:0.9rem;font-weight:700;color:#2D2D2D;margin-bottom:4px">Fonctionnalité Premium</div>
+      <div style="font-size:0.9rem;font-weight:700;color:#2D2D2D;margin-bottom:4px">Fonctionnalité Standard & Premium</div>
       <div style="font-size:0.78rem;color:#888;margin-bottom:12px">Débloquez l'analyse des produits et leur compatibilité avec votre profil</div>
       <div style="background:linear-gradient(135deg,var(--coral),var(--accent));color:white;border-radius:10px;padding:8px 20px;font-size:0.82rem;font-weight:700">Voir les offres →</div>
     </div>
@@ -7165,6 +7227,7 @@ function switchLang(lang) {
       document.getElementById('profileBudget').value = profile.budget_alimentaire || '';
       if (document.getElementById('profileEthnicity')) document.getElementById('profileEthnicity').value = profile.ethnicity || '';
       if (document.getElementById('profileSexe')) document.getElementById('profileSexe').value = profile.sexe || '';
+      if (window.updateProfileAvatarDisplay) window.updateProfileAvatarDisplay();
       if (document.getElementById('profileAge')) document.getElementById('profileAge').value = profile.age || '';
       if (document.getElementById('profilePoids')) document.getElementById('profilePoids').value = profile.poids || '';
       if (document.getElementById('profileTaille')) document.getElementById('profileTaille').value = profile.taille || '';
@@ -9368,7 +9431,7 @@ Réponds UNIQUEMENT en JSON valide avec cette structure exacte:
     document.getElementById('dashboardView').style.display = view === 'dashboard' ? 'block' : 'none';
     document.getElementById('profileView').style.display = view === 'profile' ? 'block' : 'none'; if (view === 'profile') loadProfile();
     document.getElementById('pricingView').style.display = view === 'pricing' ? 'block' : 'none';
-    document.getElementById('corpoView').style.display = view === 'corpo' ? 'block' : 'none';
+    document.getElementById('corpoView').style.display = view === 'corpo' ? 'block' : 'none'; if (view === 'corpo') applyCorpoPlanGates();
     document.getElementById('proView').style.display = view === 'pro' ? 'block' : 'none';
     if (view === 'pro') loadProfessionals();
     document.getElementById('protocolsView').style.display = view === 'protocols' ? 'block' : 'none';
@@ -10538,6 +10601,14 @@ function applyScanproduitPlanGates() {
   const upload = document.getElementById('scanproduitUploadCard');
   if (lock) lock.style.display = isPremium ? 'none' : 'block';
   if (upload) upload.style.display = isPremium ? 'block' : 'none';
+}
+function applyCorpoPlanGates() {
+  const isPremium = window.currentPlan === 'premium';
+  const lockOverlay = document.getElementById('corpoLockOverlay');
+  const blurred = document.getElementById('corpoBlurredContent');
+  if (lockOverlay) lockOverlay.style.display = isPremium ? 'none' : 'flex';
+  if (blurred) blurred.style.pointerEvents = isPremium ? 'auto' : 'none';
+  if (blurred) blurred.style.filter = isPremium ? 'none' : 'blur(5px)';
 }
 
 async function loadHealthDashboard() {
@@ -12863,29 +12934,31 @@ function closeMirellaNotif() {
 <!-- Quick Menu Mobile -->
 <div id="quickMenu" style="display:none;position:fixed;inset:0;z-index:999;background:rgba(0,0,0,0.5)" onclick="toggleQuickMenu()">
   <div onclick="event.stopPropagation()" style="position:absolute;bottom:80px;left:16px;right:16px;background:#FFFCFA;border-radius:24px;padding:20px;max-height:70vh;overflow-y:auto;box-shadow:0 0 0 1.5px rgba(255,154,108,0.22),0 14px 32px rgba(230,110,70,0.14)">
-    <div style="font-size:1rem;font-weight:700;color:#2D2D2D;margin-bottom:16px;text-align:center">Toutes les fonctionnalités</div>
+    <div style="font-size:1rem;font-weight:700;color:#2D2D2D;margin-bottom:18px;text-align:center">Toutes les fonctionnalités</div>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
-      <button id="qmBtn-visage" onclick="toggleQuickMenu();showView('visage')" style="display:flex;align-items:center;gap:10px;padding:12px;background:var(--color-background-secondary);border:0.5px solid var(--color-border-tertiary);border-radius:14px;font-size:0.82rem;font-weight:600;color:var(--color-text-primary);cursor:pointer"><div style="width:32px;height:32px;background:#FFF0EC;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0"><i class="ti ti-face-id" style="font-size:16px;color:#FF6B6B" aria-hidden="true"></i></div>Analyse Visage</button>
-      <button id="qmBtn-frigo" onclick="toggleQuickMenu();showView('frigo')" style="display:flex;align-items:center;gap:10px;padding:12px;background:var(--color-background-secondary);border:0.5px solid var(--color-border-tertiary);border-radius:14px;font-size:0.82rem;font-weight:600;color:var(--color-text-primary);cursor:pointer"><div style="width:32px;height:32px;background:#E6F1FB;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0"><i class="ti ti-snowflake" style="font-size:16px;color:#185FA5" aria-hidden="true"></i></div>Mon Frigo</button>
+      <div style="grid-column:1/-1;font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#999;margin:0 0 2px 2px">Nutrition</div>
       <button id="qmBtn-menus" onclick="toggleQuickMenu();showView('menus')" style="display:flex;align-items:center;gap:10px;padding:12px;background:var(--color-background-secondary);border:0.5px solid var(--color-border-tertiary);border-radius:14px;font-size:0.82rem;font-weight:600;color:var(--color-text-primary);cursor:pointer"><div style="width:32px;height:32px;background:#FFF0EC;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0"><i class="ti ti-tools-kitchen-2" style="font-size:16px;color:#FF6B6B" aria-hidden="true"></i></div>Mes menus</button>
-      <button id="qmBtn-health" onclick="toggleQuickMenu();showView('health')" style="display:flex;align-items:center;gap:10px;padding:12px;background:var(--color-background-secondary);border:0.5px solid var(--color-border-tertiary);border-radius:14px;font-size:0.82rem;font-weight:600;color:var(--color-text-primary);cursor:pointer"><div style="width:32px;height:32px;background:#EAF3DE;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0"><i class="ti ti-activity" style="font-size:16px;color:#3B6D11" aria-hidden="true"></i></div>Suivi santé</button>
+      <button id="qmBtn-frigo" onclick="toggleQuickMenu();showView('frigo')" style="display:flex;align-items:center;gap:10px;padding:12px;background:var(--color-background-secondary);border:0.5px solid var(--color-border-tertiary);border-radius:14px;font-size:0.82rem;font-weight:600;color:var(--color-text-primary);cursor:pointer"><div style="width:32px;height:32px;background:#E6F1FB;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0"><i class="ti ti-snowflake" style="font-size:16px;color:#185FA5" aria-hidden="true"></i></div>Mon Frigo</button>
       <button id="qmBtn-analysis" onclick="toggleQuickMenu();showView('analysis')" style="display:flex;align-items:center;gap:10px;padding:12px;background:var(--color-background-secondary);border:0.5px solid var(--color-border-tertiary);border-radius:14px;font-size:0.82rem;font-weight:600;color:var(--color-text-primary);cursor:pointer"><div style="width:32px;height:32px;background:#FFF0EC;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0"><i class="ti ti-camera" style="font-size:16px;color:#FF6B6B" aria-hidden="true"></i></div>Analyse repas</button>
       <button id="qmBtn-scanproduit" onclick="toggleQuickMenu();showView('scanproduit')" style="display:flex;align-items:center;gap:10px;padding:12px;background:var(--color-background-secondary);border:0.5px solid var(--color-border-tertiary);border-radius:14px;font-size:0.82rem;font-weight:600;color:var(--color-text-primary);cursor:pointer"><div style="width:32px;height:32px;background:#E6F1FB;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0"><i class="ti ti-scan" style="font-size:16px;color:#185FA5" aria-hidden="true"></i></div>Scan produit</button>
-      <button id="qmBtn-visual" onclick="toggleQuickMenu();showView('visual')" style="display:flex;align-items:center;gap:10px;padding:12px;background:var(--color-background-secondary);border:0.5px solid var(--color-border-tertiary);border-radius:14px;font-size:0.82rem;font-weight:600;color:var(--color-text-primary);cursor:pointer"><div style="width:32px;height:32px;background:#EEEDFE;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0"><i class="ti ti-microscope" style="font-size:16px;color:#534AB7" aria-hidden="true"></i></div>Détection visuelle</button>
-      <button id="qmBtn-pro" onclick="toggleQuickMenu();showView('pro')" style="display:none"><div style="width:32px;height:32px;background:#EAF3DE;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0"><i class="ti ti-stethoscope" style="font-size:16px;color:#3B6D11" aria-hidden="true"></i></div>Espace médecin</button>
-      <button id="qmBtn-chrono" onclick="toggleQuickMenu();showView('chrono')" style="display:none !important;display:flex;align-items:center;gap:10px;padding:12px;background:#FFF5F0;border:0.5px solid rgba(255,107,107,0.15);border-radius:14px;font-size:0.82rem;font-weight:600;color:#2D2D2D;cursor:pointer"><div style="width:32px;height:32px;background:#FBEAF0;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0"><i class="ti ti-heart" style="font-size:16px;color:#993556" aria-hidden="true"></i></div>Score de santé</button>
-      <button id="qmBtn-biologie" onclick="toggleQuickMenu();showView('biologie')" style="display:flex;align-items:center;gap:10px;padding:12px;background:var(--color-background-secondary);border:0.5px solid var(--color-border-tertiary);border-radius:14px;font-size:0.82rem;font-weight:600;color:var(--color-text-primary);cursor:pointer"><div style="width:32px;height:32px;background:#EEEDFE;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0"><i class="ti ti-dna" style="font-size:16px;color:#534AB7" aria-hidden="true"></i></div>Bilan sanguin</button>
-            
-      <button id="qmBtn-programs" onclick="toggleQuickMenu();showView('programs')" style="display:flex;align-items:center;gap:10px;padding:12px;background:var(--color-background-secondary);border:0.5px solid var(--color-border-tertiary);border-radius:14px;font-size:0.82rem;font-weight:600;color:var(--color-text-primary);cursor:pointer"><div style="width:32px;height:32px;background:#FFF0EC;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0"><i class="ti ti-target" style="font-size:16px;color:#FF6B6B" aria-hidden="true"></i></div>Programmes</button>
-      <button id="qmBtn-leaderboard" onclick="toggleQuickMenu();showView('leaderboard');loadLeaderboard()" style="display:flex;align-items:center;gap:10px;padding:12px;background:var(--color-background-secondary);border:0.5px solid var(--color-border-tertiary);border-radius:14px;font-size:0.82rem;font-weight:600;color:var(--color-text-primary);cursor:pointer"><div style="width:32px;height:32px;background:#FFF7E0;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0"><i class="ti ti-trophy" style="font-size:16px;color:#D4A017" aria-hidden="true"></i></div>Classement</button>
-      
-      <button id="qmBtn-pricing" onclick="toggleQuickMenu();showView('pricing')" style="display:flex;align-items:center;gap:10px;padding:12px;background:var(--color-background-secondary);border:0.5px solid var(--color-border-tertiary);border-radius:14px;font-size:0.82rem;font-weight:600;color:var(--color-text-primary);cursor:pointer"><div style="width:32px;height:32px;background:#FAEEDA;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0"><i class="ti ti-star" style="font-size:16px;color:#854F0B" aria-hidden="true"></i></div>Abonnements</button>
-      <button id="qmBtn-planning" onclick="toggleQuickMenu();showView('planning')" style="display:flex;align-items:center;gap:10px;padding:12px;background:var(--color-background-secondary);border:0.5px solid var(--color-border-tertiary);border-radius:14px;font-size:0.82rem;font-weight:600;color:var(--color-text-primary);cursor:pointer"><div style="width:32px;height:32px;background:#E6F1FB;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0"><i class="ti ti-calendar" style="font-size:16px;color:#185FA5" aria-hidden="true"></i></div>Mon planning</button>
-      <button id="btnCycleFeminin" onclick="toggleQuickMenu();showView('cycle')" style="display:none;align-items:center;gap:10px;padding:12px;background:#FFF5F0;border:0.5px solid rgba(255,107,107,0.15);border-radius:14px;font-size:0.82rem;font-weight:600;color:#2D2D2D;cursor:pointer"><div style="width:32px;height:32px;background:#FBEAF0;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0"><i class="ti ti-rosette" style="font-size:16px;color:#993556" aria-hidden="true"></i></div>Cycle féminin</button>
       <button id="qmBtn-catalogue" onclick="toggleQuickMenu();showView('catalogue')" style="display:flex;align-items:center;gap:10px;padding:12px;background:var(--color-background-secondary);border:0.5px solid var(--color-border-tertiary);border-radius:14px;font-size:0.82rem;font-weight:600;color:var(--color-text-primary);cursor:pointer"><div style="width:32px;height:32px;background:#EAF3DE;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0"><i class="ti ti-book" style="font-size:16px;color:#3B6D11" aria-hidden="true"></i></div>Recettes</button>
       <button id="qmBtn-mes-recettes" onclick="toggleQuickMenu();showView('mes-recettes')" style="display:flex;align-items:center;gap:10px;padding:12px;background:var(--color-background-secondary);border:0.5px solid var(--color-border-tertiary);border-radius:14px;font-size:0.82rem;font-weight:600;color:var(--color-text-primary);cursor:pointer"><div style="width:32px;height:32px;background:#FFF0EC;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0"><i class="ti ti-chef-hat" style="font-size:16px;color:#FF6B6B" aria-hidden="true"></i></div>Mes recettes</button>
-<button id="qmBtn-corpo" onclick="toggleQuickMenu();showView('corpo')" style="display:flex;align-items:center;gap:10px;padding:12px;background:var(--color-background-secondary);border:0.5px solid var(--color-border-tertiary);border-radius:14px;font-size:0.82rem;font-weight:600;color:var(--color-text-primary);cursor:pointer"><div style="width:32px;height:32px;background:#FFF0EC;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0"><i class="ti ti-user-scan" style="font-size:16px;color:#FF6B6B" aria-hidden="true"></i></div>Evolution corpo</button>
+      <div style="grid-column:1/-1;font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#999;margin:14px 0 2px 2px">Analyse visuelle</div>
+      <button id="qmBtn-visage" onclick="toggleQuickMenu();showView('visage')" style="display:flex;align-items:center;gap:10px;padding:12px;background:var(--color-background-secondary);border:0.5px solid var(--color-border-tertiary);border-radius:14px;font-size:0.82rem;font-weight:600;color:var(--color-text-primary);cursor:pointer"><div style="width:32px;height:32px;background:#FFF0EC;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0"><i class="ti ti-face-id" style="font-size:16px;color:#FF6B6B" aria-hidden="true"></i></div>Analyse Visage</button>
+      <button id="qmBtn-visual" onclick="toggleQuickMenu();showView('visual')" style="display:flex;align-items:center;gap:10px;padding:12px;background:var(--color-background-secondary);border:0.5px solid var(--color-border-tertiary);border-radius:14px;font-size:0.82rem;font-weight:600;color:var(--color-text-primary);cursor:pointer"><div style="width:32px;height:32px;background:#EEEDFE;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0"><i class="ti ti-microscope" style="font-size:16px;color:#534AB7" aria-hidden="true"></i></div>Détection visuelle</button>
+      <button id="qmBtn-corpo" onclick="toggleQuickMenu();showView('corpo')" style="display:flex;align-items:center;gap:10px;padding:12px;background:var(--color-background-secondary);border:0.5px solid var(--color-border-tertiary);border-radius:14px;font-size:0.82rem;font-weight:600;color:var(--color-text-primary);cursor:pointer"><div style="width:32px;height:32px;background:#FFF0EC;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0"><i class="ti ti-user-scan" style="font-size:16px;color:#FF6B6B" aria-hidden="true"></i></div>Evolution corpo</button>
+      <div style="grid-column:1/-1;font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#999;margin:14px 0 2px 2px">Suivi & santé</div>
+      <button id="qmBtn-health" onclick="toggleQuickMenu();showView('health')" style="display:flex;align-items:center;gap:10px;padding:12px;background:var(--color-background-secondary);border:0.5px solid var(--color-border-tertiary);border-radius:14px;font-size:0.82rem;font-weight:600;color:var(--color-text-primary);cursor:pointer"><div style="width:32px;height:32px;background:#EAF3DE;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0"><i class="ti ti-activity" style="font-size:16px;color:#3B6D11" aria-hidden="true"></i></div>Suivi santé</button>
+      <button id="qmBtn-biologie" onclick="toggleQuickMenu();showView('biologie')" style="display:flex;align-items:center;gap:10px;padding:12px;background:var(--color-background-secondary);border:0.5px solid var(--color-border-tertiary);border-radius:14px;font-size:0.82rem;font-weight:600;color:var(--color-text-primary);cursor:pointer"><div style="width:32px;height:32px;background:#EEEDFE;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0"><i class="ti ti-dna" style="font-size:16px;color:#534AB7" aria-hidden="true"></i></div>Bilan sanguin</button>
+      <button id="btnCycleFeminin" onclick="toggleQuickMenu();showView('cycle')" style="display:none;align-items:center;gap:10px;padding:12px;background:#FFF5F0;border:0.5px solid rgba(255,107,107,0.15);border-radius:14px;font-size:0.82rem;font-weight:600;color:#2D2D2D;cursor:pointer"><div style="width:32px;height:32px;background:#FBEAF0;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0"><i class="ti ti-rosette" style="font-size:16px;color:#993556" aria-hidden="true"></i></div>Cycle féminin</button>
+      <button id="qmBtn-planning" onclick="toggleQuickMenu();showView('planning')" style="display:flex;align-items:center;gap:10px;padding:12px;background:var(--color-background-secondary);border:0.5px solid var(--color-border-tertiary);border-radius:14px;font-size:0.82rem;font-weight:600;color:var(--color-text-primary);cursor:pointer"><div style="width:32px;height:32px;background:#E6F1FB;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0"><i class="ti ti-calendar" style="font-size:16px;color:#185FA5" aria-hidden="true"></i></div>Mon planning</button>
+      <div style="grid-column:1/-1;font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#999;margin:14px 0 2px 2px">Progression & motivation</div>
+      <button id="qmBtn-programs" onclick="toggleQuickMenu();showView('programs')" style="display:flex;align-items:center;gap:10px;padding:12px;background:var(--color-background-secondary);border:0.5px solid var(--color-border-tertiary);border-radius:14px;font-size:0.82rem;font-weight:600;color:var(--color-text-primary);cursor:pointer"><div style="width:32px;height:32px;background:#FFF0EC;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0"><i class="ti ti-target" style="font-size:16px;color:#FF6B6B" aria-hidden="true"></i></div>Programmes</button>
+      <button id="qmBtn-leaderboard" onclick="toggleQuickMenu();showView('leaderboard');loadLeaderboard()" style="display:flex;align-items:center;gap:10px;padding:12px;background:var(--color-background-secondary);border:0.5px solid var(--color-border-tertiary);border-radius:14px;font-size:0.82rem;font-weight:600;color:var(--color-text-primary);cursor:pointer"><div style="width:32px;height:32px;background:#FFF7E0;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0"><i class="ti ti-trophy" style="font-size:16px;color:#D4A017" aria-hidden="true"></i></div>Classement</button>
       <button id="qmBtn-gamification" onclick="toggleQuickMenu();showView('gamification')" style="display:flex;align-items:center;gap:10px;padding:12px;background:var(--color-background-secondary);border:0.5px solid var(--color-border-tertiary);border-radius:14px;font-size:0.82rem;font-weight:600;color:var(--color-text-primary);cursor:pointer"><div style="width:32px;height:32px;background:#FAEEDA;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0"><i class="ti ti-trophy" style="font-size:16px;color:#854F0B" aria-hidden="true"></i></div>Progression</button>
+      <button id="qmBtn-pricing" onclick="toggleQuickMenu();showView('pricing')" style="display:flex;align-items:center;gap:10px;padding:12px;background:var(--color-background-secondary);border:0.5px solid var(--color-border-tertiary);border-radius:14px;font-size:0.82rem;font-weight:600;color:var(--color-text-primary);cursor:pointer"><div style="width:32px;height:32px;background:#FAEEDA;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0"><i class="ti ti-star" style="font-size:16px;color:#854F0B" aria-hidden="true"></i></div>Abonnements</button>
+      <button id="qmBtn-pro" onclick="toggleQuickMenu();showView('pro')" style="display:none"><div style="width:32px;height:32px;background:#EAF3DE;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0"><i class="ti ti-stethoscope" style="font-size:16px;color:#3B6D11" aria-hidden="true"></i></div>Espace médecin</button>
+      <button id="qmBtn-chrono" onclick="toggleQuickMenu();showView('chrono')" style="display:none !important;display:flex;align-items:center;gap:10px;padding:12px;background:#FFF5F0;border:0.5px solid rgba(255,107,107,0.15);border-radius:14px;font-size:0.82rem;font-weight:600;color:#2D2D2D;cursor:pointer"><div style="width:32px;height:32px;background:#FBEAF0;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0"><i class="ti ti-heart" style="font-size:16px;color:#993556" aria-hidden="true"></i></div>Score de santé</button>
     </div>
   </div>
 </div>
@@ -14545,26 +14618,28 @@ document.addEventListener('resume', function() {
     }
   }, 1000);
 }, false);
-
+window.getProfilePhotoKey = function() {
+  var user = JSON.parse(localStorage.getItem('nutricare_user') || 'null');
+  var uid = (user && (user.email || user.id)) || 'anonyme';
+  return 'mirella_profile_photo_' + uid;
+};
 window.handleProfilePhoto = function(input) {
   if (!input.files || !input.files[0]) return;
   var file = input.files[0];
   var reader = new FileReader();
   reader.onload = function(e) {
     var dataUrl = e.target.result;
-    localStorage.setItem('mirella_profile_photo', dataUrl);
+    localStorage.setItem(window.getProfilePhotoKey(), dataUrl);
     window.updateProfileAvatarDisplay();
   };
   reader.readAsDataURL(file);
 };
-
 window.removeProfilePhoto = function() {
-  localStorage.removeItem('mirella_profile_photo');
+  localStorage.removeItem(window.getProfilePhotoKey());
   window.updateProfileAvatarDisplay();
 };
-
 window.updateProfileAvatarDisplay = function() {
-  var photo = localStorage.getItem('mirella_profile_photo');
+  var photo = localStorage.getItem(window.getProfilePhotoKey());
   var sexe = document.getElementById('profileSexe') ? document.getElementById('profileSexe').value : '';
   var emoji = sexe === 'femme' ? '👩' : sexe === 'homme' ? '👨' : '👤';
   var avatarEmoji = document.getElementById('profileAvatarEmoji');
