@@ -4544,7 +4544,7 @@ function switchLang(lang) {
           <div class="cs-feat"><div class="cs-feat-ico"><i class="ti ti-book-2"></i></div><span class="cs-feat-txt">Catalogue 7 000+ recettes</span></div>
           <div class="cs-feat"><div class="cs-feat-ico"><i class="ti ti-bulb"></i></div><span class="cs-feat-txt">Nudges & protocoles pathologies</span></div>
         </div>
-        <div id="standardDiscount" style="display:none;color:rgba(255,255,255,0.75);font-size:13px;font-weight:600;margin:8px 0;text-align:center"></div>
+        <div id="standardDiscount" style="display:none;justify-content:center" ></div>
         <button class="cs-cta" id="standardPlanBtn" onclick="selectPlan(window._pricingPeriod==='annual'?'standard_annual':'standard')"><i class="ti ti-arrow-right" style="font-size:15px"></i>Choisir Standard</button>
       </div>
 
@@ -4570,7 +4570,7 @@ function switchLang(lang) {
           <div class="cp-feat"><div class="cp-feat-ico"><i class="ti ti-mood-happy"></i></div><span class="cp-feat-txt">Coaching comportemental</span></div>
           <div class="cp-feat"><div class="cp-feat-ico"><i class="ti ti-star"></i></div><span class="cp-feat-txt">Programmes & contenus exclusifs</span></div>
         </div>
-        <div id="premiumDiscount" style="display:none;color:rgba(255,255,255,0.9);font-size:13px;font-weight:600;margin:8px 0;text-align:center"></div>
+        <div id="premiumDiscount" style="display:none;justify-content:center"></div>
         <button class="cp-cta" id="premiumPlanBtn" onclick="selectPlan(window._pricingPeriod==='annual'?'premium_annual':'premium')"><i class="ti ti-crown" style="font-size:15px"></i>Choisir Premium</button>
       </div>
 
@@ -7420,17 +7420,19 @@ function switchLang(lang) {
     if (discountPercent === 100) {
       if (stdEl) stdEl.textContent = '0€';
       if (prmEl) prmEl.textContent = '0€';
-      if (stdDisc) { stdDisc.textContent = '🎁 Gratuit à vie (50 filleuls)'; stdDisc.style.display = 'block'; }
-      if (prmDisc) { prmDisc.textContent = '🎁 Gratuit à vie (50 filleuls)'; prmDisc.style.display = 'block'; }
+      var badgeHtmlFree = '<div style="display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,0.12);padding:8px 16px;border-radius:20px;font-size:12.5px;font-weight:700;color:#fff"><i class="ti ti-gift" style="font-size:15px"></i>Gratuit à vie (50 filleuls)</div>';
+      if (stdDisc) { stdDisc.innerHTML = badgeHtmlFree; stdDisc.style.cssText = 'display:flex;justify-content:center;margin:18px 0 20px'; }
+      if (prmDisc) { prmDisc.innerHTML = badgeHtmlFree; prmDisc.style.cssText = 'display:flex;justify-content:center;margin:18px 0 20px'; }
       return;
     }
     var stdRed = (3.99 * (1 - discountPercent/100)).toFixed(2).replace('.', ',');
     var prmRed = (6.90 * (1 - discountPercent/100)).toFixed(2).replace('.', ',');
-    var label = referrals >= 20 ? '(-70% · 20 filleuls)' : referrals >= 10 ? '(-50% · 10 filleuls)' : referrals >= 5 ? '(-30% · 5 filleuls)' : '(-20% · 1 filleul)';
+    var label = referrals >= 20 ? '-70% · 20 filleuls' : referrals >= 10 ? '-50% · 10 filleuls' : referrals >= 5 ? '-30% · 5 filleuls' : '-20% · 1 filleul';
     if (stdEl) stdEl.textContent = stdRed + '€';
     if (prmEl) prmEl.textContent = prmRed + '€';
-    if (stdDisc) { stdDisc.textContent = '🎁 ' + label; stdDisc.style.display = 'block'; }
-    if (prmDisc) { prmDisc.textContent = '🎁 ' + label; prmDisc.style.display = 'block'; }
+    var badgeHtml = '<div style="display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,0.12);padding:8px 16px;border-radius:20px;font-size:12.5px;font-weight:700;color:#fff"><i class="ti ti-gift" style="font-size:15px"></i>' + label + '</div>';
+    if (stdDisc) { stdDisc.innerHTML = badgeHtml; stdDisc.style.cssText = 'display:flex;justify-content:center;margin:18px 0 20px'; }
+    if (prmDisc) { prmDisc.innerHTML = badgeHtml; prmDisc.style.cssText = 'display:flex;justify-content:center;margin:18px 0 20px'; }
   }
 
   function copyReferralCode() {
