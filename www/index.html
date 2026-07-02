@@ -2099,9 +2099,15 @@ window.catalogueNextPage = function() {
 };
 
 window.showCatalogueFavoris = function() {
+  window._recettesTab = 'favoris';
   showView('mes-recettes');
   setTimeout(function() {
-    window.switchRecettesTab('favoris');
+    var btn = document.getElementById('tabFavoris');
+    var btnMes = document.getElementById('tabMesRecettes');
+    var btnCom = document.getElementById('tabCommunaute');
+    if (btn) { btn.style.background = 'var(--coral)'; btn.style.color = 'white'; }
+    if (btnMes) { btnMes.style.background = 'white'; btnMes.style.color = '#888'; }
+    if (btnCom) { btnCom.style.background = 'white'; btnCom.style.color = '#888'; }
   }, 100);
 };
 window.retirerFavori = async function(nomEncoded) {
