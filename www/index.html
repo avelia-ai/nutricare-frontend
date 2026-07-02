@@ -2098,6 +2098,24 @@ window.catalogueNextPage = function() {
   if (window._cataloguePage < totalPages) { window._cataloguePage++; window.loadCatalogue(); }
 };
 
+window.showCatalogueFavoris = function() {
+  showView('mes-recettes');
+  setTimeout(function() {
+    window.switchRecettesTab('favoris');
+  }, 100);
+};
+window.retirerFavori = async function(nomEncoded) {
+  var token = localStorage.getItem('nutricare_token');
+  try {
+    await fetch(BACKEND_URL + '/api/favoris/' + nomEncoded, {
+      method: 'DELETE',
+      headers: { 'Authorization': 'Bearer ' + token }
+    });
+    window.loadMesRecettes();
+  } catch (e) {
+    console.error('Erreur suppression favori:', e);
+  }
+};
 window.toggleFavoriIdx = async function(idx, btn) {
   var r = window._catalogueRecettes[idx];
   if (!r) return;
@@ -13841,16 +13859,34 @@ window.loadMesRecettes = async function() {
   var token = localStorage.getItem('nutricare_token');
   var tab = window._recettesTab || 'mes';
   try {
+    if (tab === 'favoris') {
+      var resF = await fetch(BACKEND_URL + '/api/favoris', {
+        headers: { 'Authorization': 'Bearer ' + token }
+      });
+      var dataF = await resF.json();
+      var favoris = dataF.favoris || [];
+      if (!favoris.length) {
+        list.innerHTML = '<div style="text-align:center;padding:40px;color:#ccc">Aucun favori pour le moment</div>';
+        return;
+      }
+      list.innerHTML = favoris.map(function(f) {
+        var r = f.recette_data || {};
+        var catEmoji = {petit_dejeuner:'🌅',dejeuner:'☀️',diner:'🌙',collation:'🍎',dessert:'🍰',entree:'🥗'}[r.categorie] || '🍽️';
+        return '<div style="background:#FFFCFA;border-radius:14px;padding:14px;margin-bottom:10px;box-shadow:0 0 0 1.5px rgba(255,154,108,0.22),0 14px 32px rgba(230,110,70,0.14)">' +
+          '<div style="display:flex;justify-content:space-between;align-items:flex-start">' +
+          '<div style="flex:1"><div style="font-weight:700;font-size:0.92rem;color:#1a1a1a">' + catEmoji + ' ' + (f.recette_nom||r.nom||'Recette') + '</div>' +
+          '<div style="font-size:0.75rem;color:#888;margin-top:4px">' + (r.calories||0) + ' kcal · ' + (r.prep_minutes||0) + ' min</div></div>' +
+          '<button onclick="window.retirerFavori(\'' + encodeURIComponent(f.recette_nom) + '\')" style="background:none;border:none;color:#ccc;font-size:1.1rem;cursor:pointer;padding:4px">×</button>' +
+          '</div></div>';
+      }).join('');
+      return;
+    }
     var apiType = tab === 'mes' ? 'mes' : 'communaute';
     var res = await fetch(BACKEND_URL + '/api/user-recettes?type=' + apiType, {
       headers: { 'Authorization': 'Bearer ' + token }
     });
     var data = await res.json();
     var recettes = data.recettes || [];
-    if (tab === 'favoris') {
-      var favIds = JSON.parse(localStorage.getItem('mirella_recettes_favoris') || '[]');
-      recettes = recettes.filter(function(r){ return favIds.includes(r.id); });
-    }
     if (!recettes.length) {
       list.innerHTML = '<div style="text-align:center;padding:40px;color:#ccc">Aucune recette pour le moment</div>';
       return;
