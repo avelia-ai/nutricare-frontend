@@ -2163,7 +2163,11 @@ window.retirerFavori = async function(nomEncoded) {
   }
 };
 if (new URLSearchParams(window.location.search).get('testreview') === '1') {
-  setTimeout(function(){ if (window.showReviewPrompt) window.showReviewPrompt(); }, 1000);
+  alert('DEBUG: testreview detecte, declenchement dans 1s');
+  setTimeout(function(){
+    if (window.showReviewPrompt) { alert('DEBUG: appel de showReviewPrompt'); window.showReviewPrompt(); }
+    else { alert('DEBUG: showReviewPrompt introuvable !'); }
+  }, 1000);
 }
 window.maybeShowReviewPrompt = function() {
   var status = localStorage.getItem('mirella_review_status');
