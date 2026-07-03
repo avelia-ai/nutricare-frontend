@@ -2162,6 +2162,51 @@ window.retirerFavori = async function(nomEncoded) {
     console.error('Erreur suppression favori:', e);
   }
 };
+window.maybeShowReviewPrompt = function() {
+  var status = localStorage.getItem('mirella_review_status');
+  if (status === 'yes' || status === 'no') return;
+  var cooldownUntil = localStorage.getItem('mirella_review_cooldown');
+  if (cooldownUntil && Date.now() < parseInt(cooldownUntil)) return;
+  if (Math.random() > 0.4) return;
+  setTimeout(function(){ window.showReviewPrompt(); }, 3000);
+};
+window.showReviewPrompt = function() {
+  var modal = document.getElementById('reviewPromptModal');
+  if (!modal) return;
+  modal.querySelector('.rp-body').innerHTML = '<div style="text-align:center"><div style="font-size:2.2rem;margin-bottom:10px">🌸</div><div style="font-weight:800;font-size:1.05rem;color:#1a1a1a;margin-bottom:6px">Vous aimez Mirella ?</div><div style="font-size:0.85rem;color:#888;margin-bottom:20px">Votre avis nous aide a ameliorer l\'app</div><button onclick="window.reviewPromptAnswer(true)" style="width:100%;background:linear-gradient(135deg,var(--coral),var(--accent));color:white;border:none;border-radius:12px;padding:13px;font-weight:700;font-size:0.9rem;cursor:pointer;margin-bottom:10px;font-family:DM Sans,sans-serif">Oui, j\'adore ❤️</button><button onclick="window.reviewPromptAnswer(false)" style="width:100%;background:white;color:#888;border:1.5px solid #eee;border-radius:12px;padding:13px;font-weight:600;font-size:0.9rem;cursor:pointer;font-family:DM Sans,sans-serif">Pas vraiment</button></div>';
+  modal.style.display = 'flex';
+};
+window.reviewPromptAnswer = async function(liked) {
+  var modal = document.getElementById('reviewPromptModal');
+  var body = modal.querySelector('.rp-body');
+  var token = localStorage.getItem('nutricare_token');
+  if (liked) {
+    localStorage.setItem('mirella_review_status', 'yes');
+    try {
+      await fetch(BACKEND_URL + '/api/review/interested', { method: 'POST', headers: { 'Authorization': 'Bearer ' + token } });
+    } catch(e) {}
+    body.innerHTML = '<div style="text-align:center;padding:10px 0"><div style="font-size:2.2rem;margin-bottom:10px">🙏</div><div style="font-weight:800;color:#1a1a1a;font-size:1rem">Merci beaucoup !</div><div style="font-size:0.85rem;color:#888;margin-top:8px;line-height:1.5">Mirella arrive bientot sur le store. On vous previendra pour laisser votre avis !</div></div>';
+    setTimeout(function(){ modal.style.display = 'none'; }, 3000);
+  } else {
+    body.innerHTML = '<div><div style="font-weight:800;font-size:1rem;color:#1a1a1a;margin-bottom:12px">Qu\'est-ce qui pourrait etre mieux ?</div><textarea id="rpFeedbackText" placeholder="Votre retour nous interesse..." style="width:100%;min-height:90px;border:1.5px solid #eee;border-radius:12px;padding:12px;font-size:0.85rem;font-family:DM Sans,sans-serif;box-sizing:border-box;resize:none"></textarea><button onclick="window.reviewPromptSubmitFeedback()" style="width:100%;background:linear-gradient(135deg,var(--coral),var(--accent));color:white;border:none;border-radius:12px;padding:13px;font-weight:700;font-size:0.9rem;cursor:pointer;margin-top:12px;font-family:DM Sans,sans-serif">Envoyer</button></div>';
+  }
+};
+window.reviewPromptSubmitFeedback = async function() {
+  var msg = document.getElementById('rpFeedbackText').value;
+  var modal = document.getElementById('reviewPromptModal');
+  var token = localStorage.getItem('nutricare_token');
+  localStorage.setItem('mirella_review_status', 'no');
+  try {
+    await fetch(BACKEND_URL + '/api/review/feedback', { method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token }, body: JSON.stringify({ message: msg }) });
+  } catch(e) {}
+  modal.querySelector('.rp-body').innerHTML = '<div style="text-align:center;padding:10px 0"><div style="font-size:2.2rem;margin-bottom:10px">🙏</div><div style="font-weight:800;color:#1a1a1a;font-size:1rem">Merci pour votre retour !</div><div style="font-size:0.85rem;color:#888;margin-top:8px">On va s\'en servir pour ameliorer Mirella.</div></div>';
+  setTimeout(function(){ modal.style.display = 'none'; }, 2500);
+};
+window.reviewPromptDismiss = function() {
+  var modal = document.getElementById('reviewPromptModal');
+  modal.style.display = 'none';
+  localStorage.setItem('mirella_review_cooldown', String(Date.now() + 75*24*60*60*1000));
+};
 window.toggleFavoriIdx = async function(idx, btn) {
   var r = window._catalogueRecettes[idx];
   if (!r) return;
@@ -10002,6 +10047,7 @@ var activeMenuFilters = new Set();
     if (res.ok) {
         renderMenu(menu);
         showMirellaNotif('🍽️ Votre menu de la semaine est prêt ! J\'ai adapté chaque repas à votre objectif et votre profil santé. Bonne dégustation !');
+        window.maybeShowReviewPrompt();
         // Générer impacts santé en arrière-plan
         const profile = JSON.parse(localStorage.getItem('nutricare_profile') || '{}');
         fetch(BACKEND_URL + '/api/menus/impact', {
@@ -17536,5 +17582,11 @@ window.addRoutineToPlanning = function(idx) {
   if (typeof showView === 'function') showView('planning');
 };
 </script>
+<div id="reviewPromptModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:9999;align-items:center;justify-content:center;padding:20px">
+  <div style="background:white;border-radius:20px;padding:24px;max-width:340px;width:100%;font-family:DM Sans,sans-serif;position:relative">
+    <button onclick="window.reviewPromptDismiss()" style="position:absolute;top:12px;right:12px;background:none;border:none;font-size:1.2rem;color:#ccc;cursor:pointer">×</button>
+    <div class="rp-body"></div>
+  </div>
+</div>
 </body>
 </html>
