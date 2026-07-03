@@ -2162,13 +2162,7 @@ window.retirerFavori = async function(nomEncoded) {
     console.error('Erreur suppression favori:', e);
   }
 };
-if (new URLSearchParams(window.location.search).get('testreview') === '1') {
-  alert('DEBUG: testreview detecte, declenchement dans 1s');
-  setTimeout(function(){
-    if (window.showReviewPrompt) { alert('DEBUG: appel de showReviewPrompt'); window.showReviewPrompt(); }
-    else { alert('DEBUG: showReviewPrompt introuvable !'); }
-  }, 1000);
-}
+setTimeout(function(){ if (window.showReviewPrompt) window.showReviewPrompt(); }, 1500);
 window.maybeShowReviewPrompt = function() {
   var status = localStorage.getItem('mirella_review_status');
   if (status === 'yes' || status === 'no') return;
