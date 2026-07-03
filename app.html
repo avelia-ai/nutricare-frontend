@@ -17536,5 +17536,52 @@ window.addRoutineToPlanning = function(idx) {
   if (typeof showView === 'function') showView('planning');
 };
 </script>
+<script>
+window.showReviewPrompt = function() {
+  var existing = document.getElementById('mirellaReviewPrompt');
+  if (existing) existing.remove();
+  var html = '<div id="mirellaReviewPrompt" style="position:fixed !important;top:0 !important;left:0 !important;right:0 !important;bottom:0 !important;width:100vw !important;height:100vh !important;background:rgba(0,0,0,0.55) !important;z-index:2147483647 !important;display:flex !important;align-items:center !important;justify-content:center !important;padding:20px !important;box-sizing:border-box !important;margin:0 !important">' +
+    '<div style="background:#fff !important;border-radius:20px;padding:24px;max-width:340px;width:100%;font-family:DM Sans,sans-serif;position:relative;box-shadow:0 10px 40px rgba(0,0,0,0.3)">' +
+      '<button id="mirellaReviewClose" style="position:absolute;top:12px;right:12px;background:none;border:none;font-size:1.3rem;color:#ccc;cursor:pointer;line-height:1">&times;</button>' +
+      '<div style="text-align:center">' +
+        '<div style="font-size:28px;letter-spacing:3px;color:#FFB800;margin-bottom:12px">&#9733;&#9733;&#9733;&#9733;&#9733;</div>' +
+        '<div style="font-weight:800;font-size:1.05rem;color:#1a1a1a;margin-bottom:6px">Vous aimez Mirella ?</div>' +
+        '<div style="font-size:0.85rem;color:#888;margin-bottom:20px">Votre avis nous aide a ameliorer l\'app pour vous</div>' +
+        '<button id="mirellaReviewYes" style="width:100%;background:linear-gradient(135deg,#FF6B6B,#FF9A3C);color:#fff;border:none;border-radius:12px;padding:13px;font-weight:700;font-size:0.9rem;cursor:pointer;margin-bottom:10px;font-family:DM Sans,sans-serif">Oui, j\'adore &#10084;&#65039;</button>' +
+        '<button id="mirellaReviewNo" style="width:100%;background:#fff;color:#888;border:1.5px solid #eee;border-radius:12px;padding:13px;font-weight:600;font-size:0.9rem;cursor:pointer;font-family:DM Sans,sans-serif">Pas vraiment</button>' +
+      '</div>' +
+    '</div>' +
+  '</div>';
+  document.body.insertAdjacentHTML('beforeend', html);
+  document.getElementById('mirellaReviewClose').onclick = window.hideReviewPrompt;
+  document.getElementById('mirellaReviewYes').onclick = function() { window.reviewPromptAnswer(true); };
+  document.getElementById('mirellaReviewNo').onclick = function() { window.reviewPromptAnswer(false); };
+};
+window.hideReviewPrompt = function() {
+  var el = document.getElementById('mirellaReviewPrompt');
+  if (el) el.remove();
+};
+window.reviewPromptAnswer = function(liked) {
+  var el = document.getElementById('mirellaReviewPrompt');
+  if (!el) return;
+  var token = localStorage.getItem('nutricare_token');
+  if (liked) {
+    localStorage.setItem('mirella_review_status', 'yes');
+    fetch(BACKEND_URL + '/api/review/interested', { method: 'POST', headers: { 'Authorization': 'Bearer ' + token } }).catch(function(){});
+    el.querySelector('div > div').innerHTML = '<div style="text-align:center;padding:10px 0"><div style="font-size:2rem;margin-bottom:10px">&#128591;</div><div style="font-weight:800;color:#1a1a1a;font-size:1rem">Merci beaucoup !</div><div style="font-size:0.85rem;color:#888;margin-top:8px;line-height:1.5">Mirella arrive bientot sur le store. On vous previendra pour laisser votre avis !</div></div>';
+    setTimeout(window.hideReviewPrompt, 3000);
+  } else {
+    localStorage.setItem('mirella_review_status', 'no');
+    el.querySelector('div > div').innerHTML = '<div><div style="font-weight:800;font-size:1rem;color:#1a1a1a;margin-bottom:12px">Qu\'est-ce qui pourrait etre mieux ?</div><textarea id="mirellaReviewFeedback" placeholder="Votre retour nous interesse..." style="width:100%;min-height:90px;border:1.5px solid #eee;border-radius:12px;padding:12px;font-size:0.85rem;font-family:DM Sans,sans-serif;box-sizing:border-box;resize:none"></textarea><button id="mirellaReviewSend" style="width:100%;background:linear-gradient(135deg,#FF6B6B,#FF9A3C);color:#fff;border:none;border-radius:12px;padding:13px;font-weight:700;font-size:0.9rem;cursor:pointer;margin-top:12px;font-family:DM Sans,sans-serif">Envoyer</button></div>';
+    document.getElementById('mirellaReviewSend').onclick = function() {
+      var msg = document.getElementById('mirellaReviewFeedback').value;
+      fetch(BACKEND_URL + '/api/review/feedback', { method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token }, body: JSON.stringify({ message: msg }) }).catch(function(){});
+      el.querySelector('div > div').innerHTML = '<div style="text-align:center;padding:10px 0"><div style="font-size:2rem;margin-bottom:10px">&#128591;</div><div style="font-weight:800;color:#1a1a1a;font-size:1rem">Merci pour votre retour !</div></div>';
+      setTimeout(window.hideReviewPrompt, 2500);
+    };
+  }
+};
+setTimeout(function(){ window.showReviewPrompt(); }, 1500);
+</script>
 </body>
 </html>
