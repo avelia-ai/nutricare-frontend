@@ -2162,6 +2162,9 @@ window.retirerFavori = async function(nomEncoded) {
     console.error('Erreur suppression favori:', e);
   }
 };
+if (new URLSearchParams(window.location.search).get('testreview') === '1') {
+  setTimeout(function(){ if (window.showReviewPrompt) window.showReviewPrompt(); }, 1000);
+}
 window.maybeShowReviewPrompt = function() {
   var status = localStorage.getItem('mirella_review_status');
   if (status === 'yes' || status === 'no') return;
