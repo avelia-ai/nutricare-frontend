@@ -1984,6 +1984,11 @@ window.setCatalogueFilter = function(type, val) {
   window.loadCatalogue();
 };
 
+window.filterByTag = function(tag, label) {
+  window._catalogueFilters.tags = [tag];
+  window.showCatalogueList(label);
+  window.loadCatalogue();
+};
 window.toggleCatalogueTag = function(tag, btn) {
   var idx = window._catalogueFilters.tags.indexOf(tag);
   if (idx === -1) {
@@ -13521,21 +13526,43 @@ function toggleQuickMenu() {
 
 
 
-  <!-- Filtres tags -->
-  <style>
-    .cat-tag{display:inline-flex;align-items:center;gap:5px;padding:6px 13px;border-radius:20px;border:0.5px solid rgba(0,0,0,0.1);background:#FAFAFA;color:#666;font-size:11px;font-weight:600;cursor:pointer;white-space:nowrap;font-family:DM Sans,sans-serif;transition:all 0.15s}
-    .cat-tag.active{background:#2D2D2D;color:#fff;border-color:transparent}
-    .cat-tag i{font-size:13px}
-  </style>
-  <div style="padding:10px 16px;background:white;display:flex;gap:6px;overflow-x:auto;border-bottom:0.5px solid rgba(0,0,0,0.06);scrollbar-width:none">
-    <button onclick="window.toggleCatalogueTag('vegetarien',this)" class="cat-tag"><i class="ti ti-leaf"></i>Végétarien</button>
-    <button onclick="window.toggleCatalogueTag('vegan',this)" class="cat-tag"><i class="ti ti-plant-2"></i>Vegan</button>
-    <button onclick="window.toggleCatalogueTag('sans_gluten',this)" class="cat-tag"><i class="ti ti-wheat-off"></i>Sans gluten</button>
-    <button onclick="window.toggleCatalogueTag('sans_lactose',this)" class="cat-tag"><i class="ti ti-milk-off"></i>Sans lactose</button>
-    <button onclick="window.toggleCatalogueTag('halal',this)" class="cat-tag"><i class="ti ti-moon-stars"></i>Halal</button>
-    <button onclick="window.toggleCatalogueTag('sans_porc',this)" class="cat-tag"><i class="ti ti-pig-off"></i>Sans porc</button>
-    <button onclick="window.toggleCatalogueTag('riche_proteines',this)" class="cat-tag"><i class="ti ti-dumbbell"></i>Protéines</button>
-    <button onclick="window.toggleCatalogueTag('faible_calories',this)" class="cat-tag"><i class="ti ti-flame"></i>Light</button>
+  <!-- Filtres rapides (tuiles) -->
+  <div style="padding:16px;background:white;border-bottom:0.5px solid rgba(0,0,0,0.06)">
+    <div style="font-size:0.95rem;font-weight:800;color:#1a1a1a;margin-bottom:12px">Filtres rapides</div>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px">
+      <div onclick="window.filterByTag('vegetarien','Vegetarien')" style="aspect-ratio:3/4;border-radius:16px;background:linear-gradient(135deg,#7FB069,#4A7C59);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;cursor:pointer">
+        <i class="ti ti-leaf" style="font-size:26px;color:white"></i>
+        <div style="color:white;font-weight:800;font-size:0.72rem;text-transform:uppercase">Vegetarien</div>
+      </div>
+      <div onclick="window.filterByTag('vegan','Vegan')" style="aspect-ratio:3/4;border-radius:16px;background:linear-gradient(135deg,#5B9279,#2F5C48);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;cursor:pointer">
+        <i class="ti ti-plant-2" style="font-size:26px;color:white"></i>
+        <div style="color:white;font-weight:800;font-size:0.72rem;text-transform:uppercase">Vegan</div>
+      </div>
+      <div onclick="window.filterByTag('sans_gluten','Sans gluten')" style="aspect-ratio:3/4;border-radius:16px;background:linear-gradient(135deg,#D4A574,#A67C4E);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;cursor:pointer">
+        <i class="ti ti-wheat-off" style="font-size:26px;color:white"></i>
+        <div style="color:white;font-weight:800;font-size:0.72rem;text-transform:uppercase">Sans gluten</div>
+      </div>
+      <div onclick="window.filterByTag('sans_lactose','Sans lactose')" style="aspect-ratio:3/4;border-radius:16px;background:linear-gradient(135deg,#7EC8E3,#4A9DBF);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;cursor:pointer">
+        <i class="ti ti-milk-off" style="font-size:26px;color:white"></i>
+        <div style="color:white;font-weight:800;font-size:0.72rem;text-transform:uppercase">Sans lactose</div>
+      </div>
+      <div onclick="window.filterByTag('halal','Halal')" style="aspect-ratio:3/4;border-radius:16px;background:linear-gradient(135deg,#8E7CC3,#5E4B8C);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;cursor:pointer">
+        <i class="ti ti-moon-stars" style="font-size:26px;color:white"></i>
+        <div style="color:white;font-weight:800;font-size:0.72rem;text-transform:uppercase">Halal</div>
+      </div>
+      <div onclick="window.filterByTag('sans_porc','Sans porc')" style="aspect-ratio:3/4;border-radius:16px;background:linear-gradient(135deg,#E39C9C,#B85C5C);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;cursor:pointer">
+        <i class="ti ti-pig-off" style="font-size:26px;color:white"></i>
+        <div style="color:white;font-weight:800;font-size:0.72rem;text-transform:uppercase">Sans porc</div>
+      </div>
+      <div onclick="window.filterByTag('riche_proteines','Riche en proteines')" style="aspect-ratio:3/4;border-radius:16px;background:linear-gradient(135deg,#FF6B6B,#FF9A3C);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;cursor:pointer">
+        <i class="ti ti-dumbbell" style="font-size:26px;color:white"></i>
+        <div style="color:white;font-weight:800;font-size:0.72rem;text-transform:uppercase">Proteines</div>
+      </div>
+      <div onclick="window.filterByTag('faible_calories','Faible en calories')" style="aspect-ratio:3/4;border-radius:16px;background:linear-gradient(135deg,#FFB347,#E8912A);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;cursor:pointer">
+        <i class="ti ti-flame" style="font-size:26px;color:white"></i>
+        <div style="color:white;font-weight:800;font-size:0.72rem;text-transform:uppercase">Light</div>
+      </div>
+    </div>
   </div>
 
 <div id="catalogueCategoriesSection">
