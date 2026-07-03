@@ -9997,6 +9997,7 @@ var activeMenuFilters = new Set();
     if (res.ok) {
         renderMenu(menu);
         showMirellaNotif('🍽️ Votre menu de la semaine est prêt ! J\'ai adapté chaque repas à votre objectif et votre profil santé. Bonne dégustation !');
+        if (window.maybeShowReviewPrompt) window.maybeShowReviewPrompt();
         // Générer impacts santé en arrière-plan
         const profile = JSON.parse(localStorage.getItem('nutricare_profile') || '{}');
         fetch(BACKEND_URL + '/api/menus/impact', {
@@ -17555,6 +17556,10 @@ window.showReviewPrompt = function() {
 window.hideReviewPrompt = function() {
   var el = document.getElementById('mirellaReviewPrompt');
   if (el) el.remove();
+  var status = localStorage.getItem('mirella_review_status');
+  if (status !== 'yes' && status !== 'no') {
+    localStorage.setItem('mirella_review_cooldown', String(Date.now() + 75*24*60*60*1000));
+  }
 };
 window.reviewPromptAnswer = function(liked) {
   var el = document.getElementById('mirellaReviewPrompt');
@@ -17576,7 +17581,14 @@ window.reviewPromptAnswer = function(liked) {
     };
   }
 };
-setTimeout(function(){ window.showReviewPrompt(); }, 1500);
+window.maybeShowReviewPrompt = function() {
+  var status = localStorage.getItem('mirella_review_status');
+  if (status === 'yes' || status === 'no') return;
+  var cooldownUntil = localStorage.getItem('mirella_review_cooldown');
+  if (cooldownUntil && Date.now() < parseInt(cooldownUntil)) return;
+  if (Math.random() > 0.35) return;
+  setTimeout(function(){ window.showReviewPrompt(); }, 2000);
+};
 </script>
 </body>
 </html>
