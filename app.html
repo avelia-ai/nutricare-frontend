@@ -1996,6 +1996,7 @@ window.loadCatalogue = async function() {
   if (window._catalogueFilters.categorie) params.set('categorie', window._catalogueFilters.categorie);
   if (window._catalogueFilters.tags.length) params.set('tags', window._catalogueFilters.tags.join(','));
   if (window._catalogueFilters.search) params.set('search', window._catalogueFilters.search);
+  if (window._catalogueFilters.cuisine) params.set('cuisine', window._catalogueFilters.cuisine);
   var tri = document.getElementById('catalogueTri');
   if (tri) params.set('tri', tri.value);
 
@@ -13512,46 +13513,46 @@ function toggleQuickMenu() {
     <button onclick="window.toggleCatalogueTag('faible_calories',this)" class="cat-tag"><i class="ti ti-flame"></i>Light</button>
   </div>
 
-  <!-- Catégories visuelles -->
-  <div style="padding:16px 16px 0;background:white">
-    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
-      <div style="font-size:0.82rem;font-weight:700;color:#1a1a1a">Catégories</div>
-    </div>
-    <div style="display:flex;gap:12px;overflow-x:auto;scrollbar-width:none;padding-bottom:16px">
-      <div onclick="window.setCatalogueFilter('categorie','')" style="min-width:80px;flex-shrink:0;text-align:center;cursor:pointer">
-        <div style="width:80px;height:80px;border-radius:16px;overflow:hidden;margin-bottom:6px;background:url('https://images.pexels.com/photos/1640777/pexels-photo-1640777.jpeg?auto=compress&cs=tinysrgb&w=200') center/cover;border:2px solid var(--coral)"></div>
-        <div style="font-size:0.7rem;font-weight:600;color:var(--coral)">Tout</div>
+  <!-- Categories visuelles (grille) -->
+  <div style="padding:16px;background:white">
+    <div style="font-size:0.95rem;font-weight:800;color:#1a1a1a;margin-bottom:12px">Explorer par categorie</div>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px">
+      <div onclick="window.setCatalogueFilter('categorie','')" style="position:relative;aspect-ratio:3/4;border-radius:16px;overflow:hidden;cursor:pointer;background:url('https://images.pexels.com/photos/1640777/pexels-photo-1640777.jpeg?auto=compress&cs=tinysrgb&w=300') center/cover">
+        <div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,0.75) 0%,rgba(0,0,0,0.05) 55%)"></div>
+        <div style="position:absolute;bottom:10px;left:8px;right:8px;color:white;font-weight:800;font-size:0.78rem;line-height:1.15;text-transform:uppercase">Tout voir</div>
       </div>
-      <div onclick="window.loadCatalogueGratuit()" id="catGratuit" style="min-width:80px;flex-shrink:0;text-align:center;cursor:pointer">
-        <div style="width:80px;height:80px;border-radius:16px;margin-bottom:6px;background:linear-gradient(135deg,#FF6B6B,#FF9A3C);display:flex;align-items:center;justify-content:center;position:relative">
-          <i class="ti ti-gift" style="font-size:28px;color:white"></i>
-          <div style="position:absolute;top:6px;right:6px;background:white;color:#FF6B6B;font-size:8px;font-weight:800;padding:2px 5px;border-radius:6px">30</div>
-        </div>
-        <div style="font-size:0.7rem;font-weight:700;color:#FF6B6B">Gratuit</div>
+      <div onclick="window.loadCatalogueGratuit()" id="catGratuit" style="position:relative;aspect-ratio:3/4;border-radius:16px;overflow:hidden;cursor:pointer;background:linear-gradient(135deg,#FF6B6B,#FF9A3C);display:flex;align-items:center;justify-content:center">
+        <i class="ti ti-gift" style="font-size:34px;color:white;opacity:0.9"></i>
+        <div style="position:absolute;top:8px;right:8px;background:white;color:#FF6B6B;font-size:9px;font-weight:800;padding:3px 7px;border-radius:8px">30</div>
+        <div style="position:absolute;bottom:10px;left:8px;right:8px;color:white;font-weight:800;font-size:0.78rem;line-height:1.15;text-transform:uppercase">Gratuit</div>
       </div>
-      <div onclick="window.setCatalogueFilter('categorie','petit_dejeuner')" style="min-width:80px;flex-shrink:0;text-align:center;cursor:pointer">
-        <div style="width:80px;height:80px;border-radius:16px;overflow:hidden;margin-bottom:6px;background:url('https://images.pexels.com/photos/376464/pexels-photo-376464.jpeg?auto=compress&cs=tinysrgb&w=200') center/cover"></div>
-        <div style="font-size:0.7rem;font-weight:600;color:#1a1a1a">Petit-déj</div>
+      <div onclick="window.setCatalogueFilter('categorie','petit_dejeuner')" style="position:relative;aspect-ratio:3/4;border-radius:16px;overflow:hidden;cursor:pointer;background:url('https://images.pexels.com/photos/376464/pexels-photo-376464.jpeg?auto=compress&cs=tinysrgb&w=300') center/cover">
+        <div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,0.75) 0%,rgba(0,0,0,0.05) 55%)"></div>
+        <div style="position:absolute;bottom:10px;left:8px;right:8px;color:white;font-weight:800;font-size:0.78rem;line-height:1.15;text-transform:uppercase">Petit-dej</div>
       </div>
-      <div onclick="window.setCatalogueFilter('categorie','dejeuner')" style="min-width:80px;flex-shrink:0;text-align:center;cursor:pointer">
-        <div style="width:80px;height:80px;border-radius:16px;overflow:hidden;margin-bottom:6px;background:url('https://images.pexels.com/photos/1640772/pexels-photo-1640772.jpeg?auto=compress&cs=tinysrgb&w=200') center/cover"></div>
-        <div style="font-size:0.7rem;font-weight:600;color:#1a1a1a">Déjeuner</div>
+      <div onclick="window.setCatalogueFilter('categorie','dejeuner')" style="position:relative;aspect-ratio:3/4;border-radius:16px;overflow:hidden;cursor:pointer;background:url('https://images.pexels.com/photos/1640772/pexels-photo-1640772.jpeg?auto=compress&cs=tinysrgb&w=300') center/cover">
+        <div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,0.75) 0%,rgba(0,0,0,0.05) 55%)"></div>
+        <div style="position:absolute;bottom:10px;left:8px;right:8px;color:white;font-weight:800;font-size:0.78rem;line-height:1.15;text-transform:uppercase">Dejeuner</div>
       </div>
-      <div onclick="window.setCatalogueFilter('categorie','diner')" style="min-width:80px;flex-shrink:0;text-align:center;cursor:pointer">
-        <div style="width:80px;height:80px;border-radius:16px;overflow:hidden;margin-bottom:6px;background:url('https://images.pexels.com/photos/699953/pexels-photo-699953.jpeg?auto=compress&cs=tinysrgb&w=200') center/cover"></div>
-        <div style="font-size:0.7rem;font-weight:600;color:#1a1a1a">Dîner</div>
+      <div onclick="window.setCatalogueFilter('categorie','diner')" style="position:relative;aspect-ratio:3/4;border-radius:16px;overflow:hidden;cursor:pointer;background:url('https://images.pexels.com/photos/699953/pexels-photo-699953.jpeg?auto=compress&cs=tinysrgb&w=300') center/cover">
+        <div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,0.75) 0%,rgba(0,0,0,0.05) 55%)"></div>
+        <div style="position:absolute;bottom:10px;left:8px;right:8px;color:white;font-weight:800;font-size:0.78rem;line-height:1.15;text-transform:uppercase">Diner</div>
       </div>
-      <div onclick="window.setCatalogueFilter('categorie','dessert')" style="min-width:80px;flex-shrink:0;text-align:center;cursor:pointer">
-        <div style="width:80px;height:80px;border-radius:16px;overflow:hidden;margin-bottom:6px;background:url('https://images.pexels.com/photos/1126359/pexels-photo-1126359.jpeg?auto=compress&cs=tinysrgb&w=200') center/cover"></div>
-        <div style="font-size:0.7rem;font-weight:600;color:#1a1a1a">Desserts</div>
+      <div onclick="window.setCatalogueFilter('categorie','dessert')" style="position:relative;aspect-ratio:3/4;border-radius:16px;overflow:hidden;cursor:pointer;background:url('https://images.pexels.com/photos/1126359/pexels-photo-1126359.jpeg?auto=compress&cs=tinysrgb&w=300') center/cover">
+        <div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,0.75) 0%,rgba(0,0,0,0.05) 55%)"></div>
+        <div style="position:absolute;bottom:10px;left:8px;right:8px;color:white;font-weight:800;font-size:0.78rem;line-height:1.15;text-transform:uppercase">Desserts</div>
       </div>
-      <div onclick="window.setCatalogueFilter('categorie','entree')" style="min-width:80px;flex-shrink:0;text-align:center;cursor:pointer">
-        <div style="width:80px;height:80px;border-radius:16px;overflow:hidden;margin-bottom:6px;background:url('https://images.pexels.com/photos/1213710/pexels-photo-1213710.jpeg?auto=compress&cs=tinysrgb&w=200') center/cover"></div>
-        <div style="font-size:0.7rem;font-weight:600;color:#1a1a1a">Entrées</div>
+      <div onclick="window.setCatalogueFilter('categorie','entree')" style="position:relative;aspect-ratio:3/4;border-radius:16px;overflow:hidden;cursor:pointer;background:url('https://images.pexels.com/photos/1213710/pexels-photo-1213710.jpeg?auto=compress&cs=tinysrgb&w=300') center/cover">
+        <div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,0.75) 0%,rgba(0,0,0,0.05) 55%)"></div>
+        <div style="position:absolute;bottom:10px;left:8px;right:8px;color:white;font-weight:800;font-size:0.78rem;line-height:1.15;text-transform:uppercase">Entrees</div>
       </div>
-      <div onclick="window.setCatalogueFilter('categorie','collation')" style="min-width:80px;flex-shrink:0;text-align:center;cursor:pointer">
-        <div style="width:80px;height:80px;border-radius:16px;overflow:hidden;margin-bottom:6px;background:url('https://images.pexels.com/photos/1132047/pexels-photo-1132047.jpeg?auto=compress&cs=tinysrgb&w=200') center/cover"></div>
-        <div style="font-size:0.7rem;font-weight:600;color:#1a1a1a">Collations</div>
+      <div onclick="window.setCatalogueFilter('categorie','collation')" style="position:relative;aspect-ratio:3/4;border-radius:16px;overflow:hidden;cursor:pointer;background:url('https://images.pexels.com/photos/1132047/pexels-photo-1132047.jpeg?auto=compress&cs=tinysrgb&w=300') center/cover">
+        <div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,0.75) 0%,rgba(0,0,0,0.05) 55%)"></div>
+        <div style="position:absolute;bottom:10px;left:8px;right:8px;color:white;font-weight:800;font-size:0.78rem;line-height:1.15;text-transform:uppercase">Collations</div>
+      </div>
+      <div onclick="window.setCatalogueFilter('cuisine','japonaise')" style="position:relative;aspect-ratio:3/4;border-radius:16px;overflow:hidden;cursor:pointer;background:url('https://images.pexels.com/photos/357756/pexels-photo-357756.jpeg?auto=compress&cs=tinysrgb&w=300') center/cover">
+        <div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,0.75) 0%,rgba(0,0,0,0.05) 55%)"></div>
+        <div style="position:absolute;bottom:10px;left:8px;right:8px;color:white;font-weight:800;font-size:0.78rem;line-height:1.15;text-transform:uppercase">Japonais</div>
       </div>
     </div>
   </div>
