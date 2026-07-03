@@ -2179,6 +2179,7 @@ window.maybeShowReviewPrompt = function() {
 };
 window.showReviewPrompt = function() {
   var modal = document.getElementById('reviewPromptModal');
+  alert('DEBUG: modal trouve = ' + (modal ? 'OUI' : 'NON'));
   if (!modal) return;
   modal.querySelector('.rp-body').innerHTML = '<div style="text-align:center"><div style="font-size:2.2rem;margin-bottom:10px">🌸</div><div style="font-weight:800;font-size:1.05rem;color:#1a1a1a;margin-bottom:6px">Vous aimez Mirella ?</div><div style="font-size:0.85rem;color:#888;margin-bottom:20px">Votre avis nous aide a ameliorer l\'app</div><button onclick="window.reviewPromptAnswer(true)" style="width:100%;background:linear-gradient(135deg,var(--coral),var(--accent));color:white;border:none;border-radius:12px;padding:13px;font-weight:700;font-size:0.9rem;cursor:pointer;margin-bottom:10px;font-family:DM Sans,sans-serif">Oui, j\'adore ❤️</button><button onclick="window.reviewPromptAnswer(false)" style="width:100%;background:white;color:#888;border:1.5px solid #eee;border-radius:12px;padding:13px;font-weight:600;font-size:0.9rem;cursor:pointer;font-family:DM Sans,sans-serif">Pas vraiment</button></div>';
   modal.style.display = 'flex';
