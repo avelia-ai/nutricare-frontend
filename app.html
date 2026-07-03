@@ -2031,6 +2031,7 @@ window.loadCatalogue = async function() {
   if (tri) params.set('tri', tri.value);
 
   try {
+    params.set('_t', Date.now());
     var res = await fetch(BACKEND_URL + '/api/recettes?' + params.toString(), {
       headers: { 'Authorization': 'Bearer ' + token }
     });
