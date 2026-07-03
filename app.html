@@ -1935,6 +1935,7 @@ window.setPricingPeriod = function(period) {
 };
 window._catalogueFilters = { categorie: '', tags: [], search: '', free_only: false };
 window.loadCatalogueGratuit = function() {
+  window.showCatalogueList('Recettes gratuites');
   window._catalogueFilters = { categorie: '', tags: [], search: '', free_only: true };
   window.loadCatalogue(1);
 };
@@ -1947,7 +1948,30 @@ window.initCatalogue = function() {
   window.loadCatalogue();
 };
 
+window._catalogueLabels = {
+  'categorie:': 'Toutes les recettes', 'categorie:petit_dejeuner': 'Petit-dejeuner', 'categorie:dejeuner': 'Dejeuner',
+  'categorie:diner': 'Diner', 'categorie:dessert': 'Desserts', 'categorie:entree': 'Entrees', 'categorie:collation': 'Collations',
+  'cuisine:japonaise': 'Cuisine japonaise', 'cuisine:française': 'Cuisine francaise', 'cuisine:méditerranéenne': 'Cuisine mediterraneenne',
+  'cuisine:italienne': 'Cuisine italienne', 'cuisine:indienne': 'Cuisine indienne', 'cuisine:asiatique': 'Cuisine asiatique',
+  'cuisine:orientale': 'Cuisine orientale', 'cuisine:libanaise': 'Cuisine libanaise', 'cuisine:africaine': 'Cuisine africaine',
+  'cuisine:européenne': 'Cuisine europeenne', 'cuisine:mexicaine': 'Cuisine mexicaine', 'cuisine:latino': 'Cuisine latino-americaine'
+};
+window.showCatalogueList = function(title) {
+  var cs = document.getElementById('catalogueCategoriesSection');
+  var ls = document.getElementById('catalogueListSection');
+  if (cs) cs.style.display = 'none';
+  if (ls) ls.style.display = 'block';
+  var t = document.getElementById('catalogueListTitle');
+  if (t) t.textContent = title || 'Recettes';
+};
+window.showCatalogueCategories = function() {
+  var cs = document.getElementById('catalogueCategoriesSection');
+  var ls = document.getElementById('catalogueListSection');
+  if (ls) ls.style.display = 'none';
+  if (cs) cs.style.display = 'block';
+};
 window.setCatalogueFilter = function(type, val) {
+  window.showCatalogueList(window._catalogueLabels[type + ':' + val] || 'Recettes');
   window._catalogueFilters[type] = val;
   window._cataloguePage = 1;
   // Mettre à jour boutons catégorie
@@ -1978,6 +2002,7 @@ window.toggleCatalogueTag = function(tag, btn) {
 };
 
 window.searchCatalogue = function() {
+  window.showCatalogueList('Resultats de recherche');
   window._catalogueFilters.search = document.getElementById('catalogueSearch').value;
   window._cataloguePage = 1;
   clearTimeout(window._searchTimeout);
@@ -13513,6 +13538,7 @@ function toggleQuickMenu() {
     <button onclick="window.toggleCatalogueTag('faible_calories',this)" class="cat-tag"><i class="ti ti-flame"></i>Light</button>
   </div>
 
+<div id="catalogueCategoriesSection">
   <!-- Categories visuelles (grille) -->
   <div style="padding:16px;background:white">
     <div style="font-size:0.95rem;font-weight:800;color:#1a1a1a;margin-bottom:12px">Explorer par categorie</div>
@@ -13600,7 +13626,12 @@ function toggleQuickMenu() {
       </div>
     </div>
   </div>
-
+</div>
+<div id="catalogueListSection" style="display:none">
+  <div style="padding:12px 16px;display:flex;align-items:center;gap:10px;background:white;border-bottom:0.5px solid rgba(0,0,0,0.06)">
+    <button onclick="window.showCatalogueCategories()" style="background:none;border:none;cursor:pointer;padding:4px"><i class="ti ti-arrow-left" style="font-size:20px;color:#2D2D2D"></i></button>
+    <div id="catalogueListTitle" style="font-weight:800;font-size:1rem;color:#1a1a1a">Recettes</div>
+  </div>
   <!-- Stats et tri -->
   <div style="padding:10px 16px;display:flex;justify-content:space-between;align-items:center">
     <div id="catalogueCount" style="font-size:0.8rem;color:#888">Chargement...</div>
@@ -13650,6 +13681,7 @@ function toggleQuickMenu() {
     <span id="cataloguePage" style="padding:8px 16px;font-size:0.82rem;color:#888;line-height:1.8">Page 1</span>
     <button onclick="window.catalogueNextPage()" id="catalogueNext" style="padding:8px 20px;border-radius:10px;border:none;background:linear-gradient(135deg,var(--coral),var(--accent));color:white;font-size:0.82rem;cursor:pointer">Suiv. →</button>
   </div>
+</div>
 </div>
 <!-- FIN CATALOGUE RECETTES VIEW -->
 
