@@ -1972,6 +1972,7 @@ window.showCatalogueCategories = function() {
 };
 window.setCatalogueFilter = function(type, val) {
   window.showCatalogueList(window._catalogueLabels[type + ':' + val] || 'Recettes');
+  window._catalogueFilters = { categorie: '', cuisine: '', tags: [], search: '' };
   window._catalogueFilters[type] = val;
   window._cataloguePage = 1;
   // Mettre à jour boutons catégorie
@@ -1985,7 +1986,8 @@ window.setCatalogueFilter = function(type, val) {
 };
 
 window.filterByTag = function(tag, label) {
-  window._catalogueFilters.tags = [tag];
+  window._catalogueFilters = { categorie: '', cuisine: '', tags: [tag], search: '' };
+  window._cataloguePage = 1;
   window.showCatalogueList(label);
   window.loadCatalogue();
 };
