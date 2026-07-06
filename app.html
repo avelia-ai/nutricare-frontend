@@ -17599,12 +17599,10 @@ window.maybeShowReviewPrompt = function() {
 (function() {
   var seen = localStorage.getItem('mirella_intro_seen');
   var token = localStorage.getItem('nutricare_token');
-  alert('DEBUG intro: seen=' + seen + ' | token=' + (token ? 'present' : 'absent'));
   if (seen || token) return;
   var overlay = document.getElementById('introVideoOverlay');
-  alert('DEBUG intro: overlay trouve = ' + (overlay ? 'OUI' : 'NON'));
   if (!overlay) return;
-  overlay.style.display = 'flex';
+  overlay.setAttribute('style', 'display:flex !important;position:fixed !important;top:0 !important;left:0 !important;right:0 !important;bottom:0 !important;width:100vw !important;height:100vh !important;background:#000 !important;z-index:2147483647 !important;align-items:center !important;justify-content:center !important;margin:0 !important');
   function closeIntro() {
     localStorage.setItem('mirella_intro_seen', '1');
     overlay.style.display = 'none';
