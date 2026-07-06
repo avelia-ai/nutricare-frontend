@@ -17599,8 +17599,10 @@ window.maybeShowReviewPrompt = function() {
 (function() {
   var seen = localStorage.getItem('mirella_intro_seen');
   var token = localStorage.getItem('nutricare_token');
+  alert('DEBUG intro: seen=' + seen + ' | token=' + (token ? 'present' : 'absent'));
   if (seen || token) return;
   var overlay = document.getElementById('introVideoOverlay');
+  alert('DEBUG intro: overlay trouve = ' + (overlay ? 'OUI' : 'NON'));
   if (!overlay) return;
   overlay.style.display = 'flex';
   function closeIntro() {
