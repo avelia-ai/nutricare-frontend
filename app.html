@@ -17588,26 +17588,23 @@ window.maybeShowReviewPrompt = function() {
   setTimeout(function(){ window.showReviewPrompt(); }, 2000);
 };
 </script>
-<div id="introVideoOverlay" style="display:none;position:fixed;top:0;left:0;right:0;bottom:0;width:100vw;height:100vh;background:#000;z-index:2147483647;align-items:center;justify-content:center">
-  <video id="introVideoEl" src="intro-video.mp4" autoplay muted playsinline style="width:100%;height:100%;object-fit:contain"></video>
-  <div style="position:absolute;bottom:0;left:0;right:0;padding:20px;padding-bottom:calc(20px + env(safe-area-inset-bottom));display:flex;gap:12px;background:linear-gradient(to top,rgba(0,0,0,0.7),transparent)">
-    <button id="introSkipBtn" style="flex:1;background:rgba(255,255,255,0.15);color:white;border:1.5px solid rgba(255,255,255,0.4);border-radius:12px;padding:14px;font-weight:700;font-size:0.95rem;cursor:pointer;font-family:DM Sans,sans-serif;backdrop-filter:blur(10px)">Passer</button>
-    <button id="introSignupBtn" style="flex:2;background:linear-gradient(135deg,#FF6B6B,#FF9A3C);color:white;border:none;border-radius:12px;padding:14px;font-weight:700;font-size:0.95rem;cursor:pointer;font-family:DM Sans,sans-serif">S'inscrire</button>
-  </div>
-</div>
 <script>
 (function() {
   var seen = localStorage.getItem('mirella_intro_seen');
   var token = localStorage.getItem('nutricare_token');
   if (seen || token) return;
+  var html = '<div id="introVideoOverlay" style="position:fixed !important;top:0 !important;left:0 !important;right:0 !important;bottom:0 !important;width:100vw !important;height:100vh !important;background:#000 !important;z-index:2147483647 !important;display:flex !important;align-items:center !important;justify-content:center !important;margin:0 !important">' +
+    '<video id="introVideoEl" src="intro-video.mp4" autoplay muted playsinline style="width:100%;height:100%;object-fit:contain"></video>' +
+    '<div style="position:absolute;bottom:0;left:0;right:0;padding:20px;padding-bottom:calc(20px + env(safe-area-inset-bottom));display:flex;gap:12px;background:linear-gradient(to top,rgba(0,0,0,0.7),transparent)">' +
+      '<button id="introSkipBtn" style="flex:1;background:rgba(255,255,255,0.15);color:white;border:1.5px solid rgba(255,255,255,0.4);border-radius:12px;padding:14px;font-weight:700;font-size:0.95rem;cursor:pointer;font-family:DM Sans,sans-serif">Passer</button>' +
+      '<button id="introSignupBtn" style="flex:2;background:linear-gradient(135deg,#FF6B6B,#FF9A3C);color:white;border:none;border-radius:12px;padding:14px;font-weight:700;font-size:0.95rem;cursor:pointer;font-family:DM Sans,sans-serif">S\'inscrire</button>' +
+    '</div>' +
+  '</div>';
+  document.body.insertAdjacentHTML('beforeend', html);
   var overlay = document.getElementById('introVideoOverlay');
-  if (!overlay) return;
-  overlay.setAttribute('style', 'display:flex !important;position:fixed !important;top:0 !important;left:0 !important;right:0 !important;bottom:0 !important;width:100vw !important;height:100vh !important;background:#000 !important;z-index:2147483647 !important;align-items:center !important;justify-content:center !important;margin:0 !important');
   function closeIntro() {
     localStorage.setItem('mirella_intro_seen', '1');
-    overlay.style.display = 'none';
-    var vid = document.getElementById('introVideoEl');
-    if (vid) vid.pause();
+    if (overlay) overlay.remove();
   }
   document.getElementById('introSkipBtn').onclick = closeIntro;
   document.getElementById('introSignupBtn').onclick = function() {
