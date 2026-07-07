@@ -17596,9 +17596,10 @@ window.maybeShowReviewPrompt = function() {
 </script>
 <script>
 (function() {
+  var forceIntro = new URLSearchParams(window.location.search).get('intro') === '1';
   var seen = localStorage.getItem('mirella_intro_seen');
   var token = localStorage.getItem('nutricare_token');
-  if (seen || token) return;
+  if (!forceIntro && (seen || token)) return;
   var html = '<div id="introVideoOverlay" style="position:fixed !important;top:0 !important;left:0 !important;right:0 !important;bottom:0 !important;background:#000 !important;z-index:2147483647 !important;display:flex !important;flex-direction:column !important;margin:0 !important">' +
     '<div style="flex:1;min-height:0;overflow:hidden;position:relative">' +
       '<video id="introVideoEl" src="intro-video.mp4" autoplay muted playsinline style="width:100%;height:100%;object-fit:cover;display:block;position:absolute;top:0;left:0"></video>' +
