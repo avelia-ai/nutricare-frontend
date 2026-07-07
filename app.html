@@ -616,6 +616,12 @@ button[style*="background:linear-gradient(135deg,var(--coral),var(--accent))"] {
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCCvxdc-gPJr7myjxjZFWNUjbfDmzvZwig&libraries=places" defer></script>
 </head>
 
+<script>
+window.onerror = function(msg, url, line, col, error) {
+  alert('ERREUR JS: ' + msg + ' | ligne ' + line);
+  return false;
+};
+</script>
 <body style="background:#fff8f4;margin:0;padding:0">
 <!-- WAVES BACKGROUND -->
 <canvas id="wavesBg" style="position:fixed;top:0;left:0;width:100%;height:100%;z-index:0;pointer-events:none"></canvas>
