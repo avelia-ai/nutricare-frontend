@@ -7377,6 +7377,7 @@ function switchLang(lang) {
       // Nettoyer les notifs de debug
       try { var _n = JSON.parse(localStorage.getItem('mirella_notifs')||'[]'); _n = _n.filter(function(n){ return !n.message || !n.message.startsWith('Plan:'); }); localStorage.setItem('mirella_notifs', JSON.stringify(_n)); } catch(e) {}
       showApp();
+      setTimeout(function() { if (typeof initBottomNav === 'function') initBottomNav(); }, 100);
       if (localStorage.getItem('mirella_new_user') === 'true') {
         localStorage.removeItem('mirella_new_user');
         setTimeout(showFabTutorial, 900);
@@ -13603,7 +13604,7 @@ function initBottomNav() {
     if (window.Capacitor && window.Capacitor.isNativePlatform()) {
       document.getElementById('mobileTopbar').style.display = 'none !important';
     }
-    document.getElementById('bottomNav').style.display = 'block';
+    if (typeof currentUser !== 'undefined' && currentUser) document.getElementById('bottomNav').style.display = 'block';
     document.getElementById('mobileTopbar').style.display = 'flex';
     // Ajouter padding top et bottom au contenu
     const mainContent = document.getElementById('mainContent');
