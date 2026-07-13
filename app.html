@@ -7419,18 +7419,20 @@ function switchLang(lang) {
     if (document.getElementById('fabTutorialPopup')) return;
     var popup = document.createElement('div');
     popup.id = 'fabTutorialPopup';
-    popup.style.cssText = 'position:fixed;bottom:78px;left:50%;transform:translateX(-50%);background:var(--charcoal,#2D2D2D);color:white;padding:12px 18px;border-radius:14px;font-size:0.82rem;font-weight:600;box-shadow:0 8px 24px rgba(0,0,0,0.25);z-index:99998;max-width:280px;text-align:center;display:flex;flex-direction:column;align-items:center;gap:8px;animation:fabTutorialFadeIn .3s ease';
-    popup.innerHTML = '<div>✨ Appuyez sur le bouton <strong>+</strong> pour accéder à toutes les fonctionnalités de Mirella !</div><button onclick="document.getElementById(\'fabTutorialPopup\').remove()" style="background:rgba(255,255,255,0.15);border:none;color:white;padding:5px 14px;border-radius:8px;font-size:0.75rem;cursor:pointer;font-weight:600">J\'ai compris</button>';
-    var style = document.createElement('style');
-    style.textContent = '@keyframes fabTutorialFadeIn{from{opacity:0;transform:translateX(-50%) translateY(10px)}to{opacity:1;transform:translateX(-50%) translateY(0)}}';
-    document.head.appendChild(style);
+    popup.style.cssText = 'position:fixed;bottom:78px;left:16px;right:16px;max-width:360px;margin:0 auto;background:#FFFCFA;border-radius:18px;padding:18px;box-shadow:0 0 0 1.5px rgba(255,154,108,0.22),0 14px 32px rgba(230,110,70,0.18);z-index:99998;display:flex;align-items:flex-start;gap:12px;font-family:DM Sans,sans-serif;animation:suiviTutoFadeIn .35s ease';
+    if (!document.getElementById('suiviTutorialStyle')) {
+      var fabStyle = document.createElement('style');
+      fabStyle.id = 'suiviTutorialStyle';
+      fabStyle.textContent = '@keyframes suiviTutoFadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}';
+      document.head.appendChild(fabStyle);
+    }
+    popup.innerHTML = '<div style="flex-shrink:0;width:40px;height:40px;border-radius:12px;background:linear-gradient(135deg,var(--coral,#FF6B6B),var(--accent,#FF9A3C));display:flex;align-items:center;justify-content:center"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg></div><div style="flex:1;min-width:0"><div style="font-size:0.88rem;font-weight:700;color:#2D2D2D;margin-bottom:4px">D\u00e9couvrez Mirella</div><div style="font-size:0.8rem;color:#666;line-height:1.5;margin-bottom:12px">Appuyez sur le bouton + pour acc\u00e9der \u00e0 toutes les fonctionnalit\u00e9s de Mirella</div><button onclick="document.getElementById(\'fabTutorialPopup\').remove()" style="background:linear-gradient(135deg,var(--coral,#FF6B6B),var(--accent,#FF9A3C));border:none;color:white;padding:8px 16px;border-radius:10px;font-size:0.78rem;font-weight:700;cursor:pointer;font-family:DM Sans,sans-serif">J\'ai compris</button></div><button onclick="document.getElementById(\'fabTutorialPopup\').remove()" style="flex-shrink:0;background:none;border:none;color:#bbb;font-size:1.1rem;cursor:pointer;padding:0;line-height:1">\u00d7</button>';
     document.body.appendChild(popup);
     setTimeout(function() {
       var p = document.getElementById('fabTutorialPopup');
       if (p) p.remove();
     }, 10000);
   }
-
   function showSuiviTutorial() {
     if (document.getElementById('suiviTutorialPopup')) return;
     var popup = document.createElement('div');
