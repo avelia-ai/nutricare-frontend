@@ -3629,6 +3629,9 @@ function switchLang(lang) {
       <div class="form-group">
         <label class="form-label">Mot de passe</label>
         <input type="password" class="form-input" id="loginPassword" placeholder="••••••••">
+        <div style="text-align:right;margin-top:6px">
+          <a href="javascript:void(0)" onclick="showForgotPassword()" style="font-size:0.78rem;color:var(--coral,#FF6B6B);font-weight:600;text-decoration:none">Mot de passe oublié ?</a>
+        </div>
       </div>
       <button class="btn-auth" onclick="login()">Se connecter →</button>
       <div style="display:flex;align-items:center;gap:10px;margin:16px 0">
@@ -4032,6 +4035,12 @@ function switchLang(lang) {
           <button onclick="showView('profile')" style="background:white;color:var(--coral);border:none;border-radius:10px;padding:10px 20px;font-size:0.85rem;font-weight:700;cursor:pointer">Completer mon profil</button>
         </div>
       </div>
+    <!-- Disclaimer médical -->
+    <div style="padding:20px 20px 32px 20px;text-align:center">
+      <p style="font-size:0.72rem;line-height:1.5;color:rgba(45,45,45,0.5);max-width:600px;margin:0 auto">
+        ⚠️ Mirella est un outil d'aide et de coaching forme et bien-être. Les informations, recommandations et analyses fournies ne constituent en aucun cas un avis médical, un diagnostic ou un traitement, et ne remplacent pas la consultation d'un professionnel de santé qualifié. Consultez toujours un médecin pour toute question relative à votre état de santé.
+      </p>
+    </div>
     </div>
     <!-- FIN HOME VIEW -->
 
@@ -7371,11 +7380,31 @@ function switchLang(lang) {
       // Nettoyer les notifs de debug
       try { var _n = JSON.parse(localStorage.getItem('mirella_notifs')||'[]'); _n = _n.filter(function(n){ return !n.message || !n.message.startsWith('Plan:'); }); localStorage.setItem('mirella_notifs', JSON.stringify(_n)); } catch(e) {}
       showApp();
+      setTimeout(function() { if (typeof initBottomNav === 'function') initBottomNav(); }, 100);
+      if (localStorage.getItem('mirella_new_user') === 'true') {
+        localStorage.removeItem('mirella_new_user');
+        setTimeout(showFabTutorial, 900);
+      }
       const redirectUrl = new URLSearchParams(window.location.search).get('redirect');
       if (redirectUrl) { setTimeout(() => window.location.href = decodeURIComponent(redirectUrl), 500); return; }
     } catch (err) {
       showAuthError('Erreur de connexion au serveur. Réessayez.');
     }
+  }
+  function showFabTutorial() {
+    if (document.getElementById('fabTutorialPopup')) return;
+    var popup = document.createElement('div');
+    popup.id = 'fabTutorialPopup';
+    popup.style.cssText = 'position:fixed;bottom:78px;left:50%;transform:translateX(-50%);background:var(--charcoal,#2D2D2D);color:white;padding:12px 18px;border-radius:14px;font-size:0.82rem;font-weight:600;box-shadow:0 8px 24px rgba(0,0,0,0.25);z-index:99998;max-width:280px;text-align:center;display:flex;flex-direction:column;align-items:center;gap:8px;animation:fabTutorialFadeIn .3s ease';
+    popup.innerHTML = '<div>✨ Appuyez sur le bouton <strong>+</strong> pour accéder à toutes les fonctionnalités de Mirella !</div><button onclick="document.getElementById(\'fabTutorialPopup\').remove()" style="background:rgba(255,255,255,0.15);border:none;color:white;padding:5px 14px;border-radius:8px;font-size:0.75rem;cursor:pointer;font-weight:600">J\'ai compris</button>';
+    var style = document.createElement('style');
+    style.textContent = '@keyframes fabTutorialFadeIn{from{opacity:0;transform:translateX(-50%) translateY(10px)}to{opacity:1;transform:translateX(-50%) translateY(0)}}';
+    document.head.appendChild(style);
+    document.body.appendChild(popup);
+    setTimeout(function() {
+      var p = document.getElementById('fabTutorialPopup');
+      if (p) p.remove();
+    }, 10000);
   }
 
   async function register() {
@@ -7393,6 +7422,7 @@ function switchLang(lang) {
       });
       const data = await res.json();
       if (!res.ok) return showAuthError(data.error || 'Erreur lors de l\'inscription');
+      localStorage.setItem('mirella_new_user', 'true');
       showAuthSuccess('Compte créé ! Vous pouvez maintenant vous connecter.');
       switchTabByName('login');
     } catch (err) {
@@ -13577,7 +13607,7 @@ function initBottomNav() {
     if (window.Capacitor && window.Capacitor.isNativePlatform()) {
       document.getElementById('mobileTopbar').style.display = 'none !important';
     }
-    document.getElementById('bottomNav').style.display = 'block';
+    if (typeof currentUser !== 'undefined' && currentUser) document.getElementById('bottomNav').style.display = 'block';
     document.getElementById('mobileTopbar').style.display = 'flex';
     // Ajouter padding top et bottom au contenu
     const mainContent = document.getElementById('mainContent');
@@ -15246,6 +15276,47 @@ window.loginWithGoogle = async function() {
   }
 };
 
+window.showForgotPassword = function() {
+  if (document.getElementById('forgotPasswordModal')) return;
+  var emailVal = (document.getElementById('loginEmail') && document.getElementById('loginEmail').value.trim()) || '';
+  var modal = document.createElement('div');
+  modal.id = 'forgotPasswordModal';
+  modal.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:99999;display:flex;align-items:center;justify-content:center;padding:20px';
+  modal.innerHTML = '' +
+    '<div style="background:white;border-radius:16px;padding:24px;max-width:360px;width:100%;box-sizing:border-box">' +
+      '<div style="font-size:1.1rem;font-weight:700;color:#2D2D2D;margin-bottom:6px">Mot de passe oublié</div>' +
+      '<div style="font-size:0.82rem;color:#888;margin-bottom:16px">Entrez votre email, vous recevrez un lien pour réinitialiser votre mot de passe.</div>' +
+      '<input type="email" id="forgotPasswordEmail" placeholder="votre@email.com" value="' + emailVal.replace(/"/g, '&quot;') + '" style="width:100%;padding:11px 14px;border:1.5px solid #e0e0e0;border-radius:10px;font-size:0.88rem;box-sizing:border-box;margin-bottom:12px;font-family:DM Sans,sans-serif">' +
+      '<div id="forgotPasswordMsg" style="font-size:0.78rem;margin-bottom:10px"></div>' +
+      '<button onclick="sendPasswordReset()" style="width:100%;padding:12px;background:linear-gradient(135deg,var(--coral,#FF6B6B),var(--accent,#FF9A3C));border:none;border-radius:10px;color:white;font-weight:700;font-size:0.88rem;cursor:pointer;margin-bottom:8px">Envoyer le lien →</button>' +
+      '<button onclick="document.getElementById(\'forgotPasswordModal\').remove()" style="width:100%;padding:10px;background:none;border:none;color:#999;font-size:0.82rem;cursor:pointer">Annuler</button>' +
+    '</div>';
+  document.body.appendChild(modal);
+};
+window.sendPasswordReset = async function() {
+  var emailInput = document.getElementById('forgotPasswordEmail');
+  var msgEl = document.getElementById('forgotPasswordMsg');
+  var email = emailInput.value.trim();
+  if (!email) { msgEl.style.color = '#E85555'; msgEl.textContent = 'Veuillez entrer votre email.'; return; }
+  var client = getSupabaseClient();
+  if (!client) { msgEl.style.color = '#E85555'; msgEl.textContent = 'Erreur de chargement, réessayez.'; return; }
+  msgEl.style.color = '#888';
+  msgEl.textContent = 'Envoi en cours...';
+  try {
+    var redirectTo = 'https://mirella-ai.fr/reset-password.html';
+    var resp = await client.auth.resetPasswordForEmail(email, { redirectTo: redirectTo });
+    if (resp.error) {
+      msgEl.style.color = '#E85555';
+      msgEl.textContent = 'Erreur : ' + resp.error.message;
+      return;
+    }
+    msgEl.style.color = '#4CAF82';
+    msgEl.textContent = 'Email envoyé ! Vérifiez votre boîte de réception.';
+  } catch (e) {
+    msgEl.style.color = '#E85555';
+    msgEl.textContent = 'Erreur de connexion. Réessayez.';
+  }
+};
 async function handleOAuthCallback(urlString) {
   try {
     // Cas 1 : tokens directement dans le hash (#access_token=...)
