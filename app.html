@@ -7377,11 +7377,30 @@ function switchLang(lang) {
       // Nettoyer les notifs de debug
       try { var _n = JSON.parse(localStorage.getItem('mirella_notifs')||'[]'); _n = _n.filter(function(n){ return !n.message || !n.message.startsWith('Plan:'); }); localStorage.setItem('mirella_notifs', JSON.stringify(_n)); } catch(e) {}
       showApp();
+      if (localStorage.getItem('mirella_new_user') === 'true') {
+        localStorage.removeItem('mirella_new_user');
+        setTimeout(showFabTutorial, 900);
+      }
       const redirectUrl = new URLSearchParams(window.location.search).get('redirect');
       if (redirectUrl) { setTimeout(() => window.location.href = decodeURIComponent(redirectUrl), 500); return; }
     } catch (err) {
       showAuthError('Erreur de connexion au serveur. Réessayez.');
     }
+  }
+  function showFabTutorial() {
+    if (document.getElementById('fabTutorialPopup')) return;
+    var popup = document.createElement('div');
+    popup.id = 'fabTutorialPopup';
+    popup.style.cssText = 'position:fixed;bottom:78px;left:50%;transform:translateX(-50%);background:var(--charcoal,#2D2D2D);color:white;padding:12px 18px;border-radius:14px;font-size:0.82rem;font-weight:600;box-shadow:0 8px 24px rgba(0,0,0,0.25);z-index:99998;max-width:280px;text-align:center;display:flex;flex-direction:column;align-items:center;gap:8px;animation:fabTutorialFadeIn .3s ease';
+    popup.innerHTML = '<div>✨ Appuyez sur le bouton <strong>+</strong> pour accéder à toutes les fonctionnalités de Mirella !</div><button onclick="document.getElementById(\'fabTutorialPopup\').remove()" style="background:rgba(255,255,255,0.15);border:none;color:white;padding:5px 14px;border-radius:8px;font-size:0.75rem;cursor:pointer;font-weight:600">J\'ai compris</button>';
+    var style = document.createElement('style');
+    style.textContent = '@keyframes fabTutorialFadeIn{from{opacity:0;transform:translateX(-50%) translateY(10px)}to{opacity:1;transform:translateX(-50%) translateY(0)}}';
+    document.head.appendChild(style);
+    document.body.appendChild(popup);
+    setTimeout(function() {
+      var p = document.getElementById('fabTutorialPopup');
+      if (p) p.remove();
+    }, 6000);
   }
 
   async function register() {
@@ -7399,6 +7418,7 @@ function switchLang(lang) {
       });
       const data = await res.json();
       if (!res.ok) return showAuthError(data.error || 'Erreur lors de l\'inscription');
+      localStorage.setItem('mirella_new_user', 'true');
       showAuthSuccess('Compte créé ! Vous pouvez maintenant vous connecter.');
       switchTabByName('login');
     } catch (err) {
