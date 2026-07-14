@@ -7869,6 +7869,7 @@ function switchLang(lang) {
     document.getElementById('appPage').classList.add('active');
     try { const cached = JSON.parse(localStorage.getItem('nutricare_profile') || 'null'); if (cached) renderProfileQuick(cached); } catch (e) {}
     await loadProfile();
+    if (!window._currentView) { await showView('home'); }
     var _sp = new URLSearchParams(window.location.search); if (_sp.get("success")==="true") { window.history.replaceState({},"",window.location.pathname); loadProfile().then(function(){ alert("Abonnement activé !"); }); } else if (_sp.get("cancelled")==="true") { window.history.replaceState({},"",window.location.pathname); }
 
   }
