@@ -7487,6 +7487,24 @@ function switchLang(lang) {
       if (p) p.remove();
     }, 10000);
   }
+  function showBiologieTutorial() {
+    if (document.getElementById('biologieTutorialPopup')) return;
+    var popup = document.createElement('div');
+    popup.id = 'biologieTutorialPopup';
+    popup.style.cssText = 'position:fixed;top:80px;left:16px;right:16px;max-width:360px;margin:0 auto;background:#FFFCFA;border-radius:18px;padding:18px;box-shadow:0 0 0 1.5px rgba(255,154,108,0.22),0 14px 32px rgba(230,110,70,0.18);z-index:99998;display:flex;align-items:flex-start;gap:12px;font-family:DM Sans,sans-serif;animation:suiviTutoFadeIn .35s ease';
+    if (!document.getElementById('suiviTutorialStyle')) {
+      var biologieStyle = document.createElement('style');
+      biologieStyle.id = 'suiviTutorialStyle';
+      biologieStyle.textContent = '@keyframes suiviTutoFadeIn{from{opacity:0;transform:translateY(-10px)}to{opacity:1;transform:translateY(0)}}';
+      document.head.appendChild(biologieStyle);
+    }
+    popup.innerHTML = '<div style="flex-shrink:0;width:40px;height:40px;border-radius:12px;background:linear-gradient(135deg,var(--coral,#FF6B6B),var(--accent,#FF9A3C));display:flex;align-items:center;justify-content:center"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M9 15h6M9 11h2"/></svg></div><div style="flex:1;min-width:0"><div style="font-size:0.88rem;font-weight:700;color:#2D2D2D;margin-bottom:4px">Bilan sanguin</div><div style="font-size:0.8rem;color:#666;line-height:1.5;margin-bottom:12px">Importez une photo ou un PDF de votre bilan sanguin pour que Mirella vous en fasse une analyse compl\u00e8te en langage simple</div><button onclick="document.getElementById(\'biologieTutorialPopup\').remove()" style="background:linear-gradient(135deg,var(--coral,#FF6B6B),var(--accent,#FF9A3C));border:none;color:white;padding:8px 16px;border-radius:10px;font-size:0.78rem;font-weight:700;cursor:pointer;font-family:DM Sans,sans-serif">J\'ai compris</button></div><button onclick="document.getElementById(\'biologieTutorialPopup\').remove()" style="flex-shrink:0;background:none;border:none;color:#bbb;font-size:1.1rem;cursor:pointer;padding:0;line-height:1">\u00d7</button>';
+    document.body.appendChild(popup);
+    setTimeout(function() {
+      var p = document.getElementById('biologieTutorialPopup');
+      if (p) p.remove();
+    }, 10000);
+  }
   async function register() {
     const name = document.getElementById('registerName').value.trim();
     const email = document.getElementById('registerEmail').value.trim();
@@ -9896,6 +9914,12 @@ Réponds UNIQUEMENT en JSON valide avec cette structure exacte:
       if (localStorage.getItem('mirella_visage_tuto_seen') !== 'true') {
         localStorage.setItem('mirella_visage_tuto_seen', 'true');
         setTimeout(showVisageTutorial, 600);
+      }
+    }
+    if (view === 'biologie') {
+      if (localStorage.getItem('mirella_biologie_tuto_seen') !== 'true') {
+        localStorage.setItem('mirella_biologie_tuto_seen', 'true');
+        setTimeout(showBiologieTutorial, 600);
       }
     }
     if (wcalViews.includes(view)) setTimeout(function(){ wcalInit(view); }, 50);
