@@ -10084,6 +10084,11 @@ Réponds UNIQUEMENT en JSON valide avec cette structure exacte:
     document.querySelectorAll('#homeView,#menusView,#frigoView,#cycleView,#catalogueView,#mesRecettesView,#visageView,#chatView,#profileView,#analysisView,#leaderboardView,#visualView,#biologieView,#scanproduitView,#ordonnanceView,#programsView,#pricingView,#healthView,#chronoView,#gamificationView,#protocolsView').forEach(function(el) {
       if (el) el.style.top = '96px';
     });
+    // healthView et protocolsView ne sont pas en position:fixed, le top ci-dessus n'a aucun effet dessus.
+    // On compense avec un margin-top pour ne pas que le titre soit masque par la banniere.
+    document.querySelectorAll('#healthView,#protocolsView').forEach(function(el) {
+      if (el) el.style.marginTop = '40px';
+    });
     window._trialBannerActive = true;
   }
 
