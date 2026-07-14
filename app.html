@@ -7523,6 +7523,24 @@ function switchLang(lang) {
       if (p) p.remove();
     }, 10000);
   }
+  function showScanproduitTutorial() {
+    if (document.getElementById('scanproduitTutorialPopup')) return;
+    var popup = document.createElement('div');
+    popup.id = 'scanproduitTutorialPopup';
+    popup.style.cssText = 'position:fixed;top:80px;left:16px;right:16px;max-width:360px;margin:0 auto;background:#FFFCFA;border-radius:18px;padding:18px;box-shadow:0 0 0 1.5px rgba(255,154,108,0.22),0 14px 32px rgba(230,110,70,0.18);z-index:99998;display:flex;align-items:flex-start;gap:12px;font-family:DM Sans,sans-serif;animation:suiviTutoFadeIn .35s ease';
+    if (!document.getElementById('suiviTutorialStyle')) {
+      var scanStyle = document.createElement('style');
+      scanStyle.id = 'suiviTutorialStyle';
+      scanStyle.textContent = '@keyframes suiviTutoFadeIn{from{opacity:0;transform:translateY(-10px)}to{opacity:1;transform:translateY(0)}}';
+      document.head.appendChild(scanStyle);
+    }
+    popup.innerHTML = '<div style="flex-shrink:0;width:40px;height:40px;border-radius:12px;background:linear-gradient(135deg,var(--coral,#FF6B6B),var(--accent,#FF9A3C));display:flex;align-items:center;justify-content:center"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7V5a2 2 0 0 1 2-2h2M17 3h2a2 2 0 0 1 2 2v2M21 17v2a2 2 0 0 1-2 2h-2M7 21H5a2 2 0 0 1-2-2v-2M8 12h8"/></svg></div><div style="flex:1;min-width:0"><div style="font-size:0.88rem;font-weight:700;color:#2D2D2D;margin-bottom:4px">Scan produit</div><div style="font-size:0.8rem;color:#666;line-height:1.5;margin-bottom:12px">Photographiez un produit alimentaire pour analyser ses apports nutritionnels et sa compatibilit\u00e9 avec votre profil</div><button onclick="document.getElementById(\'scanproduitTutorialPopup\').remove()" style="background:linear-gradient(135deg,var(--coral,#FF6B6B),var(--accent,#FF9A3C));border:none;color:white;padding:8px 16px;border-radius:10px;font-size:0.78rem;font-weight:700;cursor:pointer;font-family:DM Sans,sans-serif">J\'ai compris</button></div><button onclick="document.getElementById(\'scanproduitTutorialPopup\').remove()" style="flex-shrink:0;background:none;border:none;color:#bbb;font-size:1.1rem;cursor:pointer;padding:0;line-height:1">\u00d7</button>';
+    document.body.appendChild(popup);
+    setTimeout(function() {
+      var p = document.getElementById('scanproduitTutorialPopup');
+      if (p) p.remove();
+    }, 10000);
+  }
   async function register() {
     const name = document.getElementById('registerName').value.trim();
     const email = document.getElementById('registerEmail').value.trim();
@@ -9944,6 +9962,12 @@ Réponds UNIQUEMENT en JSON valide avec cette structure exacte:
       if (localStorage.getItem('mirella_frigo_tuto_seen') !== 'true') {
         localStorage.setItem('mirella_frigo_tuto_seen', 'true');
         setTimeout(showFrigoTutorial, 600);
+      }
+    }
+    if (view === 'scanproduit') {
+      if (localStorage.getItem('mirella_scanproduit_tuto_seen') !== 'true') {
+        localStorage.setItem('mirella_scanproduit_tuto_seen', 'true');
+        setTimeout(showScanproduitTutorial, 600);
       }
     }
     if (wcalViews.includes(view)) setTimeout(function(){ wcalInit(view); }, 50);
