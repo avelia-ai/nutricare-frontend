@@ -7595,6 +7595,24 @@ function switchLang(lang) {
       if (p) p.remove();
     }, 10000);
   }
+  function showMesRecettesTutorial() {
+    if (document.getElementById('mesRecettesTutorialPopup')) return;
+    var popup = document.createElement('div');
+    popup.id = 'mesRecettesTutorialPopup';
+    popup.style.cssText = 'position:fixed;top:80px;left:16px;right:16px;max-width:360px;margin:0 auto;background:#FFFCFA;border-radius:18px;padding:18px;box-shadow:0 0 0 1.5px rgba(255,154,108,0.22),0 14px 32px rgba(230,110,70,0.18);z-index:99998;display:flex;align-items:flex-start;gap:12px;font-family:DM Sans,sans-serif;animation:suiviTutoFadeIn .35s ease';
+    if (!document.getElementById('suiviTutorialStyle')) {
+      var mesRecettesStyle = document.createElement('style');
+      mesRecettesStyle.id = 'suiviTutorialStyle';
+      mesRecettesStyle.textContent = '@keyframes suiviTutoFadeIn{from{opacity:0;transform:translateY(-10px)}to{opacity:1;transform:translateY(0)}}';
+      document.head.appendChild(mesRecettesStyle);
+    }
+    popup.innerHTML = '<div style="flex-shrink:0;width:40px;height:40px;border-radius:12px;background:linear-gradient(135deg,var(--coral,#FF6B6B),var(--accent,#FF9A3C));display:flex;align-items:center;justify-content:center"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a4 4 0 0 0-4 4v1H6a2 2 0 0 0-2 2v11a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-2V6a4 4 0 0 0-4-4z"/></svg></div><div style="flex:1;min-width:0"><div style="font-size:0.88rem;font-weight:700;color:#2D2D2D;margin-bottom:4px">Mes recettes</div><div style="font-size:0.8rem;color:#666;line-height:1.5;margin-bottom:12px">Cr\u00e9ez vos propres recettes, retrouvez vos favoris et d\u00e9couvrez celles de la communaut\u00e9 Mirella</div><button onclick="document.getElementById(\'mesRecettesTutorialPopup\').remove()" style="background:linear-gradient(135deg,var(--coral,#FF6B6B),var(--accent,#FF9A3C));border:none;color:white;padding:8px 16px;border-radius:10px;font-size:0.78rem;font-weight:700;cursor:pointer;font-family:DM Sans,sans-serif">J\'ai compris</button></div><button onclick="document.getElementById(\'mesRecettesTutorialPopup\').remove()" style="flex-shrink:0;background:none;border:none;color:#bbb;font-size:1.1rem;cursor:pointer;padding:0;line-height:1">\u00d7</button>';
+    document.body.appendChild(popup);
+    setTimeout(function() {
+      var p = document.getElementById('mesRecettesTutorialPopup');
+      if (p) p.remove();
+    }, 10000);
+  }
   async function register() {
     const name = document.getElementById('registerName').value.trim();
     const email = document.getElementById('registerEmail').value.trim();
@@ -10040,6 +10058,12 @@ Réponds UNIQUEMENT en JSON valide avec cette structure exacte:
       if (localStorage.getItem('mirella_corpo_tuto_seen') !== 'true') {
         localStorage.setItem('mirella_corpo_tuto_seen', 'true');
         setTimeout(showCorpoTutorial, 600);
+      }
+    }
+    if (view === 'mes-recettes') {
+      if (localStorage.getItem('mirella_mesrecettes_tuto_seen') !== 'true') {
+        localStorage.setItem('mirella_mesrecettes_tuto_seen', 'true');
+        setTimeout(showMesRecettesTutorial, 600);
       }
     }
     if (wcalViews.includes(view)) setTimeout(function(){ wcalInit(view); }, 50);
