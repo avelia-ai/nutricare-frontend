@@ -7303,31 +7303,6 @@ function switchLang(lang) {
             }
             var perm = await LN.requestPermissions();
             console.log('Perm:', JSON.stringify(perm));
-            // Test immédiat
-            await LN.schedule({
-              notifications: [{
-                id: 99999,
-                title: '✅ Mirella',
-                body: 'Notifications activées !',
-                schedule: { at: new Date(Date.now() + 2000) },
-                channelId: 'mirella_channel',
-                sound: 'default',
-                smallIcon: 'ic_launcher',
-                iconColor: '#FF6B6B'
-              }]
-            });
-            console.log('Notif test envoyée');
-            // Test notif dans 10 secondes
-            await LN.schedule({ notifications: [{
-              id: 99998,
-              title: '⏰ Test planifié',
-              body: 'Cette notif était planifiée 10s après le login !',
-              schedule: { at: new Date(Date.now() + 10000), allowWhileIdle: true },
-              channelId: 'mirella_channel',
-              smallIcon: 'ic_launcher',
-              iconColor: '#FF6B6B'
-            }]});
-            console.log('Notif 10s planifiée');
             schedulePlanningNotifications();
             scheduleDailyNotifications();
             setTimeout(initMirellaNotifications, 2000);
