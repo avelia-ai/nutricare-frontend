@@ -5679,6 +5679,12 @@ function switchLang(lang) {
       </div>
 
     </div>
+
+    <div id="cardioHistorySection" style="padding:4px 14px 16px">
+      <div style="font-size:0.75rem;font-weight:700;color:#2D2D2D;margin:6px 0 8px">Historique</div>
+      <canvas id="cardioChartCanvas" width="300" height="90" style="width:100%;height:90px;display:block;margin-bottom:10px"></canvas>
+      <div id="cardioHistoryList" style="font-size:0.78rem;color:#888"></div>
+    </div>
   </div>
 
   <div id="healthDateIndicator" style="display:none;font-size:0.82rem;background:rgba(255,107,107,.08);color:var(--coral);padding:6px 12px;border-radius:6px;margin-bottom:16px;font-weight:500"></div>
@@ -9292,6 +9298,8 @@ function switchLang(lang) {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + authToken },
       body: JSON.stringify({ date: new Date().toISOString().split('T')[0], frequence_cardiaque: bpm })
+    }).then(function() {
+      if (typeof loadHealthDashboard === 'function') loadHealthDashboard();
     }).catch(function() {});
   }
 
@@ -11673,6 +11681,7 @@ async function loadHealthDashboard() {
     renderHealthChart(logs);
     refreshHarmonyAvatar(logs);
     renderHealthHistory(logs);
+    renderCardioSection(logs);
   } catch(e) {
     console.error(e);
     var div = document.createElement('div');
@@ -12572,6 +12581,58 @@ function renderHealthChart(logs) {
   if (elEnergie && avgEnergy) elEnergie.innerHTML = avgEnergy + ' <span style="font-size:11px;font-weight:500;color:#bbb">/10</span>';
   if (elSommeil && avgSleep) elSommeil.innerHTML = avgSleep + ' <span style="font-size:11px;font-weight:500;color:#bbb">h</span>';
   drawHealthChart(_healthActiveKey);
+}
+
+function renderCardioSection(logs) {
+  var points = (logs || [])
+    .filter(function(l) { return l.frequence_cardiaque; })
+    .map(function(l) { return { date: l.date, bpm: l.frequence_cardiaque }; });
+
+  var canvas = document.getElementById('cardioChartCanvas');
+  var listEl = document.getElementById('cardioHistoryList');
+  if (!canvas || !listEl) return;
+
+  var ctx = canvas.getContext('2d');
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+  if (points.length === 0) {
+    listEl.innerHTML = '<div style="padding:8px 0;color:#aaa">Aucune mesure enregistr\u00e9e pour le moment.</div>';
+    return;
+  }
+
+  var recent = points.slice(-14);
+  var w = canvas.width, h = canvas.height, pad = 10;
+  var values = recent.map(function(p) { return p.bpm; });
+  var minV = Math.min.apply(null, values) - 5;
+  var maxV = Math.max.apply(null, values) + 5;
+  var range = Math.max(1, maxV - minV);
+  var stepX = recent.length > 1 ? (w - pad * 2) / (recent.length - 1) : 0;
+
+  ctx.beginPath();
+  recent.forEach(function(p, i) {
+    var x = pad + i * stepX;
+    var y = h - pad - ((p.bpm - minV) / range) * (h - pad * 2);
+    if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+  });
+  ctx.strokeStyle = '#FF6B6B';
+  ctx.lineWidth = 2.5;
+  ctx.lineJoin = 'round';
+  ctx.stroke();
+
+  recent.forEach(function(p, i) {
+    var x = pad + i * stepX;
+    var y = h - pad - ((p.bpm - minV) / range) * (h - pad * 2);
+    ctx.beginPath();
+    ctx.arc(x, y, 3, 0, Math.PI * 2);
+    ctx.fillStyle = '#FF6B6B';
+    ctx.fill();
+  });
+
+  listEl.innerHTML = [...recent].reverse().slice(0, 5).map(function(p) {
+    var d = new Date(p.date);
+    var dateStr = d.toLocaleDateString('fr-FR', { day: 'numeric', month: 'short' });
+    return '<div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid #F2EFE9"><span>' + dateStr + '</span><span style="font-weight:700;color:#FF6B6B">' + p.bpm + ' bpm</span></div>';
+  }).join('');
 }
 
 function renderHealthHistory(logs) {
