@@ -8820,6 +8820,164 @@ function switchLang(lang) {
     });
   }
 
+  // ===== CARDIO: mesure du rythme cardiaque via camera =====
+  var cardioStream = null;
+  var cardioSamples = [];
+  var cardioStartTime = 0;
+  var cardioRAF = null;
+  var CARDIO_DURATION_MS = 15000;
+
+  function cardioDetectPeaks(samples) {
+    if (samples.length < 30) return [];
+    var windowMs = 1000;
+    var baseline = samples.map(function(s) {
+      var winStart = s.t - windowMs / 2, winEnd = s.t + windowMs / 2;
+      var sum = 0, count = 0;
+      for (var j = 0; j < samples.length; j++) {
+        if (samples[j].t >= winStart && samples[j].t <= winEnd) { sum += samples[j].v; count++; }
+      }
+      return count > 0 ? sum / count : s.v;
+    });
+    var detrended = samples.map(function(s, i) { return s.v - baseline[i]; });
+    var peaks = [];
+    var minPeakDistanceMs = 320;
+    var lastPeakT = -Infinity;
+    for (var i = 2; i < detrended.length - 2; i++) {
+      if (detrended[i] > detrended[i - 1] && detrended[i] > detrended[i + 1] &&
+          detrended[i] > detrended[i - 2] && detrended[i] > detrended[i + 2] &&
+          detrended[i] > 0.5 &&
+          (samples[i].t - lastPeakT) >= minPeakDistanceMs) {
+        peaks.push(samples[i].t);
+        lastPeakT = samples[i].t;
+      }
+    }
+    return peaks;
+  }
+
+  function cardioEstimateBpm(samples) {
+    var peaks = cardioDetectPeaks(samples);
+    if (peaks.length < 3) return null;
+    var intervals = [];
+    for (var i = 1; i < peaks.length; i++) {
+      var interval = peaks[i] - peaks[i - 1];
+      if (interval > 300 && interval < 2000) intervals.push(interval);
+    }
+    if (intervals.length < 2) return null;
+    var avgInterval = intervals.reduce(function(a, b) { return a + b; }, 0) / intervals.length;
+    return 60000 / avgInterval;
+  }
+
+  window.startCardioMeasurement = async function() {
+    document.getElementById('cardioEntryState').style.display = 'none';
+    document.getElementById('cardioMeasuringState').style.display = 'block';
+    document.getElementById('cardioResultState').style.display = 'none';
+    document.getElementById('cardioMeasuringStatus').textContent = 'Place ton doigt sur la caméra...';
+    cardioSamples = [];
+
+    try {
+      cardioStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: { ideal: 'environment' } } });
+    } catch (err) {
+      window.resetCardioCard();
+      alert('Accès caméra refusé ou indisponible.');
+      return;
+    }
+
+    var video = document.createElement('video');
+    video.srcObject = cardioStream;
+    video.setAttribute('playsinline', '');
+    video.muted = true;
+    await video.play();
+
+    var track = cardioStream.getVideoTracks()[0];
+    try { await track.applyConstraints({ advanced: [{ torch: true }] }); } catch (e) {}
+
+    var canvas = document.createElement('canvas');
+    canvas.width = 40; canvas.height = 40;
+    var ctx = canvas.getContext('2d');
+    cardioStartTime = performance.now();
+
+    function sampleFrame() {
+      var elapsed = performance.now() - cardioStartTime;
+      if (elapsed >= CARDIO_DURATION_MS) {
+        finishCardioMeasurement(track);
+        return;
+      }
+      if (video.videoWidth > 0) {
+        ctx.drawImage(video, 0, 0, 40, 40);
+        var frame = ctx.getImageData(10, 10, 20, 20).data;
+        var sum = 0, count = 0;
+        for (var i = 0; i < frame.length; i += 4) { sum += frame[i]; count++; }
+        cardioSamples.push({ t: elapsed, v: sum / count });
+
+        var progress = Math.min(1, elapsed / CARDIO_DURATION_MS);
+        var ring = document.getElementById('cardioProgressRing');
+        if (ring) ring.setAttribute('stroke-dasharray', (progress * 239) + ' 239');
+
+        if (cardioSamples.length > 60) {
+          var liveBpm = cardioEstimateBpm(cardioSamples.slice(-150));
+          if (liveBpm) document.getElementById('cardioLiveBpm').textContent = Math.round(liveBpm);
+        }
+        var remaining = Math.ceil((CARDIO_DURATION_MS - elapsed) / 1000);
+        document.getElementById('cardioMeasuringStatus').textContent = 'Reste immobile... ' + remaining + 's';
+      }
+      cardioRAF = requestAnimationFrame(sampleFrame);
+    }
+    cardioRAF = requestAnimationFrame(sampleFrame);
+  };
+
+  function finishCardioMeasurement(track) {
+    if (cardioRAF) cancelAnimationFrame(cardioRAF);
+    try { track.applyConstraints({ advanced: [{ torch: false }] }); } catch (e) {}
+    if (cardioStream) cardioStream.getTracks().forEach(function(t) { t.stop(); });
+
+    var bpm = cardioEstimateBpm(cardioSamples);
+    if (!bpm || bpm < 40 || bpm > 200) {
+      document.getElementById('cardioMeasuringState').style.display = 'none';
+      document.getElementById('cardioEntryState').style.display = 'block';
+      document.getElementById('cardioEntryText').textContent = 'Mesure impossible. Assure-toi de bien couvrir la caméra et réessaie.';
+      return;
+    }
+    bpm = Math.round(bpm);
+    showCardioResult(bpm);
+    saveCardioMeasurement(bpm);
+  }
+
+  function showCardioResult(bpm) {
+    document.getElementById('cardioMeasuringState').style.display = 'none';
+    document.getElementById('cardioResultState').style.display = 'block';
+    document.getElementById('cardioResultBpm').textContent = bpm;
+
+    var zoneEl = document.getElementById('cardioResultZone');
+    if (bpm <= 100) { zoneEl.textContent = 'Zone repos'; zoneEl.style.background = '#EAF3DE'; zoneEl.style.color = '#3B6D11'; }
+    else if (bpm <= 140) { zoneEl.textContent = 'Zone modérée'; zoneEl.style.background = '#FFF3D6'; zoneEl.style.color = '#B0790C'; }
+    else { zoneEl.textContent = 'Zone intense'; zoneEl.style.background = '#FFE0DC'; zoneEl.style.color = '#C23B2E'; }
+
+    var trendEl = document.getElementById('cardioResultTrend');
+    var lastBpm = parseInt(localStorage.getItem('mirella_cardio_last') || '0', 10);
+    if (lastBpm > 0) {
+      var diff = bpm - lastBpm;
+      trendEl.textContent = (diff >= 0 ? '+' : '') + diff + ' bpm vs dernière mesure';
+    } else {
+      trendEl.textContent = 'Première mesure enregistrée';
+    }
+    localStorage.setItem('mirella_cardio_last', String(bpm));
+  }
+
+  function saveCardioMeasurement(bpm) {
+    fetch(BACKEND_URL + '/api/health', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + authToken },
+      body: JSON.stringify({ date: new Date().toISOString().split('T')[0], frequence_cardiaque: bpm })
+    }).catch(function() {});
+  }
+
+  window.resetCardioCard = function() {
+    document.getElementById('cardioResultState').style.display = 'none';
+    document.getElementById('cardioMeasuringState').style.display = 'none';
+    document.getElementById('cardioEntryState').style.display = 'block';
+    document.getElementById('cardioEntryText').textContent = 'Pose ton doigt sur la caméra arrière pendant 15 secondes';
+  };
+
   function loadInfoDuJour() {
     const el = document.getElementById('infoDuJourTexte');
     const titre = document.getElementById('infoDuJourTitre');
