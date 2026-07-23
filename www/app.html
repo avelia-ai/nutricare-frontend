@@ -5631,6 +5631,43 @@ function switchLang(lang) {
       </div>
     </div>
   </div>
+  <!-- CARDIO -->
+  <div id="cardioCard" style="background:#FFFCFA;border-radius:16px;margin-bottom:16px;overflow:hidden;box-shadow:0 0 0 1.5px rgba(255,154,108,0.22),0 14px 32px rgba(230,110,70,0.14)">
+    <div style="background:linear-gradient(135deg,var(--coral),var(--accent));padding:16px 20px 30px">
+      <div style="font-size:0.7rem;color:rgba(255,255,255,0.85);font-weight:700;letter-spacing:0.04em;margin-bottom:4px">CARDIO</div>
+      <div style="font-size:1.05rem;color:white;font-weight:700">Rythme cardiaque</div>
+    </div>
+    <div style="margin:-18px 14px 16px;position:relative">
+
+      <div id="cardioEntryState" style="background:#fff;border-radius:14px;padding:18px;text-align:center;box-shadow:0 2px 10px rgba(0,0,0,0.06)">
+        <div style="width:52px;height:52px;border-radius:50%;background:#FFE8DD;display:flex;align-items:center;justify-content:center;margin:0 auto 10px">
+          <span style="font-size:1.4rem">❤️</span>
+        </div>
+        <div id="cardioEntryText" style="font-size:0.78rem;color:#888;margin-bottom:14px">Pose ton doigt sur la caméra arrière pendant 15 secondes</div>
+        <div onclick="startCardioMeasurement()" style="background:linear-gradient(135deg,var(--coral),var(--accent));color:white;border-radius:24px;padding:10px;font-size:0.82rem;font-weight:700;cursor:pointer">Démarrer la mesure</div>
+      </div>
+
+      <div id="cardioMeasuringState" style="display:none;background:linear-gradient(160deg,#3A2C25,#2A1F1A);border-radius:14px;padding:22px;text-align:center">
+        <svg width="110" height="110" viewBox="0 0 90 90" style="margin:0 auto 10px;display:block">
+          <circle cx="45" cy="45" r="38" fill="none" stroke="rgba(255,255,255,0.12)" stroke-width="6"/>
+          <circle id="cardioProgressRing" cx="45" cy="45" r="38" fill="none" stroke="#FF8A5C" stroke-width="6" stroke-dasharray="0 239" stroke-linecap="round" transform="rotate(-90 45 45)"/>
+          <text id="cardioLiveBpm" x="45" y="41" text-anchor="middle" fill="#fff" font-size="21" font-weight="700" font-family="sans-serif">--</text>
+          <text x="45" y="57" text-anchor="middle" fill="#C9BBB0" font-size="9" font-family="sans-serif">bpm</text>
+        </svg>
+        <div id="cardioMeasuringStatus" style="font-size:0.78rem;color:#D8CFC5">Place ton doigt sur la caméra...</div>
+      </div>
+
+      <div id="cardioResultState" style="display:none;background:#fff;border-radius:14px;padding:18px;text-align:center;box-shadow:0 2px 10px rgba(0,0,0,0.06)">
+        <div id="cardioResultBpm" style="font-size:2.2rem;font-weight:700;color:var(--coral);line-height:1">--</div>
+        <div style="font-size:0.78rem;color:#888;margin-bottom:10px">bpm au repos</div>
+        <div id="cardioResultZone" style="display:inline-block;background:#EAF3DE;color:#3B6D11;font-size:0.68rem;font-weight:700;padding:5px 12px;border-radius:12px;margin-bottom:10px">Zone repos</div>
+        <div id="cardioResultTrend" style="font-size:0.72rem;color:#888"></div>
+        <div onclick="resetCardioCard()" style="margin-top:14px;font-size:0.72rem;color:var(--coral);font-weight:700;cursor:pointer">Nouvelle mesure</div>
+      </div>
+
+    </div>
+  </div>
+
   <div id="healthDateIndicator" style="display:none;font-size:0.82rem;background:rgba(255,107,107,.08);color:var(--coral);padding:6px 12px;border-radius:6px;margin-bottom:16px;font-weight:500"></div>
 
   <!-- Info du jour -->
