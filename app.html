@@ -3802,7 +3802,7 @@ function switchLang(lang) {
             <!-- Canvas gauche -->
             <div style="flex-shrink:0;width:160px;height:160px;position:relative;overflow:hidden">
               <canvas id="harmonyCanvasHome" style="display:none"></canvas>
-              <video autoplay muted loop playsinline style="width:88%;height:88%;object-fit:cover;border-radius:50%;background:#FFFCFA;border:none;outline:none;display:block;margin:6% auto">
+              <video id="harmonyFoxVideoHome" autoplay muted loop playsinline style="width:88%;height:88%;object-fit:cover;border-radius:50%;background:#FFFCFA;border:none;outline:none;display:block;margin:6% auto">
                 <source src="https://raw.githubusercontent.com/avelia-ai/nutricare-frontend/main/renard-def-compresse.mp4" type="video/mp4">
               </video>
             </div>
@@ -11834,6 +11834,29 @@ var HARMONY_CAPTIONS = [
   "Ton énergie s'épanouit pleinement.",
   "Tu as atteint une maîtrise profonde.",
 ];
+var HARMONY_FOX_VIDEOS = {
+  1: 'https://raw.githubusercontent.com/avelia-ai/nutricare-frontend/main/renard-niveau1-compresse.mp4',
+  2: 'https://raw.githubusercontent.com/avelia-ai/nutricare-frontend/main/renard-def-compresse.mp4',
+  3: 'https://raw.githubusercontent.com/avelia-ai/nutricare-frontend/main/renard-def-compresse.mp4',
+  4: 'https://raw.githubusercontent.com/avelia-ai/nutricare-frontend/main/renard-def-compresse.mp4',
+  5: 'https://raw.githubusercontent.com/avelia-ai/nutricare-frontend/main/renard-def-compresse.mp4'
+};
+var _lastHarmonyFoxLevel = null;
+function updateHarmonyFoxVideo(level) {
+  if (level === _lastHarmonyFoxLevel) return;
+  _lastHarmonyFoxLevel = level;
+  var url = HARMONY_FOX_VIDEOS[level] || HARMONY_FOX_VIDEOS[1];
+  ['harmonyFoxVideo', 'harmonyFoxVideoHome'].forEach(function(id) {
+    var vid = document.getElementById(id);
+    if (!vid) return;
+    var source = vid.querySelector('source');
+    if (source && source.src !== url) {
+      source.src = url;
+      vid.load();
+      vid.play().catch(function() {});
+    }
+  });
+}
 
 function normalizeHealthLog(log) {
   const sleep  = Math.min((log.sleep_hours  || 0) / 8,  1);
@@ -12379,6 +12402,7 @@ function renderHarmonyAvatar(normalizedValues) {
 
 function updateHarmonyUI(totalPoints) {
   const lvl = getHarmonyLevel(totalPoints);
+  updateHarmonyFoxVideo(lvl.level);
   const badge = document.getElementById('harmonyLevelBadge');
   const stage = document.getElementById('harmonyStageName');
   const caption = document.getElementById('harmonyCaption');
