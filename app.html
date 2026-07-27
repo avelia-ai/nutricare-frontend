@@ -18812,9 +18812,8 @@ window.maybeShowReviewPrompt = function() {
   // ── ONBOARDING ──
   function showOnboarding() {
     var overlay = document.getElementById('onboardingOverlay');
-    alert('overlay found: ' + !!overlay);
     if (overlay) {
-      overlay.style.setProperty('display', 'flex', 'important');
+      overlay.style.cssText = 'display:flex !important;position:fixed;inset:0;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.7);z-index:99999;align-items:center;justify-content:center;padding:20px';
       document.getElementById('onboarding1').style.display = 'block';
       document.getElementById('onboarding2').style.display = 'none';
       document.getElementById('onboarding3').style.display = 'none';
@@ -18915,7 +18914,6 @@ window.maybeShowReviewPrompt = function() {
   // Vérifier si l'onboarding doit s'afficher
   function checkOnboarding() {
     var done = localStorage.getItem('mirella_onboarding_done');
-    alert('check: done=' + done);
     if (!done) showOnboarding();
   }
 
