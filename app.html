@@ -7341,6 +7341,7 @@ function switchLang(lang) {
         window.history.replaceState({}, '', window.location.pathname);
         setTimeout(async function() {
           await loadProfile();
+    checkOnboarding();
           alert('🎉 Abonnement activé !');
         }, 2000);
       } else if (_stripeParams.get('cancelled') === 'true') {
@@ -18806,6 +18807,199 @@ window.maybeShowReviewPrompt = function() {
   var vidEl = document.getElementById('introVideoEl');
   if (vidEl) vidEl.addEventListener('ended', closeIntro);
 })();
+
+  // ── ONBOARDING ──
+  function showOnboarding() {
+    var overlay = document.getElementById('onboardingOverlay');
+    if (overlay) {
+      overlay.style.display = 'flex';
+      document.getElementById('onboarding1').style.display = 'block';
+      document.getElementById('onboarding2').style.display = 'none';
+      document.getElementById('onboarding3').style.display = 'none';
+    }
+  }
+
+  async function saveOnboardingProfile() {
+    var name = document.getElementById('obName').value.trim();
+    var age = document.getElementById('obAge').value;
+    var sexe = document.getElementById('obSexe').value;
+    var activite = document.getElementById('obActivite').value;
+
+    // Mettre à jour le localStorage
+    var profile = JSON.parse(localStorage.getItem('nutricare_profile') || '{}');
+    if (name) profile.full_name = name;
+    if (age) profile.age = parseInt(age);
+    if (sexe) profile.sexe = sexe;
+    if (activite) profile.niveau_activite = activite;
+    localStorage.setItem('nutricare_profile', JSON.stringify(profile));
+
+    // Mettre à jour les champs du profil si visibles
+    if (document.getElementById('profileName')) document.getElementById('profileName').value = name || '';
+    if (document.getElementById('profileAge')) document.getElementById('profileAge').value = age || '';
+    if (document.getElementById('profileSexe')) document.getElementById('profileSexe').value = sexe || '';
+    if (document.getElementById('profileActivite')) document.getElementById('profileActivite').value = activite || '';
+
+    // Sauvegarder via API
+    try {
+      var token = authToken || window._authToken || localStorage.getItem('nutricare_token');
+      if (token) {
+        var updates = {};
+        if (name) updates.full_name = name;
+        if (age) updates.age = parseInt(age);
+        if (sexe) updates.sexe = sexe;
+        if (activite) updates.niveau_activite = activite;
+        await fetch(BACKEND_URL + '/api/profile', {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
+          body: JSON.stringify(updates)
+        });
+      }
+    } catch(e) { console.error('Onboarding save error:', e); }
+
+    // Passer à l'écran 3
+    document.getElementById('onboarding2').style.display = 'none';
+    document.getElementById('onboarding3').style.display = 'block';
+    launchConfetti();
+  }
+
+  function skipOnboarding() {
+    document.getElementById('onboarding2').style.display = 'none';
+    document.getElementById('onboarding3').style.display = 'block';
+    launchConfetti();
+  }
+
+  function closeOnboarding() {
+    document.getElementById('onboardingOverlay').style.display = 'none';
+    localStorage.setItem('mirella_onboarding_done', '1');
+  }
+
+  function launchConfetti() {
+    var canvas = document.getElementById('confettiCanvas');
+    if (!canvas) return;
+    var ctx = canvas.getContext('2d');
+    canvas.width = canvas.offsetWidth;
+    canvas.height = canvas.offsetHeight;
+    var pieces = [];
+    var colors = ['#FF6B6B','#FF9A3C','#7EC8E3','#A8D8A8','#C3A9D1','#FFD700'];
+    for (var i = 0; i < 120; i++) {
+      pieces.push({
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height - canvas.height,
+        r: Math.random() * 6 + 3,
+        color: colors[Math.floor(Math.random() * colors.length)],
+        speed: Math.random() * 3 + 1,
+        swing: Math.random() * 3,
+        angle: Math.random() * Math.PI * 2
+      });
+    }
+    var frame = 0;
+    function draw() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      pieces.forEach(function(p) {
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+        ctx.fillStyle = p.color;
+        ctx.fill();
+        p.y += p.speed;
+        p.x += Math.sin(p.angle + frame * 0.05) * p.swing;
+        if (p.y > canvas.height) { p.y = -10; p.x = Math.random() * canvas.width; }
+      });
+      frame++;
+      if (frame < 180) requestAnimationFrame(draw);
+    }
+    draw();
+  }
+
+  // Vérifier si l'onboarding doit s'afficher
+  function checkOnboarding() {
+    var done = localStorage.getItem('mirella_onboarding_done');
+    if (!done) showOnboarding();
+  }
+
 </script>
+
+<!-- POPUP ONBOARDING MIRELLA -->
+<div id="onboardingOverlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.55);z-index:9999;align-items:center;justify-content:center;padding:20px">
+  <div style="background:white;border-radius:28px;width:100%;max-width:420px;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,0.2);position:relative">
+    
+    <!-- ECRAN 1 : Présentation Mirella -->
+    <div id="onboarding1" style="padding:32px 24px;text-align:center">
+      <img src="https://raw.githubusercontent.com/avelia-ai/nutricare-frontend/main/renard_transparent.png" style="width:140px;height:140px;object-fit:contain;margin-bottom:16px">
+      <h2 style="font-size:1.4rem;font-weight:800;color:#2D2D2D;margin-bottom:8px">Bonjour, je suis Mirella ! 🦊</h2>
+      <p style="font-size:0.88rem;color:#666;line-height:1.6;margin-bottom:12px">Je suis votre coach santé & nutrition personnalisé. Plus vous utilisez l'appli, plus j'évolue avec vous !</p>
+      <div style="background:#fff8f5;border-radius:16px;padding:14px;text-align:left;margin-bottom:20px">
+        <div style="font-size:0.82rem;color:#555;line-height:1.7">
+          🍽️ <b>Générez des menus</b> adaptés à votre profil<br>
+          💧 <b>Suivez votre hydratation</b> et votre sommeil<br>
+          🏆 <b>Relevez des défis</b> pour gagner des points<br>
+          📊 <b>Complétez vos données</b> pour des conseils précis
+        </div>
+      </div>
+      <button onclick="document.getElementById('onboarding1').style.display='none';document.getElementById('onboarding2').style.display='block'" style="width:100%;background:linear-gradient(135deg,#FF6B6B,#FF9A3C);color:white;border:none;border-radius:16px;padding:16px;font-size:1rem;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif">
+        Commencer →
+      </button>
+    </div>
+
+    <!-- ECRAN 2 : Données personnelles -->
+    <div id="onboarding2" style="display:none;padding:32px 24px">
+      <div style="text-align:center;margin-bottom:20px">
+        <img src="https://raw.githubusercontent.com/avelia-ai/nutricare-frontend/main/renard_transparent.png" style="width:70px;height:70px;object-fit:contain;margin-bottom:8px">
+        <h2 style="font-size:1.2rem;font-weight:800;color:#2D2D2D">Parlez-moi de vous ✨</h2>
+        <p style="font-size:0.82rem;color:#888">Ces infos me permettent de personnaliser vos conseils</p>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:12px">
+        <div>
+          <label style="font-size:0.78rem;font-weight:600;color:#555;margin-bottom:4px;display:block">Prénom & Nom</label>
+          <input id="obName" type="text" placeholder="Ex: Sophie Martin" style="width:100%;padding:12px 14px;border:1.5px solid #f0f0f0;border-radius:12px;font-size:0.9rem;font-family:'DM Sans',sans-serif;box-sizing:border-box;outline:none">
+        </div>
+        <div style="display:flex;gap:10px">
+          <div style="flex:1">
+            <label style="font-size:0.78rem;font-weight:600;color:#555;margin-bottom:4px;display:block">Âge</label>
+            <input id="obAge" type="number" placeholder="Ex: 32" min="10" max="100" style="width:100%;padding:12px 14px;border:1.5px solid #f0f0f0;border-radius:12px;font-size:0.9rem;font-family:'DM Sans',sans-serif;box-sizing:border-box;outline:none">
+          </div>
+          <div style="flex:1">
+            <label style="font-size:0.78rem;font-weight:600;color:#555;margin-bottom:4px;display:block">Sexe</label>
+            <select id="obSexe" style="width:100%;padding:12px 14px;border:1.5px solid #f0f0f0;border-radius:12px;font-size:0.9rem;font-family:'DM Sans',sans-serif;box-sizing:border-box;outline:none;background:white">
+              <option value="">-- Choisir --</option>
+              <option value="femme">Femme</option>
+              <option value="homme">Homme</option>
+              <option value="autre">Autre</option>
+            </select>
+          </div>
+        </div>
+        <div>
+          <label style="font-size:0.78rem;font-weight:600;color:#555;margin-bottom:4px;display:block">Niveau d'activité physique</label>
+          <select id="obActivite" style="width:100%;padding:12px 14px;border:1.5px solid #f0f0f0;border-radius:12px;font-size:0.9rem;font-family:'DM Sans',sans-serif;box-sizing:border-box;outline:none;background:white">
+            <option value="">-- Choisir --</option>
+            <option value="sedentaire">🛋️ Sédentaire</option>
+            <option value="leger">🚶 Légèrement actif</option>
+            <option value="modere">🏃 Modérément actif</option>
+            <option value="actif">💪 Très actif</option>
+            <option value="tres_actif">🏋️ Extrêmement actif</option>
+          </select>
+        </div>
+      </div>
+      <button onclick="saveOnboardingProfile()" style="width:100%;background:linear-gradient(135deg,#FF6B6B,#FF9A3C);color:white;border:none;border-radius:16px;padding:16px;font-size:1rem;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif;margin-top:20px">
+        Continuer →
+      </button>
+      <button onclick="skipOnboarding()" style="width:100%;background:none;border:none;color:#aaa;font-size:0.8rem;cursor:pointer;margin-top:8px;font-family:'DM Sans',sans-serif">
+        Passer cette étape
+      </button>
+    </div>
+
+    <!-- ECRAN 3 : Félicitations -->
+    <div id="onboarding3" style="display:none;padding:32px 24px;text-align:center">
+      <canvas id="confettiCanvas" style="position:absolute;inset:0;width:100%;height:100%;pointer-events:none;border-radius:28px"></canvas>
+      <img src="https://raw.githubusercontent.com/avelia-ai/nutricare-frontend/main/renard_transparent.png" style="width:120px;height:120px;object-fit:contain;margin-bottom:16px;position:relative;z-index:1">
+      <h2 style="font-size:1.4rem;font-weight:800;color:#2D2D2D;margin-bottom:8px;position:relative;z-index:1">Bienvenue ! 🎉</h2>
+      <p style="font-size:0.9rem;color:#666;line-height:1.6;margin-bottom:24px;position:relative;z-index:1">Votre compte est prêt ! Je suis là pour vous accompagner chaque jour vers une meilleure santé. C'est parti !</p>
+      <button onclick="closeOnboarding()" style="width:100%;background:linear-gradient(135deg,#FF6B6B,#FF9A3C);color:white;border:none;border-radius:16px;padding:16px;font-size:1rem;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif;position:relative;z-index:1">
+        Découvrir Mirella 🦊
+      </button>
+    </div>
+
+  </div>
+</div>
+<!-- FIN POPUP ONBOARDING -->
 </body>
 </html>
