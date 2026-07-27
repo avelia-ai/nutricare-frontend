@@ -18812,8 +18812,9 @@ window.maybeShowReviewPrompt = function() {
   // ── ONBOARDING ──
   function showOnboarding() {
     var overlay = document.getElementById('onboardingOverlay');
+    alert('overlay found: ' + !!overlay);
     if (overlay) {
-      overlay.style.display = 'flex';
+      overlay.style.setProperty('display', 'flex', 'important');
       document.getElementById('onboarding1').style.display = 'block';
       document.getElementById('onboarding2').style.display = 'none';
       document.getElementById('onboarding3').style.display = 'none';
