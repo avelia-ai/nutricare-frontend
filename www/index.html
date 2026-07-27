@@ -18915,6 +18915,7 @@ window.maybeShowReviewPrompt = function() {
   // Vérifier si l'onboarding doit s'afficher
   function checkOnboarding() {
     var done = localStorage.getItem('mirella_onboarding_done');
+    alert('CHECKONBOARDING: done="' + done + '" (type=' + typeof done + ') -> ' + (!done ? 'VA APPELER showOnboarding' : 'NE FERA RIEN'));
     if (!done) showOnboarding();
   }
 
