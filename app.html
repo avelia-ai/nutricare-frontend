@@ -7314,6 +7314,7 @@ function switchLang(lang) {
     if (lv === 'oracle' || lv === 'pro') localStorage.setItem('nutricare_last_view', 'home');
   })();
   window.onload = async () => {
+    setTimeout(function(){ showOnboarding(); }, 1000);
     const urlParams = new URLSearchParams(window.location.search);
     const urlView = urlParams.get('view');
     const urlPathologie = urlParams.get('p');
