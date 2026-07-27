@@ -12500,7 +12500,7 @@ function renderShopGrid(items) {
       '<div style="font-size:2.5rem;margin-bottom:8px">' + item.icon + '</div>' +
       '<div style="font-size:0.82rem;font-weight:700;color:#1a1a1a;margin-bottom:4px">' + item.name + '</div>' +
       '<div style="font-size:0.7rem;color:#aaa;margin-bottom:12px;text-transform:uppercase;letter-spacing:1px">' + item.category + '</div>' +
-      '<button onclick="shopAction('' + item.id + '','' + (owned ? 'equip' : 'buy') + '')" style="width:100%;padding:8px;border-radius:10px;border:none;font-size:0.78rem;font-weight:700;cursor:pointer;font-family:DM Sans,sans-serif;' + btnStyle + '">' + btnLabel + '</button>' +
+      '<button onclick="shopAction(\'' + item.id + '\',' + (owned ? '\'equip\'': '\'buy\'') + ')" style="width:100%;padding:8px;border-radius:10px;border:none;font-size:0.78rem;font-weight:700;cursor:pointer;font-family:DM Sans,sans-serif;' + btnStyle + '">' + btnLabel + '</button>' +
       '</div>';
   }).join('');
 }
