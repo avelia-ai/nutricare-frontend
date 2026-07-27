@@ -18915,13 +18915,13 @@ window.maybeShowReviewPrompt = function() {
   // Vérifier si l'onboarding doit s'afficher
   function checkOnboarding() {
     var done = localStorage.getItem('mirella_onboarding_done');
-    alert('CHECKONBOARDING: done="' + done + '" (type=' + typeof done + ') -> ' + (!done ? 'VA APPELER showOnboarding' : 'NE FERA RIEN'));
     if (!done) showOnboarding();
   }
 
 </script>
 
 <!-- POPUP ONBOARDING MIRELLA -->
+<!-- FIN POPUP ONBOARDING -->
 <div id="onboardingOverlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.55);z-index:9999;align-items:center;justify-content:center;padding:20px">
   <div style="background:white;border-radius:28px;width:100%;max-width:420px;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,0.2);position:relative">
     
@@ -19003,6 +19003,5 @@ window.maybeShowReviewPrompt = function() {
 
   </div>
 </div>
-<!-- FIN POPUP ONBOARDING -->
 </body>
 </html>
