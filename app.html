@@ -7335,6 +7335,7 @@ function switchLang(lang) {
         const cached = JSON.parse(localStorage.getItem('nutricare_profile') || 'null');
         if (cached) renderProfileQuick(cached);
       } catch (e) {}
+      checkOnboarding();
       // Retour Stripe
       var _stripeParams = new URLSearchParams(window.location.search);
       if (_stripeParams.get('success') === 'true') {
