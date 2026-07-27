@@ -12453,17 +12453,26 @@ var _shopData = [];
 var _shopCurrentCat = 'all';
 
 function loadShop() {
-  var token = localStorage.getItem('token') || (window.supabaseSession && window.supabaseSession.access_token);
-  fetch('/api/shop', { headers: { 'Authorization': 'Bearer ' + token } })
-    .then(function(r) { return r.json(); })
-    .then(function(data) {
-      _shopData = data.items || [];
-      document.getElementById('shopCoinsDisplay').textContent = data.coins || 0;
-      renderShopGrid(_shopData);
-    })
-    .catch(function() {
-      document.getElementById('shopGrid').innerHTML = '<div style="text-align:center;padding:40px;color:#ccc;grid-column:1/-1">Erreur de chargement</div>';
-    });
+  // Données statiques en attendant le backend
+  var coins = parseInt(localStorage.getItem('shop_coins') || '150');
+  document.getElementById('shopCoinsDisplay').textContent = coins;
+  var owned = JSON.parse(localStorage.getItem('shop_owned') || '[]');
+  var equipped = localStorage.getItem('shop_equipped') || '';
+  _shopData = [
+    { id:'hat1', name:'Chapeau Chef', icon:'👨‍🍳', category:'hat', price:50, owned:owned.includes('hat1'), equipped:equipped==='hat1' },
+    { id:'hat2', name:'Couronne Santé', icon:'👑', category:'hat', price:120, owned:owned.includes('hat2'), equipped:equipped==='hat2' },
+    { id:'hat3', name:'Béret Zen', icon:'🎩', category:'hat', price:80, owned:owned.includes('hat3'), equipped:equipped==='hat3' },
+    { id:'badge1', name:'Badge Étoile', icon:'⭐', category:'badge', price:30, owned:owned.includes('badge1'), equipped:equipped==='badge1' },
+    { id:'badge2', name:'Badge Feu', icon:'🔥', category:'badge', price:60, owned:owned.includes('badge2'), equipped:equipped==='badge2' },
+    { id:'badge3', name:'Badge Diamant', icon:'💎', category:'badge', price:200, owned:owned.includes('badge3'), equipped:equipped==='badge3' },
+    { id:'frame1', name:'Cadre Corail', icon:'🌸', category:'frame', price:90, owned:owned.includes('frame1'), equipped:equipped==='frame1' },
+    { id:'frame2', name:'Cadre Or', icon:'🏅', category:'frame', price:150, owned:owned.includes('frame2'), equipped:equipped==='frame2' },
+    { id:'pet1', name:'Chat Zen', icon:'🐱', category:'pet', price:100, owned:owned.includes('pet1'), equipped:equipped==='pet1' },
+    { id:'pet2', name:'Panda Fit', icon:'🐼', category:'pet', price:180, owned:owned.includes('pet2'), equipped:equipped==='pet2' },
+    { id:'pet3', name:'Lapin Vitamine', icon:'🐰', category:'pet', price:130, owned:owned.includes('pet3'), equipped:equipped==='pet3' },
+    { id:'pet4', name:'Renard Nutrition', icon:'🦊', category:'pet', price:220, owned:owned.includes('pet4'), equipped:equipped==='pet4' }
+  ];
+  renderShopGrid(_shopData);
 }
 
 function filterShop(cat) {
@@ -12506,20 +12515,21 @@ function renderShopGrid(items) {
 }
 
 function shopAction(itemId, action) {
-  var token = localStorage.getItem('token') || (window.supabaseSession && window.supabaseSession.access_token);
-  var url = '/api/shop/' + action;
-  fetch(url, {
-    method: 'POST',
-    headers: { 'Authorization': 'Bearer ' + token, 'Content-Type': 'application/json' },
-    body: JSON.stringify({ item_id: itemId })
-  })
-  .then(function(r) { return r.json(); })
-  .then(function(data) {
-    if (data.error) { alert(data.error); return; }
-    if (data.coins !== undefined) document.getElementById('shopCoinsDisplay').textContent = data.coins;
-    loadShop();
-  })
-  .catch(function() { alert('Erreur réseau'); });
+  var coins = parseInt(localStorage.getItem('shop_coins') || '150');
+  var owned = JSON.parse(localStorage.getItem('shop_owned') || '[]');
+  var item = _shopData.find(function(i) { return i.id === itemId; });
+  if (!item) return;
+  if (action === 'buy') {
+    if (coins < item.price) { alert('Pas assez de 🪙 coins !'); return; }
+    coins -= item.price;
+    owned.push(itemId);
+    localStorage.setItem('shop_coins', coins);
+    localStorage.setItem('shop_owned', JSON.stringify(owned));
+    document.getElementById('shopCoinsDisplay').textContent = coins;
+  } else if (action === 'equip') {
+    localStorage.setItem('shop_equipped', itemId);
+  }
+  loadShop();
 }
 
 function loadLeaderboard(page) {
