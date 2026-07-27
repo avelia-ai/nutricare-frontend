@@ -10279,7 +10279,7 @@ Réponds UNIQUEMENT en JSON valide avec cette structure exacte:
     var topbar = document.getElementById('mobileTopbar');
     if (topbar) topbar.style.top = '40px';
     // Ajuster les vues fixed pour tenir compte du banner
-    document.querySelectorAll('#homeView,#menusView,#frigoView,#cycleView,#catalogueView,#mesRecettesView,#visageView,#chatView,#profileView,#analysisView,#leaderboardView,#visualView,#biologieView,#scanproduitView,#ordonnanceView,#programsView,#pricingView,#healthView,#chronoView,#gamificationView,#protocolsView').forEach(function(el) {
+    document.querySelectorAll('#homeView,#menusView,#frigoView,#cycleView,#catalogueView,#mesRecettesView,#visageView,#chatView,#profileView,#analysisView,#leaderboardView,#visualView,#biologieView,#scanproduitView,#ordonnanceView,#programsView,#pricingView,#healthView,#chronoView,#gamificationView,#protocolsView,#shopView').forEach(function(el) {
       if (el) el.style.top = '96px';
     });
     // healthView et protocolsView ne sont pas en position:fixed, le top ci-dessus n'a aucun effet dessus.
@@ -12448,6 +12448,80 @@ function loadMyRank() {
   });
 }
 
+// ── BOUTIQUE ──
+var _shopData = [];
+var _shopCurrentCat = 'all';
+
+function loadShop() {
+  var token = localStorage.getItem('token') || (window.supabaseSession && window.supabaseSession.access_token);
+  fetch('/api/shop', { headers: { 'Authorization': 'Bearer ' + token } })
+    .then(function(r) { return r.json(); })
+    .then(function(data) {
+      _shopData = data.items || [];
+      document.getElementById('shopCoinsDisplay').textContent = data.coins || 0;
+      renderShopGrid(_shopData);
+    })
+    .catch(function() {
+      document.getElementById('shopGrid').innerHTML = '<div style="text-align:center;padding:40px;color:#ccc;grid-column:1/-1">Erreur de chargement</div>';
+    });
+}
+
+function filterShop(cat) {
+  _shopCurrentCat = cat;
+  ['all','hat','badge','frame','pet'].forEach(function(c) {
+    var btn = document.getElementById('shopCat-' + c);
+    if (!btn) return;
+    if (c === cat) {
+      btn.style.background = 'var(--coral)'; btn.style.color = 'white'; btn.style.border = 'none';
+    } else {
+      btn.style.background = 'white'; btn.style.color = '#666'; btn.style.border = '1px solid #ddd';
+    }
+  });
+  var filtered = cat === 'all' ? _shopData : _shopData.filter(function(i) { return i.category === cat; });
+  renderShopGrid(filtered);
+}
+
+function renderShopGrid(items) {
+  var grid = document.getElementById('shopGrid');
+  if (!items || !items.length) {
+    grid.innerHTML = '<div style="text-align:center;padding:40px;color:#ccc;grid-column:1/-1">Aucun article</div>';
+    return;
+  }
+  grid.innerHTML = items.map(function(item) {
+    var owned = item.owned;
+    var equipped = item.equipped;
+    var btnLabel = equipped ? 'Équipé ✓' : owned ? 'Équiper' : '🪙 ' + item.price;
+    var btnStyle = equipped
+      ? 'background:linear-gradient(135deg,#4CAF50,#2e7d32);color:white;'
+      : owned
+        ? 'background:linear-gradient(135deg,var(--coral),var(--accent));color:white;'
+        : 'background:#f5f5f5;color:#333;';
+    return '<div style="background:white;border-radius:16px;padding:16px;text-align:center;box-shadow:0 2px 12px rgba(0,0,0,0.06)">' +
+      '<div style="font-size:2.5rem;margin-bottom:8px">' + item.icon + '</div>' +
+      '<div style="font-size:0.82rem;font-weight:700;color:#1a1a1a;margin-bottom:4px">' + item.name + '</div>' +
+      '<div style="font-size:0.7rem;color:#aaa;margin-bottom:12px;text-transform:uppercase;letter-spacing:1px">' + item.category + '</div>' +
+      '<button onclick="shopAction('' + item.id + '','' + (owned ? 'equip' : 'buy') + '')" style="width:100%;padding:8px;border-radius:10px;border:none;font-size:0.78rem;font-weight:700;cursor:pointer;font-family:DM Sans,sans-serif;' + btnStyle + '">' + btnLabel + '</button>' +
+      '</div>';
+  }).join('');
+}
+
+function shopAction(itemId, action) {
+  var token = localStorage.getItem('token') || (window.supabaseSession && window.supabaseSession.access_token);
+  var url = '/api/shop/' + action;
+  fetch(url, {
+    method: 'POST',
+    headers: { 'Authorization': 'Bearer ' + token, 'Content-Type': 'application/json' },
+    body: JSON.stringify({ item_id: itemId })
+  })
+  .then(function(r) { return r.json(); })
+  .then(function(data) {
+    if (data.error) { alert(data.error); return; }
+    if (data.coins !== undefined) document.getElementById('shopCoinsDisplay').textContent = data.coins;
+    loadShop();
+  })
+  .catch(function() { alert('Erreur réseau'); });
+}
+
 function loadLeaderboard(page) {
   var list = document.getElementById('leaderboardList');
   var pag = document.getElementById('leaderboardPagination');
@@ -13810,6 +13884,33 @@ function closeMirellaNotif() {
   </div>
 </nav>
 
+<!-- SHOP VIEW -->
+<div id="shopView" style="display:none;position:fixed;top:56px;left:0;right:0;bottom:60px;overflow-y:auto;overflow-x:hidden;background:var(--cream);z-index:10;box-sizing:border-box">
+  <div style="background:linear-gradient(135deg,var(--coral),var(--accent));padding:28px 24px 24px;width:100%;box-sizing:border-box">
+    <div style="font-size:1.6rem;font-weight:700;color:white;margin-bottom:4px">Boutique 🛍️</div>
+    <div style="font-size:0.85rem;color:rgba(255,255,255,0.85)">Dépensez vos coins pour personnaliser votre profil</div>
+    <div style="display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,0.2);border-radius:20px;padding:6px 14px;margin-top:12px">
+      <span style="font-size:1.1rem">🪙</span>
+      <span id="shopCoinsDisplay" style="color:white;font-weight:700;font-size:1rem">--</span>
+      <span style="color:rgba(255,255,255,0.8);font-size:0.78rem">coins</span>
+    </div>
+  </div>
+  <div style="padding:20px 16px 80px">
+    <!-- Catégories -->
+    <div style="display:flex;gap:8px;overflow-x:auto;padding-bottom:8px;margin-bottom:20px;scrollbar-width:none">
+      <button onclick="filterShop('all')" id="shopCat-all" style="flex-shrink:0;padding:6px 16px;border-radius:20px;border:none;background:var(--coral);color:white;font-size:0.78rem;font-weight:700;cursor:pointer;font-family:DM Sans,sans-serif">Tout</button>
+      <button onclick="filterShop('hat')" id="shopCat-hat" style="flex-shrink:0;padding:6px 16px;border-radius:20px;border:1px solid #ddd;background:white;color:#666;font-size:0.78rem;font-weight:600;cursor:pointer;font-family:DM Sans,sans-serif">Chapeaux</button>
+      <button onclick="filterShop('badge')" id="shopCat-badge" style="flex-shrink:0;padding:6px 16px;border-radius:20px;border:1px solid #ddd;background:white;color:#666;font-size:0.78rem;font-weight:600;cursor:pointer;font-family:DM Sans,sans-serif">Badges</button>
+      <button onclick="filterShop('frame')" id="shopCat-frame" style="flex-shrink:0;padding:6px 16px;border-radius:20px;border:1px solid #ddd;background:white;color:#666;font-size:0.78rem;font-weight:600;cursor:pointer;font-family:DM Sans,sans-serif">Cadres</button>
+      <button onclick="filterShop('pet')" id="shopCat-pet" style="flex-shrink:0;padding:6px 16px;border-radius:20px;border:1px solid #ddd;background:white;color:#666;font-size:0.78rem;font-weight:600;cursor:pointer;font-family:DM Sans,sans-serif">Compagnons</button>
+    </div>
+    <!-- Grille articles -->
+    <div id="shopGrid" style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+      <div style="text-align:center;padding:40px;color:#ccc;grid-column:1/-1">Chargement...</div>
+    </div>
+  </div>
+</div>
+
 <!-- VISAGE VIEW -->
 <div id="visageView" style="display:none;position:fixed;top:56px;left:0;right:0;bottom:60px;padding:16px;padding-bottom:220px;overflow-y:scroll;-webkit-overflow-scrolling:touch;background:var(--cream);box-sizing:border-box;z-index:10">
   <div class="view-header" style="font-family:Open Sans,serif;font-size:2rem;font-weight:700;margin-bottom:6px;color:#2D2D2D">Analyse Visage</div>
@@ -14083,6 +14184,7 @@ function closeMirellaNotif() {
       <button id="qmBtn-programs" onclick="toggleQuickMenu();showView('programs')" style="display:flex;align-items:center;gap:10px;padding:12px;background:var(--color-background-secondary);border:0.5px solid var(--color-border-tertiary);border-radius:14px;font-size:0.82rem;font-weight:600;color:var(--color-text-primary);cursor:pointer"><div style="width:32px;height:32px;background:#FFF0EC;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0"><i class="ti ti-target" style="font-size:16px;color:#FF6B6B" aria-hidden="true"></i></div>Programmes</button>
       <button id="qmBtn-leaderboard" onclick="toggleQuickMenu();showView('leaderboard');loadLeaderboard()" style="display:flex;align-items:center;gap:10px;padding:12px;background:var(--color-background-secondary);border:0.5px solid var(--color-border-tertiary);border-radius:14px;font-size:0.82rem;font-weight:600;color:var(--color-text-primary);cursor:pointer"><div style="width:32px;height:32px;background:#FFF7E0;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0"><i class="ti ti-trophy" style="font-size:16px;color:#D4A017" aria-hidden="true"></i></div>Classement</button>
       <button id="qmBtn-gamification" onclick="toggleQuickMenu();showView('gamification')" style="display:flex;align-items:center;gap:10px;padding:12px;background:var(--color-background-secondary);border:0.5px solid var(--color-border-tertiary);border-radius:14px;font-size:0.82rem;font-weight:600;color:var(--color-text-primary);cursor:pointer"><div style="width:32px;height:32px;background:#FAEEDA;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0"><i class="ti ti-trophy" style="font-size:16px;color:#854F0B" aria-hidden="true"></i></div>Progression</button>
+      <button id="qmBtn-shop" onclick="toggleQuickMenu();showView('shop');loadShop()" style="display:flex;align-items:center;gap:10px;padding:12px;background:var(--color-background-secondary);border:0.5px solid var(--color-border-tertiary);border-radius:14px;font-size:0.82rem;font-weight:600;color:var(--color-text-primary);cursor:pointer"><div style="width:32px;height:32px;background:#E8F4FF;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0"><i class="ti ti-shopping-bag" style="font-size:16px;color:#185FA5" aria-hidden="true"></i></div>Boutique</button>
       <button id="qmBtn-pricing" onclick="toggleQuickMenu();showView('pricing')" style="display:flex;align-items:center;gap:10px;padding:12px;background:var(--color-background-secondary);border:0.5px solid var(--color-border-tertiary);border-radius:14px;font-size:0.82rem;font-weight:600;color:var(--color-text-primary);cursor:pointer"><div style="width:32px;height:32px;background:#FAEEDA;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0"><i class="ti ti-star" style="font-size:16px;color:#854F0B" aria-hidden="true"></i></div>Abonnements</button>
       <button id="qmBtn-pro" onclick="toggleQuickMenu();showView('pro')" style="display:none"><div style="width:32px;height:32px;background:#EAF3DE;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0"><i class="ti ti-stethoscope" style="font-size:16px;color:#3B6D11" aria-hidden="true"></i></div>Espace médecin</button>
       <button id="qmBtn-chrono" onclick="toggleQuickMenu();showView('chrono')" style="display:none !important;display:flex;align-items:center;gap:10px;padding:12px;background:#FFF5F0;border:0.5px solid rgba(255,107,107,0.15);border-radius:14px;font-size:0.82rem;font-weight:600;color:#2D2D2D;cursor:pointer"><div style="width:32px;height:32px;background:#FBEAF0;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0"><i class="ti ti-heart" style="font-size:16px;color:#993556" aria-hidden="true"></i></div>Score de santé</button>
