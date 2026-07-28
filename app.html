@@ -7313,49 +7313,6 @@ function switchLang(lang) {
     const lv = localStorage.getItem('nutricare_last_view');
     if (lv === 'oracle' || lv === 'pro') localStorage.setItem('nutricare_last_view', 'home');
   })();
-  var ACTIVITE_OPTIONS = [
-    { value: 'sedentaire', label: 'Sédentaire', icon: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#FF7A3C" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 9V7a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v2"/><path d="M2 9h20v6a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V9Z"/><path d="M4 17v3M20 17v3"/></svg>' },
-    { value: 'leger', label: 'Légèrement actif', icon: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#FF7A3C" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="13" cy="4" r="2"/><path d="m7 21 2-6 3-2-1-5-4 1"/><path d="m10 13 3 2 3 6"/><path d="M9 9l4-1 2 3"/></svg>' },
-    { value: 'modere', label: 'Modérément actif', icon: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#FF7A3C" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="14.5" cy="4.5" r="2"/><path d="m6 21 2.5-7 3-2.5-1-5.5-4.5 1.5"/><path d="m10.5 11.5 3.5 2 3 7.5"/><path d="m8.5 8 4.5-1.5 3 4"/></svg>' },
-    { value: 'actif', label: 'Très actif', icon: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#FF7A3C" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6.5 6.5 4 9l2.5 2.5M17.5 6.5 20 9l-2.5 2.5M9 4l1.5 1.5M15 4l-1.5 1.5M2 9h4M18 9h4M9 12h6"/><rect x="8" y="9" width="8" height="6" rx="1.5"/></svg>' },
-    { value: 'tres_actif', label: 'Extrêmement actif', icon: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#FF7A3C" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12h3M19 12h3M5 8v8M19 8v8"/><path d="M5 12h14"/><circle cx="12" cy="5" r="2"/><path d="M12 7v3"/></svg>' }
-  ];
-
-  function renderActiviteOptions() {
-    var panel = document.getElementById('obActiviteOptions');
-    if (!panel) return;
-    panel.innerHTML = ACTIVITE_OPTIONS.map(function(o) {
-      return '<div onclick="selectActivite(\'' + o.value + '\',\'' + o.label + '\')" style="display:flex;align-items:center;gap:10px;padding:12px 15px;cursor:pointer;font-size:0.9rem;color:#2D2D2D;border-bottom:1px solid #F5F0EC" onmouseover="this.style.background=\'#FFF8F3\'" onmouseout="this.style.background=\'white\'">' + o.icon + '<span>' + o.label + '</span></div>';
-    }).join('');
-  }
-
-  function toggleActiviteDropdown() {
-    var panel = document.getElementById('obActiviteOptions');
-    if (!panel) return;
-    if (panel.style.display === 'none' || !panel.style.display) {
-      renderActiviteOptions();
-      panel.style.display = 'block';
-    } else {
-      panel.style.display = 'none';
-    }
-  }
-
-  function selectActivite(value, label) {
-    document.getElementById('obActivite').value = value;
-    var opt = ACTIVITE_OPTIONS.find(function(o) { return o.value === value; });
-    document.getElementById('obActiviteLabel').innerHTML = (opt ? opt.icon : '') + '<span style="color:#2D2D2D">' + label + '</span>';
-    document.getElementById('obActiviteOptions').style.display = 'none';
-  }
-
-  document.addEventListener('click', function(e) {
-    var wrap = document.getElementById('obActiviteTrigger');
-    var panel = document.getElementById('obActiviteOptions');
-    if (!wrap || !panel) return;
-    if (!wrap.contains(e.target) && !panel.contains(e.target)) {
-      panel.style.display = 'none';
-    }
-  });
-
   window.onload = async () => {
     const urlParams = new URLSearchParams(window.location.search);
     const urlView = urlParams.get('view');
@@ -19084,18 +19041,16 @@ window.maybeShowReviewPrompt = function() {
             </select>
           </div>
         </div>
-        <div style="position:relative">
+        <div>
           <label style="font-size:0.68rem;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;color:#B0785C;margin-bottom:6px;display:block">Niveau d'activité physique</label>
-          <input type="hidden" id="obActivite" value="">
-          <div id="obActiviteTrigger" onclick="toggleActiviteDropdown()" style="width:100%;padding:13px 15px;border:1.5px solid #F0EAE5;border-radius:13px;font-size:0.92rem;font-family:'DM Sans',sans-serif;box-sizing:border-box;background:#FCFAF8;display:flex;align-items:center;justify-content:space-between;cursor:pointer">
-            <span id="obActiviteLabel" style="display:flex;align-items:center;gap:10px;color:#b8afa8">
-              <span id="obActiviteIcon" style="width:20px;height:20px;flex-shrink:0"></span>
-              -- Choisir --
-            </span>
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#c2b9b2" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
-          </div>
-          <div id="obActiviteOptions" style="display:none;position:absolute;top:calc(100% + 6px);left:0;right:0;background:white;border-radius:13px;box-shadow:0 10px 30px rgba(0,0,0,0.14);border:1px solid #F0EAE5;z-index:20;overflow:hidden">
-          </div>
+          <select id="obActivite" style="width:100%;padding:13px 15px;border:1.5px solid #F0EAE5;border-radius:13px;font-size:0.92rem;font-family:'DM Sans',sans-serif;box-sizing:border-box;outline:none;background:#FCFAF8">
+            <option value="">-- Choisir --</option>
+            <option value="sedentaire">🪑 Sédentaire</option>
+            <option value="leger">🚶 Légèrement actif</option>
+            <option value="modere">🏃 Modérément actif</option>
+            <option value="actif">🏋️ Très actif</option>
+            <option value="tres_actif">🔥 Extrêmement actif</option>
+          </select>
         </div>
       </div>
       <button onclick="saveOnboardingProfile()" style="width:100%;background:linear-gradient(135deg,#FF6B6B,#FF9A3C);color:white;border:none;border-radius:14px;padding:16px;font-size:0.95rem;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif;letter-spacing:0.2px;margin-top:24px;box-shadow:0 8px 20px rgba(255,107,107,0.28)">
