@@ -7314,18 +7314,6 @@ function switchLang(lang) {
     if (lv === 'oracle' || lv === 'pro') localStorage.setItem('nutricare_last_view', 'home');
   })();
   window.onload = async () => {
-    setTimeout(function(){
-      var o = document.getElementById('onboardingOverlay');
-      if (!o) {
-        alert('OVERLAY INTROUVABLE DANS LE DOM');
-      } else {
-        showOnboarding();
-        setTimeout(function() {
-          var cs = getComputedStyle(o);
-          alert('display=' + cs.display + ' visibility=' + cs.visibility + ' opacity=' + cs.opacity + ' zIndex=' + cs.zIndex + ' position=' + cs.position + ' width=' + o.offsetWidth + ' height=' + o.offsetHeight + ' parent=' + (o.parentElement ? o.parentElement.tagName + '#' + o.parentElement.id : 'none'));
-        }, 200);
-      }
-    }, 1000);
     const urlParams = new URLSearchParams(window.location.search);
     const urlView = urlParams.get('view');
     const urlPathologie = urlParams.get('p');
@@ -16648,6 +16636,7 @@ function openSubscriptionModal(context) {
       </div>
       <button onclick="closeRituel()" style="width:100%;padding:14px;background:#FF9A3C;color:white;border:none;border-radius:10px;font-size:0.9rem;font-weight:700;cursor:pointer">Terminer</button>
     </div>
+  </div>
   </div>
 
 <script>
