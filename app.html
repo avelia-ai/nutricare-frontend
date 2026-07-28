@@ -18981,7 +18981,7 @@ window.maybeShowReviewPrompt = function() {
     }
 
     var frame = 0;
-    var fireworkTimes = [15, 55, 95];
+    var fireworkTimes = [15, 55, 95, 140, 200, 280, 360, 440, 520];
 
     function draw() {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -19019,7 +19019,7 @@ window.maybeShowReviewPrompt = function() {
       }
 
       frame++;
-      if (frame < 200 || sparks.length > 0) requestAnimationFrame(draw);
+      if (frame < 600 || sparks.length > 0) requestAnimationFrame(draw);
     }
     draw();
   }
