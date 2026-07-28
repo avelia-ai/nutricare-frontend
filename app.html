@@ -4567,6 +4567,25 @@ function switchLang(lang) {
         <div style="font-family:Open Sans,serif;font-size:1.6rem;font-weight:700;margin-bottom:4px"><span id="dashName">!</span></div>
         <div style="font-size:0.85rem;opacity:0.75">Votre tableau de bord santé du jour</div>
       </div>
+
+      <!-- BLOC MIRELS DASHBOARD -->
+      <div id="dashMirelsBanner" onclick="showView('mirelsBoutique')" style="display:flex;align-items:center;justify-content:space-between;background:linear-gradient(135deg,#FFF5EE,#FFF0E8);border-radius:16px;padding:14px 18px;margin-bottom:16px;border:1.5px solid rgba(255,154,60,0.25);cursor:pointer;box-shadow:0 2px 12px rgba(255,107,107,0.08)">
+        <div style="display:flex;align-items:center;gap:12px">
+          <div style="width:40px;height:40px;background:linear-gradient(135deg,var(--coral),var(--accent));border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.2rem;flex-shrink:0">🪙</div>
+          <div>
+            <div style="font-size:0.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--accent);margin-bottom:2px">Mes Mirels</div>
+            <div style="display:flex;align-items:baseline;gap:4px">
+              <span id="dashMirelsCount" style="font-size:1.5rem;font-weight:700;color:var(--charcoal)">--</span>
+              <span style="font-size:0.78rem;color:rgba(0,0,0,0.4)">Mirels disponibles</span>
+            </div>
+          </div>
+        </div>
+        <div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px">
+          <div style="background:linear-gradient(135deg,var(--coral),var(--accent));color:white;font-size:0.72rem;font-weight:700;padding:5px 12px;border-radius:100px">Boutique →</div>
+          <div id="dashMirelsEarn" style="font-size:0.68rem;color:rgba(0,0,0,0.35)">Gagnez des Mirels chaque jour</div>
+        </div>
+      </div>
+      <!-- FIN BLOC MIRELS DASHBOARD -->
       <div id="predictionBanner" style="display:none;border-radius: 4px;padding:16px 20px;margin-bottom:16px;border-left:4px solid #C9A84C;background:#FDF6E8">
         <div style="display:flex;align-items:flex-start;gap:12px">
           <div style="font-size:1.4rem;flex-shrink:0" id="predIcon">&#x1F52E;</div>
@@ -7140,6 +7159,35 @@ function switchLang(lang) {
   </div>
 
   <div id="gamiContent" style="display:none">
+
+
+    <!-- BLOC MIRELS PROGRESSION -->
+    <div id="gamiMirels" style="background:#FFFCFA;border-radius:16px;padding:20px;margin-bottom:16px;border:1px solid rgba(255,154,108,0.3);box-shadow:0 0 0 1.5px rgba(255,154,108,0.22),0 14px 32px rgba(230,110,70,0.14)">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
+        <div style="font-size:0.75rem;font-weight:700;text-transform:uppercase;letter-spacing:1.2px;color:var(--accent)">🪙 Mes Mirels</div>
+        <button onclick="showView('mirelsBoutique')" style="background:linear-gradient(135deg,var(--coral),var(--accent));color:white;border:none;border-radius:100px;padding:5px 14px;font-size:0.72rem;font-weight:700;cursor:pointer;font-family:DM Sans,sans-serif">Boutique →</button>
+      </div>
+      <div style="display:flex;align-items:center;gap:16px;margin-bottom:16px">
+        <div style="width:56px;height:56px;background:linear-gradient(135deg,var(--coral),var(--accent));border-radius:16px;display:flex;align-items:center;justify-content:center;font-size:1.6rem;flex-shrink:0">🪙</div>
+        <div>
+          <div style="font-size:2rem;font-weight:700;color:var(--charcoal)" id="gamiMirelsCount">--</div>
+          <div style="font-size:0.78rem;color:rgba(0,0,0,0.4)">Mirels disponibles</div>
+        </div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:8px" id="gamiMirelsActions">
+        <button onclick="earnMirels('connexion_quotidienne')" style="display:flex;align-items:center;gap:10px;background:#FFF5EE;border:1.5px solid rgba(255,154,60,0.2);border-radius:12px;padding:10px 14px;cursor:pointer;font-family:DM Sans,sans-serif;width:100%;text-align:left">
+          <span style="font-size:1.1rem">☀️</span>
+          <div style="flex:1"><div style="font-size:0.82rem;font-weight:600;color:#2D2D2D">Connexion quotidienne</div><div style="font-size:0.72rem;color:rgba(0,0,0,0.4)">Réclamez vos 5 Mirels du jour</div></div>
+          <span style="font-size:0.78rem;font-weight:700;color:var(--coral)">+5 🪙</span>
+        </button>
+        <button onclick="earnMirels('score_sante')" style="display:flex;align-items:center;gap:10px;background:#FFF5EE;border:1.5px solid rgba(255,154,60,0.2);border-radius:12px;padding:10px 14px;cursor:pointer;font-family:DM Sans,sans-serif;width:100%;text-align:left">
+          <span style="font-size:1.1rem">❤️</span>
+          <div style="flex:1"><div style="font-size:0.82rem;font-weight:600;color:#2D2D2D">Score santé rempli</div><div style="font-size:0.72rem;color:rgba(0,0,0,0.4)">Complétez votre score du jour</div></div>
+          <span style="font-size:0.78rem;font-weight:700;color:var(--coral)">+5 🪙</span>
+        </button>
+      </div>
+    </div>
+    <!-- FIN BLOC MIRELS PROGRESSION -->
 
     <!-- Niveau + Points d'harmonie -->
     <div style="background:var(--charcoal);border-radius:16px;padding:24px;color:white;margin-bottom:16px">
@@ -19239,5 +19287,47 @@ function sendFeedback() {
 }
 </script>
 
+
+<script>
+// ── SYSTEME MIRELS ────────────────────────────────────────────────────────
+function getMirels() {
+  return parseInt(localStorage.getItem('mirella_mirels') || '0');
+}
+function setMirels(n) {
+  localStorage.setItem('mirella_mirels', String(n));
+  updateMirelsDisplay();
+}
+function updateMirelsDisplay() {
+  var n = getMirels();
+  var els = ['dashMirelsCount','gamiMirelsCount','boutiqueMirelsCount'];
+  els.forEach(function(id) {
+    var el = document.getElementById(id);
+    if (el) el.textContent = n;
+  });
+}
+function earnMirels(action) {
+  var key = 'mirella_earned_' + action + '_' + new Date().toISOString().split('T')[0];
+  if (localStorage.getItem(key)) {
+    alert('Vous avez deja gagne ces Mirels aujourd hui !');
+    return;
+  }
+  var gains = { connexion_quotidienne: 5, score_sante: 5, routine_ajoutee: 10, recette_vue: 2 };
+  var gain = gains[action] || 5;
+  setMirels(getMirels() + gain);
+  localStorage.setItem(key, '1');
+  alert('+' + gain + ' Mirels gagnés ! 🪙');
+}
+// Initialiser au chargement
+document.addEventListener('DOMContentLoaded', function() {
+  updateMirelsDisplay();
+  // Connexion quotidienne automatique
+  var keyDay = 'mirella_earned_connexion_quotidienne_' + new Date().toISOString().split('T')[0];
+  if (!localStorage.getItem(keyDay)) {
+    setMirels(getMirels() + 5);
+    localStorage.setItem(keyDay, '1');
+  }
+});
+// ── FIN SYSTEME MIRELS ────────────────────────────────────────────────────
+</script>
 </body>
 </html>
