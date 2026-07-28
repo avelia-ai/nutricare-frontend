@@ -3791,6 +3791,13 @@ function switchLang(lang) {
             <div id="homeDate" style="font-size:0.78rem;color:rgba(255,255,255,0.8)"></div>
           </div>
         </div>
+        <div id="homeMirelsBanner" onclick="showView('mirelsBoutique')" style="display:flex;align-items:center;justify-content:space-between;background:rgba(255,255,255,0.18);border-radius:12px;padding:10px 14px;margin-bottom:12px;cursor:pointer">
+          <div style="display:flex;align-items:center;gap:8px">
+            <span style="font-size:1.2rem">🪙</span>
+            <span style="font-size:0.85rem;color:white;font-weight:600">Mes Mirels</span>
+          </div>
+          <span id="homeMirelsCount" style="font-size:1.1rem;font-weight:700;color:white">--</span>
+        </div>
         <div id="homeScoreResume" style="position:relative;background:rgba(255,255,255,0.18);border-radius:12px;padding:10px 14px">
           <div style="font-size:0.82rem;color:white;line-height:1.5" id="homeScoreText">Chargement...</div>
         </div>
@@ -5728,6 +5735,11 @@ function switchLang(lang) {
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px">
       <div style="font-size:0.75rem;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:var(--accent)">✨ Mirella</div>
       <div id="harmonyLevelBadge" style="font-size:0.72rem;font-weight:600;color:var(--coral-dark);background:var(--cream2);padding:4px 10px;border-radius:100px">Niveau 1</div>
+    </div>
+    <div style="display:flex;align-items:center;justify-content:center;gap:6px;margin:6px 0 2px">
+      <span style="font-size:1rem">🪙</span>
+      <span id="suiviMirelsCount" style="font-size:0.95rem;font-weight:700;color:var(--charcoal)">--</span>
+      <span style="font-size:0.72rem;color:#999">Mirels</span>
     </div>
     <div id="harmonyStageName" style="font-size:1.05rem;font-weight:600;color:#2D2D2D;margin:8px 0 4px">Éveil</div>
     <div style="font-size:0.78rem;color:#999;line-height:1.4;margin-bottom:8px">Renseignez vos indicateurs santé ci-dessous (sommeil, hydratation, activité, stress) pour faire évoluer Mirella</div>
@@ -19304,7 +19316,7 @@ function setMirels(n) {
 }
 function updateMirelsDisplay() {
   var n = getMirels();
-  var els = ['dashMirelsCount','gamiMirelsCount','boutiqueMirelsCount'];
+  var els = ['dashMirelsCount','gamiMirelsCount','boutiqueMirelsCount','homeMirelsCount','suiviMirelsCount'];
   els.forEach(function(id) {
     var el = document.getElementById(id);
     if (el) el.textContent = n;
