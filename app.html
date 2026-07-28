@@ -18945,33 +18945,81 @@ window.maybeShowReviewPrompt = function() {
     var ctx = canvas.getContext('2d');
     canvas.width = canvas.offsetWidth;
     canvas.height = canvas.offsetHeight;
-    var pieces = [];
-    var colors = ['#FF6B6B','#FF9A3C','#7EC8E3','#A8D8A8','#C3A9D1','#FFD700'];
-    for (var i = 0; i < 120; i++) {
-      pieces.push({
+    var colors = ['#FF6B6B','#FF9A3C','#FFD166','#7EC8E3','#A8D8A8','#C3A9D1','#F4A261'];
+
+    var ribbons = [];
+    for (var i = 0; i < 70; i++) {
+      ribbons.push({
         x: Math.random() * canvas.width,
         y: Math.random() * canvas.height - canvas.height,
-        r: Math.random() * 6 + 3,
+        w: Math.random() * 6 + 5,
+        h: Math.random() * 10 + 8,
         color: colors[Math.floor(Math.random() * colors.length)],
-        speed: Math.random() * 3 + 1,
-        swing: Math.random() * 3,
-        angle: Math.random() * Math.PI * 2
+        speed: Math.random() * 2 + 1.2,
+        swing: Math.random() * 2.2 + 0.6,
+        angle: Math.random() * Math.PI * 2,
+        rot: Math.random() * Math.PI * 2,
+        rotSpeed: (Math.random() - 0.5) * 0.15
       });
     }
+
+    var sparks = [];
+    function launchFirework(cx, cy) {
+      var color = colors[Math.floor(Math.random() * colors.length)];
+      var count = 26;
+      for (var j = 0; j < count; j++) {
+        var a = (Math.PI * 2 * j) / count;
+        var speed = Math.random() * 2.5 + 2;
+        sparks.push({
+          x: cx, y: cy,
+          vx: Math.cos(a) * speed,
+          vy: Math.sin(a) * speed,
+          life: 1,
+          color: color
+        });
+      }
+    }
+
     var frame = 0;
+    var fireworkTimes = [15, 55, 95];
+
     function draw() {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
-      pieces.forEach(function(p) {
-        ctx.beginPath();
-        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+
+      ribbons.forEach(function(p) {
+        ctx.save();
+        ctx.translate(p.x, p.y);
+        ctx.rotate(p.rot);
         ctx.fillStyle = p.color;
-        ctx.fill();
+        ctx.fillRect(-p.w / 2, -p.h / 2, p.w, p.h);
+        ctx.restore();
         p.y += p.speed;
         p.x += Math.sin(p.angle + frame * 0.05) * p.swing;
+        p.rot += p.rotSpeed;
         if (p.y > canvas.height) { p.y = -10; p.x = Math.random() * canvas.width; }
       });
+
+      if (fireworkTimes.indexOf(frame) !== -1) {
+        launchFirework(canvas.width * (0.25 + Math.random() * 0.5), canvas.height * (0.25 + Math.random() * 0.3));
+      }
+
+      for (var k = sparks.length - 1; k >= 0; k--) {
+        var s = sparks[k];
+        ctx.globalAlpha = Math.max(s.life, 0);
+        ctx.beginPath();
+        ctx.arc(s.x, s.y, 2.2, 0, Math.PI * 2);
+        ctx.fillStyle = s.color;
+        ctx.fill();
+        ctx.globalAlpha = 1;
+        s.x += s.vx;
+        s.y += s.vy;
+        s.vy += 0.05;
+        s.life -= 0.025;
+        if (s.life <= 0) sparks.splice(k, 1);
+      }
+
       frame++;
-      if (frame < 180) requestAnimationFrame(draw);
+      if (frame < 200 || sparks.length > 0) requestAnimationFrame(draw);
     }
     draw();
   }
@@ -19129,7 +19177,7 @@ window.maybeShowReviewPrompt = function() {
     <div id="onboarding3" style="display:none;padding:32px 24px;text-align:center">
       <canvas id="confettiCanvas" style="position:absolute;inset:0;width:100%;height:100%;pointer-events:none;border-radius:28px"></canvas>
       <img src="https://raw.githubusercontent.com/avelia-ai/nutricare-frontend/main/renard_transparent.png" style="width:120px;height:120px;object-fit:contain;margin-bottom:16px;position:relative;z-index:1">
-      <h2 style="font-size:1.4rem;font-weight:800;color:#2D2D2D;margin-bottom:8px;position:relative;z-index:1">Bienvenue ! 🎉</h2>
+      <h2 style="font-size:1.4rem;font-weight:800;color:#2D2D2D;margin-bottom:8px;position:relative;z-index:1">Bienvenue !</h2>
       <p style="font-size:0.9rem;color:#666;line-height:1.6;margin-bottom:24px;position:relative;z-index:1">Votre compte est prêt ! Je suis là pour vous accompagner chaque jour vers une meilleure santé. C'est parti !</p>
       <button onclick="closeOnboarding()" style="width:100%;background:linear-gradient(135deg,#FF6B6B,#FF9A3C);color:white;border:none;border-radius:16px;padding:16px;font-size:1rem;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif;position:relative;z-index:1">
         Découvrir Mirella 🦊
