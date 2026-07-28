@@ -16553,6 +16553,7 @@ var _subContexts = {
   }
 };
 function openSubscriptionModal(context) {
+  if (window._onboardingActive) return;
   var ctx = _subContexts[context] || _subContexts.lock;
   document.getElementById('subModalTitle').textContent = ctx.title;
   document.getElementById('subModalSubtitle').textContent = ctx.subtitle;
@@ -18878,6 +18879,13 @@ window.maybeShowReviewPrompt = function() {
   function showOnboarding() {
     var overlay = document.getElementById('onboardingOverlay');
     if (overlay) {
+      // Cacher toutes les autres popups pendant l'onboarding
+      var toHide = ['subscriptionModal','referralMilestonePopup','changePasswordModal'];
+      toHide.forEach(function(id) {
+        var el = document.getElementById(id);
+        if (el) el.style.display = 'none';
+      });
+      window._onboardingActive = true;
       overlay.style.cssText = 'display:flex !important;position:fixed;inset:0;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.7);z-index:99999;align-items:center;justify-content:center;padding:20px';
       document.getElementById('onboarding1').style.display = 'block';
       document.getElementById('onboarding2').style.display = 'none';
@@ -18937,6 +18945,7 @@ window.maybeShowReviewPrompt = function() {
   function closeOnboarding() {
     document.getElementById('onboardingOverlay').style.display = 'none';
     localStorage.setItem('mirella_onboarding_done', '1');
+    window._onboardingActive = false;
   }
 
   function launchConfetti() {
