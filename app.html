@@ -18927,22 +18927,52 @@ window.maybeShowReviewPrompt = function() {
   <div style="background:white;border-radius:28px;width:100%;max-width:420px;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,0.2);position:relative">
     
     <!-- ECRAN 1 : Présentation Mirella -->
-    <div id="onboarding1" style="padding:32px 24px;text-align:center">
-      <video autoplay muted loop playsinline style="width:200px;height:200px;object-fit:contain;margin-bottom:16px;background:transparent;border:none;outline:none">
+    <div id="onboarding1" style="padding:40px 28px 28px;text-align:center">
+      <video autoplay muted loop playsinline style="width:180px;height:180px;object-fit:contain;margin-bottom:20px;background:transparent;border:none;outline:none">
         <source src="https://raw.githubusercontent.com/avelia-ai/nutricare-frontend/main/renard_mirella_niveau_1_compressed.mp4" type="video/mp4">
       </video>
-      <h2 style="font-size:1.4rem;font-weight:800;color:#2D2D2D;margin-bottom:8px">Bonjour, je suis Mirella ! 🦊</h2>
-      <p style="font-size:0.88rem;color:#666;line-height:1.6;margin-bottom:12px">Je suis votre coach santé & nutrition personnalisé. Plus vous utilisez l'appli, plus j'évolue avec vous !</p>
-      <div style="background:#fff8f5;border-radius:16px;padding:14px;text-align:left;margin-bottom:20px">
-        <div style="font-size:0.82rem;color:#555;line-height:1.7">
-          🍽️ <b>Générez des menus</b> adaptés à votre profil<br>
-          💧 <b>Suivez votre hydratation</b> et votre sommeil<br>
-          🏆 <b>Relevez des défis</b> pour gagner des points<br>
-          📊 <b>Complétez vos données</b> pour des conseils précis
+      <h2 style="font-size:1.5rem;font-weight:800;color:#1E1E1E;margin-bottom:10px;letter-spacing:-0.3px">Bonjour, je suis Mirella</h2>
+      <p style="font-size:0.9rem;color:#767676;line-height:1.65;margin-bottom:28px;padding:0 4px">Votre coach santé & nutrition personnalisé. Plus vous utilisez l'application, plus mes conseils s'affinent avec vous.</p>
+      <div style="text-align:left;margin-bottom:32px">
+        <div style="display:flex;align-items:flex-start;gap:14px;padding:13px 2px;border-bottom:1px solid #f2ece7">
+          <div style="flex-shrink:0;width:34px;height:34px;border-radius:10px;background:#FFF3ED;display:flex;align-items:center;justify-content:center">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#FF9A3C" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8h1a4 4 0 0 1 0 8h-1"/><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8Z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/></svg>
+          </div>
+          <div style="padding-top:3px">
+            <div style="font-size:0.87rem;font-weight:700;color:#2D2D2D;margin-bottom:2px">Menus personnalisés</div>
+            <div style="font-size:0.78rem;color:#909090;line-height:1.4">Générés selon votre profil et vos objectifs</div>
+          </div>
+        </div>
+        <div style="display:flex;align-items:flex-start;gap:14px;padding:13px 2px;border-bottom:1px solid #f2ece7">
+          <div style="flex-shrink:0;width:34px;height:34px;border-radius:10px;background:#FFF3ED;display:flex;align-items:center;justify-content:center">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#FF9A3C" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2.69s-7 7.44-7 12.31a7 7 0 0 0 14 0c0-4.87-7-12.31-7-12.31Z"/></svg>
+          </div>
+          <div style="padding-top:3px">
+            <div style="font-size:0.87rem;font-weight:700;color:#2D2D2D;margin-bottom:2px">Suivi quotidien</div>
+            <div style="font-size:0.78rem;color:#909090;line-height:1.4">Hydratation, sommeil et indicateurs de santé</div>
+          </div>
+        </div>
+        <div style="display:flex;align-items:flex-start;gap:14px;padding:13px 2px;border-bottom:1px solid #f2ece7">
+          <div style="flex-shrink:0;width:34px;height:34px;border-radius:10px;background:#FFF3ED;display:flex;align-items:center;justify-content:center">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#FF9A3C" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="6"/><path d="M15.5 13.5 17 22l-5-3-5 3 1.5-8.5"/></svg>
+          </div>
+          <div style="padding-top:3px">
+            <div style="font-size:0.87rem;font-weight:700;color:#2D2D2D;margin-bottom:2px">Défis & progression</div>
+            <div style="font-size:0.78rem;color:#909090;line-height:1.4">Gagnez des points en atteignant vos objectifs</div>
+          </div>
+        </div>
+        <div style="display:flex;align-items:flex-start;gap:14px;padding:13px 2px">
+          <div style="flex-shrink:0;width:34px;height:34px;border-radius:10px;background:#FFF3ED;display:flex;align-items:center;justify-content:center">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#FF9A3C" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="M18.7 8 12 14.7 8.5 11.2 4 15.7"/></svg>
+          </div>
+          <div style="padding-top:3px">
+            <div style="font-size:0.87rem;font-weight:700;color:#2D2D2D;margin-bottom:2px">Analyse précise</div>
+            <div style="font-size:0.78rem;color:#909090;line-height:1.4">Des conseils affinés à mesure que vous progressez</div>
+          </div>
         </div>
       </div>
-      <button onclick="document.getElementById('onboarding1').style.display='none';document.getElementById('onboarding2').style.display='block'" style="width:100%;background:linear-gradient(135deg,#FF6B6B,#FF9A3C);color:white;border:none;border-radius:16px;padding:16px;font-size:1rem;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif">
-        Commencer →
+      <button onclick="document.getElementById('onboarding1').style.display='none';document.getElementById('onboarding2').style.display='block'" style="width:100%;background:linear-gradient(135deg,#FF6B6B,#FF9A3C);color:white;border:none;border-radius:14px;padding:16px;font-size:0.95rem;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif;letter-spacing:0.2px;box-shadow:0 8px 20px rgba(255,107,107,0.28)">
+        Commencer
       </button>
     </div>
 
