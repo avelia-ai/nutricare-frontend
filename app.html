@@ -7930,7 +7930,6 @@ function switchLang(lang) {
         body: JSON.stringify({ password: p1 })
       });
       if (res.ok) {
-        document.getElementById('changePasswordModal').style.display = 'none';
         localStorage.setItem('mirella_pwd_changed', '1');
         alert('✅ Mot de passe mis à jour avec succès !');
       } else {
@@ -7940,10 +7939,7 @@ function switchLang(lang) {
     } catch(e) { errEl.textContent = 'Erreur réseau.'; errEl.style.display = 'block'; }
   }
 
-  function showChangePasswordModal() {
-    const modal = document.getElementById('changePasswordModal');
-    if (modal) modal.style.display = 'flex';
-  }
+
 
 
   // Détection token reset password Supabase
@@ -7955,12 +7951,7 @@ function switchLang(lang) {
       if (accessToken) {
         localStorage.setItem('nutricare_token', accessToken);
         setTimeout(function() {
-          const modal = document.getElementById('changePasswordModal');
-          if (modal) {
-            modal.style.display = 'flex';
-            const title = modal.querySelector('h2');
-            if (title) title.textContent = 'Définissez votre nouveau mot de passe';
-          }
+          alert('Vous pouvez maintenant définir votre nouveau mot de passe dans Profil > Sécurité.');
         }, 1500);
       }
     }
@@ -8087,7 +8078,7 @@ function switchLang(lang) {
       if (document.getElementById('profileWorkEnd')) document.getElementById('profileWorkEnd').value = profile.work_end || '18:00';
       if (document.getElementById('profileChronoGoal')) document.getElementById('profileChronoGoal').value = profile.chrono_goal || '';
       updateMenu(window.currentPlan || 'free');
-      if (window.isTrial) { setTimeout(showTrialBanner, 500); if (!localStorage.getItem("mirella_pwd_changed")) setTimeout(showChangePasswordModal, 1000); }
+      if (window.isTrial) { setTimeout(showTrialBanner, 500); }
       // Score circadien dans le dashboard
       if (profile.wake_up || profile.sleep_time) {
         const wakeH = parseInt((profile.wake_up || '07:00').split(':')[0]);
@@ -14544,31 +14535,7 @@ function toggleQuickMenu() {
 </script>
 
 <!-- MODALE CHANGEMENT MOT DE PASSE -->
-<div id="changePasswordModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:99999;align-items:center;justify-content:center">
-  <div style="background:#FFFCFA;border-radius:20px;padding:40px;max-width:440px;width:90%;box-shadow:0 0 0 1.5px rgba(255,154,108,0.22),0 14px 32px rgba(230,110,70,0.14)">
-    <div style="text-align:center;margin-bottom:24px">
-      <div style="width:56px;height:56px;background:linear-gradient(135deg,var(--coral),var(--accent));border-radius:16px;display:flex;align-items:center;justify-content:center;margin:0 auto 16px;font-size:1.5rem">🔑</div>
-      <h2 style="font-family:Open Sans,serif;font-size:1.3rem;font-weight:700;color:#2D2D2D;margin-bottom:8px">Personnalisez votre mot de passe</h2>
-      <p style="font-size:.85rem;color:#888;line-height:1.5">Vous utilisez un mot de passe temporaire. Créez-en un personnel pour sécuriser votre compte.</p>
-    </div>
-    <div style="display:flex;flex-direction:column;gap:12px;margin-bottom:20px">
-      <input type="password" id="newPassword1" placeholder="Nouveau mot de passe" style="padding:14px 16px;border:1.5px solid #eee;border-radius:10px;font-size:.9rem;font-family:DM Sans,sans-serif;outline:none;transition:border .2s" onfocus="this.style.borderColor='var(--coral)'" onblur="this.style.borderColor='#eee'">
-      <input type="password" id="newPassword2" placeholder="Confirmer le mot de passe" style="padding:14px 16px;border:1.5px solid #eee;border-radius:10px;font-size:.9rem;font-family:DM Sans,sans-serif;outline:none;transition:border .2s" onfocus="this.style.borderColor='var(--coral)'" onblur="this.style.borderColor='#eee'">
-      <div id="pwdError" style="display:none;font-size:.8rem;color:var(--coral);text-align:center"></div>
-    </div>
-    <button onclick="changePassword()" style="width:100%;background:linear-gradient(135deg,var(--coral),var(--accent));color:white;border:none;border-radius:10px;padding:14px;font-size:.95rem;font-weight:600;cursor:pointer;font-family:DM Sans,sans-serif;margin-bottom:10px">Enregistrer mon mot de passe →</button>
-    <button onclick="localStorage.setItem('mirella_pwd_changed','1');document.getElementById('changePasswordModal').style.display='none'" style="width:100%;background:none;border:none;color:#aaa;font-size:.82rem;cursor:pointer;font-family:DM Sans,sans-serif">Plus tard</button>
-  </div>
-</div>
 
-
-
-
-
-<!-- CYCLE FEMININ VIEW -->
-<div id="cycleView" style="display:none;position:fixed;top:56px;left:0;right:0;bottom:60px;overflow-y:auto;background:var(--cream);z-index:10">
-  <div class="view-header" style="background:linear-gradient(135deg,var(--coral),var(--accent));padding:32px 32px 28px">
-    <div style="font-size:1.6rem;font-weight:700;color:white;font-family:'Open Sans',sans-serif">Cycle Féminin</div>
     <div style="font-size:0.9rem;color:rgba(255,255,255,0.8);margin-top:4px">Nutrition & bien-être adaptés à votre cycle</div>
   </div>
 
@@ -18880,7 +18847,7 @@ window.maybeShowReviewPrompt = function() {
     var overlay = document.getElementById('onboardingOverlay');
     if (overlay) {
       // Cacher toutes les autres popups pendant l'onboarding
-      var toHide = ['subscriptionModal','referralMilestonePopup','changePasswordModal'];
+      var toHide = ['subscriptionModal','referralMilestonePopup'];
       toHide.forEach(function(id) {
         var el = document.getElementById(id);
         if (el) el.style.display = 'none';
