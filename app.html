@@ -18924,56 +18924,48 @@ window.maybeShowReviewPrompt = function() {
 <!-- POPUP ONBOARDING MIRELLA -->
 <!-- FIN POPUP ONBOARDING -->
 <div id="onboardingOverlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.55);z-index:9999;align-items:center;justify-content:center;padding:20px">
-  <div style="background:white;border-radius:28px;width:100%;max-width:420px;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,0.2);position:relative">
+  <div style="background:white;border-radius:28px;width:100%;max-width:420px;max-height:92vh;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,0.2);position:relative;display:flex;flex-direction:column">
     
     <!-- ECRAN 1 : Présentation Mirella -->
-    <div id="onboarding1" style="padding:40px 28px 28px;text-align:center">
-      <video autoplay muted loop playsinline style="width:180px;height:180px;object-fit:contain;margin-bottom:20px;background:transparent;border:none;outline:none">
-        <source src="https://raw.githubusercontent.com/avelia-ai/nutricare-frontend/main/renard_mirella_niveau_1_compressed.mp4" type="video/mp4">
-      </video>
-      <h2 style="font-size:1.5rem;font-weight:800;color:#1E1E1E;margin-bottom:10px;letter-spacing:-0.3px">Bonjour, je suis Mirella</h2>
-      <p style="font-size:0.9rem;color:#767676;line-height:1.65;margin-bottom:28px;padding:0 4px">Votre coach santé & nutrition personnalisé. Plus vous utilisez l'application, plus mes conseils s'affinent avec vous.</p>
-      <div style="text-align:left;margin-bottom:32px">
-        <div style="display:flex;align-items:flex-start;gap:14px;padding:13px 2px;border-bottom:1px solid #f2ece7">
-          <div style="flex-shrink:0;width:34px;height:34px;border-radius:10px;background:#FFF3ED;display:flex;align-items:center;justify-content:center">
-            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#FF9A3C" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8h1a4 4 0 0 1 0 8h-1"/><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8Z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/></svg>
-          </div>
-          <div style="padding-top:3px">
-            <div style="font-size:0.87rem;font-weight:700;color:#2D2D2D;margin-bottom:2px">Menus personnalisés</div>
-            <div style="font-size:0.78rem;color:#909090;line-height:1.4">Générés selon votre profil et vos objectifs</div>
-          </div>
-        </div>
-        <div style="display:flex;align-items:flex-start;gap:14px;padding:13px 2px;border-bottom:1px solid #f2ece7">
-          <div style="flex-shrink:0;width:34px;height:34px;border-radius:10px;background:#FFF3ED;display:flex;align-items:center;justify-content:center">
-            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#FF9A3C" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2.69s-7 7.44-7 12.31a7 7 0 0 0 14 0c0-4.87-7-12.31-7-12.31Z"/></svg>
-          </div>
-          <div style="padding-top:3px">
-            <div style="font-size:0.87rem;font-weight:700;color:#2D2D2D;margin-bottom:2px">Suivi quotidien</div>
-            <div style="font-size:0.78rem;color:#909090;line-height:1.4">Hydratation, sommeil et indicateurs de santé</div>
-          </div>
-        </div>
-        <div style="display:flex;align-items:flex-start;gap:14px;padding:13px 2px;border-bottom:1px solid #f2ece7">
-          <div style="flex-shrink:0;width:34px;height:34px;border-radius:10px;background:#FFF3ED;display:flex;align-items:center;justify-content:center">
-            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#FF9A3C" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="6"/><path d="M15.5 13.5 17 22l-5-3-5 3 1.5-8.5"/></svg>
-          </div>
-          <div style="padding-top:3px">
-            <div style="font-size:0.87rem;font-weight:700;color:#2D2D2D;margin-bottom:2px">Défis & progression</div>
-            <div style="font-size:0.78rem;color:#909090;line-height:1.4">Gagnez des points en atteignant vos objectifs</div>
-          </div>
-        </div>
-        <div style="display:flex;align-items:flex-start;gap:14px;padding:13px 2px">
-          <div style="flex-shrink:0;width:34px;height:34px;border-radius:10px;background:#FFF3ED;display:flex;align-items:center;justify-content:center">
-            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#FF9A3C" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="M18.7 8 12 14.7 8.5 11.2 4 15.7"/></svg>
-          </div>
-          <div style="padding-top:3px">
-            <div style="font-size:0.87rem;font-weight:700;color:#2D2D2D;margin-bottom:2px">Analyse précise</div>
-            <div style="font-size:0.78rem;color:#909090;line-height:1.4">Des conseils affinés à mesure que vous progressez</div>
-          </div>
-        </div>
+    <div id="onboarding1" style="text-align:center;display:flex;flex-direction:column;max-height:92vh">
+      <div style="background:linear-gradient(160deg,#FFDCC4,#FFB088 55%,#FF9A6B);padding:14px 20px 0;flex-shrink:0">
+        <video autoplay muted loop playsinline style="width:180px;height:180px;object-fit:contain;background:transparent;border:none;outline:none;display:block;margin:0 auto">
+          <source src="https://raw.githubusercontent.com/avelia-ai/nutricare-frontend/main/renard_mirella_niveau_1_compressed.mp4" type="video/mp4">
+        </video>
       </div>
-      <button onclick="document.getElementById('onboarding1').style.display='none';document.getElementById('onboarding2').style.display='block'" style="width:100%;background:linear-gradient(135deg,#FF6B6B,#FF9A3C);color:white;border:none;border-radius:14px;padding:16px;font-size:0.95rem;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif;letter-spacing:0.2px;box-shadow:0 8px 20px rgba(255,107,107,0.28)">
-        Commencer
-      </button>
+      <div style="padding:16px 26px 22px;overflow-y:auto">
+        <h2 style="font-size:1.3rem;font-weight:800;color:#1E1E1E;margin-bottom:6px;letter-spacing:-0.3px">Bonjour, je suis Mirella</h2>
+        <p style="font-size:0.82rem;color:#767676;line-height:1.45;margin-bottom:16px">Votre coach santé & nutrition personnalisé, qui s'affine à mesure que vous l'utilisez.</p>
+        <div style="text-align:left;margin-bottom:16px">
+          <div style="display:flex;align-items:center;gap:12px;padding:8px 2px;border-bottom:1px solid #f2ece7">
+            <div style="flex-shrink:0;width:30px;height:30px;border-radius:9px;background:linear-gradient(135deg,#FFEDE1,#FFDCC4);display:flex;align-items:center;justify-content:center">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#FF7A3C" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8h1a4 4 0 0 1 0 8h-1"/><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8Z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/></svg>
+            </div>
+            <div style="font-size:0.82rem;font-weight:700;color:#2D2D2D">Menus personnalisés</div>
+          </div>
+          <div style="display:flex;align-items:center;gap:12px;padding:8px 2px;border-bottom:1px solid #f2ece7">
+            <div style="flex-shrink:0;width:30px;height:30px;border-radius:9px;background:linear-gradient(135deg,#FFEDE1,#FFDCC4);display:flex;align-items:center;justify-content:center">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#FF7A3C" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2.69s-7 7.44-7 12.31a7 7 0 0 0 14 0c0-4.87-7-12.31-7-12.31Z"/></svg>
+            </div>
+            <div style="font-size:0.82rem;font-weight:700;color:#2D2D2D">Suivi quotidien</div>
+          </div>
+          <div style="display:flex;align-items:center;gap:12px;padding:8px 2px;border-bottom:1px solid #f2ece7">
+            <div style="flex-shrink:0;width:30px;height:30px;border-radius:9px;background:linear-gradient(135deg,#FFEDE1,#FFDCC4);display:flex;align-items:center;justify-content:center">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#FF7A3C" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="6"/><path d="M15.5 13.5 17 22l-5-3-5 3 1.5-8.5"/></svg>
+            </div>
+            <div style="font-size:0.82rem;font-weight:700;color:#2D2D2D">Défis & progression</div>
+          </div>
+          <div style="display:flex;align-items:center;gap:12px;padding:8px 2px">
+            <div style="flex-shrink:0;width:30px;height:30px;border-radius:9px;background:linear-gradient(135deg,#FFEDE1,#FFDCC4);display:flex;align-items:center;justify-content:center">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#FF7A3C" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="M18.7 8 12 14.7 8.5 11.2 4 15.7"/></svg>
+            </div>
+            <div style="font-size:0.82rem;font-weight:700;color:#2D2D2D">Analyse précise</div>
+          </div>
+        </div>
+        <button onclick="document.getElementById('onboarding1').style.display='none';document.getElementById('onboarding2').style.display='block'" style="width:100%;background:linear-gradient(135deg,#FF6B6B,#FF9A3C);color:white;border:none;border-radius:14px;padding:15px;font-size:0.92rem;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif;letter-spacing:0.2px;box-shadow:0 8px 20px rgba(255,107,107,0.28)">
+          Commencer
+        </button>
+      </div>
     </div>
 
     <!-- ECRAN 2 : Données personnelles -->
