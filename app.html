@@ -9277,7 +9277,7 @@ function switchLang(lang) {
   var cardioSamples = [];
   var cardioStartTime = 0;
   var cardioRAF = null;
-  var CARDIO_DURATION_MS = 15000;
+  var CARDIO_DURATION_MS = 20000;
 
   // Lisse un signal avec moyenne mobile
   function cardioMovingAvg(arr, win) {
@@ -9289,29 +9289,27 @@ function switchLang(lang) {
   }
 
   function cardioDetectPeaks(samples) {
-    if (samples.length < 40) return [];
+    if (samples.length < 20) return [];
     // 1. Extraire les valeurs brutes
     var raw = samples.map(function(s) { return s.v; });
-    // 2. Lissage fort (fenêtre 7 points) pour supprimer le bruit haute fréquence
-    var smoothed = cardioMovingAvg(raw, 7);
-    // 3. Ligne de base longue (fenêtre 25 points) pour détecter la tendance
-    var baseline = cardioMovingAvg(smoothed, 25);
-    // 4. Signal centré = signal lissé - tendance
+    // 2. Lissage modere (fenetre 5 points)
+    var smoothed = cardioMovingAvg(raw, 5);
+    // 3. Baseline longue (fenetre 15 points)
+    var baseline = cardioMovingAvg(smoothed, 15);
+    // 4. Signal centre
     var detrended = smoothed.map(function(v, i) { return v - baseline[i]; });
-    // 5. Seuil dynamique = 40% de l'amplitude du signal centré
+    // 5. Seuil = 25% de l'amplitude max (plus permissif)
     var maxAmp = Math.max.apply(null, detrended.map(Math.abs));
-    var threshold = Math.max(0.8, maxAmp * 0.40);
+    if (maxAmp < 0.05) return []; // signal trop plat = doigt pas bien pose
+    var threshold = maxAmp * 0.25;
     var peaks = [];
-    var minPeakDistanceMs = 350; // min 350ms entre 2 pics = max 171 bpm
+    var minPeakDistanceMs = 330;
     var lastPeakT = -Infinity;
-    // Fenêtre de comparaison plus large (±4 points)
-    for (var i = 4; i < detrended.length - 4; i++) {
+    for (var i = 2; i < detrended.length - 2; i++) {
       var v = detrended[i];
       if (v > threshold &&
-          v > detrended[i-1] && v > detrended[i+1] &&
-          v > detrended[i-2] && v > detrended[i+2] &&
-          v > detrended[i-3] && v > detrended[i+3] &&
-          v > detrended[i-4] && v > detrended[i+4] &&
+          v >= detrended[i-1] && v >= detrended[i+1] &&
+          v >= detrended[i-2] && v >= detrended[i+2] &&
           (samples[i].t - lastPeakT) >= minPeakDistanceMs) {
         peaks.push(samples[i].t);
         lastPeakT = samples[i].t;
@@ -9319,27 +9317,24 @@ function switchLang(lang) {
     }
     return peaks;
   }
-
   function cardioEstimateBpm(samples) {
     var peaks = cardioDetectPeaks(samples);
-    if (peaks.length < 4) return null;
+    if (peaks.length < 3) return null;
     var intervals = [];
     for (var i = 1; i < peaks.length; i++) {
       var interval = peaks[i] - peaks[i - 1];
-      if (interval > 350 && interval < 1500) intervals.push(interval);
+      if (interval > 330 && interval < 1600) intervals.push(interval);
     }
-    if (intervals.length < 3) return null;
-    // Supprime les intervalles aberrants (±25% de la médiane)
+    if (intervals.length < 2) return null;
     intervals.sort(function(a, b) { return a - b; });
     var median = intervals[Math.floor(intervals.length / 2)];
     var filtered = intervals.filter(function(iv) {
-      return iv > median * 0.75 && iv < median * 1.25;
+      return iv > median * 0.65 && iv < median * 1.35;
     });
-    if (filtered.length < 2) return null;
+    if (filtered.length < 1) return null;
     var avgInterval = filtered.reduce(function(a, b) { return a + b; }, 0) / filtered.length;
     return 60000 / avgInterval;
   }
-
   window.startCardioMeasurement = async function() {
     document.getElementById('cardioEntryState').style.display = 'none';
     document.getElementById('cardioMeasuringState').style.display = 'block';
@@ -9388,7 +9383,7 @@ function switchLang(lang) {
           }
           // Le canal rouge est dominant quand le doigt couvre la caméra
           // On utilise R - 0.5*G pour amplifier le signal pulsatile
-          var v = count > 0 ? (sumR - 0.5 * sumG) / count : 0;
+          var v = count > 0 ? sumR / count : 0;
           cardioSamples.push({ t: elapsed, v: v });
         }
 
