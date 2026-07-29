@@ -9357,7 +9357,17 @@ function switchLang(lang) {
     await video.play();
 
     var track = cardioStream.getVideoTracks()[0];
-    try { await track.applyConstraints({ advanced: [{ torch: true }] }); } catch (e) {}
+    var caps = (track.getCapabilities && track.getCapabilities()) || {};
+    var torchDebugMsg = 'torch capability: ' + (caps.torch ? 'oui' : 'NON supporte');
+    try {
+      await track.applyConstraints({ advanced: [{ torch: true }] });
+      torchDebugMsg += ' | activation: OK';
+    } catch (e) {
+      torchDebugMsg += ' | erreur: ' + e.message;
+    }
+    document.getElementById('cardioMeasuringStatus').textContent = torchDebugMsg;
+    await new Promise(function(r) { setTimeout(r, 2500); });
+    document.getElementById('cardioMeasuringStatus').textContent = 'Place ton doigt sur la camera...';
 
     var canvas = document.createElement('canvas');
     canvas.width = 40; canvas.height = 40;
