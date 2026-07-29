@@ -9402,14 +9402,16 @@ function switchLang(lang) {
 
     var track = cardioStream.getVideoTracks()[0];
     try {
-      await track.applyConstraints({ torch: true });
+      await track.applyConstraints({ advanced: [{ torch: true }] });
     } catch (e) {
-      try { await track.applyConstraints({ advanced: [{ torch: true }] }); } catch (e2) {}
-    }
-    if (typeof cardioDebugMsg !== 'undefined' && cardioDebugMsg) {
-      document.getElementById('cardioMeasuringStatus').textContent = cardioDebugMsg;
-      await new Promise(function(r){ setTimeout(r, 3000); });
-      document.getElementById('cardioMeasuringStatus').textContent = 'Place ton doigt sur la caméra...';
+      try { await track.applyConstraints({ torch: true }); } catch (e2) {
+        try {
+          if (window.ImageCapture) {
+            var ic = new ImageCapture(track);
+            await ic.setOptions({ fillLightMode: 'flash' });
+          }
+        } catch (e3) {}
+      }
     }
 
     var canvas = document.createElement('canvas');
