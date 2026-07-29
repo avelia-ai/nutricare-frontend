@@ -9345,7 +9345,11 @@ function switchLang(lang) {
 
     var cardioDebugMsg = '';
     try {
-      cardioStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: { ideal: 'environment' } } });
+      try {
+        cardioStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: { ideal: 'environment' }, torch: true } });
+      } catch(eTorch) {
+        cardioStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: { ideal: 'environment' } } });
+      }
     } catch (err) {
       window.resetCardioCard();
       alert('Accès caméra refusé ou indisponible.');
