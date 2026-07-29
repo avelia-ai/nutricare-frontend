@@ -9279,25 +9279,39 @@ function switchLang(lang) {
   var cardioRAF = null;
   var CARDIO_DURATION_MS = 15000;
 
-  function cardioDetectPeaks(samples) {
-    if (samples.length < 30) return [];
-    var windowMs = 1000;
-    var baseline = samples.map(function(s) {
-      var winStart = s.t - windowMs / 2, winEnd = s.t + windowMs / 2;
-      var sum = 0, count = 0;
-      for (var j = 0; j < samples.length; j++) {
-        if (samples[j].t >= winStart && samples[j].t <= winEnd) { sum += samples[j].v; count++; }
-      }
-      return count > 0 ? sum / count : s.v;
+  // Lisse un signal avec moyenne mobile
+  function cardioMovingAvg(arr, win) {
+    return arr.map(function(_, i) {
+      var start = Math.max(0, i - win + 1);
+      var slice = arr.slice(start, i + 1);
+      return slice.reduce(function(a, b) { return a + b; }, 0) / slice.length;
     });
-    var detrended = samples.map(function(s, i) { return s.v - baseline[i]; });
+  }
+
+  function cardioDetectPeaks(samples) {
+    if (samples.length < 40) return [];
+    // 1. Extraire les valeurs brutes
+    var raw = samples.map(function(s) { return s.v; });
+    // 2. Lissage fort (fenêtre 7 points) pour supprimer le bruit haute fréquence
+    var smoothed = cardioMovingAvg(raw, 7);
+    // 3. Ligne de base longue (fenêtre 25 points) pour détecter la tendance
+    var baseline = cardioMovingAvg(smoothed, 25);
+    // 4. Signal centré = signal lissé - tendance
+    var detrended = smoothed.map(function(v, i) { return v - baseline[i]; });
+    // 5. Seuil dynamique = 40% de l'amplitude du signal centré
+    var maxAmp = Math.max.apply(null, detrended.map(Math.abs));
+    var threshold = Math.max(0.8, maxAmp * 0.40);
     var peaks = [];
-    var minPeakDistanceMs = 320;
+    var minPeakDistanceMs = 350; // min 350ms entre 2 pics = max 171 bpm
     var lastPeakT = -Infinity;
-    for (var i = 2; i < detrended.length - 2; i++) {
-      if (detrended[i] > detrended[i - 1] && detrended[i] > detrended[i + 1] &&
-          detrended[i] > detrended[i - 2] && detrended[i] > detrended[i + 2] &&
-          detrended[i] > 0.5 &&
+    // Fenêtre de comparaison plus large (±4 points)
+    for (var i = 4; i < detrended.length - 4; i++) {
+      var v = detrended[i];
+      if (v > threshold &&
+          v > detrended[i-1] && v > detrended[i+1] &&
+          v > detrended[i-2] && v > detrended[i+2] &&
+          v > detrended[i-3] && v > detrended[i+3] &&
+          v > detrended[i-4] && v > detrended[i+4] &&
           (samples[i].t - lastPeakT) >= minPeakDistanceMs) {
         peaks.push(samples[i].t);
         lastPeakT = samples[i].t;
@@ -9308,14 +9322,21 @@ function switchLang(lang) {
 
   function cardioEstimateBpm(samples) {
     var peaks = cardioDetectPeaks(samples);
-    if (peaks.length < 3) return null;
+    if (peaks.length < 4) return null;
     var intervals = [];
     for (var i = 1; i < peaks.length; i++) {
       var interval = peaks[i] - peaks[i - 1];
-      if (interval > 300 && interval < 2000) intervals.push(interval);
+      if (interval > 350 && interval < 1500) intervals.push(interval);
     }
-    if (intervals.length < 2) return null;
-    var avgInterval = intervals.reduce(function(a, b) { return a + b; }, 0) / intervals.length;
+    if (intervals.length < 3) return null;
+    // Supprime les intervalles aberrants (±25% de la médiane)
+    intervals.sort(function(a, b) { return a - b; });
+    var median = intervals[Math.floor(intervals.length / 2)];
+    var filtered = intervals.filter(function(iv) {
+      return iv > median * 0.75 && iv < median * 1.25;
+    });
+    if (filtered.length < 2) return null;
+    var avgInterval = filtered.reduce(function(a, b) { return a + b; }, 0) / filtered.length;
     return 60000 / avgInterval;
   }
 
@@ -9356,10 +9377,20 @@ function switchLang(lang) {
       }
       if (video.videoWidth > 0) {
         ctx.drawImage(video, 0, 0, 40, 40);
-        var frame = ctx.getImageData(10, 10, 20, 20).data;
-        var sum = 0, count = 0;
-        for (var i = 0; i < frame.length; i += 4) { sum += frame[i]; count++; }
-        cardioSamples.push({ t: elapsed, v: sum / count });
+        // Throttle à ~30fps pour réduire le bruit
+        if (cardioSamples.length === 0 || elapsed - cardioSamples[cardioSamples.length-1].t >= 33) {
+          var frame = ctx.getImageData(5, 5, 30, 30).data;
+          var sumR = 0, sumG = 0, count = 0;
+          for (var i = 0; i < frame.length; i += 4) {
+            sumR += frame[i];      // canal rouge
+            sumG += frame[i + 1]; // canal vert
+            count++;
+          }
+          // Le canal rouge est dominant quand le doigt couvre la caméra
+          // On utilise R - 0.5*G pour amplifier le signal pulsatile
+          var v = count > 0 ? (sumR - 0.5 * sumG) / count : 0;
+          cardioSamples.push({ t: elapsed, v: v });
+        }
 
         var progress = Math.min(1, elapsed / CARDIO_DURATION_MS);
         var ring = document.getElementById('cardioProgressRing');
