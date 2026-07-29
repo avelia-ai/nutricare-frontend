@@ -153,10 +153,16 @@ window.addEventListener("error", function(e) {
   .alerte-conseil { font-size: 0.78rem; color: #888; font-style: italic; line-height: 1.4; }
 
   @media(max-width:768px) {
-    [id$="View"]:not(#homeView):not(#mesRecettesView):not(#chatView):not(#catalogueView):not(#visualView):not(#healthView):not(#shopView) {
+    [id$="View"]:not(#homeView):not(#mesRecettesView):not(#chatView):not(#catalogueView):not(#visualView):not(#healthView):not(#shopView):not(#mirelsBoutiqueView):not(#cycleView) {
       padding: 16px !important;
     }
     #shopView {
+      padding: 0 !important;
+    }
+    #mirelsBoutiqueView {
+      padding: 0 !important;
+    }
+    #cycleView {
       padding: 0 !important;
     }
     #healthView {
@@ -3796,6 +3802,13 @@ function switchLang(lang) {
         </div>
       </div>
       <div style="padding:18px 16px 16px;width:100%;box-sizing:border-box">
+        <div id="homeMirelsBanner" onclick="showView('mirelsBoutique')" style="display:flex;align-items:center;justify-content:space-between;background:linear-gradient(135deg,#FFF5EE,#FFF0E8);border-radius:16px;padding:14px 18px;margin-bottom:16px;border:1.5px solid rgba(255,154,60,0.25);cursor:pointer;box-shadow:0 2px 12px rgba(255,107,107,0.08)">
+          <div style="display:flex;align-items:center;gap:10px">
+            <span style="font-size:1.3rem">🪙</span>
+            <span style="font-size:0.85rem;color:var(--charcoal);font-weight:600">Mes Mirels</span>
+          </div>
+          <span id="homeMirelsCount" style="font-size:1.3rem;font-weight:700;color:var(--accent)">--</span>
+        </div>
         <!-- SECTION COEUR D'HARMONIE -->
         <div style="margin-bottom:16px;border-radius:20px;padding:2px;background:linear-gradient(160deg, rgba(255,180,130,0.55), rgba(255,255,255,0.9) 40%, rgba(255,110,90,0.4) 75%, rgba(255,255,255,0.9));box-shadow:0 16px 38px rgba(230,110,70,0.14)">
         <div style="background:#FFFFFF;border-radius:18px;padding:14px 16px 6px">
@@ -3853,20 +3866,6 @@ function switchLang(lang) {
         </div>
         <!-- FIN COEUR D'HARMONIE -->
 
-        <div style="margin-bottom:12px;border-radius:18px;padding:2px;background:linear-gradient(160deg, rgba(255,180,130,0.55), rgba(255,255,255,0.9) 40%, rgba(255,110,90,0.4) 75%, rgba(255,255,255,0.9));box-shadow:0 16px 38px rgba(230,110,70,0.14)">
-        <div id="homeJourneeCard" style="background:#FFFCFA;border-radius:16px;overflow:hidden">
-          <div id="homeJourneePhoto" style="height:120px;background:#f0f0f0;background-size:cover;background-position:center;position:relative">
-            <div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,0.6),transparent)"></div>
-            <div style="position:absolute;bottom:10px;left:14px">
-              <div style="font-size:0.65rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:rgba(255,255,255,0.8);margin-bottom:2px">Journee mondiale</div>
-              <div id="homeJourneeTitre" style="font-size:0.95rem;font-weight:700;color:white">Chargement...</div>
-            </div>
-          </div>
-          <div style="padding:12px 14px">
-            <div id="homeJourneeDesc" style="font-size:0.82rem;color:#555;line-height:1.5"></div>
-          </div>
-        </div>
-        </div>
 <div style="margin-bottom:24px;border-radius:18px;padding:2px;background:linear-gradient(160deg, rgba(255,180,130,0.55), rgba(255,255,255,0.9) 40%, rgba(255,110,90,0.4) 75%, rgba(255,255,255,0.9));box-shadow:0 16px 38px rgba(230,110,70,0.14)">
         <div style="background:#FFFCFA;border-radius:16px;overflow:hidden">
           <div style="display:flex">
@@ -4567,6 +4566,25 @@ function switchLang(lang) {
         <div style="font-family:Open Sans,serif;font-size:1.6rem;font-weight:700;margin-bottom:4px"><span id="dashName">!</span></div>
         <div style="font-size:0.85rem;opacity:0.75">Votre tableau de bord santé du jour</div>
       </div>
+
+      <!-- BLOC MIRELS DASHBOARD -->
+      <div id="dashMirelsBanner" onclick="showView('mirelsBoutique')" style="display:flex;align-items:center;justify-content:space-between;background:linear-gradient(135deg,#FFF5EE,#FFF0E8);border-radius:16px;padding:14px 18px;margin-bottom:16px;border:1.5px solid rgba(255,154,60,0.25);cursor:pointer;box-shadow:0 2px 12px rgba(255,107,107,0.08)">
+        <div style="display:flex;align-items:center;gap:12px">
+          <div style="width:40px;height:40px;background:linear-gradient(135deg,var(--coral),var(--accent));border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.2rem;flex-shrink:0">🪙</div>
+          <div>
+            <div style="font-size:0.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--accent);margin-bottom:2px">Mes Mirels</div>
+            <div style="display:flex;align-items:baseline;gap:4px">
+              <span id="dashMirelsCount" style="font-size:1.5rem;font-weight:700;color:var(--charcoal)">--</span>
+              <span style="font-size:0.78rem;color:rgba(0,0,0,0.4)">Mirels disponibles</span>
+            </div>
+          </div>
+        </div>
+        <div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px">
+          <div style="background:linear-gradient(135deg,var(--coral),var(--accent));color:white;font-size:0.72rem;font-weight:700;padding:5px 12px;border-radius:100px">Boutique →</div>
+          <div id="dashMirelsEarn" style="font-size:0.68rem;color:rgba(0,0,0,0.35)">Gagnez des Mirels chaque jour</div>
+        </div>
+      </div>
+      <!-- FIN BLOC MIRELS DASHBOARD -->
       <div id="predictionBanner" style="display:none;border-radius: 4px;padding:16px 20px;margin-bottom:16px;border-left:4px solid #C9A84C;background:#FDF6E8">
         <div style="display:flex;align-items:flex-start;gap:12px">
           <div style="font-size:1.4rem;flex-shrink:0" id="predIcon">&#x1F52E;</div>
@@ -5709,6 +5727,11 @@ function switchLang(lang) {
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px">
       <div style="font-size:0.75rem;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:var(--accent)">✨ Mirella</div>
       <div id="harmonyLevelBadge" style="font-size:0.72rem;font-weight:600;color:var(--coral-dark);background:var(--cream2);padding:4px 10px;border-radius:100px">Niveau 1</div>
+    </div>
+    <div style="display:flex;align-items:center;justify-content:center;gap:6px;margin:6px 0 2px">
+      <span style="font-size:1rem">🪙</span>
+      <span id="suiviMirelsCount" style="font-size:0.95rem;font-weight:700;color:var(--charcoal)">--</span>
+      <span style="font-size:0.72rem;color:#999">Mirels</span>
     </div>
     <div id="harmonyStageName" style="font-size:1.05rem;font-weight:600;color:#2D2D2D;margin:8px 0 4px">Éveil</div>
     <div style="font-size:0.78rem;color:#999;line-height:1.4;margin-bottom:8px">Renseignez vos indicateurs santé ci-dessous (sommeil, hydratation, activité, stress) pour faire évoluer Mirella</div>
@@ -7141,6 +7164,35 @@ function switchLang(lang) {
 
   <div id="gamiContent" style="display:none">
 
+
+    <!-- BLOC MIRELS PROGRESSION -->
+    <div id="gamiMirels" style="background:#FFFCFA;border-radius:16px;padding:20px;margin-bottom:16px;border:1px solid rgba(255,154,108,0.3);box-shadow:0 0 0 1.5px rgba(255,154,108,0.22),0 14px 32px rgba(230,110,70,0.14)">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
+        <div style="font-size:0.75rem;font-weight:700;text-transform:uppercase;letter-spacing:1.2px;color:var(--accent)">🪙 Mes Mirels</div>
+        <button onclick="showView('mirelsBoutique')" style="background:linear-gradient(135deg,var(--coral),var(--accent));color:white;border:none;border-radius:100px;padding:5px 14px;font-size:0.72rem;font-weight:700;cursor:pointer;font-family:DM Sans,sans-serif">Boutique →</button>
+      </div>
+      <div style="display:flex;align-items:center;gap:16px;margin-bottom:16px">
+        <div style="width:56px;height:56px;background:linear-gradient(135deg,var(--coral),var(--accent));border-radius:16px;display:flex;align-items:center;justify-content:center;font-size:1.6rem;flex-shrink:0">🪙</div>
+        <div>
+          <div style="font-size:2rem;font-weight:700;color:var(--charcoal)" id="gamiMirelsCount">--</div>
+          <div style="font-size:0.78rem;color:rgba(0,0,0,0.4)">Mirels disponibles</div>
+        </div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:8px" id="gamiMirelsActions">
+        <button onclick="earnMirels('connexion_quotidienne')" style="display:flex;align-items:center;gap:10px;background:#FFF5EE;border:1.5px solid rgba(255,154,60,0.2);border-radius:12px;padding:10px 14px;cursor:pointer;font-family:DM Sans,sans-serif;width:100%;text-align:left">
+          <span style="font-size:1.1rem">☀️</span>
+          <div style="flex:1"><div style="font-size:0.82rem;font-weight:600;color:#2D2D2D">Connexion quotidienne</div><div style="font-size:0.72rem;color:rgba(0,0,0,0.4)">Réclamez vos 5 Mirels du jour</div></div>
+          <span style="font-size:0.78rem;font-weight:700;color:var(--coral)">+5 🪙</span>
+        </button>
+        <button onclick="earnMirels('score_sante')" style="display:flex;align-items:center;gap:10px;background:#FFF5EE;border:1.5px solid rgba(255,154,60,0.2);border-radius:12px;padding:10px 14px;cursor:pointer;font-family:DM Sans,sans-serif;width:100%;text-align:left">
+          <span style="font-size:1.1rem">❤️</span>
+          <div style="flex:1"><div style="font-size:0.82rem;font-weight:600;color:#2D2D2D">Score santé rempli</div><div style="font-size:0.72rem;color:rgba(0,0,0,0.4)">Complétez votre score du jour</div></div>
+          <span style="font-size:0.78rem;font-weight:700;color:var(--coral)">+5 🪙</span>
+        </button>
+      </div>
+    </div>
+    <!-- FIN BLOC MIRELS PROGRESSION -->
+
     <!-- Niveau + Points d'harmonie -->
     <div style="background:var(--charcoal);border-radius:16px;padding:24px;color:white;margin-bottom:16px">
       <div style="display:flex;align-items:center;gap:16px;margin-bottom:16px">
@@ -7313,8 +7365,70 @@ function switchLang(lang) {
     const lv = localStorage.getItem('nutricare_last_view');
     if (lv === 'oracle' || lv === 'pro') localStorage.setItem('nutricare_last_view', 'home');
   })();
+  var ACTIVITE_OPTIONS = [
+    { value: 'sedentaire', label: 'Sédentaire', icon: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#FF7A3C" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 9V7a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v2"/><path d="M2 9h20v6a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V9Z"/><path d="M4 17v3M20 17v3"/></svg>' },
+    { value: 'leger', label: 'Légèrement actif', icon: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#FF7A3C" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="13" cy="4" r="2"/><path d="m7 21 2-6 3-2-1-5-4 1"/><path d="m10 13 3 2 3 6"/><path d="M9 9l4-1 2 3"/></svg>' },
+    { value: 'modere', label: 'Modérément actif', icon: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#FF7A3C" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="14.5" cy="4.5" r="2"/><path d="m6 21 2.5-7 3-2.5-1-5.5-4.5 1.5"/><path d="m10.5 11.5 3.5 2 3 7.5"/><path d="m8.5 8 4.5-1.5 3 4"/></svg>' },
+    { value: 'actif', label: 'Très actif', icon: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#FF7A3C" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6.5 6.5 4 9l2.5 2.5M17.5 6.5 20 9l-2.5 2.5M9 4l1.5 1.5M15 4l-1.5 1.5M2 9h4M18 9h4M9 12h6"/><rect x="8" y="9" width="8" height="6" rx="1.5"/></svg>' },
+    { value: 'tres_actif', label: 'Extrêmement actif', icon: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#FF7A3C" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12h3M19 12h3M5 8v8M19 8v8"/><path d="M5 12h14"/><circle cx="12" cy="5" r="2"/><path d="M12 7v3"/></svg>' }
+  ];
+
+  function renderActiviteOptions() {
+    var panel = document.getElementById('obActiviteOptions');
+    if (!panel) return;
+    panel.innerHTML = ACTIVITE_OPTIONS.map(function(o) {
+      return '<div onclick="selectActivite(\'' + o.value + '\',\'' + o.label + '\')" style="display:flex;align-items:center;gap:10px;padding:12px 15px;cursor:pointer;font-size:0.9rem;color:#2D2D2D;border-bottom:1px solid #F5F0EC" onmouseover="this.style.background=\'#FFF8F3\'" onmouseout="this.style.background=\'white\'">' + o.icon + '<span>' + o.label + '</span></div>';
+    }).join('');
+  }
+
+  function positionActiviteDropdown() {
+    var trigger = document.getElementById('obActiviteTrigger');
+    var panel = document.getElementById('obActiviteOptions');
+    if (!trigger || !panel) return;
+    var rect = trigger.getBoundingClientRect();
+    panel.style.top = (rect.bottom + 6) + 'px';
+    panel.style.left = rect.left + 'px';
+    panel.style.width = rect.width + 'px';
+  }
+
+  function toggleActiviteDropdown() {
+    var panel = document.getElementById('obActiviteOptions');
+    if (!panel) return;
+    if (panel.style.display === 'none' || !panel.style.display) {
+      renderActiviteOptions();
+      positionActiviteDropdown();
+      panel.style.display = 'block';
+    } else {
+      panel.style.display = 'none';
+    }
+  }
+
+  function selectActivite(value, label) {
+    document.getElementById('obActivite').value = value;
+    var opt = ACTIVITE_OPTIONS.find(function(o) { return o.value === value; });
+    document.getElementById('obActiviteLabel').innerHTML = (opt ? opt.icon : '') + '<span style="color:#2D2D2D">' + label + '</span>';
+    document.getElementById('obActiviteOptions').style.display = 'none';
+  }
+
+  window.addEventListener('resize', function() {
+    var panel = document.getElementById('obActiviteOptions');
+    if (panel && panel.style.display === 'block') positionActiviteDropdown();
+  });
+  window.addEventListener('scroll', function() {
+    var panel = document.getElementById('obActiviteOptions');
+    if (panel && panel.style.display === 'block') positionActiviteDropdown();
+  }, true);
+
+  document.addEventListener('click', function(e) {
+    var wrap = document.getElementById('obActiviteTrigger');
+    var panel = document.getElementById('obActiviteOptions');
+    if (!wrap || !panel) return;
+    if (!wrap.contains(e.target) && !panel.contains(e.target)) {
+      panel.style.display = 'none';
+    }
+  });
+
   window.onload = async () => {
-    setTimeout(function(){ showOnboarding(); }, 1000);
     const urlParams = new URLSearchParams(window.location.search);
     const urlView = urlParams.get('view');
     const urlPathologie = urlParams.get('p');
@@ -7336,7 +7450,6 @@ function switchLang(lang) {
         const cached = JSON.parse(localStorage.getItem('nutricare_profile') || 'null');
         if (cached) renderProfileQuick(cached);
       } catch (e) {}
-      checkOnboarding();
       // Retour Stripe
       var _stripeParams = new URLSearchParams(window.location.search);
       if (_stripeParams.get('success') === 'true') {
@@ -7348,6 +7461,13 @@ function switchLang(lang) {
         }, 2000);
       } else if (_stripeParams.get('cancelled') === 'true') {
         window.history.replaceState({}, '', window.location.pathname);
+      }
+      if (_stripeParams.get('mirels_success')) {
+        window.history.replaceState({}, '', window.location.pathname);
+        setTimeout(async function() {
+          await fetchMirelsBalance();
+          alert('🎉 Mirels ajoutés à votre compte !');
+        }, 2000);
       }
       var _savedTheme = localStorage.getItem('mirella_theme');
       setTimeout(async function() {
@@ -7868,7 +7988,6 @@ function switchLang(lang) {
         body: JSON.stringify({ password: p1 })
       });
       if (res.ok) {
-        document.getElementById('changePasswordModal').style.display = 'none';
         localStorage.setItem('mirella_pwd_changed', '1');
         alert('✅ Mot de passe mis à jour avec succès !');
       } else {
@@ -7878,10 +7997,7 @@ function switchLang(lang) {
     } catch(e) { errEl.textContent = 'Erreur réseau.'; errEl.style.display = 'block'; }
   }
 
-  function showChangePasswordModal() {
-    const modal = document.getElementById('changePasswordModal');
-    if (modal) modal.style.display = 'flex';
-  }
+
 
 
   // Détection token reset password Supabase
@@ -7893,12 +8009,7 @@ function switchLang(lang) {
       if (accessToken) {
         localStorage.setItem('nutricare_token', accessToken);
         setTimeout(function() {
-          const modal = document.getElementById('changePasswordModal');
-          if (modal) {
-            modal.style.display = 'flex';
-            const title = modal.querySelector('h2');
-            if (title) title.textContent = 'Définissez votre nouveau mot de passe';
-          }
+          alert('Vous pouvez maintenant définir votre nouveau mot de passe dans Profil > Sécurité.');
         }, 1500);
       }
     }
@@ -8025,7 +8136,7 @@ function switchLang(lang) {
       if (document.getElementById('profileWorkEnd')) document.getElementById('profileWorkEnd').value = profile.work_end || '18:00';
       if (document.getElementById('profileChronoGoal')) document.getElementById('profileChronoGoal').value = profile.chrono_goal || '';
       updateMenu(window.currentPlan || 'free');
-      if (window.isTrial) { setTimeout(showTrialBanner, 500); if (!localStorage.getItem("mirella_pwd_changed")) setTimeout(showChangePasswordModal, 1000); }
+      if (window.isTrial) { setTimeout(showTrialBanner, 500); }
       // Score circadien dans le dashboard
       if (profile.wake_up || profile.sleep_time) {
         const wakeH = parseInt((profile.wake_up || '07:00').split(':')[0]);
@@ -10495,6 +10606,7 @@ Réponds UNIQUEMENT en JSON valide avec cette structure exacte:
     if (document.getElementById('visualView')) { document.getElementById('visualView').style.display = view === 'visual' ? 'block' : 'none'; if (view === 'visual') applyVisualPlanGates(); }
     document.getElementById('gamificationView').style.display = view === 'gamification' ? 'block' : 'none';
     if (document.getElementById('shopView')) document.getElementById('shopView').style.display = view === 'shop' ? 'block' : 'none';
+    if (document.getElementById('mirelsBoutiqueView')) { document.getElementById('mirelsBoutiqueView').style.display = view === 'mirelsBoutique' ? 'block' : 'none'; if (view === 'mirelsBoutique') loadMirelsBoutique(); }
     document.getElementById('programsView').style.display = view === 'programs' ? 'block' : 'none';
     document.getElementById('ordonnanceView').style.display = view === 'ordonnance' ? 'block' : 'none';
     document.getElementById('scanproduitView').style.display = view === 'scanproduit' ? 'block' : 'none'; if (view === 'scanproduit') applyScanproduitPlanGates();
@@ -12467,25 +12579,17 @@ function loadShop() {
   var owned = JSON.parse(localStorage.getItem('shop_owned') || '[]');
   var equipped = localStorage.getItem('shop_equipped') || '';
   _shopData = [
-    { id:'hat1', name:'Chapeau Chef', icon:'👨‍🍳', category:'hat', price:50, owned:owned.includes('hat1'), equipped:equipped==='hat1' },
-    { id:'hat2', name:'Couronne Santé', icon:'👑', category:'hat', price:120, owned:owned.includes('hat2'), equipped:equipped==='hat2' },
-    { id:'hat3', name:'Béret Zen', icon:'🎩', category:'hat', price:80, owned:owned.includes('hat3'), equipped:equipped==='hat3' },
-    { id:'badge1', name:'Badge Étoile', icon:'⭐', category:'badge', price:30, owned:owned.includes('badge1'), equipped:equipped==='badge1' },
-    { id:'badge2', name:'Badge Feu', icon:'🔥', category:'badge', price:60, owned:owned.includes('badge2'), equipped:equipped==='badge2' },
-    { id:'badge3', name:'Badge Diamant', icon:'💎', category:'badge', price:200, owned:owned.includes('badge3'), equipped:equipped==='badge3' },
-    { id:'frame1', name:'Cadre Corail', icon:'🌸', category:'frame', price:90, owned:owned.includes('frame1'), equipped:equipped==='frame1' },
-    { id:'frame2', name:'Cadre Or', icon:'🏅', category:'frame', price:150, owned:owned.includes('frame2'), equipped:equipped==='frame2' },
-    { id:'pet1', name:'Chat Zen', icon:'🐱', category:'pet', price:100, owned:owned.includes('pet1'), equipped:equipped==='pet1' },
-    { id:'pet2', name:'Panda Fit', icon:'🐼', category:'pet', price:180, owned:owned.includes('pet2'), equipped:equipped==='pet2' },
-    { id:'pet3', name:'Lapin Vitamine', icon:'🐰', category:'pet', price:130, owned:owned.includes('pet3'), equipped:equipped==='pet3' },
-    { id:'pet4', name:'Renard Nutrition', icon:'🦊', category:'pet', price:220, owned:owned.includes('pet4'), equipped:equipped==='pet4' }
+    { id:'bandana1', name:'Bandana Paw Orange', image:'https://raw.githubusercontent.com/avelia-ai/nutricare-frontend/main/bandana_paw_orange.png', category:'bandana', price:40, owned:owned.includes('bandana1'), equipped:equipped==='bandana1' },
+    { id:'hat1', name:'Bob Fox Jaune', image:'https://raw.githubusercontent.com/avelia-ai/nutricare-frontend/main/bob_fox_jaune.png', category:'hat', price:60, owned:owned.includes('hat1'), equipped:equipped==='hat1' },
+    { id:'glasses1', name:'Lunettes Pixels', image:'https://raw.githubusercontent.com/avelia-ai/nutricare-frontend/main/lunettes_pixels.png', category:'glasses', price:80, owned:owned.includes('glasses1'), equipped:equipped==='glasses1' },
+    { id:'necklace1', name:'Collier Bling-Bling', image:'https://raw.githubusercontent.com/avelia-ai/nutricare-frontend/main/collier_blingbling.png', category:'necklace', price:130, owned:owned.includes('necklace1'), equipped:equipped==='necklace1' }
   ];
   renderShopGrid(_shopData);
 }
 
 function filterShop(cat) {
   _shopCurrentCat = cat;
-  ['all','hat','badge','frame','pet'].forEach(function(c) {
+  ['all','hat','glasses','necklace','bandana'].forEach(function(c) {
     var btn = document.getElementById('shopCat-' + c);
     if (!btn) return;
     if (c === cat) {
@@ -12514,9 +12618,9 @@ function renderShopGrid(items) {
         ? 'background:linear-gradient(135deg,var(--coral),var(--accent));color:white;'
         : 'background:#f5f5f5;color:#333;';
     return '<div style="background:white;border-radius:16px;padding:16px;text-align:center;box-shadow:0 2px 12px rgba(0,0,0,0.06)">' +
-      '<div style="font-size:2.5rem;margin-bottom:8px">' + item.icon + '</div>' +
+      '<div style="font-size:2.5rem;margin-bottom:8px;display:flex;align-items:center;justify-content:center;height:56px">' + (item.image ? '<img src="' + item.image + '" style="width:56px;height:56px;object-fit:contain">' : item.icon) + '</div>' +
       '<div style="font-size:0.82rem;font-weight:700;color:#1a1a1a;margin-bottom:4px">' + item.name + '</div>' +
-      '<div style="font-size:0.7rem;color:#aaa;margin-bottom:12px;text-transform:uppercase;letter-spacing:1px">' + item.category + '</div>' +
+      '<div style="font-size:0.7rem;color:#aaa;margin-bottom:12px;text-transform:uppercase;letter-spacing:1px">' + ({hat:'Chapeau',glasses:'Lunettes',necklace:'Collier',bandana:'Bandana'}[item.category] || item.category) + '</div>' +
       '<button onclick="shopAction(\'' + item.id + '\',' + (owned ? '\'equip\'': '\'buy\'') + ')" style="width:100%;padding:8px;border-radius:10px;border:none;font-size:0.78rem;font-weight:700;cursor:pointer;font-family:DM Sans,sans-serif;' + btnStyle + '">' + btnLabel + '</button>' +
       '</div>';
   }).join('');
@@ -12540,6 +12644,52 @@ function shopAction(itemId, action) {
   loadShop();
 }
 
+function loadMirelsBoutique() {
+  fetchMirelsBalance();
+  var el = document.getElementById('boutiqueMirelsCount');
+  if (el) el.textContent = getMirels();
+  window._mirelsPacks = [
+    { id:'small', mirels:100, price:'1,99€', popular:false },
+    { id:'medium', mirels:300, price:'4,99€', popular:true },
+    { id:'large', mirels:700, price:'9,99€', popular:false }
+  ];
+  renderMirelsShopGrid(window._mirelsPacks);
+}
+function renderMirelsShopGrid(items) {
+  var grid = document.getElementById('mirelsShopGrid');
+  if (!grid) return;
+  grid.innerHTML = items.map(function(item) {
+    var badge = item.popular ? '<div style="position:absolute;top:-10px;right:16px;background:#4CAF50;color:white;font-size:0.62rem;font-weight:700;padding:3px 10px;border-radius:100px;text-transform:uppercase;letter-spacing:0.5px">Populaire</div>' : '';
+    var border = item.popular ? 'border:2px solid var(--coral);' : '';
+    return '<div onclick="purchaseMirelsPack(\'' + item.id + '\')" style="background:white;border-radius:16px;padding:16px 18px;display:flex;align-items:center;justify-content:space-between;gap:12px;box-shadow:0 2px 10px rgba(0,0,0,0.06);position:relative;cursor:pointer;' + border + '">' +
+      badge +
+      '<div style="display:flex;align-items:center;gap:14px">' +
+      '<div style="width:48px;height:48px;border-radius:12px;background:linear-gradient(135deg,#FFE8B0,#FFB347);display:flex;align-items:center;justify-content:center;font-size:1.5rem;flex-shrink:0">🪙</div>' +
+      '<div><span style="font-size:1.15rem;font-weight:800;color:#1a1a1a">' + item.mirels + '</span> <span style="font-size:0.68rem;font-weight:700;color:#999;text-transform:uppercase;letter-spacing:0.5px">Mirels</span></div>' +
+      '</div>' +
+      '<button onclick="purchaseMirelsPack(\'' + item.id + '\')" style="padding:10px 18px;border-radius:10px;border:none;font-size:0.85rem;font-weight:700;cursor:pointer;font-family:DM Sans,sans-serif;background:linear-gradient(135deg,var(--coral),var(--accent));color:white;white-space:nowrap;flex-shrink:0">' + item.price + '</button>' +
+      '</div>';
+  }).join('');
+}
+async function purchaseMirelsPack(pack) {
+  try {
+    var token = authToken || window._authToken || localStorage.getItem('nutricare_token');
+    var res = await fetch(BACKEND_URL + '/api/mirels/purchase', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
+      body: JSON.stringify({ pack: pack })
+    });
+    var data = await res.json();
+    if (data.url) {
+      sessionStorage.setItem('stripe_return_token', token);
+      window.location.href = data.url;
+    } else {
+      alert(data.error || 'Erreur lors de la création du paiement');
+    }
+  } catch (e) {
+    alert('Erreur: ' + e.message);
+  }
+}
 function loadLeaderboard(page) {
   var list = document.getElementById('leaderboardList');
   var pag = document.getElementById('leaderboardPagination');
@@ -13918,9 +14068,9 @@ function closeMirellaNotif() {
     <div style="display:flex;gap:8px;overflow-x:auto;padding-bottom:8px;margin-bottom:20px;scrollbar-width:none">
       <button onclick="filterShop('all')" id="shopCat-all" style="flex-shrink:0;padding:6px 16px;border-radius:20px;border:none;background:var(--coral);color:white;font-size:0.78rem;font-weight:700;cursor:pointer;font-family:DM Sans,sans-serif">Tout</button>
       <button onclick="filterShop('hat')" id="shopCat-hat" style="flex-shrink:0;padding:6px 16px;border-radius:20px;border:1px solid #ddd;background:white;color:#666;font-size:0.78rem;font-weight:600;cursor:pointer;font-family:DM Sans,sans-serif">Chapeaux</button>
-      <button onclick="filterShop('badge')" id="shopCat-badge" style="flex-shrink:0;padding:6px 16px;border-radius:20px;border:1px solid #ddd;background:white;color:#666;font-size:0.78rem;font-weight:600;cursor:pointer;font-family:DM Sans,sans-serif">Badges</button>
-      <button onclick="filterShop('frame')" id="shopCat-frame" style="flex-shrink:0;padding:6px 16px;border-radius:20px;border:1px solid #ddd;background:white;color:#666;font-size:0.78rem;font-weight:600;cursor:pointer;font-family:DM Sans,sans-serif">Cadres</button>
-      <button onclick="filterShop('pet')" id="shopCat-pet" style="flex-shrink:0;padding:6px 16px;border-radius:20px;border:1px solid #ddd;background:white;color:#666;font-size:0.78rem;font-weight:600;cursor:pointer;font-family:DM Sans,sans-serif">Compagnons</button>
+      <button onclick="filterShop('glasses')" id="shopCat-glasses" style="flex-shrink:0;padding:6px 16px;border-radius:20px;border:1px solid #ddd;background:white;color:#666;font-size:0.78rem;font-weight:600;cursor:pointer;font-family:DM Sans,sans-serif">Lunettes</button>
+      <button onclick="filterShop('necklace')" id="shopCat-necklace" style="flex-shrink:0;padding:6px 16px;border-radius:20px;border:1px solid #ddd;background:white;color:#666;font-size:0.78rem;font-weight:600;cursor:pointer;font-family:DM Sans,sans-serif">Colliers</button>
+      <button onclick="filterShop('bandana')" id="shopCat-bandana" style="flex-shrink:0;padding:6px 16px;border-radius:20px;border:1px solid #ddd;background:white;color:#666;font-size:0.78rem;font-weight:600;cursor:pointer;font-family:DM Sans,sans-serif">Bandanas</button>
     </div>
     <!-- Grille articles -->
     <div id="shopGrid" style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
@@ -13928,7 +14078,32 @@ function closeMirellaNotif() {
     </div>
   </div>
 </div>
-
+<!-- MIRELS BOUTIQUE VIEW -->
+<div id="mirelsBoutiqueView" style="display:none;position:fixed;top:56px;left:0;right:0;bottom:60px;overflow-y:auto;overflow-x:hidden;background:var(--cream);z-index:10;box-sizing:border-box;padding:0;margin:0">
+  <div style="background:linear-gradient(135deg,var(--coral),var(--accent));padding:20px 16px 28px;margin:0;width:100%;box-sizing:border-box">
+    <div style="font-size:1.8rem;font-weight:800;color:white;margin-bottom:4px">Mes Mirels 🪙</div>
+    <div style="font-size:0.85rem;color:rgba(255,255,255,0.85)">Dépensez vos Mirels pour personnaliser Mirella</div>
+  </div>
+  <div style="padding:0 16px;margin-top:16px;margin-bottom:16px">
+    <div style="background:white;border-radius:16px;padding:16px 20px;box-shadow:0 4px 16px rgba(0,0,0,0.08);display:flex;align-items:center;gap:12px">
+      <span style="font-size:2rem">🪙</span>
+      <div>
+        <div id="boutiqueMirelsCount" style="font-size:2rem;font-weight:800;color:#2D2D2D;line-height:1">--</div>
+        <div style="font-size:0.75rem;color:#999;font-weight:600;text-transform:uppercase;letter-spacing:0.5px">Mirels</div>
+      </div>
+    </div>
+  </div>
+  <div style="padding:8px 16px 16px">
+    <div style="background:white;border-radius:16px;padding:14px 16px;display:flex;align-items:center;gap:12px;box-shadow:0 2px 10px rgba(0,0,0,0.05);margin-bottom:20px">
+      <span style="font-size:1.4rem">✨</span>
+      <div style="font-size:0.82rem;color:#666;line-height:1.4">Utilisez vos Mirels pour débloquer des accessoires pour Mirella dans la vue Suivi</div>
+    </div>
+    <div style="font-size:0.95rem;font-weight:700;color:#2D2D2D;margin-bottom:12px">Acheter des Mirels</div>
+    <div id="mirelsShopGrid" style="display:flex;flex-direction:column;gap:14px">
+      <div style="text-align:center;padding:40px;color:#ccc">Chargement...</div>
+    </div>
+  </div>
+</div>
 <!-- VISAGE VIEW -->
 <div id="visageView" style="display:none;position:fixed;top:56px;left:0;right:0;bottom:60px;padding:16px;padding-bottom:220px;overflow-y:scroll;-webkit-overflow-scrolling:touch;background:var(--cream);box-sizing:border-box;z-index:10">
   <div class="view-header" style="font-family:Open Sans,serif;font-size:2rem;font-weight:700;margin-bottom:6px;color:#2D2D2D">Analyse Visage</div>
@@ -14203,6 +14378,7 @@ function closeMirellaNotif() {
       <button id="qmBtn-leaderboard" onclick="toggleQuickMenu();showView('leaderboard');loadLeaderboard()" style="display:flex;align-items:center;gap:10px;padding:12px;background:var(--color-background-secondary);border:0.5px solid var(--color-border-tertiary);border-radius:14px;font-size:0.82rem;font-weight:600;color:var(--color-text-primary);cursor:pointer"><div style="width:32px;height:32px;background:#FFF7E0;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0"><i class="ti ti-trophy" style="font-size:16px;color:#D4A017" aria-hidden="true"></i></div>Classement</button>
       <button id="qmBtn-gamification" onclick="toggleQuickMenu();showView('gamification')" style="display:flex;align-items:center;gap:10px;padding:12px;background:var(--color-background-secondary);border:0.5px solid var(--color-border-tertiary);border-radius:14px;font-size:0.82rem;font-weight:600;color:var(--color-text-primary);cursor:pointer"><div style="width:32px;height:32px;background:#FAEEDA;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0"><i class="ti ti-trophy" style="font-size:16px;color:#854F0B" aria-hidden="true"></i></div>Progression</button>
       <button id="qmBtn-shop" onclick="toggleQuickMenu();showView('shop');loadShop()" style="display:flex;align-items:center;gap:10px;padding:12px;background:var(--color-background-secondary);border:0.5px solid var(--color-border-tertiary);border-radius:14px;font-size:0.82rem;font-weight:600;color:var(--color-text-primary);cursor:pointer"><div style="width:32px;height:32px;background:#E8F4FF;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0"><i class="ti ti-shopping-bag" style="font-size:16px;color:#185FA5" aria-hidden="true"></i></div>Boutique</button>
+      <button id="qmBtn-mirelsboutique" onclick="toggleQuickMenu();showView('mirelsBoutique');loadMirelsBoutique()" style="display:flex;align-items:center;gap:10px;padding:12px;background:var(--color-background-secondary);border:0.5px solid var(--color-border-tertiary);border-radius:14px;font-size:0.82rem;font-weight:600;color:var(--color-text-primary);cursor:pointer"><div style="width:32px;height:32px;background:#FFF0E8;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0">🪙</div>Boutique Mirels</button>
       <button id="qmBtn-pricing" onclick="toggleQuickMenu();showView('pricing')" style="display:flex;align-items:center;gap:10px;padding:12px;background:var(--color-background-secondary);border:0.5px solid var(--color-border-tertiary);border-radius:14px;font-size:0.82rem;font-weight:600;color:var(--color-text-primary);cursor:pointer"><div style="width:32px;height:32px;background:#FAEEDA;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0"><i class="ti ti-star" style="font-size:16px;color:#854F0B" aria-hidden="true"></i></div>Abonnements</button>
       <button id="qmBtn-pro" onclick="toggleQuickMenu();showView('pro')" style="display:none"><div style="width:32px;height:32px;background:#EAF3DE;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0"><i class="ti ti-stethoscope" style="font-size:16px;color:#3B6D11" aria-hidden="true"></i></div>Espace médecin</button>
       <button id="qmBtn-chrono" onclick="toggleQuickMenu();showView('chrono')" style="display:none !important;display:flex;align-items:center;gap:10px;padding:12px;background:#FFF5F0;border:0.5px solid rgba(255,107,107,0.15);border-radius:14px;font-size:0.82rem;font-weight:600;color:#2D2D2D;cursor:pointer"><div style="width:32px;height:32px;background:#FBEAF0;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0"><i class="ti ti-heart" style="font-size:16px;color:#993556" aria-hidden="true"></i></div>Score de santé</button>
@@ -14482,31 +14658,12 @@ function toggleQuickMenu() {
 </script>
 
 <!-- MODALE CHANGEMENT MOT DE PASSE -->
-<div id="changePasswordModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:99999;align-items:center;justify-content:center">
-  <div style="background:#FFFCFA;border-radius:20px;padding:40px;max-width:440px;width:90%;box-shadow:0 0 0 1.5px rgba(255,154,108,0.22),0 14px 32px rgba(230,110,70,0.14)">
-    <div style="text-align:center;margin-bottom:24px">
-      <div style="width:56px;height:56px;background:linear-gradient(135deg,var(--coral),var(--accent));border-radius:16px;display:flex;align-items:center;justify-content:center;margin:0 auto 16px;font-size:1.5rem">🔑</div>
-      <h2 style="font-family:Open Sans,serif;font-size:1.3rem;font-weight:700;color:#2D2D2D;margin-bottom:8px">Personnalisez votre mot de passe</h2>
-      <p style="font-size:.85rem;color:#888;line-height:1.5">Vous utilisez un mot de passe temporaire. Créez-en un personnel pour sécuriser votre compte.</p>
+<div id="cycleView" style="display:none;position:fixed;top:56px;left:0;right:0;bottom:60px;overflow-y:auto;background:var(--cream);z-index:100">
+
+  <div style="background:linear-gradient(135deg,var(--coral),var(--accent));padding:20px 16px 16px">
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:4px">
+      <div style="font-size:1.3rem;font-weight:800;color:white">Cycle féminin 🌸</div>
     </div>
-    <div style="display:flex;flex-direction:column;gap:12px;margin-bottom:20px">
-      <input type="password" id="newPassword1" placeholder="Nouveau mot de passe" style="padding:14px 16px;border:1.5px solid #eee;border-radius:10px;font-size:.9rem;font-family:DM Sans,sans-serif;outline:none;transition:border .2s" onfocus="this.style.borderColor='var(--coral)'" onblur="this.style.borderColor='#eee'">
-      <input type="password" id="newPassword2" placeholder="Confirmer le mot de passe" style="padding:14px 16px;border:1.5px solid #eee;border-radius:10px;font-size:.9rem;font-family:DM Sans,sans-serif;outline:none;transition:border .2s" onfocus="this.style.borderColor='var(--coral)'" onblur="this.style.borderColor='#eee'">
-      <div id="pwdError" style="display:none;font-size:.8rem;color:var(--coral);text-align:center"></div>
-    </div>
-    <button onclick="changePassword()" style="width:100%;background:linear-gradient(135deg,var(--coral),var(--accent));color:white;border:none;border-radius:10px;padding:14px;font-size:.95rem;font-weight:600;cursor:pointer;font-family:DM Sans,sans-serif;margin-bottom:10px">Enregistrer mon mot de passe →</button>
-    <button onclick="localStorage.setItem('mirella_pwd_changed','1');document.getElementById('changePasswordModal').style.display='none'" style="width:100%;background:none;border:none;color:#aaa;font-size:.82rem;cursor:pointer;font-family:DM Sans,sans-serif">Plus tard</button>
-  </div>
-</div>
-
-
-
-
-
-<!-- CYCLE FEMININ VIEW -->
-<div id="cycleView" style="display:none;position:fixed;top:56px;left:0;right:0;bottom:60px;overflow-y:auto;background:var(--cream);z-index:10">
-  <div class="view-header" style="background:linear-gradient(135deg,var(--coral),var(--accent));padding:32px 32px 28px">
-    <div style="font-size:1.6rem;font-weight:700;color:white;font-family:'Open Sans',sans-serif">Cycle Féminin</div>
     <div style="font-size:0.9rem;color:rgba(255,255,255,0.8);margin-top:4px">Nutrition & bien-être adaptés à votre cycle</div>
   </div>
 
@@ -16491,6 +16648,7 @@ var _subContexts = {
   }
 };
 function openSubscriptionModal(context) {
+  if (window._onboardingActive) return;
   var ctx = _subContexts[context] || _subContexts.lock;
   document.getElementById('subModalTitle').textContent = ctx.title;
   document.getElementById('subModalSubtitle').textContent = ctx.subtitle;
@@ -16637,6 +16795,7 @@ function openSubscriptionModal(context) {
       </div>
       <button onclick="closeRituel()" style="width:100%;padding:14px;background:#FF9A3C;color:white;border:none;border-radius:10px;font-size:0.9rem;font-weight:700;cursor:pointer">Terminer</button>
     </div>
+  </div>
   </div>
 
 <script>
@@ -18787,6 +18946,8 @@ window.maybeShowReviewPrompt = function() {
   var seen = localStorage.getItem('mirella_intro_seen');
   var token = localStorage.getItem('nutricare_token');
   if (!forceIntro && (seen || token)) return;
+  // Si token absent mais profil en base → ne pas afficher
+  if (!forceIntro && !token) return;
   var html = '<div id="introVideoOverlay" style="position:fixed !important;top:0 !important;left:0 !important;right:0 !important;bottom:0 !important;background:#000 !important;z-index:2147483647 !important;display:flex !important;flex-direction:column !important;margin:0 !important">' +
     '<div style="flex:1;min-height:0;overflow:hidden;position:relative">' +
       '<video id="introVideoEl" src="intro-video.mp4" autoplay muted playsinline style="width:100%;height:100%;object-fit:cover;display:block;position:absolute;top:0;left:0"></video>' +
@@ -18815,6 +18976,13 @@ window.maybeShowReviewPrompt = function() {
   function showOnboarding() {
     var overlay = document.getElementById('onboardingOverlay');
     if (overlay) {
+      // Cacher toutes les autres popups pendant l'onboarding
+      var toHide = ['subscriptionModal','referralMilestonePopup'];
+      toHide.forEach(function(id) {
+        var el = document.getElementById(id);
+        if (el) el.style.display = 'none';
+      });
+      window._onboardingActive = true;
       overlay.style.cssText = 'display:flex !important;position:fixed;inset:0;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.7);z-index:99999;align-items:center;justify-content:center;padding:20px';
       document.getElementById('onboarding1').style.display = 'block';
       document.getElementById('onboarding2').style.display = 'none';
@@ -18874,6 +19042,19 @@ window.maybeShowReviewPrompt = function() {
   function closeOnboarding() {
     document.getElementById('onboardingOverlay').style.display = 'none';
     localStorage.setItem('mirella_onboarding_done', '1');
+    window._onboardingActive = false;
+    // Sauvegarder en base Supabase
+    var tok = authToken || window._authToken || localStorage.getItem('nutricare_token');
+    if (tok) {
+      fetch(BACKEND_URL + '/api/profile', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + tok },
+        body: JSON.stringify({ onboarding_done: true })
+      }).catch(function(){});
+    }
+    setTimeout(function() {
+      document.getElementById('ratingModal').style.display = 'flex';
+    }, 400);
   }
 
   function launchConfetti() {
@@ -18882,33 +19063,81 @@ window.maybeShowReviewPrompt = function() {
     var ctx = canvas.getContext('2d');
     canvas.width = canvas.offsetWidth;
     canvas.height = canvas.offsetHeight;
-    var pieces = [];
-    var colors = ['#FF6B6B','#FF9A3C','#7EC8E3','#A8D8A8','#C3A9D1','#FFD700'];
-    for (var i = 0; i < 120; i++) {
-      pieces.push({
+    var colors = ['#FF6B6B','#FF9A3C','#FFD166','#7EC8E3','#A8D8A8','#C3A9D1','#F4A261'];
+
+    var ribbons = [];
+    for (var i = 0; i < 70; i++) {
+      ribbons.push({
         x: Math.random() * canvas.width,
         y: Math.random() * canvas.height - canvas.height,
-        r: Math.random() * 6 + 3,
+        w: Math.random() * 6 + 5,
+        h: Math.random() * 10 + 8,
         color: colors[Math.floor(Math.random() * colors.length)],
-        speed: Math.random() * 3 + 1,
-        swing: Math.random() * 3,
-        angle: Math.random() * Math.PI * 2
+        speed: Math.random() * 2 + 1.2,
+        swing: Math.random() * 2.2 + 0.6,
+        angle: Math.random() * Math.PI * 2,
+        rot: Math.random() * Math.PI * 2,
+        rotSpeed: (Math.random() - 0.5) * 0.15
       });
     }
+
+    var sparks = [];
+    function launchFirework(cx, cy) {
+      var color = colors[Math.floor(Math.random() * colors.length)];
+      var count = 26;
+      for (var j = 0; j < count; j++) {
+        var a = (Math.PI * 2 * j) / count;
+        var speed = Math.random() * 2.5 + 2;
+        sparks.push({
+          x: cx, y: cy,
+          vx: Math.cos(a) * speed,
+          vy: Math.sin(a) * speed,
+          life: 1,
+          color: color
+        });
+      }
+    }
+
     var frame = 0;
+    var fireworkTimes = [15, 55, 95, 140, 200, 280, 360, 440, 520];
+
     function draw() {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
-      pieces.forEach(function(p) {
-        ctx.beginPath();
-        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+
+      ribbons.forEach(function(p) {
+        ctx.save();
+        ctx.translate(p.x, p.y);
+        ctx.rotate(p.rot);
         ctx.fillStyle = p.color;
-        ctx.fill();
+        ctx.fillRect(-p.w / 2, -p.h / 2, p.w, p.h);
+        ctx.restore();
         p.y += p.speed;
         p.x += Math.sin(p.angle + frame * 0.05) * p.swing;
+        p.rot += p.rotSpeed;
         if (p.y > canvas.height) { p.y = -10; p.x = Math.random() * canvas.width; }
       });
+
+      if (fireworkTimes.indexOf(frame) !== -1) {
+        launchFirework(canvas.width * (0.25 + Math.random() * 0.5), canvas.height * (0.25 + Math.random() * 0.3));
+      }
+
+      for (var k = sparks.length - 1; k >= 0; k--) {
+        var s = sparks[k];
+        ctx.globalAlpha = Math.max(s.life, 0);
+        ctx.beginPath();
+        ctx.arc(s.x, s.y, 2.2, 0, Math.PI * 2);
+        ctx.fillStyle = s.color;
+        ctx.fill();
+        ctx.globalAlpha = 1;
+        s.x += s.vx;
+        s.y += s.vy;
+        s.vy += 0.05;
+        s.life -= 0.025;
+        if (s.life <= 0) sparks.splice(k, 1);
+      }
+
       frame++;
-      if (frame < 180) requestAnimationFrame(draw);
+      if (frame < 600 || sparks.length > 0) requestAnimationFrame(draw);
     }
     draw();
   }
@@ -18916,7 +19145,20 @@ window.maybeShowReviewPrompt = function() {
   // Vérifier si l'onboarding doit s'afficher
   function checkOnboarding() {
     var done = localStorage.getItem('mirella_onboarding_done');
-    if (!done) showOnboarding();
+    if (done) return;
+    var profile = JSON.parse(localStorage.getItem('nutricare_profile') || '{}');
+    if (profile.onboarding_done) {
+      localStorage.setItem('mirella_onboarding_done', '1');
+      return;
+    }
+    // Si profil pas encore chargé, attendre loadProfile
+    var tok = localStorage.getItem('nutricare_token');
+    if (tok && !profile.id) {
+      // Profil pas encore en cache, on attend loadProfile
+      setTimeout(checkOnboarding, 1500);
+      return;
+    }
+    showOnboarding();
   }
 
 </script>
@@ -18924,46 +19166,116 @@ window.maybeShowReviewPrompt = function() {
 <!-- POPUP ONBOARDING MIRELLA -->
 <!-- FIN POPUP ONBOARDING -->
 <div id="onboardingOverlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.55);z-index:9999;align-items:center;justify-content:center;padding:20px">
-  <div style="background:white;border-radius:28px;width:100%;max-width:420px;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,0.2);position:relative">
+  <div style="background:white;border-radius:28px;width:100%;max-width:420px;max-height:92vh;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,0.2);border:2px solid rgba(255,138,60,0.6);position:relative;display:flex;flex-direction:column">
     
     <!-- ECRAN 1 : Présentation Mirella -->
-    <div id="onboarding1" style="padding:32px 24px;text-align:center">
-      <img src="https://raw.githubusercontent.com/avelia-ai/nutricare-frontend/main/renard_transparent.png" style="width:140px;height:140px;object-fit:contain;margin-bottom:16px">
-      <h2 style="font-size:1.4rem;font-weight:800;color:#2D2D2D;margin-bottom:8px">Bonjour, je suis Mirella ! 🦊</h2>
-      <p style="font-size:0.88rem;color:#666;line-height:1.6;margin-bottom:12px">Je suis votre coach santé & nutrition personnalisé. Plus vous utilisez l'appli, plus j'évolue avec vous !</p>
-      <div style="background:#fff8f5;border-radius:16px;padding:14px;text-align:left;margin-bottom:20px">
-        <div style="font-size:0.82rem;color:#555;line-height:1.7">
-          🍽️ <b>Générez des menus</b> adaptés à votre profil<br>
-          💧 <b>Suivez votre hydratation</b> et votre sommeil<br>
-          🏆 <b>Relevez des défis</b> pour gagner des points<br>
-          📊 <b>Complétez vos données</b> pour des conseils précis
-        </div>
+    <div id="onboarding1" style="text-align:center;display:flex;flex-direction:column;max-height:92vh">
+      <div style="padding:22px 26px 0;flex-shrink:0">
+        <video autoplay muted loop playsinline style="width:150px;height:150px;object-fit:contain;background:transparent;border:none;outline:none;display:block;margin:0 auto">
+          <source src="https://raw.githubusercontent.com/avelia-ai/nutricare-frontend/main/renard_mirella_niveau_1_compressed.mp4" type="video/mp4">
+        </video>
+        <h2 style="font-size:1.3rem;font-weight:800;color:#1E1E1E;margin:4px 0 6px;letter-spacing:-0.3px">Bonjour, je suis Mirella</h2>
+        <p style="font-size:0.8rem;color:#767676;line-height:1.4;margin-bottom:14px">Votre coach santé & nutrition personnalisé, qui s'affine à mesure que vous l'utilisez.</p>
       </div>
-      <button onclick="document.getElementById('onboarding1').style.display='none';document.getElementById('onboarding2').style.display='block'" style="width:100%;background:linear-gradient(135deg,#FF6B6B,#FF9A3C);color:white;border:none;border-radius:16px;padding:16px;font-size:1rem;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif">
-        Commencer →
-      </button>
+      <div style="padding:0 26px 22px;overflow-y:auto">
+        <div style="text-align:left;margin-bottom:16px;background:linear-gradient(165deg,#FFF3EC,#FFEADC);border-radius:16px;padding:6px 14px">
+          <div style="display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid rgba(255,154,60,0.15)">
+            <div style="flex-shrink:0;width:32px;height:32px;border-radius:9px;background:white;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 6px rgba(255,138,60,0.18)">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#FF7A3C" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8h1a4 4 0 0 1 0 8h-1"/><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8Z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/></svg>
+            </div>
+            <div>
+              <div style="font-size:0.83rem;font-weight:700;color:#2D2D2D;line-height:1.3">Menus personnalisés</div>
+              <div style="font-size:0.72rem;color:#9a8f88;line-height:1.3">Générés selon votre profil & vos objectifs</div>
+            </div>
+          </div>
+          <div style="display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid rgba(255,154,60,0.15)">
+            <div style="flex-shrink:0;width:32px;height:32px;border-radius:9px;background:white;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 6px rgba(255,138,60,0.18)">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#FF7A3C" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2.69s-7 7.44-7 12.31a7 7 0 0 0 14 0c0-4.87-7-12.31-7-12.31Z"/></svg>
+            </div>
+            <div>
+              <div style="font-size:0.83rem;font-weight:700;color:#2D2D2D;line-height:1.3">Suivi quotidien</div>
+              <div style="font-size:0.72rem;color:#9a8f88;line-height:1.3">Hydratation, sommeil & indicateurs de santé</div>
+            </div>
+          </div>
+          <div style="display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid rgba(255,154,60,0.15)">
+            <div style="flex-shrink:0;width:32px;height:32px;border-radius:9px;background:white;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 6px rgba(255,138,60,0.18)">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#FF7A3C" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="6"/><path d="M15.5 13.5 17 22l-5-3-5 3 1.5-8.5"/></svg>
+            </div>
+            <div>
+              <div style="font-size:0.83rem;font-weight:700;color:#2D2D2D;line-height:1.3">Défis & progression</div>
+              <div style="font-size:0.72rem;color:#9a8f88;line-height:1.3">Gagnez des points en atteignant vos objectifs</div>
+            </div>
+          </div>
+          <div style="display:flex;align-items:center;gap:12px;padding:10px 0">
+            <div style="flex-shrink:0;width:32px;height:32px;border-radius:9px;background:white;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 6px rgba(255,138,60,0.18)">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#FF7A3C" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="M18.7 8 12 14.7 8.5 11.2 4 15.7"/></svg>
+            </div>
+            <div>
+              <div style="font-size:0.83rem;font-weight:700;color:#2D2D2D;line-height:1.3">Analyse précise</div>
+              <div style="font-size:0.72rem;color:#9a8f88;line-height:1.3">Des conseils affinés à mesure que vous progressez</div>
+            </div>
+          </div>
+        </div>
+        <button onclick="document.getElementById('onboarding1').style.display='none';document.getElementById('onboarding1b').style.display='block'" style="width:100%;background:linear-gradient(135deg,#FF6B6B,#FF9A3C);color:white;border:none;border-radius:14px;padding:15px;font-size:0.92rem;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif;letter-spacing:0.2px;box-shadow:0 8px 20px rgba(255,107,107,0.28)">
+          Commencer
+        </button>
+      </div>
     </div>
 
-    <!-- ECRAN 2 : Données personnelles -->
-    <div id="onboarding2" style="display:none;padding:32px 24px">
-      <div style="text-align:center;margin-bottom:20px">
-        <img src="https://raw.githubusercontent.com/avelia-ai/nutricare-frontend/main/renard_transparent.png" style="width:70px;height:70px;object-fit:contain;margin-bottom:8px">
-        <h2 style="font-size:1.2rem;font-weight:800;color:#2D2D2D">Parlez-moi de vous ✨</h2>
-        <p style="font-size:0.82rem;color:#888">Ces infos me permettent de personnaliser vos conseils</p>
+
+    <!-- ECRAN 1b : Presentation du renard Mirella -->
+    <div id="onboarding1b" style="display:none;text-align:center;flex-direction:column;max-height:92vh;overflow-y:auto">
+      <div style="padding:16px 26px 0;flex-shrink:0">
+        <video autoplay muted loop playsinline style="width:190px;height:190px;object-fit:contain;background:transparent;border:none;outline:none;display:block;margin:0 auto">
+          <source src="https://raw.githubusercontent.com/avelia-ai/nutricare-frontend/main/renard_mirella_niveau_1_compressed.mp4" type="video/mp4">
+        </video>
+        <h2 style="font-size:1.15rem;font-weight:800;color:#1E1E1E;margin:2px 0 4px;letter-spacing:-0.3px">Voici Mirella</h2>
       </div>
-      <div style="display:flex;flex-direction:column;gap:12px">
+      <div style="padding:0 26px 16px">
+        <p style="font-size:0.76rem;color:#6b6b6b;line-height:1.35;margin-bottom:8px">Mirella grandit et évolue avec vous. Plus vous complétez votre profil, vos données de santé, vos repas et vos activités, plus elle progresse à vos côtés.</p>
+        <p style="font-size:0.74rem;color:#6b6b6b;line-height:1.3;margin-bottom:20px">Venez lui rendre visite chaque jour pour suivre sa progression – et la vôtre !</p>
+        <div style="background:linear-gradient(165deg,#FFF9F5,#FFF1E6);border:1px solid rgba(255,154,60,0.25);border-radius:16px;padding:12px 14px;margin-bottom:12px;text-align:left">
+          <div style="font-size:0.73rem;font-weight:700;color:#2D2D2D;margin-bottom:8px">🎁 Personnalisez Mirella avec des accessoires</div>
+          <div style="display:flex;gap:8px;justify-content:space-between">
+            <div style="flex:1;aspect-ratio:1;background:white;border-radius:12px;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 6px rgba(255,138,60,0.15);border:1px dashed rgba(255,138,60,0.35)">
+              <img src="https://raw.githubusercontent.com/avelia-ai/nutricare-frontend/main/bob_fox_jaune.png" style="width:70%;height:70%;object-fit:contain">
+            </div>
+            <div style="flex:1;aspect-ratio:1;background:white;border-radius:12px;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 6px rgba(255,138,60,0.15);border:1px dashed rgba(255,138,60,0.35)">
+              <img src="https://raw.githubusercontent.com/avelia-ai/nutricare-frontend/main/lunettes_pixels.png" style="width:70%;height:70%;object-fit:contain">
+            </div>
+            <div style="flex:1;aspect-ratio:1;background:white;border-radius:12px;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 6px rgba(255,138,60,0.15);border:1px dashed rgba(255,138,60,0.35)">
+              <img src="https://raw.githubusercontent.com/avelia-ai/nutricare-frontend/main/collier_blingbling.png" style="width:70%;height:70%;object-fit:contain">
+            </div>
+            <div style="flex:1;aspect-ratio:1;background:white;border-radius:12px;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 6px rgba(255,138,60,0.15);border:1px dashed rgba(255,138,60,0.35)">
+              <img src="https://raw.githubusercontent.com/avelia-ai/nutricare-frontend/main/bandana_paw_orange.png" style="width:70%;height:70%;object-fit:contain">
+            </div>
+          </div>
+          <div style="font-size:0.68rem;color:#9a8f88;line-height:1.3;margin-top:8px">À débloquer bientôt avec vos coins 🪙</div>
+        </div>
+        <button onclick="document.getElementById('onboarding1b').style.display='none';document.getElementById('onboarding2').style.display='block'" style="width:100%;background:linear-gradient(135deg,#FF6B6B,#FF9A3C);color:white;border:none;border-radius:14px;padding:14px;font-size:0.9rem;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif;letter-spacing:0.2px;box-shadow:0 8px 20px rgba(255,107,107,0.28)">
+          Continuer
+        </button>
+      </div>
+    </div>
+    <!-- ECRAN 2 : Données personnelles -->
+    <div id="onboarding2" style="display:none;padding:34px 26px 26px">
+      <div style="text-align:center;margin-bottom:26px">
+        <h2 style="font-size:1.35rem;font-weight:800;color:#1E1E1E;letter-spacing:-0.3px;margin-bottom:6px">Parlez-moi de vous</h2>
+        <p style="font-size:0.82rem;color:#8a8a8a;line-height:1.4">Ces infos me permettent de personnaliser vos conseils</p>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:14px">
         <div>
-          <label style="font-size:0.78rem;font-weight:600;color:#555;margin-bottom:4px;display:block">Prénom & Nom</label>
-          <input id="obName" type="text" placeholder="Ex: Sophie Martin" style="width:100%;padding:12px 14px;border:1.5px solid #f0f0f0;border-radius:12px;font-size:0.9rem;font-family:'DM Sans',sans-serif;box-sizing:border-box;outline:none">
+          <label style="font-size:0.68rem;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;color:#B0785C;margin-bottom:6px;display:block">Prénom &amp; nom</label>
+          <input id="obName" type="text" placeholder="Ex: Sophie Martin" style="width:100%;padding:13px 15px;border:1.5px solid #F0EAE5;border-radius:13px;font-size:0.92rem;font-family:'DM Sans',sans-serif;box-sizing:border-box;outline:none;background:#FCFAF8;transition:border-color .2s" onfocus="this.style.borderColor='#FF9A3C'" onblur="this.style.borderColor='#F0EAE5'">
         </div>
         <div style="display:flex;gap:10px">
           <div style="flex:1">
-            <label style="font-size:0.78rem;font-weight:600;color:#555;margin-bottom:4px;display:block">Âge</label>
-            <input id="obAge" type="number" placeholder="Ex: 32" min="10" max="100" style="width:100%;padding:12px 14px;border:1.5px solid #f0f0f0;border-radius:12px;font-size:0.9rem;font-family:'DM Sans',sans-serif;box-sizing:border-box;outline:none">
+            <label style="font-size:0.68rem;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;color:#B0785C;margin-bottom:6px;display:block">Âge</label>
+            <input id="obAge" type="number" placeholder="Ex: 32" min="10" max="100" style="width:100%;padding:13px 15px;border:1.5px solid #F0EAE5;border-radius:13px;font-size:0.92rem;font-family:'DM Sans',sans-serif;box-sizing:border-box;outline:none;background:#FCFAF8;transition:border-color .2s" onfocus="this.style.borderColor='#FF9A3C'" onblur="this.style.borderColor='#F0EAE5'">
           </div>
           <div style="flex:1">
-            <label style="font-size:0.78rem;font-weight:600;color:#555;margin-bottom:4px;display:block">Sexe</label>
-            <select id="obSexe" style="width:100%;padding:12px 14px;border:1.5px solid #f0f0f0;border-radius:12px;font-size:0.9rem;font-family:'DM Sans',sans-serif;box-sizing:border-box;outline:none;background:white">
+            <label style="font-size:0.68rem;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;color:#B0785C;margin-bottom:6px;display:block">Sexe</label>
+            <select id="obSexe" style="width:100%;padding:13px 15px;border:1.5px solid #F0EAE5;border-radius:13px;font-size:0.92rem;font-family:'DM Sans',sans-serif;box-sizing:border-box;outline:none;background:#FCFAF8">
               <option value="">-- Choisir --</option>
               <option value="femme">Femme</option>
               <option value="homme">Homme</option>
@@ -18972,21 +19284,22 @@ window.maybeShowReviewPrompt = function() {
           </div>
         </div>
         <div>
-          <label style="font-size:0.78rem;font-weight:600;color:#555;margin-bottom:4px;display:block">Niveau d'activité physique</label>
-          <select id="obActivite" style="width:100%;padding:12px 14px;border:1.5px solid #f0f0f0;border-radius:12px;font-size:0.9rem;font-family:'DM Sans',sans-serif;box-sizing:border-box;outline:none;background:white">
-            <option value="">-- Choisir --</option>
-            <option value="sedentaire">🛋️ Sédentaire</option>
-            <option value="leger">🚶 Légèrement actif</option>
-            <option value="modere">🏃 Modérément actif</option>
-            <option value="actif">💪 Très actif</option>
-            <option value="tres_actif">🏋️ Extrêmement actif</option>
-          </select>
+          <label style="font-size:0.68rem;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;color:#B0785C;margin-bottom:6px;display:block">Niveau d'activité physique</label>
+          <input type="hidden" id="obActivite" value="">
+          <div id="obActiviteTrigger" onclick="toggleActiviteDropdown()" style="width:100%;padding:13px 15px;border:1.5px solid #F0EAE5;border-radius:13px;font-size:0.92rem;font-family:'DM Sans',sans-serif;box-sizing:border-box;background:#FCFAF8;display:flex;align-items:center;justify-content:space-between;cursor:pointer">
+            <span id="obActiviteLabel" style="display:flex;align-items:center;gap:10px;color:#b8afa8">
+              -- Choisir --
+            </span>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#c2b9b2" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+          </div>
+        </div>
+        <div id="obActiviteOptions" style="display:none;position:fixed;background:white;border-radius:13px;box-shadow:0 10px 30px rgba(0,0,0,0.18);border:1px solid #F0EAE5;z-index:99999;overflow:hidden">
         </div>
       </div>
-      <button onclick="saveOnboardingProfile()" style="width:100%;background:linear-gradient(135deg,#FF6B6B,#FF9A3C);color:white;border:none;border-radius:16px;padding:16px;font-size:1rem;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif;margin-top:20px">
+      <button onclick="saveOnboardingProfile()" style="width:100%;background:linear-gradient(135deg,#FF6B6B,#FF9A3C);color:white;border:none;border-radius:14px;padding:16px;font-size:0.95rem;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif;letter-spacing:0.2px;margin-top:24px;box-shadow:0 8px 20px rgba(255,107,107,0.28)">
         Continuer →
       </button>
-      <button onclick="skipOnboarding()" style="width:100%;background:none;border:none;color:#aaa;font-size:0.8rem;cursor:pointer;margin-top:8px;font-family:'DM Sans',sans-serif">
+      <button onclick="skipOnboarding()" style="width:100%;background:none;border:none;color:#b0a8a2;font-size:0.8rem;cursor:pointer;margin-top:10px;font-family:'DM Sans',sans-serif">
         Passer cette étape
       </button>
     </div>
@@ -18994,15 +19307,157 @@ window.maybeShowReviewPrompt = function() {
     <!-- ECRAN 3 : Félicitations -->
     <div id="onboarding3" style="display:none;padding:32px 24px;text-align:center">
       <canvas id="confettiCanvas" style="position:absolute;inset:0;width:100%;height:100%;pointer-events:none;border-radius:28px"></canvas>
-      <img src="https://raw.githubusercontent.com/avelia-ai/nutricare-frontend/main/renard_transparent.png" style="width:120px;height:120px;object-fit:contain;margin-bottom:16px;position:relative;z-index:1">
-      <h2 style="font-size:1.4rem;font-weight:800;color:#2D2D2D;margin-bottom:8px;position:relative;z-index:1">Bienvenue ! 🎉</h2>
+      <video src="https://raw.githubusercontent.com/avelia-ai/nutricare-frontend/main/renard_felicitations%20(1).mp4" autoplay loop muted playsinline style="width:180px;height:180px;object-fit:contain;margin-bottom:16px;position:relative;z-index:1;border-radius:16px"></video>
+      <h2 style="font-size:1.4rem;font-weight:800;color:#2D2D2D;margin-bottom:8px;position:relative;z-index:1">Bienvenue !</h2>
       <p style="font-size:0.9rem;color:#666;line-height:1.6;margin-bottom:24px;position:relative;z-index:1">Votre compte est prêt ! Je suis là pour vous accompagner chaque jour vers une meilleure santé. C'est parti !</p>
       <button onclick="closeOnboarding()" style="width:100%;background:linear-gradient(135deg,#FF6B6B,#FF9A3C);color:white;border:none;border-radius:16px;padding:16px;font-size:1rem;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif;position:relative;z-index:1">
-        Découvrir Mirella 🦊
+        Découvrir Mirella
       </button>
     </div>
 
   </div>
 </div>
+<div id="ratingModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.55);z-index:99999;align-items:center;justify-content:center;padding:20px">
+  <div style="background:white;border-radius:28px;padding:32px 24px;max-width:340px;width:100%;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,0.2);animation:popIn .4s cubic-bezier(.34,1.56,.64,1)">
+    <div style="font-size:3rem;margin-bottom:12px">⭐</div>
+    <h2 style="font-size:1.3rem;font-weight:800;color:#2D2D2D;margin-bottom:8px">Vous aimez Mirella ?</h2>
+    <p style="font-size:0.88rem;color:#888;line-height:1.6;margin-bottom:24px">Votre avis nous aide à améliorer l'app et à aider plus de personnes. Ça prend 30 secondes !</p>
+    <!-- Étoiles -->
+    <div id="ratingStars" style="display:flex;justify-content:center;gap:10px;margin-bottom:24px">
+      <span onclick="setRating(1)" style="font-size:2.2rem;cursor:pointer;transition:transform .2s" id="star1">☆</span>
+      <span onclick="setRating(2)" style="font-size:2.2rem;cursor:pointer;transition:transform .2s" id="star2">☆</span>
+      <span onclick="setRating(3)" style="font-size:2.2rem;cursor:pointer;transition:transform .2s" id="star3">☆</span>
+      <span onclick="setRating(4)" style="font-size:2.2rem;cursor:pointer;transition:transform .2s" id="star4">☆</span>
+      <span onclick="setRating(5)" style="font-size:2.2rem;cursor:pointer;transition:transform .2s" id="star5">☆</span>
+    </div>
+    <button id="ratingSubmitBtn" onclick="submitRating()" style="display:none;width:100%;background:linear-gradient(135deg,#FF6B6B,#FF9A3C);color:white;border:none;border-radius:14px;padding:15px;font-size:0.95rem;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif;margin-bottom:10px">
+      Laisser un avis 🙏
+    </button>
+    <button onclick="document.getElementById('ratingModal').style.display='none'" style="width:100%;background:none;border:none;color:#bbb;font-size:0.82rem;cursor:pointer;font-family:'DM Sans',sans-serif;padding:6px">
+      Plus tard
+    </button>
+  </div>
+</div>
+
+<script>
+var _currentRating = 0;
+function setRating(n) {
+  _currentRating = n;
+  for (var i = 1; i <= 5; i++) {
+    var star = document.getElementById('star' + i);
+    star.textContent = i <= n ? '⭐' : '☆';
+    star.style.transform = i === n ? 'scale(1.3)' : 'scale(1)';
+  }
+  document.getElementById('ratingSubmitBtn').style.display = 'block';
+}
+function submitRating() {
+  document.getElementById('ratingModal').style.display = 'none';
+  localStorage.setItem('mirella_rating_done', '1');
+  if (_currentRating >= 4) {
+    // Redirige vers le store
+    window.open('https://play.google.com/store/apps/details?id=fr.mirella.app', '_blank');
+  } else {
+    // Feedback interne pour les mauvaises notes
+    setTimeout(function() {
+      document.getElementById('ratingFeedbackModal').style.display = 'flex';
+    }, 300);
+  }
+}
+</script>
+
+<div id="ratingFeedbackModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.55);z-index:99999;align-items:center;justify-content:center;padding:20px">
+  <div style="background:white;border-radius:28px;padding:32px 24px;max-width:340px;width:100%;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,0.2)">
+    <div style="font-size:2.5rem;margin-bottom:12px">💬</div>
+    <h2 style="font-size:1.2rem;font-weight:800;color:#2D2D2D;margin-bottom:8px">Comment améliorer Mirella ?</h2>
+    <p style="font-size:0.85rem;color:#888;margin-bottom:16px">Dites-nous ce qui vous a manqué. Votre retour est précieux !</p>
+    <textarea id="ratingFeedbackText" placeholder="Votre message..." style="width:100%;border:2px solid #f0f0f0;border-radius:12px;padding:12px;font-size:0.88rem;font-family:'DM Sans',sans-serif;resize:none;height:100px;outline:none;box-sizing:border-box;margin-bottom:16px"></textarea>
+    <button onclick="sendFeedback()" style="width:100%;background:linear-gradient(135deg,#FF6B6B,#FF9A3C);color:white;border:none;border-radius:14px;padding:14px;font-size:0.92rem;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif;margin-bottom:10px">Envoyer</button>
+    <button onclick="document.getElementById('ratingFeedbackModal').style.display='none'" style="width:100%;background:none;border:none;color:#bbb;font-size:0.82rem;cursor:pointer;font-family:'DM Sans',sans-serif">Fermer</button>
+  </div>
+</div>
+
+<script>
+function sendFeedback() {
+  var txt = document.getElementById('ratingFeedbackText').value.trim();
+  if (!txt) return;
+  var token = localStorage.getItem('token') || (window.supabaseSession && window.supabaseSession.access_token);
+  fetch('/api/feedback', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
+    body: JSON.stringify({ rating: _currentRating, message: txt })
+  }).catch(function(){});
+  document.getElementById('ratingFeedbackModal').style.display = 'none';
+  alert('Merci pour votre retour ! 🙏');
+}
+</script>
+
+
+<script>
+// ── SYSTEME MIRELS ────────────────────────────────────────────────────────
+window._mirelsBalance = parseInt(localStorage.getItem('mirella_mirels') || '0');
+function getMirels() {
+  return window._mirelsBalance || 0;
+}
+function setMirelsCache(n) {
+  window._mirelsBalance = n;
+  localStorage.setItem('mirella_mirels', String(n));
+  updateMirelsDisplay();
+}
+function updateMirelsDisplay() {
+  var n = getMirels();
+  var els = ['dashMirelsCount','gamiMirelsCount','boutiqueMirelsCount','homeMirelsCount','suiviMirelsCount'];
+  els.forEach(function(id) {
+    var el = document.getElementById(id);
+    if (el) el.textContent = n;
+  });
+}
+async function fetchMirelsBalance() {
+  try {
+    var token = authToken || window._authToken || localStorage.getItem('nutricare_token');
+    if (!token) return;
+    var res = await fetch(BACKEND_URL + '/api/mirels', { headers: { 'Authorization': 'Bearer ' + token } });
+    var data = await res.json();
+    if (typeof data.mirels === 'number') setMirelsCache(data.mirels);
+  } catch (e) { console.error('Erreur solde Mirels:', e); }
+}
+async function earnMirels(action) {
+  try {
+    var token = authToken || window._authToken || localStorage.getItem('nutricare_token');
+    var res = await fetch(BACKEND_URL + '/api/mirels/earn', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
+      body: JSON.stringify({ reason: action })
+    });
+    var data = await res.json();
+    if (data.already_earned) { alert('Vous avez déjà gagné ces Mirels aujourd\'hui !'); return; }
+    if (typeof data.mirels === 'number') {
+      setMirelsCache(data.mirels);
+      alert('+' + data.earned + ' Mirels gagnés ! 🪙');
+    } else if (data.error) {
+      alert(data.error);
+    }
+  } catch (e) { console.error('Erreur gain Mirels:', e); }
+}
+// Initialiser au chargement
+document.addEventListener('DOMContentLoaded', function() {
+  updateMirelsDisplay();
+  fetchMirelsBalance();
+  // Connexion quotidienne automatique (le backend gère la dedupe par jour)
+  setTimeout(async function() {
+    try {
+      var token = authToken || window._authToken || localStorage.getItem('nutricare_token');
+      if (!token) return;
+      var res = await fetch(BACKEND_URL + '/api/mirels/earn', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
+        body: JSON.stringify({ reason: 'connexion_quotidienne' })
+      });
+      var data = await res.json();
+      if (typeof data.mirels === 'number' && !data.already_earned) setMirelsCache(data.mirels);
+    } catch (e) {}
+  }, 1500);
+});
+// ── FIN SYSTEME MIRELS ────────────────────────────────────────────────────
+</script>
 </body>
 </html>

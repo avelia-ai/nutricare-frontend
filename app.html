@@ -12579,25 +12579,17 @@ function loadShop() {
   var owned = JSON.parse(localStorage.getItem('shop_owned') || '[]');
   var equipped = localStorage.getItem('shop_equipped') || '';
   _shopData = [
-    { id:'hat1', name:'Chapeau Chef', icon:'👨‍🍳', category:'hat', price:50, owned:owned.includes('hat1'), equipped:equipped==='hat1' },
-    { id:'hat2', name:'Couronne Santé', icon:'👑', category:'hat', price:120, owned:owned.includes('hat2'), equipped:equipped==='hat2' },
-    { id:'hat3', name:'Béret Zen', icon:'🎩', category:'hat', price:80, owned:owned.includes('hat3'), equipped:equipped==='hat3' },
-    { id:'badge1', name:'Badge Étoile', icon:'⭐', category:'badge', price:30, owned:owned.includes('badge1'), equipped:equipped==='badge1' },
-    { id:'badge2', name:'Badge Feu', icon:'🔥', category:'badge', price:60, owned:owned.includes('badge2'), equipped:equipped==='badge2' },
-    { id:'badge3', name:'Badge Diamant', icon:'💎', category:'badge', price:200, owned:owned.includes('badge3'), equipped:equipped==='badge3' },
-    { id:'frame1', name:'Cadre Corail', icon:'🌸', category:'frame', price:90, owned:owned.includes('frame1'), equipped:equipped==='frame1' },
-    { id:'frame2', name:'Cadre Or', icon:'🏅', category:'frame', price:150, owned:owned.includes('frame2'), equipped:equipped==='frame2' },
-    { id:'pet1', name:'Chat Zen', icon:'🐱', category:'pet', price:100, owned:owned.includes('pet1'), equipped:equipped==='pet1' },
-    { id:'pet2', name:'Panda Fit', icon:'🐼', category:'pet', price:180, owned:owned.includes('pet2'), equipped:equipped==='pet2' },
-    { id:'pet3', name:'Lapin Vitamine', icon:'🐰', category:'pet', price:130, owned:owned.includes('pet3'), equipped:equipped==='pet3' },
-    { id:'pet4', name:'Renard Nutrition', icon:'🦊', category:'pet', price:220, owned:owned.includes('pet4'), equipped:equipped==='pet4' }
+    { id:'bandana1', name:'Bandana Paw Orange', image:'https://raw.githubusercontent.com/avelia-ai/nutricare-frontend/main/bandana_paw_orange.png', category:'bandana', price:40, owned:owned.includes('bandana1'), equipped:equipped==='bandana1' },
+    { id:'hat1', name:'Bob Fox Jaune', image:'https://raw.githubusercontent.com/avelia-ai/nutricare-frontend/main/bob_fox_jaune.png', category:'hat', price:60, owned:owned.includes('hat1'), equipped:equipped==='hat1' },
+    { id:'glasses1', name:'Lunettes Pixels', image:'https://raw.githubusercontent.com/avelia-ai/nutricare-frontend/main/lunettes_pixels.png', category:'glasses', price:80, owned:owned.includes('glasses1'), equipped:equipped==='glasses1' },
+    { id:'necklace1', name:'Collier Bling-Bling', image:'https://raw.githubusercontent.com/avelia-ai/nutricare-frontend/main/collier_blingbling.png', category:'necklace', price:130, owned:owned.includes('necklace1'), equipped:equipped==='necklace1' }
   ];
   renderShopGrid(_shopData);
 }
 
 function filterShop(cat) {
   _shopCurrentCat = cat;
-  ['all','hat','badge','frame','pet'].forEach(function(c) {
+  ['all','hat','glasses','necklace','bandana'].forEach(function(c) {
     var btn = document.getElementById('shopCat-' + c);
     if (!btn) return;
     if (c === cat) {
@@ -12626,9 +12618,9 @@ function renderShopGrid(items) {
         ? 'background:linear-gradient(135deg,var(--coral),var(--accent));color:white;'
         : 'background:#f5f5f5;color:#333;';
     return '<div style="background:white;border-radius:16px;padding:16px;text-align:center;box-shadow:0 2px 12px rgba(0,0,0,0.06)">' +
-      '<div style="font-size:2.5rem;margin-bottom:8px">' + item.icon + '</div>' +
+      '<div style="font-size:2.5rem;margin-bottom:8px;display:flex;align-items:center;justify-content:center;height:56px">' + (item.image ? '<img src="' + item.image + '" style="width:56px;height:56px;object-fit:contain">' : item.icon) + '</div>' +
       '<div style="font-size:0.82rem;font-weight:700;color:#1a1a1a;margin-bottom:4px">' + item.name + '</div>' +
-      '<div style="font-size:0.7rem;color:#aaa;margin-bottom:12px;text-transform:uppercase;letter-spacing:1px">' + item.category + '</div>' +
+      '<div style="font-size:0.7rem;color:#aaa;margin-bottom:12px;text-transform:uppercase;letter-spacing:1px">' + ({hat:'Chapeau',glasses:'Lunettes',necklace:'Collier',bandana:'Bandana'}[item.category] || item.category) + '</div>' +
       '<button onclick="shopAction(\'' + item.id + '\',' + (owned ? '\'equip\'': '\'buy\'') + ')" style="width:100%;padding:8px;border-radius:10px;border:none;font-size:0.78rem;font-weight:700;cursor:pointer;font-family:DM Sans,sans-serif;' + btnStyle + '">' + btnLabel + '</button>' +
       '</div>';
   }).join('');
@@ -14076,9 +14068,9 @@ function closeMirellaNotif() {
     <div style="display:flex;gap:8px;overflow-x:auto;padding-bottom:8px;margin-bottom:20px;scrollbar-width:none">
       <button onclick="filterShop('all')" id="shopCat-all" style="flex-shrink:0;padding:6px 16px;border-radius:20px;border:none;background:var(--coral);color:white;font-size:0.78rem;font-weight:700;cursor:pointer;font-family:DM Sans,sans-serif">Tout</button>
       <button onclick="filterShop('hat')" id="shopCat-hat" style="flex-shrink:0;padding:6px 16px;border-radius:20px;border:1px solid #ddd;background:white;color:#666;font-size:0.78rem;font-weight:600;cursor:pointer;font-family:DM Sans,sans-serif">Chapeaux</button>
-      <button onclick="filterShop('badge')" id="shopCat-badge" style="flex-shrink:0;padding:6px 16px;border-radius:20px;border:1px solid #ddd;background:white;color:#666;font-size:0.78rem;font-weight:600;cursor:pointer;font-family:DM Sans,sans-serif">Badges</button>
-      <button onclick="filterShop('frame')" id="shopCat-frame" style="flex-shrink:0;padding:6px 16px;border-radius:20px;border:1px solid #ddd;background:white;color:#666;font-size:0.78rem;font-weight:600;cursor:pointer;font-family:DM Sans,sans-serif">Cadres</button>
-      <button onclick="filterShop('pet')" id="shopCat-pet" style="flex-shrink:0;padding:6px 16px;border-radius:20px;border:1px solid #ddd;background:white;color:#666;font-size:0.78rem;font-weight:600;cursor:pointer;font-family:DM Sans,sans-serif">Compagnons</button>
+      <button onclick="filterShop('glasses')" id="shopCat-glasses" style="flex-shrink:0;padding:6px 16px;border-radius:20px;border:1px solid #ddd;background:white;color:#666;font-size:0.78rem;font-weight:600;cursor:pointer;font-family:DM Sans,sans-serif">Lunettes</button>
+      <button onclick="filterShop('necklace')" id="shopCat-necklace" style="flex-shrink:0;padding:6px 16px;border-radius:20px;border:1px solid #ddd;background:white;color:#666;font-size:0.78rem;font-weight:600;cursor:pointer;font-family:DM Sans,sans-serif">Colliers</button>
+      <button onclick="filterShop('bandana')" id="shopCat-bandana" style="flex-shrink:0;padding:6px 16px;border-radius:20px;border:1px solid #ddd;background:white;color:#666;font-size:0.78rem;font-weight:600;cursor:pointer;font-family:DM Sans,sans-serif">Bandanas</button>
     </div>
     <!-- Grille articles -->
     <div id="shopGrid" style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
