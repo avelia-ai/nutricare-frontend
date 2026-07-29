@@ -7471,6 +7471,13 @@ function switchLang(lang) {
       } else if (_stripeParams.get('cancelled') === 'true') {
         window.history.replaceState({}, '', window.location.pathname);
       }
+      if (_stripeParams.get('mirels_success')) {
+        window.history.replaceState({}, '', window.location.pathname);
+        setTimeout(async function() {
+          await fetchMirelsBalance();
+          alert('🎉 Mirels ajoutés à votre compte !');
+        }, 2000);
+      }
       var _savedTheme = localStorage.getItem('mirella_theme');
       setTimeout(async function() {
         // Demander permission notifications
@@ -12655,56 +12662,47 @@ function shopAction(itemId, action) {
 }
 
 function loadMirelsBoutique() {
-  var mirels = getMirels();
+  fetchMirelsBalance();
   var el = document.getElementById('boutiqueMirelsCount');
-  if (el) el.textContent = mirels;
-  var owned = JSON.parse(localStorage.getItem('mirels_owned') || '[]');
-  var equipped = localStorage.getItem('mirels_equipped') || '';
-  window._mirelsShopData = [
-    { id:'bob_jaune', name:'Bob jaune', icon:'https://raw.githubusercontent.com/avelia-ai/nutricare-frontend/main/bob_fox_jaune.png', price:30, owned:owned.includes('bob_jaune'), equipped:equipped==='bob_jaune' },
-    { id:'lunettes_pixels', name:'Lunettes pixels', icon:'https://raw.githubusercontent.com/avelia-ai/nutricare-frontend/main/lunettes_pixels.png', price:40, owned:owned.includes('lunettes_pixels'), equipped:equipped==='lunettes_pixels' },
-    { id:'collier_bling', name:'Collier bling-bling', icon:'https://raw.githubusercontent.com/avelia-ai/nutricare-frontend/main/collier_blingbling.png', price:50, owned:owned.includes('collier_bling'), equipped:equipped==='collier_bling' },
-    { id:'bandana_paw', name:'Bandana paw orange', icon:'https://raw.githubusercontent.com/avelia-ai/nutricare-frontend/main/bandana_paw_orange.png', price:35, owned:owned.includes('bandana_paw'), equipped:equipped==='bandana_paw' }
+  if (el) el.textContent = getMirels();
+  window._mirelsPacks = [
+    { id:'small', mirels:100, price:'1,99€' },
+    { id:'medium', mirels:300, price:'4,99€' },
+    { id:'large', mirels:700, price:'9,99€' }
   ];
-  renderMirelsShopGrid(window._mirelsShopData);
+  renderMirelsShopGrid(window._mirelsPacks);
 }
 function renderMirelsShopGrid(items) {
   var grid = document.getElementById('mirelsShopGrid');
   if (!grid) return;
-  if (!items || !items.length) {
-    grid.innerHTML = '<div style="text-align:center;padding:40px;color:#ccc;grid-column:1/-1">Aucun article</div>';
-    return;
-  }
   grid.innerHTML = items.map(function(item) {
-    var owned = item.owned;
-    var equipped = item.equipped;
-    var btnLabel = equipped ? 'Équipé ✓' : owned ? 'Équiper' : '🪙 ' + item.price;
-    var btnStyle = equipped
-      ? 'background:linear-gradient(135deg,#4CAF50,#2e7d32);color:white;'
-      : owned
-        ? 'background:linear-gradient(135deg,var(--coral),var(--accent));color:white;'
-        : 'background:#f5f5f5;color:#333;';
-    return '<div style="background:white;border-radius:16px;padding:16px;text-align:center;box-shadow:0 2px 12px rgba(0,0,0,0.06)">' +
-      '<div style="width:100%;aspect-ratio:1;display:flex;align-items:center;justify-content:center;margin-bottom:8px"><img src="' + item.icon + '" style="width:70%;height:70%;object-fit:contain"></div>' +
-      '<div style="font-size:0.82rem;font-weight:700;color:#1a1a1a;margin-bottom:12px">' + item.name + '</div>' +
-      '<button onclick="mirelsShopAction(\'' + item.id + '\',' + (owned ? '\'equip\'' : '\'buy\'') + ')" style="width:100%;padding:8px;border-radius:10px;border:none;font-size:0.78rem;font-weight:700;cursor:pointer;font-family:DM Sans,sans-serif;' + btnStyle + '">' + btnLabel + '</button>' +
+    return '<div style="background:white;border-radius:16px;padding:18px 20px;display:flex;align-items:center;justify-content:space-between;box-shadow:0 2px 12px rgba(0,0,0,0.06)">' +
+      '<div style="display:flex;align-items:center;gap:14px">' +
+      '<div style="font-size:2rem">🪙</div>' +
+      '<div><div style="font-size:1.15rem;font-weight:800;color:#1a1a1a">' + item.mirels + ' Mirels</div></div>' +
+      '</div>' +
+      '<button onclick="purchaseMirelsPack(\'' + item.id + '\')" style="padding:10px 20px;border-radius:10px;border:none;font-size:0.85rem;font-weight:700;cursor:pointer;font-family:DM Sans,sans-serif;background:linear-gradient(135deg,var(--coral),var(--accent));color:white;white-space:nowrap">' + item.price + '</button>' +
       '</div>';
   }).join('');
 }
-function mirelsShopAction(itemId, action) {
-  var mirels = getMirels();
-  var owned = JSON.parse(localStorage.getItem('mirels_owned') || '[]');
-  var item = window._mirelsShopData.find(function(i) { return i.id === itemId; });
-  if (!item) return;
-  if (action === 'buy') {
-    if (mirels < item.price) { alert('Pas assez de 🪙 Mirels !'); return; }
-    setMirels(mirels - item.price);
-    owned.push(itemId);
-    localStorage.setItem('mirels_owned', JSON.stringify(owned));
-  } else if (action === 'equip') {
-    localStorage.setItem('mirels_equipped', itemId);
+async function purchaseMirelsPack(pack) {
+  try {
+    var token = authToken || window._authToken || localStorage.getItem('nutricare_token');
+    var res = await fetch(BACKEND_URL + '/api/mirels/purchase', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
+      body: JSON.stringify({ pack: pack })
+    });
+    var data = await res.json();
+    if (data.url) {
+      sessionStorage.setItem('stripe_return_token', token);
+      window.location.href = data.url;
+    } else {
+      alert(data.error || 'Erreur lors de la création du paiement');
+    }
+  } catch (e) {
+    alert('Erreur: ' + e.message);
   }
-  loadMirelsBoutique();
 }
 function loadLeaderboard(page) {
   var list = document.getElementById('leaderboardList');
@@ -19378,10 +19376,12 @@ function sendFeedback() {
 
 <script>
 // ── SYSTEME MIRELS ────────────────────────────────────────────────────────
+window._mirelsBalance = parseInt(localStorage.getItem('mirella_mirels') || '0');
 function getMirels() {
-  return parseInt(localStorage.getItem('mirella_mirels') || '0');
+  return window._mirelsBalance || 0;
 }
-function setMirels(n) {
+function setMirelsCache(n) {
+  window._mirelsBalance = n;
   localStorage.setItem('mirella_mirels', String(n));
   updateMirelsDisplay();
 }
@@ -19393,27 +19393,51 @@ function updateMirelsDisplay() {
     if (el) el.textContent = n;
   });
 }
-function earnMirels(action) {
-  var key = 'mirella_earned_' + action + '_' + new Date().toISOString().split('T')[0];
-  if (localStorage.getItem(key)) {
-    alert('Vous avez deja gagne ces Mirels aujourd hui !');
-    return;
-  }
-  var gains = { connexion_quotidienne: 5, score_sante: 5, routine_ajoutee: 10, recette_vue: 2 };
-  var gain = gains[action] || 5;
-  setMirels(getMirels() + gain);
-  localStorage.setItem(key, '1');
-  alert('+' + gain + ' Mirels gagnés ! 🪙');
+async function fetchMirelsBalance() {
+  try {
+    var token = authToken || window._authToken || localStorage.getItem('nutricare_token');
+    if (!token) return;
+    var res = await fetch(BACKEND_URL + '/api/mirels', { headers: { 'Authorization': 'Bearer ' + token } });
+    var data = await res.json();
+    if (typeof data.mirels === 'number') setMirelsCache(data.mirels);
+  } catch (e) { console.error('Erreur solde Mirels:', e); }
+}
+async function earnMirels(action) {
+  try {
+    var token = authToken || window._authToken || localStorage.getItem('nutricare_token');
+    var res = await fetch(BACKEND_URL + '/api/mirels/earn', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
+      body: JSON.stringify({ reason: action })
+    });
+    var data = await res.json();
+    if (data.already_earned) { alert('Vous avez déjà gagné ces Mirels aujourd\'hui !'); return; }
+    if (typeof data.mirels === 'number') {
+      setMirelsCache(data.mirels);
+      alert('+' + data.earned + ' Mirels gagnés ! 🪙');
+    } else if (data.error) {
+      alert(data.error);
+    }
+  } catch (e) { console.error('Erreur gain Mirels:', e); }
 }
 // Initialiser au chargement
 document.addEventListener('DOMContentLoaded', function() {
   updateMirelsDisplay();
-  // Connexion quotidienne automatique
-  var keyDay = 'mirella_earned_connexion_quotidienne_' + new Date().toISOString().split('T')[0];
-  if (!localStorage.getItem(keyDay)) {
-    setMirels(getMirels() + 5);
-    localStorage.setItem(keyDay, '1');
-  }
+  fetchMirelsBalance();
+  // Connexion quotidienne automatique (le backend gère la dedupe par jour)
+  setTimeout(async function() {
+    try {
+      var token = authToken || window._authToken || localStorage.getItem('nutricare_token');
+      if (!token) return;
+      var res = await fetch(BACKEND_URL + '/api/mirels/earn', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
+        body: JSON.stringify({ reason: 'connexion_quotidienne' })
+      });
+      var data = await res.json();
+      if (typeof data.mirels === 'number' && !data.already_earned) setMirelsCache(data.mirels);
+    } catch (e) {}
+  }, 1500);
 });
 // ── FIN SYSTEME MIRELS ────────────────────────────────────────────────────
 </script>
