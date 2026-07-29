@@ -19155,10 +19155,16 @@ window.maybeShowReviewPrompt = function() {
   function checkOnboarding() {
     var done = localStorage.getItem('mirella_onboarding_done');
     if (done) return;
-    // Vérifier aussi en base via le profil chargé
     var profile = JSON.parse(localStorage.getItem('nutricare_profile') || '{}');
     if (profile.onboarding_done) {
       localStorage.setItem('mirella_onboarding_done', '1');
+      return;
+    }
+    // Si profil pas encore chargé, attendre loadProfile
+    var tok = localStorage.getItem('nutricare_token');
+    if (tok && !profile.id) {
+      // Profil pas encore en cache, on attend loadProfile
+      setTimeout(checkOnboarding, 1500);
       return;
     }
     showOnboarding();
