@@ -9358,15 +9358,21 @@ function switchLang(lang) {
 
     var track = cardioStream.getVideoTracks()[0];
     var caps = (track.getCapabilities && track.getCapabilities()) || {};
-    var torchDebugMsg = 'torch capability: ' + (caps.torch ? 'oui' : 'NON supporte');
+    var torchDebugMsg = 'cam: ' + (track.label || 'inconnu') + ' | caps: ' + JSON.stringify(caps);
     try {
       await track.applyConstraints({ advanced: [{ torch: true }] });
-      torchDebugMsg += ' | activation: OK';
-    } catch (e) {
-      torchDebugMsg += ' | erreur: ' + e.message;
+      torchDebugMsg += ' | advanced OK';
+    } catch (e1) {
+      torchDebugMsg += ' | advanced ECHEC: ' + e1.message;
+      try {
+        await track.applyConstraints({ torch: true });
+        torchDebugMsg += ' | direct OK';
+      } catch (e2) {
+        torchDebugMsg += ' | direct ECHEC: ' + e2.message;
+      }
     }
     document.getElementById('cardioMeasuringStatus').textContent = torchDebugMsg;
-    await new Promise(function(r) { setTimeout(r, 2500); });
+    await new Promise(function(r) { setTimeout(r, 4000); });
     document.getElementById('cardioMeasuringStatus').textContent = 'Place ton doigt sur la camera...';
 
     var canvas = document.createElement('canvas');
