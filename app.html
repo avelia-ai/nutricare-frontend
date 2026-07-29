@@ -9343,12 +9343,47 @@ function switchLang(lang) {
     document.getElementById('cardioMeasuringStatus').textContent = 'Place ton doigt sur la caméra...';
     cardioSamples = [];
 
+    var cardioDebugMsg = '';
     try {
       cardioStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: { ideal: 'environment' } } });
     } catch (err) {
       window.resetCardioCard();
       alert('Accès caméra refusé ou indisponible.');
       return;
+    }
+    try {
+      var allDevices = await navigator.mediaDevices.enumerateDevices();
+      var backCams = allDevices.filter(function(d) {
+        return d.kind === 'videoinput' && /back|arriere|rear/i.test(d.label) && !/front|avant/i.test(d.label);
+      });
+      var currentTrack0 = cardioStream.getVideoTracks()[0];
+      var currentCaps0 = (currentTrack0.getCapabilities && currentTrack0.getCapabilities()) || {};
+      cardioDebugMsg = 'cam actuelle: ' + (currentTrack0.label || '?') + ' torch=' + (!!currentCaps0.torch) + ' | ' + backCams.length + ' cams back';
+      if (!currentCaps0.torch && backCams.length > 1) {
+        var currentId0 = currentTrack0.getSettings().deviceId;
+        for (var bi = 0; bi < backCams.length; bi++) {
+          var candidateId = backCams[bi].deviceId;
+          if (candidateId === currentId0) continue;
+          try {
+            var testStream = await navigator.mediaDevices.getUserMedia({ video: { deviceId: { exact: candidateId } } });
+            var testTrack = testStream.getVideoTracks()[0];
+            var testCaps = (testTrack.getCapabilities && testTrack.getCapabilities()) || {};
+            if (testCaps.torch) {
+              cardioStream.getTracks().forEach(function(t){ t.stop(); });
+              cardioStream = testStream;
+              cardioDebugMsg += ' | bascule: ' + backCams[bi].label;
+              break;
+            } else {
+              testStream.getTracks().forEach(function(t){ t.stop(); });
+              cardioDebugMsg += ' | ' + backCams[bi].label + ' sans torch';
+            }
+          } catch (eSwitch) {
+            cardioDebugMsg += ' | echec ' + backCams[bi].label;
+          }
+        }
+      }
+    } catch (eEnum) {
+      cardioDebugMsg += ' | enum echec: ' + eEnum.message;
     }
 
     var video = document.createElement('video'); cardioVideoEl = video;
@@ -9370,6 +9405,11 @@ function switchLang(lang) {
       await track.applyConstraints({ torch: true });
     } catch (e) {
       try { await track.applyConstraints({ advanced: [{ torch: true }] }); } catch (e2) {}
+    }
+    if (typeof cardioDebugMsg !== 'undefined' && cardioDebugMsg) {
+      document.getElementById('cardioMeasuringStatus').textContent = cardioDebugMsg;
+      await new Promise(function(r){ setTimeout(r, 3000); });
+      document.getElementById('cardioMeasuringStatus').textContent = 'Place ton doigt sur la caméra...';
     }
 
     var canvas = document.createElement('canvas');
