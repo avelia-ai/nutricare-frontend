@@ -19050,6 +19050,15 @@ window.maybeShowReviewPrompt = function() {
     document.getElementById('onboardingOverlay').style.display = 'none';
     localStorage.setItem('mirella_onboarding_done', '1');
     window._onboardingActive = false;
+    // Sauvegarder en base Supabase
+    var tok = authToken || window._authToken || localStorage.getItem('nutricare_token');
+    if (tok) {
+      fetch(BACKEND_URL + '/api/profile', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + tok },
+        body: JSON.stringify({ onboarding_done: true })
+      }).catch(function(){});
+    }
     setTimeout(function() {
       document.getElementById('ratingModal').style.display = 'flex';
     }, 400);
