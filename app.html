@@ -9277,6 +9277,7 @@ function switchLang(lang) {
   var cardioSamples = [];
   var cardioStartTime = 0;
   var cardioRAF = null;
+  var cardioVideoEl = null;
   var CARDIO_DURATION_MS = 20000;
 
   // Lisse un signal avec moyenne mobile
@@ -9350,9 +9351,17 @@ function switchLang(lang) {
       return;
     }
 
-    var video = document.createElement('video');
+    var video = document.createElement('video'); cardioVideoEl = video;
     video.srcObject = cardioStream;
     video.setAttribute('playsinline', '');
+    video.style.position = 'fixed';
+    video.style.top = '0';
+    video.style.left = '0';
+    video.style.width = '1px';
+    video.style.height = '1px';
+    video.style.opacity = '0';
+    video.style.pointerEvents = 'none';
+    document.body.appendChild(video);
     video.muted = true;
     await video.play();
 
@@ -9415,6 +9424,7 @@ function switchLang(lang) {
       try { track.applyConstraints({ advanced: [{ torch: false }] }); } catch (e2) {}
     }
     if (cardioStream) cardioStream.getTracks().forEach(function(t) { t.stop(); });
+    if (cardioVideoEl) { cardioVideoEl.remove(); cardioVideoEl = null; }
 
     var bpm = cardioEstimateBpm(cardioSamples);
     if (!bpm || bpm < 40 || bpm > 200) {
