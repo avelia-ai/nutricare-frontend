@@ -12666,9 +12666,9 @@ function loadMirelsBoutique() {
   var el = document.getElementById('boutiqueMirelsCount');
   if (el) el.textContent = getMirels();
   window._mirelsPacks = [
-    { id:'small', mirels:100, price:'1,99€' },
-    { id:'medium', mirels:300, price:'4,99€' },
-    { id:'large', mirels:700, price:'9,99€' }
+    { id:'small', mirels:100, price:'1,99€', popular:false },
+    { id:'medium', mirels:300, price:'4,99€', popular:true },
+    { id:'large', mirels:700, price:'9,99€', popular:false }
   ];
   renderMirelsShopGrid(window._mirelsPacks);
 }
@@ -12676,12 +12676,15 @@ function renderMirelsShopGrid(items) {
   var grid = document.getElementById('mirelsShopGrid');
   if (!grid) return;
   grid.innerHTML = items.map(function(item) {
-    return '<div style="background:white;border-radius:16px;padding:18px 20px;display:flex;align-items:center;justify-content:space-between;box-shadow:0 2px 12px rgba(0,0,0,0.06)">' +
+    var badge = item.popular ? '<div style="position:absolute;top:-10px;right:16px;background:#4CAF50;color:white;font-size:0.62rem;font-weight:700;padding:3px 10px;border-radius:100px;text-transform:uppercase;letter-spacing:0.5px">Populaire</div>' : '';
+    var border = item.popular ? 'border:2px solid var(--coral);' : '';
+    return '<div style="background:white;border-radius:16px;padding:16px 18px;display:flex;align-items:center;justify-content:space-between;gap:12px;box-shadow:0 2px 10px rgba(0,0,0,0.06);position:relative;' + border + '">' +
+      badge +
       '<div style="display:flex;align-items:center;gap:14px">' +
-      '<div style="font-size:2rem">🪙</div>' +
-      '<div><div style="font-size:1.15rem;font-weight:800;color:#1a1a1a">' + item.mirels + ' Mirels</div></div>' +
+      '<div style="width:48px;height:48px;border-radius:12px;background:linear-gradient(135deg,#FFE8B0,#FFB347);display:flex;align-items:center;justify-content:center;font-size:1.5rem;flex-shrink:0">🪙</div>' +
+      '<div><span style="font-size:1.15rem;font-weight:800;color:#1a1a1a">' + item.mirels + '</span> <span style="font-size:0.68rem;font-weight:700;color:#999;text-transform:uppercase;letter-spacing:0.5px">Mirels</span></div>' +
       '</div>' +
-      '<button onclick="purchaseMirelsPack(\'' + item.id + '\')" style="padding:10px 20px;border-radius:10px;border:none;font-size:0.85rem;font-weight:700;cursor:pointer;font-family:DM Sans,sans-serif;background:linear-gradient(135deg,var(--coral),var(--accent));color:white;white-space:nowrap">' + item.price + '</button>' +
+      '<button onclick="purchaseMirelsPack(\'' + item.id + '\')" style="padding:10px 18px;border-radius:10px;border:none;font-size:0.85rem;font-weight:700;cursor:pointer;font-family:DM Sans,sans-serif;background:linear-gradient(135deg,var(--coral),var(--accent));color:white;white-space:nowrap;flex-shrink:0">' + item.price + '</button>' +
       '</div>';
   }).join('');
 }
@@ -14094,22 +14097,22 @@ function closeMirellaNotif() {
 </div>
 <!-- MIRELS BOUTIQUE VIEW -->
 <div id="mirelsBoutiqueView" style="display:none;position:fixed;top:56px;left:0;right:0;bottom:60px;overflow-y:auto;overflow-x:hidden;background:var(--cream);z-index:10;box-sizing:border-box">
-  <div style="background:linear-gradient(135deg,var(--coral),var(--accent));padding:16px 16px 14px;width:100%;box-sizing:border-box;margin:0">
-    <div style="font-size:1.6rem;font-weight:700;color:white;margin-bottom:4px">Boutique Mirella 🦊</div>
-    <div style="font-size:0.85rem;color:rgba(255,255,255,0.85)">Dépensez vos Mirels pour personnaliser Mirella</div>
-    <div style="display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,0.2);border-radius:20px;padding:6px 14px;margin-top:12px">
-      <span style="font-size:1.1rem">🪙</span>
-      <span id="boutiqueMirelsCount" style="color:white;font-weight:700;font-size:1rem">--</span>
-      <span style="color:rgba(255,255,255,0.8);font-size:0.78rem">Mirels</span>
-    </div>
+  <div style="background:linear-gradient(160deg,#FFE8D6,#FFF6EE);padding:36px 20px 28px;text-align:center;width:100%;box-sizing:border-box">
+    <div style="width:88px;height:88px;margin:0 auto 14px;border-radius:50%;background:linear-gradient(135deg,var(--coral),var(--accent));display:flex;align-items:center;justify-content:center;font-size:2.6rem;box-shadow:0 10px 24px rgba(255,107,107,0.3)">🪙</div>
+    <div id="boutiqueMirelsCount" style="font-size:2.6rem;font-weight:800;color:#2D2D2D;line-height:1">--</div>
+    <div style="font-size:0.85rem;color:#999;font-weight:600;letter-spacing:0.5px;text-transform:uppercase;margin-top:2px">Mirels</div>
   </div>
-  <div style="padding:20px 16px 80px">
-    <div id="mirelsShopGrid" style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
-      <div style="text-align:center;padding:40px;color:#ccc;grid-column:1/-1">Chargement...</div>
+  <div style="padding:8px 16px 16px">
+    <div style="background:white;border-radius:16px;padding:14px 16px;display:flex;align-items:center;gap:12px;box-shadow:0 2px 10px rgba(0,0,0,0.05);margin-bottom:20px">
+      <span style="font-size:1.4rem">✨</span>
+      <div style="font-size:0.82rem;color:#666;line-height:1.4">Utilisez vos Mirels pour débloquer des accessoires pour Mirella dans la vue Suivi</div>
+    </div>
+    <div style="font-size:0.95rem;font-weight:700;color:#2D2D2D;margin-bottom:12px">Acheter des Mirels</div>
+    <div id="mirelsShopGrid" style="display:flex;flex-direction:column;gap:14px">
+      <div style="text-align:center;padding:40px;color:#ccc">Chargement...</div>
     </div>
   </div>
 </div>
-
 <!-- VISAGE VIEW -->
 <div id="visageView" style="display:none;position:fixed;top:56px;left:0;right:0;bottom:60px;padding:16px;padding-bottom:220px;overflow-y:scroll;-webkit-overflow-scrolling:touch;background:var(--cream);box-sizing:border-box;z-index:10">
   <div class="view-header" style="font-family:Open Sans,serif;font-size:2rem;font-weight:700;margin-bottom:6px;color:#2D2D2D">Analyse Visage</div>
