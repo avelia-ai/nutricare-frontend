@@ -9357,23 +9357,11 @@ function switchLang(lang) {
     await video.play();
 
     var track = cardioStream.getVideoTracks()[0];
-    var caps = (track.getCapabilities && track.getCapabilities()) || {};
-    var torchDebugMsg = 'cam: ' + (track.label || 'inconnu') + ' | caps: ' + JSON.stringify(caps);
     try {
-      await track.applyConstraints({ advanced: [{ torch: true }] });
-      torchDebugMsg += ' | advanced OK';
-    } catch (e1) {
-      torchDebugMsg += ' | advanced ECHEC: ' + e1.message;
-      try {
-        await track.applyConstraints({ torch: true });
-        torchDebugMsg += ' | direct OK';
-      } catch (e2) {
-        torchDebugMsg += ' | direct ECHEC: ' + e2.message;
-      }
+      await track.applyConstraints({ torch: true });
+    } catch (e) {
+      try { await track.applyConstraints({ advanced: [{ torch: true }] }); } catch (e2) {}
     }
-    document.getElementById('cardioMeasuringStatus').textContent = torchDebugMsg;
-    await new Promise(function(r) { setTimeout(r, 4000); });
-    document.getElementById('cardioMeasuringStatus').textContent = 'Place ton doigt sur la camera...';
 
     var canvas = document.createElement('canvas');
     canvas.width = 40; canvas.height = 40;
@@ -9421,7 +9409,11 @@ function switchLang(lang) {
 
   function finishCardioMeasurement(track) {
     if (cardioRAF) cancelAnimationFrame(cardioRAF);
-    try { track.applyConstraints({ advanced: [{ torch: false }] }); } catch (e) {}
+    try {
+      track.applyConstraints({ torch: false });
+    } catch (e) {
+      try { track.applyConstraints({ advanced: [{ torch: false }] }); } catch (e2) {}
+    }
     if (cardioStream) cardioStream.getTracks().forEach(function(t) { t.stop(); });
 
     var bpm = cardioEstimateBpm(cardioSamples);
