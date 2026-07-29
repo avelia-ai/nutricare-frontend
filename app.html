@@ -10608,6 +10608,7 @@ Réponds UNIQUEMENT en JSON valide avec cette structure exacte:
     if (document.getElementById('visualView')) { document.getElementById('visualView').style.display = view === 'visual' ? 'block' : 'none'; if (view === 'visual') applyVisualPlanGates(); }
     document.getElementById('gamificationView').style.display = view === 'gamification' ? 'block' : 'none';
     if (document.getElementById('shopView')) document.getElementById('shopView').style.display = view === 'shop' ? 'block' : 'none';
+    if (document.getElementById('mirelsBoutiqueView')) { document.getElementById('mirelsBoutiqueView').style.display = view === 'mirelsBoutique' ? 'block' : 'none'; if (view === 'mirelsBoutique') loadMirelsBoutique(); }
     document.getElementById('programsView').style.display = view === 'programs' ? 'block' : 'none';
     document.getElementById('ordonnanceView').style.display = view === 'ordonnance' ? 'block' : 'none';
     document.getElementById('scanproduitView').style.display = view === 'scanproduit' ? 'block' : 'none'; if (view === 'scanproduit') applyScanproduitPlanGates();
@@ -12653,6 +12654,58 @@ function shopAction(itemId, action) {
   loadShop();
 }
 
+function loadMirelsBoutique() {
+  var mirels = getMirels();
+  var el = document.getElementById('boutiqueMirelsCount');
+  if (el) el.textContent = mirels;
+  var owned = JSON.parse(localStorage.getItem('mirels_owned') || '[]');
+  var equipped = localStorage.getItem('mirels_equipped') || '';
+  window._mirelsShopData = [
+    { id:'bob_jaune', name:'Bob jaune', icon:'https://raw.githubusercontent.com/avelia-ai/nutricare-frontend/main/bob_fox_jaune.png', price:30, owned:owned.includes('bob_jaune'), equipped:equipped==='bob_jaune' },
+    { id:'lunettes_pixels', name:'Lunettes pixels', icon:'https://raw.githubusercontent.com/avelia-ai/nutricare-frontend/main/lunettes_pixels.png', price:40, owned:owned.includes('lunettes_pixels'), equipped:equipped==='lunettes_pixels' },
+    { id:'collier_bling', name:'Collier bling-bling', icon:'https://raw.githubusercontent.com/avelia-ai/nutricare-frontend/main/collier_blingbling.png', price:50, owned:owned.includes('collier_bling'), equipped:equipped==='collier_bling' },
+    { id:'bandana_paw', name:'Bandana paw orange', icon:'https://raw.githubusercontent.com/avelia-ai/nutricare-frontend/main/bandana_paw_orange.png', price:35, owned:owned.includes('bandana_paw'), equipped:equipped==='bandana_paw' }
+  ];
+  renderMirelsShopGrid(window._mirelsShopData);
+}
+function renderMirelsShopGrid(items) {
+  var grid = document.getElementById('mirelsShopGrid');
+  if (!grid) return;
+  if (!items || !items.length) {
+    grid.innerHTML = '<div style="text-align:center;padding:40px;color:#ccc;grid-column:1/-1">Aucun article</div>';
+    return;
+  }
+  grid.innerHTML = items.map(function(item) {
+    var owned = item.owned;
+    var equipped = item.equipped;
+    var btnLabel = equipped ? 'Équipé ✓' : owned ? 'Équiper' : '🪙 ' + item.price;
+    var btnStyle = equipped
+      ? 'background:linear-gradient(135deg,#4CAF50,#2e7d32);color:white;'
+      : owned
+        ? 'background:linear-gradient(135deg,var(--coral),var(--accent));color:white;'
+        : 'background:#f5f5f5;color:#333;';
+    return '<div style="background:white;border-radius:16px;padding:16px;text-align:center;box-shadow:0 2px 12px rgba(0,0,0,0.06)">' +
+      '<div style="width:100%;aspect-ratio:1;display:flex;align-items:center;justify-content:center;margin-bottom:8px"><img src="' + item.icon + '" style="width:70%;height:70%;object-fit:contain"></div>' +
+      '<div style="font-size:0.82rem;font-weight:700;color:#1a1a1a;margin-bottom:12px">' + item.name + '</div>' +
+      '<button onclick="mirelsShopAction(\'' + item.id + '\',' + (owned ? '\'equip\'' : '\'buy\'') + ')" style="width:100%;padding:8px;border-radius:10px;border:none;font-size:0.78rem;font-weight:700;cursor:pointer;font-family:DM Sans,sans-serif;' + btnStyle + '">' + btnLabel + '</button>' +
+      '</div>';
+  }).join('');
+}
+function mirelsShopAction(itemId, action) {
+  var mirels = getMirels();
+  var owned = JSON.parse(localStorage.getItem('mirels_owned') || '[]');
+  var item = window._mirelsShopData.find(function(i) { return i.id === itemId; });
+  if (!item) return;
+  if (action === 'buy') {
+    if (mirels < item.price) { alert('Pas assez de 🪙 Mirels !'); return; }
+    setMirels(mirels - item.price);
+    owned.push(itemId);
+    localStorage.setItem('mirels_owned', JSON.stringify(owned));
+  } else if (action === 'equip') {
+    localStorage.setItem('mirels_equipped', itemId);
+  }
+  loadMirelsBoutique();
+}
 function loadLeaderboard(page) {
   var list = document.getElementById('leaderboardList');
   var pag = document.getElementById('leaderboardPagination');
@@ -14041,6 +14094,23 @@ function closeMirellaNotif() {
     </div>
   </div>
 </div>
+<!-- MIRELS BOUTIQUE VIEW -->
+<div id="mirelsBoutiqueView" style="display:none;position:fixed;top:56px;left:0;right:0;bottom:60px;overflow-y:auto;overflow-x:hidden;background:var(--cream);z-index:10;box-sizing:border-box">
+  <div style="background:linear-gradient(135deg,var(--coral),var(--accent));padding:16px 16px 14px;width:100%;box-sizing:border-box;margin:0">
+    <div style="font-size:1.6rem;font-weight:700;color:white;margin-bottom:4px">Boutique Mirella 🦊</div>
+    <div style="font-size:0.85rem;color:rgba(255,255,255,0.85)">Dépensez vos Mirels pour personnaliser Mirella</div>
+    <div style="display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,0.2);border-radius:20px;padding:6px 14px;margin-top:12px">
+      <span style="font-size:1.1rem">🪙</span>
+      <span id="boutiqueMirelsCount" style="color:white;font-weight:700;font-size:1rem">--</span>
+      <span style="color:rgba(255,255,255,0.8);font-size:0.78rem">Mirels</span>
+    </div>
+  </div>
+  <div style="padding:20px 16px 80px">
+    <div id="mirelsShopGrid" style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+      <div style="text-align:center;padding:40px;color:#ccc;grid-column:1/-1">Chargement...</div>
+    </div>
+  </div>
+</div>
 
 <!-- VISAGE VIEW -->
 <div id="visageView" style="display:none;position:fixed;top:56px;left:0;right:0;bottom:60px;padding:16px;padding-bottom:220px;overflow-y:scroll;-webkit-overflow-scrolling:touch;background:var(--cream);box-sizing:border-box;z-index:10">
@@ -14316,6 +14386,7 @@ function closeMirellaNotif() {
       <button id="qmBtn-leaderboard" onclick="toggleQuickMenu();showView('leaderboard');loadLeaderboard()" style="display:flex;align-items:center;gap:10px;padding:12px;background:var(--color-background-secondary);border:0.5px solid var(--color-border-tertiary);border-radius:14px;font-size:0.82rem;font-weight:600;color:var(--color-text-primary);cursor:pointer"><div style="width:32px;height:32px;background:#FFF7E0;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0"><i class="ti ti-trophy" style="font-size:16px;color:#D4A017" aria-hidden="true"></i></div>Classement</button>
       <button id="qmBtn-gamification" onclick="toggleQuickMenu();showView('gamification')" style="display:flex;align-items:center;gap:10px;padding:12px;background:var(--color-background-secondary);border:0.5px solid var(--color-border-tertiary);border-radius:14px;font-size:0.82rem;font-weight:600;color:var(--color-text-primary);cursor:pointer"><div style="width:32px;height:32px;background:#FAEEDA;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0"><i class="ti ti-trophy" style="font-size:16px;color:#854F0B" aria-hidden="true"></i></div>Progression</button>
       <button id="qmBtn-shop" onclick="toggleQuickMenu();showView('shop');loadShop()" style="display:flex;align-items:center;gap:10px;padding:12px;background:var(--color-background-secondary);border:0.5px solid var(--color-border-tertiary);border-radius:14px;font-size:0.82rem;font-weight:600;color:var(--color-text-primary);cursor:pointer"><div style="width:32px;height:32px;background:#E8F4FF;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0"><i class="ti ti-shopping-bag" style="font-size:16px;color:#185FA5" aria-hidden="true"></i></div>Boutique</button>
+      <button id="qmBtn-mirelsboutique" onclick="toggleQuickMenu();showView('mirelsBoutique');loadMirelsBoutique()" style="display:flex;align-items:center;gap:10px;padding:12px;background:var(--color-background-secondary);border:0.5px solid var(--color-border-tertiary);border-radius:14px;font-size:0.82rem;font-weight:600;color:var(--color-text-primary);cursor:pointer"><div style="width:32px;height:32px;background:#FFF0E8;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0">🪙</div>Boutique Mirels</button>
       <button id="qmBtn-pricing" onclick="toggleQuickMenu();showView('pricing')" style="display:flex;align-items:center;gap:10px;padding:12px;background:var(--color-background-secondary);border:0.5px solid var(--color-border-tertiary);border-radius:14px;font-size:0.82rem;font-weight:600;color:var(--color-text-primary);cursor:pointer"><div style="width:32px;height:32px;background:#FAEEDA;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0"><i class="ti ti-star" style="font-size:16px;color:#854F0B" aria-hidden="true"></i></div>Abonnements</button>
       <button id="qmBtn-pro" onclick="toggleQuickMenu();showView('pro')" style="display:none"><div style="width:32px;height:32px;background:#EAF3DE;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0"><i class="ti ti-stethoscope" style="font-size:16px;color:#3B6D11" aria-hidden="true"></i></div>Espace médecin</button>
       <button id="qmBtn-chrono" onclick="toggleQuickMenu();showView('chrono')" style="display:none !important;display:flex;align-items:center;gap:10px;padding:12px;background:#FFF5F0;border:0.5px solid rgba(255,107,107,0.15);border-radius:14px;font-size:0.82rem;font-weight:600;color:#2D2D2D;cursor:pointer"><div style="width:32px;height:32px;background:#FBEAF0;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0"><i class="ti ti-heart" style="font-size:16px;color:#993556" aria-hidden="true"></i></div>Score de santé</button>
