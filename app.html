@@ -19132,16 +19132,14 @@ window.maybeShowReviewPrompt = function() {
       }
     } catch(e) { console.error('Onboarding save error:', e); }
 
-    // Passer à l'écran 3
+    // Passer à l'écran 3 (vidéo prénom) puis 2b (objectifs)
     document.getElementById('onboarding2').style.display = 'none';
-    var s2b = document.getElementById('onboarding2b');
-    s2b.style.display = 'flex';
+    document.getElementById('onboarding3').style.display = 'block';
   }
 
   function skipOnboarding() {
     document.getElementById('onboarding2').style.display = 'none';
     document.getElementById('onboarding3').style.display = 'block';
-    launchConfetti();
   }
 
   function obToggleObjectif(el, obj) {
@@ -19447,8 +19445,8 @@ window.maybeShowReviewPrompt = function() {
         </div>
       </div>
       <!-- Bouton continuer -->
-      <button onclick="closeOnboarding()" style="position:absolute;bottom:40px;left:24px;right:24px;background:linear-gradient(135deg,#FF6B6B,#FF9A3C);color:white;border:none;border-radius:14px;padding:16px;font-size:1rem;font-weight:700;cursor:pointer;font-family:DM Sans,sans-serif;box-shadow:0 8px 24px rgba(255,107,107,0.4)">
-        C'est parti ! 🚀
+      <button onclick="obNext(3)" style="position:absolute;bottom:40px;left:24px;right:24px;background:linear-gradient(135deg,#FF6B6B,#FF9A3C);color:white;border:none;border-radius:14px;padding:16px;font-size:1rem;font-weight:700;cursor:pointer;font-family:DM Sans,sans-serif;box-shadow:0 8px 24px rgba(255,107,107,0.4)">
+        Continuer →
       </button>
     </div>
   </div>
@@ -19467,10 +19465,9 @@ function obNext(step) {
     var s2b = document.getElementById('onboarding2b');
     s2b.style.display = 'flex';
   } else if (step === 3) {
-    document.getElementById('onboarding2b').style.display = 'none';
-    var s3 = document.getElementById('onboarding3');
-    s3.style.display = 'flex';
-    launchConfetti();
+    document.getElementById('onboarding3').style.display = 'none';
+    var s2b = document.getElementById('onboarding2b');
+    s2b.style.display = 'flex';
     // Lancer la vidéo bienvenue
     var v3 = document.getElementById('obVideoBienvenue');
     if (v3) { v3.currentTime = 0; v3.play().catch(function(){}); }
