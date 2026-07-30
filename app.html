@@ -19179,10 +19179,8 @@ window.maybeShowReviewPrompt = function() {
         });
       }
     } catch(e) {}
-    // Passer à l'écran 3
-    document.getElementById('onboarding2b').style.display = 'none';
-    document.getElementById('onboarding3').style.display = 'flex';
-    launchConfetti();
+    // Passer à l'écran 3 via obNext
+    obNext(3);
   }
 
   function closeOnboarding() {
@@ -19473,9 +19471,15 @@ function obNext(step) {
     var s2 = document.getElementById('onboarding2');
     s2.style.display = 'flex';
   } else if (step === 2) {
+    // Aller vers onboarding2b (choix des objectifs) avant onboarding3
     document.getElementById('onboarding2').style.display = 'none';
+    var s2b = document.getElementById('onboarding2b');
+    s2b.style.display = 'flex';
+  } else if (step === 3) {
+    document.getElementById('onboarding2b').style.display = 'none';
     var s3 = document.getElementById('onboarding3');
     s3.style.display = 'flex';
+    launchConfetti();
     // Lancer la vidéo bienvenue
     var v3 = document.getElementById('obVideoBienvenue');
     if (v3) { v3.currentTime = 0; v3.play().catch(function(){}); }
@@ -19484,7 +19488,6 @@ function obNext(step) {
       (JSON.parse(localStorage.getItem('nutricare_profile') || '{}').full_name || '').split(' ')[0] || '';
     var bubble = document.getElementById('obBubbleText');
     if (bubble) bubble.textContent = prenom ? 'Bienvenue ' + prenom + ', on va accomplir tes objectifs ensemble !' : 'Bienvenue ! On va accomplir tes objectifs ensemble !';
-    // Afficher la 1ère phylactère, puis la remplacer par la 2ème après un délai
     var b1 = document.getElementById('obBubble1');
     var b2 = document.getElementById('obBubble2');
     if (b1) b1.style.opacity = '1';
