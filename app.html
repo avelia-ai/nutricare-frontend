@@ -19341,12 +19341,12 @@ window.maybeShowReviewPrompt = function() {
       <!-- Phylactères -->
       <div style="position:absolute;top:8%;left:50%;transform:translateX(-50%);width:82%;z-index:10;display:flex;flex-direction:column;gap:10px">
         <!-- Phylactère 1 -->
-        <div style="background:white;border-radius:20px;padding:14px 18px;box-shadow:0 8px 24px rgba(0,0,0,0.2);position:relative;text-align:center">
+        <div id="obBubble1" style="background:white;border-radius:20px;padding:14px 18px;box-shadow:0 8px 24px rgba(0,0,0,0.2);position:relative;text-align:center;opacity:1;transition:opacity 0.5s">
           <div id="obBubbleText" style="font-family:DM Sans,sans-serif;font-size:0.95rem;font-weight:700;color:#2D2D2D;line-height:1.4">Bienvenue ! On va accomplir tes objectifs ensemble !</div>
           <div style="position:absolute;bottom:-12px;left:50%;transform:translateX(-50%);width:0;height:0;border-left:12px solid transparent;border-right:12px solid transparent;border-top:12px solid white"></div>
         </div>
         <!-- Phylactère 2 -->
-        <div id="obBubble2" style="background:white;border-radius:20px;padding:14px 18px;box-shadow:0 8px 24px rgba(0,0,0,0.2);position:relative;text-align:center;margin-top:6px;opacity:0;transition:opacity 0.5s">
+        <div id="obBubble2" style="background:white;border-radius:20px;padding:14px 18px;box-shadow:0 8px 24px rgba(0,0,0,0.2);position:absolute;top:0;left:0;right:0;text-align:center;opacity:0;transition:opacity 0.5s">
           <div style="font-family:DM Sans,sans-serif;font-size:0.88rem;font-weight:600;color:#666;line-height:1.4">Promis, encore quelques questions, et je m'occupe du reste 😊</div>
           <div style="position:absolute;bottom:-12px;left:50%;transform:translateX(-50%);width:0;height:0;border-left:12px solid transparent;border-right:12px solid transparent;border-top:12px solid white"></div>
         </div>
@@ -19378,9 +19378,17 @@ function obNext(step) {
       (JSON.parse(localStorage.getItem('nutricare_profile') || '{}').full_name || '').split(' ')[0] || '';
     var bubble = document.getElementById('obBubbleText');
     if (bubble) bubble.textContent = prenom ? 'Bienvenue ' + prenom + ', on va accomplir tes objectifs ensemble !' : 'Bienvenue ! On va accomplir tes objectifs ensemble !';
-    // Afficher la 2ème phylactère après 2s
+    // Afficher la 1ère phylactère, puis la remplacer par la 2ème après un délai
+    var b1 = document.getElementById('obBubble1');
     var b2 = document.getElementById('obBubble2');
-    if (b2) setTimeout(function(){ b2.style.opacity='1'; }, 2000);
+    if (b1) b1.style.opacity = '1';
+    if (b2) b2.style.opacity = '0';
+    setTimeout(function(){
+      if (b1) b1.style.opacity = '0';
+      setTimeout(function(){
+        if (b2) b2.style.opacity = '1';
+      }, 500);
+    }, 3000);
   }
 }
 function obSaveIdentite() {
