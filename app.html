@@ -19265,7 +19265,7 @@ window.maybeShowReviewPrompt = function() {
   <div id="onboarding1" style="width:100%;height:100%;position:relative">
     <video id="onboardingVideo1" autoplay muted playsinline webkit-playsinline
       style="width:100%;height:100%;object-fit:cover;display:block"
-      onended="document.getElementById('obBtnCommencer').style.opacity='1';document.getElementById('obBtnCommencer').style.pointerEvents='auto'">
+      onended="obNext(1)">
       <source src="https://raw.githubusercontent.com/avelia-ai/nutricare-frontend/main/mirella_premiere_video_onboarding_compressed.mp4" type="video/mp4">
     </video>
     <!-- Bouton passer -->
@@ -19279,15 +19279,92 @@ window.maybeShowReviewPrompt = function() {
     </button>
   </div>
 
+  <!-- ETAPE 2 : Identité -->
+  <div id="onboarding2" style="display:none;width:100%;height:100%;position:absolute;top:0;left:0;align-items:center;justify-content:center;background:linear-gradient(160deg,#1a0a0a 0%,#2d1010 50%,#1a0a0a 100%)">
+    <!-- Particules décoratives -->
+    <div style="position:absolute;inset:0;overflow:hidden;pointer-events:none">
+      <div style="position:absolute;top:8%;left:10%;width:180px;height:180px;border-radius:50%;background:radial-gradient(circle,rgba(255,107,107,0.15),transparent 70%);animation:obPulse 3s ease-in-out infinite"></div>
+      <div style="position:absolute;bottom:15%;right:8%;width:220px;height:220px;border-radius:50%;background:radial-gradient(circle,rgba(255,154,60,0.12),transparent 70%);animation:obPulse 4s ease-in-out infinite 1s"></div>
+      <div style="position:absolute;top:40%;left:50%;transform:translateX(-50%);width:300px;height:300px;border-radius:50%;background:radial-gradient(circle,rgba(255,107,107,0.06),transparent 70%)"></div>
+    </div>
+    <style>
+      @keyframes obPulse { 0%,100%{transform:scale(1);opacity:0.6} 50%{transform:scale(1.15);opacity:1} }
+      @keyframes obSlideUp { from{opacity:0;transform:translateY(30px)} to{opacity:1;transform:translateY(0)} }
+      #onboarding2 .ob2-card { animation: obSlideUp 0.5s ease forwards; }
+    </style>
+    <div class="ob2-card" style="width:100%;max-width:420px;padding:0 20px;position:relative;z-index:2">
+      <!-- Logo Mirella -->
+      <div style="text-align:center;margin-bottom:28px">
+        <div style="display:inline-flex;align-items:center;gap:10px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);border-radius:50px;padding:8px 20px;backdrop-filter:blur(10px)">
+          <div style="width:8px;height:8px;border-radius:50%;background:linear-gradient(135deg,#FF6B6B,#FF9A3C)"></div>
+          <span style="font-family:Open Sans,serif;font-size:1rem;font-weight:700;color:white;letter-spacing:0.5px">Mirella</span>
+        </div>
+      </div>
+      <!-- Titre -->
+      <div style="text-align:center;margin-bottom:32px">
+        <h2 style="font-family:Open Sans,serif;font-size:1.6rem;font-weight:800;color:white;margin:0 0 10px;letter-spacing:-0.5px;line-height:1.2">Faisons<br>connaissance 👋</h2>
+        <p style="font-size:0.82rem;color:rgba(255,255,255,0.5);margin:0;line-height:1.5">Quelques infos pour personnaliser<br>votre coaching santé</p>
+      </div>
+      <!-- Champs -->
+      <div style="display:flex;flex-direction:column;gap:12px;margin-bottom:24px">
+        <input id="obPrenom" type="text" placeholder="Votre prénom *" autocomplete="given-name"
+          style="width:100%;padding:16px 20px;border:1.5px solid rgba(255,255,255,0.12);border-radius:14px;font-family:DM Sans,sans-serif;font-size:0.95rem;outline:none;background:rgba(255,255,255,0.08);color:white;box-sizing:border-box;transition:all .2s;backdrop-filter:blur(10px)"
+          onfocus="this.style.borderColor='#FF9A3C';this.style.background='rgba(255,154,60,0.1)'"
+          onblur="this.style.borderColor='rgba(255,255,255,0.12)';this.style.background='rgba(255,255,255,0.08)'"
+          oninput="document.getElementById('obPrenomPreview').textContent=this.value||''">
+        <input id="obNom" type="text" placeholder="Votre nom" autocomplete="family-name"
+          style="width:100%;padding:16px 20px;border:1.5px solid rgba(255,255,255,0.12);border-radius:14px;font-family:DM Sans,sans-serif;font-size:0.95rem;outline:none;background:rgba(255,255,255,0.08);color:white;box-sizing:border-box;transition:all .2s;backdrop-filter:blur(10px)"
+          onfocus="this.style.borderColor='#FF9A3C';this.style.background='rgba(255,154,60,0.1)'"
+          onblur="this.style.borderColor='rgba(255,255,255,0.12)';this.style.background='rgba(255,255,255,0.08)'">
+        <input id="obAge" type="number" placeholder="Votre âge" min="10" max="120"
+          style="width:100%;padding:16px 20px;border:1.5px solid rgba(255,255,255,0.12);border-radius:14px;font-family:DM Sans,sans-serif;font-size:0.95rem;outline:none;background:rgba(255,255,255,0.08);color:white;box-sizing:border-box;transition:all .2s;backdrop-filter:blur(10px)"
+          onfocus="this.style.borderColor='#FF9A3C';this.style.background='rgba(255,154,60,0.1)'"
+          onblur="this.style.borderColor='rgba(255,255,255,0.12)';this.style.background='rgba(255,255,255,0.08)'">
+      </div>
+      <!-- Preview prénom live -->
+      <div id="obPrenomPreview" style="text-align:center;font-size:0.78rem;color:rgba(255,154,60,0.7);min-height:18px;margin-bottom:16px;font-style:italic"></div>
+      <!-- Bouton -->
+      <button onclick="obSaveIdentite()"
+        style="width:100%;background:linear-gradient(135deg,#FF6B6B,#FF9A3C);color:white;border:none;border-radius:14px;padding:17px;font-size:1rem;font-weight:700;cursor:pointer;font-family:DM Sans,sans-serif;box-shadow:0 8px 32px rgba(255,107,107,0.45);letter-spacing:0.3px;transition:transform .15s"
+        onmousedown="this.style.transform='scale(0.97)'" onmouseup="this.style.transform='scale(1)'">
+        Continuer →
+      </button>
+      <button onclick="obSaveIdentite()" style="width:100%;background:transparent;border:none;color:rgba(255,255,255,0.3);font-size:0.78rem;padding:12px;cursor:pointer;font-family:DM Sans,sans-serif;margin-top:4px">
+        Passer cette étape
+      </button>
+    </div>
+  </div>
+
 </div>
 
 <script>
 function obNext(step) {
   if (step === 1) {
     document.getElementById('onboarding1').style.display = 'none';
-    // Prochaine étape à venir
-    closeOnboarding();
+    var s2 = document.getElementById('onboarding2');
+    s2.style.display = 'flex';
   }
+}
+function obSaveIdentite() {
+  var prenom = document.getElementById('obPrenom').value.trim();
+  var nom = document.getElementById('obNom').value.trim();
+  var age = document.getElementById('obAge').value.trim();
+  var profile = JSON.parse(localStorage.getItem('nutricare_profile') || '{}');
+  if (prenom) profile.full_name = prenom + (nom ? ' ' + nom : '');
+  if (age) profile.age = parseInt(age);
+  localStorage.setItem('nutricare_profile', JSON.stringify(profile));
+  var token = localStorage.getItem('nutricare_token');
+  if (token) {
+    var updates = {};
+    if (prenom) updates.full_name = prenom + (nom ? ' ' + nom : '');
+    if (age) updates.age = parseInt(age);
+    fetch(BACKEND_URL + '/api/profile', {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
+      body: JSON.stringify(updates)
+    }).catch(function(e){ console.error(e); });
+  }
+  closeOnboarding();
 }
 function showOnboarding() {
   var overlay = document.getElementById('onboardingOverlay');
