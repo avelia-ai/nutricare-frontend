@@ -19372,64 +19372,55 @@ window.maybeShowReviewPrompt = function() {
   </div>
 
   <!-- ETAPE 2.5 : Objectifs -->
-  <div id="onboarding2b" style="display:none;width:100%;height:100%;position:absolute;top:0;left:0;align-items:center;justify-content:center;background:white;overflow-y:auto">
-    <div style="width:100%;max-width:420px;padding:0;position:relative;z-index:2;display:flex;flex-direction:column">
-      <!-- Vidéo renard -->
-      <video autoplay muted loop playsinline style="width:100%;max-height:35vh;object-fit:cover;background:#FFFCFA;display:block">
+  <div id="onboarding2b" style="display:none;width:100%;height:100%;position:absolute;top:0;left:0;flex-direction:column;background:white;overflow-y:auto">
+    <div style="width:100%;height:100%;display:flex;flex-direction:column">
+      <!-- Vidéo -->
+      <video autoplay muted loop playsinline style="width:100%;height:28vh;object-fit:cover;flex-shrink:0;display:block">
         <source src="https://raw.githubusercontent.com/avelia-ai/nutricare-frontend/main/ren_niveau1_compressed.mp4" type="video/mp4">
       </video>
       <!-- Titre -->
-      <div style="text-align:center;padding:20px 20px 8px">
-        <h2 style="font-family:Open Sans,serif;font-size:1.5rem;font-weight:800;color:#2D2D2D;margin:0 0 6px">Vos objectifs 🎯</h2>
-        <p style="font-size:0.82rem;color:#999;margin:0;line-height:1.5">Sélectionnez tout ce qui vous correspond (plusieurs choix possibles)</p>
+      <div style="text-align:center;padding:18px 24px 10px;flex-shrink:0">
+        <h2 style="font-family:Open Sans,serif;font-size:1.4rem;font-weight:800;color:#2D2D2D;margin:0 0 5px;letter-spacing:-0.3px">Vos objectifs</h2>
+        <p style="font-size:0.8rem;color:#aaa;margin:0;line-height:1.5;font-weight:400">Sélectionnez tout ce qui vous correspond</p>
       </div>
       <!-- Grille objectifs -->
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:16px 20px 20px">
-        <div onclick="obToggleObjectif(this,'perte_poids')" data-obj="perte_poids" style="padding:14px 10px;border:1.5px solid #eee;border-radius:14px;text-align:center;cursor:pointer;background:#f8f8f8;transition:all .2s">
-          <div style="font-size:1.4rem;margin-bottom:4px">⚖️</div>
-          <div style="font-size:0.8rem;font-weight:700;color:#2D2D2D">Perdre du poids</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:0 20px;flex:1;overflow-y:auto">
+        <div onclick="obToggleObjectif(this,'perte_poids')" data-obj="perte_poids" style="padding:14px 10px;border:1.5px solid #eee;border-radius:14px;text-align:center;cursor:pointer;background:#fafafa;transition:all .2s">
+          <div style="font-size:0.8rem;font-weight:700;color:#2D2D2D;letter-spacing:0.1px">Perdre du poids</div>
         </div>
-        <div onclick="obToggleObjectif(this,'maintien')" data-obj="maintien" style="padding:14px 10px;border:1.5px solid #eee;border-radius:14px;text-align:center;cursor:pointer;background:#f8f8f8;transition:all .2s">
-          <div style="font-size:1.4rem;margin-bottom:4px">🎯</div>
-          <div style="font-size:0.8rem;font-weight:700;color:#2D2D2D">Maintien du poids</div>
+        <div onclick="obToggleObjectif(this,'maintien')" data-obj="maintien" style="padding:14px 10px;border:1.5px solid #eee;border-radius:14px;text-align:center;cursor:pointer;background:#fafafa;transition:all .2s">
+          <div style="font-size:0.8rem;font-weight:700;color:#2D2D2D;letter-spacing:0.1px">Maintien du poids</div>
         </div>
-        <div onclick="obToggleObjectif(this,'forme')" data-obj="forme" style="padding:14px 10px;border:1.5px solid #eee;border-radius:14px;text-align:center;cursor:pointer;background:#f8f8f8;transition:all .2s">
-          <div style="font-size:1.4rem;margin-bottom:4px">💪</div>
-          <div style="font-size:0.8rem;font-weight:700;color:#2D2D2D">Rester en forme</div>
+        <div onclick="obToggleObjectif(this,'forme')" data-obj="forme" style="padding:14px 10px;border:1.5px solid #eee;border-radius:14px;text-align:center;cursor:pointer;background:#fafafa;transition:all .2s">
+          <div style="font-size:0.8rem;font-weight:700;color:#2D2D2D;letter-spacing:0.1px">Rester en forme</div>
         </div>
-        <div onclick="obToggleObjectif(this,'energie')" data-obj="energie" style="padding:14px 10px;border:1.5px solid #eee;border-radius:14px;text-align:center;cursor:pointer;background:#f8f8f8;transition:all .2s">
-          <div style="font-size:1.4rem;margin-bottom:4px">⚡</div>
-          <div style="font-size:0.8rem;font-weight:700;color:#2D2D2D">Améliorer mon énergie</div>
+        <div onclick="obToggleObjectif(this,'energie')" data-obj="energie" style="padding:14px 10px;border:1.5px solid #eee;border-radius:14px;text-align:center;cursor:pointer;background:#fafafa;transition:all .2s">
+          <div style="font-size:0.8rem;font-weight:700;color:#2D2D2D;letter-spacing:0.1px">Améliorer l'énergie</div>
         </div>
-        <div onclick="obToggleObjectif(this,'masse')" data-obj="masse" style="padding:14px 10px;border:1.5px solid #eee;border-radius:14px;text-align:center;cursor:pointer;background:#f8f8f8;transition:all .2s">
-          <div style="font-size:1.4rem;margin-bottom:4px">🏋️</div>
-          <div style="font-size:0.8rem;font-weight:700;color:#2D2D2D">Prise de masse</div>
+        <div onclick="obToggleObjectif(this,'masse')" data-obj="masse" style="padding:14px 10px;border:1.5px solid #eee;border-radius:14px;text-align:center;cursor:pointer;background:#fafafa;transition:all .2s">
+          <div style="font-size:0.8rem;font-weight:700;color:#2D2D2D;letter-spacing:0.1px">Prise de masse</div>
         </div>
-        <div onclick="obToggleObjectif(this,'sommeil')" data-obj="sommeil" style="padding:14px 10px;border:1.5px solid #eee;border-radius:14px;text-align:center;cursor:pointer;background:#f8f8f8;transition:all .2s">
-          <div style="font-size:1.4rem;margin-bottom:4px">😴</div>
-          <div style="font-size:0.8rem;font-weight:700;color:#2D2D2D">Mieux dormir</div>
+        <div onclick="obToggleObjectif(this,'sommeil')" data-obj="sommeil" style="padding:14px 10px;border:1.5px solid #eee;border-radius:14px;text-align:center;cursor:pointer;background:#fafafa;transition:all .2s">
+          <div style="font-size:0.8rem;font-weight:700;color:#2D2D2D;letter-spacing:0.1px">Mieux dormir</div>
         </div>
-        <div onclick="obToggleObjectif(this,'stress')" data-obj="stress" style="padding:14px 10px;border:1.5px solid #eee;border-radius:14px;text-align:center;cursor:pointer;background:#f8f8f8;transition:all .2s">
-          <div style="font-size:1.4rem;margin-bottom:4px">🧘</div>
-          <div style="font-size:0.8rem;font-weight:700;color:#2D2D2D">Réduire le stress</div>
+        <div onclick="obToggleObjectif(this,'stress')" data-obj="stress" style="padding:14px 10px;border:1.5px solid #eee;border-radius:14px;text-align:center;cursor:pointer;background:#fafafa;transition:all .2s">
+          <div style="font-size:0.8rem;font-weight:700;color:#2D2D2D;letter-spacing:0.1px">Réduire le stress</div>
         </div>
-        <div onclick="obToggleObjectif(this,'performance')" data-obj="performance" style="padding:14px 10px;border:1.5px solid #eee;border-radius:14px;text-align:center;cursor:pointer;background:#f8f8f8;transition:all .2s">
-          <div style="font-size:1.4rem;margin-bottom:4px">🏅</div>
-          <div style="font-size:0.8rem;font-weight:700;color:#2D2D2D">Performance sportive</div>
+        <div onclick="obToggleObjectif(this,'performance')" data-obj="performance" style="padding:14px 10px;border:1.5px solid #eee;border-radius:14px;text-align:center;cursor:pointer;background:#fafafa;transition:all .2s">
+          <div style="font-size:0.8rem;font-weight:700;color:#2D2D2D;letter-spacing:0.1px">Performance sportive</div>
         </div>
-        <div onclick="obToggleObjectif(this,'rééquilibrage')" data-obj="rééquilibrage" style="grid-column:1/-1;padding:14px 10px;border:1.5px solid #eee;border-radius:14px;text-align:center;cursor:pointer;background:#f8f8f8;transition:all .2s">
-          <div style="font-size:1.4rem;margin-bottom:4px">🥗</div>
-          <div style="font-size:0.8rem;font-weight:700;color:#2D2D2D">Rééquilibrage alimentaire</div>
+        <div onclick="obToggleObjectif(this,'rééquilibrage')" data-obj="rééquilibrage" style="grid-column:1/-1;padding:14px 10px;border:1.5px solid #eee;border-radius:14px;text-align:center;cursor:pointer;background:#fafafa;transition:all .2s">
+          <div style="font-size:0.8rem;font-weight:700;color:#2D2D2D;letter-spacing:0.1px">Rééquilibrage alimentaire</div>
         </div>
       </div>
-      <!-- Bouton -->
-      <div style="padding:0 20px 24px">
+      <!-- Boutons -->
+      <div style="padding:16px 20px 32px;flex-shrink:0">
         <button onclick="obSaveObjectifs()"
-          style="width:100%;background:linear-gradient(135deg,#FF6B6B,#FF9A3C);color:white;border:none;border-radius:14px;padding:17px;font-size:1rem;font-weight:700;cursor:pointer;font-family:DM Sans,sans-serif;box-shadow:0 8px 32px rgba(255,107,107,0.45);letter-spacing:0.3px;transition:transform .15s"
+          style="width:100%;background:linear-gradient(135deg,#FF6B6B,#FF9A3C);color:white;border:none;border-radius:14px;padding:17px;font-size:1rem;font-weight:700;cursor:pointer;font-family:DM Sans,sans-serif;box-shadow:0 8px 32px rgba(255,107,107,0.35);letter-spacing:0.3px;transition:transform .15s"
           onmousedown="this.style.transform='scale(0.97)'" onmouseup="this.style.transform='scale(1)'">
-          Continuer →
+          Continuer
         </button>
-        <button onclick="obSaveObjectifs()" style="width:100%;background:transparent;border:none;color:#bbb;font-size:0.78rem;padding:12px;cursor:pointer;font-family:DM Sans,sans-serif;margin-top:4px">
+        <button onclick="obSaveObjectifs()" style="width:100%;background:transparent;border:none;color:#ccc;font-size:0.78rem;padding:10px;cursor:pointer;font-family:DM Sans,sans-serif;margin-top:2px">
           Passer cette étape
         </button>
       </div>
