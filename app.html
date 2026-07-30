@@ -19259,129 +19259,58 @@ window.maybeShowReviewPrompt = function() {
 
 <!-- POPUP ONBOARDING MIRELLA -->
 <!-- FIN POPUP ONBOARDING -->
-<div id="onboardingOverlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.55);z-index:9999;align-items:center;justify-content:center;padding:20px">
-  <div style="background:white;border-radius:28px;width:100%;max-width:420px;max-height:92vh;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,0.2);border:2px solid rgba(255,138,60,0.6);position:relative;display:flex;flex-direction:column">
-    
-    <!-- ECRAN 1 : Vidéo intro plein écran -->
-    <div id="onboarding1" style="text-align:center;display:flex;flex-direction:column;height:92vh;max-height:92vh;position:relative;background:black;border-radius:28px;overflow:hidden">
-      <video id="onboardingVideo1" autoplay muted playsinline webkit-playsinline style="width:100%;height:100%;object-fit:cover;display:block;position:absolute;top:0;left:0"
-        onended="document.getElementById('obVideoBtn1').style.opacity='1'">
-        <source src="https://raw.githubusercontent.com/avelia-ai/nutricare-frontend/main/premiere_video_onboarding_compressed.mp4" type="video/mp4">
-      </video>
-      <div style="position:absolute;top:20px;right:20px">
-        <button onclick="document.getElementById('onboarding1').style.display='none';document.getElementById('onboarding1b').style.display='flex'"
-          style="background:rgba(255,255,255,0.25);backdrop-filter:blur(8px);color:white;border:none;border-radius:20px;padding:8px 16px;font-size:0.78rem;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif">
-          Passer →
-        </button>
-      </div>
-      <div id="obVideoBtn1" style="position:absolute;bottom:40px;left:0;right:0;padding:0 24px;opacity:0;transition:opacity 0.5s">
-        <button onclick="document.getElementById('onboarding1').style.display='none';document.getElementById('onboarding1b').style.display='flex'"
-          style="width:100%;background:linear-gradient(135deg,#FF6B6B,#FF9A3C);color:white;border:none;border-radius:14px;padding:15px;font-size:0.95rem;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif;box-shadow:0 8px 20px rgba(255,107,107,0.35)">
-          Commencer →
-        </button>
-      </div>
-      <script>
-        document.getElementById('onboardingVideo1').play().catch(function(){
-          document.getElementById('obVideoBtn1').style.opacity='1';
-        });
-      </script>
-    </div>
+<div id="onboardingOverlay" style="display:none;position:fixed;inset:0;z-index:99999;background:#000">
 
-
-    <!-- ECRAN 1b : Presentation du renard Mirella -->
-    <div id="onboarding1b" style="display:none;text-align:center;flex-direction:column;max-height:92vh;overflow-y:auto">
-      <div style="padding:16px 26px 0;flex-shrink:0">
-        <video autoplay muted loop playsinline style="width:190px;height:190px;object-fit:contain;background:transparent;border:none;outline:none;display:block;margin:0 auto">
-          <source src="https://raw.githubusercontent.com/avelia-ai/nutricare-frontend/main/renard_mirella_niveau_1_compressed.mp4" type="video/mp4">
-        </video>
-        <h2 style="font-size:1.15rem;font-weight:800;color:#1E1E1E;margin:2px 0 4px;letter-spacing:-0.3px">Voici Mirella</h2>
-      </div>
-      <div style="padding:0 26px 16px">
-        <p style="font-size:0.76rem;color:#6b6b6b;line-height:1.35;margin-bottom:8px">Mirella grandit et évolue avec vous. Plus vous complétez votre profil, vos données de santé, vos repas et vos activités, plus elle progresse à vos côtés.</p>
-        <p style="font-size:0.74rem;color:#6b6b6b;line-height:1.3;margin-bottom:20px">Venez lui rendre visite chaque jour pour suivre sa progression – et la vôtre !</p>
-        <div style="background:linear-gradient(165deg,#FFF9F5,#FFF1E6);border:1px solid rgba(255,154,60,0.25);border-radius:16px;padding:12px 14px;margin-bottom:12px;text-align:left">
-          <div style="font-size:0.73rem;font-weight:700;color:#2D2D2D;margin-bottom:8px">🎁 Personnalisez Mirella avec des accessoires</div>
-          <div style="display:flex;gap:8px;justify-content:space-between">
-            <div style="flex:1;aspect-ratio:1;background:white;border-radius:12px;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 6px rgba(255,138,60,0.15);border:1px dashed rgba(255,138,60,0.35)">
-              <img src="https://raw.githubusercontent.com/avelia-ai/nutricare-frontend/main/bob_fox_jaune.png" style="width:70%;height:70%;object-fit:contain">
-            </div>
-            <div style="flex:1;aspect-ratio:1;background:white;border-radius:12px;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 6px rgba(255,138,60,0.15);border:1px dashed rgba(255,138,60,0.35)">
-              <img src="https://raw.githubusercontent.com/avelia-ai/nutricare-frontend/main/lunettes_pixels.png" style="width:70%;height:70%;object-fit:contain">
-            </div>
-            <div style="flex:1;aspect-ratio:1;background:white;border-radius:12px;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 6px rgba(255,138,60,0.15);border:1px dashed rgba(255,138,60,0.35)">
-              <img src="https://raw.githubusercontent.com/avelia-ai/nutricare-frontend/main/collier_blingbling.png" style="width:70%;height:70%;object-fit:contain">
-            </div>
-            <div style="flex:1;aspect-ratio:1;background:white;border-radius:12px;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 6px rgba(255,138,60,0.15);border:1px dashed rgba(255,138,60,0.35)">
-              <img src="https://raw.githubusercontent.com/avelia-ai/nutricare-frontend/main/bandana_paw_orange.png" style="width:70%;height:70%;object-fit:contain">
-            </div>
-          </div>
-          <div style="font-size:0.68rem;color:#9a8f88;line-height:1.3;margin-top:8px">À débloquer bientôt avec vos coins <span style="display:inline-flex;align-items:center;justify-content:center;width:1.4em;height:1.4em;background:radial-gradient(circle at 35% 35%,#FFE566,#FFB300);border-radius:50%;box-shadow:0 2px 4px rgba(0,0,0,0.2);vertical-align:middle;font-size:0.75em;font-weight:900;color:#B8730A;font-family:DM Sans,sans-serif">M</span></div>
-        </div>
-        <button onclick="document.getElementById('onboarding1b').style.display='none';document.getElementById('onboarding2').style.display='block'" style="width:100%;background:linear-gradient(135deg,#FF6B6B,#FF9A3C);color:white;border:none;border-radius:14px;padding:14px;font-size:0.9rem;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif;letter-spacing:0.2px;box-shadow:0 8px 20px rgba(255,107,107,0.28)">
-          Continuer
-        </button>
-      </div>
-    </div>
-    <!-- ECRAN 2 : Données personnelles -->
-    <div id="onboarding2" style="display:none;padding:34px 26px 26px">
-      <div style="text-align:center;margin-bottom:26px">
-        <h2 style="font-size:1.35rem;font-weight:800;color:#1E1E1E;letter-spacing:-0.3px;margin-bottom:6px">Parlez-moi de vous</h2>
-        <p style="font-size:0.82rem;color:#8a8a8a;line-height:1.4">Ces infos me permettent de personnaliser vos conseils</p>
-      </div>
-      <div style="display:flex;flex-direction:column;gap:14px">
-        <div>
-          <label style="font-size:0.68rem;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;color:#B0785C;margin-bottom:6px;display:block">Prénom &amp; nom</label>
-          <input id="obName" type="text" placeholder="Ex: Sophie Martin" style="width:100%;padding:13px 15px;border:1.5px solid #F0EAE5;border-radius:13px;font-size:0.92rem;font-family:'DM Sans',sans-serif;box-sizing:border-box;outline:none;background:#FCFAF8;transition:border-color .2s" onfocus="this.style.borderColor='#FF9A3C'" onblur="this.style.borderColor='#F0EAE5'">
-        </div>
-        <div style="display:flex;gap:10px">
-          <div style="flex:1">
-            <label style="font-size:0.68rem;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;color:#B0785C;margin-bottom:6px;display:block">Âge</label>
-            <input id="obAge" type="number" placeholder="Ex: 32" min="10" max="100" style="width:100%;padding:13px 15px;border:1.5px solid #F0EAE5;border-radius:13px;font-size:0.92rem;font-family:'DM Sans',sans-serif;box-sizing:border-box;outline:none;background:#FCFAF8;transition:border-color .2s" onfocus="this.style.borderColor='#FF9A3C'" onblur="this.style.borderColor='#F0EAE5'">
-          </div>
-          <div style="flex:1">
-            <label style="font-size:0.68rem;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;color:#B0785C;margin-bottom:6px;display:block">Sexe</label>
-            <select id="obSexe" style="width:100%;padding:13px 15px;border:1.5px solid #F0EAE5;border-radius:13px;font-size:0.92rem;font-family:'DM Sans',sans-serif;box-sizing:border-box;outline:none;background:#FCFAF8">
-              <option value="">-- Choisir --</option>
-              <option value="femme">Femme</option>
-              <option value="homme">Homme</option>
-              <option value="autre">Autre</option>
-            </select>
-          </div>
-        </div>
-        <div>
-          <label style="font-size:0.68rem;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;color:#B0785C;margin-bottom:6px;display:block">Niveau d'activité physique</label>
-          <input type="hidden" id="obActivite" value="">
-          <div id="obActiviteTrigger" onclick="toggleActiviteDropdown()" style="width:100%;padding:13px 15px;border:1.5px solid #F0EAE5;border-radius:13px;font-size:0.92rem;font-family:'DM Sans',sans-serif;box-sizing:border-box;background:#FCFAF8;display:flex;align-items:center;justify-content:space-between;cursor:pointer">
-            <span id="obActiviteLabel" style="display:flex;align-items:center;gap:10px;color:#b8afa8">
-              -- Choisir --
-            </span>
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#c2b9b2" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
-          </div>
-        </div>
-        <div id="obActiviteOptions" style="display:none;position:fixed;background:white;border-radius:13px;box-shadow:0 10px 30px rgba(0,0,0,0.18);border:1px solid #F0EAE5;z-index:99999;overflow:hidden">
-        </div>
-      </div>
-      <button onclick="saveOnboardingProfile()" style="width:100%;background:linear-gradient(135deg,#FF6B6B,#FF9A3C);color:white;border:none;border-radius:14px;padding:16px;font-size:0.95rem;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif;letter-spacing:0.2px;margin-top:24px;box-shadow:0 8px 20px rgba(255,107,107,0.28)">
-        Continuer →
-      </button>
-      <button onclick="skipOnboarding()" style="width:100%;background:none;border:none;color:#b0a8a2;font-size:0.8rem;cursor:pointer;margin-top:10px;font-family:'DM Sans',sans-serif">
-        Passer cette étape
-      </button>
-    </div>
-
-    <!-- ECRAN 3 : Félicitations -->
-    <div id="onboarding3" style="display:none;padding:32px 24px;text-align:center">
-      <canvas id="confettiCanvas" style="position:absolute;inset:0;width:100%;height:100%;pointer-events:none;border-radius:28px"></canvas>
-      <video src="https://raw.githubusercontent.com/avelia-ai/nutricare-frontend/main/renard_felicitations%20(1).mp4" autoplay loop muted playsinline style="width:180px;height:180px;object-fit:contain;margin-bottom:16px;position:relative;z-index:1;border-radius:16px"></video>
-      <h2 style="font-size:1.4rem;font-weight:800;color:#2D2D2D;margin-bottom:8px;position:relative;z-index:1">Bienvenue !</h2>
-      <p style="font-size:0.9rem;color:#666;line-height:1.6;margin-bottom:24px;position:relative;z-index:1">Votre compte est prêt ! Je suis là pour vous accompagner chaque jour vers une meilleure santé. C'est parti !</p>
-      <button onclick="closeOnboarding()" style="width:100%;background:linear-gradient(135deg,#FF6B6B,#FF9A3C);color:white;border:none;border-radius:16px;padding:16px;font-size:1rem;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif;position:relative;z-index:1">
-        Découvrir Mirella
-      </button>
-    </div>
-
+  <!-- ETAPE 1 : Vidéo intro plein écran -->
+  <div id="onboarding1" style="width:100%;height:100%;position:relative">
+    <video id="onboardingVideo1" autoplay muted playsinline webkit-playsinline
+      style="width:100%;height:100%;object-fit:cover;display:block"
+      onended="document.getElementById('obBtnCommencer').style.opacity='1';document.getElementById('obBtnCommencer').style.pointerEvents='auto'">
+      <source src="https://raw.githubusercontent.com/avelia-ai/nutricare-frontend/main/premiere_video_onboarding_compressed.mp4" type="video/mp4">
+    </video>
+    <!-- Bouton passer -->
+    <button onclick="obNext(1)" style="position:absolute;top:20px;right:20px;background:rgba(0,0,0,0.4);backdrop-filter:blur(8px);color:white;border:1px solid rgba(255,255,255,0.3);border-radius:20px;padding:8px 16px;font-size:0.78rem;font-weight:600;cursor:pointer;font-family:DM Sans,sans-serif;z-index:10">
+      Passer →
+    </button>
+    <!-- Bouton commencer (apparaît à la fin de la vidéo) -->
+    <button id="obBtnCommencer" onclick="obNext(1)"
+      style="position:absolute;bottom:40px;left:24px;right:24px;opacity:0;pointer-events:none;transition:opacity 0.6s;background:linear-gradient(135deg,#FF6B6B,#FF9A3C);color:white;border:none;border-radius:14px;padding:16px;font-size:0.95rem;font-weight:700;cursor:pointer;font-family:DM Sans,sans-serif;box-shadow:0 8px 24px rgba(255,107,107,0.4)">
+      Commencer →
+    </button>
   </div>
+
 </div>
+
+<script>
+function obNext(step) {
+  if (step === 1) {
+    document.getElementById('onboarding1').style.display = 'none';
+    // Prochaine étape à venir
+    closeOnboarding();
+  }
+}
+function showOnboarding() {
+  var overlay = document.getElementById('onboardingOverlay');
+  if (overlay) {
+    window._onboardingActive = true;
+    overlay.style.display = 'block';
+    var v = document.getElementById('onboardingVideo1');
+    if (v) v.play().catch(function(){
+      document.getElementById('obBtnCommencer').style.opacity = '1';
+      document.getElementById('obBtnCommencer').style.pointerEvents = 'auto';
+    });
+  }
+}
+function closeOnboarding() {
+  document.getElementById('onboardingOverlay').style.display = 'none';
+  window._onboardingActive = false;
+  localStorage.setItem('mirella_onboarding_done', '1');
+  var profile = JSON.parse(localStorage.getItem('nutricare_profile') || '{}');
+  profile.onboarding_done = true;
+  localStorage.setItem('nutricare_profile', JSON.stringify(profile));
+}
+</script>
+
 <div id="ratingModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.55);z-index:99999;align-items:center;justify-content:center;padding:20px">
   <div style="background:white;border-radius:28px;padding:32px 24px;max-width:340px;width:100%;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,0.2);animation:popIn .4s cubic-bezier(.34,1.56,.64,1)">
     <div style="font-size:3rem;margin-bottom:12px">⭐</div>
