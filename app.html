@@ -19366,18 +19366,7 @@ function obSaveIdentite() {
   }
   closeOnboarding();
 }
-function showOnboarding() {
-  var overlay = document.getElementById('onboardingOverlay');
-  if (overlay) {
-    window._onboardingActive = true;
-    overlay.style.display = 'block';
-    var v = document.getElementById('onboardingVideo1');
-    if (v) v.play().catch(function(){
-      document.getElementById('obBtnCommencer').style.opacity = '1';
-      document.getElementById('obBtnCommencer').style.pointerEvents = 'auto';
-    });
-  }
-}
+
 function closeOnboarding() {
   document.getElementById('onboardingOverlay').style.display = 'none';
   window._onboardingActive = false;
