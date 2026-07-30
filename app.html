@@ -19433,10 +19433,19 @@ window.maybeShowReviewPrompt = function() {
       </video>
       <!-- Overlay gradient bas -->
       <div style="position:absolute;bottom:0;left:0;right:0;height:50%;background:linear-gradient(to top,rgba(0,0,0,0.85) 0%,transparent 100%);pointer-events:none"></div>
-      <!-- Texte et bouton -->
+      <!-- Phylactères + bouton -->
+      <div style="position:absolute;top:8%;left:50%;transform:translateX(-50%);width:82%;z-index:10;display:flex;flex-direction:column;gap:10px">
+        <div id="obProg1" style="background:white;border-radius:20px;padding:14px 18px;box-shadow:0 8px 24px rgba(0,0,0,0.2);position:relative;text-align:center;opacity:0;transition:opacity 0.5s">
+          <div style="font-family:DM Sans,sans-serif;font-size:0.95rem;font-weight:700;color:#2D2D2D;line-height:1.4">Votre programme personnalisé est prêt ✨</div>
+          <div style="position:absolute;bottom:-12px;left:50%;transform:translateX(-50%);width:0;height:0;border-left:12px solid transparent;border-right:12px solid transparent;border-top:12px solid white"></div>
+        </div>
+        <div id="obProg2" style="background:white;border-radius:20px;padding:14px 18px;box-shadow:0 8px 24px rgba(0,0,0,0.2);position:absolute;top:0;left:0;right:0;text-align:center;opacity:0;transition:opacity 0.5s">
+          <div style="font-family:DM Sans,sans-serif;font-size:0.88rem;font-weight:600;color:#666;line-height:1.4">Menus, coaching et suivi adaptés à vos objectifs vous attendent 💪</div>
+          <div style="position:absolute;bottom:-12px;left:50%;transform:translateX(-50%);width:0;height:0;border-left:12px solid transparent;border-right:12px solid transparent;border-top:12px solid white"></div>
+        </div>
+      </div>
+      <!-- Bouton -->
       <div style="position:absolute;bottom:0;left:0;right:0;padding:0 24px 44px;text-align:center">
-        <div style="font-family:DM Sans,sans-serif;font-size:1.15rem;font-weight:800;color:white;margin-bottom:6px;text-shadow:0 2px 12px rgba(0,0,0,0.5)">Votre programme est prêt ✨</div>
-        <div style="font-family:DM Sans,sans-serif;font-size:0.82rem;color:rgba(255,255,255,0.7);margin-bottom:22px;line-height:1.5">Menus, coaching et suivi personnalisés vous attendent</div>
         <button id="obBtnDecouvrir" onclick="closeOnboarding()"
           style="width:100%;background:linear-gradient(135deg,#FF6B6B,#FF9A3C);color:white;border:none;border-radius:14px;padding:17px;font-size:1rem;font-weight:700;cursor:pointer;font-family:DM Sans,sans-serif;box-shadow:0 8px 32px rgba(255,107,107,0.45);opacity:0;transform:translateY(16px);transition:opacity 0.6s ease,transform 0.6s ease;pointer-events:none">
           Découvrir Mirella 🚀
@@ -19526,11 +19535,17 @@ function obNext(step) {
         document.getElementById('obBtnDecouvrir').style.pointerEvents = 'auto';
       };
     }
-    // Afficher le bouton après 3s même si la vidéo ne se termine pas
+    // Animer les phylactères
+    setTimeout(function() { var p = document.getElementById('obProg1'); if(p) p.style.opacity='1'; }, 800);
+    setTimeout(function() {
+      var p1 = document.getElementById('obProg1'); if(p1) p1.style.opacity='0';
+      setTimeout(function() { var p2 = document.getElementById('obProg2'); if(p2) p2.style.opacity='1'; }, 400);
+    }, 3500);
+    // Afficher le bouton après 5s
     setTimeout(function() {
       var btn = document.getElementById('obBtnDecouvrir');
       if (btn) { btn.style.opacity = '1'; btn.style.transform = 'translateY(0)'; btn.style.pointerEvents = 'auto'; }
-    }, 3000);
+    }, 5000);
   }
 }
 function obSaveIdentite() {
