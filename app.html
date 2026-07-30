@@ -19261,6 +19261,47 @@ window.maybeShowReviewPrompt = function() {
 <!-- FIN POPUP ONBOARDING -->
 <div id="onboardingOverlay" style="display:none;position:fixed;inset:0;z-index:99999;background:#000">
 
+  <!-- ETAPE 2 : Identité -->
+  <div id="onboarding2" style="display:none;width:100%;height:100%;position:relative;align-items:center;justify-content:center;background:linear-gradient(160deg,#FFF5F0,#FFE8DC)">
+    <div style="width:100%;max-width:400px;padding:32px 24px">
+      <!-- Header -->
+      <div style="text-align:center;margin-bottom:32px">
+        <div style="width:64px;height:64px;border-radius:50%;background:linear-gradient(135deg,#FF6B6B,#FF9A3C);display:flex;align-items:center;justify-content:center;margin:0 auto 16px;font-size:1.8rem">👋</div>
+        <h2 style="font-family:Open Sans,serif;font-size:1.4rem;font-weight:800;color:#1E1E1E;margin:0 0 6px">Faisons connaissance !</h2>
+        <p style="font-size:0.82rem;color:#888;margin:0">Ces infos nous permettent de personnaliser votre expérience</p>
+      </div>
+      <!-- Champs -->
+      <div style="display:flex;flex-direction:column;gap:14px;margin-bottom:28px">
+        <div>
+          <label style="font-size:0.78rem;font-weight:600;color:#555;display:block;margin-bottom:6px;text-transform:uppercase;letter-spacing:.06em">Prénom *</label>
+          <input id="obPrenom" type="text" placeholder="Votre prénom" autocomplete="given-name"
+            style="width:100%;padding:14px 16px;border:1.5px solid #E8E3DC;border-radius:12px;font-family:DM Sans,sans-serif;font-size:0.95rem;outline:none;background:white;box-sizing:border-box;transition:border-color .2s"
+            onfocus="this.style.borderColor='#FF9A3C'" onblur="this.style.borderColor='#E8E3DC'">
+        </div>
+        <div>
+          <label style="font-size:0.78rem;font-weight:600;color:#555;display:block;margin-bottom:6px;text-transform:uppercase;letter-spacing:.06em">Nom</label>
+          <input id="obNom" type="text" placeholder="Votre nom" autocomplete="family-name"
+            style="width:100%;padding:14px 16px;border:1.5px solid #E8E3DC;border-radius:12px;font-family:DM Sans,sans-serif;font-size:0.95rem;outline:none;background:white;box-sizing:border-box;transition:border-color .2s"
+            onfocus="this.style.borderColor='#FF9A3C'" onblur="this.style.borderColor='#E8E3DC'">
+        </div>
+        <div>
+          <label style="font-size:0.78rem;font-weight:600;color:#555;display:block;margin-bottom:6px;text-transform:uppercase;letter-spacing:.06em">Âge</label>
+          <input id="obAge" type="number" placeholder="Votre âge" min="10" max="120"
+            style="width:100%;padding:14px 16px;border:1.5px solid #E8E3DC;border-radius:12px;font-family:DM Sans,sans-serif;font-size:0.95rem;outline:none;background:white;box-sizing:border-box;transition:border-color .2s"
+            onfocus="this.style.borderColor='#FF9A3C'" onblur="this.style.borderColor='#E8E3DC'">
+        </div>
+      </div>
+      <!-- Bouton -->
+      <button onclick="obNext(2)"
+        style="width:100%;background:linear-gradient(135deg,#FF6B6B,#FF9A3C);color:white;border:none;border-radius:14px;padding:16px;font-size:0.95rem;font-weight:700;cursor:pointer;font-family:DM Sans,sans-serif;box-shadow:0 8px 24px rgba(255,107,107,0.3)">
+        Continuer →
+      </button>
+      <button onclick="obNext(2)" style="width:100%;background:transparent;border:none;color:#aaa;font-size:0.82rem;padding:12px;cursor:pointer;font-family:DM Sans,sans-serif;margin-top:6px">
+        Passer cette étape
+      </button>
+    </div>
+  </div>
+
   <!-- ETAPE 1 : Vidéo intro plein écran -->
   <div id="onboarding1" style="width:100%;height:100%;position:relative">
     <video id="onboardingVideo1" autoplay muted playsinline webkit-playsinline
@@ -19285,7 +19326,30 @@ window.maybeShowReviewPrompt = function() {
 function obNext(step) {
   if (step === 1) {
     document.getElementById('onboarding1').style.display = 'none';
-    // Prochaine étape à venir
+    document.getElementById('onboarding2').style.display = 'flex';
+  }
+  if (step === 2) {
+    var prenom = document.getElementById('obPrenom').value.trim();
+    var nom = document.getElementById('obNom').value.trim();
+    var age = document.getElementById('obAge').value.trim();
+    if (!prenom) { document.getElementById('obPrenom').focus(); return; }
+    // Sauvegarder
+    var profile = JSON.parse(localStorage.getItem('nutricare_profile') || '{}');
+    if (prenom) profile.full_name = prenom + (nom ? ' ' + nom : '');
+    if (age) profile.age = parseInt(age);
+    localStorage.setItem('nutricare_profile', JSON.stringify(profile));
+    // Sauvegarder via API
+    var token = localStorage.getItem('nutricare_token');
+    if (token) {
+      var updates = {};
+      if (prenom) updates.full_name = prenom + (nom ? ' ' + nom : '');
+      if (age) updates.age = parseInt(age);
+      fetch(BACKEND_URL + '/api/profile', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
+        body: JSON.stringify(updates)
+      }).catch(function(e){ console.error(e); });
+    }
     closeOnboarding();
   }
 }
