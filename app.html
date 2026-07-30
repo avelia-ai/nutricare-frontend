@@ -19080,6 +19080,18 @@ window.maybeShowReviewPrompt = function() {
       overlay.style.cssText = 'display:flex !important;position:fixed;inset:0;top:0;left:0;right:0;bottom:0;background:#000;z-index:99999;align-items:stretch;justify-content:stretch;padding:0';
       document.getElementById('onboarding1').style.display = 'block';
       document.getElementById('onboarding2').style.display = 'none';
+      // Lancer la vidéo
+      setTimeout(function() {
+        var v = document.getElementById('onboardingVideo1');
+        if (v) {
+          v.currentTime = 0;
+          v.play().catch(function() {
+            // Si autoplay bloqué, afficher le bouton commencer
+            var btn = document.getElementById('obBtnCommencer');
+            if (btn) { btn.style.opacity='1'; btn.style.pointerEvents='auto'; }
+          });
+        }
+      }, 100);
     }
   }
 
