@@ -19740,34 +19740,32 @@ document.addEventListener('DOMContentLoaded', function() {
 </script>
 
 <!-- POPUP FINALE ONBOARDING -->
-<div id="onboardingSuccessPopup" style="display:none;position:fixed;inset:0;z-index:99999;align-items:center;justify-content:center;background:rgba(0,0,0,0.7);backdrop-filter:blur(6px)">
-  <div style="width:96%;max-width:420px;border-radius:28px;overflow:hidden;position:relative;box-shadow:0 24px 64px rgba(0,0,0,0.4)">
-    <!-- Vidéo -->
-    <video id="obSuccessVideo" autoplay muted loop playsinline style="width:100%;height:380px;object-fit:cover;display:block">
-      <source src="https://raw.githubusercontent.com/avelia-ai/nutricare-frontend/main/video_reussite_compressed.mp4" type="video/mp4">
-    </video>
-    <!-- Overlay gradient -->
-    <div style="position:absolute;top:0;left:0;right:0;height:260px;background:linear-gradient(to bottom,rgba(0,0,0,0.15) 0%,transparent 40%,rgba(0,0,0,0.3) 100%);pointer-events:none"></div>
-    <!-- Phylactères -->
-    <div style="position:absolute;top:14px;left:50%;transform:translateX(-50%);width:85%;z-index:10">
-      <div id="obSuccessBubble1" style="background:white;border-radius:20px;padding:13px 16px;box-shadow:0 8px 24px rgba(0,0,0,0.2);text-align:center;opacity:0;transition:opacity 0.5s;position:relative">
-        <div style="font-family:DM Sans,sans-serif;font-size:0.9rem;font-weight:700;color:#2D2D2D;line-height:1.4">C'est parfait ! Tout a été construit rien que pour toi 🎉</div>
-        <div style="position:absolute;bottom:-12px;left:50%;transform:translateX(-50%);width:0;height:0;border-left:12px solid transparent;border-right:12px solid transparent;border-top:12px solid white"></div>
-      </div>
-      <div id="obSuccessBubble2" style="background:white;border-radius:20px;padding:13px 16px;box-shadow:0 8px 24px rgba(0,0,0,0.2);text-align:center;opacity:0;transition:opacity 0.5s;position:absolute;top:0;left:0;right:0">
-        <div style="font-family:DM Sans,sans-serif;font-size:0.88rem;font-weight:600;color:#666;line-height:1.4">Tu es prêt(e) à atteindre tes objectifs, je suis là à chaque étape 🌟</div>
-        <div style="position:absolute;bottom:-12px;left:50%;transform:translateX(-50%);width:0;height:0;border-left:12px solid transparent;border-right:12px solid transparent;border-top:12px solid white"></div>
-      </div>
+<div id="onboardingSuccessPopup" style="display:none;position:fixed;inset:0;z-index:99999;background:#000">
+  <!-- Vidéo plein écran -->
+  <video id="obSuccessVideo" autoplay muted playsinline style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block">
+    <source src="https://raw.githubusercontent.com/avelia-ai/nutricare-frontend/main/video_reussite_compressed.mp4" type="video/mp4">
+  </video>
+  <!-- Overlay gradient haut et bas -->
+  <div style="position:absolute;inset:0;background:linear-gradient(to bottom,rgba(0,0,0,0.35) 0%,transparent 30%,transparent 55%,rgba(0,0,0,0.75) 100%);pointer-events:none;z-index:1"></div>
+  <!-- Phylactères en haut -->
+  <div style="position:absolute;top:16px;left:50%;transform:translateX(-50%);width:85%;z-index:10">
+    <div id="obSuccessBubble1" style="background:white;border-radius:20px;padding:14px 18px;box-shadow:0 8px 24px rgba(0,0,0,0.25);text-align:center;opacity:0;transition:opacity 0.5s;position:relative">
+      <div style="font-family:DM Sans,sans-serif;font-size:0.95rem;font-weight:700;color:#2D2D2D;line-height:1.4">C'est parfait ! Tout a été construit rien que pour toi 🎉</div>
+      <div style="position:absolute;bottom:-12px;left:50%;transform:translateX(-50%);width:0;height:0;border-left:12px solid transparent;border-right:12px solid transparent;border-top:12px solid white"></div>
     </div>
-    <!-- Bas de la carte -->
-    <div style="background:white;padding:20px 20px 28px;text-align:center">
-      <div style="font-size:1.1rem;font-weight:800;color:#2D2D2D;margin-bottom:4px">Tout est prêt pour toi ✨</div>
-      <div style="font-size:0.8rem;color:#aaa;margin-bottom:18px;line-height:1.5">Ton programme personnalisé t'attend</div>
-      <button id="obSuccessBtn" onclick="finishOnboarding()"
-        style="width:100%;background:linear-gradient(135deg,#FF6B6B,#FF9A3C);color:white;border:none;border-radius:14px;padding:16px;font-size:1rem;font-weight:700;cursor:pointer;font-family:DM Sans,sans-serif;box-shadow:0 8px 24px rgba(255,107,107,0.4);opacity:0;transform:translateY(12px);transition:opacity 0.6s ease,transform 0.6s ease;pointer-events:none">
-        C'est parti ! 🚀
-      </button>
+    <div id="obSuccessBubble2" style="background:white;border-radius:20px;padding:14px 18px;box-shadow:0 8px 24px rgba(0,0,0,0.25);text-align:center;opacity:0;transition:opacity 0.5s;position:absolute;top:0;left:0;right:0">
+      <div style="font-family:DM Sans,sans-serif;font-size:0.88rem;font-weight:600;color:#666;line-height:1.4">Tu es prêt(e) à atteindre tes objectifs, je suis là à chaque étape 🌟</div>
+      <div style="position:absolute;bottom:-12px;left:50%;transform:translateX(-50%);width:0;height:0;border-left:12px solid transparent;border-right:12px solid transparent;border-top:12px solid white"></div>
     </div>
+  </div>
+  <!-- Bas : texte + bouton -->
+  <div style="position:absolute;bottom:0;left:0;right:0;padding:0 24px 48px;text-align:center;z-index:10">
+    <div style="font-family:DM Sans,sans-serif;font-size:1.2rem;font-weight:800;color:white;margin-bottom:6px;text-shadow:0 2px 12px rgba(0,0,0,0.5)">Tout est prêt pour toi ✨</div>
+    <div style="font-family:DM Sans,sans-serif;font-size:0.82rem;color:rgba(255,255,255,0.7);margin-bottom:22px">Ton programme personnalisé t'attend</div>
+    <button id="obSuccessBtn" onclick="finishOnboarding()"
+      style="width:100%;background:linear-gradient(135deg,#FF6B6B,#FF9A3C);color:white;border:none;border-radius:14px;padding:17px;font-size:1rem;font-weight:700;cursor:pointer;font-family:DM Sans,sans-serif;box-shadow:0 8px 32px rgba(255,107,107,0.45);opacity:0;transform:translateY(16px);transition:opacity 0.6s ease,transform 0.6s ease;pointer-events:none">
+      C'est parti ! 🚀
+    </button>
   </div>
 </div>
 </body>
