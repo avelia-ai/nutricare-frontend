@@ -7445,11 +7445,13 @@ function switchLang(lang) {
     }
     if (authToken && currentUser) {
       document.getElementById('authPage').classList.remove('active');
-      document.getElementById('appPage').classList.add('active');
       try {
         const cached = JSON.parse(localStorage.getItem('nutricare_profile') || 'null');
         if (cached) renderProfileQuick(cached);
       } catch (e) {}
+      await loadProfile();
+      checkOnboarding();
+      document.getElementById('appPage').classList.add('active');
       // Retour Stripe
       var _stripeParams = new URLSearchParams(window.location.search);
       if (_stripeParams.get('success') === 'true') {
@@ -7500,7 +7502,6 @@ function switchLang(lang) {
       const savedV = localStorage.getItem('nutricare_last_view'); const targetView = urlView || (['chat','health','menus','profile','home'].includes(savedV) ? savedV : 'home');
       if (urlEntreprise === 'create') await showView('entreprise');
       else { await showView(targetView); if (urlPathologie) window.selectedPathologie = urlPathologie; }
-      loadProfile();
     }
   };
 
