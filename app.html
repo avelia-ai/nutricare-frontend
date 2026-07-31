@@ -19228,8 +19228,18 @@ window.maybeShowReviewPrompt = function() {
       v.play().catch(function(){});
       v.onended = function() { reallyCloseOnboarding(); };
     }
-    // Fallback après 10s
-    setTimeout(function() { reallyCloseOnboarding(); }, 10000);
+    // Animer les phylactères
+    setTimeout(function() { var p = document.getElementById('obFinalBubble1'); if(p) p.style.opacity='1'; }, 800);
+    setTimeout(function() {
+      var p1 = document.getElementById('obFinalBubble1'); if(p1) p1.style.opacity='0';
+      setTimeout(function() { var p2 = document.getElementById('obFinalBubble2'); if(p2) p2.style.opacity='1'; }, 400);
+    }, 3500);
+    setTimeout(function() {
+      var p2 = document.getElementById('obFinalBubble2'); if(p2) p2.style.opacity='0';
+      setTimeout(function() { var p3 = document.getElementById('obFinalBubble3'); if(p3) p3.style.opacity='1'; }, 400);
+    }, 7000);
+    // Fallback après 12s
+    setTimeout(function() { reallyCloseOnboarding(); }, 12000);
   }
 
   function reallyCloseOnboarding() {
@@ -19789,8 +19799,25 @@ document.addEventListener('DOMContentLoaded', function() {
   <video id="obFinalVideo" autoplay muted playsinline style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block">
     <source src="https://raw.githubusercontent.com/avelia-ai/nutricare-frontend/main/video_fin_onboarding_compressed.mp4" type="video/mp4">
   </video>
+  <!-- Overlay gradient -->
+  <div style="position:absolute;inset:0;background:linear-gradient(to bottom,rgba(0,0,0,0.4) 0%,transparent 35%);pointer-events:none;z-index:1"></div>
   <!-- Bouton passer -->
   <button onclick="reallyCloseOnboarding()" style="position:absolute;top:20px;right:20px;background:rgba(255,255,255,0.2);backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,0.3);color:white;border-radius:20px;padding:8px 16px;font-size:0.78rem;font-weight:600;cursor:pointer;font-family:DM Sans,sans-serif;z-index:10">Passer</button>
+  <!-- Phylactères -->
+  <div style="position:absolute;top:16px;left:50%;transform:translateX(-50%);width:85%;z-index:10">
+    <div id="obFinalBubble1" style="background:white;border-radius:20px;padding:14px 18px;box-shadow:0 8px 24px rgba(0,0,0,0.25);text-align:center;opacity:0;transition:opacity 0.5s;position:relative">
+      <div style="font-family:DM Sans,sans-serif;font-size:0.9rem;font-weight:700;color:#2D2D2D;line-height:1.4">Et voilà, j'ai tout construit avec attention, rien que pour toi ! 🙌</div>
+      <div style="position:absolute;bottom:-12px;left:50%;transform:translateX(-50%);width:0;height:0;border-left:12px solid transparent;border-right:12px solid transparent;border-top:12px solid white"></div>
+    </div>
+    <div id="obFinalBubble2" style="background:white;border-radius:20px;padding:14px 18px;box-shadow:0 8px 24px rgba(0,0,0,0.25);text-align:center;opacity:0;transition:opacity 0.5s;position:absolute;top:0;left:0;right:0">
+      <div style="font-family:DM Sans,sans-serif;font-size:0.88rem;font-weight:600;color:#666;line-height:1.4">On va avancer ensemble, j'ai hâte de faire ce chemin avec toi ! 🌟</div>
+      <div style="position:absolute;bottom:-12px;left:50%;transform:translateX(-50%);width:0;height:0;border-left:12px solid transparent;border-right:12px solid transparent;border-top:12px solid white"></div>
+    </div>
+    <div id="obFinalBubble3" style="background:white;border-radius:20px;padding:14px 18px;box-shadow:0 8px 24px rgba(0,0,0,0.25);text-align:center;opacity:0;transition:opacity 0.5s;position:absolute;top:0;left:0;right:0">
+      <div style="font-family:DM Sans,sans-serif;font-size:0.88rem;font-weight:600;color:#666;line-height:1.4">Je suis là pour t'aider quoi qu'il arrive, alors allons-y ! Évoluons ensemble ! 💪</div>
+      <div style="position:absolute;bottom:-12px;left:50%;transform:translateX(-50%);width:0;height:0;border-left:12px solid transparent;border-right:12px solid transparent;border-top:12px solid white"></div>
+    </div>
+  </div>
 </div>
 </body>
 </html>
