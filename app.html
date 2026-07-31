@@ -8017,9 +8017,9 @@ function switchLang(lang) {
 
   async function showApp() {
     document.getElementById('authPage').classList.remove('active');
-    document.getElementById('appPage').classList.add('active');
     try { const cached = JSON.parse(localStorage.getItem('nutricare_profile') || 'null'); if (cached) renderProfileQuick(cached); } catch (e) {}
     await loadProfile();
+    document.getElementById('appPage').classList.add('active');
     checkOnboarding();
     var _anyViewVisible = false;
     document.querySelectorAll('[id$="View"]').forEach(function(v) {
