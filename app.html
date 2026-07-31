@@ -19470,13 +19470,7 @@ window.maybeShowReviewPrompt = function() {
           <div style="position:absolute;bottom:-12px;left:50%;transform:translateX(-50%);width:0;height:0;border-left:12px solid transparent;border-right:12px solid transparent;border-top:12px solid white"></div>
         </div>
       </div>
-      <!-- Bouton -->
-      <div style="position:absolute;bottom:0;left:0;right:0;padding:0 24px 44px;text-align:center">
-        <button id="obBtnDecouvrir" onclick="closeOnboarding()"
-          style="width:100%;background:linear-gradient(135deg,#FF6B6B,#FF9A3C);color:white;border:none;border-radius:14px;padding:17px;font-size:1rem;font-weight:700;cursor:pointer;font-family:DM Sans,sans-serif;box-shadow:0 8px 32px rgba(255,107,107,0.45);opacity:0;transform:translateY(16px);transition:opacity 0.6s ease,transform 0.6s ease;pointer-events:none">
-          Découvrir Mirella 🚀
-        </button>
-      </div>
+
     </div>
   </div>
 
@@ -19556,9 +19550,7 @@ function obNext(step) {
       v4.currentTime = 0;
       v4.play().catch(function(){});
       v4.onended = function() {
-        document.getElementById('obBtnDecouvrir').style.opacity = '1';
-        document.getElementById('obBtnDecouvrir').style.transform = 'translateY(0)';
-        document.getElementById('obBtnDecouvrir').style.pointerEvents = 'auto';
+        closeOnboarding();
       };
     }
     // Animer les phylactères
@@ -19567,11 +19559,8 @@ function obNext(step) {
       var p1 = document.getElementById('obProg1'); if(p1) p1.style.opacity='0';
       setTimeout(function() { var p2 = document.getElementById('obProg2'); if(p2) p2.style.opacity='1'; }, 400);
     }, 3500);
-    // Afficher le bouton après 5s
-    setTimeout(function() {
-      var btn = document.getElementById('obBtnDecouvrir');
-      if (btn) { btn.style.opacity = '1'; btn.style.transform = 'translateY(0)'; btn.style.pointerEvents = 'auto'; }
-    }, 5000);
+    // Fallback : déclencher closeOnboarding après 8s si la vidéo ne se termine pas
+    setTimeout(function() { closeOnboarding(); }, 8000);
   }
 }
 function obSaveIdentite() {
