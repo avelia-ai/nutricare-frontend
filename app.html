@@ -8020,7 +8020,7 @@ function switchLang(lang) {
     document.getElementById('appPage').classList.add('active');
     try { const cached = JSON.parse(localStorage.getItem('nutricare_profile') || 'null'); if (cached) renderProfileQuick(cached); } catch (e) {}
     await loadProfile();
-    setTimeout(checkOnboarding, 500);
+    checkOnboarding();
     var _anyViewVisible = false;
     document.querySelectorAll('[id$="View"]').forEach(function(v) {
       if (v.style.display === 'block' || v.style.display === 'flex') { _anyViewVisible = true; }
@@ -19421,7 +19421,7 @@ window.maybeShowReviewPrompt = function() {
   </div>
 
   <!-- ETAPE 2.5 : Objectifs -->
-  <div id="onboarding2b" style="display:none;width:100%;height:100%;position:absolute;top:0;left:0;flex-direction:column;background:white;overflow-y:auto">
+  <div id="onboarding2b" style="display:none;position:fixed;inset:0;flex-direction:column;background:white;overflow-y:auto;z-index:10000">
     <div style="width:100%;height:100%;display:flex;flex-direction:column">
       <!-- Vidéo -->
       <video autoplay muted loop playsinline style="width:100%;height:28vh;object-fit:cover;flex-shrink:0;display:block">
