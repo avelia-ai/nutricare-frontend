@@ -19621,23 +19621,36 @@ function closeOnboarding() {
 }
 </script>
 
-<div id="ratingModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.55);z-index:99999;align-items:center;justify-content:center;padding:20px">
-  <div style="background:white;border-radius:28px;padding:32px 24px;max-width:340px;width:100%;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,0.2);animation:popIn .4s cubic-bezier(.34,1.56,.64,1)">
-    <div style="font-size:3rem;margin-bottom:12px">⭐</div>
-    <h2 style="font-size:1.3rem;font-weight:800;color:#2D2D2D;margin-bottom:8px">Vous aimez Mirella ?</h2>
-    <p style="font-size:0.88rem;color:#888;line-height:1.6;margin-bottom:24px">Votre avis nous aide à améliorer l'app et à aider plus de personnes. Ça prend 30 secondes !</p>
-    <!-- Étoiles -->
-    <div id="ratingStars" style="display:flex;justify-content:center;gap:10px;margin-bottom:24px">
-      <span onclick="setRating(1)" style="font-size:2.2rem;cursor:pointer;transition:transform .2s" id="star1">☆</span>
-      <span onclick="setRating(2)" style="font-size:2.2rem;cursor:pointer;transition:transform .2s" id="star2">☆</span>
-      <span onclick="setRating(3)" style="font-size:2.2rem;cursor:pointer;transition:transform .2s" id="star3">☆</span>
-      <span onclick="setRating(4)" style="font-size:2.2rem;cursor:pointer;transition:transform .2s" id="star4">☆</span>
-      <span onclick="setRating(5)" style="font-size:2.2rem;cursor:pointer;transition:transform .2s" id="star5">☆</span>
+<div id="ratingModal" style="display:none;position:fixed;inset:0;z-index:99999;background:#000;align-items:center;justify-content:center">
+  <!-- Vidéo plein écran -->
+  <video id="ratingVideo" autoplay muted loop playsinline style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block">
+    <source src="https://raw.githubusercontent.com/avelia-ai/nutricare-frontend/main/video_avis_compressed.mp4" type="video/mp4">
+  </video>
+  <!-- Overlay gradient -->
+  <div style="position:absolute;inset:0;background:linear-gradient(to bottom,rgba(0,0,0,0.3) 0%,transparent 35%,transparent 45%,rgba(0,0,0,0.85) 100%);pointer-events:none;z-index:1"></div>
+  <!-- Phylactère en haut -->
+  <div style="position:absolute;top:20px;left:50%;transform:translateX(-50%);width:85%;z-index:10;text-align:center">
+    <div style="background:white;border-radius:20px;padding:14px 18px;box-shadow:0 8px 24px rgba(0,0,0,0.25);display:inline-block;position:relative">
+      <div style="font-family:DM Sans,sans-serif;font-size:0.92rem;font-weight:700;color:#2D2D2D;line-height:1.4">Tu aimes Mirella jusqu'ici ? Dis-le moi ! ⭐</div>
+      <div style="position:absolute;bottom:-12px;left:50%;transform:translateX(-50%);width:0;height:0;border-left:12px solid transparent;border-right:12px solid transparent;border-top:12px solid white"></div>
     </div>
-    <button id="ratingSubmitBtn" onclick="submitRating()" style="display:none;width:100%;background:linear-gradient(135deg,#FF6B6B,#FF9A3C);color:white;border:none;border-radius:14px;padding:15px;font-size:0.95rem;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif;margin-bottom:10px">
+  </div>
+  <!-- Bas : étoiles + bouton -->
+  <div style="position:absolute;bottom:0;left:0;right:0;padding:0 24px 48px;text-align:center;z-index:10">
+    <div style="font-family:DM Sans,sans-serif;font-size:1.2rem;font-weight:800;color:white;margin-bottom:4px;text-shadow:0 2px 12px rgba(0,0,0,0.5)">Tu aimes Mirella ?</div>
+    <div style="font-family:DM Sans,sans-serif;font-size:0.8rem;color:rgba(255,255,255,0.7);margin-bottom:20px">Ton avis nous aide à t'accompagner encore mieux 🙏</div>
+    <!-- Étoiles -->
+    <div id="ratingStars" style="display:flex;justify-content:center;gap:14px;margin-bottom:22px">
+      <span onclick="setRating(1)" style="font-size:2.6rem;cursor:pointer;transition:transform .2s;filter:drop-shadow(0 2px 6px rgba(0,0,0,0.4))" id="star1">☆</span>
+      <span onclick="setRating(2)" style="font-size:2.6rem;cursor:pointer;transition:transform .2s;filter:drop-shadow(0 2px 6px rgba(0,0,0,0.4))" id="star2">☆</span>
+      <span onclick="setRating(3)" style="font-size:2.6rem;cursor:pointer;transition:transform .2s;filter:drop-shadow(0 2px 6px rgba(0,0,0,0.4))" id="star3">☆</span>
+      <span onclick="setRating(4)" style="font-size:2.6rem;cursor:pointer;transition:transform .2s;filter:drop-shadow(0 2px 6px rgba(0,0,0,0.4))" id="star4">☆</span>
+      <span onclick="setRating(5)" style="font-size:2.6rem;cursor:pointer;transition:transform .2s;filter:drop-shadow(0 2px 6px rgba(0,0,0,0.4))" id="star5">☆</span>
+    </div>
+    <button id="ratingSubmitBtn" onclick="submitRating()" style="display:none;width:100%;background:linear-gradient(135deg,#FF6B6B,#FF9A3C);color:white;border:none;border-radius:14px;padding:16px;font-size:1rem;font-weight:700;cursor:pointer;font-family:DM Sans,sans-serif;box-shadow:0 8px 24px rgba(255,107,107,0.45);margin-bottom:12px">
       Laisser un avis 🙏
     </button>
-    <button onclick="document.getElementById('ratingModal').style.display='none'" style="width:100%;background:none;border:none;color:#bbb;font-size:0.82rem;cursor:pointer;font-family:'DM Sans',sans-serif;padding:6px">
+    <button onclick="document.getElementById('ratingModal').style.display='none'" style="background:none;border:none;color:rgba(255,255,255,0.5);font-size:0.82rem;cursor:pointer;font-family:DM Sans,sans-serif;padding:6px">
       Plus tard
     </button>
   </div>
