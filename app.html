@@ -8017,10 +8017,10 @@ function switchLang(lang) {
   })();
 
   async function showApp() {
-    document.getElementById('authPage').classList.remove('active');
     try { const cached = JSON.parse(localStorage.getItem('nutricare_profile') || 'null'); if (cached) renderProfileQuick(cached); } catch (e) {}
     await loadProfile();
     await checkOnboarding();
+    document.getElementById('authPage').classList.remove('active');
     var _anyViewVisible = false;
     document.querySelectorAll('[id$="View"]').forEach(function(v) {
       if (v.style.display === 'block' || v.style.display === 'flex') { _anyViewVisible = true; }
