@@ -19653,7 +19653,7 @@ function closeOnboarding() {
       <button id="ratingSubmitBtn" onclick="submitRating()" style="display:none;width:100%;background:linear-gradient(135deg,#FF6B6B,#FF9A3C);color:white;border:none;border-radius:16px;padding:16px;font-size:1rem;font-weight:700;cursor:pointer;font-family:DM Sans,sans-serif;box-shadow:0 8px 24px rgba(255,107,107,0.35);margin-bottom:12px;letter-spacing:0.3px">
         Laisser un avis 🙏
       </button>
-      <button onclick="document.getElementById('ratingModal').style.display='none'" style="background:none;border:none;color:#ccc;font-size:0.82rem;cursor:pointer;font-family:DM Sans,sans-serif;padding:4px">
+      <button onclick="document.getElementById('ratingModal').style.display='none';showAppAfterOnboarding()" style="background:none;border:none;color:#ccc;font-size:0.82rem;cursor:pointer;font-family:DM Sans,sans-serif;padding:4px">
         Plus tard
       </button>
     </div>
@@ -19662,6 +19662,10 @@ function closeOnboarding() {
 
 <script>
 var _currentRating = 0;
+  function showAppAfterOnboarding() {
+    document.getElementById('appPage').classList.add('active');
+    if (typeof showView === 'function') { showView('home'); }
+  }
 function setRating(n) {
   _currentRating = n;
   for (var i = 1; i <= 5; i++) {
@@ -19672,7 +19676,7 @@ function setRating(n) {
   document.getElementById('ratingSubmitBtn').style.display = 'block';
 }
 function submitRating() {
-  document.getElementById('ratingModal').style.display = 'none';
+  document.getElementById('ratingModal').style.display = 'none'; showAppAfterOnboarding();
   localStorage.setItem('mirella_rating_done', '1');
   if (_currentRating >= 4) {
     // Redirige vers le store
@@ -19693,7 +19697,7 @@ function submitRating() {
     <p style="font-size:0.85rem;color:#888;margin-bottom:16px">Dites-nous ce qui vous a manqué. Votre retour est précieux !</p>
     <textarea id="ratingFeedbackText" placeholder="Votre message..." style="width:100%;border:2px solid #f0f0f0;border-radius:12px;padding:12px;font-size:0.88rem;font-family:'DM Sans',sans-serif;resize:none;height:100px;outline:none;box-sizing:border-box;margin-bottom:16px"></textarea>
     <button onclick="sendFeedback()" style="width:100%;background:linear-gradient(135deg,#FF6B6B,#FF9A3C);color:white;border:none;border-radius:14px;padding:14px;font-size:0.92rem;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif;margin-bottom:10px">Envoyer</button>
-    <button onclick="document.getElementById('ratingFeedbackModal').style.display='none'" style="width:100%;background:none;border:none;color:#bbb;font-size:0.82rem;cursor:pointer;font-family:'DM Sans',sans-serif">Fermer</button>
+    <button onclick="document.getElementById('ratingFeedbackModal').style.display='none';showAppAfterOnboarding()" style="width:100%;background:none;border:none;color:#bbb;font-size:0.82rem;cursor:pointer;font-family:'DM Sans',sans-serif">Fermer</button>
   </div>
 </div>
 
@@ -19707,7 +19711,7 @@ function sendFeedback() {
     headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
     body: JSON.stringify({ rating: _currentRating, message: txt })
   }).catch(function(){});
-  document.getElementById('ratingFeedbackModal').style.display = 'none';
+  document.getElementById('ratingFeedbackModal').style.display = 'none'; showAppAfterOnboarding();
   alert('Merci pour votre retour ! 🙏');
 }
 </script>
