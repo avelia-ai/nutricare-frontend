@@ -19603,6 +19603,7 @@ function closeOnboarding() {
   var profile = JSON.parse(localStorage.getItem('nutricare_profile') || '{}');
   profile.onboarding_done = true;
   localStorage.setItem('nutricare_profile', JSON.stringify(profile));
+  showOnboardingSuccessPopup();
 }
 </script>
 
