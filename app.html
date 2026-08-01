@@ -15934,15 +15934,8 @@ window.initMirellaNotifications = function() {
 
   var lastVisit = localStorage.getItem('mirella_last_visit');
   var today = new Date().toDateString();
-  // Toujours afficher la popup de bienvenue
-  setTimeout(function() {
-    window.showMirellaPopup(window.getMirellaMsg('bonjour'));
-  }, 2000);
   if(lastVisit !== today) {
     localStorage.setItem('mirella_last_visit', today);
-    setTimeout(function() {
-      window.addNotif('bonjour', window.getMirellaMsg('bonjour'), '🌸');
-    }, 2000);
     setTimeout(function() {
       window.addNotif('conseil', window.getMirellaMsg('conseil'), '💡');
     }, 5000);
@@ -16196,10 +16189,7 @@ document.addEventListener('resume', function() {
     var today = new Date().toDateString();
     if(lastVisit !== today) {
       localStorage.setItem('mirella_last_visit', today);
-      window.addNotif('bonjour', window.getMirellaMsg('bonjour'), '🌸');
-      setTimeout(function(){ window.addNotif('conseil', window.getMirellaMsg('conseil'), '💡'); }, 3000);
-    } else {
-      window.showMirellaPopup(window.getMirellaMsg('bonjour'));
+      window.addNotif('conseil', window.getMirellaMsg('conseil'), '💡');
     }
   }, 1000);
 }, false);
