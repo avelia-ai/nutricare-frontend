@@ -19832,7 +19832,12 @@ document.addEventListener('DOMContentLoaded', function() {
         body: JSON.stringify({ reason: 'connexion_quotidienne' })
       });
       var data = await res.json();
-      if (typeof data.mirels === 'number' && !data.already_earned) setMirelsCache(data.mirels);
+      if (typeof data.mirels === 'number' && !data.already_earned) {
+        setMirelsCache(data.mirels);
+        setTimeout(function() {
+          window.showMirellaVideoPopup('https://raw.githubusercontent.com/avelia-ai/nutricare-frontend/main/notif_mirels_compressed.mp4', 'Bravo, tu as gagné 5 Mirels aujourd\'hui ! 🎉');
+        }, 800);
+      }
     } catch (e) {}
   }, 1500);
 });
