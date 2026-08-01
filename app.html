@@ -12018,6 +12018,13 @@ async function saveHealthLog() {
       }
       loadHealthDashboard();
       setTimeout(() => checkAndShowNewBadges(), 1000);
+      // Notif "en forme" si les indicateurs sont bons
+      if (data.energy_level !== null && data.sleep_hours !== null && data.stress_level !== null &&
+          data.energy_level >= 7 && data.sleep_hours >= 7 && data.stress_level <= 3) {
+        setTimeout(function() {
+          window.showMirellaVideoPopup('https://raw.githubusercontent.com/avelia-ai/nutricare-frontend/main/notif_en_forme_hq.mp4', 'Waouh, tu as l\'air en pleine forme aujourd\'hui ! 💪');
+        }, 1000);
+      }
     } else {
       const err = await res.json();
       alert("Erreur serveur: " + JSON.stringify(err));
