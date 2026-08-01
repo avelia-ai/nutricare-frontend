@@ -15994,6 +15994,28 @@ window.closeMirellaPopup = function() {
   var popup = document.getElementById('mirellaPopup');
   if(popup) popup.style.display = 'none';
 };
+window.showMirellaVideoPopup = function(videoUrl, message) {
+  var popup = document.getElementById('mirellaVideoPopup');
+  var text = document.getElementById('mirellaVideoPopupText');
+  var video = document.getElementById('mirellaVideoPopupVideo');
+  var source = document.getElementById('mirellaVideoPopupSource');
+  if(!popup || !text || !video || !source) return;
+  text.textContent = message;
+  if(source.getAttribute('src') !== videoUrl) {
+    source.setAttribute('src', videoUrl);
+    video.load();
+  }
+  video.currentTime = 0;
+  video.play().catch(function(){});
+  popup.style.display = 'block';
+  popup.style.animation = 'slideUp 0.3s ease';
+  if(window._videoPopupTimeout) clearTimeout(window._videoPopupTimeout);
+  window._videoPopupTimeout = setTimeout(function(){ window.closeMirellaVideoPopup(); }, 6000);
+};
+window.closeMirellaVideoPopup = function() {
+  var popup = document.getElementById('mirellaVideoPopup');
+  if(popup) popup.style.display = 'none';
+};
 
 window.updateNotifBadge = function() {
   var unread = _notifList.filter(function(n){ return !n.read; }).length;
@@ -16641,6 +16663,21 @@ document.addEventListener('deviceready', function() {
       <div id="mirellaPopupText" style="font-size:0.82rem;color:#1a1a1a;line-height:1.4"></div>
     </div>
     <button onclick="closeMirellaPopup()" style="background:none;border:none;color:#ccc;font-size:1.1rem;cursor:pointer;flex-shrink:0;padding:4px">✕</button>
+  </div>
+</div>
+<!-- Toast succès avec vidéo Mirella -->
+<div id="mirellaVideoPopup" style="display:none;position:fixed;bottom:80px;left:16px;right:16px;z-index:99998;animation:slideUp 0.3s ease">
+  <div style="background:#FFFCFA;border-radius:20px;padding:14px 16px;box-shadow:0 0 0 1.5px rgba(255,154,108,0.22),0 14px 32px rgba(230,110,70,0.14);display:flex;align-items:center;gap:12px;border-left:4px solid var(--coral)">
+    <div style="width:48px;height:48px;border-radius:50%;overflow:hidden;flex-shrink:0;background:#000">
+      <video id="mirellaVideoPopupVideo" autoplay muted playsinline style="width:100%;height:100%;object-fit:cover;display:block">
+        <source id="mirellaVideoPopupSource" src="" type="video/mp4">
+      </video>
+    </div>
+    <div style="flex:1;min-width:0">
+      <div style="font-size:0.72rem;font-weight:700;color:var(--coral);margin-bottom:2px">Mirella</div>
+      <div id="mirellaVideoPopupText" style="font-size:0.82rem;color:#1a1a1a;line-height:1.4"></div>
+    </div>
+    <button onclick="closeMirellaVideoPopup()" style="background:none;border:none;color:#ccc;font-size:1.1rem;cursor:pointer;flex-shrink:0;padding:4px">✕</button>
   </div>
 </div>
 <style>
@@ -19677,6 +19714,9 @@ var _currentRating = 0;
       loadingScreen.style.display = 'none';
       document.getElementById('appPage').classList.add('active');
       if (typeof showView === 'function') { showView('home'); }
+      setTimeout(function() {
+        window.showMirellaVideoPopup('https://raw.githubusercontent.com/avelia-ai/nutricare-frontend/main/notif_1_compressed.mp4', "Voilà, bienvenue sur l'appli ! C'est ici que notre histoire commence 🦊");
+      }, 800);
     };
     setTimeout(revealApp, 3000);
   }
