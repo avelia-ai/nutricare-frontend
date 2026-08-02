@@ -12063,6 +12063,33 @@ var HARMONY_FOX_VIDEOS = {
   5: 'https://raw.githubusercontent.com/avelia-ai/nutricare-frontend/main/renard-def-compresse.mp4'
 };
 var _lastHarmonyFoxLevel = null;
+var SAD_FOX_VIDEO_URL = 'https://raw.githubusercontent.com/avelia-ai/nutricare-frontend/main/renard_fatigue_3jours_compressed.mp4';
+// Calcule le nombre de jours d'inactivité AVANT d'écraser la date (une seule fois par chargement de page)
+window._foxDaysInactive = (function() {
+  var todayStr = new Date().toDateString();
+  var lastActive = localStorage.getItem('mirella_fox_last_active');
+  var days = 0;
+  if (lastActive) {
+    var diffMs = new Date(todayStr) - new Date(lastActive);
+    days = Math.round(diffMs / 86400000);
+  }
+  localStorage.setItem('mirella_fox_last_active', todayStr);
+  return days;
+})();
+function updateSadFoxVideo() {
+  if (_lastHarmonyFoxLevel === 'sad') return;
+  _lastHarmonyFoxLevel = 'sad';
+  ['harmonyFoxVideo', 'harmonyFoxVideoHome'].forEach(function(id) {
+    var vid = document.getElementById(id);
+    if (!vid) return;
+    var source = vid.querySelector('source');
+    if (source && source.src !== SAD_FOX_VIDEO_URL) {
+      source.src = SAD_FOX_VIDEO_URL;
+      vid.load();
+      vid.play().catch(function() {});
+    }
+  });
+}
 function updateHarmonyFoxVideo(level) {
   if (level === _lastHarmonyFoxLevel) return;
   _lastHarmonyFoxLevel = level;
@@ -12623,7 +12650,11 @@ function renderHarmonyAvatar(normalizedValues) {
 
 function updateHarmonyUI(totalPoints) {
   const lvl = getHarmonyLevel(totalPoints);
-  updateHarmonyFoxVideo(lvl.level);
+  if (window._foxDaysInactive >= 3) {
+    updateSadFoxVideo();
+  } else {
+    updateHarmonyFoxVideo(lvl.level);
+  }
   const badge = document.getElementById('harmonyLevelBadge');
   const stage = document.getElementById('harmonyStageName');
   const caption = document.getElementById('harmonyCaption');
