@@ -12064,6 +12064,7 @@ var HARMONY_FOX_VIDEOS = {
 };
 var _lastHarmonyFoxLevel = null;
 var SAD_FOX_VIDEO_URL = 'https://raw.githubusercontent.com/avelia-ai/nutricare-frontend/main/renard_fatigue_3jours_compressed.mp4';
+var SLEEPY_FOX_VIDEO_URL = 'https://raw.githubusercontent.com/avelia-ai/nutricare-frontend/main/renard_dort_compressed.mp4';
 // Calcule le nombre de jours d'inactivité AVANT d'écraser la date (une seule fois par chargement de page)
 window._foxDaysInactive = (function() {
   var todayStr = new Date().toDateString();
@@ -12085,6 +12086,20 @@ function updateSadFoxVideo() {
     var source = vid.querySelector('source');
     if (source && source.src !== SAD_FOX_VIDEO_URL) {
       source.src = SAD_FOX_VIDEO_URL;
+      vid.load();
+      vid.play().catch(function() {});
+    }
+  });
+}
+function updateSleepyFoxVideo() {
+  if (_lastHarmonyFoxLevel === 'sleepy') return;
+  _lastHarmonyFoxLevel = 'sleepy';
+  ['harmonyFoxVideo', 'harmonyFoxVideoHome'].forEach(function(id) {
+    var vid = document.getElementById(id);
+    if (!vid) return;
+    var source = vid.querySelector('source');
+    if (source && source.src !== SLEEPY_FOX_VIDEO_URL) {
+      source.src = SLEEPY_FOX_VIDEO_URL;
       vid.load();
       vid.play().catch(function() {});
     }
@@ -12652,6 +12667,8 @@ function updateHarmonyUI(totalPoints) {
   const lvl = getHarmonyLevel(totalPoints);
   if (window._foxDaysInactive >= 3) {
     updateSadFoxVideo();
+  } else if (window._foxLowHealth) {
+    updateSleepyFoxVideo();
   } else {
     updateHarmonyFoxVideo(lvl.level);
   }
@@ -12879,15 +12896,21 @@ function loadLeaderboard(page) {
 function refreshHarmonyAvatar(logs) {
   const defiBonus = parseInt(localStorage.getItem(_gamiKey()) || '0', 10);
   const totalPoints = calcHarmonyFromLogs(logs) + defiBonus;
-  updateHarmonyUI(totalPoints);
   // Valeurs du dernier log pour l'avatar visuel
   var norm;
+  var lastLog = null;
   if (logs && logs.length) {
-    const last = [...logs].sort((a,b) => new Date(b.date) - new Date(a.date))[0];
-    norm = normalizeHealthLog(last);
+    lastLog = [...logs].sort((a,b) => new Date(b.date) - new Date(a.date))[0];
+    norm = normalizeHealthLog(lastLog);
   } else {
     norm = { sleep: 0, hydra: 0, activ: 0, calm: 0, stress: 0 };
   }
+  // Détermine si le renard qui dort doit s'afficher (santé basse sur le dernier log)
+  window._foxLowHealth = !!(lastLog && lastLog.energy_level !== null && lastLog.energy_level !== undefined &&
+    lastLog.sleep_hours !== null && lastLog.sleep_hours !== undefined &&
+    lastLog.stress_level !== null && lastLog.stress_level !== undefined &&
+    lastLog.energy_level <= 3 && lastLog.sleep_hours < 5 && lastLog.stress_level >= 7);
+  updateHarmonyUI(totalPoints);
   var lvlData = getHarmonyLevel(totalPoints);
   norm.level = window._debugLevel || lvlData.level;
   window._lastLogs = logs;
