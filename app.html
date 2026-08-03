@@ -19237,6 +19237,9 @@ window.maybeShowReviewPrompt = function() {
   // ── ONBOARDING ──
   function showOnboarding() {
     var overlay = document.getElementById('onboardingOverlay');
+    // Précharge la vidéo de l'écran de chargement final dès le début de l'onboarding
+    var preloadVid = document.getElementById('obLoadingVideo');
+    if (preloadVid && preloadVid.readyState < 3) { preloadVid.load(); }
     if (overlay) {
       // Cacher toutes les autres popups pendant l'onboarding
       var toHide = ['subscriptionModal','referralMilestonePopup'];
@@ -19796,7 +19799,7 @@ function closeOnboarding() {
 
 <!-- ÉCRAN DE CHARGEMENT FINAL -->
 <div id="onboardingLoadingScreen" style="display:none;position:fixed;inset:0;z-index:99999;background:#000;align-items:center;justify-content:center">
-  <video id="obLoadingVideo" autoplay muted playsinline loop style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block">
+  <video id="obLoadingVideo" autoplay muted playsinline loop preload="auto" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block">
     <source src="https://raw.githubusercontent.com/avelia-ai/nutricare-frontend/main/chargement_final_compressed.mp4" type="video/mp4">
   </video>
   <div style="position:absolute;inset:0;background:linear-gradient(to bottom,rgba(0,0,0,0.35) 0%,transparent 30%,transparent 70%,rgba(0,0,0,0.6) 100%);pointer-events:none;z-index:1"></div>
@@ -19851,6 +19854,8 @@ var _currentRating = 0;
   function showAppAfterOnboarding() {
     var loadingScreen = document.getElementById('onboardingLoadingScreen');
     loadingScreen.style.display = 'flex';
+    var obVid = document.getElementById('obLoadingVideo');
+    if (obVid) { obVid.play().catch(function(){}); }
     var revealApp = function() {
       loadingScreen.style.display = 'none';
       document.getElementById('appPage').classList.add('active');
