@@ -12018,18 +12018,19 @@ async function saveHealthLog() {
       }
       loadHealthDashboard();
       setTimeout(() => checkAndShowNewBadges(), 1000);
-      // Notif de forme basée sur les indicateurs (couvre tous les cas si les 3 champs sont remplis)
+      // Notif de forme basée sur le score composite (4 statuts)
       if (data.energy_level !== null && data.sleep_hours !== null && data.stress_level !== null) {
-        var estEnForme = data.energy_level >= 7 && data.sleep_hours >= 7 && data.stress_level <= 3;
-        if (estEnForme) {
-          setTimeout(function() {
-            window.showMirellaVideoPopup('https://raw.githubusercontent.com/avelia-ai/nutricare-frontend/main/notif_en_forme_hq.mp4', 'Waouh, tu as l\'air en pleine forme aujourd\'hui ! 💪');
-          }, 1000);
-        } else {
-          setTimeout(function() {
-            window.showMirellaVideoPopup('https://raw.githubusercontent.com/avelia-ai/nutricare-frontend/main/notif_score_moyen_v2_hq.mp4', "OK, on va avancer ensemble pour que tu sois en super forme !");
-          }, 1000);
-        }
+        var healthScore = calcHealthScore(data.energy_level, data.sleep_hours, data.stress_level);
+        var foxStatus = getFoxStatus(healthScore);
+        var NOTIF_MESSAGES = {
+          tres_en_forme: 'Waouh, tu es en pleine forme aujourd\'hui ! 🎉',
+          en_forme: 'Waouh, tu as l\'air en pleine forme aujourd\'hui ! 💪',
+          moyennement_en_forme: "OK, on va avancer ensemble pour que tu sois en super forme !",
+          fatigue: "Tu as l'air fatigué(e), prends soin de toi aujourd'hui 🌙"
+        };
+        setTimeout(function() {
+          window.showMirellaVideoPopup(FOX_STATUS_VIDEOS[foxStatus], NOTIF_MESSAGES[foxStatus]);
+        }, 1000);
       }
     } else {
       const err = await res.json();
@@ -12065,6 +12066,40 @@ var HARMONY_FOX_VIDEOS = {
 var _lastHarmonyFoxLevel = null;
 var SAD_FOX_VIDEO_URL = 'https://raw.githubusercontent.com/avelia-ai/nutricare-frontend/main/renard_fatigue_3jours_compressed.mp4';
 var SLEEPY_FOX_VIDEO_URL = 'https://raw.githubusercontent.com/avelia-ai/nutricare-frontend/main/renard_dort_compressed.mp4';
+// Système à 4 statuts basé sur un score composite (énergie/sommeil/stress)
+var FOX_STATUS_VIDEOS = {
+  tres_en_forme: 'https://raw.githubusercontent.com/avelia-ai/nutricare-frontend/main/renard_tres_en_forme_hq.mp4',
+  en_forme: 'https://raw.githubusercontent.com/avelia-ai/nutricare-frontend/main/notif_en_forme_hq.mp4',
+  moyennement_en_forme: 'https://raw.githubusercontent.com/avelia-ai/nutricare-frontend/main/notif_score_moyen_v2_hq.mp4',
+  fatigue: 'https://raw.githubusercontent.com/avelia-ai/nutricare-frontend/main/renard_dort_compressed.mp4'
+};
+function calcHealthScore(energyLevel, sleepHours, stressLevel) {
+  var energyNorm = energyLevel / 10;
+  var sleepNorm = Math.min(sleepHours / 8, 1);
+  var stressNorm = 1 - (stressLevel / 10);
+  return ((energyNorm + sleepNorm + stressNorm) / 3) * 100;
+}
+function getFoxStatus(score) {
+  if (score >= 80) return 'tres_en_forme';
+  if (score >= 60) return 'en_forme';
+  if (score >= 40) return 'moyennement_en_forme';
+  return 'fatigue';
+}
+function updateStatusFoxVideo(status) {
+  if (_lastHarmonyFoxLevel === status) return;
+  _lastHarmonyFoxLevel = status;
+  var url = FOX_STATUS_VIDEOS[status];
+  ['harmonyFoxVideo', 'harmonyFoxVideoHome'].forEach(function(id) {
+    var vid = document.getElementById(id);
+    if (!vid) return;
+    var source = vid.querySelector('source');
+    if (source && source.src !== url) {
+      source.src = url;
+      vid.load();
+      vid.play().catch(function() {});
+    }
+  });
+}
 // Calcule le nombre de jours d'inactivité AVANT d'écraser la date (une seule fois par chargement de page)
 window._foxDaysInactive = (function() {
   var todayStr = new Date().toDateString();
@@ -12667,8 +12702,8 @@ function updateHarmonyUI(totalPoints) {
   const lvl = getHarmonyLevel(totalPoints);
   if (window._foxDaysInactive >= 3) {
     updateSadFoxVideo();
-  } else if (window._foxLowHealth) {
-    updateSleepyFoxVideo();
+  } else if (window._foxHealthStatus) {
+    updateStatusFoxVideo(window._foxHealthStatus);
   } else {
     updateHarmonyFoxVideo(lvl.level);
   }
@@ -12905,11 +12940,14 @@ function refreshHarmonyAvatar(logs) {
   } else {
     norm = { sleep: 0, hydra: 0, activ: 0, calm: 0, stress: 0 };
   }
-  // Détermine si le renard qui dort doit s'afficher (santé basse sur le dernier log)
-  window._foxLowHealth = !!(lastLog && lastLog.energy_level !== null && lastLog.energy_level !== undefined &&
-    lastLog.sleep_hours !== null && lastLog.sleep_hours !== undefined &&
-    lastLog.stress_level !== null && lastLog.stress_level !== undefined &&
-    lastLog.energy_level <= 3 && lastLog.sleep_hours < 5 && lastLog.stress_level >= 7);
+  // Calcule le statut de forme du renard (4 niveaux) à partir du dernier log
+  window._foxHealthStatus = null;
+  if (lastLog && lastLog.energy_level !== null && lastLog.energy_level !== undefined &&
+      lastLog.sleep_hours !== null && lastLog.sleep_hours !== undefined &&
+      lastLog.stress_level !== null && lastLog.stress_level !== undefined) {
+    var healthScore = calcHealthScore(lastLog.energy_level, lastLog.sleep_hours, lastLog.stress_level);
+    window._foxHealthStatus = getFoxStatus(healthScore);
+  }
   updateHarmonyUI(totalPoints);
   var lvlData = getHarmonyLevel(totalPoints);
   norm.level = window._debugLevel || lvlData.level;
