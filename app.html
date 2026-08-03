@@ -8021,7 +8021,9 @@ function switchLang(lang) {
     await loadProfile();
     await checkOnboarding();
     if (typeof fetchMirelsBalance === 'function') { fetchMirelsBalance(); }
-    if (typeof claimDailyConnexion === 'function') { setTimeout(claimDailyConnexion, 1500); }
+    // Ne pas lancer le décompte des Mirels quotidiens si l'onboarding vient de démarrer :
+    // il sera relancé proprement dans showAppAfterOnboarding() une fois l'onboarding terminé.
+    if (typeof claimDailyConnexion === 'function' && !window._onboardingActive) { setTimeout(claimDailyConnexion, 1500); }
     document.getElementById('authPage').classList.remove('active');
     var _anyViewVisible = false;
     document.querySelectorAll('[id$="View"]').forEach(function(v) {
@@ -19892,6 +19894,9 @@ var _currentRating = 0;
       setTimeout(function() {
         window.showMirellaVideoPopup('https://raw.githubusercontent.com/avelia-ai/nutricare-frontend/main/notif_1_compressed.mp4', "Voilà, bienvenue sur l'appli ! C'est ici que notre histoire commence 🦊");
       }, 800);
+      // Le décompte des Mirels quotidiens démarre seulement maintenant que l'utilisateur
+      // est vraiment arrivé sur l'appli (pas pendant l'onboarding).
+      if (typeof claimDailyConnexion === 'function') { setTimeout(claimDailyConnexion, 2000); }
     };
     setTimeout(revealApp, 3000);
   }
