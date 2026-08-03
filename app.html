@@ -12029,7 +12029,7 @@ async function saveHealthLog() {
           fatigue: "Tu as l'air fatigué(e), prends soin de toi aujourd'hui 🌙"
         };
         setTimeout(function() {
-          window.showMirellaVideoPopup(FOX_STATUS_VIDEOS[foxStatus], NOTIF_MESSAGES[foxStatus]);
+          window.showMirellaVideoPopup(FOX_NOTIF_VIDEOS[foxStatus], NOTIF_MESSAGES[foxStatus]);
         }, 1000);
       }
     } else {
@@ -12072,6 +12072,13 @@ var FOX_STATUS_VIDEOS = {
   en_forme: 'https://raw.githubusercontent.com/avelia-ai/nutricare-frontend/main/renard_en_forme_hq.mp4',
   moyennement_en_forme: 'https://raw.githubusercontent.com/avelia-ai/nutricare-frontend/main/renard_forme_moyenne_hq.mp4',
   fatigue: 'https://raw.githubusercontent.com/avelia-ai/nutricare-frontend/main/renard_fatigue_hq.mp4'
+};
+
+var FOX_NOTIF_VIDEOS = {
+  tres_en_forme: 'https://raw.githubusercontent.com/avelia-ai/nutricare-frontend/main/renard_notif_super_forme.mp4',
+  en_forme: '',
+  moyennement_en_forme: '',
+  fatigue: ''
 };
 function calcHealthScore(energyLevel, sleepHours, stressLevel) {
   var energyNorm = energyLevel / 10;
