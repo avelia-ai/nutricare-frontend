@@ -12069,12 +12069,33 @@ var _lastHarmonyFoxLevel = null;
 var SAD_FOX_VIDEO_URL = 'https://raw.githubusercontent.com/avelia-ai/nutricare-frontend/main/renard_fatigue_3jours_compressed.mp4';
 var SLEEPY_FOX_VIDEO_URL = 'https://raw.githubusercontent.com/avelia-ai/nutricare-frontend/main/renard_dort_compressed.mp4';
 // Système à 4 statuts basé sur un score composite (énergie/sommeil/stress)
+// Chaque statut a 2 variantes vidéo ; on alterne selon la parité du jour
+// pour éviter d'avoir toujours la même vidéo au même statut.
 var FOX_STATUS_VIDEOS = {
-  tres_en_forme: 'https://raw.githubusercontent.com/avelia-ai/nutricare-frontend/main/renard_tres_en_forme_hq.mp4',
-  en_forme: 'https://raw.githubusercontent.com/avelia-ai/nutricare-frontend/main/renard_en_forme_hq.mp4',
-  moyennement_en_forme: 'https://raw.githubusercontent.com/avelia-ai/nutricare-frontend/main/renard_forme_moyenne_hq.mp4',
-  fatigue: 'https://raw.githubusercontent.com/avelia-ai/nutricare-frontend/main/renard_fatigue_hq.mp4'
+  tres_en_forme: [
+    'https://raw.githubusercontent.com/avelia-ai/nutricare-frontend/main/renard_tres_en_forme_hq.mp4',
+    ''
+  ],
+  en_forme: [
+    'https://raw.githubusercontent.com/avelia-ai/nutricare-frontend/main/renard_en_forme_hq.mp4',
+    ''
+  ],
+  moyennement_en_forme: [
+    'https://raw.githubusercontent.com/avelia-ai/nutricare-frontend/main/renard_forme_moyenne_hq.mp4',
+    ''
+  ],
+  fatigue: [
+    'https://raw.githubusercontent.com/avelia-ai/nutricare-frontend/main/renard_fatigue_hq.mp4',
+    ''
+  ]
 };
+function getFoxStatusVideoUrl(status) {
+  var variants = FOX_STATUS_VIDEOS[status];
+  if (!variants) return null;
+  var dayOfYear = Math.floor((new Date() - new Date(new Date().getFullYear(), 0, 0)) / 86400000);
+  var variantIndex = dayOfYear % 2;
+  return variants[variantIndex] || variants[0];
+}
 
 var FOX_NOTIF_VIDEOS = {
   tres_en_forme: 'https://raw.githubusercontent.com/avelia-ai/nutricare-frontend/main/renard_notif_super_forme.mp4',
@@ -12097,7 +12118,7 @@ function getFoxStatus(score) {
 function updateStatusFoxVideo(status) {
   if (_lastHarmonyFoxLevel === status) return;
   _lastHarmonyFoxLevel = status;
-  var url = FOX_STATUS_VIDEOS[status];
+  var url = getFoxStatusVideoUrl(status);
   ['harmonyFoxVideo', 'harmonyFoxVideoHome'].forEach(function(id) {
     var vid = document.getElementById(id);
     if (!vid) return;
