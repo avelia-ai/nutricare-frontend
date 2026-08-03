@@ -8020,6 +8020,7 @@ function switchLang(lang) {
     try { const cached = JSON.parse(localStorage.getItem('nutricare_profile') || 'null'); if (cached) renderProfileQuick(cached); } catch (e) {}
     await loadProfile();
     await checkOnboarding();
+    if (typeof fetchMirelsBalance === 'function') { fetchMirelsBalance(); }
     document.getElementById('authPage').classList.remove('active');
     var _anyViewVisible = false;
     document.querySelectorAll('[id$="View"]').forEach(function(v) {
