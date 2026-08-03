@@ -8021,6 +8021,7 @@ function switchLang(lang) {
     await loadProfile();
     await checkOnboarding();
     if (typeof fetchMirelsBalance === 'function') { fetchMirelsBalance(); }
+    if (typeof claimDailyConnexion === 'function') { setTimeout(claimDailyConnexion, 1500); }
     document.getElementById('authPage').classList.remove('active');
     var _anyViewVisible = false;
     document.querySelectorAll('[id$="View"]').forEach(function(v) {
@@ -19964,30 +19965,33 @@ async function earnMirels(action) {
     }
   } catch (e) { console.error('Erreur gain Mirels:', e); }
 }
+// Réclame la connexion quotidienne (le backend gère la dedupe par jour)
+// Appelée au chargement de page ET juste après connexion/inscription (showApp),
+// pour couvrir le cas où un nouvel utilisateur s'inscrit et se connecte sans reload.
+async function claimDailyConnexion() {
+  try {
+    var token = authToken || window._authToken || localStorage.getItem('nutricare_token');
+    if (!token) return;
+    var res = await fetch(BACKEND_URL + '/api/mirels/earn', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
+      body: JSON.stringify({ reason: 'connexion_quotidienne' })
+    });
+    var data = await res.json();
+    if (typeof data.mirels === 'number' && !data.already_earned) {
+      setMirelsCache(data.mirels);
+      setTimeout(function() {
+        var modal = document.getElementById('mirelsDailyModal');
+        if (modal) modal.style.display = 'flex';
+      }, 15000);
+    }
+  } catch (e) {}
+}
 // Initialiser au chargement
 document.addEventListener('DOMContentLoaded', function() {
   updateMirelsDisplay();
   fetchMirelsBalance();
-  // Connexion quotidienne automatique (le backend gère la dedupe par jour)
-  setTimeout(async function() {
-    try {
-      var token = authToken || window._authToken || localStorage.getItem('nutricare_token');
-      if (!token) return;
-      var res = await fetch(BACKEND_URL + '/api/mirels/earn', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
-        body: JSON.stringify({ reason: 'connexion_quotidienne' })
-      });
-      var data = await res.json();
-      if (typeof data.mirels === 'number' && !data.already_earned) {
-        setMirelsCache(data.mirels);
-        setTimeout(function() {
-          var modal = document.getElementById('mirelsDailyModal');
-          if (modal) modal.style.display = 'flex';
-        }, 15000);
-      }
-    } catch (e) {}
-  }, 1500);
+  setTimeout(claimDailyConnexion, 1500);
 });
 // ── FIN SYSTEME MIRELS ────────────────────────────────────────────────────
 </script>
