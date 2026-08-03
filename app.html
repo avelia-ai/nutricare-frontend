@@ -19263,6 +19263,8 @@ window.maybeShowReviewPrompt = function() {
     // Précharge la vidéo de l'écran de chargement final dès le début de l'onboarding
     var preloadVid = document.getElementById('obLoadingVideo');
     if (preloadVid && preloadVid.readyState < 3) { preloadVid.load(); }
+    var preloadSuccessVid = document.getElementById('obSuccessVideo');
+    if (preloadSuccessVid && preloadSuccessVid.readyState < 3) { preloadSuccessVid.load(); }
     if (overlay) {
       // Cacher toutes les autres popups pendant l'onboarding
       var toHide = ['subscriptionModal','referralMilestonePopup'];
@@ -19769,11 +19771,17 @@ function obNext(step) {
     var s4 = document.getElementById('onboarding4');
     s4.style.display = 'flex';
     var v4 = document.getElementById('obVideoProgramme');
+    // Fallback : déclencher closeOnboarding après 18s si la vidéo ne se termine pas.
+    // On garde l'id pour pouvoir l'annuler si la vidéo se termine naturellement avant,
+    // sinon closeOnboarding() (et donc showOnboardingSuccessPopup) est appelée 2 fois
+    // et ça redémarre la vidéo de la popup suivante en plein milieu de sa lecture.
+    var _obStep4FallbackTimer = setTimeout(function() { closeOnboarding(); }, 18000);
     if (v4) {
       v4.loop = false;
       v4.currentTime = 0;
       v4.play().catch(function(){});
       v4.onended = function() {
+        clearTimeout(_obStep4FallbackTimer);
         closeOnboarding();
       };
     }
@@ -19783,8 +19791,6 @@ function obNext(step) {
       var p1 = document.getElementById('obProg1'); if(p1) p1.style.opacity='0';
       setTimeout(function() { var p2 = document.getElementById('obProg2'); if(p2) p2.style.opacity='1'; }, 600);
     }, 7000);
-    // Fallback : déclencher closeOnboarding après 18s si la vidéo ne se termine pas
-    setTimeout(function() { closeOnboarding(); }, 18000);
   }
 }
 function obSaveIdentite() {
@@ -20020,7 +20026,7 @@ document.addEventListener('DOMContentLoaded', function() {
 <!-- POPUP FINALE ONBOARDING -->
 <div id="onboardingSuccessPopup" style="display:none;position:fixed;inset:0;z-index:99999;background:#000">
   <!-- Vidéo plein écran -->
-  <video id="obSuccessVideo" autoplay muted playsinline loop style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block">
+  <video id="obSuccessVideo" autoplay muted playsinline loop preload="auto" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block">
     <source src="https://raw.githubusercontent.com/avelia-ai/nutricare-frontend/main/onboarding_success_final.mp4" type="video/mp4">
   </video>
   <!-- Overlay gradient haut et bas -->
