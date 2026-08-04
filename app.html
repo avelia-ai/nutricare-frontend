@@ -984,8 +984,16 @@ window.setSedentarite = function(val, btn) {
   window.calcScore();
 };
 
-window.openAddSport = function() {
+window.openAddSport = function(presetType) {
   var m = document.getElementById('addSportModal');
+  if (presetType) {
+    var sel = document.getElementById('sportActivite');
+    if (sel) {
+      for (var i = 0; i < sel.options.length; i++) {
+        if (sel.options[i].value.split(',')[0] === presetType) { sel.selectedIndex = i; break; }
+      }
+    }
+  }
   if (m) { m.style.display = 'flex'; window.previewCalories(); }
 };
 
@@ -1024,6 +1032,8 @@ window.renderSportSeances = function() {
   var totalEl = document.getElementById('totalCalories');
   var elMenus = document.getElementById('sportSeancesMenus');
   var totalMenus = document.getElementById('totalCaloriesMenus');
+  var elActivite = document.getElementById('sportSeancesActivite');
+  var totalActivite = document.getElementById('totalCaloriesActivite');
 
   var cardHtml = function(s, i) {
     return '<div style="display:flex;align-items:center;gap:10px;padding:10px;background:var(--cream);border-radius:10px">' +
@@ -1036,8 +1046,10 @@ window.renderSportSeances = function() {
     var empty = '<div style="font-size:0.78rem;color:#ccc;text-align:center;padding:8px">Aucune activite ajoutee</div>';
     if (el) el.innerHTML = empty;
     if (elMenus) elMenus.innerHTML = empty;
+    if (elActivite) elActivite.innerHTML = empty;
     if (totalEl) totalEl.style.display = 'none';
     if (totalMenus) totalMenus.style.display = 'none';
+    if (totalActivite) totalActivite.style.display = 'none';
     return;
   }
 
@@ -1045,10 +1057,12 @@ window.renderSportSeances = function() {
   var cards = window._sportSeances.map(function(s, i) { total += s.cal; return cardHtml(s, i); }).join('');
   if (el) el.innerHTML = cards;
   if (elMenus) elMenus.innerHTML = cards;
+  if (elActivite) elActivite.innerHTML = cards;
 
   var totalTxt = '🔥 Total calories brulees : ' + total + ' kcal';
   if (totalEl) { totalEl.textContent = totalTxt; totalEl.style.display = 'block'; }
   if (totalMenus) { totalMenus.textContent = totalTxt; totalMenus.style.display = 'block'; }
+  if (totalActivite) { totalActivite.textContent = totalTxt; totalActivite.style.display = 'block'; }
 
   // Mettre a jour donutDepensees
   var dep = document.getElementById('donutDepensees');
@@ -5641,6 +5655,10 @@ function switchLang(lang) {
       <i class="ti ti-yoga" style="font-size:18px"></i>
       <span style="font-size:0.65rem;font-weight:600">Rituels</span>
     </button>
+    <button class="suivi-tab-btn" onclick="switchSuiviTab('activite', this)" style="display:flex;flex-direction:column;align-items:center;gap:4px;min-width:64px;padding:10px 6px;border-radius:14px;border:none;background:#FFFCFA;color:#888;cursor:pointer;font-family:DM Sans,sans-serif;flex-shrink:0;box-shadow:0 0 0 1px rgba(0,0,0,0.06)">
+      <i class="ti ti-walk" style="font-size:18px"></i>
+      <span style="font-size:0.65rem;font-weight:600">Activité</span>
+    </button>
   </div>
   <div style="position:relative;border-radius:18px;padding:2px;margin-bottom:16px;background:linear-gradient(135deg, rgba(255,180,130,0.9), rgba(255,255,255,0.6) 35%, rgba(255,110,90,0.8) 70%, rgba(255,255,255,0.6));background-size:300% 300%;animation:visBorderFlow 6s ease infinite;box-shadow:0 16px 40px rgba(230,110,70,0.16), 0 2px 8px rgba(0,0,0,0.04)">
     <div style="border-radius:16px;overflow:hidden;position:relative;height:140px;background:url(https://raw.githubusercontent.com/avelia-ai/nutricare-frontend/main/suivi_sante.png) center/cover">
@@ -5748,6 +5766,52 @@ function switchLang(lang) {
       <div style="font-size:0.75rem;font-weight:700;color:#2D2D2D;margin:6px 0 8px">Historique</div>
       <canvas id="sommeilChartCanvas" width="300" height="90" style="width:100%;height:90px;display:block;margin-bottom:10px"></canvas>
       <div id="sommeilHistoryList" style="font-size:0.78rem;color:#888"></div>
+    </div>
+  </div>
+
+  <!-- ACTIVITE -->
+  <div id="activiteCard" data-suivi-tab="activite" style="display:none;background:#FFFCFA;border-radius:16px;margin-bottom:16px;overflow:hidden;box-shadow:0 0 0 1.5px rgba(255,154,108,0.22),0 14px 32px rgba(230,110,70,0.14)">
+    <div style="background:linear-gradient(135deg,#27AE60,#7EC8E3);padding:16px 20px 30px">
+      <div style="font-size:0.7rem;color:rgba(255,255,255,0.85);font-weight:700;letter-spacing:0.04em;margin-bottom:4px">ACTIVITÉ</div>
+      <div style="font-size:1.05rem;color:white;font-weight:700">Podomètre & exercices</div>
+    </div>
+    <div style="margin:-18px 14px 16px;position:relative">
+      <div style="background:#fff;border-radius:14px;padding:18px;text-align:center;box-shadow:0 2px 10px rgba(0,0,0,0.06)">
+        <div style="width:52px;height:52px;border-radius:50%;background:#EAF7EE;display:flex;align-items:center;justify-content:center;margin:0 auto 10px">
+          <span style="font-size:1.4rem">👣</span>
+        </div>
+        <div id="activitePasCount" style="font-size:2.2rem;font-weight:700;color:#27AE60;line-height:1">0</div>
+        <div style="font-size:0.78rem;color:#888;margin-bottom:14px">pas aujourd'hui</div>
+        <div style="display:flex;gap:8px;align-items:center;justify-content:center;margin-bottom:10px">
+          <input type="number" id="activitePasInput" min="0" placeholder="Saisir mes pas" style="flex:1;max-width:150px;padding:10px;border:1.5px solid #eee;border-radius:10px;font-size:0.9rem;text-align:center;box-sizing:border-box;font-family:DM Sans,sans-serif">
+          <button onclick="saveManualSteps()" style="background:linear-gradient(135deg,var(--coral),var(--accent));color:white;border:none;border-radius:10px;padding:10px 14px;font-size:0.8rem;font-weight:700;cursor:pointer">OK</button>
+        </div>
+        <button id="activiteSensorBtn" onclick="startStepSensor()" style="width:100%;background:#F5F5F5;color:#555;border:none;border-radius:10px;padding:10px;font-size:0.78rem;font-weight:600;cursor:pointer">Activer le suivi via capteur</button>
+      </div>
+    </div>
+    <div style="padding:4px 14px 16px">
+      <div style="font-size:0.75rem;font-weight:700;color:#2D2D2D;margin:6px 0 10px">Exercice physique</div>
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:16px">
+        <div onclick="window.openAddSport('marche')" style="text-align:center;cursor:pointer">
+          <div style="width:52px;height:52px;border-radius:50%;background:#27AE60;display:flex;align-items:center;justify-content:center;margin:0 auto 6px"><i class="ti ti-walk" style="font-size:22px;color:white"></i></div>
+          <div style="font-size:0.7rem;color:#555;font-weight:600">Marche</div>
+        </div>
+        <div onclick="window.openAddSport('course')" style="text-align:center;cursor:pointer">
+          <div style="width:52px;height:52px;border-radius:50%;background:#A3C93A;display:flex;align-items:center;justify-content:center;margin:0 auto 6px"><i class="ti ti-run" style="font-size:22px;color:white"></i></div>
+          <div style="font-size:0.7rem;color:#555;font-weight:600">Course</div>
+        </div>
+        <div onclick="window.openAddSport('velo')" style="text-align:center;cursor:pointer">
+          <div style="width:52px;height:52px;border-radius:50%;background:#FF6B6B;display:flex;align-items:center;justify-content:center;margin:0 auto 6px"><i class="ti ti-bike" style="font-size:22px;color:white"></i></div>
+          <div style="font-size:0.7rem;color:#555;font-weight:600">Vélo</div>
+        </div>
+        <div onclick="window.openAddSport()" style="text-align:center;cursor:pointer">
+          <div style="width:52px;height:52px;border-radius:50%;background:#999;display:flex;align-items:center;justify-content:center;margin:0 auto 6px"><i class="ti ti-dots" style="font-size:22px;color:white"></i></div>
+          <div style="font-size:0.7rem;color:#555;font-weight:600">Plus</div>
+        </div>
+      </div>
+      <div style="font-size:0.75rem;font-weight:700;color:#2D2D2D;margin:6px 0 8px">Séances du jour</div>
+      <div id="sportSeancesActivite" style="display:flex;flex-direction:column;gap:8px"></div>
+      <div id="totalCaloriesActivite" style="display:none;margin-top:10px;padding:10px;background:var(--cream);border-radius:10px;text-align:center;font-size:0.85rem;font-weight:600;color:var(--coral)"></div>
     </div>
   </div>
 
@@ -13239,6 +13303,80 @@ function renderSommeilSection(logs) {
   }).join('');
 }
 
+function getTodaySteps() {
+  var key = 'mirella_steps_' + new Date().toISOString().slice(0,10);
+  return parseInt(localStorage.getItem(key) || '0', 10);
+}
+function setTodaySteps(n) {
+  var key = 'mirella_steps_' + new Date().toISOString().slice(0,10);
+  localStorage.setItem(key, String(n));
+  var el = document.getElementById('activitePasCount');
+  if (el) el.textContent = n;
+}
+function saveManualSteps() {
+  var input = document.getElementById('activitePasInput');
+  var n = parseInt(input.value, 10);
+  if (isNaN(n) || n < 0) return;
+  setTodaySteps(n);
+}
+window._stepsSensorActive = false;
+window._stepsSensorBaseCount = 0;
+window._stepsSensorSessionCount = 0;
+window._lastAccelMag = 0;
+window._lastStepTime = 0;
+function handleMotionForSteps(e) {
+  var acc = e.accelerationIncludingGravity || e.acceleration;
+  if (!acc) return;
+  var mag = Math.sqrt((acc.x||0)*(acc.x||0) + (acc.y||0)*(acc.y||0) + (acc.z||0)*(acc.z||0));
+  var delta = mag - window._lastAccelMag;
+  window._lastAccelMag = mag;
+  var now = Date.now();
+  if (delta > 3 && (now - window._lastStepTime) > 300) {
+    window._lastStepTime = now;
+    window._stepsSensorSessionCount++;
+    var el = document.getElementById('activitePasCount');
+    if (el) el.textContent = window._stepsSensorBaseCount + window._stepsSensorSessionCount;
+  }
+}
+function startStepSensor() {
+  function begin() {
+    window._stepsSensorActive = true;
+    window._stepsSensorBaseCount = getTodaySteps();
+    window._stepsSensorSessionCount = 0;
+    window._lastAccelMag = 0;
+    window._lastStepTime = 0;
+    window.addEventListener('devicemotion', handleMotionForSteps);
+    var btn = document.getElementById('activiteSensorBtn');
+    if (btn) { btn.textContent = 'Arrêter et enregistrer'; btn.onclick = stopStepSensor; }
+  }
+  if (typeof DeviceMotionEvent !== 'undefined' && typeof DeviceMotionEvent.requestPermission === 'function') {
+    DeviceMotionEvent.requestPermission().then(function(state) {
+      if (state === 'granted') begin();
+      else alert("Autorisation capteurs refusée.");
+    }).catch(function(){ alert("Impossible d'accéder aux capteurs sur cet appareil."); });
+  } else if (typeof DeviceMotionEvent !== 'undefined') {
+    begin();
+  } else {
+    alert("Les capteurs de mouvement ne sont pas disponibles sur cet appareil ou ce navigateur.");
+  }
+}
+function stopStepSensor() {
+  window.removeEventListener('devicemotion', handleMotionForSteps);
+  window._stepsSensorActive = false;
+  setTodaySteps(window._stepsSensorBaseCount + window._stepsSensorSessionCount);
+  var input = document.getElementById('activitePasInput');
+  if (input) input.value = getTodaySteps();
+  var btn = document.getElementById('activiteSensorBtn');
+  if (btn) { btn.textContent = 'Activer le suivi via capteur'; btn.onclick = startStepSensor; }
+}
+function renderActiviteTab() {
+  var countEl = document.getElementById('activitePasCount');
+  if (countEl) countEl.textContent = getTodaySteps();
+  var input = document.getElementById('activitePasInput');
+  if (input) input.value = getTodaySteps() || '';
+  if (typeof window.renderSportSeances === 'function') window.renderSportSeances();
+}
+
 function switchSuiviTab(tab, btn) {
   var container = document.getElementById('healthView');
   if (!container) return;
@@ -13265,6 +13403,7 @@ function switchSuiviTab(tab, btn) {
   window._suiviActiveTab = tab;
   if (tab === 'sommeil' && typeof renderSommeilSection === 'function') { renderSommeilSection(_healthLogs); }
   if (tab === 'cardio' && typeof renderCardioSection === 'function') { renderCardioSection(_healthLogs); }
+  if (tab === 'activite' && typeof renderActiviteTab === 'function') { renderActiviteTab(); }
 }
 
 function renderHealthHistory(logs) {
