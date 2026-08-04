@@ -5884,15 +5884,57 @@ function switchLang(lang) {
       </div>
     </div>
   </div>
-  <div id="healthScoreSummaryCard" style="background:#FFFCFA;border-radius:16px;padding:18px 20px;margin-bottom:16px;box-shadow:0 0 0 1.5px rgba(255,154,108,0.22),0 14px 32px rgba(230,110,70,0.14);display:flex;align-items:center;gap:16px">
-    <svg width="64" height="64" viewBox="0 0 64 64" style="flex-shrink:0">
-      <circle cx="32" cy="32" r="27" fill="none" stroke="#F2EFE9" stroke-width="6"/>
-      <circle id="healthScoreSummaryRing" cx="32" cy="32" r="27" fill="none" stroke="var(--coral)" stroke-width="6" stroke-linecap="round" stroke-dasharray="169.6" stroke-dashoffset="169.6" transform="rotate(-90 32 32)" style="transition:stroke-dashoffset .5s ease"/>
-      <text id="healthScoreSummaryValue" x="32" y="37" text-anchor="middle" font-size="18" font-weight="700" fill="#2D2D2D">--</text>
-    </svg>
-    <div style="flex:1;min-width:0">
-      <div style="font-size:0.7rem;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;color:#999;margin-bottom:3px">Score de sante</div>
-      <div id="healthScoreSummaryLabel" style="font-size:0.95rem;font-weight:700;color:#2D2D2D">Remplissez vos indicateurs du jour</div>
+  <div id="healthScoreSummaryCard" style="background:linear-gradient(135deg,#1B1B2F,#232946);border-radius:20px;padding:22px;margin-bottom:16px;position:relative;overflow:hidden;box-shadow:0 16px 40px rgba(0,0,0,0.18)">
+    <div style="position:absolute;top:-40px;right:-30px;width:140px;height:140px;background:radial-gradient(circle,rgba(255,107,107,0.22),transparent 70%);pointer-events:none"></div>
+    <div style="position:absolute;bottom:-50px;left:-20px;width:120px;height:120px;background:radial-gradient(circle,rgba(108,92,231,0.16),transparent 70%);pointer-events:none"></div>
+    <div style="display:flex;align-items:center;gap:18px;position:relative;z-index:1;margin-bottom:18px">
+      <svg width="86" height="86" viewBox="0 0 86 86" style="flex-shrink:0">
+        <circle cx="43" cy="43" r="36" fill="none" stroke="rgba(255,255,255,0.08)" stroke-width="7"/>
+        <circle id="healthScoreSummaryRing" cx="43" cy="43" r="36" fill="none" stroke="url(#hsGrad)" stroke-width="7" stroke-linecap="round" stroke-dasharray="226.2" stroke-dashoffset="226.2" transform="rotate(-90 43 43)" style="transition:stroke-dashoffset .6s ease"/>
+        <defs><linearGradient id="hsGrad" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#FF6B6B"/><stop offset="100%" stop-color="#FFB347"/></linearGradient></defs>
+        <text id="healthScoreSummaryValue" x="43" y="49" text-anchor="middle" font-size="24" font-weight="800" fill="#fff" font-family="DM Sans, sans-serif">--</text>
+      </svg>
+      <div style="flex:1;min-width:0">
+        <div style="font-size:0.66rem;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:rgba(255,255,255,0.45);margin-bottom:5px">Score de sante</div>
+        <div id="healthScoreSummaryLabel" style="font-size:1.05rem;font-weight:700;color:#fff">Remplissez vos indicateurs</div>
+      </div>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:6px;position:relative;z-index:1;border-top:1px solid rgba(255,255,255,0.08);padding-top:16px">
+      <div style="text-align:center">
+        <div style="width:30px;height:30px;border-radius:9px;background:rgba(255,255,255,0.08);display:flex;align-items:center;justify-content:center;margin:0 auto 5px">
+          <i class="ti ti-bolt" style="font-size:14px;color:#FFB347"></i>
+        </div>
+        <div id="healthScoreBarEnergie" style="font-size:0.68rem;font-weight:700;color:#fff">--</div>
+        <div style="font-size:0.56rem;color:rgba(255,255,255,0.4);margin-top:1px">Energie</div>
+      </div>
+      <div style="text-align:center">
+        <div style="width:30px;height:30px;border-radius:9px;background:rgba(255,255,255,0.08);display:flex;align-items:center;justify-content:center;margin:0 auto 5px">
+          <i class="ti ti-moon" style="font-size:14px;color:#7EC8E3"></i>
+        </div>
+        <div id="healthScoreBarSommeil" style="font-size:0.68rem;font-weight:700;color:#fff">--</div>
+        <div style="font-size:0.56rem;color:rgba(255,255,255,0.4);margin-top:1px">Sommeil</div>
+      </div>
+      <div style="text-align:center">
+        <div style="width:30px;height:30px;border-radius:9px;background:rgba(255,255,255,0.08);display:flex;align-items:center;justify-content:center;margin:0 auto 5px">
+          <i class="ti ti-droplet" style="font-size:14px;color:#A8D8A8"></i>
+        </div>
+        <div id="healthScoreBarHydra" style="font-size:0.68rem;font-weight:700;color:#fff">--</div>
+        <div style="font-size:0.56rem;color:rgba(255,255,255,0.4);margin-top:1px">Hydra</div>
+      </div>
+      <div style="text-align:center">
+        <div style="width:30px;height:30px;border-radius:9px;background:rgba(255,255,255,0.08);display:flex;align-items:center;justify-content:center;margin:0 auto 5px">
+          <i class="ti ti-walk" style="font-size:14px;color:#FF9A6B"></i>
+        </div>
+        <div id="healthScoreBarActiv" style="font-size:0.68rem;font-weight:700;color:#fff">--</div>
+        <div style="font-size:0.56rem;color:rgba(255,255,255,0.4);margin-top:1px">Activite</div>
+      </div>
+      <div style="text-align:center">
+        <div style="width:30px;height:30px;border-radius:9px;background:rgba(255,255,255,0.08);display:flex;align-items:center;justify-content:center;margin:0 auto 5px">
+          <i class="ti ti-yoga" style="font-size:14px;color:#C3A9D1"></i>
+        </div>
+        <div id="healthScoreBarStress" style="font-size:0.68rem;font-weight:700;color:#fff">--</div>
+        <div style="font-size:0.56rem;color:rgba(255,255,255,0.4);margin-top:1px">Calme</div>
+      </div>
     </div>
   </div>
   <!-- RITUELS BIEN-ETRE -->
@@ -13349,10 +13391,15 @@ function updateHealthScoreSummary(log) {
   var ringEl = document.getElementById('healthScoreSummaryRing');
   var lblEl = document.getElementById('healthScoreSummaryLabel');
   if (!valEl || !ringEl || !lblEl) return;
+  var circ = 226.2;
   if (!log) {
     valEl.textContent = '--';
     lblEl.textContent = 'Remplissez vos indicateurs du jour';
-    ringEl.style.strokeDashoffset = 169.6;
+    ringEl.style.strokeDashoffset = circ;
+    ['Energie','Sommeil','Hydra','Activ','Stress'].forEach(function(k) {
+      var e = document.getElementById('healthScoreBar' + k);
+      if (e) e.textContent = '--';
+    });
     return;
   }
   var energyNorm = (log.energy_level != null) ? Math.min(log.energy_level / 10, 1) : 0;
@@ -13360,12 +13407,19 @@ function updateHealthScoreSummary(log) {
   var avg = (energyNorm + norm.sleep + norm.hydra + norm.activ + norm.calm) / 5;
   var score = Math.round(avg * 100);
   var lbl = score >= 80 ? 'Excellente journee !' : score >= 60 ? 'Bonne journee' : score >= 40 ? 'Journee correcte' : 'Journee difficile';
-  var c = score >= 80 ? '#22c55e' : score >= 60 ? 'var(--accent)' : 'var(--coral)';
   valEl.textContent = score;
-  valEl.style.color = c;
   lblEl.textContent = lbl;
-  ringEl.style.strokeDashoffset = 169.6 * (1 - score/100);
-  ringEl.style.stroke = c;
+  ringEl.style.strokeDashoffset = circ * (1 - score/100);
+  var barEnergie = document.getElementById('healthScoreBarEnergie');
+  var barSommeil = document.getElementById('healthScoreBarSommeil');
+  var barHydra = document.getElementById('healthScoreBarHydra');
+  var barActiv = document.getElementById('healthScoreBarActiv');
+  var barStress = document.getElementById('healthScoreBarStress');
+  if (barEnergie) barEnergie.textContent = Math.round(energyNorm * 100) + '%';
+  if (barSommeil) barSommeil.textContent = Math.round(norm.sleep * 100) + '%';
+  if (barHydra) barHydra.textContent = Math.round(norm.hydra * 100) + '%';
+  if (barActiv) barActiv.textContent = Math.round(norm.activ * 100) + '%';
+  if (barStress) barStress.textContent = Math.round(norm.calm * 100) + '%';
 }
 function refreshHarmonyAvatar(logs) {
   const defiBonus = parseInt(localStorage.getItem(_gamiKey()) || '0', 10);
