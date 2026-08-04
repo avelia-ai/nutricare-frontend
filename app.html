@@ -1129,6 +1129,12 @@ function loadSportSeancesForToday() {
   } catch(e) {}
   if (typeof window.renderSportSeances === 'function') window.renderSportSeances();
 }
+function deleteSportHistoryEntry(idx) {
+  var hist = JSON.parse(localStorage.getItem('mirella_sport_history') || '[]');
+  hist.splice(idx, 1);
+  localStorage.setItem('mirella_sport_history', JSON.stringify(hist));
+  renderSportHistory();
+}
 function renderSportHistory() {
   var el = document.getElementById('sportHistoryList');
   if (!el) return;
@@ -1138,19 +1144,20 @@ function renderSportHistory() {
     return;
   }
   var grouped = {};
-  hist.forEach(function(h) {
+  hist.forEach(function(h, i) {
     if (!grouped[h.date]) grouped[h.date] = [];
-    grouped[h.date].push(h);
+    grouped[h.date].push({entry: h, origIndex: i});
   });
   var dates = Object.keys(grouped).sort().reverse().slice(0, 30);
   var html = '';
   dates.forEach(function(date) {
     var d = new Date(date + 'T12:00:00');
     var dateLabel = d.toLocaleDateString('fr-FR', {weekday:'short', day:'numeric', month:'short'});
-    var dayTotal = grouped[date].reduce(function(s,h){return s+(h.cal||0);}, 0);
+    var dayTotal = grouped[date].reduce(function(s,g){return s+(g.entry.cal||0);}, 0);
     html += '<div style="margin-bottom:14px">';
     html += '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px"><span style="font-size:0.76rem;font-weight:700;color:#555;text-transform:capitalize">' + dateLabel + '</span><span style="font-size:0.72rem;color:#FF6B6B;font-weight:700">' + dayTotal + ' kcal</span></div>';
-    grouped[date].forEach(function(h) {
+    grouped[date].forEach(function(g) {
+      var h = g.entry;
       var key = (h.nom || '').toLowerCase().trim();
       var meta = _seanceIconMapGlobal[key] || _seanceIconMapGlobal['autre'];
       html += '<div style="display:flex;align-items:center;gap:10px;padding:8px 10px;background:#FAFAFA;border-radius:12px;margin-bottom:6px">' +
@@ -1159,6 +1166,7 @@ function renderSportHistory() {
         '</div>' +
         '<div style="flex:1;min-width:0"><div style="font-size:0.8rem;font-weight:600;color:#1a1a1a">'+h.nom+'</div>' +
         '<div style="font-size:0.68rem;color:#999">'+h.duree+' min'+(h.distance ? ' \u00b7 '+h.distance+' km' : '')+' \u00b7 '+h.cal+' kcal</div></div>' +
+        '<button onclick="deleteSportHistoryEntry('+g.origIndex+')" style="width:26px;height:26px;border-radius:50%;background:#F0F0F0;border:none;color:#bbb;cursor:pointer;font-size:0.85rem;display:flex;align-items:center;justify-content:center;flex-shrink:0">\u2715</button>' +
       '</div>';
     });
     html += '</div>';
