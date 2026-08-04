@@ -6300,13 +6300,20 @@ function switchLang(lang) {
         <div class="hc-unit">litres</div>
       </div>
     </div>
-    <div style="background:#FFF8F5;border-radius:14px;border:0.5px solid rgba(255,154,108,0.2);padding:14px;margin-bottom:16px">
-      <div style="font-size:10px;font-weight:700;letter-spacing:0.07em;text-transform:uppercase;color:#FF9A3C;margin-bottom:8px;display:flex;align-items:center;gap:6px"><i class="ti ti-pencil" style="font-size:13px"></i>Ressenti du jour</div>
-      <textarea id="hNotes" placeholder="Notez vos ressentis du jour..." style="width:100%;background:transparent;border:none;font-size:0.88rem;font-family:DM Sans,sans-serif;outline:none;resize:none;height:60px;color:#2D2D2D;line-height:1.5"></textarea>
+    <div style="background:linear-gradient(160deg,#fff,#FFF8F5);border-radius:18px;border:0.5px solid rgba(255,154,108,0.15);padding:18px;margin-bottom:16px;box-shadow:0 8px 22px rgba(230,110,70,0.06)">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">
+        <div style="width:32px;height:32px;border-radius:10px;background:linear-gradient(135deg,#FF9A3C,#FFC078);display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:0 4px 10px rgba(255,154,60,0.35)">
+          <i class="ti ti-pencil" style="font-size:15px;color:#fff"></i>
+        </div>
+        <div style="font-size:11px;font-weight:800;letter-spacing:0.07em;text-transform:uppercase;color:#999">Ressenti du jour</div>
+      </div>
+      <textarea id="hNotes" placeholder="Notez vos ressentis du jour..." style="width:100%;background:transparent;border:none;font-size:0.92rem;font-family:DM Sans,sans-serif;outline:none;resize:none;height:64px;color:#1a1a1a;line-height:1.6"></textarea>
     </div>
-    <button onclick="saveHealthLog()" style="background:linear-gradient(135deg,#FF6B6B,#FF9A3C);color:white;width:100%;padding:14px;border:none;border-radius:14px;font-size:0.95rem;font-weight:700;cursor:pointer;font-family:DM Sans,sans-serif;box-shadow:0 6px 20px rgba(255,107,107,0.3);letter-spacing:0.02em;margin-bottom:8px">Enregistrer ✓</button>
+    <button onclick="saveHealthLog()" style="background:linear-gradient(135deg,#FF6B6B,#FF9A3C);color:white;width:100%;padding:16px;border:none;border-radius:16px;font-size:1rem;font-weight:800;cursor:pointer;font-family:DM Sans,sans-serif;box-shadow:0 10px 26px rgba(255,107,107,0.35);letter-spacing:0.02em;margin-bottom:10px;display:flex;align-items:center;justify-content:center;gap:8px"><i class="ti ti-check" style="font-size:18px"></i>Enregistrer</button>
     <span id="healthSaveMsg" style="font-size:0.78rem;color:#28C840;display:none;margin-top:8px">✅ Enregistré !</span>
-    <button onclick="window.analyseHealthLog()" id="healthAnalyseBtn" style="width:100%;background:#2D2D2D;color:white;border:none;border-radius:14px;padding:14px;font-size:0.95rem;font-weight:700;cursor:pointer;font-family:DM Sans,sans-serif;letter-spacing:0.02em;display:flex;align-items:center;justify-content:center;gap:8px"><i class="ti ti-sparkles" style="font-size:16px"></i>Analyser ma journée avec Mirella</button>
+    <button onclick="window.analyseHealthLog()" id="healthAnalyseBtn" style="width:100%;background:linear-gradient(135deg,#1B1B2F,#232946);color:white;border:none;border-radius:16px;padding:16px;font-size:1rem;font-weight:800;cursor:pointer;font-family:DM Sans,sans-serif;letter-spacing:0.02em;display:flex;align-items:center;justify-content:center;gap:9px;box-shadow:0 10px 26px rgba(0,0,0,0.18);position:relative;overflow:hidden">
+      <i class="ti ti-sparkles" style="font-size:17px;color:#FFD180"></i>Analyser ma journée avec Mirella
+    </button>
     <div id="healthAnalyseComment" style="display:none;margin-top:16px"></div>
   </div>
   <!-- Graphiques et historique -->
