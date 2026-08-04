@@ -6208,14 +6208,14 @@ function switchLang(lang) {
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
   <!-- Formulaire saisie PREMIUM v3 -->
   <style>
-    .hc{position:relative;background:#FFFFFF;border-radius:16px;border:0.5px solid rgba(0,0,0,0.08);padding:14px;overflow:hidden}
-    .hc-top{position:absolute;top:0;left:0;right:0;height:3px;border-radius:16px 16px 0 0}
-    .hc-ico{width:32px;height:32px;border-radius:10px;display:flex;align-items:center;justify-content:center;margin-bottom:10px;font-size:16px;flex-shrink:0}
-    .hc-ico i{font-size:16px;line-height:1}
-    .hc-lbl{font-size:10px;font-weight:700;letter-spacing:0.07em;text-transform:uppercase;color:#aaa;margin-bottom:5px}
-    .hc input{width:100%;background:transparent;border:none;outline:none;font-size:1.2rem;font-weight:800;font-family:DM Sans,sans-serif;padding:0;line-height:1.2;color:#2D2D2D}
-    .hc input::placeholder{font-weight:400;font-size:0.88rem;color:#ccc}
-    .hc-unit{font-size:10px;color:#bbb;margin-top:3px;font-weight:500}
+    .hc{position:relative;background:linear-gradient(160deg,#ffffff,#FFFCFA);border-radius:18px;border:0.5px solid rgba(0,0,0,0.05);padding:16px;overflow:hidden;box-shadow:0 6px 18px rgba(0,0,0,0.045);transition:box-shadow .2s ease}
+    .hc-top{display:none}
+    .hc-ico{width:38px;height:38px;border-radius:13px;display:flex;align-items:center;justify-content:center;margin-bottom:12px;font-size:17px;flex-shrink:0;box-shadow:0 6px 14px rgba(0,0,0,0.1)}
+    .hc-ico i{font-size:17px;line-height:1;color:#fff !important}
+    .hc-lbl{font-size:9.5px;font-weight:800;letter-spacing:0.09em;text-transform:uppercase;color:#bbb;margin-bottom:5px}
+    .hc input{width:100%;background:transparent;border:none;outline:none;font-size:1.35rem;font-weight:800;font-family:DM Sans,sans-serif;padding:0;line-height:1.2;color:#1a1a1a}
+    .hc input::placeholder{font-weight:400;font-size:0.88rem;color:#ddd}
+    .hc-unit{font-size:10px;color:#bbb;margin-top:4px;font-weight:600}
   </style>
   <div style="background:#FFFCFA;border-radius:22px;padding:20px;box-shadow:0 0 0 1.5px rgba(255,154,108,0.15),0 16px 40px rgba(230,110,70,0.1);margin-bottom:24px">
     <div style="display:flex;align-items:center;gap:8px;margin-bottom:18px">
@@ -6225,56 +6225,56 @@ function switchLang(lang) {
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:9px" id="healthGrid" class="health-grid">
       <div class="hc">
         <div class="hc-top" style="background:linear-gradient(90deg,#FF6B6B,#FF9A3C)"></div>
-        <div class="hc-ico" style="background:#FFF0EE">🩸</div>
+        <div class="hc-ico" style="background:linear-gradient(135deg,#FF6B6B,#FF9A3C)">🩸</div>
         <div class="hc-lbl">Glycémie</div>
         <input type="number" id="hGlycemia" step="0.1" placeholder="—">
         <div class="hc-unit">mmol/L</div>
       </div>
       <div class="hc">
         <div class="hc-top" style="background:linear-gradient(90deg,#9B59B6,#c39bd3)"></div>
-        <div class="hc-ico" style="background:#F5F0FF"><i class="ti ti-scale" style="color:#9B59B6"></i></div>
+        <div class="hc-ico" style="background:linear-gradient(135deg,#9B59B6,#c39bd3)"><i class="ti ti-scale" style="color:#fff"></i></div>
         <div class="hc-lbl">Poids</div>
         <input type="number" id="hWeight" step="0.1" placeholder="—" oninput="window.updateIMCDisplay()">
         <div class="hc-unit">kg</div>
       </div>
       <div class="hc">
         <div class="hc-top" style="background:linear-gradient(90deg,#2E86C1,#7fb3d3)"></div>
-        <div class="hc-ico" style="background:#F0F7FF"><i class="ti ti-ruler" style="color:#2E86C1"></i></div>
+        <div class="hc-ico" style="background:linear-gradient(135deg,#2E86C1,#7fb3d3)"><i class="ti ti-ruler" style="color:#fff"></i></div>
         <div class="hc-lbl">Taille</div>
         <input type="number" id="hHeight" placeholder="—" oninput="window.updateIMCDisplay()">
         <div class="hc-unit">cm</div>
       </div>
       <div class="hc">
         <div class="hc-top" style="background:linear-gradient(90deg,#27AE60,#82e0aa)"></div>
-        <div class="hc-ico" style="background:#F0FFF5"><i class="ti ti-chart-bar" style="color:#27AE60"></i></div>
+        <div class="hc-ico" style="background:linear-gradient(135deg,#27AE60,#82e0aa)"><i class="ti ti-chart-bar" style="color:#fff"></i></div>
         <div class="hc-lbl">IMC</div>
         <div id="hImcValue" style="font-size:1.2rem;font-weight:800;color:#2D2D2D;line-height:1.2">—</div>
         <div id="hImcLabel" style="font-size:10px;color:#27AE60;margin-top:3px;font-weight:600"></div>
       </div>
       <div class="hc">
         <div class="hc-top" style="background:linear-gradient(90deg,#F39C12,#f8c471)"></div>
-        <div class="hc-ico" style="background:#FFFBF0"><i class="ti ti-bolt" style="color:#F39C12"></i></div>
+        <div class="hc-ico" style="background:linear-gradient(135deg,#F39C12,#FFD180)"><i class="ti ti-bolt" style="color:#fff"></i></div>
         <div class="hc-lbl">Énergie</div>
         <input type="number" id="hEnergy" min="1" max="10" placeholder="—">
         <div class="hc-unit">sur 10</div>
       </div>
       <div class="hc">
         <div class="hc-top" style="background:linear-gradient(90deg,#E91E8C,#f48cb6)"></div>
-        <div class="hc-ico" style="background:#FFF0F8"><i class="ti ti-brain" style="color:#E91E8C"></i></div>
+        <div class="hc-ico" style="background:linear-gradient(135deg,#E91E8C,#F48FB1)"><i class="ti ti-brain" style="color:#fff"></i></div>
         <div class="hc-lbl">Stress</div>
         <input type="number" id="hStress" min="1" max="10" placeholder="—">
         <div class="hc-unit">sur 10</div>
       </div>
       <div class="hc">
         <div class="hc-top" style="background:linear-gradient(90deg,#00B894,#55efc4)"></div>
-        <div class="hc-ico" style="background:#F0FFF8"><i class="ti ti-run" style="color:#00B894"></i></div>
+        <div class="hc-ico" style="background:linear-gradient(135deg,#00B894,#55EFC4)"><i class="ti ti-run" style="color:#fff"></i></div>
         <div class="hc-lbl">Activité</div>
         <input type="number" id="hActivity" min="0" placeholder="—">
         <div class="hc-unit">minutes</div>
       </div>
       <div class="hc">
         <div class="hc-top" style="background:linear-gradient(90deg,#6C5CE7,#a29bfe)"></div>
-        <div class="hc-ico" style="background:#F0F0FF"><i class="ti ti-moon" style="color:#6C5CE7"></i></div>
+        <div class="hc-ico" style="background:linear-gradient(135deg,#6C5CE7,#a29bfe)"><i class="ti ti-moon" style="color:#fff"></i></div>
         <div class="hc-lbl">Sommeil</div>
         <input type="number" id="hSleep" step="0.5" placeholder="—">
         <div class="hc-unit">heures</div>
@@ -6283,7 +6283,7 @@ function switchLang(lang) {
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:12px">
       <div class="hc">
         <div class="hc-top" style="background:linear-gradient(90deg,#FF6B6B,#FF9A3C)"></div>
-        <div class="hc-ico" style="background:#FFF0EE"><i class="ti ti-heart-rate-monitor" style="color:#FF6B6B"></i></div>
+        <div class="hc-ico" style="background:linear-gradient(135deg,#FF6B6B,#FF9A9A)"><i class="ti ti-heart-rate-monitor" style="color:#fff"></i></div>
         <div class="hc-lbl">Tension</div>
         <div style="display:flex;gap:4px;align-items:center">
           <input type="number" id="hBpSys" placeholder="sys" style="width:44%;color:#2D2D2D;font-size:1rem;font-weight:800;background:transparent;border:none;outline:none;font-family:DM Sans,sans-serif">
@@ -6294,7 +6294,7 @@ function switchLang(lang) {
       </div>
       <div class="hc">
         <div class="hc-top" style="background:linear-gradient(90deg,#0984E3,#74b9ff)"></div>
-        <div class="hc-ico" style="background:#F0F8FF"><i class="ti ti-droplet" style="color:#0984E3"></i></div>
+        <div class="hc-ico" style="background:linear-gradient(135deg,#0984E3,#74b9ff)"><i class="ti ti-droplet" style="color:#fff"></i></div>
         <div class="hc-lbl">Hydratation</div>
         <input type="number" id="hHydration" step="0.1" placeholder="—" oninput="var v=parseFloat(this.value);if(!isNaN(v)){_hydrationMl=Math.round(v*1000);localStorage.setItem(getHydrationKey(),_hydrationMl);if(typeof updateHydrationDisplay==='function')updateHydrationDisplay();}">
         <div class="hc-unit">litres</div>
