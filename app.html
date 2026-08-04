@@ -4032,67 +4032,93 @@ function switchLang(lang) {
         </div>
       </div>
       <div style="padding:18px 16px 16px;width:100%;box-sizing:border-box">
-        <div id="homeMirelsBanner" onclick="showView('mirelsBoutique')" style="display:flex;align-items:center;justify-content:space-between;background:linear-gradient(135deg,#FFF5EE,#FFF0E8);border-radius:16px;padding:14px 18px;margin-bottom:16px;border:1.5px solid rgba(255,154,60,0.25);cursor:pointer;box-shadow:0 2px 12px rgba(255,107,107,0.08)">
-          <div style="display:flex;align-items:center;gap:10px">
-            <span style="font-size:1.3rem"><span style="display:inline-flex;align-items:center;justify-content:center;width:1.4em;height:1.4em;background:radial-gradient(circle at 35% 35%,#FFE566,#FFB300);border-radius:50%;box-shadow:0 2px 4px rgba(0,0,0,0.2);vertical-align:middle;font-size:0.75em;font-weight:900;color:#B8730A;font-family:DM Sans,sans-serif">M</span></span>
-            <span style="font-size:0.85rem;color:var(--charcoal);font-weight:600">Mes Mirels</span>
+        <div id="healthScoreSummaryCardHome" style="background:linear-gradient(135deg,#1B1B2F,#232946);border-radius:20px;padding:22px;margin-bottom:16px;position:relative;overflow:hidden;box-shadow:0 0 0 1.5px rgba(255,154,108,0.22),0 16px 40px rgba(0,0,0,0.18)">
+          <div style="position:absolute;top:-40px;right:-30px;width:140px;height:140px;background:radial-gradient(circle,rgba(255,107,107,0.22),transparent 70%);pointer-events:none"></div>
+          <div style="position:absolute;bottom:-50px;left:-20px;width:120px;height:120px;background:radial-gradient(circle,rgba(108,92,231,0.16),transparent 70%);pointer-events:none"></div>
+          <div style="display:flex;align-items:center;gap:18px;position:relative;z-index:1;margin-bottom:18px">
+            <svg width="86" height="86" viewBox="0 0 86 86" style="flex-shrink:0">
+              <circle cx="43" cy="43" r="36" fill="none" stroke="rgba(255,255,255,0.08)" stroke-width="7"/>
+              <circle id="healthScoreSummaryRingHome" cx="43" cy="43" r="36" fill="none" stroke="url(#hsGradHome)" stroke-width="7" stroke-linecap="round" stroke-dasharray="226.2" stroke-dashoffset="226.2" transform="rotate(-90 43 43)" style="transition:stroke-dashoffset .6s ease"/>
+              <defs><linearGradient id="hsGradHome" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#FF6B6B"/><stop offset="100%" stop-color="#FFB347"/></linearGradient></defs>
+              <text id="healthScoreSummaryValueHome" x="43" y="49" text-anchor="middle" font-size="24" font-weight="800" fill="#fff" font-family="DM Sans, sans-serif">--</text>
+            </svg>
+            <div style="flex:1;min-width:0">
+              <div style="font-size:0.66rem;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:rgba(255,255,255,0.45);margin-bottom:5px">Score de sante</div>
+              <div id="healthScoreSummaryLabelHome" style="font-size:1.05rem;font-weight:700;color:#fff">Remplissez vos indicateurs</div>
+            </div>
           </div>
-          <span id="homeMirelsCount" style="font-size:1.3rem;font-weight:700;color:var(--accent)">--</span>
+          <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:6px;position:relative;z-index:1;border-top:1px solid rgba(255,255,255,0.08);padding-top:16px">
+            <div style="text-align:center">
+              <div style="width:30px;height:30px;border-radius:9px;background:rgba(255,255,255,0.08);display:flex;align-items:center;justify-content:center;margin:0 auto 5px"><i class="ti ti-bolt" style="font-size:14px;color:#FFB347"></i></div>
+              <div id="healthScoreBarEnergieHome" style="font-size:0.68rem;font-weight:700;color:#fff">--</div>
+              <div style="font-size:0.56rem;color:rgba(255,255,255,0.4);margin-top:1px">Energie</div>
+            </div>
+            <div style="text-align:center">
+              <div style="width:30px;height:30px;border-radius:9px;background:rgba(255,255,255,0.08);display:flex;align-items:center;justify-content:center;margin:0 auto 5px"><i class="ti ti-moon" style="font-size:14px;color:#7EC8E3"></i></div>
+              <div id="healthScoreBarSommeilHome" style="font-size:0.68rem;font-weight:700;color:#fff">--</div>
+              <div style="font-size:0.56rem;color:rgba(255,255,255,0.4);margin-top:1px">Sommeil</div>
+            </div>
+            <div style="text-align:center">
+              <div style="width:30px;height:30px;border-radius:9px;background:rgba(255,255,255,0.08);display:flex;align-items:center;justify-content:center;margin:0 auto 5px"><i class="ti ti-droplet" style="font-size:14px;color:#A8D8A8"></i></div>
+              <div id="healthScoreBarHydraHome" style="font-size:0.68rem;font-weight:700;color:#fff">--</div>
+              <div style="font-size:0.56rem;color:rgba(255,255,255,0.4);margin-top:1px">Hydra</div>
+            </div>
+            <div style="text-align:center">
+              <div style="width:30px;height:30px;border-radius:9px;background:rgba(255,255,255,0.08);display:flex;align-items:center;justify-content:center;margin:0 auto 5px"><i class="ti ti-walk" style="font-size:14px;color:#FF9A6B"></i></div>
+              <div id="healthScoreBarActivHome" style="font-size:0.68rem;font-weight:700;color:#fff">--</div>
+              <div style="font-size:0.56rem;color:rgba(255,255,255,0.4);margin-top:1px">Activite</div>
+            </div>
+            <div style="text-align:center">
+              <div style="width:30px;height:30px;border-radius:9px;background:rgba(255,255,255,0.08);display:flex;align-items:center;justify-content:center;margin:0 auto 5px"><i class="ti ti-yoga" style="font-size:14px;color:#C3A9D1"></i></div>
+              <div id="healthScoreBarStressHome" style="font-size:0.68rem;font-weight:700;color:#fff">--</div>
+              <div style="font-size:0.56rem;color:rgba(255,255,255,0.4);margin-top:1px">Stress</div>
+            </div>
+          </div>
         </div>
         <!-- SECTION COEUR D'HARMONIE -->
-        <div style="margin-bottom:16px;border-radius:20px;padding:2px;background:linear-gradient(160deg, rgba(255,180,130,0.55), rgba(255,255,255,0.9) 40%, rgba(255,110,90,0.4) 75%, rgba(255,255,255,0.9));box-shadow:0 16px 38px rgba(230,110,70,0.14)">
-        <div style="background:#FFFFFF;border-radius:18px;padding:14px 16px 6px">
-          <div style="font-size:0.65rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--accent);margin-bottom:0px">✨ Mirella</div>
-          <div style="font-size:0.72rem;color:#999;line-height:1.4;margin:4px 0 8px">Renseignez vos indicateurs santé dans l'onglet "Suivi" pour faire évoluer Mirella</div>
-          <div style="display:flex;align-items:center;width:100%;gap:6px">
-            <!-- Canvas gauche -->
-            <div style="flex-shrink:0;width:155px;height:155px;position:relative;overflow:hidden">
+        <div id="coeurHarmonieCardHome" style="background:#FFFFFF;border-radius:20px;padding:0;overflow:hidden;box-shadow:0 0 0 1.5px rgba(255,154,108,0.22),0 14px 32px rgba(230,110,70,0.14);margin-bottom:24px">
+          <div style="background:linear-gradient(135deg,#FFB347,#FF6B6B);padding:16px 20px 30px">
+            <div style="font-size:0.7rem;color:rgba(255,255,255,0.85);font-weight:700;letter-spacing:0.04em;margin-bottom:4px">MIRELLA</div>
+            <div style="display:flex;align-items:center;justify-content:space-between">
+              <div id="harmonyStageNameHome" style="font-size:1.05rem;color:white;font-weight:700">Éveil</div>
+              <div id="harmonyLevelBadgeHome" style="font-size:0.72rem;font-weight:700;color:white;background:rgba(255,255,255,0.2);padding:4px 10px;border-radius:20px">Niveau 1</div>
+            </div>
+          </div>
+          <div style="margin:-18px 14px 16px;position:relative;background:#fff;border-radius:14px;padding:16px;box-shadow:0 2px 10px rgba(0,0,0,0.06)">
+            <div style="font-size:0.72rem;color:#999;line-height:1.4;margin-bottom:10px;text-align:center">Renseignez vos indicateurs santé dans l'onglet "Suivi" pour faire évoluer Mirella</div>
+            <div style="width:150px;height:150px;overflow:hidden;margin:0 auto 14px;border-radius:50%;display:flex;align-items:center;justify-content:center">
               <canvas id="harmonyCanvasHome" style="display:none"></canvas>
-              <video id="harmonyFoxVideoHome" autoplay muted loop playsinline style="width:100%;height:100%;object-fit:contain;border-radius:0;background:transparent;border:none;outline:none;display:block;margin:0 auto">
-        <source src="https://raw.githubusercontent.com/avelia-ai/nutricare-frontend/main/renard_mirella_niveau_1_compressed.mp4" type="video/mp4">
+              <video id="harmonyFoxVideoHome" autoplay muted loop playsinline style="width:150px;height:150px;object-fit:cover;background:transparent;border:none;outline:none;display:block">
+                <source src="https://raw.githubusercontent.com/avelia-ai/nutricare-frontend/main/renard_mirella_niveau_1_compressed.mp4" type="video/mp4">
               </video>
             </div>
-            <!-- Mesures droite -->
-            <div style="flex:1;min-width:0;display:flex;flex-direction:column;gap:8px;padding-right:8px">
-              <div>
-                <div style="display:flex;justify-content:space-between;font-size:0.72rem;margin-bottom:3px">
-                  <span style="color:#8a8a8a">Sommeil</span>
-                  <b id="homePctSleep" style="color:#2D2D2D">0%</b>
-                </div>
-                <div style="height:5px;background:#f0f0f0;border-radius:10px;overflow:hidden">
-                  <div id="homeBarSleep" style="height:100%;width:0%;background:#7EC8E3;border-radius:10px;transition:width .6s"></div>
-                </div>
+            <div style="display:none">
+              <b id="homePctSleep">0%</b><div id="homeBarSleep"></div>
+              <b id="homePctHydra">0%</b><div id="homeBarHydra"></div>
+              <b id="homePctActiv">0%</b><div id="homeBarActiv"></div>
+              <b id="homePctStress">0%</b><div id="homeBarStress"></div>
+            </div>
+            <div onclick="showView('mirelsBoutique')" style="display:flex;align-items:center;gap:12px;background:linear-gradient(135deg,#FFF0EC,#FFF8E8);border-radius:14px;padding:14px 16px;margin-bottom:10px;cursor:pointer">
+              <div style="width:38px;height:38px;border-radius:11px;background:linear-gradient(135deg,var(--coral),var(--accent));display:flex;align-items:center;justify-content:center;flex-shrink:0">
+                <i class="ti ti-shirt" style="font-size:18px;color:white"></i>
               </div>
-              <div>
-                <div style="display:flex;justify-content:space-between;font-size:0.72rem;margin-bottom:3px">
-                  <span style="color:#8a8a8a">Hydratation</span>
-                  <b id="homePctHydra" style="color:#2D2D2D">0%</b>
-                </div>
-                <div style="height:5px;background:#f0f0f0;border-radius:10px;overflow:hidden">
-                  <div id="homeBarHydra" style="height:100%;width:0%;background:#A8D8A8;border-radius:10px;transition:width .6s"></div>
-                </div>
+              <div style="flex:1;min-width:0">
+                <div style="font-size:0.82rem;font-weight:700;color:#2D2D2D">Personnalise Mirella</div>
+                <div style="font-size:0.7rem;color:#999">Debloque des accessoires dans la boutique</div>
               </div>
+              <i class="ti ti-chevron-right" style="font-size:16px;color:#ccc;flex-shrink:0"></i>
+            </div>
+            <div style="background:#FFFCFA;border-radius:14px;padding:14px 16px;display:flex;align-items:center;justify-content:space-between;box-shadow:0 0 0 1px rgba(0,0,0,0.04)">
               <div>
-                <div style="display:flex;justify-content:space-between;font-size:0.72rem;margin-bottom:3px">
-                  <span style="color:#8a8a8a">Activité</span>
-                  <b id="homePctActiv" style="color:#2D2D2D">0%</b>
-                </div>
-                <div style="height:5px;background:#f0f0f0;border-radius:10px;overflow:hidden">
-                  <div id="homeBarActiv" style="height:100%;width:0%;background:#FFB347;border-radius:10px;transition:width .6s"></div>
-                </div>
-              </div>
-              <div>
-                <div style="display:flex;justify-content:space-between;font-size:0.72rem;margin-bottom:3px">
-                  <span style="color:#8a8a8a">Calme</span>
-                  <b id="homePctStress" style="color:#2D2D2D">0%</b>
-                </div>
-                <div style="height:5px;background:#f0f0f0;border-radius:10px;overflow:hidden">
-                  <div id="homeBarStress" style="height:100%;width:0%;background:#C3A9D1;border-radius:10px;transition:width .6s"></div>
+                <div style="font-size:0.68rem;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;color:#999;margin-bottom:4px">Mes Mirels</div>
+                <div style="display:flex;align-items:center;gap:6px">
+                  <span style="display:inline-flex;align-items:center;justify-content:center;width:1.4em;height:1.4em;background:radial-gradient(circle at 35% 35%,#FFE566,#FFB300);border-radius:50%;box-shadow:0 2px 4px rgba(0,0,0,0.2);font-size:0.75em;font-weight:900;color:#B8730A;font-family:DM Sans,sans-serif">M</span>
+                  <span id="homeMirelsCount" style="font-size:1.15rem;font-weight:800;color:var(--charcoal)">--</span>
+                  <span style="font-size:0.78rem;color:#999">Mirels</span>
                 </div>
               </div>
             </div>
           </div>
-        </div>
         </div>
         <!-- FIN COEUR D'HARMONIE -->
 
@@ -13369,6 +13395,41 @@ function loadLeaderboard(page) {
   });
 }
 
+function updateHealthScoreSummaryHome(log) {
+  var valEl = document.getElementById('healthScoreSummaryValueHome');
+  var ringEl = document.getElementById('healthScoreSummaryRingHome');
+  var lblEl = document.getElementById('healthScoreSummaryLabelHome');
+  if (!valEl || !ringEl || !lblEl) return;
+  var circ = 226.2;
+  if (!log) {
+    valEl.textContent = '--';
+    lblEl.textContent = 'Remplissez vos indicateurs du jour';
+    ringEl.style.strokeDashoffset = circ;
+    ['Energie','Sommeil','Hydra','Activ','Stress'].forEach(function(k) {
+      var e = document.getElementById('healthScoreBar' + k + 'Home');
+      if (e) e.textContent = '--';
+    });
+    return;
+  }
+  var energyNorm = (log.energy_level != null) ? Math.min(log.energy_level / 10, 1) : 0;
+  var norm = normalizeHealthLog(log);
+  var avg = (energyNorm + norm.sleep + norm.hydra + norm.activ + norm.calm) / 5;
+  var score = Math.round(avg * 100);
+  var lbl = score >= 80 ? 'Excellente journee !' : score >= 60 ? 'Bonne journee' : score >= 40 ? 'Journee correcte' : 'Journee difficile';
+  valEl.textContent = score;
+  lblEl.textContent = lbl;
+  ringEl.style.strokeDashoffset = circ * (1 - score/100);
+  var barEnergie = document.getElementById('healthScoreBarEnergieHome');
+  var barSommeil = document.getElementById('healthScoreBarSommeilHome');
+  var barHydra = document.getElementById('healthScoreBarHydraHome');
+  var barActiv = document.getElementById('healthScoreBarActivHome');
+  var barStress = document.getElementById('healthScoreBarStressHome');
+  if (barEnergie) barEnergie.textContent = Math.round(energyNorm * 100) + '%';
+  if (barSommeil) barSommeil.textContent = Math.round(norm.sleep * 100) + '%';
+  if (barHydra) barHydra.textContent = Math.round(norm.hydra * 100) + '%';
+  if (barActiv) barActiv.textContent = Math.round(norm.activ * 100) + '%';
+  if (barStress) barStress.textContent = Math.round(norm.stress * 100) + '%';
+}
 function updateHealthScoreSummary(log) {
   var valEl = document.getElementById('healthScoreSummaryValue');
   var ringEl = document.getElementById('healthScoreSummaryRing');
@@ -13425,6 +13486,7 @@ function refreshHarmonyAvatar(logs) {
     window._foxHealthStatus = getFoxStatus(healthScore);
   }
   updateHealthScoreSummary(lastLog);
+  updateHealthScoreSummaryHome(lastLog);
   updateHarmonyUI(totalPoints);
   var lvlData = getHarmonyLevel(totalPoints);
   norm.level = window._debugLevel || lvlData.level;
