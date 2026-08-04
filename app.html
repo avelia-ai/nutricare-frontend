@@ -994,6 +994,9 @@ window.openAddSport = function(presetType) {
       }
     }
   }
+  window._calorieManualOverride = false;
+  var resetLinkOpen = document.getElementById('caloriesResetLink');
+  if (resetLinkOpen) resetLinkOpen.style.display = 'none';
   if (m) { m.style.display = 'flex'; if (typeof window.onSportActiviteChange === 'function') window.onSportActiviteChange(); else window.previewCalories(); }
 };
 
@@ -1024,6 +1027,18 @@ window.onSportActiviteChange = function() {
   if (distWrap) distWrap.style.display = _distanceEligible[key] ? 'block' : 'none';
   window.previewCalories();
 };
+window._calorieManualOverride = false;
+window.onCaloriesManualEdit = function() {
+  window._calorieManualOverride = true;
+  var link = document.getElementById('caloriesResetLink');
+  if (link) link.style.display = 'block';
+};
+window.resetCaloriesAuto = function() {
+  window._calorieManualOverride = false;
+  var link = document.getElementById('caloriesResetLink');
+  if (link) link.style.display = 'none';
+  window.previewCalories();
+};
 window.previewCalories = function() {
   var sel = document.getElementById('sportActivite');
   var duree = parseFloat(document.getElementById('sportDuree').value) || 30;
@@ -1031,7 +1046,7 @@ window.previewCalories = function() {
   var met = parseFloat((sel.value.split(',')[1])) || 4;
   var cal = Math.round(met * poids * duree / 60 * 4.2);
   var prev = document.getElementById('caloriesPreview');
-  if (prev) prev.textContent = cal + ' kcal';
+  if (prev && !window._calorieManualOverride) prev.value = cal;
   var distEl = document.getElementById('sportDistance');
   var paceEl = document.getElementById('paceSportPreview');
   if (paceEl) {
@@ -1055,7 +1070,8 @@ window.saveSportSeance = function() {
   var duree = parseFloat(document.getElementById('sportDuree').value) || 30;
   var poids = parseFloat(document.getElementById('sportPoids').value) || 70;
   var met = parseFloat(parts[1]) || 4;
-  var cal = Math.round(met * poids * duree / 60 * 4.2);
+  var calInput = document.getElementById('caloriesPreview');
+  var cal = calInput ? (parseInt(calInput.value, 10) || 0) : Math.round(met * poids * duree / 60 * 4.2);
   var distEl = document.getElementById('sportDistance');
   var distance = distEl ? (parseFloat(distEl.value) || 0) : 0;
   var seance = {nom: nom, duree: duree, cal: cal};
@@ -1063,6 +1079,9 @@ window.saveSportSeance = function() {
   window._sportSeances.push(seance);
   document.getElementById('addSportModal').style.display = 'none';
   if (distEl) distEl.value = '';
+  window._calorieManualOverride = false;
+  var resetLink = document.getElementById('caloriesResetLink');
+  if (resetLink) resetLink.style.display = 'none';
   window.renderSportSeances();
   window.saveScoreForm();
   if (typeof updateActiviteCalories === 'function') updateActiviteCalories();
@@ -17204,8 +17223,12 @@ document.addEventListener('deviceready', function() {
               <div style="position:relative;z-index:1;display:flex;align-items:center;justify-content:space-between">
                 <div>
                   <div style="font-size:0.66rem;color:rgba(255,255,255,0.45);text-transform:uppercase;letter-spacing:0.08em;font-weight:700;margin-bottom:6px">Estimation</div>
-                  <div id="caloriesPreview" style="font-size:1.6rem;font-weight:800;color:#fff">-- kcal</div>
-                  <div id="paceSportPreview" style="font-size:0.75rem;color:rgba(255,255,255,0.5);margin-top:2px"></div>
+                  <div style="display:flex;align-items:baseline;gap:6px">
+                    <input type="number" id="caloriesPreview" oninput="window.onCaloriesManualEdit()" style="width:90px;background:transparent;border:none;border-bottom:2px solid rgba(255,255,255,0.25);font-size:1.6rem;font-weight:800;color:#fff;padding:0 0 2px;font-family:DM Sans,sans-serif">
+                    <span style="font-size:0.85rem;color:rgba(255,255,255,0.5);font-weight:600">kcal</span>
+                  </div>
+                  <div id="paceSportPreview" style="font-size:0.75rem;color:rgba(255,255,255,0.5);margin-top:4px"></div>
+                  <div id="caloriesResetLink" onclick="window.resetCaloriesAuto()" style="display:none;font-size:0.68rem;color:#FFB347;margin-top:4px;cursor:pointer;text-decoration:underline">↺ Recalculer automatiquement</div>
                 </div>
                 <i class="ti ti-flame" style="font-size:34px;color:#FF6B6B;opacity:0.9"></i>
               </div>
