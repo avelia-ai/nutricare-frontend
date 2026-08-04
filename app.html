@@ -5624,7 +5624,6 @@ function switchLang(lang) {
   </div>
 <div id="healthView" style="display:none;padding:16px 16px 180px 16px;overflow-y:auto;background:var(--cream);width:100%;box-sizing:border-box;overflow-x:hidden">
   <div class="view-header" style="font-family:Open Sans,serif;font-size:2rem;font-weight:700;margin-bottom:6px;color:#2D2D2D">Mon suivi santé</div>
-  <div style="font-size:0.85rem;color:var(--accent);margin-bottom:16px">Saisissez vos indicateurs quotidiens</div>
   <div data-suivi-tab="always" style="display:flex;gap:8px;overflow-x:auto;padding:2px 0 14px;scrollbar-width:none">
     <button class="suivi-tab-btn" onclick="switchSuiviTab('principal', this)" style="display:flex;flex-direction:column;align-items:center;gap:4px;min-width:64px;padding:10px 6px;border-radius:14px;border:none;background:#2D2D2D;color:#fff;cursor:pointer;font-family:DM Sans,sans-serif;flex-shrink:0;box-shadow:none">
       <i class="ti ti-layout-grid" style="font-size:18px"></i>
@@ -13242,6 +13241,10 @@ function renderSommeilSection(logs) {
 function switchSuiviTab(tab, btn) {
   var container = document.getElementById('healthView');
   if (!container) return;
+  container.scrollTop = 0;
+  var mcSuivi = document.querySelector('.main-content');
+  if (mcSuivi) mcSuivi.scrollTop = 0;
+  window.scrollTo(0, 0);
   Array.prototype.forEach.call(container.children, function(child) {
     var t = child.getAttribute('data-suivi-tab');
     if (t === 'always') return;
