@@ -5640,7 +5640,7 @@ function switchLang(lang) {
   </div>
 <div id="healthView" style="display:none;padding:16px 16px 180px 16px;overflow-y:auto;background:var(--cream);width:100%;box-sizing:border-box;overflow-x:hidden">
   <div class="view-header" data-suivi-tab="always" style="font-family:Open Sans,serif;font-size:2rem;font-weight:700;margin-bottom:6px;color:#2D2D2D">Mon suivi santé</div>
-  <div data-suivi-tab="always" style="display:flex;gap:8px;overflow-x:auto;padding:4px 4px 14px 4px;margin:0 -4px;scrollbar-width:none">
+  <div data-suivi-tab="always" style="display:flex;gap:8px;overflow-x:auto;padding:4px 12px 14px 0;scrollbar-width:none">
     <button class="suivi-tab-btn" onclick="switchSuiviTab('principal', this)" style="display:flex;flex-direction:column;align-items:center;gap:4px;min-width:64px;padding:10px 6px;border-radius:14px;border:none;background:#2D2D2D;color:#fff;cursor:pointer;font-family:DM Sans,sans-serif;flex-shrink:0;box-shadow:none">
       <i class="ti ti-layout-grid" style="font-size:18px"></i>
       <span style="font-size:0.65rem;font-weight:600">Suivi</span>
@@ -5790,10 +5790,34 @@ function switchLang(lang) {
         </div>
         <button id="activiteSensorBtn" onclick="startStepSensor()" style="width:100%;background:#F5F5F5;color:#555;border:none;border-radius:10px;padding:10px;font-size:0.78rem;font-weight:600;cursor:pointer">Activer le suivi via capteur</button>
       </div>
-      <div style="display:flex;justify-content:center;align-items:baseline;gap:6px;margin-top:14px">
-        <span style="font-size:1.3rem">🔥</span>
-        <span id="activiteCaloriesTotal" style="font-size:1.3rem;font-weight:700;color:#FF6B6B">0</span>
-        <span style="font-size:0.78rem;color:#888">kcal brûlées aujourd'hui (pas + séances)</span>
+      <div style="background:linear-gradient(135deg,#1B1B2F,#232946);border-radius:18px;padding:20px;margin-top:14px;position:relative;overflow:hidden">
+        <div style="position:absolute;top:-40px;right:-30px;width:140px;height:140px;background:radial-gradient(circle,rgba(255,107,107,0.25),transparent 70%);pointer-events:none"></div>
+        <div style="position:absolute;bottom:-50px;left:-20px;width:120px;height:120px;background:radial-gradient(circle,rgba(108,92,231,0.2),transparent 70%);pointer-events:none"></div>
+        <div style="display:flex;align-items:center;gap:18px;position:relative;z-index:1">
+          <svg width="92" height="92" viewBox="0 0 92 92" style="flex-shrink:0">
+            <circle cx="46" cy="46" r="38" fill="none" stroke="rgba(255,255,255,0.08)" stroke-width="8"/>
+            <circle id="activiteCalRing" cx="46" cy="46" r="38" fill="none" stroke="url(#activiteCalGrad)" stroke-width="8" stroke-linecap="round" stroke-dasharray="238.8" stroke-dashoffset="238.8" transform="rotate(-90 46 46)" style="transition:stroke-dashoffset .6s ease"/>
+            <defs>
+              <linearGradient id="activiteCalGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#FF6B6B"/>
+                <stop offset="100%" stop-color="#FFB347"/>
+              </linearGradient>
+            </defs>
+            <text x="46" y="42" text-anchor="middle" font-size="8" fill="rgba(255,255,255,0.45)" font-family="DM Sans, sans-serif" letter-spacing="1">KCAL</text>
+            <text id="activiteCaloriesTotal" x="46" y="58" text-anchor="middle" font-size="21" font-weight="700" fill="#fff" font-family="DM Sans, sans-serif">0</text>
+          </svg>
+          <div style="flex:1;min-width:0">
+            <div style="font-size:0.68rem;color:rgba(255,255,255,0.45);text-transform:uppercase;letter-spacing:0.08em;font-weight:700;margin-bottom:10px">Calories brûlées</div>
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+              <span style="font-size:0.78rem;color:rgba(255,255,255,0.65)">👣 Pas</span>
+              <span id="activiteCalPas" style="font-size:0.85rem;font-weight:700;color:#FFB347">0 kcal</span>
+            </div>
+            <div style="display:flex;justify-content:space-between;align-items:center">
+              <span style="font-size:0.78rem;color:rgba(255,255,255,0.65)">💪 Séances</span>
+              <span id="activiteCalSeances" style="font-size:0.85rem;font-weight:700;color:#FF6B6B">0 kcal</span>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
     <div style="padding:4px 14px 16px">
@@ -13327,7 +13351,19 @@ function updateActiviteCalories() {
   var steps = getTodaySteps();
   var stepCalories = Math.round(steps * 0.04);
   var sessionCalories = (window._sportSeances || []).reduce(function(sum, s) { return sum + (s.cal || 0); }, 0);
-  el.textContent = stepCalories + sessionCalories;
+  var total = stepCalories + sessionCalories;
+  el.textContent = total;
+  var pasEl = document.getElementById('activiteCalPas');
+  if (pasEl) pasEl.textContent = stepCalories + ' kcal';
+  var seancesEl = document.getElementById('activiteCalSeances');
+  if (seancesEl) seancesEl.textContent = sessionCalories + ' kcal';
+  var ring = document.getElementById('activiteCalRing');
+  if (ring) {
+    var goal = 400;
+    var ratio = Math.min(total / goal, 1);
+    var circumference = 238.8;
+    ring.style.strokeDashoffset = circumference * (1 - ratio);
+  }
 }
 function saveManualSteps() {
   var input = document.getElementById('activitePasInput');
