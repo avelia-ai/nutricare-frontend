@@ -13526,6 +13526,11 @@ function computeWeeklyReport(offsetWeeks) {
 }
 function renderWeeklyReport() {
   var report = computeWeeklyReport(-1);
+  var isCurrentWeek = false;
+  if (report.avgScore === null && report.sportCount === 0 && report.activeDays === 0) {
+    report = computeWeeklyReport(0);
+    isCurrentWeek = true;
+  }
   var card = document.getElementById('weeklyReportCard');
   if (!card) return;
   if (report.avgScore === null && report.sportCount === 0 && report.activeDays === 0) {
@@ -13534,7 +13539,7 @@ function renderWeeklyReport() {
   }
   card.style.display = 'block';
   var fmt = function(d) { return d.toLocaleDateString('fr-FR', { day: 'numeric', month: 'short' }); };
-  document.getElementById('weeklyReportDates').textContent = fmt(report.weekStart) + ' \u2014 ' + fmt(report.weekEnd);
+  document.getElementById('weeklyReportDates').textContent = (isCurrentWeek ? 'Cette semaine \u00b7 ' : '') + fmt(report.weekStart) + ' \u2014 ' + fmt(report.weekEnd);
   document.getElementById('weeklyReportScore').textContent = report.avgScore !== null ? report.avgScore : '--';
   var trendEl = document.getElementById('weeklyReportTrend');
   if (report.avgScore !== null && report.prevAvgScore !== null) {
