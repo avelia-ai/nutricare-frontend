@@ -1084,6 +1084,15 @@ window.saveSportSeance = function() {
   if (resetLink) resetLink.style.display = 'none';
   window.renderSportSeances();
   window.saveScoreForm();
+  if (typeof persistSportSeances === 'function') persistSportSeances();
+  try {
+    var todayKey = new Date().toISOString().slice(0,10);
+    var histLog = JSON.parse(localStorage.getItem('mirella_sport_history') || '[]');
+    histLog.push({date: todayKey, nom: seance.nom, duree: seance.duree, cal: seance.cal, distance: seance.distance});
+    if (histLog.length > 300) histLog = histLog.slice(-300);
+    localStorage.setItem('mirella_sport_history', JSON.stringify(histLog));
+    if (typeof renderSportHistory === 'function') renderSportHistory();
+  } catch(e) {}
   if (typeof updateActiviteCalories === 'function') updateActiviteCalories();
 };
 
@@ -1091,9 +1100,71 @@ window.deleteSportSeance = function(idx) {
   window._sportSeances.splice(idx, 1);
   window.renderSportSeances();
   window.saveScoreForm();
+  if (typeof persistSportSeances === 'function') persistSportSeances();
   if (typeof updateActiviteCalories === 'function') updateActiviteCalories();
 };
 
+var _seanceIconMapGlobal = {
+  'marche': {icon:'ti-walk', c1:'#34D399', c2:'#0D9488'},
+  'course a pied': {icon:'ti-run', c1:'#A3E635', c2:'#4D7C0F'},
+  'velo': {icon:'ti-bike', c1:'#FB7185', c2:'#BE123C'},
+  'natation': {icon:'ti-swimming', c1:'#38BDF8', c2:'#0369A1'},
+  'musculation': {icon:'ti-barbell', c1:'#FBBF24', c2:'#B45309'},
+  'yoga/pilates': {icon:'ti-yoga', c1:'#C4B5FD', c2:'#6D28D9'},
+  'hiit': {icon:'ti-bolt', c1:'#FCD34D', c2:'#D97706'},
+  'football': {icon:'ti-ball-football', c1:'#6EE7B7', c2:'#047857'},
+  'tennis': {icon:'ti-ball-tennis', c1:'#FDE047', c2:'#A16207'},
+  'danse': {icon:'ti-music', c1:'#F472B6', c2:'#BE185D'},
+  'autre': {icon:'ti-activity-heartbeat', c1:'#94A3B8', c2:'#334155'}
+};
+function persistSportSeances() {
+  var key = 'mirella_sport_seances_' + new Date().toISOString().slice(0,10);
+  localStorage.setItem(key, JSON.stringify(window._sportSeances));
+}
+function loadSportSeancesForToday() {
+  var key = 'mirella_sport_seances_' + new Date().toISOString().slice(0,10);
+  try {
+    var saved = JSON.parse(localStorage.getItem(key) || '[]');
+    if (Array.isArray(saved)) window._sportSeances = saved;
+  } catch(e) {}
+  if (typeof window.renderSportSeances === 'function') window.renderSportSeances();
+}
+function renderSportHistory() {
+  var el = document.getElementById('sportHistoryList');
+  if (!el) return;
+  var hist = JSON.parse(localStorage.getItem('mirella_sport_history') || '[]');
+  if (hist.length === 0) {
+    el.innerHTML = '<div style="font-size:0.78rem;color:#ccc;text-align:center;padding:12px">Aucun historique pour le moment</div>';
+    return;
+  }
+  var grouped = {};
+  hist.forEach(function(h) {
+    if (!grouped[h.date]) grouped[h.date] = [];
+    grouped[h.date].push(h);
+  });
+  var dates = Object.keys(grouped).sort().reverse().slice(0, 30);
+  var html = '';
+  dates.forEach(function(date) {
+    var d = new Date(date + 'T12:00:00');
+    var dateLabel = d.toLocaleDateString('fr-FR', {weekday:'short', day:'numeric', month:'short'});
+    var dayTotal = grouped[date].reduce(function(s,h){return s+(h.cal||0);}, 0);
+    html += '<div style="margin-bottom:14px">';
+    html += '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px"><span style="font-size:0.76rem;font-weight:700;color:#555;text-transform:capitalize">' + dateLabel + '</span><span style="font-size:0.72rem;color:#FF6B6B;font-weight:700">' + dayTotal + ' kcal</span></div>';
+    grouped[date].forEach(function(h) {
+      var key = (h.nom || '').toLowerCase().trim();
+      var meta = _seanceIconMapGlobal[key] || _seanceIconMapGlobal['autre'];
+      html += '<div style="display:flex;align-items:center;gap:10px;padding:8px 10px;background:#FAFAFA;border-radius:12px;margin-bottom:6px">' +
+        '<div style="width:32px;height:32px;border-radius:9px;background:linear-gradient(135deg,'+meta.c1+','+meta.c2+');display:flex;align-items:center;justify-content:center;flex-shrink:0">' +
+          '<i class="ti '+meta.icon+'" style="font-size:14px;color:white"></i>' +
+        '</div>' +
+        '<div style="flex:1;min-width:0"><div style="font-size:0.8rem;font-weight:600;color:#1a1a1a">'+h.nom+'</div>' +
+        '<div style="font-size:0.68rem;color:#999">'+h.duree+' min'+(h.distance ? ' \u00b7 '+h.distance+' km' : '')+' \u00b7 '+h.cal+' kcal</div></div>' +
+      '</div>';
+    });
+    html += '</div>';
+  });
+  el.innerHTML = html;
+}
 window.renderSportSeances = function() {
   var el = document.getElementById('sportSeances');
   var totalEl = document.getElementById('totalCalories');
@@ -5933,6 +6004,8 @@ function switchLang(lang) {
       <div style="font-size:0.75rem;font-weight:700;color:#2D2D2D;margin:6px 0 8px">Séances du jour</div>
       <div id="sportSeancesActivite" style="display:flex;flex-direction:column;gap:8px"></div>
       <div id="totalCaloriesActivite" style="display:none;margin-top:10px;padding:10px;background:var(--cream);border-radius:10px;text-align:center;font-size:0.85rem;font-weight:600;color:var(--coral)"></div>
+      <div style="font-size:0.75rem;font-weight:700;color:#2D2D2D;margin:20px 0 10px">Historique des seances</div>
+      <div id="sportHistoryList" style="display:flex;flex-direction:column"></div>
     </div>
   </div>
 
@@ -13519,6 +13592,7 @@ function renderActiviteTab() {
   var input = document.getElementById('activitePasInput');
   if (input) input.value = getTodaySteps() || '';
   if (typeof window.renderSportSeances === 'function') window.renderSportSeances();
+  if (typeof renderSportHistory === 'function') renderSportHistory();
   updateActiviteCalories();
 }
 
@@ -20472,6 +20546,7 @@ document.addEventListener('DOMContentLoaded', function() {
   updateMirelsDisplay();
   fetchMirelsBalance();
   setTimeout(claimDailyConnexion, 1500);
+  if (typeof loadSportSeancesForToday === 'function') loadSportSeancesForToday();
 });
 // ── FIN SYSTEME MIRELS ────────────────────────────────────────────────────
 </script>
