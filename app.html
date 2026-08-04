@@ -14161,15 +14161,15 @@ async function loadProtocols() {
     }
 
     document.getElementById('protocolsList').innerHTML = protocols.map(p => `
-      <div style="background:#FFFCFA;border-radius: 4px;border:1px solid rgba(255,154,108,0.3);overflow:hidden;box-shadow:0 0 0 1.5px rgba(255,154,108,0.22),0 14px 32px rgba(230,110,70,0.14)">
-        <div style="background:#2D2D2D;padding:20px 24px;display:flex;align-items:center;gap:14px">
-          <div style="font-size:2rem">${p.icon}</div>
+      <div style="background:#FFFFFF;border-radius:20px;overflow:hidden;box-shadow:0 0 0 1.5px rgba(255,154,108,0.22),0 14px 32px rgba(230,110,70,0.14)">
+        <div style="background:linear-gradient(135deg,#FF6B6B,#FF9A3C);padding:20px 24px 30px;display:flex;align-items:center;gap:14px">
+          <div style="width:48px;height:48px;border-radius:14px;background:rgba(255,255,255,0.2);display:flex;align-items:center;justify-content:center;font-size:1.5rem;flex-shrink:0">${p.icon}</div>
           <div>
-            <div style="font-family:Open Sans,serif;font-size:1.4rem;color:white">${p.name}</div>
-            <div style="font-size:0.82rem;color:var(--accent);margin-top:2px">${p.description}</div>
+            <div style="font-family:Open Sans,serif;font-size:1.3rem;color:white;font-weight:700">${p.name}</div>
+            <div style="font-size:0.8rem;color:rgba(255,255,255,0.85);margin-top:2px">${p.description}</div>
           </div>
         </div>
-        <div style="padding:24px;display:grid;grid-template-columns:1fr 1fr;gap:20px">
+        <div style="margin:-18px 14px 0;position:relative;background:#fff;border-radius:14px;box-shadow:0 2px 10px rgba(0,0,0,0.06);padding:20px;display:grid;grid-template-columns:1fr 1fr;gap:20px">
           <div>
             <div style="font-size:0.72rem;font-weight:600;text-transform:uppercase;letter-spacing:1.5px;color:var(--accent);margin-bottom:12px"> Aliments à favoriser</div>
             ${p.nutrition.aliments_favoriser.map(a => `<div style="padding:5px 0;border-bottom:1px solid #E6F1FB;font-size:0.82rem;color:#2D2D2D"> ${a}</div>`).join('')}
@@ -14187,7 +14187,8 @@ async function loadProtocols() {
             ${p.habitudes.map(h => `<div style="padding:5px 0;border-bottom:1px solid #E6F1FB;font-size:0.82rem;color:#2D2D2D">→ ${h}</div>`).join('')}
           </div>
         </div>
-        <div style="padding:12px 24px;background:#FFF3E0;border-top:1px solid #FFB74D">
+        </div>
+        <div style="padding:12px 24px;margin:16px 14px 20px;background:#FFF3E0;border-radius:12px">
           <div style="font-size:0.78rem;color:#E65100">️ ${p.avertissement}</div>
         </div>
       </div>`).join('');
