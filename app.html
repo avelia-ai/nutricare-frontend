@@ -1037,11 +1037,35 @@ window.renderSportSeances = function() {
   var elActivite = document.getElementById('sportSeancesActivite');
   var totalActivite = document.getElementById('totalCaloriesActivite');
 
+  var _seanceIconMap = {
+    'marche': {icon:'ti-walk', c1:'#34D399', c2:'#0D9488'},
+    'course a pied': {icon:'ti-run', c1:'#A3E635', c2:'#4D7C0F'},
+    'velo': {icon:'ti-bike', c1:'#FB7185', c2:'#BE123C'},
+    'natation': {icon:'ti-swimming', c1:'#38BDF8', c2:'#0369A1'},
+    'musculation': {icon:'ti-barbell', c1:'#FBBF24', c2:'#B45309'},
+    'yoga/pilates': {icon:'ti-yoga', c1:'#C4B5FD', c2:'#6D28D9'},
+    'hiit': {icon:'ti-bolt', c1:'#FCD34D', c2:'#D97706'},
+    'football': {icon:'ti-ball-football', c1:'#6EE7B7', c2:'#047857'},
+    'tennis': {icon:'ti-ball-tennis', c1:'#FDE047', c2:'#A16207'},
+    'danse': {icon:'ti-music', c1:'#F472B6', c2:'#BE185D'},
+    'autre': {icon:'ti-activity-heartbeat', c1:'#94A3B8', c2:'#334155'}
+  };
   var cardHtml = function(s, i) {
-    return '<div style="display:flex;align-items:center;gap:10px;padding:10px;background:var(--cream);border-radius:10px">' +
-      '<div style="flex:1"><div style="font-size:0.85rem;font-weight:600;color:#1a1a1a">💪 ' + s.nom + '</div>' +
-      '<div style="font-size:0.75rem;color:#888">' + s.duree + ' min · ' + s.cal + ' kcal brulees</div></div>' +
-      '<button onclick="window.deleteSportSeance(' + i + ')" style="background:none;border:none;color:#ddd;cursor:pointer;font-size:1rem">✕</button></div>';
+    var key = (s.nom || '').toLowerCase().trim();
+    var meta = _seanceIconMap[key] || _seanceIconMap['autre'];
+    return '<div style="display:flex;align-items:center;gap:13px;padding:14px;background:linear-gradient(135deg,#ffffff,#FFFCFA);border-radius:16px;box-shadow:0 4px 14px rgba(0,0,0,0.05);border:0.5px solid rgba(0,0,0,0.04);margin-bottom:8px">' +
+      '<div style="width:46px;height:46px;border-radius:13px;background:linear-gradient(135deg,' + meta.c1 + ',' + meta.c2 + ');display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:0 6px 14px ' + meta.c1 + '66">' +
+        '<i class="ti ' + meta.icon + '" style="font-size:21px;color:white"></i>' +
+      '</div>' +
+      '<div style="flex:1;min-width:0">' +
+        '<div style="font-size:0.92rem;font-weight:700;color:#1a1a1a;margin-bottom:3px">' + s.nom + '</div>' +
+        '<div style="display:flex;align-items:center;gap:12px;font-size:0.74rem;color:#999;font-weight:500">' +
+          '<span style="display:flex;align-items:center;gap:3px"><i class="ti ti-clock" style="font-size:12px"></i>' + s.duree + ' min</span>' +
+          '<span style="display:flex;align-items:center;gap:3px;color:' + meta.c2 + '"><i class="ti ti-flame" style="font-size:12px"></i>' + s.cal + ' kcal</span>' +
+        '</div>' +
+      '</div>' +
+      '<button onclick="window.deleteSportSeance(' + i + ')" style="width:30px;height:30px;border-radius:50%;background:#F7F7F7;border:none;color:#ccc;cursor:pointer;font-size:0.95rem;display:flex;align-items:center;justify-content:center;flex-shrink:0">✕</button>' +
+    '</div>';
   };
 
   if (window._sportSeances.length === 0) {
@@ -1061,10 +1085,10 @@ window.renderSportSeances = function() {
   if (elMenus) elMenus.innerHTML = cards;
   if (elActivite) elActivite.innerHTML = cards;
 
-  var totalTxt = '🔥 Total calories brulees : ' + total + ' kcal';
-  if (totalEl) { totalEl.textContent = totalTxt; totalEl.style.display = 'block'; }
-  if (totalMenus) { totalMenus.textContent = totalTxt; totalMenus.style.display = 'block'; }
-  if (totalActivite) { totalActivite.textContent = totalTxt; totalActivite.style.display = 'block'; }
+  var totalTxt = '<div style="display:flex;align-items:center;justify-content:center;gap:8px"><i class="ti ti-flame" style="font-size:16px;color:#FF6B6B"></i><span>Total : <strong style="color:#FF6B6B">' + total + ' kcal</strong> brûlées</span></div>';
+  if (totalEl) { totalEl.innerHTML = totalTxt; totalEl.style.display = 'block'; }
+  if (totalMenus) { totalMenus.innerHTML = totalTxt; totalMenus.style.display = 'block'; }
+  if (totalActivite) { totalActivite.innerHTML = totalTxt; totalActivite.style.display = 'block'; }
 
   // Mettre a jour donutDepensees
   var dep = document.getElementById('donutDepensees');
