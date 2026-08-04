@@ -12329,13 +12329,8 @@ async function loadHealthForDate(dateStr) {
       if (log.activity_minutes) document.getElementById('hActivity').value = log.activity_minutes;
       if (log.hydration_liters) { document.getElementById('hHydration').value = log.hydration_liters; _hydrationMl = Math.round(log.hydration_liters * 1000); localStorage.setItem(getHydrationKey(), _hydrationMl); if(typeof updateHydrationDisplay==='function') updateHydrationDisplay(); }
       if (log.notes) document.getElementById('hNotes').value = log.notes;
-      // Afficher un indicateur de date
       const indicator = document.getElementById('healthDateIndicator');
-      if (indicator) {
-        const d = new Date(dateStr);
-        indicator.textContent = 'Données du ' + d.toLocaleDateString('fr-FR', {weekday:'long', day:'numeric', month:'long'});
-        indicator.style.display = 'block';
-      }
+      if (indicator) { indicator.style.display = 'none'; }
     } else {
       // Vider les champs si pas de données pour cette date
       ['hGlycemia','hWeight','hEnergy','hSleep','hStress','hActivity','hHydration','hNotes'].forEach(id => {
@@ -12343,12 +12338,8 @@ async function loadHealthForDate(dateStr) {
         if (el) el.value = '';
       });
       _hydrationMl = 0; if(typeof updateHydrationDisplay==='function') updateHydrationDisplay(); localStorage.setItem(getHydrationKey(), 0);
-      const indicator = document.getElementById('healthDateIndicator');
-      if (indicator) {
-        const d = new Date(dateStr);
-        indicator.textContent = 'Aucune donnée pour le ' + d.toLocaleDateString('fr-FR', {weekday:'long', day:'numeric', month:'long'});
-        indicator.style.display = 'block';
-      }
+      const indicator2 = document.getElementById('healthDateIndicator');
+      if (indicator2) { indicator2.style.display = 'none'; }
     }
   } catch(e) { console.error('loadHealthForDate', e); }
   renderEvolutionGallery();
