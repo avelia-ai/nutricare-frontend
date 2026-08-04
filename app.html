@@ -4032,10 +4032,10 @@ function switchLang(lang) {
         </div>
       </div>
       <div style="padding:18px 16px 16px;width:100%;box-sizing:border-box">
-        <div id="healthScoreSummaryCardHome" style="background:linear-gradient(135deg,#1B1B2F,#232946);border-radius:20px;padding:22px;margin-bottom:16px;position:relative;overflow:hidden;box-shadow:0 0 0 1.5px rgba(255,154,108,0.22),0 16px 40px rgba(0,0,0,0.18)">
+        <div id="healthScoreSummaryCardHome" onclick="showView('health')" style="background:linear-gradient(135deg,#1B1B2F,#232946);border-radius:20px;padding:22px;margin-bottom:16px;position:relative;overflow:hidden;box-shadow:0 0 0 1.5px rgba(255,154,108,0.22),0 16px 40px rgba(0,0,0,0.18);cursor:pointer">
           <div style="position:absolute;top:-40px;right:-30px;width:140px;height:140px;background:radial-gradient(circle,rgba(255,107,107,0.22),transparent 70%);pointer-events:none"></div>
           <div style="position:absolute;bottom:-50px;left:-20px;width:120px;height:120px;background:radial-gradient(circle,rgba(108,92,231,0.16),transparent 70%);pointer-events:none"></div>
-          <div style="display:flex;align-items:center;gap:18px;position:relative;z-index:1;margin-bottom:18px">
+          <div style="display:flex;align-items:center;gap:18px;position:relative;z-index:1">
             <svg width="86" height="86" viewBox="0 0 86 86" style="flex-shrink:0">
               <circle cx="43" cy="43" r="36" fill="none" stroke="rgba(255,255,255,0.08)" stroke-width="7"/>
               <circle id="healthScoreSummaryRingHome" cx="43" cy="43" r="36" fill="none" stroke="url(#hsGradHome)" stroke-width="7" stroke-linecap="round" stroke-dasharray="226.2" stroke-dashoffset="226.2" transform="rotate(-90 43 43)" style="transition:stroke-dashoffset .6s ease"/>
@@ -4044,35 +4044,12 @@ function switchLang(lang) {
             </svg>
             <div style="flex:1;min-width:0">
               <div style="font-size:0.66rem;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:rgba(255,255,255,0.45);margin-bottom:5px">Score de sante</div>
-              <div id="healthScoreSummaryLabelHome" style="font-size:1.05rem;font-weight:700;color:#fff">Remplissez vos indicateurs</div>
+              <div id="healthScoreSummaryLabelHome" style="font-size:1.05rem;font-weight:700;color:#fff;margin-bottom:4px">Remplissez vos indicateurs</div>
+              <div style="font-size:0.74rem;color:rgba(255,255,255,0.55);display:flex;align-items:center;gap:4px">Voir le detail dans Suivi <i class="ti ti-chevron-right" style="font-size:13px"></i></div>
             </div>
           </div>
-          <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:6px;position:relative;z-index:1;border-top:1px solid rgba(255,255,255,0.08);padding-top:16px">
-            <div style="text-align:center">
-              <div style="width:30px;height:30px;border-radius:9px;background:rgba(255,255,255,0.08);display:flex;align-items:center;justify-content:center;margin:0 auto 5px"><i class="ti ti-bolt" style="font-size:14px;color:#FFB347"></i></div>
-              <div id="healthScoreBarEnergieHome" style="font-size:0.68rem;font-weight:700;color:#fff">--</div>
-              <div style="font-size:0.56rem;color:rgba(255,255,255,0.4);margin-top:1px">Energie</div>
-            </div>
-            <div style="text-align:center">
-              <div style="width:30px;height:30px;border-radius:9px;background:rgba(255,255,255,0.08);display:flex;align-items:center;justify-content:center;margin:0 auto 5px"><i class="ti ti-moon" style="font-size:14px;color:#7EC8E3"></i></div>
-              <div id="healthScoreBarSommeilHome" style="font-size:0.68rem;font-weight:700;color:#fff">--</div>
-              <div style="font-size:0.56rem;color:rgba(255,255,255,0.4);margin-top:1px">Sommeil</div>
-            </div>
-            <div style="text-align:center">
-              <div style="width:30px;height:30px;border-radius:9px;background:rgba(255,255,255,0.08);display:flex;align-items:center;justify-content:center;margin:0 auto 5px"><i class="ti ti-droplet" style="font-size:14px;color:#A8D8A8"></i></div>
-              <div id="healthScoreBarHydraHome" style="font-size:0.68rem;font-weight:700;color:#fff">--</div>
-              <div style="font-size:0.56rem;color:rgba(255,255,255,0.4);margin-top:1px">Hydra</div>
-            </div>
-            <div style="text-align:center">
-              <div style="width:30px;height:30px;border-radius:9px;background:rgba(255,255,255,0.08);display:flex;align-items:center;justify-content:center;margin:0 auto 5px"><i class="ti ti-walk" style="font-size:14px;color:#FF9A6B"></i></div>
-              <div id="healthScoreBarActivHome" style="font-size:0.68rem;font-weight:700;color:#fff">--</div>
-              <div style="font-size:0.56rem;color:rgba(255,255,255,0.4);margin-top:1px">Activite</div>
-            </div>
-            <div style="text-align:center">
-              <div style="width:30px;height:30px;border-radius:9px;background:rgba(255,255,255,0.08);display:flex;align-items:center;justify-content:center;margin:0 auto 5px"><i class="ti ti-yoga" style="font-size:14px;color:#C3A9D1"></i></div>
-              <div id="healthScoreBarStressHome" style="font-size:0.68rem;font-weight:700;color:#fff">--</div>
-              <div style="font-size:0.56rem;color:rgba(255,255,255,0.4);margin-top:1px">Stress</div>
-            </div>
+          <div style="display:none">
+            <span id="healthScoreBarEnergieHome"></span><span id="healthScoreBarSommeilHome"></span><span id="healthScoreBarHydraHome"></span><span id="healthScoreBarActivHome"></span><span id="healthScoreBarStressHome"></span>
           </div>
         </div>
         <!-- SECTION COEUR D'HARMONIE -->
