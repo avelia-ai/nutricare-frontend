@@ -6172,7 +6172,7 @@ function switchLang(lang) {
       </div>
       <i class="ti ti-chevron-right" style="font-size:16px;color:#ccc;flex-shrink:0"></i>
     </div>
-    <div id="harmonyCaption" style="text-align:center;font-size:0.82rem;color:#8a8a8a;margin-bottom:4px;min-height:1.2em">Ton équilibre prend forme doucement.</div>
+    <div id="harmonyCaption" style="display:none">Ton équilibre prend forme doucement.</div>
     <div style="display:none">
       <span id="harmonyPointsValue">0</span>
     </div>
@@ -6190,19 +6190,10 @@ function switchLang(lang) {
   })();
   </script>
 
-  <!-- Hydratation -->
-  <div style="background:linear-gradient(135deg,#5B9BD5,#7EC8E3);border-radius:16px;padding:14px;margin-bottom:12px;box-shadow:0 2px 8px rgba(0,0,0,0.1)">
-    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
-      <div style="font-size:0.88rem;font-weight:600;color:white;opacity:0.9">Hydratation</div>
-      <div style="width:28px;height:28px;background:rgba(255,255,255,0.2);border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer">›</div>
-    </div>
-    <div style="margin-bottom:4px">
-      <span id="hydrationMl" style="font-size:2.5rem;font-weight:700;color:white">0</span>
-      <span style="font-size:1rem;color:rgba(255,255,255,0.8)"> ml</span>
-    </div>
-    <div style="font-size:0.82rem;color:rgba(255,255,255,0.8);margin-bottom:10px">Objectif du jour : <span id="hydrationGoal">2.0</span> L</div>
-    <div id="hydrationCups" style="display:flex;gap:6px;flex-wrap:wrap;margin-top:4px"></div>
-
+  <div style="display:none">
+    <span id="hydrationMl">0</span>
+    <span id="hydrationGoal">2.0</span>
+    <div id="hydrationCups"></div>
   </div>
 
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
