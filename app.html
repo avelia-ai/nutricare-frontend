@@ -5625,6 +5625,24 @@ function switchLang(lang) {
 <div id="healthView" style="display:none;padding:16px 16px 180px 16px;overflow-y:auto;background:var(--cream);width:100%;box-sizing:border-box;overflow-x:hidden">
   <div class="view-header" style="font-family:Open Sans,serif;font-size:2rem;font-weight:700;margin-bottom:6px;color:#2D2D2D">Mon suivi santé</div>
   <div style="font-size:0.85rem;color:var(--accent);margin-bottom:16px">Saisissez vos indicateurs quotidiens</div>
+  <div data-suivi-tab="always" style="display:flex;gap:8px;overflow-x:auto;padding:2px 0 14px;scrollbar-width:none">
+    <button class="suivi-tab-btn" onclick="switchSuiviTab('principal', this)" style="display:flex;flex-direction:column;align-items:center;gap:4px;min-width:64px;padding:10px 6px;border-radius:14px;border:none;background:#2D2D2D;color:#fff;cursor:pointer;font-family:DM Sans,sans-serif;flex-shrink:0;box-shadow:none">
+      <i class="ti ti-layout-grid" style="font-size:18px"></i>
+      <span style="font-size:0.65rem;font-weight:600">Suivi</span>
+    </button>
+    <button class="suivi-tab-btn" onclick="switchSuiviTab('cardio', this)" style="display:flex;flex-direction:column;align-items:center;gap:4px;min-width:64px;padding:10px 6px;border-radius:14px;border:none;background:#FFFCFA;color:#888;cursor:pointer;font-family:DM Sans,sans-serif;flex-shrink:0;box-shadow:0 0 0 1px rgba(0,0,0,0.06)">
+      <i class="ti ti-heartbeat" style="font-size:18px"></i>
+      <span style="font-size:0.65rem;font-weight:600">Cardio</span>
+    </button>
+    <button class="suivi-tab-btn" onclick="switchSuiviTab('sommeil', this)" style="display:flex;flex-direction:column;align-items:center;gap:4px;min-width:64px;padding:10px 6px;border-radius:14px;border:none;background:#FFFCFA;color:#888;cursor:pointer;font-family:DM Sans,sans-serif;flex-shrink:0;box-shadow:0 0 0 1px rgba(0,0,0,0.06)">
+      <i class="ti ti-moon" style="font-size:18px"></i>
+      <span style="font-size:0.65rem;font-weight:600">Sommeil</span>
+    </button>
+    <button class="suivi-tab-btn" onclick="switchSuiviTab('rituels', this)" style="display:flex;flex-direction:column;align-items:center;gap:4px;min-width:64px;padding:10px 6px;border-radius:14px;border:none;background:#FFFCFA;color:#888;cursor:pointer;font-family:DM Sans,sans-serif;flex-shrink:0;box-shadow:0 0 0 1px rgba(0,0,0,0.06)">
+      <i class="ti ti-yoga" style="font-size:18px"></i>
+      <span style="font-size:0.65rem;font-weight:600">Rituels</span>
+    </button>
+  </div>
   <div style="position:relative;border-radius:18px;padding:2px;margin-bottom:16px;background:linear-gradient(135deg, rgba(255,180,130,0.9), rgba(255,255,255,0.6) 35%, rgba(255,110,90,0.8) 70%, rgba(255,255,255,0.6));background-size:300% 300%;animation:visBorderFlow 6s ease infinite;box-shadow:0 16px 40px rgba(230,110,70,0.16), 0 2px 8px rgba(0,0,0,0.04)">
     <div style="border-radius:16px;overflow:hidden;position:relative;height:140px;background:url(https://raw.githubusercontent.com/avelia-ai/nutricare-frontend/main/suivi_sante.png) center/cover">
       <div style="position:absolute;inset:0;background:rgba(0,0,0,0.25)"></div>
@@ -5634,7 +5652,7 @@ function switchLang(lang) {
     </div>
   </div>
   <!-- RITUELS BIEN-ETRE -->
-  <div id="rituelsBienEtreCard" style="background:#FFFCFA;border-radius:16px;padding:20px;margin-bottom:16px;box-shadow:0 0 0 1.5px rgba(255,154,108,0.22),0 14px 32px rgba(230,110,70,0.14)">
+  <div id="rituelsBienEtreCard" data-suivi-tab="rituels" style="display:none;background:#FFFCFA;border-radius:16px;padding:20px;margin-bottom:16px;box-shadow:0 0 0 1.5px rgba(255,154,108,0.22),0 14px 32px rgba(230,110,70,0.14)">
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px">
       <div style="font-size:1rem;font-weight:700;color:#2D2D2D">🌿 Rituels bien-être</div>
       <div style="font-size:0.75rem;color:var(--coral);font-weight:600">+pts Harmonie</div>
@@ -5669,7 +5687,7 @@ function switchLang(lang) {
     </div>
   </div>
   <!-- CARDIO -->
-  <div id="cardioCard" style="background:#FFFCFA;border-radius:16px;margin-bottom:16px;overflow:hidden;box-shadow:0 0 0 1.5px rgba(255,154,108,0.22),0 14px 32px rgba(230,110,70,0.14)">
+  <div id="cardioCard" data-suivi-tab="cardio" style="display:none;background:#FFFCFA;border-radius:16px;margin-bottom:16px;overflow:hidden;box-shadow:0 0 0 1.5px rgba(255,154,108,0.22),0 14px 32px rgba(230,110,70,0.14)">
     <div style="background:linear-gradient(135deg,var(--coral),var(--accent));padding:16px 20px 30px">
       <div style="font-size:0.7rem;color:rgba(255,255,255,0.85);font-weight:700;letter-spacing:0.04em;margin-bottom:4px">CARDIO</div>
       <div style="font-size:1.05rem;color:white;font-weight:700">Rythme cardiaque</div>
@@ -5708,6 +5726,29 @@ function switchLang(lang) {
       <div style="font-size:0.75rem;font-weight:700;color:#2D2D2D;margin:6px 0 8px">Historique</div>
       <canvas id="cardioChartCanvas" width="300" height="90" style="width:100%;height:90px;display:block;margin-bottom:10px"></canvas>
       <div id="cardioHistoryList" style="font-size:0.78rem;color:#888"></div>
+    </div>
+  </div>
+
+  <!-- SOMMEIL -->
+  <div id="sommeilCard" data-suivi-tab="sommeil" style="display:none;background:#FFFCFA;border-radius:16px;margin-bottom:16px;overflow:hidden;box-shadow:0 0 0 1.5px rgba(255,154,108,0.22),0 14px 32px rgba(230,110,70,0.14)">
+    <div style="background:linear-gradient(135deg,#6C5CE7,#7EC8E3);padding:16px 20px 30px">
+      <div style="font-size:0.7rem;color:rgba(255,255,255,0.85);font-weight:700;letter-spacing:0.04em;margin-bottom:4px">SOMMEIL</div>
+      <div style="font-size:1.05rem;color:white;font-weight:700">Suivi du sommeil</div>
+    </div>
+    <div style="margin:-18px 14px 16px;position:relative">
+      <div style="background:#fff;border-radius:14px;padding:18px;text-align:center;box-shadow:0 2px 10px rgba(0,0,0,0.06)">
+        <div style="width:52px;height:52px;border-radius:50%;background:#EFEBFF;display:flex;align-items:center;justify-content:center;margin:0 auto 10px">
+          <span style="font-size:1.4rem">🌙</span>
+        </div>
+        <div id="sommeilLastValue" style="font-size:2.2rem;font-weight:700;color:#6C5CE7;line-height:1">--</div>
+        <div style="font-size:0.78rem;color:#888;margin-bottom:4px">dernière nuit enregistrée</div>
+        <div style="font-size:0.72rem;color:#aaa">Saisissez votre sommeil dans l'onglet Suivi pour mettre à jour</div>
+      </div>
+    </div>
+    <div id="sommeilHistorySection" style="padding:4px 14px 16px">
+      <div style="font-size:0.75rem;font-weight:700;color:#2D2D2D;margin:6px 0 8px">Historique</div>
+      <canvas id="sommeilChartCanvas" width="300" height="90" style="width:100%;height:90px;display:block;margin-bottom:10px"></canvas>
+      <div id="sommeilHistoryList" style="font-size:0.78rem;color:#888"></div>
     </div>
   </div>
 
@@ -10526,6 +10567,7 @@ Réponds UNIQUEMENT en JSON valide avec cette structure exacte:
     if (view === 'menus') setTimeout(buildWeekSelector, 50);
     if (view === 'health') {
       loadInfoDuJour(); loadHydrationFromStorage(); setTimeout(renderEvolutionGallery, 100);
+      setTimeout(function() { switchSuiviTab(window._suiviActiveTab || 'principal'); }, 60);
       if (localStorage.getItem('mirella_suivi_tuto_seen') !== 'true') {
         localStorage.setItem('mirella_suivi_tuto_seen', 'true');
         setTimeout(showSuiviTutorial, 600);
@@ -13140,6 +13182,85 @@ function renderCardioSection(logs) {
     var dateStr = d.toLocaleDateString('fr-FR', { day: 'numeric', month: 'short' });
     return '<div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid #F2EFE9"><span>' + dateStr + '</span><span style="font-weight:700;color:#FF6B6B">' + p.bpm + ' bpm</span></div>';
   }).join('');
+}
+
+function renderSommeilSection(logs) {
+  var points = (logs || [])
+    .filter(function(l) { return l.sleep_hours; })
+    .map(function(l) { return { date: l.date, h: l.sleep_hours }; });
+
+  var lastVal = document.getElementById('sommeilLastValue');
+  if (lastVal) lastVal.textContent = points.length ? (points[points.length-1].h + 'h') : '--';
+
+  var canvas = document.getElementById('sommeilChartCanvas');
+  var listEl = document.getElementById('sommeilHistoryList');
+  if (!canvas || !listEl) return;
+
+  var ctx = canvas.getContext('2d');
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+  if (points.length === 0) {
+    listEl.innerHTML = '<div style="padding:8px 0;color:#aaa">Aucune donnée de sommeil enregistrée pour le moment.</div>';
+    return;
+  }
+
+  var recent = points.slice(-14);
+  var w = canvas.width, h = canvas.height, pad = 10;
+  var values = recent.map(function(p) { return p.h; });
+  var minV = Math.min.apply(null, values) - 1;
+  var maxV = Math.max.apply(null, values) + 1;
+  var range = Math.max(1, maxV - minV);
+  var stepX = recent.length > 1 ? (w - pad * 2) / (recent.length - 1) : 0;
+
+  ctx.beginPath();
+  recent.forEach(function(p, i) {
+    var x = pad + i * stepX;
+    var y = h - pad - ((p.h - minV) / range) * (h - pad * 2);
+    if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+  });
+  ctx.strokeStyle = '#6C5CE7';
+  ctx.lineWidth = 2.5;
+  ctx.lineJoin = 'round';
+  ctx.stroke();
+
+  recent.forEach(function(p, i) {
+    var x = pad + i * stepX;
+    var y = h - pad - ((p.h - minV) / range) * (h - pad * 2);
+    ctx.beginPath();
+    ctx.arc(x, y, 3, 0, Math.PI * 2);
+    ctx.fillStyle = '#6C5CE7';
+    ctx.fill();
+  });
+
+  listEl.innerHTML = [...recent].reverse().slice(0, 5).map(function(p) {
+    var d = new Date(p.date);
+    var dateStr = d.toLocaleDateString('fr-FR', { day: 'numeric', month: 'short' });
+    return '<div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid #F2EFE9"><span>' + dateStr + '</span><span style="font-weight:700;color:#6C5CE7">' + p.h + 'h</span></div>';
+  }).join('');
+}
+
+function switchSuiviTab(tab, btn) {
+  var container = document.getElementById('healthView');
+  if (!container) return;
+  Array.prototype.forEach.call(container.children, function(child) {
+    var t = child.getAttribute('data-suivi-tab');
+    if (t === 'always') return;
+    if (!t) t = 'principal';
+    child.style.display = (t === tab) ? '' : 'none';
+  });
+  document.querySelectorAll('.suivi-tab-btn').forEach(function(b) {
+    b.style.background = '#FFFCFA';
+    b.style.boxShadow = '0 0 0 1px rgba(0,0,0,0.06)';
+    b.style.color = '#888';
+  });
+  if (btn) { btn.style.background = '#2D2D2D'; btn.style.boxShadow = 'none'; btn.style.color = '#fff'; }
+  else {
+    var defaultBtn = document.querySelector('.suivi-tab-btn');
+    if (defaultBtn) { defaultBtn.style.background = '#2D2D2D'; defaultBtn.style.boxShadow = 'none'; defaultBtn.style.color = '#fff'; }
+  }
+  window._suiviActiveTab = tab;
+  if (tab === 'sommeil' && typeof renderSommeilSection === 'function') { renderSommeilSection(_healthLogs); }
+  if (tab === 'cardio' && typeof renderCardioSection === 'function') { renderCardioSection(_healthLogs); }
 }
 
 function renderHealthHistory(logs) {
