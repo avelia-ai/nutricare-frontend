@@ -1135,13 +1135,58 @@ function deleteSportHistoryEntry(idx) {
   localStorage.setItem('mirella_sport_history', JSON.stringify(hist));
   renderSportHistory();
 }
+function openSportHistoryDetail(idx) {
+  var hist = JSON.parse(localStorage.getItem('mirella_sport_history') || '[]');
+  var h = hist[idx];
+  if (!h) return;
+  var key = (h.nom || '').toLowerCase().trim();
+  var meta = _seanceIconMapGlobal[key] || _seanceIconMapGlobal['autre'];
+  var d = new Date(h.date + 'T12:00:00');
+  var dateLabel = d.toLocaleDateString('fr-FR', {weekday:'long', day:'numeric', month:'long', year:'numeric'});
+  document.getElementById('sportDetailIcon').className = 'ti ' + meta.icon;
+  document.getElementById('sportDetailIconBox').style.background = 'linear-gradient(135deg,' + meta.c1 + ',' + meta.c2 + ')';
+  document.getElementById('sportDetailIconBox').style.boxShadow = '0 10px 24px ' + meta.c1 + '55';
+  document.getElementById('sportDetailNom').textContent = h.nom;
+  document.getElementById('sportDetailDate').textContent = dateLabel;
+  document.getElementById('sportDetailCal').textContent = h.cal;
+  document.getElementById('sportDetailDuree').textContent = h.duree + ' min';
+  var distRow = document.getElementById('sportDetailDistRow');
+  var paceRow = document.getElementById('sportDetailPaceRow');
+  if (h.distance) {
+    distRow.style.display = 'flex';
+    document.getElementById('sportDetailDist').textContent = h.distance + ' km';
+    var paceMinPerKm = h.duree / h.distance;
+    var paceMin = Math.floor(paceMinPerKm);
+    var paceSec = Math.round((paceMinPerKm - paceMin) * 60);
+    var speedKmh = Math.round((h.distance / (h.duree / 60)) * 10) / 10;
+    paceRow.style.display = 'flex';
+    document.getElementById('sportDetailPace').textContent = paceMin + ':' + (paceSec < 10 ? '0' : '') + paceSec + ' /km \u00b7 ' + speedKmh + ' km/h';
+  } else {
+    distRow.style.display = 'none';
+    paceRow.style.display = 'none';
+  }
+  document.getElementById('sportDetailDeleteBtn').setAttribute('onclick', 'deleteSportHistoryEntry(' + idx + ');document.getElementById(\'sportHistoryDetailModal\').style.display=\'none\'');
+  document.getElementById('sportHistoryDetailModal').style.display = 'flex';
+}
 function renderSportHistory() {
   var el = document.getElementById('sportHistoryList');
   if (!el) return;
   var hist = JSON.parse(localStorage.getItem('mirella_sport_history') || '[]');
   if (hist.length === 0) {
     el.innerHTML = '<div style="font-size:0.78rem;color:#ccc;text-align:center;padding:12px">Aucun historique pour le moment</div>';
+    var statsBar = document.getElementById('sportHistoryStats');
+    if (statsBar) statsBar.style.display = 'none';
     return;
+  }
+  var totalSeances = hist.length;
+  var totalCal = hist.reduce(function(s,h){return s+(h.cal||0);}, 0);
+  var totalKm = hist.reduce(function(s,h){return s+(h.distance||0);}, 0);
+  var statsBar = document.getElementById('sportHistoryStats');
+  if (statsBar) {
+    statsBar.style.display = 'grid';
+    document.getElementById('sportHistoryStatSeances').textContent = totalSeances;
+    document.getElementById('sportHistoryStatCal').textContent = totalCal;
+    document.getElementById('sportHistoryStatKm').textContent = Math.round(totalKm * 10) / 10;
   }
   var grouped = {};
   hist.forEach(function(h, i) {
@@ -1154,19 +1199,19 @@ function renderSportHistory() {
     var d = new Date(date + 'T12:00:00');
     var dateLabel = d.toLocaleDateString('fr-FR', {weekday:'short', day:'numeric', month:'short'});
     var dayTotal = grouped[date].reduce(function(s,g){return s+(g.entry.cal||0);}, 0);
-    html += '<div style="margin-bottom:14px">';
-    html += '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px"><span style="font-size:0.76rem;font-weight:700;color:#555;text-transform:capitalize">' + dateLabel + '</span><span style="font-size:0.72rem;color:#FF6B6B;font-weight:700">' + dayTotal + ' kcal</span></div>';
+    html += '<div style="margin-bottom:16px">';
+    html += '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px"><span style="font-size:0.76rem;font-weight:700;color:#555;text-transform:capitalize">' + dateLabel + '</span><span style="font-size:0.72rem;color:#FF6B6B;font-weight:700">' + dayTotal + ' kcal</span></div>';
     grouped[date].forEach(function(g) {
       var h = g.entry;
       var key = (h.nom || '').toLowerCase().trim();
       var meta = _seanceIconMapGlobal[key] || _seanceIconMapGlobal['autre'];
-      html += '<div style="display:flex;align-items:center;gap:10px;padding:8px 10px;background:#FAFAFA;border-radius:12px;margin-bottom:6px">' +
-        '<div style="width:32px;height:32px;border-radius:9px;background:linear-gradient(135deg,'+meta.c1+','+meta.c2+');display:flex;align-items:center;justify-content:center;flex-shrink:0">' +
-          '<i class="ti '+meta.icon+'" style="font-size:14px;color:white"></i>' +
+      html += '<div onclick="openSportHistoryDetail('+g.origIndex+')" style="display:flex;align-items:center;gap:12px;padding:12px;background:linear-gradient(135deg,#ffffff,#FAFAFA);border-radius:14px;box-shadow:0 3px 10px rgba(0,0,0,0.04);border:0.5px solid rgba(0,0,0,0.04);margin-bottom:8px;cursor:pointer">' +
+        '<div style="width:40px;height:40px;border-radius:12px;background:linear-gradient(135deg,'+meta.c1+','+meta.c2+');display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:0 4px 10px '+meta.c1+'55">' +
+          '<i class="ti '+meta.icon+'" style="font-size:18px;color:white"></i>' +
         '</div>' +
-        '<div style="flex:1;min-width:0"><div style="font-size:0.8rem;font-weight:600;color:#1a1a1a">'+h.nom+'</div>' +
-        '<div style="font-size:0.68rem;color:#999">'+h.duree+' min'+(h.distance ? ' \u00b7 '+h.distance+' km' : '')+' \u00b7 '+h.cal+' kcal</div></div>' +
-        '<button onclick="deleteSportHistoryEntry('+g.origIndex+')" style="width:26px;height:26px;border-radius:50%;background:#F0F0F0;border:none;color:#bbb;cursor:pointer;font-size:0.85rem;display:flex;align-items:center;justify-content:center;flex-shrink:0">\u2715</button>' +
+        '<div style="flex:1;min-width:0"><div style="font-size:0.86rem;font-weight:700;color:#1a1a1a">'+h.nom+'</div>' +
+        '<div style="font-size:0.7rem;color:#999;margin-top:2px">'+h.duree+' min'+(h.distance ? ' \u00b7 '+h.distance+' km' : '')+' \u00b7 '+h.cal+' kcal</div></div>' +
+        '<i class="ti ti-chevron-right" style="font-size:16px;color:#ddd;flex-shrink:0"></i>' +
       '</div>';
     });
     html += '</div>';
@@ -6012,9 +6057,26 @@ function switchLang(lang) {
       <div style="font-size:0.75rem;font-weight:700;color:#2D2D2D;margin:6px 0 8px">Séances du jour</div>
       <div id="sportSeancesActivite" style="display:flex;flex-direction:column;gap:8px"></div>
       <div id="totalCaloriesActivite" style="display:none;margin-top:10px;padding:10px;background:var(--cream);border-radius:10px;text-align:center;font-size:0.85rem;font-weight:600;color:var(--coral)"></div>
-      <div style="font-size:0.75rem;font-weight:700;color:#2D2D2D;margin:20px 0 10px">Historique des seances</div>
-      <div id="sportHistoryList" style="display:flex;flex-direction:column"></div>
     </div>
+  </div>
+
+  <div id="sportHistoryCard" data-suivi-tab="activite" style="display:none;background:#FFFCFA;border-radius:16px;padding:20px;margin-bottom:16px;box-shadow:0 0 0 1.5px rgba(255,154,108,0.22),0 14px 32px rgba(230,110,70,0.14)">
+    <div style="font-size:0.75rem;font-weight:700;color:#2D2D2D;margin-bottom:12px;text-transform:uppercase;letter-spacing:0.04em">Historique des seances</div>
+    <div id="sportHistoryStats" style="display:none;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:16px">
+      <div style="background:linear-gradient(135deg,#1B1B2F,#232946);border-radius:12px;padding:12px;text-align:center">
+        <div id="sportHistoryStatSeances" style="font-size:1.1rem;font-weight:800;color:#fff">0</div>
+        <div style="font-size:0.62rem;color:rgba(255,255,255,0.5);text-transform:uppercase;letter-spacing:0.05em;margin-top:2px">Seances</div>
+      </div>
+      <div style="background:linear-gradient(135deg,#1B1B2F,#232946);border-radius:12px;padding:12px;text-align:center">
+        <div id="sportHistoryStatCal" style="font-size:1.1rem;font-weight:800;color:#FF6B6B">0</div>
+        <div style="font-size:0.62rem;color:rgba(255,255,255,0.5);text-transform:uppercase;letter-spacing:0.05em;margin-top:2px">Kcal</div>
+      </div>
+      <div style="background:linear-gradient(135deg,#1B1B2F,#232946);border-radius:12px;padding:12px;text-align:center">
+        <div id="sportHistoryStatKm" style="font-size:1.1rem;font-weight:800;color:#38BDF8">0</div>
+        <div style="font-size:0.62rem;color:rgba(255,255,255,0.5);text-transform:uppercase;letter-spacing:0.05em;margin-top:2px">Km</div>
+      </div>
+    </div>
+    <div id="sportHistoryList" style="display:flex;flex-direction:column"></div>
   </div>
 
   <div id="healthDateIndicator" style="display:none;font-size:0.82rem;background:rgba(255,107,107,.08);color:var(--coral);padding:6px 12px;border-radius:6px;margin-bottom:16px;font-weight:500"></div>
@@ -17321,6 +17383,42 @@ document.addEventListener('deviceready', function() {
         </div>
       </div>
 
+<div id="sportHistoryDetailModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.65);z-index:99999;align-items:flex-end;justify-content:center">
+  <div style="background:linear-gradient(180deg,#fff,#FFFCFA);border-radius:28px 28px 0 0;padding:0;width:100%;max-width:600px;max-height:85vh;overflow-y:auto;box-shadow:0 -20px 60px rgba(0,0,0,0.3)">
+    <div style="width:40px;height:4px;background:#eee;border-radius:4px;margin:12px auto 0"></div>
+    <div style="padding:20px 24px 28px">
+      <div style="display:flex;justify-content:flex-end;margin-bottom:6px">
+        <button onclick="document.getElementById('sportHistoryDetailModal').style.display='none'" style="background:#f5f5f5;border:none;border-radius:50%;width:34px;height:34px;cursor:pointer;font-size:1rem;color:#999">&#10005;</button>
+      </div>
+      <div style="text-align:center;margin-bottom:20px">
+        <div id="sportDetailIconBox" style="width:64px;height:64px;border-radius:18px;background:linear-gradient(135deg,#34D399,#0D9488);display:flex;align-items:center;justify-content:center;margin:0 auto 14px">
+          <i class="ti ti-walk" id="sportDetailIcon" style="font-size:30px;color:white"></i>
+        </div>
+        <div id="sportDetailNom" style="font-size:1.15rem;font-weight:800;color:#1a1a1a">--</div>
+        <div id="sportDetailDate" style="font-size:0.8rem;color:#999;margin-top:4px;text-transform:capitalize"></div>
+      </div>
+      <div style="background:linear-gradient(135deg,#1B1B2F,#232946);border-radius:18px;padding:20px;margin-bottom:20px">
+        <div style="text-align:center;margin-bottom:16px">
+          <div id="sportDetailCal" style="font-size:2rem;font-weight:800;color:#fff">0</div>
+          <div style="font-size:0.68rem;color:rgba(255,255,255,0.5);text-transform:uppercase;letter-spacing:0.05em">kcal brulees</div>
+        </div>
+        <div style="display:flex;justify-content:space-between;padding:10px 0;border-top:1px solid rgba(255,255,255,0.08)">
+          <span style="font-size:0.8rem;color:rgba(255,255,255,0.6)">Duree</span>
+          <span id="sportDetailDuree" style="font-size:0.85rem;font-weight:700;color:#fff">--</span>
+        </div>
+        <div id="sportDetailDistRow" style="display:none;justify-content:space-between;padding:10px 0;border-top:1px solid rgba(255,255,255,0.08)">
+          <span style="font-size:0.8rem;color:rgba(255,255,255,0.6)">Distance</span>
+          <span id="sportDetailDist" style="font-size:0.85rem;font-weight:700;color:#fff">--</span>
+        </div>
+        <div id="sportDetailPaceRow" style="display:none;justify-content:space-between;padding:10px 0;border-top:1px solid rgba(255,255,255,0.08)">
+          <span style="font-size:0.8rem;color:rgba(255,255,255,0.6)">Allure</span>
+          <span id="sportDetailPace" style="font-size:0.85rem;font-weight:700;color:#fff">--</span>
+        </div>
+      </div>
+      <button id="sportDetailDeleteBtn" style="width:100%;background:#FFF0EE;color:#FF6B6B;border:none;border-radius:16px;padding:15px;font-size:0.9rem;font-weight:700;cursor:pointer">Supprimer cette seance</button>
+    </div>
+  </div>
+</div>
 <!-- Popup notification Mirella -->
 <div id="mirellaPopup" style="display:none;position:fixed;bottom:80px;left:16px;right:16px;z-index:99998;animation:slideUp 0.3s ease">
   <div style="background:#FFFCFA;border-radius:20px;padding:14px 16px;box-shadow:0 0 0 1.5px rgba(255,154,108,0.22),0 14px 32px rgba(230,110,70,0.14);display:flex;align-items:center;gap:12px;border-left:4px solid var(--coral)">
