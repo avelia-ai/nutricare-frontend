@@ -994,9 +994,36 @@ window.openAddSport = function(presetType) {
       }
     }
   }
-  if (m) { m.style.display = 'flex'; window.previewCalories(); }
+  if (m) { m.style.display = 'flex'; if (typeof window.onSportActiviteChange === 'function') window.onSportActiviteChange(); else window.previewCalories(); }
 };
 
+var _modalActiviteMeta = {
+  marche: {icon:'ti-walk', c1:'#34D399', c2:'#0D9488'},
+  course: {icon:'ti-run', c1:'#A3E635', c2:'#4D7C0F'},
+  velo: {icon:'ti-bike', c1:'#FB7185', c2:'#BE123C'},
+  natation: {icon:'ti-swimming', c1:'#38BDF8', c2:'#0369A1'},
+  musculation: {icon:'ti-barbell', c1:'#FBBF24', c2:'#B45309'},
+  yoga: {icon:'ti-yoga', c1:'#C4B5FD', c2:'#6D28D9'},
+  hiit: {icon:'ti-bolt', c1:'#FCD34D', c2:'#D97706'},
+  football: {icon:'ti-ball-football', c1:'#6EE7B7', c2:'#047857'},
+  tennis: {icon:'ti-ball-tennis', c1:'#FDE047', c2:'#A16207'},
+  danse: {icon:'ti-music', c1:'#F472B6', c2:'#BE185D'},
+  autre: {icon:'ti-activity-heartbeat', c1:'#94A3B8', c2:'#334155'}
+};
+var _distanceEligible = {marche:1, course:1, velo:1, natation:1};
+window.onSportActiviteChange = function() {
+  var sel = document.getElementById('sportActivite');
+  if (!sel) return;
+  var key = sel.value.split(',')[0];
+  var meta = _modalActiviteMeta[key] || _modalActiviteMeta.autre;
+  var badge = document.getElementById('sportActiviteIconPreview');
+  var icon = document.getElementById('sportActiviteIcon');
+  if (badge) { badge.style.background = 'linear-gradient(135deg,' + meta.c1 + ',' + meta.c2 + ')'; badge.style.boxShadow = '0 10px 24px ' + meta.c1 + '55'; }
+  if (icon) icon.className = 'ti ' + meta.icon;
+  var distWrap = document.getElementById('sportDistanceWrap');
+  if (distWrap) distWrap.style.display = _distanceEligible[key] ? 'block' : 'none';
+  window.previewCalories();
+};
 window.previewCalories = function() {
   var sel = document.getElementById('sportActivite');
   var duree = parseFloat(document.getElementById('sportDuree').value) || 30;
@@ -1004,7 +1031,21 @@ window.previewCalories = function() {
   var met = parseFloat((sel.value.split(',')[1])) || 4;
   var cal = Math.round(met * poids * duree / 60 * 4.2);
   var prev = document.getElementById('caloriesPreview');
-  if (prev) prev.textContent = 'Estimation : ' + cal + ' kcal brulees';
+  if (prev) prev.textContent = cal + ' kcal';
+  var distEl = document.getElementById('sportDistance');
+  var paceEl = document.getElementById('paceSportPreview');
+  if (paceEl) {
+    var dist = distEl ? parseFloat(distEl.value) : 0;
+    if (dist && dist > 0 && duree > 0) {
+      var paceMinPerKm = duree / dist;
+      var paceMin = Math.floor(paceMinPerKm);
+      var paceSec = Math.round((paceMinPerKm - paceMin) * 60);
+      var speedKmh = Math.round((dist / (duree / 60)) * 10) / 10;
+      paceEl.textContent = dist + ' km · ' + paceMin + ':' + (paceSec < 10 ? '0' : '') + paceSec + ' /km · ' + speedKmh + ' km/h';
+    } else {
+      paceEl.textContent = '';
+    }
+  }
 };
 
 window.saveSportSeance = function() {
@@ -1015,8 +1056,13 @@ window.saveSportSeance = function() {
   var poids = parseFloat(document.getElementById('sportPoids').value) || 70;
   var met = parseFloat(parts[1]) || 4;
   var cal = Math.round(met * poids * duree / 60 * 4.2);
-  window._sportSeances.push({nom: nom, duree: duree, cal: cal});
+  var distEl = document.getElementById('sportDistance');
+  var distance = distEl ? (parseFloat(distEl.value) || 0) : 0;
+  var seance = {nom: nom, duree: duree, cal: cal};
+  if (distance > 0) seance.distance = distance;
+  window._sportSeances.push(seance);
   document.getElementById('addSportModal').style.display = 'none';
+  if (distEl) distEl.value = '';
   window.renderSportSeances();
   window.saveScoreForm();
   if (typeof updateActiviteCalories === 'function') updateActiviteCalories();
@@ -1061,6 +1107,7 @@ window.renderSportSeances = function() {
         '<div style="font-size:0.92rem;font-weight:700;color:#1a1a1a;margin-bottom:3px">' + s.nom + '</div>' +
         '<div style="display:flex;align-items:center;gap:12px;font-size:0.74rem;color:#999;font-weight:500">' +
           '<span style="display:flex;align-items:center;gap:3px"><i class="ti ti-clock" style="font-size:12px"></i>' + s.duree + ' min</span>' +
+          (s.distance ? '<span style="display:flex;align-items:center;gap:3px"><i class="ti ti-map-pin" style="font-size:12px"></i>' + s.distance + ' km</span>' : '') +
           '<span style="display:flex;align-items:center;gap:3px;color:' + meta.c2 + '"><i class="ti ti-flame" style="font-size:12px"></i>' + s.cal + ' kcal</span>' +
         '</div>' +
       '</div>' +
@@ -17103,40 +17150,69 @@ document.addEventListener('deviceready', function() {
     <button onclick="window.resetObjectifsModal()" style="width:100%;background:none;border:none;color:#aaa;font-size:0.82rem;cursor:pointer;padding:6px">Reinitialiser aux valeurs recommandees</button>
   </div>
 </div>
-<div id="addSportModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:99999;align-items:flex-end;justify-content:center">
-        <div style="background:white;border-radius:24px 24px 0 0;padding:24px;width:100%;max-width:600px">
-          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
-            <div style="font-size:1rem;font-weight:700">Ajouter une seance</div>
-            <button onclick="document.getElementById('addSportModal').style.display='none'" style="background:#f5f5f5;border:none;border-radius:50%;width:32px;height:32px;cursor:pointer">x</button>
-          </div>
-          <div style="margin-bottom:14px">
-            <div style="font-size:0.8rem;font-weight:600;color:#555;margin-bottom:6px">Activite</div>
-            <select id="sportActivite" style="width:100%;padding:12px;border:1px solid #eee;border-radius:10px;font-size:0.9rem;background:white">
-              <option value="marche,3.5">Marche (3.5 kcal/min/kg)</option>
-              <option value="course,7">Course a pied (7 kcal/min/kg)</option>
-              <option value="velo,5">Velo (5 kcal/min/kg)</option>
-              <option value="natation,6">Natation (6 kcal/min/kg)</option>
-              <option value="musculation,4">Musculation (4 kcal/min/kg)</option>
-              <option value="yoga,2.5">Yoga/Pilates (2.5 kcal/min/kg)</option>
-              <option value="hiit,9">HIIT (9 kcal/min/kg)</option>
-              <option value="football,6.5">Football (6.5 kcal/min/kg)</option>
-              <option value="tennis,5.5">Tennis (5.5 kcal/min/kg)</option>
-              <option value="danse,4.5">Danse (4.5 kcal/min/kg)</option>
-              <option value="autre,4">Autre (4 kcal/min/kg)</option>
-            </select>
-          </div>
-          <div style="display:flex;gap:12px;margin-bottom:14px">
-            <div style="flex:1">
-              <div style="font-size:0.8rem;font-weight:600;color:#555;margin-bottom:6px">Duree (minutes)</div>
-              <input type="number" id="sportDuree" min="5" max="300" value="30" oninput="window.previewCalories()" style="width:100%;padding:12px;border:1px solid #eee;border-radius:10px;font-size:0.9rem;box-sizing:border-box">
+<div id="addSportModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.65);z-index:99999;align-items:flex-end;justify-content:center">
+        <div style="background:linear-gradient(180deg,#fff,#FFFCFA);border-radius:28px 28px 0 0;padding:0;width:100%;max-width:600px;max-height:88vh;overflow-y:auto;box-shadow:0 -20px 60px rgba(0,0,0,0.3)">
+          <div style="width:40px;height:4px;background:#eee;border-radius:4px;margin:12px auto 0"></div>
+          <div style="padding:18px 24px 28px">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:18px">
+              <div>
+                <div style="font-size:0.66rem;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--coral)">Nouvelle séance</div>
+                <div style="font-size:1.15rem;font-weight:800;color:#1a1a1a;margin-top:2px">Ajouter une activité</div>
+              </div>
+              <button onclick="document.getElementById('addSportModal').style.display='none'" style="background:#f5f5f5;border:none;border-radius:50%;width:34px;height:34px;cursor:pointer;font-size:1rem;color:#999">✕</button>
             </div>
-            <div style="flex:1">
-              <div style="font-size:0.8rem;font-weight:600;color:#555;margin-bottom:6px">Poids (kg)</div>
-              <input type="number" id="sportPoids" min="30" max="200" value="70" oninput="window.previewCalories()" style="width:100%;padding:12px;border:1px solid #eee;border-radius:10px;font-size:0.9rem;box-sizing:border-box">
+
+            <div id="sportActiviteIconPreview" style="width:64px;height:64px;border-radius:18px;background:linear-gradient(135deg,#34D399,#0D9488);display:flex;align-items:center;justify-content:center;margin:0 auto 16px;box-shadow:0 10px 24px rgba(52,211,153,0.35);transition:all .3s ease">
+              <i class="ti ti-walk" id="sportActiviteIcon" style="font-size:30px;color:white"></i>
             </div>
+
+            <div style="margin-bottom:14px">
+              <div style="font-size:0.72rem;font-weight:700;color:#999;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:8px">Activité</div>
+              <select id="sportActivite" onchange="window.onSportActiviteChange()" style="width:100%;padding:14px 16px;border:1.5px solid #eee;border-radius:14px;font-size:0.95rem;font-weight:600;background:white;color:#1a1a1a">
+                <option value="marche,3.5">Marche (3.5 kcal/min/kg)</option>
+                <option value="course,7">Course a pied (7 kcal/min/kg)</option>
+                <option value="velo,5">Velo (5 kcal/min/kg)</option>
+                <option value="natation,6">Natation (6 kcal/min/kg)</option>
+                <option value="musculation,4">Musculation (4 kcal/min/kg)</option>
+                <option value="yoga,2.5">Yoga/Pilates (2.5 kcal/min/kg)</option>
+                <option value="hiit,9">HIIT (9 kcal/min/kg)</option>
+                <option value="football,6.5">Football (6.5 kcal/min/kg)</option>
+                <option value="tennis,5.5">Tennis (5.5 kcal/min/kg)</option>
+                <option value="danse,4.5">Danse (4.5 kcal/min/kg)</option>
+                <option value="autre,4">Autre (4 kcal/min/kg)</option>
+              </select>
+            </div>
+
+            <div style="display:flex;gap:12px;margin-bottom:14px">
+              <div style="flex:1">
+                <div style="font-size:0.72rem;font-weight:700;color:#999;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:8px">Durée (min)</div>
+                <input type="number" id="sportDuree" min="5" max="300" value="30" oninput="window.previewCalories()" style="width:100%;padding:14px;border:1.5px solid #eee;border-radius:14px;font-size:0.95rem;font-weight:600;box-sizing:border-box;text-align:center">
+              </div>
+              <div style="flex:1">
+                <div style="font-size:0.72rem;font-weight:700;color:#999;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:8px">Poids (kg)</div>
+                <input type="number" id="sportPoids" min="30" max="200" value="70" oninput="window.previewCalories()" style="width:100%;padding:14px;border:1.5px solid #eee;border-radius:14px;font-size:0.95rem;font-weight:600;box-sizing:border-box;text-align:center">
+              </div>
+            </div>
+
+            <div id="sportDistanceWrap" style="margin-bottom:16px;display:none">
+              <div style="font-size:0.72rem;font-weight:700;color:#999;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:8px">Distance (km) <span style="font-weight:500;color:#ccc;text-transform:none">· facultatif</span></div>
+              <input type="number" id="sportDistance" min="0" step="0.1" placeholder="Ex: 5.2" oninput="window.previewCalories()" style="width:100%;padding:14px;border:1.5px solid #eee;border-radius:14px;font-size:0.95rem;font-weight:600;box-sizing:border-box;text-align:center">
+            </div>
+
+            <div style="background:linear-gradient(135deg,#1B1B2F,#232946);border-radius:18px;padding:20px;margin-bottom:20px;position:relative;overflow:hidden">
+              <div style="position:absolute;top:-30px;right:-20px;width:100px;height:100px;background:radial-gradient(circle,rgba(255,107,107,0.25),transparent 70%)"></div>
+              <div style="position:relative;z-index:1;display:flex;align-items:center;justify-content:space-between">
+                <div>
+                  <div style="font-size:0.66rem;color:rgba(255,255,255,0.45);text-transform:uppercase;letter-spacing:0.08em;font-weight:700;margin-bottom:6px">Estimation</div>
+                  <div id="caloriesPreview" style="font-size:1.6rem;font-weight:800;color:#fff">-- kcal</div>
+                  <div id="paceSportPreview" style="font-size:0.75rem;color:rgba(255,255,255,0.5);margin-top:2px"></div>
+                </div>
+                <i class="ti ti-flame" style="font-size:34px;color:#FF6B6B;opacity:0.9"></i>
+              </div>
+            </div>
+
+            <button onclick="window.saveSportSeance()" style="width:100%;background:linear-gradient(135deg,var(--coral),var(--accent));color:white;border:none;border-radius:16px;padding:16px;font-size:1rem;font-weight:700;cursor:pointer;box-shadow:0 10px 24px rgba(255,107,107,0.3)">Ajouter cette séance</button>
           </div>
-          <div id="caloriesPreview" style="background:var(--cream);border-radius:10px;padding:12px;text-align:center;margin-bottom:16px;font-size:0.9rem;font-weight:600;color:var(--coral)">Selectionnez une activite</div>
-          <button onclick="window.saveSportSeance()" style="width:100%;background:linear-gradient(135deg,var(--coral),var(--accent));color:white;border:none;border-radius:12px;padding:14px;font-size:0.95rem;font-weight:700;cursor:pointer">Ajouter cette seance</button>
         </div>
       </div>
 
