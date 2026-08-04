@@ -5928,22 +5928,6 @@ function switchLang(lang) {
       </div>
     </div>
   </div>
-  <div id="weeklyReportCard" style="display:none;background:#FFFFFF;border-radius:20px;overflow:hidden;box-shadow:0 0 0 1.5px rgba(255,154,108,0.22),0 14px 32px rgba(230,110,70,0.14);margin-bottom:16px">
-    <div style="background:linear-gradient(135deg,#6C5CE7,#a29bfe);padding:16px 20px 26px">
-      <div style="font-size:0.68rem;color:rgba(255,255,255,0.85);font-weight:700;letter-spacing:0.04em;margin-bottom:4px">BILAN HEBDO</div>
-      <div id="weeklyReportDates" style="font-size:1.02rem;color:white;font-weight:700">--</div>
-    </div>
-    <div style="margin:-14px 14px 16px;position:relative;background:#fff;border-radius:14px;padding:18px;box-shadow:0 2px 10px rgba(0,0,0,0.06)">
-      <div style="display:flex;align-items:center;gap:16px;margin-bottom:16px">
-        <div style="text-align:center;flex-shrink:0">
-          <div id="weeklyReportScore" style="font-size:2.2rem;font-weight:800;color:#6C5CE7;line-height:1">--</div>
-          <div style="font-size:0.65rem;color:#999;text-transform:uppercase;letter-spacing:0.05em;margin-top:2px">Score moy.</div>
-        </div>
-        <div id="weeklyReportTrend" style="font-size:0.8rem;font-weight:700;flex:1"></div>
-      </div>
-      <div id="weeklyReportStats" style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px"></div>
-    </div>
-  </div>
   <div id="healthScoreSummaryCard" style="background:linear-gradient(135deg,#1B1B2F,#232946);border-radius:20px;padding:22px;margin-bottom:16px;position:relative;overflow:hidden;box-shadow:0 0 0 1.5px rgba(255,154,108,0.22),0 16px 40px rgba(0,0,0,0.18)">
     <div style="position:absolute;top:-40px;right:-30px;width:140px;height:140px;background:radial-gradient(circle,rgba(255,107,107,0.22),transparent 70%);pointer-events:none"></div>
     <div style="position:absolute;bottom:-50px;left:-20px;width:120px;height:120px;background:radial-gradient(circle,rgba(108,92,231,0.16),transparent 70%);pointer-events:none"></div>
@@ -6178,6 +6162,49 @@ function switchLang(lang) {
     </div>
   </div>
 
+  <div id="weeklyReportCard" style="display:none;background:#FFFFFF;border-radius:20px;overflow:hidden;box-shadow:0 0 0 1.5px rgba(255,154,108,0.22),0 14px 32px rgba(230,110,70,0.14);margin-bottom:16px">
+    <div style="background:linear-gradient(135deg,#6C5CE7,#a29bfe);padding:18px 20px 28px;position:relative;overflow:hidden">
+      <div style="position:absolute;top:-30px;right:-20px;width:110px;height:110px;background:radial-gradient(circle,rgba(255,255,255,0.14),transparent 70%);pointer-events:none"></div>
+      <div style="display:flex;align-items:center;justify-content:space-between;position:relative;z-index:1">
+        <div>
+          <div style="font-size:0.68rem;color:rgba(255,255,255,0.85);font-weight:700;letter-spacing:0.06em;margin-bottom:4px">BILAN HEBDO</div>
+          <div id="weeklyReportDates" style="font-size:1.05rem;color:white;font-weight:700">--</div>
+        </div>
+        <div style="width:34px;height:34px;border-radius:10px;background:rgba(255,255,255,0.16);display:flex;align-items:center;justify-content:center">
+          <i class="ti ti-chart-bar" style="font-size:17px;color:#fff"></i>
+        </div>
+      </div>
+    </div>
+    <div style="margin:-16px 14px 16px;position:relative;background:#fff;border-radius:16px;padding:18px;box-shadow:0 4px 14px rgba(0,0,0,0.07)">
+      <div style="display:flex;align-items:center;gap:16px;margin-bottom:18px">
+        <div style="text-align:center;flex-shrink:0">
+          <div id="weeklyReportScore" style="font-size:2.3rem;font-weight:800;color:#6C5CE7;line-height:1">--</div>
+          <div style="font-size:0.64rem;color:#999;text-transform:uppercase;letter-spacing:0.05em;margin-top:3px">Score moy.</div>
+        </div>
+        <div id="weeklyReportTrend" style="font-size:0.8rem;font-weight:700;flex:1"></div>
+      </div>
+
+      <div id="weeklyReportStats" style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:8px;margin-bottom:18px"></div>
+
+      <div style="border-top:1px solid #f2f2f2;padding-top:16px;margin-bottom:16px">
+        <div style="font-size:0.64rem;color:#999;text-transform:uppercase;letter-spacing:0.05em;font-weight:700;margin-bottom:10px">Activite par jour</div>
+        <div id="weeklyReportDayChart" style="display:flex;justify-content:space-between;align-items:flex-end;gap:6px;height:64px"></div>
+        <div id="weeklyReportDayLabels" style="display:flex;justify-content:space-between;gap:6px;margin-top:6px"></div>
+      </div>
+
+      <div id="weeklyReportBestDay" style="display:none;align-items:center;gap:10px;background:linear-gradient(135deg,#FFF6EC,#FFEFDD);border-radius:12px;padding:11px 13px;margin-bottom:10px">
+        <div style="width:30px;height:30px;border-radius:9px;background:rgba(255,154,60,0.18);display:flex;align-items:center;justify-content:center;flex-shrink:0">
+          <i class="ti ti-trophy" style="font-size:15px;color:#E67E22"></i>
+        </div>
+        <div id="weeklyReportBestDayText" style="font-size:0.76rem;color:#8a5a1f;font-weight:600;line-height:1.35"></div>
+      </div>
+
+      <div id="weeklyReportSportsWrap" style="display:none;border-top:1px solid #f2f2f2;padding-top:14px">
+        <div style="font-size:0.64rem;color:#999;text-transform:uppercase;letter-spacing:0.05em;font-weight:700;margin-bottom:10px">Repartition des seances</div>
+        <div id="weeklyReportSports" style="display:flex;flex-direction:column;gap:6px"></div>
+      </div>
+    </div>
+  </div>
   <div id="sportHistoryCard" data-suivi-tab="activite" style="display:none;background:#FFFCFA;border-radius:16px;padding:20px;margin-bottom:16px;box-shadow:0 0 0 1.5px rgba(255,154,108,0.22),0 14px 32px rgba(230,110,70,0.14)">
     <div style="font-size:0.75rem;font-weight:700;color:#2D2D2D;margin-bottom:12px;text-transform:uppercase;letter-spacing:0.04em">Historique des seances</div>
     <div id="sportHistoryStats" style="display:none;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:16px">
@@ -13517,11 +13544,41 @@ function computeWeeklyReport(offsetWeeks) {
   weekSport.forEach(function(h){ activeDates[h.date] = true; });
   var activeDays = Object.keys(activeDates).length;
 
+  var dayBreakdown = [];
+  for (var i = 0; i < 7; i++) {
+    var d = new Date(range.start);
+    d.setDate(d.getDate() + i);
+    var dISO = d.toISOString().split('T')[0];
+    var scoreEntry = null;
+    for (var j = 0; j < weekScores.length; j++) { if (weekScores[j].date === dISO) { scoreEntry = weekScores[j]; break; } }
+    var daySport = weekSport.filter(function(h){ return h.date === dISO; });
+    dayBreakdown.push({
+      date: dISO, dateObj: new Date(d),
+      score: scoreEntry ? scoreEntry.score : null,
+      sportCount: daySport.length,
+      cal: daySport.reduce(function(s,h){return s+(h.cal||0);}, 0)
+    });
+  }
+
+  var bestDay = null;
+  dayBreakdown.forEach(function(d) {
+    if (d.score !== null && (bestDay === null || d.score > bestDay.score)) bestDay = d;
+  });
+
+  var sportTypes = {};
+  weekSport.forEach(function(h) {
+    var n = h.nom || 'Autre';
+    sportTypes[n] = (sportTypes[n] || 0) + 1;
+  });
+  var sportTypesList = Object.keys(sportTypes).map(function(k){ return {nom: k, count: sportTypes[k]}; });
+  sportTypesList.sort(function(a,b){ return b.count - a.count; });
+
   return {
     weekStart: range.start, weekEnd: range.end,
     avgScore: avgScore, prevAvgScore: prevAvg,
     sportCount: weekSport.length, totalCal: totalCal, totalKm: Math.round(totalKm * 10) / 10,
-    activeDays: activeDays
+    activeDays: activeDays,
+    dayBreakdown: dayBreakdown, bestDay: bestDay, sportTypes: sportTypesList
   };
 }
 function renderWeeklyReport() {
@@ -13541,20 +13598,81 @@ function renderWeeklyReport() {
   var fmt = function(d) { return d.toLocaleDateString('fr-FR', { day: 'numeric', month: 'short' }); };
   document.getElementById('weeklyReportDates').textContent = (isCurrentWeek ? 'Cette semaine \u00b7 ' : '') + fmt(report.weekStart) + ' \u2014 ' + fmt(report.weekEnd);
   document.getElementById('weeklyReportScore').textContent = report.avgScore !== null ? report.avgScore : '--';
+
   var trendEl = document.getElementById('weeklyReportTrend');
   if (report.avgScore !== null && report.prevAvgScore !== null) {
     var diff = report.avgScore - report.prevAvgScore;
     if (diff > 0) { trendEl.innerHTML = '<span style="color:#27AE60">\u2191 +' + diff + ' pts vs semaine derniere</span>'; }
     else if (diff < 0) { trendEl.innerHTML = '<span style="color:#FF6B6B">\u2193 ' + diff + ' pts vs semaine derniere</span>'; }
     else { trendEl.innerHTML = '<span style="color:#999">Stable vs semaine derniere</span>'; }
+  } else if (isCurrentWeek) {
+    trendEl.innerHTML = '<span style="color:#999">Semaine en cours</span>';
   } else {
     trendEl.innerHTML = '<span style="color:#999">Premiere semaine de suivi</span>';
   }
+
   var statsEl = document.getElementById('weeklyReportStats');
+  var statBlock = function(val, label, color) {
+    return '<div style="background:#FAFAFA;border-radius:12px;padding:10px 6px;text-align:center"><div style="font-size:1.05rem;font-weight:800;color:' + color + '">' + val + '</div><div style="font-size:0.56rem;color:#999;text-transform:uppercase;letter-spacing:0.03em;margin-top:2px;line-height:1.2">' + label + '</div></div>';
+  };
   statsEl.innerHTML =
-    '<div style="background:#FAFAFA;border-radius:12px;padding:10px;text-align:center"><div style="font-size:1.1rem;font-weight:800;color:#1a1a1a">' + report.activeDays + '/7</div><div style="font-size:0.6rem;color:#999;text-transform:uppercase;letter-spacing:0.04em;margin-top:2px">Jours actifs</div></div>' +
-    '<div style="background:#FAFAFA;border-radius:12px;padding:10px;text-align:center"><div style="font-size:1.1rem;font-weight:800;color:#FF6B6B">' + report.sportCount + '</div><div style="font-size:0.6rem;color:#999;text-transform:uppercase;letter-spacing:0.04em;margin-top:2px">Seances</div></div>' +
-    '<div style="background:#FAFAFA;border-radius:12px;padding:10px;text-align:center"><div style="font-size:1.1rem;font-weight:800;color:#FF9A3C">' + report.totalCal + '</div><div style="font-size:0.6rem;color:#999;text-transform:uppercase;letter-spacing:0.04em;margin-top:2px">Kcal</div></div>';
+    statBlock(report.activeDays + '/7', 'Jours actifs', '#1a1a1a') +
+    statBlock(report.sportCount, 'Seances', '#FF6B6B') +
+    statBlock(report.totalCal, 'Kcal', '#FF9A3C') +
+    statBlock(report.totalKm > 0 ? report.totalKm : '--', 'Km', '#38BDF8');
+
+  var chartEl = document.getElementById('weeklyReportDayChart');
+  var labelsEl = document.getElementById('weeklyReportDayLabels');
+  var dayNames = ['L','M','M','J','V','S','D'];
+  var maxScore = 100;
+  var todayISO = new Date().toISOString().split('T')[0];
+  chartEl.innerHTML = '';
+  labelsEl.innerHTML = '';
+  report.dayBreakdown.forEach(function(d, idx) {
+    var hasData = d.score !== null || d.sportCount > 0;
+    var barPct = d.score !== null ? Math.max(8, Math.round((d.score / maxScore) * 100)) : (d.sportCount > 0 ? 22 : 4);
+    var isToday = d.date === todayISO;
+    var barColor = d.score !== null ? '#6C5CE7' : (d.sportCount > 0 ? '#FFB347' : '#EFEFEF');
+    var col = document.createElement('div');
+    col.style.cssText = 'flex:1;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;height:100%';
+    var bar = document.createElement('div');
+    bar.style.cssText = 'width:100%;max-width:22px;border-radius:6px;height:' + barPct + '%;background:' + barColor + ';' + (isToday ? 'box-shadow:0 0 0 2px rgba(108,92,231,0.35)' : '') + ';transition:height .4s ease';
+    bar.title = hasData ? (d.score !== null ? ('Score ' + d.score) : (d.sportCount + ' seance(s)')) : 'Pas de donnees';
+    col.appendChild(bar);
+    chartEl.appendChild(col);
+    var lbl = document.createElement('div');
+    lbl.style.cssText = 'flex:1;text-align:center;font-size:0.62rem;font-weight:' + (isToday ? '800' : '600') + ';color:' + (isToday ? '#6C5CE7' : '#bbb');
+    lbl.textContent = dayNames[idx];
+    labelsEl.appendChild(lbl);
+  });
+
+  var bestDayEl = document.getElementById('weeklyReportBestDay');
+  var bestDayTextEl = document.getElementById('weeklyReportBestDayText');
+  if (report.bestDay && report.bestDay.score !== null) {
+    bestDayEl.style.display = 'flex';
+    var bd = report.bestDay;
+    var bdLabel = bd.dateObj.toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'short' });
+    bestDayTextEl.innerHTML = '<strong>Meilleur jour : ' + bdLabel + '</strong><br>Score de ' + bd.score + (bd.sportCount > 0 ? (' \u00b7 ' + bd.sportCount + ' seance(s)') : '');
+  } else {
+    bestDayEl.style.display = 'none';
+  }
+
+  var sportsWrapEl = document.getElementById('weeklyReportSportsWrap');
+  var sportsEl = document.getElementById('weeklyReportSports');
+  if (report.sportTypes && report.sportTypes.length > 0) {
+    sportsWrapEl.style.display = 'block';
+    var totalSp = report.sportCount || 1;
+    sportsEl.innerHTML = report.sportTypes.map(function(s) {
+      var pct = Math.round((s.count / totalSp) * 100);
+      return '<div style="display:flex;align-items:center;gap:10px">' +
+        '<div style="font-size:0.74rem;color:#444;font-weight:600;min-width:76px">' + s.nom + '</div>' +
+        '<div style="flex:1;height:7px;background:#F2F2F2;border-radius:5px;overflow:hidden"><div style="height:100%;width:' + pct + '%;background:linear-gradient(90deg,#6C5CE7,#a29bfe);border-radius:5px"></div></div>' +
+        '<div style="font-size:0.72rem;color:#999;font-weight:700;min-width:20px;text-align:right">' + s.count + '</div>' +
+        '</div>';
+    }).join('');
+  } else {
+    sportsWrapEl.style.display = 'none';
+  }
 }
 function updateHealthScoreSummary(log) {
   var valEl = document.getElementById('healthScoreSummaryValue');
