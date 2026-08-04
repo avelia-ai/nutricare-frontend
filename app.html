@@ -1949,12 +1949,6 @@ window.calcScore = function() {
   document.getElementById('scoreLabel').textContent = lbl;
   var c = score >= 80 ? '#22c55e' : score >= 60 ? 'var(--accent)' : 'var(--coral)';
   document.getElementById('scoreValue').style.color = c;
-  var summaryVal = document.getElementById('healthScoreSummaryValue');
-  var summaryRing = document.getElementById('healthScoreSummaryRing');
-  var summaryLabel = document.getElementById('healthScoreSummaryLabel');
-  if (summaryVal) summaryVal.textContent = score;
-  if (summaryRing) { summaryRing.style.strokeDashoffset = 169.6 * (1 - score/100); summaryRing.style.stroke = c; }
-  if (summaryLabel) summaryLabel.textContent = lbl;
   return score;
 };
 
@@ -5898,7 +5892,7 @@ function switchLang(lang) {
     </svg>
     <div style="flex:1;min-width:0">
       <div style="font-size:0.7rem;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;color:#999;margin-bottom:3px">Score de sante</div>
-      <div id="healthScoreSummaryLabel" style="font-size:0.95rem;font-weight:700;color:#2D2D2D">Remplissez le formulaire</div>
+      <div id="healthScoreSummaryLabel" style="font-size:0.95rem;font-weight:700;color:#2D2D2D">Remplissez vos indicateurs du jour</div>
     </div>
   </div>
   <!-- RITUELS BIEN-ETRE -->
@@ -13351,6 +13345,29 @@ function loadLeaderboard(page) {
   });
 }
 
+function updateHealthScoreSummary(log) {
+  var valEl = document.getElementById('healthScoreSummaryValue');
+  var ringEl = document.getElementById('healthScoreSummaryRing');
+  var lblEl = document.getElementById('healthScoreSummaryLabel');
+  if (!valEl || !ringEl || !lblEl) return;
+  if (!log) {
+    valEl.textContent = '--';
+    lblEl.textContent = 'Remplissez vos indicateurs du jour';
+    ringEl.style.strokeDashoffset = 169.6;
+    return;
+  }
+  var energyNorm = (log.energy_level != null) ? Math.min(log.energy_level / 10, 1) : 0;
+  var norm = normalizeHealthLog(log);
+  var avg = (energyNorm + norm.sleep + norm.hydra + norm.activ + norm.calm) / 5;
+  var score = Math.round(avg * 100);
+  var lbl = score >= 80 ? 'Excellente journee !' : score >= 60 ? 'Bonne journee' : score >= 40 ? 'Journee correcte' : 'Journee difficile';
+  var c = score >= 80 ? '#22c55e' : score >= 60 ? 'var(--accent)' : 'var(--coral)';
+  valEl.textContent = score;
+  valEl.style.color = c;
+  lblEl.textContent = lbl;
+  ringEl.style.strokeDashoffset = 169.6 * (1 - score/100);
+  ringEl.style.stroke = c;
+}
 function refreshHarmonyAvatar(logs) {
   const defiBonus = parseInt(localStorage.getItem(_gamiKey()) || '0', 10);
   const totalPoints = calcHarmonyFromLogs(logs) + defiBonus;
@@ -13371,6 +13388,7 @@ function refreshHarmonyAvatar(logs) {
     var healthScore = calcHealthScore(lastLog.energy_level, lastLog.sleep_hours, lastLog.stress_level);
     window._foxHealthStatus = getFoxStatus(healthScore);
   }
+  updateHealthScoreSummary(lastLog);
   updateHarmonyUI(totalPoints);
   var lvlData = getHarmonyLevel(totalPoints);
   norm.level = window._debugLevel || lvlData.level;
