@@ -6266,11 +6266,20 @@ function switchLang(lang) {
     .hc input::placeholder{font-weight:400;font-size:0.88rem;color:#ddd}
     .hc-unit{font-size:10px;color:#bbb;margin-top:4px;font-weight:600}
   </style>
-  <div style="background:#FFFCFA;border-radius:22px;padding:20px;box-shadow:0 0 0 1.5px rgba(255,154,108,0.15),0 16px 40px rgba(230,110,70,0.1);margin-bottom:24px">
-    <div style="display:flex;align-items:center;gap:8px;margin-bottom:18px">
-      <div style="width:3px;height:18px;border-radius:2px;background:linear-gradient(180deg,#FF6B6B,#FF9A3C)"></div>
-      <span style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:2px;color:#999">Saisie du jour</span>
+  <div style="background:#FFFFFF;border-radius:20px;overflow:hidden;box-shadow:0 0 0 1.5px rgba(255,154,108,0.22),0 14px 32px rgba(230,110,70,0.14);margin-bottom:24px">
+    <div style="background:linear-gradient(135deg,#FF6B6B,#FF9A3C);padding:18px 20px 28px;position:relative;overflow:hidden">
+      <div style="position:absolute;top:-30px;right:-20px;width:110px;height:110px;background:radial-gradient(circle,rgba(255,255,255,0.14),transparent 70%);pointer-events:none"></div>
+      <div style="display:flex;align-items:center;justify-content:space-between;position:relative;z-index:1">
+        <div>
+          <div style="font-size:0.68rem;color:rgba(255,255,255,0.85);font-weight:700;letter-spacing:0.06em;margin-bottom:4px">SAISIE DU JOUR</div>
+          <div style="font-size:1.05rem;color:white;font-weight:700">Vos indicateurs santé</div>
+        </div>
+        <div style="width:34px;height:34px;border-radius:10px;background:rgba(255,255,255,0.16);display:flex;align-items:center;justify-content:center">
+          <i class="ti ti-clipboard-list" style="font-size:17px;color:#fff"></i>
+        </div>
+      </div>
     </div>
+    <div style="margin:-16px 14px 16px;position:relative;background:#fff;border-radius:16px;padding:18px;box-shadow:0 4px 14px rgba(0,0,0,0.07)">
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:9px" id="healthGrid" class="health-grid">
       <div class="hc">
         <div class="hc-top" style="background:linear-gradient(90deg,#FF6B6B,#FF9A3C)"></div>
@@ -6364,6 +6373,7 @@ function switchLang(lang) {
       <i class="ti ti-sparkles" style="font-size:17px;color:#FFD180"></i>Analyser ma journée avec Mirella
     </button>
     <div id="healthAnalyseComment" style="display:none;margin-top:16px"></div>
+  </div>
   </div>
   <!-- Graphiques et historique -->
   <style>
