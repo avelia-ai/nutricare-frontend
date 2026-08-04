@@ -6158,39 +6158,19 @@ function switchLang(lang) {
           <source src="https://raw.githubusercontent.com/avelia-ai/nutricare-frontend/main/renard_mirella_niveau_1_compressed.mp4" type="video/mp4">
         </video>
       </div>
-    <div style="display:flex;justify-content:center;gap:12px;flex-wrap:wrap;margin-bottom:8px;margin-top:10px">
-      <div style="display:flex;flex-direction:column;align-items:center;gap:4px">
-        <svg width="52" height="52" viewBox="0 0 56 56">
-          <circle cx="28" cy="28" r="24" fill="none" stroke="#F2EFE9" stroke-width="5"/>
-          <circle id="harmonyRingSleep" cx="28" cy="28" r="24" fill="none" stroke="#7EC8E3" stroke-width="5" stroke-linecap="round" stroke-dasharray="150.8" stroke-dashoffset="150.8" transform="rotate(-90 28 28)" style="transition:stroke-dashoffset .4s ease"/>
-          <text id="harmonyPctSleep" x="28" y="32" text-anchor="middle" font-size="12" font-weight="600" fill="#2D2D2D">0%</text>
-        </svg>
-        <span style="font-size:0.68rem;color:#8a8a8a">Sommeil</span>
+    <div style="display:none">
+      <span id="harmonyPctSleep"></span><span id="harmonyPctHydra"></span><span id="harmonyPctActiv"></span><span id="harmonyPctStress"></span>
+      <svg><circle id="harmonyRingSleep"/><circle id="harmonyRingHydra"/><circle id="harmonyRingActiv"/><circle id="harmonyRingStress"/></svg>
+    </div>
+    <div onclick="showView('shop');loadShop()" style="display:flex;align-items:center;gap:12px;background:linear-gradient(135deg,#FFF0EC,#FFF8E8);border-radius:14px;padding:14px 16px;margin-bottom:8px;margin-top:10px;cursor:pointer">
+      <div style="width:38px;height:38px;border-radius:11px;background:linear-gradient(135deg,var(--coral),var(--accent));display:flex;align-items:center;justify-content:center;flex-shrink:0">
+        <i class="ti ti-shirt" style="font-size:18px;color:white"></i>
       </div>
-      <div style="display:flex;flex-direction:column;align-items:center;gap:4px">
-        <svg width="52" height="52" viewBox="0 0 56 56">
-          <circle cx="28" cy="28" r="24" fill="none" stroke="#F2EFE9" stroke-width="5"/>
-          <circle id="harmonyRingHydra" cx="28" cy="28" r="24" fill="none" stroke="#A8D8A8" stroke-width="5" stroke-linecap="round" stroke-dasharray="150.8" stroke-dashoffset="150.8" transform="rotate(-90 28 28)" style="transition:stroke-dashoffset .4s ease"/>
-          <text id="harmonyPctHydra" x="28" y="32" text-anchor="middle" font-size="12" font-weight="600" fill="#2D2D2D">0%</text>
-        </svg>
-        <span style="font-size:0.68rem;color:#8a8a8a">Hydratation</span>
+      <div style="flex:1;min-width:0">
+        <div style="font-size:0.82rem;font-weight:700;color:#2D2D2D">Personnalise Mirella</div>
+        <div style="font-size:0.7rem;color:#999">Debloque des accessoires dans la boutique</div>
       </div>
-      <div style="display:flex;flex-direction:column;align-items:center;gap:4px">
-        <svg width="52" height="52" viewBox="0 0 56 56">
-          <circle cx="28" cy="28" r="24" fill="none" stroke="#F2EFE9" stroke-width="5"/>
-          <circle id="harmonyRingActiv" cx="28" cy="28" r="24" fill="none" stroke="#FFB347" stroke-width="5" stroke-linecap="round" stroke-dasharray="150.8" stroke-dashoffset="150.8" transform="rotate(-90 28 28)" style="transition:stroke-dashoffset .4s ease"/>
-          <text id="harmonyPctActiv" x="28" y="32" text-anchor="middle" font-size="12" font-weight="600" fill="#2D2D2D">0%</text>
-        </svg>
-        <span style="font-size:0.68rem;color:#8a8a8a">Activité</span>
-      </div>
-      <div style="display:flex;flex-direction:column;align-items:center;gap:4px">
-        <svg width="52" height="52" viewBox="0 0 56 56">
-          <circle cx="28" cy="28" r="24" fill="none" stroke="#F2EFE9" stroke-width="5"/>
-          <circle id="harmonyRingStress" cx="28" cy="28" r="24" fill="none" stroke="#C3A9D1" stroke-width="5" stroke-linecap="round" stroke-dasharray="150.8" stroke-dashoffset="150.8" transform="rotate(-90 28 28)" style="transition:stroke-dashoffset .4s ease"/>
-          <text id="harmonyPctStress" x="28" y="32" text-anchor="middle" font-size="12" font-weight="600" fill="#2D2D2D">0%</text>
-        </svg>
-        <span style="font-size:0.68rem;color:#8a8a8a">Stress</span>
-      </div>
+      <i class="ti ti-chevron-right" style="font-size:16px;color:#ccc;flex-shrink:0"></i>
     </div>
     <div id="harmonyCaption" style="text-align:center;font-size:0.82rem;color:#8a8a8a;margin-bottom:4px;min-height:1.2em">Ton équilibre prend forme doucement.</div>
     <div style="display:none">
