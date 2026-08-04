@@ -5928,6 +5928,22 @@ function switchLang(lang) {
       </div>
     </div>
   </div>
+  <div id="weeklyReportCard" style="display:none;background:#FFFFFF;border-radius:20px;overflow:hidden;box-shadow:0 0 0 1.5px rgba(255,154,108,0.22),0 14px 32px rgba(230,110,70,0.14);margin-bottom:16px">
+    <div style="background:linear-gradient(135deg,#6C5CE7,#a29bfe);padding:16px 20px 26px">
+      <div style="font-size:0.68rem;color:rgba(255,255,255,0.85);font-weight:700;letter-spacing:0.04em;margin-bottom:4px">BILAN HEBDO</div>
+      <div id="weeklyReportDates" style="font-size:1.02rem;color:white;font-weight:700">--</div>
+    </div>
+    <div style="margin:-14px 14px 16px;position:relative;background:#fff;border-radius:14px;padding:18px;box-shadow:0 2px 10px rgba(0,0,0,0.06)">
+      <div style="display:flex;align-items:center;gap:16px;margin-bottom:16px">
+        <div style="text-align:center;flex-shrink:0">
+          <div id="weeklyReportScore" style="font-size:2.2rem;font-weight:800;color:#6C5CE7;line-height:1">--</div>
+          <div style="font-size:0.65rem;color:#999;text-transform:uppercase;letter-spacing:0.05em;margin-top:2px">Score moy.</div>
+        </div>
+        <div id="weeklyReportTrend" style="font-size:0.8rem;font-weight:700;flex:1"></div>
+      </div>
+      <div id="weeklyReportStats" style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px"></div>
+    </div>
+  </div>
   <div id="healthScoreSummaryCard" style="background:linear-gradient(135deg,#1B1B2F,#232946);border-radius:20px;padding:22px;margin-bottom:16px;position:relative;overflow:hidden;box-shadow:0 0 0 1.5px rgba(255,154,108,0.22),0 16px 40px rgba(0,0,0,0.18)">
     <div style="position:absolute;top:-40px;right:-30px;width:140px;height:140px;background:radial-gradient(circle,rgba(255,107,107,0.22),transparent 70%);pointer-events:none"></div>
     <div style="position:absolute;bottom:-50px;left:-20px;width:120px;height:120px;background:radial-gradient(circle,rgba(108,92,231,0.16),transparent 70%);pointer-events:none"></div>
@@ -10992,6 +11008,7 @@ Réponds UNIQUEMENT en JSON valide avec cette structure exacte:
     if (view === 'health') {
       loadInfoDuJour(); loadHydrationFromStorage(); setTimeout(renderEvolutionGallery, 100);
       setTimeout(function() { switchSuiviTab(window._suiviActiveTab || 'principal'); }, 60);
+      setTimeout(renderWeeklyReport, 80);
       if (localStorage.getItem('mirella_suivi_tuto_seen') !== 'true') {
         localStorage.setItem('mirella_suivi_tuto_seen', 'true');
         setTimeout(showSuiviTutorial, 600);
@@ -13457,6 +13474,82 @@ function updateHealthScoreSummaryHome(log) {
   if (barHydra) barHydra.textContent = Math.round(norm.hydra * 100) + '%';
   if (barActiv) barActiv.textContent = Math.round(norm.activ * 100) + '%';
   if (barStress) barStress.textContent = Math.round(norm.stress * 100) + '%';
+}
+function getWeekRange(offsetWeeks) {
+  var now = new Date();
+  var day = now.getDay();
+  var diffToMonday = (day === 0 ? -6 : 1 - day);
+  var monday = new Date(now);
+  monday.setDate(now.getDate() + diffToMonday + offsetWeeks * 7);
+  monday.setHours(0,0,0,0);
+  var sunday = new Date(monday);
+  sunday.setDate(monday.getDate() + 6);
+  sunday.setHours(23,59,59,999);
+  return { start: monday, end: sunday };
+}
+function computeWeeklyReport(offsetWeeks) {
+  offsetWeeks = (offsetWeeks === undefined) ? -1 : offsetWeeks;
+  var range = getWeekRange(offsetWeeks);
+  var scores = JSON.parse(localStorage.getItem('mirella_scores') || '[]');
+  var weekScores = scores.filter(function(s) {
+    var d = new Date(s.date);
+    return d >= range.start && d <= range.end;
+  });
+  var avgScore = weekScores.length ? Math.round(weekScores.reduce(function(a,s){return a+s.score;},0) / weekScores.length) : null;
+
+  var prevRange = getWeekRange(offsetWeeks - 1);
+  var prevScores = scores.filter(function(s) {
+    var d = new Date(s.date);
+    return d >= prevRange.start && d <= prevRange.end;
+  });
+  var prevAvg = prevScores.length ? Math.round(prevScores.reduce(function(a,s){return a+s.score;},0) / prevScores.length) : null;
+
+  var sportHist = JSON.parse(localStorage.getItem('mirella_sport_history') || '[]');
+  var weekSport = sportHist.filter(function(h) {
+    var d = new Date(h.date + 'T12:00:00');
+    return d >= range.start && d <= range.end;
+  });
+  var totalCal = weekSport.reduce(function(s,h){return s+(h.cal||0);},0);
+  var totalKm = weekSport.reduce(function(s,h){return s+(h.distance||0);},0);
+
+  var activeDates = {};
+  weekScores.forEach(function(s){ activeDates[s.date] = true; });
+  weekSport.forEach(function(h){ activeDates[h.date] = true; });
+  var activeDays = Object.keys(activeDates).length;
+
+  return {
+    weekStart: range.start, weekEnd: range.end,
+    avgScore: avgScore, prevAvgScore: prevAvg,
+    sportCount: weekSport.length, totalCal: totalCal, totalKm: Math.round(totalKm * 10) / 10,
+    activeDays: activeDays
+  };
+}
+function renderWeeklyReport() {
+  var report = computeWeeklyReport(-1);
+  var card = document.getElementById('weeklyReportCard');
+  if (!card) return;
+  if (report.avgScore === null && report.sportCount === 0 && report.activeDays === 0) {
+    card.style.display = 'none';
+    return;
+  }
+  card.style.display = 'block';
+  var fmt = function(d) { return d.toLocaleDateString('fr-FR', { day: 'numeric', month: 'short' }); };
+  document.getElementById('weeklyReportDates').textContent = fmt(report.weekStart) + ' \u2014 ' + fmt(report.weekEnd);
+  document.getElementById('weeklyReportScore').textContent = report.avgScore !== null ? report.avgScore : '--';
+  var trendEl = document.getElementById('weeklyReportTrend');
+  if (report.avgScore !== null && report.prevAvgScore !== null) {
+    var diff = report.avgScore - report.prevAvgScore;
+    if (diff > 0) { trendEl.innerHTML = '<span style="color:#27AE60">\u2191 +' + diff + ' pts vs semaine derniere</span>'; }
+    else if (diff < 0) { trendEl.innerHTML = '<span style="color:#FF6B6B">\u2193 ' + diff + ' pts vs semaine derniere</span>'; }
+    else { trendEl.innerHTML = '<span style="color:#999">Stable vs semaine derniere</span>'; }
+  } else {
+    trendEl.innerHTML = '<span style="color:#999">Premiere semaine de suivi</span>';
+  }
+  var statsEl = document.getElementById('weeklyReportStats');
+  statsEl.innerHTML =
+    '<div style="background:#FAFAFA;border-radius:12px;padding:10px;text-align:center"><div style="font-size:1.1rem;font-weight:800;color:#1a1a1a">' + report.activeDays + '/7</div><div style="font-size:0.6rem;color:#999;text-transform:uppercase;letter-spacing:0.04em;margin-top:2px">Jours actifs</div></div>' +
+    '<div style="background:#FAFAFA;border-radius:12px;padding:10px;text-align:center"><div style="font-size:1.1rem;font-weight:800;color:#FF6B6B">' + report.sportCount + '</div><div style="font-size:0.6rem;color:#999;text-transform:uppercase;letter-spacing:0.04em;margin-top:2px">Seances</div></div>' +
+    '<div style="background:#FAFAFA;border-radius:12px;padding:10px;text-align:center"><div style="font-size:1.1rem;font-weight:800;color:#FF9A3C">' + report.totalCal + '</div><div style="font-size:0.6rem;color:#999;text-transform:uppercase;letter-spacing:0.04em;margin-top:2px">Kcal</div></div>';
 }
 function updateHealthScoreSummary(log) {
   var valEl = document.getElementById('healthScoreSummaryValue');
