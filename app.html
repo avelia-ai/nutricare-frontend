@@ -6448,9 +6448,13 @@ function switchLang(lang) {
   <div style="padding:20px 16px 100px">
 
     <!-- Photos avant/apres -->
-    <div style="background:white;border-radius:20px;padding:18px;margin-bottom:16px;box-shadow:0 0 0 1.5px rgba(255,154,108,0.18),0 16px 40px rgba(230,110,70,0.1)">
-      <div style="font-size:13px;font-weight:800;color:#1a1a1a;margin-bottom:4px">Mes photos</div>
-      <div style="font-size:11px;color:#aaa;margin-bottom:16px">Ajoutez vos photos pour que Mirella analyse votre progression</div>
+    <div style="background:#FFFFFF;border-radius:20px;overflow:hidden;box-shadow:0 0 0 1.5px rgba(255,154,108,0.18),0 16px 40px rgba(230,110,70,0.1);margin-bottom:16px">
+      <div style="background:linear-gradient(135deg,#FF6B6B,#FF9A3C);padding:16px 20px 26px">
+        <div style="font-size:0.68rem;color:rgba(255,255,255,0.85);font-weight:700;letter-spacing:0.04em;margin-bottom:4px">TRANSFORMATION</div>
+        <div style="font-size:1.02rem;color:white;font-weight:700">Mes photos</div>
+        <div style="font-size:0.75rem;color:rgba(255,255,255,0.8);margin-top:2px">Ajoutez vos photos pour que Mirella analyse votre progression</div>
+      </div>
+      <div style="margin:-14px 14px 0;position:relative;background:#fff;border-radius:14px;padding:18px;box-shadow:0 2px 10px rgba(0,0,0,0.06)">
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px">
         <div>
           <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#FF6B6B;margin-bottom:6px">Avant</div>
@@ -6494,29 +6498,34 @@ function switchLang(lang) {
           </div>
 
           <!-- Galerie timeline -->
-          <div style="background:white;border:1px solid #f0f0f0;border-radius:20px;padding:18px;margin-top:16px">
-            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
-              <div style="font-size:13px;font-weight:800;color:#1a1a1a">Historique photos</div>
+          <div style="background:#FFFFFF;border-radius:20px;overflow:hidden;margin-top:20px;box-shadow:0 0 0 1.5px rgba(255,154,108,0.18),0 16px 40px rgba(230,110,70,0.1)">
+            <div style="background:linear-gradient(135deg,#0984E3,#74b9ff);padding:16px 20px 22px;display:flex;align-items:center;justify-content:space-between">
+              <div>
+                <div style="font-size:0.62rem;color:rgba(255,255,255,0.85);font-weight:700;letter-spacing:0.04em;margin-bottom:3px">GALERIE</div>
+                <div style="font-size:0.95rem;color:white;font-weight:700">Historique photos</div>
+              </div>
               <div style="display:flex;gap:6px">
-                <label style="display:flex;align-items:center;gap:4px;padding:6px 10px;background:linear-gradient(135deg,#FF6B6B,#FF9A3C);border-radius:20px;cursor:pointer;font-size:11px;font-weight:700;color:white">
+                <label style="display:flex;align-items:center;gap:4px;padding:6px 10px;background:rgba(255,255,255,0.2);border-radius:20px;cursor:pointer;font-size:11px;font-weight:700;color:white">
                   <i class="ti ti-camera" style="font-size:12px"></i>Photo
                   <input type="file" accept="image/*" capture="user" style="display:none" onchange="corpoAddPhoto(this)">
                 </label>
-                <label style="display:flex;align-items:center;gap:4px;padding:6px 10px;background:linear-gradient(135deg,#FF6B6B,#FF9A3C);border-radius:20px;cursor:pointer;font-size:11px;font-weight:700;color:white">
+                <label style="display:flex;align-items:center;gap:4px;padding:6px 10px;background:rgba(255,255,255,0.2);border-radius:20px;cursor:pointer;font-size:11px;font-weight:700;color:white">
                   <i class="ti ti-upload" style="font-size:12px"></i>Galerie
                   <input type="file" accept="image/*" style="display:none" onchange="corpoAddPhoto(this)">
                 </label>
               </div>
             </div>
+            <div style="margin:-10px 12px 12px;position:relative;background:#fff;border-radius:14px;padding:14px;box-shadow:0 2px 10px rgba(0,0,0,0.06)">
             <div id="corpoGallery" style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px">
               <div style="aspect-ratio:1;border-radius:10px;background:#f5f5f5;display:flex;align-items:center;justify-content:center">
                 <i class="ti ti-photo" style="font-size:20px;color:#ddd"></i>
               </div>
             </div>
+            </div>
           </div>
 
           <!-- Analyse IA -->
-          <div style="background:#1a1a1a;border-radius:20px;padding:20px;margin-top:16px">
+          <div style="background:linear-gradient(160deg,#1a1a1a,#2a2a2a);border-radius:20px;padding:20px;margin-top:16px;box-shadow:0 0 0 1.5px rgba(255,154,108,0.18),0 16px 40px rgba(0,0,0,0.2)">
             <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px">
               <div style="width:36px;height:36px;border-radius:10px;background:rgba(255,107,107,0.15);display:flex;align-items:center;justify-content:center;flex-shrink:0">
                 <i class="ti ti-sparkles" style="font-size:18px;color:#FF6B6B"></i>
@@ -6533,6 +6542,7 @@ function switchLang(lang) {
             <div id="corpoAnalyseResult" style="margin-top:16px;display:none"></div>
           </div>
         </div>
+      </div>
 
         <div id="corpoLockOverlay" style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:20px;background:rgba(255,255,255,0.55);border-radius:16px;cursor:pointer" onclick="openSubscriptionModal('lock')">
           <div style="font-size:1.8rem;margin-bottom:8px">🔒</div>
