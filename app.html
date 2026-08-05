@@ -2836,6 +2836,9 @@ window.initHome = async function() {
   var prenom = profile.full_name ? profile.full_name.split(' ')[0] : '';
 
   // Salutation
+  window.openEditGoalsModal = openEditGoalsModal;
+  window.toggleEditObjectif = toggleEditObjectif;
+  window.saveEditGoals = saveEditGoals;
   function openEditGoalsModal() {
     var profile = JSON.parse(localStorage.getItem('nutricare_profile') || '{}');
     var m = document.getElementById('editGoalsModal');
