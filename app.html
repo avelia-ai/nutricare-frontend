@@ -5582,8 +5582,10 @@ function switchLang(lang) {
           </div>
         </div>
       </div>
-      <div id="analysisDetailMacros" style="display:none;background:#FAFAFA;border-radius:14px;padding:16px;margin-bottom:16px"></div>
-      <div id="analysisDetailConseil" style="display:none;background:#FFF8E8;border-left:3px solid #FFD700;border-radius:10px;padding:14px;font-size:0.85rem;color:#555;line-height:1.5"></div>
+      <div id="analysisDetailMacros" style="display:none;background:#FAFAFA;border-radius:14px;padding:16px;margin-bottom:12px"></div>
+      <div id="analysisDetailMicros" style="display:none;background:#FAFAFA;border-radius:14px;padding:16px;margin-bottom:16px"></div>
+      <div id="analysisDetailConseil" style="display:none;background:#FFF8E8;border-left:3px solid #FFD700;border-radius:10px;padding:14px;font-size:0.85rem;color:#555;line-height:1.5;margin-bottom:16px"></div>
+      <div id="analysisDetailPoints" style="display:none"></div>
     </div>
   </div>
 </div>
@@ -11562,24 +11564,53 @@ function openAnalysisDetail(idx) {
   var h = window._analysisHistoryData[idx];
   if (!h) return;
   var d = h.analysis_data || {};
+  var macro = d.macronutriments || {};
+  var micro = d.micronutriments || {};
   document.getElementById('analysisDetailNom').textContent = d.repas_identifie || 'Repas';
   document.getElementById('analysisDetailDate').textContent = new Date(h.analyzed_at).toLocaleDateString('fr-FR', { weekday:'long', day:'numeric', month:'long', hour:'2-digit', minute:'2-digit' });
   document.getElementById('analysisDetailScore').textContent = (d.score_sante != null) ? d.score_sante : '--';
   document.getElementById('analysisDetailCal').textContent = (d.calories_estimees != null) ? d.calories_estimees : '--';
+
   var macrosEl = document.getElementById('analysisDetailMacros');
-  if (d.proteines != null || d.glucides != null || d.lipides != null) {
+  if (macro.proteines_g != null || macro.glucides_g != null || macro.lipides_g != null || macro.fibres_g != null) {
     macrosEl.style.display = 'block';
-    macrosEl.innerHTML = '<div style="display:flex;justify-content:space-around;text-align:center">' +
-      '<div><div style="font-size:1rem;font-weight:800;color:#FF6B6B">' + (d.proteines != null ? d.proteines : '--') + 'g</div><div style="font-size:0.62rem;color:#999;text-transform:uppercase">Proteines</div></div>' +
-      '<div><div style="font-size:1rem;font-weight:800;color:#FFB347">' + (d.glucides != null ? d.glucides : '--') + 'g</div><div style="font-size:0.62rem;color:#999;text-transform:uppercase">Glucides</div></div>' +
-      '<div><div style="font-size:1rem;font-weight:800;color:#6C5CE7">' + (d.lipides != null ? d.lipides : '--') + 'g</div><div style="font-size:0.62rem;color:#999;text-transform:uppercase">Lipides</div></div>' +
+    macrosEl.innerHTML = '<div style="font-size:0.62rem;color:#999;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:10px;font-weight:700">Macronutriments</div><div style="display:flex;justify-content:space-around;text-align:center;flex-wrap:wrap;gap:8px">' +
+      '<div><div style="font-size:1rem;font-weight:800;color:#FF6B6B">' + (macro.proteines_g != null ? macro.proteines_g : '--') + 'g</div><div style="font-size:0.6rem;color:#999;text-transform:uppercase">Proteines</div></div>' +
+      '<div><div style="font-size:1rem;font-weight:800;color:#FFB347">' + (macro.glucides_g != null ? macro.glucides_g : '--') + 'g</div><div style="font-size:0.6rem;color:#999;text-transform:uppercase">Glucides</div></div>' +
+      '<div><div style="font-size:1rem;font-weight:800;color:#6C5CE7">' + (macro.lipides_g != null ? macro.lipides_g : '--') + 'g</div><div style="font-size:0.6rem;color:#999;text-transform:uppercase">Lipides</div></div>' +
+      (macro.fibres_g != null ? '<div><div style="font-size:1rem;font-weight:800;color:#27AE60">' + macro.fibres_g + 'g</div><div style="font-size:0.6rem;color:#999;text-transform:uppercase">Fibres</div></div>' : '') +
     '</div>';
   } else { macrosEl.style.display = 'none'; }
+
+  var microsEl = document.getElementById('analysisDetailMicros');
+  var microLabels = { vitamine_c_mg:'Vit. C', vitamine_k_mcg:'Vit. K', vitamine_a_mcg:'Vit. A', calcium_mg:'Calcium', sodium_mg:'Sodium', fer_mg:'Fer', magnesium_mg:'Magnesium', potassium_mg:'Potassium' };
+  var microKeys = Object.keys(microLabels).filter(function(k){ return micro[k] != null; });
+  if (microKeys.length) {
+    microsEl.style.display = 'block';
+    microsEl.innerHTML = '<div style="font-size:0.62rem;color:#999;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:10px;font-weight:700">Micronutriments</div><div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">' +
+      microKeys.map(function(k) {
+        var unit = k.indexOf('_mg') > -1 ? 'mg' : 'mcg';
+        return '<div style="display:flex;justify-content:space-between;font-size:0.78rem"><span style="color:#888">' + microLabels[k] + '</span><span style="font-weight:700;color:#1a1a1a">' + micro[k] + unit + '</span></div>';
+      }).join('') +
+    '</div>';
+  } else { microsEl.style.display = 'none'; }
+
   var conseilEl = document.getElementById('analysisDetailConseil');
-  if (d.conseil || d.conseils || d.recommandation) {
+  if (d.conseil_personnalise) {
     conseilEl.style.display = 'block';
-    conseilEl.textContent = d.conseil || d.conseils || d.recommandation;
+    conseilEl.textContent = d.conseil_personnalise;
   } else { conseilEl.style.display = 'none'; }
+
+  var pointsEl = document.getElementById('analysisDetailPoints');
+  var pos = d.points_positifs || [];
+  var neg = d.points_amelioration || [];
+  if (pos.length || neg.length) {
+    pointsEl.style.display = 'block';
+    pointsEl.innerHTML =
+      (pos.length ? '<div style="margin-bottom:10px"><div style="font-size:0.7rem;font-weight:700;color:#27AE60;text-transform:uppercase;margin-bottom:6px">Points positifs</div>' + pos.map(function(p){ return '<div style="font-size:0.8rem;color:#555;margin-bottom:3px">+ ' + p + '</div>'; }).join('') + '</div>' : '') +
+      (neg.length ? '<div><div style="font-size:0.7rem;font-weight:700;color:#FF6B6B;text-transform:uppercase;margin-bottom:6px">A ameliorer</div>' + neg.map(function(p){ return '<div style="font-size:0.8rem;color:#555;margin-bottom:3px">- ' + p + '</div>'; }).join('') + '</div>' : '');
+  } else { pointsEl.style.display = 'none'; }
+
   document.getElementById('analysisDetailModal').style.display = 'flex';
 }
 async function loadAnalysisHistory() {
