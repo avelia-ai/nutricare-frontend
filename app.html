@@ -2843,6 +2843,7 @@ window.initHome = async function() {
     var profile = JSON.parse(localStorage.getItem('nutricare_profile') || '{}');
     var m = document.getElementById('editGoalsModal');
     if (!m) return;
+    if (m.parentNode !== document.body) { document.body.appendChild(m); }
     document.getElementById('editPoids').value = profile.poids || '';
     document.querySelectorAll('#editGoalsModal [data-obj]').forEach(function(el) {
       var o = el.getAttribute('data-obj');
