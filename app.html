@@ -20731,6 +20731,16 @@ window.maybeShowReviewPrompt = function() {
           style="width:100%;padding:16px 20px;border:1.5px solid #eee;border-radius:14px;font-family:DM Sans,sans-serif;font-size:0.95rem;outline:none;background:#f8f8f8;color:#2D2D2D;box-sizing:border-box;transition:all .2s"
           onfocus="this.style.borderColor='#FF9A3C';this.style.background='#fff'"
           onblur="this.style.borderColor='#eee';this.style.background='#f8f8f8'">
+        <div style="display:flex;gap:10px">
+          <input id="obTaille" type="number" placeholder="Taille (cm)" min="100" max="250"
+            style="width:100%;padding:16px 20px;border:1.5px solid #eee;border-radius:14px;font-family:DM Sans,sans-serif;font-size:0.95rem;outline:none;background:#f8f8f8;color:#2D2D2D;box-sizing:border-box;transition:all .2s"
+            onfocus="this.style.borderColor='#FF9A3C';this.style.background='#fff'"
+            onblur="this.style.borderColor='#eee';this.style.background='#f8f8f8'">
+          <input id="obPoids" type="number" placeholder="Poids (kg)" min="30" max="300" step="0.1"
+            style="width:100%;padding:16px 20px;border:1.5px solid #eee;border-radius:14px;font-family:DM Sans,sans-serif;font-size:0.95rem;outline:none;background:#f8f8f8;color:#2D2D2D;box-sizing:border-box;transition:all .2s"
+            onfocus="this.style.borderColor='#FF9A3C';this.style.background='#fff'"
+            onblur="this.style.borderColor='#eee';this.style.background='#f8f8f8'">
+        </div>
       </div>
       <!-- Preview prénom live -->
       <div id="obPrenomPreview" style="text-align:center;font-size:0.78rem;color:var(--coral);min-height:18px;margin-bottom:8px;font-style:italic;padding:0 20px"></div>
@@ -20922,15 +20932,21 @@ function obSaveIdentite() {
   var prenom = document.getElementById('obPrenom').value.trim();
   var nom = document.getElementById('obNom').value.trim();
   var age = document.getElementById('obAge').value.trim();
+  var taille = document.getElementById('obTaille').value.trim();
+  var poids = document.getElementById('obPoids').value.trim();
   var profile = JSON.parse(localStorage.getItem('nutricare_profile') || '{}');
   if (prenom) profile.full_name = prenom + (nom ? ' ' + nom : '');
   if (age) profile.age = parseInt(age);
+  if (taille) profile.taille = parseFloat(taille);
+  if (poids) profile.poids = parseFloat(poids);
   localStorage.setItem('nutricare_profile', JSON.stringify(profile));
   var token = localStorage.getItem('nutricare_token');
   if (token) {
     var updates = {};
     if (prenom) updates.full_name = prenom + (nom ? ' ' + nom : '');
     if (age) updates.age = parseInt(age);
+    if (taille) updates.taille = parseFloat(taille);
+    if (poids) updates.poids = parseFloat(poids);
     fetch(BACKEND_URL + '/api/profile', {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
