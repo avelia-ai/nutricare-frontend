@@ -20465,16 +20465,19 @@ window.maybeShowReviewPrompt = function() {
 
   function obToggleObjectif(el, obj) {
     var selected = el.getAttribute('data-selected') === '1';
+    var inner = el.querySelector('div');
+    var icon = el.querySelector('[data-icon]');
+    var label = el.querySelector('div > div:last-child');
     if (selected) {
       el.setAttribute('data-selected', '0');
-      el.style.background = 'linear-gradient(160deg,#fff,#FAFAFA)';
-      el.style.boxShadow = '0 2px 8px rgba(0,0,0,0.04)';
-      el.querySelector('div:last-child').style.color = '#2D2D2D';
+      if (inner) inner.style.background = '#fff';
+      if (icon) icon.style.color = '#FF6B6B';
+      if (label) label.style.color = '#2D2D2D';
     } else {
       el.setAttribute('data-selected', '1');
-      el.style.background = 'linear-gradient(135deg,#FF6B6B,#FF9A3C)';
-      el.style.boxShadow = '0 6px 16px rgba(255,107,107,0.3)';
-      el.querySelector('div:last-child').style.color = '#fff';
+      if (inner) inner.style.background = 'linear-gradient(135deg,#FF6B6B,#FF9A3C)';
+      if (icon) icon.style.color = '#fff';
+      if (label) label.style.color = '#fff';
     }
     var sel = {};
     document.querySelectorAll('#onboarding2b [data-obj][data-selected="1"]').forEach(function(e) { sel[e.getAttribute('data-obj')] = true; });
@@ -20758,52 +20761,42 @@ window.maybeShowReviewPrompt = function() {
   <div id="onboarding2" style="display:none;width:100%;height:100%;position:absolute;top:0;left:0;align-items:center;justify-content:center;background:white;overflow-y:auto">
     <div style="width:100%;max-width:420px;padding:0;position:relative;z-index:2;display:flex;flex-direction:column">
       <!-- Vidéo renard -->
-      <video autoplay muted loop playsinline style="width:100%;height:16vh;object-fit:cover;background:#FFFCFA;display:block">
+      <video autoplay muted loop playsinline style="width:100%;height:15vh;object-fit:contain;background:var(--cream);display:block">
         <source src="https://raw.githubusercontent.com/avelia-ai/nutricare-frontend/main/ren_niveau1_compressed.mp4" type="video/mp4">
       </video>
       <!-- Titre -->
-      <div style="text-align:center;padding:14px 20px 6px">
-        <h2 style="font-family:Open Sans,serif;font-size:1.3rem;font-weight:800;color:#2D2D2D;margin:0 0 4px">Faisons connaissance 👋</h2>
-        <p style="font-size:0.78rem;color:#999;margin:0;line-height:1.4">Quelques infos pour personnaliser votre coaching santé</p>
+      <div style="text-align:center;padding:10px 20px 6px">
+        <h2 style="font-family:Open Sans,serif;font-size:1.25rem;font-weight:800;color:#2D2D2D;margin:0 0 4px">Faisons connaissance 👋</h2>
+        <p style="font-size:0.76rem;color:#999;margin:0;line-height:1.35">Quelques infos pour personnaliser votre coaching santé</p>
       </div>
       <!-- Champs -->
-      <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:16px;padding:0 20px">
-        <div style="position:relative">
-          <span style="position:absolute;left:16px;top:50%;transform:translateY(-50%);font-size:1.1rem;pointer-events:none">👤</span>
+      <div style="display:flex;flex-direction:column;gap:9px;margin-bottom:14px;padding:0 20px">
+        <div style="position:relative;border-radius:16px;padding:1.5px;background:linear-gradient(135deg,#FF6B6B,#FF9A3C)">
+          <i class="ti ti-user" style="position:absolute;left:16px;top:50%;transform:translateY(-50%);font-size:1.05rem;color:#FF6B6B;pointer-events:none;z-index:1"></i>
           <input id="obPrenom" type="text" placeholder="Votre prénom *" autocomplete="given-name"
-            style="width:100%;padding:14px 16px 14px 44px;border:1.5px solid #f0e8e0;border-radius:16px;font-family:DM Sans,sans-serif;font-size:0.92rem;outline:none;background:linear-gradient(160deg,#fff,#FFFCFA);color:#2D2D2D;box-sizing:border-box;transition:all .2s;box-shadow:0 2px 8px rgba(0,0,0,0.03)"
-            onfocus="this.style.borderColor='#FF9A3C';this.style.boxShadow='0 0 0 3px rgba(255,154,60,0.12)'"
-            onblur="this.style.borderColor='#f0e8e0';this.style.boxShadow='0 2px 8px rgba(0,0,0,0.03)'"
+            style="width:100%;padding:13px 16px 13px 44px;border:none;border-radius:14.5px;font-family:DM Sans,sans-serif;font-size:0.9rem;outline:none;background:#fff;color:#2D2D2D;box-sizing:border-box"
             oninput="document.getElementById('obPrenomPreview').textContent=this.value||''">
         </div>
-        <div style="position:relative">
-          <span style="position:absolute;left:16px;top:50%;transform:translateY(-50%);font-size:1.1rem;pointer-events:none">📝</span>
+        <div style="position:relative;border-radius:16px;padding:1.5px;background:linear-gradient(135deg,#FF6B6B,#FF9A3C)">
+          <i class="ti ti-signature" style="position:absolute;left:16px;top:50%;transform:translateY(-50%);font-size:1.05rem;color:#FF6B6B;pointer-events:none;z-index:1"></i>
           <input id="obNom" type="text" placeholder="Votre nom" autocomplete="family-name"
-            style="width:100%;padding:14px 16px 14px 44px;border:1.5px solid #f0e8e0;border-radius:16px;font-family:DM Sans,sans-serif;font-size:0.92rem;outline:none;background:linear-gradient(160deg,#fff,#FFFCFA);color:#2D2D2D;box-sizing:border-box;transition:all .2s;box-shadow:0 2px 8px rgba(0,0,0,0.03)"
-            onfocus="this.style.borderColor='#FF9A3C';this.style.boxShadow='0 0 0 3px rgba(255,154,60,0.12)'"
-            onblur="this.style.borderColor='#f0e8e0';this.style.boxShadow='0 2px 8px rgba(0,0,0,0.03)'">
+            style="width:100%;padding:13px 16px 13px 44px;border:none;border-radius:14.5px;font-family:DM Sans,sans-serif;font-size:0.9rem;outline:none;background:#fff;color:#2D2D2D;box-sizing:border-box">
         </div>
-        <div style="position:relative">
-          <span style="position:absolute;left:16px;top:50%;transform:translateY(-50%);font-size:1.1rem;pointer-events:none">🎂</span>
+        <div style="position:relative;border-radius:16px;padding:1.5px;background:linear-gradient(135deg,#FF6B6B,#FF9A3C)">
+          <i class="ti ti-cake" style="position:absolute;left:16px;top:50%;transform:translateY(-50%);font-size:1.05rem;color:#FF6B6B;pointer-events:none;z-index:1"></i>
           <input id="obAge" type="number" placeholder="Votre âge" min="10" max="120"
-            style="width:100%;padding:14px 16px 14px 44px;border:1.5px solid #f0e8e0;border-radius:16px;font-family:DM Sans,sans-serif;font-size:0.92rem;outline:none;background:linear-gradient(160deg,#fff,#FFFCFA);color:#2D2D2D;box-sizing:border-box;transition:all .2s;box-shadow:0 2px 8px rgba(0,0,0,0.03)"
-            onfocus="this.style.borderColor='#FF9A3C';this.style.boxShadow='0 0 0 3px rgba(255,154,60,0.12)'"
-            onblur="this.style.borderColor='#f0e8e0';this.style.boxShadow='0 2px 8px rgba(0,0,0,0.03)'">
+            style="width:100%;padding:13px 16px 13px 44px;border:none;border-radius:14.5px;font-family:DM Sans,sans-serif;font-size:0.9rem;outline:none;background:#fff;color:#2D2D2D;box-sizing:border-box">
         </div>
         <div style="display:flex;gap:10px">
-          <div style="position:relative;width:100%">
-            <span style="position:absolute;left:16px;top:50%;transform:translateY(-50%);font-size:1.1rem;pointer-events:none">📏</span>
+          <div style="position:relative;width:100%;border-radius:16px;padding:1.5px;background:linear-gradient(135deg,#FF6B6B,#FF9A3C)">
+            <i class="ti ti-ruler" style="position:absolute;left:16px;top:50%;transform:translateY(-50%);font-size:1.05rem;color:#FF6B6B;pointer-events:none;z-index:1"></i>
             <input id="obTaille" type="number" placeholder="Taille (cm)" min="100" max="250"
-              style="width:100%;padding:14px 12px 14px 44px;border:1.5px solid #f0e8e0;border-radius:16px;font-family:DM Sans,sans-serif;font-size:0.92rem;outline:none;background:linear-gradient(160deg,#fff,#FFFCFA);color:#2D2D2D;box-sizing:border-box;transition:all .2s;box-shadow:0 2px 8px rgba(0,0,0,0.03)"
-              onfocus="this.style.borderColor='#FF9A3C';this.style.boxShadow='0 0 0 3px rgba(255,154,60,0.12)'"
-              onblur="this.style.borderColor='#f0e8e0';this.style.boxShadow='0 2px 8px rgba(0,0,0,0.03)'">
+              style="width:100%;padding:13px 12px 13px 44px;border:none;border-radius:14.5px;font-family:DM Sans,sans-serif;font-size:0.9rem;outline:none;background:#fff;color:#2D2D2D;box-sizing:border-box">
           </div>
-          <div style="position:relative;width:100%">
-            <span style="position:absolute;left:16px;top:50%;transform:translateY(-50%);font-size:1.1rem;pointer-events:none">⚖️</span>
+          <div style="position:relative;width:100%;border-radius:16px;padding:1.5px;background:linear-gradient(135deg,#FF6B6B,#FF9A3C)">
+            <i class="ti ti-scale" style="position:absolute;left:16px;top:50%;transform:translateY(-50%);font-size:1.05rem;color:#FF6B6B;pointer-events:none;z-index:1"></i>
             <input id="obPoids" type="number" placeholder="Poids (kg)" min="30" max="300" step="0.1"
-              style="width:100%;padding:14px 12px 14px 44px;border:1.5px solid #f0e8e0;border-radius:16px;font-family:DM Sans,sans-serif;font-size:0.92rem;outline:none;background:linear-gradient(160deg,#fff,#FFFCFA);color:#2D2D2D;box-sizing:border-box;transition:all .2s;box-shadow:0 2px 8px rgba(0,0,0,0.03)"
-              onfocus="this.style.borderColor='#FF9A3C';this.style.boxShadow='0 0 0 3px rgba(255,154,60,0.12)'"
-              onblur="this.style.borderColor='#f0e8e0';this.style.boxShadow='0 2px 8px rgba(0,0,0,0.03)'">
+              style="width:100%;padding:13px 12px 13px 44px;border:none;border-radius:14.5px;font-family:DM Sans,sans-serif;font-size:0.9rem;outline:none;background:#fff;color:#2D2D2D;box-sizing:border-box">
           </div>
         </div>
       </div>
@@ -20825,7 +20818,7 @@ window.maybeShowReviewPrompt = function() {
   <div id="onboarding2b" style="display:none;position:fixed;inset:0;flex-direction:column;background:white;overflow-y:auto;z-index:10000">
     <div style="width:100%;height:100%;display:flex;flex-direction:column">
       <!-- Vidéo -->
-      <video autoplay muted loop playsinline style="width:100%;height:28vh;object-fit:cover;flex-shrink:0;display:block">
+      <video autoplay muted loop playsinline style="width:100%;height:16vh;object-fit:contain;background:var(--cream);flex-shrink:0;display:block">
         <source src="https://raw.githubusercontent.com/avelia-ai/nutricare-frontend/main/ren_niveau1_compressed.mp4" type="video/mp4">
       </video>
       <!-- Titre -->
@@ -20835,41 +20828,59 @@ window.maybeShowReviewPrompt = function() {
       </div>
       <!-- Grille objectifs -->
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:0 20px">
-        <div onclick="obToggleObjectif(this,'perte_poids')" data-obj="perte_poids" style="padding:16px 10px;border-radius:16px;text-align:center;cursor:pointer;background:linear-gradient(160deg,#fff,#FAFAFA);box-shadow:0 2px 8px rgba(0,0,0,0.04);transition:all .2s">
-          <div style="font-size:1.3rem;margin-bottom:4px">📉</div>
-          <div style="font-size:0.8rem;font-weight:700;color:#2D2D2D;letter-spacing:0.1px">Perdre du poids</div>
+        <div onclick="obToggleObjectif(this,'perte_poids')" data-obj="perte_poids" style="border-radius:16px;padding:1.5px;background:linear-gradient(135deg,#FF6B6B,#FF9A3C);cursor:pointer;transition:all .2s">
+          <div style="background:#fff;border-radius:14.5px;padding:16px 10px;text-align:center">
+            <i class="ti ti-trending-down" data-icon="1" style="font-size:1.5rem;color:#FF6B6B;margin-bottom:6px;display:block"></i>
+            <div style="font-size:0.8rem;font-weight:700;color:#2D2D2D;letter-spacing:0.1px">Perdre du poids</div>
+          </div>
         </div>
-        <div onclick="obToggleObjectif(this,'maintien')" data-obj="maintien" style="padding:16px 10px;border-radius:16px;text-align:center;cursor:pointer;background:linear-gradient(160deg,#fff,#FAFAFA);box-shadow:0 2px 8px rgba(0,0,0,0.04);transition:all .2s">
-          <div style="font-size:1.3rem;margin-bottom:4px">⚖️</div>
-          <div style="font-size:0.8rem;font-weight:700;color:#2D2D2D;letter-spacing:0.1px">Maintien du poids</div>
+        <div onclick="obToggleObjectif(this,'maintien')" data-obj="maintien" style="border-radius:16px;padding:1.5px;background:linear-gradient(135deg,#FF6B6B,#FF9A3C);cursor:pointer;transition:all .2s">
+          <div style="background:#fff;border-radius:14.5px;padding:16px 10px;text-align:center">
+            <i class="ti ti-scale" data-icon="1" style="font-size:1.5rem;color:#FF6B6B;margin-bottom:6px;display:block"></i>
+            <div style="font-size:0.8rem;font-weight:700;color:#2D2D2D;letter-spacing:0.1px">Maintien du poids</div>
+          </div>
         </div>
-        <div onclick="obToggleObjectif(this,'forme')" data-obj="forme" style="padding:16px 10px;border-radius:16px;text-align:center;cursor:pointer;background:linear-gradient(160deg,#fff,#FAFAFA);box-shadow:0 2px 8px rgba(0,0,0,0.04);transition:all .2s">
-          <div style="font-size:1.3rem;margin-bottom:4px">✨</div>
-          <div style="font-size:0.8rem;font-weight:700;color:#2D2D2D;letter-spacing:0.1px">Rester en forme</div>
+        <div onclick="obToggleObjectif(this,'forme')" data-obj="forme" style="border-radius:16px;padding:1.5px;background:linear-gradient(135deg,#FF6B6B,#FF9A3C);cursor:pointer;transition:all .2s">
+          <div style="background:#fff;border-radius:14.5px;padding:16px 10px;text-align:center">
+            <i class="ti ti-sparkles" data-icon="1" style="font-size:1.5rem;color:#FF6B6B;margin-bottom:6px;display:block"></i>
+            <div style="font-size:0.8rem;font-weight:700;color:#2D2D2D;letter-spacing:0.1px">Rester en forme</div>
+          </div>
         </div>
-        <div onclick="obToggleObjectif(this,'energie')" data-obj="energie" style="padding:16px 10px;border-radius:16px;text-align:center;cursor:pointer;background:linear-gradient(160deg,#fff,#FAFAFA);box-shadow:0 2px 8px rgba(0,0,0,0.04);transition:all .2s">
-          <div style="font-size:1.3rem;margin-bottom:4px">⚡</div>
-          <div style="font-size:0.8rem;font-weight:700;color:#2D2D2D;letter-spacing:0.1px">Améliorer l'énergie</div>
+        <div onclick="obToggleObjectif(this,'energie')" data-obj="energie" style="border-radius:16px;padding:1.5px;background:linear-gradient(135deg,#FF6B6B,#FF9A3C);cursor:pointer;transition:all .2s">
+          <div style="background:#fff;border-radius:14.5px;padding:16px 10px;text-align:center">
+            <i class="ti ti-bolt" data-icon="1" style="font-size:1.5rem;color:#FF6B6B;margin-bottom:6px;display:block"></i>
+            <div style="font-size:0.8rem;font-weight:700;color:#2D2D2D;letter-spacing:0.1px">Améliorer l'énergie</div>
+          </div>
         </div>
-        <div onclick="obToggleObjectif(this,'masse')" data-obj="masse" style="padding:16px 10px;border-radius:16px;text-align:center;cursor:pointer;background:linear-gradient(160deg,#fff,#FAFAFA);box-shadow:0 2px 8px rgba(0,0,0,0.04);transition:all .2s">
-          <div style="font-size:1.3rem;margin-bottom:4px">💪</div>
-          <div style="font-size:0.8rem;font-weight:700;color:#2D2D2D;letter-spacing:0.1px">Prise de masse</div>
+        <div onclick="obToggleObjectif(this,'masse')" data-obj="masse" style="border-radius:16px;padding:1.5px;background:linear-gradient(135deg,#FF6B6B,#FF9A3C);cursor:pointer;transition:all .2s">
+          <div style="background:#fff;border-radius:14.5px;padding:16px 10px;text-align:center">
+            <i class="ti ti-barbell" data-icon="1" style="font-size:1.5rem;color:#FF6B6B;margin-bottom:6px;display:block"></i>
+            <div style="font-size:0.8rem;font-weight:700;color:#2D2D2D;letter-spacing:0.1px">Prise de masse</div>
+          </div>
         </div>
-        <div onclick="obToggleObjectif(this,'sommeil')" data-obj="sommeil" style="padding:16px 10px;border-radius:16px;text-align:center;cursor:pointer;background:linear-gradient(160deg,#fff,#FAFAFA);box-shadow:0 2px 8px rgba(0,0,0,0.04);transition:all .2s">
-          <div style="font-size:1.3rem;margin-bottom:4px">🌙</div>
-          <div style="font-size:0.8rem;font-weight:700;color:#2D2D2D;letter-spacing:0.1px">Mieux dormir</div>
+        <div onclick="obToggleObjectif(this,'sommeil')" data-obj="sommeil" style="border-radius:16px;padding:1.5px;background:linear-gradient(135deg,#FF6B6B,#FF9A3C);cursor:pointer;transition:all .2s">
+          <div style="background:#fff;border-radius:14.5px;padding:16px 10px;text-align:center">
+            <i class="ti ti-moon" data-icon="1" style="font-size:1.5rem;color:#FF6B6B;margin-bottom:6px;display:block"></i>
+            <div style="font-size:0.8rem;font-weight:700;color:#2D2D2D;letter-spacing:0.1px">Mieux dormir</div>
+          </div>
         </div>
-        <div onclick="obToggleObjectif(this,'stress')" data-obj="stress" style="padding:16px 10px;border-radius:16px;text-align:center;cursor:pointer;background:linear-gradient(160deg,#fff,#FAFAFA);box-shadow:0 2px 8px rgba(0,0,0,0.04);transition:all .2s">
-          <div style="font-size:1.3rem;margin-bottom:4px">🧘</div>
-          <div style="font-size:0.8rem;font-weight:700;color:#2D2D2D;letter-spacing:0.1px">Réduire le stress</div>
+        <div onclick="obToggleObjectif(this,'stress')" data-obj="stress" style="border-radius:16px;padding:1.5px;background:linear-gradient(135deg,#FF6B6B,#FF9A3C);cursor:pointer;transition:all .2s">
+          <div style="background:#fff;border-radius:14.5px;padding:16px 10px;text-align:center">
+            <i class="ti ti-yoga" data-icon="1" style="font-size:1.5rem;color:#FF6B6B;margin-bottom:6px;display:block"></i>
+            <div style="font-size:0.8rem;font-weight:700;color:#2D2D2D;letter-spacing:0.1px">Réduire le stress</div>
+          </div>
         </div>
-        <div onclick="obToggleObjectif(this,'performance')" data-obj="performance" style="padding:16px 10px;border-radius:16px;text-align:center;cursor:pointer;background:linear-gradient(160deg,#fff,#FAFAFA);box-shadow:0 2px 8px rgba(0,0,0,0.04);transition:all .2s">
-          <div style="font-size:1.3rem;margin-bottom:4px">🏃</div>
-          <div style="font-size:0.8rem;font-weight:700;color:#2D2D2D;letter-spacing:0.1px">Performance sportive</div>
+        <div onclick="obToggleObjectif(this,'performance')" data-obj="performance" style="border-radius:16px;padding:1.5px;background:linear-gradient(135deg,#FF6B6B,#FF9A3C);cursor:pointer;transition:all .2s">
+          <div style="background:#fff;border-radius:14.5px;padding:16px 10px;text-align:center">
+            <i class="ti ti-run" data-icon="1" style="font-size:1.5rem;color:#FF6B6B;margin-bottom:6px;display:block"></i>
+            <div style="font-size:0.8rem;font-weight:700;color:#2D2D2D;letter-spacing:0.1px">Performance sportive</div>
+          </div>
         </div>
-        <div onclick="obToggleObjectif(this,'rééquilibrage')" data-obj="rééquilibrage" style="grid-column:1/-1;padding:16px 10px;border-radius:16px;text-align:center;cursor:pointer;background:linear-gradient(160deg,#fff,#FAFAFA);box-shadow:0 2px 8px rgba(0,0,0,0.04);transition:all .2s">
-          <div style="font-size:1.3rem;margin-bottom:4px">🥗</div>
-          <div style="font-size:0.8rem;font-weight:700;color:#2D2D2D;letter-spacing:0.1px">Rééquilibrage alimentaire</div>
+        <div onclick="obToggleObjectif(this,'rééquilibrage')" data-obj="rééquilibrage" style="grid-column:1/-1;border-radius:16px;padding:1.5px;background:linear-gradient(135deg,#FF6B6B,#FF9A3C);cursor:pointer;transition:all .2s">
+          <div style="background:#fff;border-radius:14.5px;padding:16px 10px;text-align:center">
+            <i class="ti ti-salad" data-icon="1" style="font-size:1.5rem;color:#FF6B6B;margin-bottom:6px;display:block"></i>
+            <div style="font-size:0.8rem;font-weight:700;color:#2D2D2D;letter-spacing:0.1px">Rééquilibrage alimentaire</div>
+          </div>
         </div>
       </div>
       <!-- Questions complementaires selon objectif -->
