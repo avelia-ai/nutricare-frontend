@@ -3003,7 +3003,9 @@ window.initHome = async function() {
     } else {
       progressWrap.style.display = 'none';
     }
-    document.getElementById('summaryObjectifLine').textContent = objLine;
+    var objLineEl = document.getElementById('summaryObjectifLine');
+    objLineEl.textContent = objLine;
+    objLineEl.style.display = objLine ? 'block' : 'none';
 
     var objChipsEl = document.getElementById('summaryObjectifChips');
     objChipsEl.innerHTML = objectifs.map(function(o) {
@@ -4328,10 +4330,11 @@ function switchLang(lang) {
               </svg>
               <div style="flex:1;min-width:0">
                 <div style="font-size:0.62rem;color:#999;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:2px">Indice de masse corporelle</div>
-                <div id="summaryImcLabel" style="font-size:1.05rem;font-weight:800;color:#2D2D2D;margin-bottom:4px">--</div>
-                <div id="summaryObjectifLine" style="font-size:0.8rem;color:#888;line-height:1.4"></div>
+                <div id="summaryImcLabel" style="font-size:1.05rem;font-weight:800;color:#2D2D2D">--</div>
               </div>
             </div>
+
+            <div id="summaryObjectifLine" style="display:none;font-size:0.85rem;color:#FF6B6B;font-weight:700;line-height:1.4;text-align:center;background:linear-gradient(135deg,#FFF0EC,#FFF8E8);border-radius:14px;padding:12px 16px;margin-bottom:12px"></div>
 
             <div id="summaryObjectifChips" style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:16px"></div>
 
