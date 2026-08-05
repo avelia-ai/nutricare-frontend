@@ -15368,28 +15368,80 @@ function closeMirellaNotif() {
 <!-- Bottom Navigation Mobile -->
 <nav id="bottomNav" style="display:none;position:fixed;bottom:0;left:0;right:0;background:white;border-top:1px solid rgba(255,107,107,0.1);padding:8px 0 20px;z-index:1000;box-shadow:0 -4px 20px rgba(0,0,0,0.08)">
   <div style="display:flex;justify-content:space-around;align-items:center">
-    <button onclick="showView('chat',this)" style="display:flex;flex-direction:column;align-items:center;gap:3px;padding:4px 8px;border:none;background:none;color:#999;font-size:0.6rem;font-family:DM Sans,sans-serif;cursor:pointer" class="bn-btn" id="bn-chat">
-      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-      Chat
+    <button onclick="showView('home',this)" style="display:flex;flex-direction:column;align-items:center;gap:3px;padding:4px 6px;border:none;background:none;color:#999;font-size:0.58rem;font-family:DM Sans,sans-serif;cursor:pointer" class="bn-btn" id="bn-home">
+      <i class="ti ti-home" style="font-size:21px"></i>
+      Accueil
     </button>
-    <button onclick="showView('protocols',this)" style="display:flex;flex-direction:column;align-items:center;gap:3px;padding:4px 8px;border:none;background:none;color:#999;font-size:0.6rem;font-family:DM Sans,sans-serif;cursor:pointer" class="bn-btn" id="bn-protocols">
-      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 2a10 10 0 1 0 0 20A10 10 0 0 0 12 2z"/><path d="M8 12h8M12 8v8"/></svg>
-      Pathologies
+    <button onclick="openNavCategory('nutrition')" style="display:flex;flex-direction:column;align-items:center;gap:3px;padding:4px 6px;border:none;background:none;color:#999;font-size:0.58rem;font-family:DM Sans,sans-serif;cursor:pointer" class="bn-btn" id="bn-nutrition">
+      <i class="ti ti-tools-kitchen-2" style="font-size:21px"></i>
+      Nutrition
     </button>
-    <button onclick="toggleQuickMenu()" style="display:flex;align-items:center;gap:6px;padding:10px 18px;background:linear-gradient(135deg,var(--coral),var(--accent));border-radius:24px;box-shadow:0 4px 16px rgba(255,107,107,0.4);border:none;cursor:pointer;margin-top:-14px;font-family:DM Sans,sans-serif;font-weight:700;font-size:0.72rem;letter-spacing:0.04em;color:white">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round"><line x1="4" y1="7" x2="20" y2="7"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="17" x2="20" y2="17"/></svg>
-      MENU
+    <button onclick="openNavCategory('visuel')" style="display:flex;flex-direction:column;align-items:center;gap:3px;padding:4px 6px;border:none;background:none;color:#999;font-size:0.58rem;font-family:DM Sans,sans-serif;cursor:pointer" class="bn-btn" id="bn-visuel">
+      <i class="ti ti-camera" style="font-size:21px"></i>
+      Analyse
     </button>
-    <button onclick="showView('health',this)" style="display:flex;flex-direction:column;align-items:center;gap:3px;padding:4px 8px;border:none;background:none;color:#999;font-size:0.6rem;font-family:DM Sans,sans-serif;cursor:pointer" class="bn-btn" id="bn-health">
-      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
-      Suivi
+    <button onclick="openNavCategory('suivi')" style="display:flex;flex-direction:column;align-items:center;gap:3px;padding:4px 6px;border:none;background:none;color:#999;font-size:0.58rem;font-family:DM Sans,sans-serif;cursor:pointer" class="bn-btn" id="bn-suivi">
+      <i class="ti ti-activity" style="font-size:21px"></i>
+      Suivi & Santé
     </button>
-    <button onclick="showView('profile',this)" style="display:flex;flex-direction:column;align-items:center;gap:3px;padding:4px 8px;border:none;background:none;color:#999;font-size:0.6rem;font-family:DM Sans,sans-serif;cursor:pointer" class="bn-btn" id="bn-profile">
-      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-      Profil
+    <button onclick="openNavCategory('progression')" style="display:flex;flex-direction:column;align-items:center;gap:3px;padding:4px 6px;border:none;background:none;color:#999;font-size:0.58rem;font-family:DM Sans,sans-serif;cursor:pointer" class="bn-btn" id="bn-progression">
+      <i class="ti ti-trophy" style="font-size:21px"></i>
+      Progression
     </button>
   </div>
 </nav>
+
+<!-- Popup categorie menu du bas -->
+<div id="navCategoryModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:99999;align-items:flex-end;justify-content:center" onclick="if(event.target===this)this.style.display='none'">
+  <div style="background:white;border-radius:24px 24px 0 0;padding:0;width:100%;max-width:600px;max-height:70vh;overflow-y:auto">
+    <div style="width:40px;height:4px;background:#eee;border-radius:4px;margin:12px auto 0"></div>
+    <div style="padding:16px 20px 28px">
+      <div id="navCategoryTitle" style="font-size:1.05rem;font-weight:800;color:#1a1a1a;margin-bottom:14px"></div>
+      <div id="navCategoryList" style="display:flex;flex-direction:column;gap:8px"></div>
+    </div>
+  </div>
+</div>
+<script>
+var _navCategories = {
+  nutrition: { title: 'Nutrition', items: [
+    { view: 'menus', label: 'Mes menus', icon: 'ti-tools-kitchen-2', c1:'#27AE60', c2:'#82E0AA' },
+    { view: 'analysis', label: 'Analyse repas', icon: 'ti-camera', c1:'#FF6B6B', c2:'#FF9A3C' },
+    { view: 'scanproduit', label: 'Scan produit', icon: 'ti-barcode', c1:'#0984E3', c2:'#74b9ff' },
+    { view: 'frigo', label: 'Mon frigo', icon: 'ti-fridge', c1:'#00B894', c2:'#55EFC4' }
+  ]},
+  visuel: { title: 'Analyse visuelle', items: [
+    { view: 'visual', label: 'Detection visuelle', icon: 'ti-eye', c1:'#6C5CE7', c2:'#a29bfe' },
+    { view: 'corpo', label: 'Evolution corporelle', icon: 'ti-camera', c1:'#FF6B6B', c2:'#FF9A3C' },
+    { view: 'visage', label: 'Analyse visage', icon: 'ti-scan', c1:'#E91E8C', c2:'#F48FB1' },
+    { view: 'biologie', label: 'Bilan sanguin', icon: 'ti-droplet', c1:'#FF6B6B', c2:'#FF9A9A' }
+  ]},
+  suivi: { title: 'Suivi & Sante', items: [
+    { view: 'health', label: 'Suivi sante', icon: 'ti-activity', c1:'#FF6B6B', c2:'#FF9A3C' },
+    { view: 'chat', label: 'Chat avec Mirella', icon: 'ti-message-circle', c1:'#0984E3', c2:'#74b9ff' },
+    { view: 'protocols', label: 'Pathologies', icon: 'ti-stethoscope', c1:'#9B59B6', c2:'#c39bd3' },
+    { view: 'cycle', label: 'Cycle feminin', icon: 'ti-moon', c1:'#E91E8C', c2:'#F48FB1' }
+  ]},
+  progression: { title: 'Progression & Motivation', items: [
+    { view: 'leaderboard', label: 'Classement', icon: 'ti-medal', c1:'#D4A017', c2:'#FFD700' },
+    { view: 'gamification', label: 'Defis', icon: 'ti-trophy', c1:'#FF9A3C', c2:'#FFC078' },
+    { view: 'shop', label: 'Boutique', icon: 'ti-shopping-bag', c1:'#FF6B6B', c2:'#FF9A3C' },
+    { view: 'gamification', label: 'Parrainage', icon: 'ti-gift', c1:'#FF6B6B', c2:'#FF9A3C' }
+  ]}
+};
+function openNavCategory(cat) {
+  var data = _navCategories[cat];
+  if (!data) return;
+  document.getElementById('navCategoryTitle').textContent = data.title;
+  document.getElementById('navCategoryList').innerHTML = data.items.map(function(it) {
+    return '<div onclick="document.getElementById(\'navCategoryModal\').style.display=\'none\';showView(\'' + it.view + '\')" style="display:flex;align-items:center;gap:14px;padding:14px;background:linear-gradient(135deg,#ffffff,#FAFAFA);border-radius:14px;box-shadow:0 3px 10px rgba(0,0,0,0.04);cursor:pointer">' +
+      '<div style="width:42px;height:42px;border-radius:12px;background:linear-gradient(135deg,' + it.c1 + ',' + it.c2 + ');display:flex;align-items:center;justify-content:center;flex-shrink:0"><i class="ti ' + it.icon + '" style="font-size:19px;color:#fff"></i></div>' +
+      '<div style="font-size:0.92rem;font-weight:700;color:#1a1a1a">' + it.label + '</div>' +
+      '<i class="ti ti-chevron-right" style="font-size:16px;color:#ddd;margin-left:auto"></i>' +
+    '</div>';
+  }).join('');
+  document.getElementById('navCategoryModal').style.display = 'flex';
+}
+</script>
 
 <!-- SHOP VIEW -->
 <div id="shopView" style="display:none;position:fixed;top:56px;left:0;right:0;bottom:60px;overflow-y:auto;overflow-x:hidden;background:var(--cream);z-index:10;box-sizing:border-box">
