@@ -20476,6 +20476,9 @@ window.maybeShowReviewPrompt = function() {
       el.style.background = '#FFF5EE';
       el.querySelector('div:last-child').style.color = '#FF6B6B';
     }
+    var needsPoids = document.querySelector('#onboarding2b [data-obj="perte_poids"][data-selected="1"], #onboarding2b [data-obj="masse"][data-selected="1"]');
+    var wrap = document.getElementById('obPoidsObjectifWrap');
+    if (wrap) wrap.style.display = needsPoids ? 'block' : 'none';
   }
 
   async function obSaveObjectifs() {
@@ -20483,19 +20486,29 @@ window.maybeShowReviewPrompt = function() {
     document.querySelectorAll('#onboarding2b [data-obj]').forEach(function(el) {
       if (el.getAttribute('data-selected') === '1') selected.push(el.getAttribute('data-obj'));
     });
+    var poidsVise = document.getElementById('obPoidsVise') ? document.getElementById('obPoidsVise').value.trim() : '';
+    var delai = document.getElementById('obDelaiObjectif') ? document.getElementById('obDelaiObjectif').value : '';
     // Sauvegarde locale
     var profile = JSON.parse(localStorage.getItem('nutricare_profile') || '{}');
     profile.objectifs = selected;
+    if (poidsVise) profile.poids_objectif = parseFloat(poidsVise);
+    if (poidsVise && delai) profile.objectif_delai_semaines = parseInt(delai);
     localStorage.setItem('nutricare_profile', JSON.stringify(profile));
     // Sauvegarde API
     try {
       var token = authToken || window._authToken || localStorage.getItem('nutricare_token');
-      if (token && selected.length > 0) {
-        await fetch(BACKEND_URL + '/api/profile', {
-          method: 'PUT',
-          headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
-          body: JSON.stringify({ objectifs: selected })
-        });
+      if (token) {
+        var payload = {};
+        if (selected.length > 0) payload.objectifs = selected;
+        if (poidsVise) payload.poids_objectif = parseFloat(poidsVise);
+        if (poidsVise && delai) payload.objectif_delai_semaines = parseInt(delai);
+        if (Object.keys(payload).length > 0) {
+          await fetch(BACKEND_URL + '/api/profile', {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
+            body: JSON.stringify(payload)
+          });
+        }
       }
     } catch(e) {}
     // Passer à l'écran 4 (vidéo programme) via obNext
@@ -20796,6 +20809,23 @@ window.maybeShowReviewPrompt = function() {
         </div>
         <div onclick="obToggleObjectif(this,'rééquilibrage')" data-obj="rééquilibrage" style="grid-column:1/-1;padding:14px 10px;border:1.5px solid #eee;border-radius:14px;text-align:center;cursor:pointer;background:#fafafa;transition:all .2s">
           <div style="font-size:0.8rem;font-weight:700;color:#2D2D2D;letter-spacing:0.1px">Rééquilibrage alimentaire</div>
+        </div>
+      </div>
+      <!-- Poids vise + delai (affiche si perte de poids ou prise de masse selectionne) -->
+      <div id="obPoidsObjectifWrap" style="display:none;padding:14px 20px 0;flex-shrink:0">
+        <div style="font-size:0.78rem;color:#999;margin-bottom:8px;font-weight:600">Quel est ton objectif precis ?</div>
+        <div style="display:flex;gap:10px;margin-bottom:8px">
+          <input id="obPoidsVise" type="number" placeholder="Poids vise (kg)" min="30" max="300" step="0.1"
+            style="width:100%;padding:14px 16px;border:1.5px solid #eee;border-radius:12px;font-family:DM Sans,sans-serif;font-size:0.9rem;outline:none;background:#f8f8f8;color:#2D2D2D;box-sizing:border-box"
+            onfocus="this.style.borderColor='#FF9A3C';this.style.background='#fff'"
+            onblur="this.style.borderColor='#eee';this.style.background='#f8f8f8'">
+          <select id="obDelaiObjectif" style="width:100%;padding:14px 16px;border:1.5px solid #eee;border-radius:12px;font-family:DM Sans,sans-serif;font-size:0.9rem;outline:none;background:#f8f8f8;color:#2D2D2D;box-sizing:border-box">
+            <option value="4">En 1 mois</option>
+            <option value="8" selected>En 2 mois</option>
+            <option value="12">En 3 mois</option>
+            <option value="24">En 6 mois</option>
+            <option value="52">En 1 an</option>
+          </select>
         </div>
       </div>
       <!-- Boutons -->
