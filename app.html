@@ -2925,6 +2925,9 @@ window.initHome = async function() {
       }
       profile.poids_objectif = payload.poids_objectif;
       if (delai) { payload.objectif_delai_semaines = parseInt(delai); profile.objectif_delai_semaines = parseInt(delai); }
+      var todayStr = new Date().toISOString().split('T')[0];
+      payload.objectif_date_debut = todayStr;
+      profile.objectif_date_debut = todayStr;
     }
     if (sel_has('energie') && energie) { payload.energie_actuelle = parseInt(energie); profile.energie_actuelle = parseInt(energie); }
     if (sel_has('stress') && stress) { payload.stress_actuel = parseInt(stress); profile.stress_actuel = parseInt(stress); }
@@ -20924,7 +20927,7 @@ window.maybeShowReviewPrompt = function() {
     profile.objectifs = selected;
     if (delta) profile.poids_delta_souhaite = delta;
     if (poidsObjectifCalcule) profile.poids_objectif = poidsObjectifCalcule;
-    if (delta && delai) profile.objectif_delai_semaines = parseInt(delai);
+    if (delta && delai) { profile.objectif_delai_semaines = parseInt(delai); profile.objectif_date_debut = new Date().toISOString().split('T')[0]; }
     if (energie) profile.energie_actuelle = parseInt(energie);
     if (stress) profile.stress_actuel = parseInt(stress);
     if (sommeilH) profile.sommeil_heures_actuel = parseFloat(sommeilH);
@@ -20940,7 +20943,7 @@ window.maybeShowReviewPrompt = function() {
         var payload = {};
         if (selected.length > 0) payload.objectifs = selected;
         if (poidsObjectifCalcule) payload.poids_objectif = poidsObjectifCalcule;
-        if (delta && delai) payload.objectif_delai_semaines = parseInt(delai);
+        if (delta && delai) { payload.objectif_delai_semaines = parseInt(delai); payload.objectif_date_debut = profile.objectif_date_debut; }
         if (delta) payload.poids_delta_souhaite = delta;
         if (energie) payload.energie_actuelle = parseInt(energie);
         if (stress) payload.stress_actuel = parseInt(stress);
