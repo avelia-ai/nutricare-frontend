@@ -20467,18 +20467,27 @@ window.maybeShowReviewPrompt = function() {
     var selected = el.getAttribute('data-selected') === '1';
     if (selected) {
       el.setAttribute('data-selected', '0');
-      el.style.border = '1.5px solid #eee';
-      el.style.background = '#f8f8f8';
+      el.style.background = 'linear-gradient(160deg,#fff,#FAFAFA)';
+      el.style.boxShadow = '0 2px 8px rgba(0,0,0,0.04)';
       el.querySelector('div:last-child').style.color = '#2D2D2D';
     } else {
       el.setAttribute('data-selected', '1');
-      el.style.border = '1.5px solid #FF9A3C';
-      el.style.background = '#FFF5EE';
-      el.querySelector('div:last-child').style.color = '#FF6B6B';
+      el.style.background = 'linear-gradient(135deg,#FF6B6B,#FF9A3C)';
+      el.style.boxShadow = '0 6px 16px rgba(255,107,107,0.3)';
+      el.querySelector('div:last-child').style.color = '#fff';
     }
-    var needsPoids = document.querySelector('#onboarding2b [data-obj="perte_poids"][data-selected="1"], #onboarding2b [data-obj="masse"][data-selected="1"]');
-    var wrap = document.getElementById('obPoidsObjectifWrap');
-    if (wrap) wrap.style.display = needsPoids ? 'block' : 'none';
+    var sel = {};
+    document.querySelectorAll('#onboarding2b [data-obj][data-selected="1"]').forEach(function(e) { sel[e.getAttribute('data-obj')] = true; });
+    var poidsWrap = document.querySelector('[data-req="poids_delta"]');
+    if (poidsWrap) {
+      poidsWrap.style.display = (sel['perte_poids'] || sel['masse']) ? 'block' : 'none';
+      var label = document.getElementById('obPoidsDeltaLabel');
+      if (label) label.textContent = (sel['masse'] && !sel['perte_poids']) ? 'Combien de kg souhaitez-vous prendre ?' : 'Combien de kg souhaitez-vous perdre ?';
+    }
+    ['energie','sommeil','stress','performance'].forEach(function(k) {
+      var w = document.querySelector('[data-req="' + k + '"]');
+      if (w) w.style.display = sel[k] ? 'block' : 'none';
+    });
   }
 
   async function obSaveObjectifs() {
@@ -20486,22 +20495,50 @@ window.maybeShowReviewPrompt = function() {
     document.querySelectorAll('#onboarding2b [data-obj]').forEach(function(el) {
       if (el.getAttribute('data-selected') === '1') selected.push(el.getAttribute('data-obj'));
     });
-    var poidsVise = document.getElementById('obPoidsVise') ? document.getElementById('obPoidsVise').value.trim() : '';
-    var delai = document.getElementById('obDelaiObjectif') ? document.getElementById('obDelaiObjectif').value : '';
-    // Sauvegarde locale
     var profile = JSON.parse(localStorage.getItem('nutricare_profile') || '{}');
+    var poidsActuel = parseFloat(profile.poids) || null;
+    var delta = document.getElementById('obPoidsDelta') ? parseFloat(document.getElementById('obPoidsDelta').value) : null;
+    var delai = document.getElementById('obDelaiObjectif') ? document.getElementById('obDelaiObjectif').value : '';
+    var poidsObjectifCalcule = null;
+    if (poidsActuel && delta) {
+      if (selected.indexOf('perte_poids') > -1) poidsObjectifCalcule = Math.round((poidsActuel - delta) * 10) / 10;
+      else if (selected.indexOf('masse') > -1) poidsObjectifCalcule = Math.round((poidsActuel + delta) * 10) / 10;
+    }
+    var energie = document.getElementById('obEnergieActuelle') ? document.getElementById('obEnergieActuelle').value : null;
+    var stress = document.getElementById('obStressActuel') ? document.getElementById('obStressActuel').value : null;
+    var sommeilH = document.getElementById('obSommeilHeures') ? document.getElementById('obSommeilHeures').value.trim() : '';
+    var sommeilQ = document.getElementById('obSommeilQualite') ? document.getElementById('obSommeilQualite').value : '';
+    var sommeilR = document.getElementById('obSommeilReveils') ? document.getElementById('obSommeilReveils').value : '';
+    var sport = document.getElementById('obSportPratique') ? document.getElementById('obSportPratique').value.trim() : '';
+
+    // Sauvegarde locale
     profile.objectifs = selected;
-    if (poidsVise) profile.poids_objectif = parseFloat(poidsVise);
-    if (poidsVise && delai) profile.objectif_delai_semaines = parseInt(delai);
+    if (delta) profile.poids_delta_souhaite = delta;
+    if (poidsObjectifCalcule) profile.poids_objectif = poidsObjectifCalcule;
+    if (delta && delai) profile.objectif_delai_semaines = parseInt(delai);
+    if (energie) profile.energie_actuelle = parseInt(energie);
+    if (stress) profile.stress_actuel = parseInt(stress);
+    if (sommeilH) profile.sommeil_heures_actuel = parseFloat(sommeilH);
+    if (sommeilQ) profile.sommeil_qualite_endormissement = sommeilQ;
+    if (sommeilR) profile.sommeil_reveils_nocturnes = sommeilR;
+    if (sport) profile.sport_pratique = sport;
     localStorage.setItem('nutricare_profile', JSON.stringify(profile));
-    // Sauvegarde API
+
+    // Sauvegarde API (les champs non reconnus par le backend sont ignores sans erreur)
     try {
       var token = authToken || window._authToken || localStorage.getItem('nutricare_token');
       if (token) {
         var payload = {};
         if (selected.length > 0) payload.objectifs = selected;
-        if (poidsVise) payload.poids_objectif = parseFloat(poidsVise);
-        if (poidsVise && delai) payload.objectif_delai_semaines = parseInt(delai);
+        if (poidsObjectifCalcule) payload.poids_objectif = poidsObjectifCalcule;
+        if (delta && delai) payload.objectif_delai_semaines = parseInt(delai);
+        if (delta) payload.poids_delta_souhaite = delta;
+        if (energie) payload.energie_actuelle = parseInt(energie);
+        if (stress) payload.stress_actuel = parseInt(stress);
+        if (sommeilH) payload.sommeil_heures_actuel = parseFloat(sommeilH);
+        if (sommeilQ) payload.sommeil_qualite_endormissement = sommeilQ;
+        if (sommeilR) payload.sommeil_reveils_nocturnes = sommeilR;
+        if (sport) payload.sport_pratique = sport;
         if (Object.keys(payload).length > 0) {
           await fetch(BACKEND_URL + '/api/profile', {
             method: 'PUT',
@@ -20721,38 +20758,53 @@ window.maybeShowReviewPrompt = function() {
   <div id="onboarding2" style="display:none;width:100%;height:100%;position:absolute;top:0;left:0;align-items:center;justify-content:center;background:white;overflow-y:auto">
     <div style="width:100%;max-width:420px;padding:0;position:relative;z-index:2;display:flex;flex-direction:column">
       <!-- Vidéo renard -->
-      <video autoplay muted loop playsinline style="width:100%;max-height:45vh;object-fit:cover;background:#FFFCFA;display:block">
+      <video autoplay muted loop playsinline style="width:100%;height:16vh;object-fit:cover;background:#FFFCFA;display:block">
         <source src="https://raw.githubusercontent.com/avelia-ai/nutricare-frontend/main/ren_niveau1_compressed.mp4" type="video/mp4">
       </video>
       <!-- Titre -->
-      <div style="text-align:center;padding:20px 20px 8px">
-        <h2 style="font-family:Open Sans,serif;font-size:1.5rem;font-weight:800;color:#2D2D2D;margin:0 0 6px">Faisons connaissance 👋</h2>
-        <p style="font-size:0.82rem;color:#999;margin:0;line-height:1.5">Quelques infos pour personnaliser votre coaching santé</p>
+      <div style="text-align:center;padding:14px 20px 6px">
+        <h2 style="font-family:Open Sans,serif;font-size:1.3rem;font-weight:800;color:#2D2D2D;margin:0 0 4px">Faisons connaissance 👋</h2>
+        <p style="font-size:0.78rem;color:#999;margin:0;line-height:1.4">Quelques infos pour personnaliser votre coaching santé</p>
       </div>
       <!-- Champs -->
-      <div style="display:flex;flex-direction:column;gap:12px;margin-bottom:24px;padding:0 20px">
-        <input id="obPrenom" type="text" placeholder="Votre prénom *" autocomplete="given-name"
-          style="width:100%;padding:16px 20px;border:1.5px solid #eee;border-radius:14px;font-family:DM Sans,sans-serif;font-size:0.95rem;outline:none;background:#f8f8f8;color:#2D2D2D;box-sizing:border-box;transition:all .2s"
-          onfocus="this.style.borderColor='#FF9A3C';this.style.background='#fff'"
-          onblur="this.style.borderColor='#eee';this.style.background='#f8f8f8'"
-          oninput="document.getElementById('obPrenomPreview').textContent=this.value||''">
-        <input id="obNom" type="text" placeholder="Votre nom" autocomplete="family-name"
-          style="width:100%;padding:16px 20px;border:1.5px solid #eee;border-radius:14px;font-family:DM Sans,sans-serif;font-size:0.95rem;outline:none;background:#f8f8f8;color:#2D2D2D;box-sizing:border-box;transition:all .2s"
-          onfocus="this.style.borderColor='#FF9A3C';this.style.background='#fff'"
-          onblur="this.style.borderColor='#eee';this.style.background='#f8f8f8'">
-        <input id="obAge" type="number" placeholder="Votre âge" min="10" max="120"
-          style="width:100%;padding:16px 20px;border:1.5px solid #eee;border-radius:14px;font-family:DM Sans,sans-serif;font-size:0.95rem;outline:none;background:#f8f8f8;color:#2D2D2D;box-sizing:border-box;transition:all .2s"
-          onfocus="this.style.borderColor='#FF9A3C';this.style.background='#fff'"
-          onblur="this.style.borderColor='#eee';this.style.background='#f8f8f8'">
+      <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:16px;padding:0 20px">
+        <div style="position:relative">
+          <span style="position:absolute;left:16px;top:50%;transform:translateY(-50%);font-size:1.1rem;pointer-events:none">👤</span>
+          <input id="obPrenom" type="text" placeholder="Votre prénom *" autocomplete="given-name"
+            style="width:100%;padding:14px 16px 14px 44px;border:1.5px solid #f0e8e0;border-radius:16px;font-family:DM Sans,sans-serif;font-size:0.92rem;outline:none;background:linear-gradient(160deg,#fff,#FFFCFA);color:#2D2D2D;box-sizing:border-box;transition:all .2s;box-shadow:0 2px 8px rgba(0,0,0,0.03)"
+            onfocus="this.style.borderColor='#FF9A3C';this.style.boxShadow='0 0 0 3px rgba(255,154,60,0.12)'"
+            onblur="this.style.borderColor='#f0e8e0';this.style.boxShadow='0 2px 8px rgba(0,0,0,0.03)'"
+            oninput="document.getElementById('obPrenomPreview').textContent=this.value||''">
+        </div>
+        <div style="position:relative">
+          <span style="position:absolute;left:16px;top:50%;transform:translateY(-50%);font-size:1.1rem;pointer-events:none">📝</span>
+          <input id="obNom" type="text" placeholder="Votre nom" autocomplete="family-name"
+            style="width:100%;padding:14px 16px 14px 44px;border:1.5px solid #f0e8e0;border-radius:16px;font-family:DM Sans,sans-serif;font-size:0.92rem;outline:none;background:linear-gradient(160deg,#fff,#FFFCFA);color:#2D2D2D;box-sizing:border-box;transition:all .2s;box-shadow:0 2px 8px rgba(0,0,0,0.03)"
+            onfocus="this.style.borderColor='#FF9A3C';this.style.boxShadow='0 0 0 3px rgba(255,154,60,0.12)'"
+            onblur="this.style.borderColor='#f0e8e0';this.style.boxShadow='0 2px 8px rgba(0,0,0,0.03)'">
+        </div>
+        <div style="position:relative">
+          <span style="position:absolute;left:16px;top:50%;transform:translateY(-50%);font-size:1.1rem;pointer-events:none">🎂</span>
+          <input id="obAge" type="number" placeholder="Votre âge" min="10" max="120"
+            style="width:100%;padding:14px 16px 14px 44px;border:1.5px solid #f0e8e0;border-radius:16px;font-family:DM Sans,sans-serif;font-size:0.92rem;outline:none;background:linear-gradient(160deg,#fff,#FFFCFA);color:#2D2D2D;box-sizing:border-box;transition:all .2s;box-shadow:0 2px 8px rgba(0,0,0,0.03)"
+            onfocus="this.style.borderColor='#FF9A3C';this.style.boxShadow='0 0 0 3px rgba(255,154,60,0.12)'"
+            onblur="this.style.borderColor='#f0e8e0';this.style.boxShadow='0 2px 8px rgba(0,0,0,0.03)'">
+        </div>
         <div style="display:flex;gap:10px">
-          <input id="obTaille" type="number" placeholder="Taille (cm)" min="100" max="250"
-            style="width:100%;padding:16px 20px;border:1.5px solid #eee;border-radius:14px;font-family:DM Sans,sans-serif;font-size:0.95rem;outline:none;background:#f8f8f8;color:#2D2D2D;box-sizing:border-box;transition:all .2s"
-            onfocus="this.style.borderColor='#FF9A3C';this.style.background='#fff'"
-            onblur="this.style.borderColor='#eee';this.style.background='#f8f8f8'">
-          <input id="obPoids" type="number" placeholder="Poids (kg)" min="30" max="300" step="0.1"
-            style="width:100%;padding:16px 20px;border:1.5px solid #eee;border-radius:14px;font-family:DM Sans,sans-serif;font-size:0.95rem;outline:none;background:#f8f8f8;color:#2D2D2D;box-sizing:border-box;transition:all .2s"
-            onfocus="this.style.borderColor='#FF9A3C';this.style.background='#fff'"
-            onblur="this.style.borderColor='#eee';this.style.background='#f8f8f8'">
+          <div style="position:relative;width:100%">
+            <span style="position:absolute;left:16px;top:50%;transform:translateY(-50%);font-size:1.1rem;pointer-events:none">📏</span>
+            <input id="obTaille" type="number" placeholder="Taille (cm)" min="100" max="250"
+              style="width:100%;padding:14px 12px 14px 44px;border:1.5px solid #f0e8e0;border-radius:16px;font-family:DM Sans,sans-serif;font-size:0.92rem;outline:none;background:linear-gradient(160deg,#fff,#FFFCFA);color:#2D2D2D;box-sizing:border-box;transition:all .2s;box-shadow:0 2px 8px rgba(0,0,0,0.03)"
+              onfocus="this.style.borderColor='#FF9A3C';this.style.boxShadow='0 0 0 3px rgba(255,154,60,0.12)'"
+              onblur="this.style.borderColor='#f0e8e0';this.style.boxShadow='0 2px 8px rgba(0,0,0,0.03)'">
+          </div>
+          <div style="position:relative;width:100%">
+            <span style="position:absolute;left:16px;top:50%;transform:translateY(-50%);font-size:1.1rem;pointer-events:none">⚖️</span>
+            <input id="obPoids" type="number" placeholder="Poids (kg)" min="30" max="300" step="0.1"
+              style="width:100%;padding:14px 12px 14px 44px;border:1.5px solid #f0e8e0;border-radius:16px;font-family:DM Sans,sans-serif;font-size:0.92rem;outline:none;background:linear-gradient(160deg,#fff,#FFFCFA);color:#2D2D2D;box-sizing:border-box;transition:all .2s;box-shadow:0 2px 8px rgba(0,0,0,0.03)"
+              onfocus="this.style.borderColor='#FF9A3C';this.style.boxShadow='0 0 0 3px rgba(255,154,60,0.12)'"
+              onblur="this.style.borderColor='#f0e8e0';this.style.boxShadow='0 2px 8px rgba(0,0,0,0.03)'">
+          </div>
         </div>
       </div>
       <!-- Preview prénom live -->
@@ -20782,50 +20834,87 @@ window.maybeShowReviewPrompt = function() {
         <p style="font-size:0.8rem;color:#aaa;margin:0;line-height:1.5;font-weight:400">Sélectionnez tout ce qui vous correspond</p>
       </div>
       <!-- Grille objectifs -->
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:0 20px;flex:1;overflow-y:auto">
-        <div onclick="obToggleObjectif(this,'perte_poids')" data-obj="perte_poids" style="padding:14px 10px;border:1.5px solid #eee;border-radius:14px;text-align:center;cursor:pointer;background:#fafafa;transition:all .2s">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:0 20px">
+        <div onclick="obToggleObjectif(this,'perte_poids')" data-obj="perte_poids" style="padding:16px 10px;border-radius:16px;text-align:center;cursor:pointer;background:linear-gradient(160deg,#fff,#FAFAFA);box-shadow:0 2px 8px rgba(0,0,0,0.04);transition:all .2s">
+          <div style="font-size:1.3rem;margin-bottom:4px">📉</div>
           <div style="font-size:0.8rem;font-weight:700;color:#2D2D2D;letter-spacing:0.1px">Perdre du poids</div>
         </div>
-        <div onclick="obToggleObjectif(this,'maintien')" data-obj="maintien" style="padding:14px 10px;border:1.5px solid #eee;border-radius:14px;text-align:center;cursor:pointer;background:#fafafa;transition:all .2s">
+        <div onclick="obToggleObjectif(this,'maintien')" data-obj="maintien" style="padding:16px 10px;border-radius:16px;text-align:center;cursor:pointer;background:linear-gradient(160deg,#fff,#FAFAFA);box-shadow:0 2px 8px rgba(0,0,0,0.04);transition:all .2s">
+          <div style="font-size:1.3rem;margin-bottom:4px">⚖️</div>
           <div style="font-size:0.8rem;font-weight:700;color:#2D2D2D;letter-spacing:0.1px">Maintien du poids</div>
         </div>
-        <div onclick="obToggleObjectif(this,'forme')" data-obj="forme" style="padding:14px 10px;border:1.5px solid #eee;border-radius:14px;text-align:center;cursor:pointer;background:#fafafa;transition:all .2s">
+        <div onclick="obToggleObjectif(this,'forme')" data-obj="forme" style="padding:16px 10px;border-radius:16px;text-align:center;cursor:pointer;background:linear-gradient(160deg,#fff,#FAFAFA);box-shadow:0 2px 8px rgba(0,0,0,0.04);transition:all .2s">
+          <div style="font-size:1.3rem;margin-bottom:4px">✨</div>
           <div style="font-size:0.8rem;font-weight:700;color:#2D2D2D;letter-spacing:0.1px">Rester en forme</div>
         </div>
-        <div onclick="obToggleObjectif(this,'energie')" data-obj="energie" style="padding:14px 10px;border:1.5px solid #eee;border-radius:14px;text-align:center;cursor:pointer;background:#fafafa;transition:all .2s">
+        <div onclick="obToggleObjectif(this,'energie')" data-obj="energie" style="padding:16px 10px;border-radius:16px;text-align:center;cursor:pointer;background:linear-gradient(160deg,#fff,#FAFAFA);box-shadow:0 2px 8px rgba(0,0,0,0.04);transition:all .2s">
+          <div style="font-size:1.3rem;margin-bottom:4px">⚡</div>
           <div style="font-size:0.8rem;font-weight:700;color:#2D2D2D;letter-spacing:0.1px">Améliorer l'énergie</div>
         </div>
-        <div onclick="obToggleObjectif(this,'masse')" data-obj="masse" style="padding:14px 10px;border:1.5px solid #eee;border-radius:14px;text-align:center;cursor:pointer;background:#fafafa;transition:all .2s">
+        <div onclick="obToggleObjectif(this,'masse')" data-obj="masse" style="padding:16px 10px;border-radius:16px;text-align:center;cursor:pointer;background:linear-gradient(160deg,#fff,#FAFAFA);box-shadow:0 2px 8px rgba(0,0,0,0.04);transition:all .2s">
+          <div style="font-size:1.3rem;margin-bottom:4px">💪</div>
           <div style="font-size:0.8rem;font-weight:700;color:#2D2D2D;letter-spacing:0.1px">Prise de masse</div>
         </div>
-        <div onclick="obToggleObjectif(this,'sommeil')" data-obj="sommeil" style="padding:14px 10px;border:1.5px solid #eee;border-radius:14px;text-align:center;cursor:pointer;background:#fafafa;transition:all .2s">
+        <div onclick="obToggleObjectif(this,'sommeil')" data-obj="sommeil" style="padding:16px 10px;border-radius:16px;text-align:center;cursor:pointer;background:linear-gradient(160deg,#fff,#FAFAFA);box-shadow:0 2px 8px rgba(0,0,0,0.04);transition:all .2s">
+          <div style="font-size:1.3rem;margin-bottom:4px">🌙</div>
           <div style="font-size:0.8rem;font-weight:700;color:#2D2D2D;letter-spacing:0.1px">Mieux dormir</div>
         </div>
-        <div onclick="obToggleObjectif(this,'stress')" data-obj="stress" style="padding:14px 10px;border:1.5px solid #eee;border-radius:14px;text-align:center;cursor:pointer;background:#fafafa;transition:all .2s">
+        <div onclick="obToggleObjectif(this,'stress')" data-obj="stress" style="padding:16px 10px;border-radius:16px;text-align:center;cursor:pointer;background:linear-gradient(160deg,#fff,#FAFAFA);box-shadow:0 2px 8px rgba(0,0,0,0.04);transition:all .2s">
+          <div style="font-size:1.3rem;margin-bottom:4px">🧘</div>
           <div style="font-size:0.8rem;font-weight:700;color:#2D2D2D;letter-spacing:0.1px">Réduire le stress</div>
         </div>
-        <div onclick="obToggleObjectif(this,'performance')" data-obj="performance" style="padding:14px 10px;border:1.5px solid #eee;border-radius:14px;text-align:center;cursor:pointer;background:#fafafa;transition:all .2s">
+        <div onclick="obToggleObjectif(this,'performance')" data-obj="performance" style="padding:16px 10px;border-radius:16px;text-align:center;cursor:pointer;background:linear-gradient(160deg,#fff,#FAFAFA);box-shadow:0 2px 8px rgba(0,0,0,0.04);transition:all .2s">
+          <div style="font-size:1.3rem;margin-bottom:4px">🏃</div>
           <div style="font-size:0.8rem;font-weight:700;color:#2D2D2D;letter-spacing:0.1px">Performance sportive</div>
         </div>
-        <div onclick="obToggleObjectif(this,'rééquilibrage')" data-obj="rééquilibrage" style="grid-column:1/-1;padding:14px 10px;border:1.5px solid #eee;border-radius:14px;text-align:center;cursor:pointer;background:#fafafa;transition:all .2s">
+        <div onclick="obToggleObjectif(this,'rééquilibrage')" data-obj="rééquilibrage" style="grid-column:1/-1;padding:16px 10px;border-radius:16px;text-align:center;cursor:pointer;background:linear-gradient(160deg,#fff,#FAFAFA);box-shadow:0 2px 8px rgba(0,0,0,0.04);transition:all .2s">
+          <div style="font-size:1.3rem;margin-bottom:4px">🥗</div>
           <div style="font-size:0.8rem;font-weight:700;color:#2D2D2D;letter-spacing:0.1px">Rééquilibrage alimentaire</div>
         </div>
       </div>
-      <!-- Poids vise + delai (affiche si perte de poids ou prise de masse selectionne) -->
-      <div id="obPoidsObjectifWrap" style="display:none;padding:14px 20px 0;flex-shrink:0">
-        <div style="font-size:0.78rem;color:#999;margin-bottom:8px;font-weight:600">Quel est ton objectif precis ?</div>
-        <div style="display:flex;gap:10px;margin-bottom:8px">
-          <input id="obPoidsVise" type="number" placeholder="Poids vise (kg)" min="30" max="300" step="0.1"
-            style="width:100%;padding:14px 16px;border:1.5px solid #eee;border-radius:12px;font-family:DM Sans,sans-serif;font-size:0.9rem;outline:none;background:#f8f8f8;color:#2D2D2D;box-sizing:border-box"
-            onfocus="this.style.borderColor='#FF9A3C';this.style.background='#fff'"
-            onblur="this.style.borderColor='#eee';this.style.background='#f8f8f8'">
-          <select id="obDelaiObjectif" style="width:100%;padding:14px 16px;border:1.5px solid #eee;border-radius:12px;font-family:DM Sans,sans-serif;font-size:0.9rem;outline:none;background:#f8f8f8;color:#2D2D2D;box-sizing:border-box">
-            <option value="4">En 1 mois</option>
-            <option value="8" selected>En 2 mois</option>
-            <option value="12">En 3 mois</option>
-            <option value="24">En 6 mois</option>
-            <option value="52">En 1 an</option>
+      <!-- Questions complementaires selon objectif -->
+      <div id="obExtraQuestions" style="padding:14px 20px 0;flex-shrink:0;display:flex;flex-direction:column;gap:14px">
+        <div data-req="poids_delta" style="display:none">
+          <div id="obPoidsDeltaLabel" style="font-size:0.78rem;color:#999;margin-bottom:8px;font-weight:600">Combien de kg souhaitez-vous perdre ?</div>
+          <div style="display:flex;gap:10px">
+            <input id="obPoidsDelta" type="number" placeholder="Kg" min="1" max="100" step="0.5"
+              style="width:100%;padding:14px 16px;border:1.5px solid #f0e8e0;border-radius:14px;font-family:DM Sans,sans-serif;font-size:0.9rem;outline:none;background:linear-gradient(160deg,#fff,#FFFCFA);color:#2D2D2D;box-sizing:border-box">
+            <select id="obDelaiObjectif" style="width:100%;padding:14px 16px;border:1.5px solid #f0e8e0;border-radius:14px;font-family:DM Sans,sans-serif;font-size:0.9rem;outline:none;background:linear-gradient(160deg,#fff,#FFFCFA);color:#2D2D2D;box-sizing:border-box">
+              <option value="4">En 1 mois</option>
+              <option value="8" selected>En 2 mois</option>
+              <option value="12">En 3 mois</option>
+              <option value="24">En 6 mois</option>
+              <option value="52">En 1 an</option>
+            </select>
+          </div>
+        </div>
+        <div data-req="energie" style="display:none">
+          <div style="font-size:0.78rem;color:#999;margin-bottom:8px;font-weight:600">Votre énergie actuelle : <span id="obEnergieVal" style="color:#FF6B6B;font-weight:800">5</span>/10</div>
+          <input id="obEnergieActuelle" type="range" min="1" max="10" value="5" oninput="document.getElementById('obEnergieVal').textContent=this.value" style="width:100%;accent-color:#FF9A3C">
+        </div>
+        <div data-req="sommeil" style="display:none">
+          <div style="font-size:0.78rem;color:#999;margin-bottom:8px;font-weight:600">Combien d'heures dormez-vous actuellement ?</div>
+          <input id="obSommeilHeures" type="number" placeholder="Heures" min="1" max="14" step="0.5"
+            style="width:100%;padding:14px 16px;border:1.5px solid #f0e8e0;border-radius:14px;font-family:DM Sans,sans-serif;font-size:0.9rem;outline:none;background:linear-gradient(160deg,#fff,#FFFCFA);color:#2D2D2D;box-sizing:border-box;margin-bottom:8px">
+          <select id="obSommeilQualite" style="width:100%;padding:14px 16px;border:1.5px solid #f0e8e0;border-radius:14px;font-family:DM Sans,sans-serif;font-size:0.9rem;outline:none;background:linear-gradient(160deg,#fff,#FFFCFA);color:#2D2D2D;box-sizing:border-box;margin-bottom:8px">
+            <option value="bien">Je m'endors facilement</option>
+            <option value="moyen">Ça prend un moment</option>
+            <option value="difficile">J'ai du mal à m'endormir</option>
           </select>
+          <select id="obSommeilReveils" style="width:100%;padding:14px 16px;border:1.5px solid #f0e8e0;border-radius:14px;font-family:DM Sans,sans-serif;font-size:0.9rem;outline:none;background:linear-gradient(160deg,#fff,#FFFCFA);color:#2D2D2D;box-sizing:border-box">
+            <option value="jamais">Pas de réveils nocturnes</option>
+            <option value="parfois">Réveils occasionnels</option>
+            <option value="souvent">Réveils fréquents</option>
+          </select>
+        </div>
+        <div data-req="stress" style="display:none">
+          <div style="font-size:0.78rem;color:#999;margin-bottom:8px;font-weight:600">Votre stress actuel : <span id="obStressVal" style="color:#FF6B6B;font-weight:800">5</span>/10</div>
+          <input id="obStressActuel" type="range" min="1" max="10" value="5" oninput="document.getElementById('obStressVal').textContent=this.value" style="width:100%;accent-color:#FF9A3C">
+        </div>
+        <div data-req="performance" style="display:none">
+          <div style="font-size:0.78rem;color:#999;margin-bottom:8px;font-weight:600">Quel sport pratiquez-vous ?</div>
+          <input id="obSportPratique" type="text" placeholder="Ex : Course a pied, Musculation..."
+            style="width:100%;padding:14px 16px;border:1.5px solid #f0e8e0;border-radius:14px;font-family:DM Sans,sans-serif;font-size:0.9rem;outline:none;background:linear-gradient(160deg,#fff,#FFFCFA);color:#2D2D2D;box-sizing:border-box">
         </div>
       </div>
       <!-- Boutons -->
