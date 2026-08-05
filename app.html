@@ -4353,6 +4353,100 @@ function switchLang(lang) {
           </div>
         </div>
 
+        <!-- Popup Modifier mon profil -->
+        <div id="editGoalsModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.65);z-index:99999;align-items:flex-end;justify-content:center">
+          <div style="background:linear-gradient(180deg,#fff,#FFFCFA);border-radius:28px 28px 0 0;padding:0;width:100%;max-width:600px;max-height:82vh;overflow-y:auto">
+            <div style="width:40px;height:4px;background:#eee;border-radius:4px;margin:12px auto 0"></div>
+            <div style="padding:20px 22px 30px">
+              <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
+                <div style="font-size:1.05rem;font-weight:800;color:#1a1a1a">Modifier mon profil</div>
+                <button onclick="document.getElementById('editGoalsModal').style.display='none'" style="background:#f5f5f5;border:none;border-radius:50%;width:32px;height:32px;cursor:pointer;font-size:0.9rem;color:#999">&#10005;</button>
+              </div>
+
+              <div style="font-size:0.72rem;color:#999;margin-bottom:6px;font-weight:600">Poids actuel (kg)</div>
+              <input id="editPoids" type="number" placeholder="Poids (kg)" min="30" max="300" step="0.1"
+                style="width:100%;padding:13px 16px;border:1.5px solid #f0e8e0;border-radius:14px;font-family:DM Sans,sans-serif;font-size:0.9rem;outline:none;background:linear-gradient(160deg,#fff,#FFFCFA);color:#2D2D2D;box-sizing:border-box;margin-bottom:16px">
+
+              <div style="font-size:0.72rem;color:#999;margin-bottom:8px;font-weight:600">Objectifs</div>
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px">
+                <div onclick="toggleEditObjectif(this)" data-obj="perte_poids" style="border-radius:16px;padding:1.5px;background:linear-gradient(135deg,#FF6B6B,#FF9A3C);cursor:pointer">
+                  <div style="background:#fff;border-radius:14.5px;padding:14px 8px;text-align:center"><i class="ti ti-trending-down" data-icon="1" style="font-size:1.3rem;color:#FF6B6B;margin-bottom:5px;display:block"></i><div style="font-size:0.74rem;font-weight:700;color:#2D2D2D">Perdre du poids</div></div>
+                </div>
+                <div onclick="toggleEditObjectif(this)" data-obj="maintien" style="border-radius:16px;padding:1.5px;background:linear-gradient(135deg,#FF6B6B,#FF9A3C);cursor:pointer">
+                  <div style="background:#fff;border-radius:14.5px;padding:14px 8px;text-align:center"><i class="ti ti-scale" data-icon="1" style="font-size:1.3rem;color:#FF6B6B;margin-bottom:5px;display:block"></i><div style="font-size:0.74rem;font-weight:700;color:#2D2D2D">Maintien du poids</div></div>
+                </div>
+                <div onclick="toggleEditObjectif(this)" data-obj="forme" style="border-radius:16px;padding:1.5px;background:linear-gradient(135deg,#FF6B6B,#FF9A3C);cursor:pointer">
+                  <div style="background:#fff;border-radius:14.5px;padding:14px 8px;text-align:center"><i class="ti ti-sparkles" data-icon="1" style="font-size:1.3rem;color:#FF6B6B;margin-bottom:5px;display:block"></i><div style="font-size:0.74rem;font-weight:700;color:#2D2D2D">Rester en forme</div></div>
+                </div>
+                <div onclick="toggleEditObjectif(this)" data-obj="energie" style="border-radius:16px;padding:1.5px;background:linear-gradient(135deg,#FF6B6B,#FF9A3C);cursor:pointer">
+                  <div style="background:#fff;border-radius:14.5px;padding:14px 8px;text-align:center"><i class="ti ti-bolt" data-icon="1" style="font-size:1.3rem;color:#FF6B6B;margin-bottom:5px;display:block"></i><div style="font-size:0.74rem;font-weight:700;color:#2D2D2D">Ameliorer l'energie</div></div>
+                </div>
+                <div onclick="toggleEditObjectif(this)" data-obj="masse" style="border-radius:16px;padding:1.5px;background:linear-gradient(135deg,#FF6B6B,#FF9A3C);cursor:pointer">
+                  <div style="background:#fff;border-radius:14.5px;padding:14px 8px;text-align:center"><i class="ti ti-barbell" data-icon="1" style="font-size:1.3rem;color:#FF6B6B;margin-bottom:5px;display:block"></i><div style="font-size:0.74rem;font-weight:700;color:#2D2D2D">Prise de masse</div></div>
+                </div>
+                <div onclick="toggleEditObjectif(this)" data-obj="sommeil" style="border-radius:16px;padding:1.5px;background:linear-gradient(135deg,#FF6B6B,#FF9A3C);cursor:pointer">
+                  <div style="background:#fff;border-radius:14.5px;padding:14px 8px;text-align:center"><i class="ti ti-moon" data-icon="1" style="font-size:1.3rem;color:#FF6B6B;margin-bottom:5px;display:block"></i><div style="font-size:0.74rem;font-weight:700;color:#2D2D2D">Mieux dormir</div></div>
+                </div>
+                <div onclick="toggleEditObjectif(this)" data-obj="stress" style="border-radius:16px;padding:1.5px;background:linear-gradient(135deg,#FF6B6B,#FF9A3C);cursor:pointer">
+                  <div style="background:#fff;border-radius:14.5px;padding:14px 8px;text-align:center"><i class="ti ti-yoga" data-icon="1" style="font-size:1.3rem;color:#FF6B6B;margin-bottom:5px;display:block"></i><div style="font-size:0.74rem;font-weight:700;color:#2D2D2D">Reduire le stress</div></div>
+                </div>
+                <div onclick="toggleEditObjectif(this)" data-obj="performance" style="border-radius:16px;padding:1.5px;background:linear-gradient(135deg,#FF6B6B,#FF9A3C);cursor:pointer">
+                  <div style="background:#fff;border-radius:14.5px;padding:14px 8px;text-align:center"><i class="ti ti-run" data-icon="1" style="font-size:1.3rem;color:#FF6B6B;margin-bottom:5px;display:block"></i><div style="font-size:0.74rem;font-weight:700;color:#2D2D2D">Performance sportive</div></div>
+                </div>
+                <div onclick="toggleEditObjectif(this)" data-obj="r\u00e9\u00e9quilibrage" style="grid-column:1/-1;border-radius:16px;padding:1.5px;background:linear-gradient(135deg,#FF6B6B,#FF9A3C);cursor:pointer">
+                  <div style="background:#fff;border-radius:14.5px;padding:14px 8px;text-align:center"><i class="ti ti-salad" data-icon="1" style="font-size:1.3rem;color:#FF6B6B;margin-bottom:5px;display:block"></i><div style="font-size:0.74rem;font-weight:700;color:#2D2D2D">Reequilibrage alimentaire</div></div>
+                </div>
+              </div>
+
+              <div id="editPoidsDeltaWrap" style="display:none;margin-bottom:14px">
+                <div id="editPoidsDeltaLabel" style="font-size:0.72rem;color:#999;margin-bottom:8px;font-weight:600">Combien de kg souhaitez-vous perdre ?</div>
+                <div style="display:flex;gap:10px">
+                  <input id="editPoidsDelta" type="number" placeholder="Kg" min="1" max="100" step="0.5" style="width:100%;padding:13px 16px;border:1.5px solid #f0e8e0;border-radius:14px;font-family:DM Sans,sans-serif;font-size:0.9rem;outline:none;background:linear-gradient(160deg,#fff,#FFFCFA);color:#2D2D2D;box-sizing:border-box">
+                  <select id="editDelaiObjectif" style="width:100%;padding:13px 16px;border:1.5px solid #f0e8e0;border-radius:14px;font-family:DM Sans,sans-serif;font-size:0.9rem;outline:none;background:linear-gradient(160deg,#fff,#FFFCFA);color:#2D2D2D;box-sizing:border-box">
+                    <option value="4">En 1 mois</option>
+                    <option value="8" selected>En 2 mois</option>
+                    <option value="12">En 3 mois</option>
+                    <option value="24">En 6 mois</option>
+                    <option value="52">En 1 an</option>
+                  </select>
+                </div>
+              </div>
+
+              <div id="editEnergieWrap" style="display:none;margin-bottom:14px">
+                <div style="font-size:0.72rem;color:#999;margin-bottom:8px;font-weight:600">Votre energie actuelle : <span id="editEnergieVal" style="color:#FF6B6B;font-weight:800">5</span>/10</div>
+                <input id="editEnergieActuelle" type="range" min="1" max="10" value="5" oninput="document.getElementById('editEnergieVal').textContent=this.value" style="width:100%;accent-color:#FF9A3C">
+              </div>
+
+              <div id="editSommeilWrap" style="display:none;margin-bottom:14px">
+                <div style="font-size:0.72rem;color:#999;margin-bottom:8px;font-weight:600">Combien d'heures dormez-vous actuellement ?</div>
+                <input id="editSommeilHeures" type="number" placeholder="Heures" min="1" max="14" step="0.5" style="width:100%;padding:13px 16px;border:1.5px solid #f0e8e0;border-radius:14px;font-family:DM Sans,sans-serif;font-size:0.9rem;outline:none;background:linear-gradient(160deg,#fff,#FFFCFA);color:#2D2D2D;box-sizing:border-box;margin-bottom:8px">
+                <select id="editSommeilQualite" style="width:100%;padding:13px 16px;border:1.5px solid #f0e8e0;border-radius:14px;font-family:DM Sans,sans-serif;font-size:0.9rem;outline:none;background:linear-gradient(160deg,#fff,#FFFCFA);color:#2D2D2D;box-sizing:border-box;margin-bottom:8px">
+                  <option value="bien">Je m'endors facilement</option>
+                  <option value="moyen">Ca prend un moment</option>
+                  <option value="difficile">J'ai du mal a m'endormir</option>
+                </select>
+                <select id="editSommeilReveils" style="width:100%;padding:13px 16px;border:1.5px solid #f0e8e0;border-radius:14px;font-family:DM Sans,sans-serif;font-size:0.9rem;outline:none;background:linear-gradient(160deg,#fff,#FFFCFA);color:#2D2D2D;box-sizing:border-box">
+                  <option value="jamais">Pas de reveils nocturnes</option>
+                  <option value="parfois">Reveils occasionnels</option>
+                  <option value="souvent">Reveils frequents</option>
+                </select>
+              </div>
+
+              <div id="editStressWrap" style="display:none;margin-bottom:14px">
+                <div style="font-size:0.72rem;color:#999;margin-bottom:8px;font-weight:600">Votre stress actuel : <span id="editStressVal" style="color:#FF6B6B;font-weight:800">5</span>/10</div>
+                <input id="editStressActuel" type="range" min="1" max="10" value="5" oninput="document.getElementById('editStressVal').textContent=this.value" style="width:100%;accent-color:#FF9A3C">
+              </div>
+
+              <div id="editPerformanceWrap" style="display:none;margin-bottom:14px">
+                <div style="font-size:0.72rem;color:#999;margin-bottom:8px;font-weight:600">Quel sport pratiquez-vous ?</div>
+                <input id="editSportPratique" type="text" placeholder="Ex : Course a pied, Musculation..." style="width:100%;padding:13px 16px;border:1.5px solid #f0e8e0;border-radius:14px;font-family:DM Sans,sans-serif;font-size:0.9rem;outline:none;background:linear-gradient(160deg,#fff,#FFFCFA);color:#2D2D2D;box-sizing:border-box">
+              </div>
+
+              <button onclick="saveEditGoals()" style="width:100%;background:linear-gradient(135deg,#FF6B6B,#FF9A3C);color:white;border:none;border-radius:16px;padding:15px;font-size:0.95rem;font-weight:800;cursor:pointer;font-family:DM Sans,sans-serif;box-shadow:0 8px 22px rgba(255,107,107,0.3);margin-top:6px">Enregistrer</button>
+            </div>
+          </div>
+        </div>
+
 <div style="background:#FFFFFF;border-radius:20px;padding:0;overflow:hidden;box-shadow:0 0 0 1.5px rgba(255,154,108,0.22),0 14px 32px rgba(230,110,70,0.14);margin-bottom:24px">
           <div style="background:linear-gradient(135deg,#27AE60,#82E0AA);padding:16px 20px 30px">
             <div style="font-size:0.7rem;color:rgba(255,255,255,0.85);font-weight:700;letter-spacing:0.04em;margin-bottom:4px">CONSEIL</div>
