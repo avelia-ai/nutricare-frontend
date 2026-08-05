@@ -2836,6 +2836,124 @@ window.initHome = async function() {
   var prenom = profile.full_name ? profile.full_name.split(' ')[0] : '';
 
   // Salutation
+  function openEditGoalsModal() {
+    var profile = JSON.parse(localStorage.getItem('nutricare_profile') || '{}');
+    var m = document.getElementById('editGoalsModal');
+    if (!m) return;
+    document.getElementById('editPoids').value = profile.poids || '';
+    document.querySelectorAll('#editGoalsModal [data-obj]').forEach(function(el) {
+      var o = el.getAttribute('data-obj');
+      var active = (profile.objectifs || []).indexOf(o) > -1;
+      el.setAttribute('data-selected', active ? '1' : '0');
+      var inner = el.querySelector('div');
+      var icon = el.querySelector('[data-icon]');
+      var label = el.querySelector('div > div:last-child');
+      if (inner) inner.style.background = active ? 'linear-gradient(135deg,#FF6B6B,#FF9A3C)' : '#fff';
+      if (icon) icon.style.color = active ? '#fff' : '#FF6B6B';
+      if (label) label.style.color = active ? '#fff' : '#2D2D2D';
+    });
+    if (profile.poids_delta_souhaite) document.getElementById('editPoidsDelta').value = profile.poids_delta_souhaite;
+    if (profile.objectif_delai_semaines) document.getElementById('editDelaiObjectif').value = profile.objectif_delai_semaines;
+    if (profile.energie_actuelle) document.getElementById('editEnergieActuelle').value = profile.energie_actuelle;
+    if (profile.stress_actuel) document.getElementById('editStressActuel').value = profile.stress_actuel;
+    if (profile.sommeil_heures_actuel) document.getElementById('editSommeilHeures').value = profile.sommeil_heures_actuel;
+    if (profile.sommeil_qualite_endormissement) document.getElementById('editSommeilQualite').value = profile.sommeil_qualite_endormissement;
+    if (profile.sommeil_reveils_nocturnes) document.getElementById('editSommeilReveils').value = profile.sommeil_reveils_nocturnes;
+    if (profile.sport_pratique) document.getElementById('editSportPratique').value = profile.sport_pratique;
+    document.getElementById('editEnergieVal').textContent = document.getElementById('editEnergieActuelle').value || 5;
+    document.getElementById('editStressVal').textContent = document.getElementById('editStressActuel').value || 5;
+    updateEditExtraVisibility();
+    m.style.display = 'flex';
+  }
+  function toggleEditObjectif(el) {
+    var selected = el.getAttribute('data-selected') === '1';
+    var inner = el.querySelector('div');
+    var icon = el.querySelector('[data-icon]');
+    var label = el.querySelector('div > div:last-child');
+    el.setAttribute('data-selected', selected ? '0' : '1');
+    if (inner) inner.style.background = selected ? '#fff' : 'linear-gradient(135deg,#FF6B6B,#FF9A3C)';
+    if (icon) icon.style.color = selected ? '#FF6B6B' : '#fff';
+    if (label) label.style.color = selected ? '#2D2D2D' : '#fff';
+    updateEditExtraVisibility();
+  }
+  function updateEditExtraVisibility() {
+    var sel = {};
+    document.querySelectorAll('#editGoalsModal [data-obj][data-selected="1"]').forEach(function(e) { sel[e.getAttribute('data-obj')] = true; });
+    var poidsWrap = document.getElementById('editPoidsDeltaWrap');
+    if (poidsWrap) {
+      poidsWrap.style.display = (sel['perte_poids'] || sel['masse']) ? 'block' : 'none';
+      document.getElementById('editPoidsDeltaLabel').textContent = (sel['masse'] && !sel['perte_poids']) ? 'Combien de kg souhaitez-vous prendre ?' : 'Combien de kg souhaitez-vous perdre ?';
+    }
+    document.getElementById('editEnergieWrap').style.display = sel['energie'] ? 'block' : 'none';
+    document.getElementById('editSommeilWrap').style.display = sel['sommeil'] ? 'block' : 'none';
+    document.getElementById('editStressWrap').style.display = sel['stress'] ? 'block' : 'none';
+    document.getElementById('editPerformanceWrap').style.display = sel['performance'] ? 'block' : 'none';
+  }
+  async function saveEditGoals() {
+    var selected = [];
+    document.querySelectorAll('#editGoalsModal [data-obj][data-selected="1"]').forEach(function(el) { selected.push(el.getAttribute('data-obj')); });
+    var profile = JSON.parse(localStorage.getItem('nutricare_profile') || '{}');
+    var poids = document.getElementById('editPoids').value.trim();
+    var delta = document.getElementById('editPoidsDelta').value.trim();
+    var delai = document.getElementById('editDelaiObjectif').value;
+    var energie = document.getElementById('editEnergieActuelle').value;
+    var stress = document.getElementById('editStressActuel').value;
+    var sommeilH = document.getElementById('editSommeilHeures').value.trim();
+    var sommeilQ = document.getElementById('editSommeilQualite').value;
+    var sommeilR = document.getElementById('editSommeilReveils').value;
+    var sport = document.getElementById('editSportPratique').value.trim();
+
+    var payload = { objectifs: selected };
+    if (poids) { payload.poids = parseFloat(poids); profile.poids = parseFloat(poids); }
+    profile.objectifs = selected;
+    var poidsRef = parseFloat(poids) || parseFloat(profile.poids);
+    if (delta && poidsRef) {
+      var deltaNum = parseFloat(delta);
+      payload.poids_delta_souhaite = deltaNum;
+      profile.poids_delta_souhaite = deltaNum;
+      if (selected.indexOf('masse') > -1 && selected.indexOf('perte_poids') === -1) {
+        payload.poids_objectif = Math.round((poidsRef + deltaNum) * 10) / 10;
+      } else {
+        payload.poids_objectif = Math.round((poidsRef - deltaNum) * 10) / 10;
+      }
+      profile.poids_objectif = payload.poids_objectif;
+      if (delai) { payload.objectif_delai_semaines = parseInt(delai); profile.objectif_delai_semaines = parseInt(delai); }
+    }
+    if (sel_has('energie') && energie) { payload.energie_actuelle = parseInt(energie); profile.energie_actuelle = parseInt(energie); }
+    if (sel_has('stress') && stress) { payload.stress_actuel = parseInt(stress); profile.stress_actuel = parseInt(stress); }
+    if (sel_has('sommeil')) {
+      if (sommeilH) { payload.sommeil_heures_actuel = parseFloat(sommeilH); profile.sommeil_heures_actuel = parseFloat(sommeilH); }
+      if (sommeilQ) { payload.sommeil_qualite_endormissement = sommeilQ; profile.sommeil_qualite_endormissement = sommeilQ; }
+      if (sommeilR) { payload.sommeil_reveils_nocturnes = sommeilR; profile.sommeil_reveils_nocturnes = sommeilR; }
+    }
+    if (sel_has('performance') && sport) { payload.sport_pratique = sport; profile.sport_pratique = sport; }
+    function sel_has(k) { return selected.indexOf(k) > -1; }
+
+    localStorage.setItem('nutricare_profile', JSON.stringify(profile));
+    try {
+      var token = authToken || window._authToken || localStorage.getItem('nutricare_token');
+      if (token) {
+        await fetch(BACKEND_URL + '/api/profile', {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
+          body: JSON.stringify(payload)
+        });
+      }
+    } catch(e) {}
+    document.getElementById('editGoalsModal').style.display = 'none';
+    renderPersonalSummary(profile);
+  }
+  var _objMeta = {
+    perte_poids: { label: 'Perdre du poids', icon: 'trending-down' },
+    maintien: { label: 'Maintien du poids', icon: 'scale' },
+    forme: { label: 'Rester en forme', icon: 'sparkles' },
+    energie: { label: "Ameliorer l'energie", icon: 'bolt' },
+    masse: { label: 'Prise de masse', icon: 'barbell' },
+    sommeil: { label: 'Mieux dormir', icon: 'moon' },
+    stress: { label: 'Reduire le stress', icon: 'yoga' },
+    performance: { label: 'Performance sportive', icon: 'run' },
+    'r\u00e9\u00e9quilibrage': { label: 'Reequilibrage alimentaire', icon: 'salad' }
+  };
   function renderPersonalSummary(profile) {
     var card = document.getElementById('personalSummaryCard');
     if (!card) return;
@@ -2853,23 +2971,45 @@ window.initHome = async function() {
     document.getElementById('summaryImcVal').style.color = imcColor;
     document.getElementById('summaryImcLabel').textContent = imcLabel;
 
-    var objLine = '';
     var objectifs = profile.objectifs || [];
+    var objLine = '';
+    var progressWrap = document.getElementById('summaryProgressWrap');
     if (profile.poids_objectif && profile.poids_delta_souhaite && profile.objectif_delai_semaines) {
       var verbe = objectifs.indexOf('masse') > -1 && objectifs.indexOf('perte_poids') === -1 ? 'prendre' : 'perdre';
-      objLine = 'Objectif : ' + verbe + ' ' + profile.poids_delta_souhaite + ' kg en ' + profile.objectif_delai_semaines + ' semaines (' + poids + ' kg \u2192 ' + profile.poids_objectif + ' kg)';
-    } else if (objectifs.length) {
-      var objLabels = { perte_poids:'Perdre du poids', maintien:'Maintien du poids', forme:'Rester en forme', energie:"Ameliorer l'energie", masse:'Prise de masse', sommeil:'Mieux dormir', stress:'Reduire le stress', performance:'Performance sportive', 'r\u00e9\u00e9quilibrage':'Reequilibrage alimentaire' };
-      objLine = 'Objectifs : ' + objectifs.map(function(o){ return objLabels[o] || o; }).join(', ');
+      objLine = 'Objectif : ' + verbe + ' ' + profile.poids_delta_souhaite + ' kg en ' + profile.objectif_delai_semaines + ' semaines';
+      progressWrap.style.display = 'block';
+      var startW = verbe === 'perdre' ? poids + profile.poids_delta_souhaite : poids - profile.poids_delta_souhaite;
+      document.getElementById('summaryProgressStart').textContent = startW + ' kg';
+      document.getElementById('summaryProgressEnd').textContent = profile.poids_objectif + ' kg';
+      document.getElementById('summaryProgressLabel').textContent = poids + ' kg';
+      var total = Math.abs(startW - profile.poids_objectif);
+      var done = Math.abs(startW - poids);
+      var pct = total > 0 ? Math.max(0, Math.min(100, Math.round((done / total) * 100))) : 0;
+      document.getElementById('summaryProgressBar').style.width = pct + '%';
+    } else {
+      progressWrap.style.display = 'none';
     }
     document.getElementById('summaryObjectifLine').textContent = objLine;
+
+    var objChipsEl = document.getElementById('summaryObjectifChips');
+    objChipsEl.innerHTML = objectifs.map(function(o) {
+      var m = _objMeta[o] || { label: o, icon: 'target' };
+      return '<div style="display:flex;align-items:center;gap:5px;background:linear-gradient(135deg,#FFF0EC,#FFF8E8);border-radius:20px;padding:6px 12px;font-size:0.74rem;font-weight:700;color:#FF6B6B"><i class="ti ti-' + m.icon + '" style="font-size:13px"></i>' + m.label + '</div>';
+    }).join('');
 
     var chips = [];
     var hydra = Math.round(poids * 0.033 * 10) / 10;
     chips.push({ icon: 'droplet', label: hydra + ' L/jour conseilles', color: '#0984E3' });
     if (profile.energie_actuelle) chips.push({ icon: 'bolt', label: 'Energie : ' + profile.energie_actuelle + '/10', color: '#FFB347' });
     if (profile.stress_actuel) chips.push({ icon: 'yoga', label: 'Stress : ' + profile.stress_actuel + '/10', color: '#C3A9D1' });
-    if (profile.sommeil_heures_actuel) chips.push({ icon: 'moon', label: profile.sommeil_heures_actuel + 'h de sommeil actuel', color: '#7EC8E3' });
+    if (profile.sommeil_heures_actuel) {
+      var sommeilTxt = profile.sommeil_heures_actuel + 'h de sommeil';
+      var qLabels = { bien: 'endormissement facile', moyen: 'endormissement moyen', difficile: 'endormissement difficile' };
+      var rLabels = { jamais: 'sans reveils', parfois: 'reveils occasionnels', souvent: 'reveils frequents' };
+      if (profile.sommeil_qualite_endormissement && qLabels[profile.sommeil_qualite_endormissement]) sommeilTxt += ' (' + qLabels[profile.sommeil_qualite_endormissement] + ')';
+      if (profile.sommeil_reveils_nocturnes && rLabels[profile.sommeil_reveils_nocturnes]) sommeilTxt += ' \u00b7 ' + rLabels[profile.sommeil_reveils_nocturnes];
+      chips.push({ icon: 'moon', label: sommeilTxt, color: '#7EC8E3' });
+    }
     if (profile.sport_pratique) chips.push({ icon: 'run', label: profile.sport_pratique, color: '#27AE60' });
     var chipsEl = document.getElementById('summaryChips');
     chipsEl.innerHTML = chips.map(function(c) {
@@ -4141,9 +4281,12 @@ function switchLang(lang) {
         <!-- FIN COEUR D'HARMONIE -->
 
         <div id="personalSummaryCard" style="display:none;background:#FFFFFF;border-radius:20px;padding:0;overflow:hidden;box-shadow:0 0 0 1.5px rgba(255,154,108,0.22),0 14px 32px rgba(230,110,70,0.14);margin-bottom:24px">
-          <div style="background:linear-gradient(135deg,#1B1B2F,#232946);padding:16px 20px 26px">
-            <div style="font-size:0.68rem;color:rgba(255,255,255,0.85);font-weight:700;letter-spacing:0.04em;margin-bottom:4px">MON PROFIL</div>
-            <div style="font-size:1.05rem;color:white;font-weight:700">Resume personnalise</div>
+          <div style="background:linear-gradient(135deg,#1B1B2F,#232946);padding:16px 20px 26px;display:flex;align-items:center;justify-content:space-between">
+            <div>
+              <div style="font-size:0.68rem;color:rgba(255,255,255,0.85);font-weight:700;letter-spacing:0.04em;margin-bottom:4px">MON PROFIL</div>
+              <div style="font-size:1.05rem;color:white;font-weight:700">Resume personnalise</div>
+            </div>
+            <button onclick="openEditGoalsModal()" style="background:rgba(255,255,255,0.15);border:none;color:white;font-size:0.68rem;font-weight:700;padding:7px 12px;border-radius:20px;cursor:pointer;white-space:nowrap">Modifier</button>
           </div>
           <div style="margin:-14px 14px 16px;position:relative;background:#fff;border-radius:14px;padding:18px;box-shadow:0 2px 10px rgba(0,0,0,0.06)">
             <div style="display:flex;align-items:center;gap:16px;margin-bottom:14px">
@@ -4154,6 +4297,17 @@ function switchLang(lang) {
               <div style="flex:1;min-width:0">
                 <div id="summaryImcLabel" style="font-size:0.85rem;font-weight:700;color:#2D2D2D;margin-bottom:2px">--</div>
                 <div id="summaryObjectifLine" style="font-size:0.76rem;color:#888;line-height:1.4"></div>
+              </div>
+            </div>
+            <div id="summaryObjectifChips" style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px"></div>
+            <div id="summaryProgressWrap" style="display:none;margin-bottom:14px">
+              <div style="display:flex;justify-content:space-between;font-size:0.7rem;color:#999;margin-bottom:5px">
+                <span id="summaryProgressStart"></span>
+                <span id="summaryProgressLabel" style="font-weight:700;color:#FF6B6B"></span>
+                <span id="summaryProgressEnd"></span>
+              </div>
+              <div style="height:8px;background:#F0F0F0;border-radius:10px;overflow:hidden">
+                <div id="summaryProgressBar" style="height:100%;width:0%;background:linear-gradient(135deg,#FF6B6B,#FF9A3C);border-radius:10px;transition:width .6s"></div>
               </div>
             </div>
             <div id="summaryChips" style="display:flex;flex-wrap:wrap;gap:6px"></div>
