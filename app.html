@@ -4362,9 +4362,9 @@ function switchLang(lang) {
 
         <!-- Popup Modifier mon profil -->
         <div id="editGoalsModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.65);z-index:99999;align-items:flex-end;justify-content:center">
-          <div style="background:linear-gradient(180deg,#fff,#FFFCFA);border-radius:28px 28px 0 0;padding:0;width:100%;max-width:600px;max-height:82vh;overflow-y:auto">
-            <div style="width:40px;height:4px;background:#eee;border-radius:4px;margin:12px auto 0"></div>
-            <div style="padding:20px 22px 30px">
+          <div style="background:linear-gradient(180deg,#fff,#FFFCFA);border-radius:28px 28px 0 0;padding:0;width:100%;max-width:600px;max-height:85vh;display:flex;flex-direction:column">
+            <div style="width:40px;height:4px;background:#eee;border-radius:4px;margin:12px auto 0;flex-shrink:0"></div>
+            <div style="padding:20px 22px 16px;overflow-y:auto;flex:1;min-height:0">
               <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
                 <div style="font-size:1.05rem;font-weight:800;color:#1a1a1a">Modifier mon profil</div>
                 <button onclick="document.getElementById('editGoalsModal').style.display='none';var n=document.getElementById('bottomNav');if(n)n.style.display='flex';" style="background:#f5f5f5;border:none;border-radius:50%;width:32px;height:32px;cursor:pointer;font-size:0.9rem;color:#999">&#10005;</button>
@@ -4449,7 +4449,9 @@ function switchLang(lang) {
                 <input id="editSportPratique" type="text" placeholder="Ex : Course a pied, Musculation..." style="width:100%;padding:13px 16px;border:1.5px solid #f0e8e0;border-radius:14px;font-family:DM Sans,sans-serif;font-size:0.9rem;outline:none;background:linear-gradient(160deg,#fff,#FFFCFA);color:#2D2D2D;box-sizing:border-box">
               </div>
 
-              <button onclick="saveEditGoals()" style="width:100%;background:linear-gradient(135deg,#FF6B6B,#FF9A3C);color:white;border:none;border-radius:16px;padding:15px;font-size:0.95rem;font-weight:800;cursor:pointer;font-family:DM Sans,sans-serif;box-shadow:0 8px 22px rgba(255,107,107,0.3);margin-top:6px">Enregistrer</button>
+            </div>
+            <div style="padding:14px 22px calc(16px + env(safe-area-inset-bottom, 0px));flex-shrink:0;background:#fff;box-shadow:0 -4px 14px rgba(0,0,0,0.06)">
+              <button onclick="saveEditGoals()" style="width:100%;background:linear-gradient(135deg,#FF6B6B,#FF9A3C);color:white;border:none;border-radius:16px;padding:15px;font-size:0.95rem;font-weight:800;cursor:pointer;font-family:DM Sans,sans-serif;box-shadow:0 8px 22px rgba(255,107,107,0.3)">Enregistrer</button>
             </div>
           </div>
         </div>
