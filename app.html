@@ -4335,16 +4335,11 @@ function switchLang(lang) {
           </div>
         </div>
         
-        <div style="background:#FFFFFF;border-radius:20px;padding:0;overflow:hidden;box-shadow:0 0 0 1.5px rgba(255,154,108,0.22),0 14px 32px rgba(230,110,70,0.14);margin-bottom:12px">
-          <div style="background:linear-gradient(135deg,#6C5CE7,#a29bfe);padding:16px 20px 30px">
-            <div style="font-size:0.7rem;color:rgba(255,255,255,0.85);font-weight:700;letter-spacing:0.04em">RECHERCHE</div>
-            <div style="font-size:1.05rem;color:white;font-weight:700">Explorer une pathologie</div>
-          </div>
-          <div style="margin:-18px 14px 16px;position:relative;background:#fff;border-radius:14px;padding:16px;box-shadow:0 2px 10px rgba(0,0,0,0.06)">
-            <div style="display:flex;gap:8px;margin-bottom:12px"><input id="pathoSearchInput" type="text" placeholder="Hypertension, diabete, arthrose..." style="flex:1;padding:10px 14px;border:1.5px solid rgba(108,92,231,0.25);border-radius:12px;font-size:0.85rem;font-family:inherit;outline:none;background:var(--cream)"><button id="pathoBtn" style="background:linear-gradient(135deg,#6C5CE7,#a29bfe);color:white;border:none;border-radius:12px;padding:10px 16px;font-size:0.85rem;font-weight:700;cursor:pointer">&#x1F50D;</button></div>
-            <div id="pathoLoading" style="display:none;text-align:center;padding:16px;color:var(--accent);font-size:0.82rem">Mirella analyse...</div>
-            <div id="pathoResult" style="display:none"></div>
-          </div>
+        <div style="display:none">
+          <input id="pathoSearchInput" type="text">
+          <button id="pathoBtn"></button>
+          <div id="pathoLoading" style="display:none"></div>
+          <div id="pathoResult" style="display:none"></div>
         </div>
         <!-- CARD MÉDECINS -->
         <div id="homeMedecinsCard" style="background:#FFFFFF;border-radius:20px;overflow:hidden;margin-bottom:12px;box-shadow:0 0 0 1.5px rgba(255,154,108,0.22),0 14px 32px rgba(230,110,70,0.14)">
