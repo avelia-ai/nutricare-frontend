@@ -2968,9 +2968,9 @@ window.initHome = async function() {
     'r\u00e9\u00e9quilibrage': { label: 'Reequilibrage alimentaire', icon: 'salad' }
   };
   var _pcWaypoints = [
-    {x:160,y:372},{x:167,y:331},{x:179,y:289},{x:167,y:247},{x:179,y:213},
-    {x:194,y:190},{x:213,y:167},{x:228,y:137},{x:239,y:106},{x:258,y:76},
-    {x:277,y:53},{x:293,y:38},{x:304,y:27}
+    {x:42,y:96},{x:43,y:87},{x:41,y:78},{x:44,y:68},{x:47,y:59},
+    {x:52,y:52},{x:58,y:45},{x:63,y:37},{x:67,y:29},{x:72,y:22},
+    {x:77,y:16},{x:81,y:11},{x:85,y:7}
   ];
   var _pcWorldNames = ["Foret de l'Eveil","Vallee de l'Equilibre","Montagne de la Force","Sommet de l'Harmonie"];
   function advanceParcoursIfNeeded(profile) {
@@ -3008,22 +3008,19 @@ window.initHome = async function() {
     var caseIdx = Math.min(profile.parcours_case || 0, 12);
     var mondeIdx = (profile.parcours_monde || 1) - 1;
     var pt = _pcWaypoints[caseIdx];
-    document.getElementById('pcFoxWrap').setAttribute('transform', 'translate(' + pt.x + ',' + pt.y + ')');
-    document.getElementById('pcFoxShadow').setAttribute('cx', pt.x);
-    document.getElementById('pcFoxShadow').setAttribute('cy', pt.y);
-    document.getElementById('pcWorldName').textContent = _pcWorldNames[mondeIdx % _pcWorldNames.length];
+    var foxEl = document.getElementById('pcFoxWrap');
+    foxEl.style.left = pt.x + '%';
+    foxEl.style.top = pt.y + '%';
     document.getElementById('pcCaseLabel').textContent = caseIdx + '/12';
     var checkpointsEl = document.getElementById('pcCheckpoints');
     var html = '';
     [4, 8].forEach(function(ci) {
       var p = _pcWaypoints[ci];
       var unlocked = caseIdx >= ci;
-      html += '<circle cx="' + p.x + '" cy="' + p.y + '" r="12" fill="url(#pcChest)" stroke="#fff" stroke-width="2.5" opacity="' + (unlocked ? '0.4' : '1') + '" style="animation:pcPulse 1.6s ease-in-out infinite"/>';
-      html += '<text x="' + p.x + '" y="' + (p.y + 4) + '" text-anchor="middle" font-size="12">\u{1F381}</text>';
+      html += '<div style="position:absolute;left:' + p.x + '%;top:' + p.y + '%;transform:translate(-50%,-50%);width:34px;height:34px;border-radius:50%;background:radial-gradient(circle,#FFF7D6,#FFB84D);border:2.5px solid #fff;display:flex;align-items:center;justify-content:center;font-size:15px;opacity:' + (unlocked ? '0.45' : '1') + ';animation:pcPulse 1.6s ease-in-out infinite">\u{1F381}</div>';
     });
     var doorP = _pcWaypoints[12];
-    html += '<circle cx="' + doorP.x + '" cy="' + doorP.y + '" r="12" fill="none" stroke="#fff" stroke-width="2.2" stroke-dasharray="3 4" opacity="0.9"/>';
-    html += '<text x="' + doorP.x + '" y="' + (doorP.y + 4) + '" text-anchor="middle" font-size="12" opacity="0.9">\u{1F6AA}</text>';
+    html += '<div style="position:absolute;left:' + doorP.x + '%;top:' + doorP.y + '%;transform:translate(-50%,-50%);width:34px;height:34px;border-radius:50%;border:2.2px dashed #fff;display:flex;align-items:center;justify-content:center;font-size:15px;opacity:0.9">\u{1F6AA}</div>';
     checkpointsEl.innerHTML = html;
     var msgEl = document.getElementById('pcMessage');
     if (caseIdx >= 12) {
@@ -4473,35 +4470,19 @@ function switchLang(lang) {
         <!-- Parcours de progression -->
         <div id="parcoursCard" style="display:none;border-radius:28px;overflow:hidden;margin-bottom:24px;box-shadow:0 12px 30px rgba(190,100,50,0.25)">
           <div style="position:relative;overflow:hidden">
-            <div style="width:100%;aspect-ratio:1/1;overflow:hidden">
+            <div style="width:100%;aspect-ratio:1/1;overflow:hidden;position:relative">
               <video autoplay muted loop playsinline style="width:100%;height:100%;object-fit:cover;display:block">
-                <source src="https://raw.githubusercontent.com/avelia-ai/nutricare-frontend/main/map_foret_eveil_compressed.mp4" type="video/mp4">
+                <source src="https://raw.githubusercontent.com/avelia-ai/nutricare-frontend/main/map_foret_eveil_hq.mp4" type="video/mp4">
               </video>
+              <div id="pcCheckpoints" style="position:absolute;inset:0;pointer-events:none"></div>
+              <div id="pcFoxWrap" style="position:absolute;left:42%;top:96%;width:15%;aspect-ratio:1/1;transform:translate(-50%,-50%);pointer-events:none">
+                <div style="width:35%;height:12%;background:#2A1806;border-radius:50%;opacity:0.22;position:absolute;bottom:2%;left:32%;animation:pcShadowPulse 1.8s ease-in-out infinite"></div>
+                <video autoplay muted loop playsinline style="width:100%;height:100%;object-fit:contain;display:block;animation:pcFoxBob 1.8s ease-in-out infinite">
+                  <source src="https://raw.githubusercontent.com/avelia-ai/nutricare-frontend/main/ren_niveau1_compressed.mp4" type="video/mp4">
+                </video>
+              </div>
+              <div id="pcCaseLabel" style="position:absolute;top:12px;right:12px;background:rgba(255,255,255,0.8);border-radius:16px;padding:6px 14px;font-size:13px;font-weight:700;color:#8A4A1E">0/12</div>
             </div>
-            <svg viewBox="0 0 380 380" width="100%" style="display:block;position:absolute;inset:0;pointer-events:none">
-              <defs>
-                <radialGradient id="pcChest" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#FFF7D6"/><stop offset="100%" stop-color="#FFB84D"/></radialGradient>
-                </defs>
-              <g id="pcCheckpoints" aria-hidden="true"></g>
-              <ellipse id="pcFoxShadow" cx="167" cy="369" rx="13" ry="4" fill="#2A1806" opacity="0.2" style="animation:pcShadowPulse 1.8s ease-in-out infinite"/>
-              <g id="pcFoxWrap" transform="translate(167,369)">
-                <g style="transform-origin:center;animation:pcFoxBob 1.8s ease-in-out infinite">
-                  <ellipse cx="-7" cy="2" rx="15" ry="12" fill="#F2884B"/>
-                  <ellipse cx="-9" cy="4" rx="8" ry="6" fill="#FFF6E8"/>
-                  <circle cx="7" cy="-8" r="12" fill="#F2884B"/>
-                  <path d="M -1 -18 L 3 -8 L 9 -18 Z" fill="#F2884B"/>
-                  <path d="M 12 -18 L 16 -8 L 21 -16 Z" fill="#F2884B"/>
-                  <circle cx="5" cy="-9" r="1.8" fill="#3B2412"/>
-                  <circle cx="12" cy="-10" r="1.8" fill="#3B2412"/>
-                  <ellipse cx="9" cy="-3" rx="3.5" ry="2.6" fill="#FFF6E8"/>
-                  <path d="M -19 3 Q -27 -4 -19 -11 Q -13 -7 -15 0 Z" fill="#F2884B"/>
-                </g>
-              </g>
-              <rect x="14" y="14" width="150" height="32" rx="16" fill="rgba(255,255,255,0.75)"/>
-              <text id="pcWorldName" x="30" y="35" font-size="13" fill="#8A4A1E" font-weight="700">Foret de l'Eveil</text>
-              <rect x="272" y="14" width="94" height="32" rx="16" fill="rgba(255,255,255,0.75)"/>
-              <text id="pcCaseLabel" x="358" y="35" text-anchor="end" font-size="13" fill="#8A4A1E" font-weight="700">0/12</text>
-            </svg>
           </div>
           <div style="background:linear-gradient(160deg,#fff,#FFF6EC);padding:16px 18px 20px">
             <div style="display:flex;align-items:center;gap:10px;background:#FFF3E4;border-radius:14px;padding:13px 15px">
