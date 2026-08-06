@@ -3014,6 +3014,11 @@ window.initHome = async function() {
     document.getElementById('pcCaseLabel').textContent = caseIdx + '/12';
     var checkpointsEl = document.getElementById('pcCheckpoints');
     var html = '';
+    _pcWaypoints.forEach(function(p, ci) {
+      if (ci === 0 || ci === 4 || ci === 8 || ci === 12) return;
+      var done = caseIdx >= ci;
+      html += '<div style="position:absolute;left:' + p.x + '%;top:' + p.y + '%;transform:translate(-50%,-50%);width:11px;height:11px;border-radius:50%;background:' + (done ? '#FFD166' : 'rgba(255,255,255,0.55)') + ';border:1.5px solid #fff;box-shadow:0 2px 4px rgba(0,0,0,0.15)"></div>';
+    });
     [4, 8].forEach(function(ci) {
       var p = _pcWaypoints[ci];
       var unlocked = caseIdx >= ci;
@@ -3022,6 +3027,9 @@ window.initHome = async function() {
     var doorP = _pcWaypoints[12];
     html += '<div style="position:absolute;left:' + doorP.x + '%;top:' + doorP.y + '%;transform:translate(-50%,-50%);width:34px;height:34px;border-radius:50%;border:2.2px dashed #fff;display:flex;align-items:center;justify-content:center;font-size:15px;opacity:0.9">\u{1F6AA}</div>';
     checkpointsEl.innerHTML = html;
+    var pct = Math.round((caseIdx / 12) * 100);
+    document.getElementById('pcPercent').textContent = pct + '%';
+    document.getElementById('pcProgressBar').style.width = pct + '%';
     var msgEl = document.getElementById('pcMessage');
     if (caseIdx >= 12) {
       msgEl.textContent = 'Nouveau monde debloque ! Continue ton parcours.';
@@ -4475,19 +4483,28 @@ function switchLang(lang) {
                 <source src="https://raw.githubusercontent.com/avelia-ai/nutricare-frontend/main/map_foret_eveil_hq.mp4" type="video/mp4">
               </video>
               <div id="pcCheckpoints" style="position:absolute;inset:0;pointer-events:none"></div>
-              <div id="pcFoxWrap" style="position:absolute;left:42%;top:96%;width:15%;aspect-ratio:1/1;transform:translate(-50%,-50%);pointer-events:none">
-                <div style="width:35%;height:12%;background:#2A1806;border-radius:50%;opacity:0.22;position:absolute;bottom:2%;left:32%;animation:pcShadowPulse 1.8s ease-in-out infinite"></div>
-                <video autoplay muted loop playsinline style="width:100%;height:100%;object-fit:contain;display:block;animation:pcFoxBob 1.8s ease-in-out infinite">
-                  <source src="https://raw.githubusercontent.com/avelia-ai/nutricare-frontend/main/ren_niveau1_compressed.mp4" type="video/mp4">
-                </video>
+              <div id="pcFoxWrap" style="position:absolute;left:42%;top:96%;width:13%;aspect-ratio:1/1;transform:translate(-50%,-50%);pointer-events:none">
+                <div style="width:40%;height:13%;background:#2A1806;border-radius:50%;opacity:0.25;position:absolute;bottom:4%;left:30%;animation:pcShadowPulse 1.8s ease-in-out infinite;filter:blur(1px)"></div>
+                <div style="width:100%;height:100%;border-radius:50%;overflow:hidden;animation:pcFoxBob 1.8s ease-in-out infinite;box-shadow:0 4px 14px rgba(0,0,0,0.25)">
+                  <video autoplay muted loop playsinline style="width:140%;height:140%;object-fit:cover;display:block;margin:-20%">
+                    <source src="https://raw.githubusercontent.com/avelia-ai/nutricare-frontend/main/ren_niveau1_compressed.mp4" type="video/mp4">
+                  </video>
+                </div>
               </div>
-              <div id="pcCaseLabel" style="position:absolute;top:12px;right:12px;background:rgba(255,255,255,0.8);border-radius:16px;padding:6px 14px;font-size:13px;font-weight:700;color:#8A4A1E">0/12</div>
+              <div id="pcCaseLabel" style="position:absolute;top:12px;right:12px;background:rgba(255,255,255,0.85);backdrop-filter:blur(6px);border-radius:16px;padding:7px 15px;font-size:13px;font-weight:800;color:#8A4A1E;box-shadow:0 2px 8px rgba(0,0,0,0.1)">0/12</div>
             </div>
           </div>
-          <div style="background:linear-gradient(160deg,#fff,#FFF6EC);padding:16px 18px 20px">
-            <div style="display:flex;align-items:center;gap:10px;background:#FFF3E4;border-radius:14px;padding:13px 15px">
-              <div style="width:34px;height:34px;border-radius:11px;background:linear-gradient(135deg,#FFD166,#FF8A5B);display:flex;align-items:center;justify-content:center;flex-shrink:0"><i class="ti ti-gift" style="font-size:16px;color:#fff"></i></div>
-              <div id="pcMessage" style="font-size:12.5px;color:#5C3A1E;font-weight:600;line-height:1.45">Complete une action aujourd'hui pour avancer sur le chemin !</div>
+          <div style="background:linear-gradient(160deg,#2A1806,#4A2A12);padding:18px">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+              <div style="font-size:0.68rem;color:rgba(255,255,255,0.6);font-weight:700;text-transform:uppercase;letter-spacing:0.05em">Progression du monde</div>
+              <div id="pcPercent" style="font-size:0.72rem;color:#FFD166;font-weight:800">0%</div>
+            </div>
+            <div style="height:8px;background:rgba(255,255,255,0.15);border-radius:10px;overflow:hidden;margin-bottom:16px">
+              <div id="pcProgressBar" style="height:100%;width:0%;background:linear-gradient(90deg,#FFD166,#FF8A5B);border-radius:10px;transition:width .6s"></div>
+            </div>
+            <div style="display:flex;align-items:center;gap:12px;background:rgba(255,255,255,0.08);border-radius:14px;padding:13px 15px">
+              <div style="width:36px;height:36px;border-radius:12px;background:linear-gradient(135deg,#FFD166,#FF8A5B);display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:0 4px 10px rgba(255,154,60,0.35)"><i class="ti ti-gift" style="font-size:17px;color:#fff"></i></div>
+              <div id="pcMessage" style="font-size:12.5px;color:#F5E6D8;font-weight:600;line-height:1.45">Complete une action aujourd'hui pour avancer sur le chemin !</div>
             </div>
           </div>
         </div>
