@@ -2984,12 +2984,66 @@ window.initHome = async function() {
   var _pcWorldNames = ["Foret de l'Eveil","Vallee de l'Equilibre","Montagne de la Force","Sommet de l'Harmonie"];
   var _pcForkCase = 6;
   var _pcWorldByChemin = { A: "Vallee de l'Equilibre", B: 'Montagne de la Force' };
+  var _pcActionsRotation = ['suivi','pas','menu','defi_jour','defi_mirella','score','photo'];
+  var _pcActionLabels = {
+    suivi: "complete ton suivi sante du jour (energie, sommeil, stress, hydratation)",
+    pas: "atteins 5000 pas aujourd'hui",
+    menu: "genere ton/tes menu(s) de la semaine",
+    defi_jour: "valide un defi du jour",
+    defi_mirella: "valide un defi Mirella en cours",
+    score: "obtiens un score sante superieur a 70",
+    photo: "analyse un repas en photo"
+  };
+  function pcTodayStr() { return new Date().toISOString().split('T')[0]; }
+  function pcCheckAction(key) {
+    var today = pcTodayStr();
+    try {
+      if (key === 'suivi') return localStorage.getItem('mirella_pc_suivi_' + today) === '1';
+      if (key === 'photo') return localStorage.getItem('mirella_pc_photo_' + today) === '1';
+      if (key === 'menu') return localStorage.getItem('mirella_pc_menu_' + today) === '1';
+      if (key === 'score') {
+        var s = parseInt(localStorage.getItem('mirella_pc_score_' + today) || '0', 10);
+        return s > 70;
+      }
+      if (key === 'pas') {
+        return (typeof getTodaySteps === 'function' ? getTodaySteps() : 0) >= 5000;
+      }
+      if (key === 'defi_jour') {
+        var _uid = (JSON.parse(localStorage.getItem('nutricare_user')||'{}').id || JSON.parse(localStorage.getItem('nutricare_user')||'{}').email || 'default');
+        var state = JSON.parse(localStorage.getItem('gami_defis_' + _uid + '_' + today) || '{}');
+        return Object.keys(state).some(function(k){ return state[k]; });
+      }
+      if (key === 'defi_mirella') {
+        var state2 = JSON.parse(localStorage.getItem('mirella_defis') || '{}');
+        var todayDateStr = new Date().toDateString();
+        return Object.keys(state2).some(function(k){ return state2[k] && state2[k].last_valid === todayDateStr; });
+      }
+    } catch(e) {}
+    return false;
+  }
+  function pcActionsDoneToday() {
+    return _pcActionsRotation.filter(function(k){ return pcCheckAction(k); }).length;
+  }
+  function pcTodayActionKey() {
+    var dayIdx = Math.floor(Date.now() / 86400000) % _pcActionsRotation.length;
+    return _pcActionsRotation[dayIdx];
+  }
+  window.pcMarkAction = function(key) {
+    var today = pcTodayStr();
+    if (key === 'suivi') localStorage.setItem('mirella_pc_suivi_' + today, '1');
+    if (key === 'photo') localStorage.setItem('mirella_pc_photo_' + today, '1');
+    if (key === 'menu') localStorage.setItem('mirella_pc_menu_' + today, '1');
+  };
+  window.pcMarkScore = function(score) {
+    localStorage.setItem('mirella_pc_score_' + pcTodayStr(), String(score));
+  };
   function advanceParcoursIfNeeded(profile) {
     var todayStr = new Date().toISOString().split('T')[0];
     if (profile.parcours_derniere_action === todayStr) return profile;
-    var scores = JSON.parse(localStorage.getItem('mirella_scores') || '[]');
-    var didToday = scores.some(function(s) { return s.date === todayStr; });
-    if (!didToday) return profile;
+    var todayActionKey = pcTodayActionKey();
+    var todayActionDone = pcCheckAction(todayActionKey);
+    var totalDoneCount = pcActionsDoneToday();
+    if (!todayActionDone && totalDoneCount < 2) return profile;
     var currentCase = profile.parcours_case || 0;
     var currentMonde = profile.parcours_monde || 1;
     currentCase += 1;
@@ -3094,6 +3148,10 @@ window.initHome = async function() {
       } else {
         msgEl.textContent = 'Encore ' + casesToWorld + ' case' + (casesToWorld > 1 ? 's' : '') + ' avant ' + nextWorldName;
       }
+    }
+    if (caseIdx < 12) {
+      var _todayKey = pcTodayActionKey();
+      msgEl.textContent += ' \u00b7 Aujourd\'hui pour avancer : ' + _pcActionLabels[_todayKey] + '.';
     }
   }
   function renderPersonalSummary(profile) {
@@ -11967,7 +12025,7 @@ async function previewAndAnalyze(event) {
         body: JSON.stringify({ image_base64: base64, media_type: mediaType })
       });
       const data = await res.json();
-      if (res.ok) { renderAnalysis(data); showMirellaNotif('📸 Analyse terminée ! J\'ai examiné votre repas et calculé les apports nutritionnels. Consultez les résultats ci-dessous.'); }
+      if (res.ok) { renderAnalysis(data); showMirellaNotif('📸 Analyse terminée ! J\'ai examiné votre repas et calculé les apports nutritionnels. Consultez les résultats ci-dessous.'); if (window.pcMarkAction) window.pcMarkAction('photo'); }
       else alert(data.error || 'Erreur analyse');
     } catch(e) { alert('Erreur de connexion'); }
     finally { document.getElementById('analysisLoading').style.display = 'none'; }
@@ -12349,6 +12407,7 @@ var activeMenuFilters = new Set();
         alert(jourData.error || 'Erreur lors de la generation du menu du jour.');
         return;
       }
+      if (window.pcMarkAction) window.pcMarkAction('menu');
       const joursOrdre = ['Lundi','Mardi','Mercredi','Jeudi','Vendredi','Samedi','Dimanche'];
       const semaineComplete = joursOrdre.map(function(j) {
         if (j === jourAujourdhui) return jourData;
@@ -13221,6 +13280,8 @@ async function saveHealthLog() {
       // Notif de forme basée sur le score composite (4 statuts)
       if (data.energy_level !== null && data.sleep_hours !== null && data.stress_level !== null) {
         var healthScore = calcHealthScore(data.energy_level, data.sleep_hours, data.stress_level);
+        if (data.hydration !== null && data.hydration !== undefined) { window.pcMarkAction('suivi'); }
+        window.pcMarkScore(healthScore);
         var foxStatus = getFoxStatus(healthScore);
         var NOTIF_MESSAGES = {
           tres_en_forme: 'Waouh, tu es en pleine forme aujourd\'hui ! 🎉',
