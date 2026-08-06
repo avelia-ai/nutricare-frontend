@@ -2954,6 +2954,7 @@ window.initHome = async function() {
     var nav2 = document.getElementById('bottomNav');
     if (nav2) { nav2.style.zIndex = '1000'; nav2.style.visibility = 'visible'; }
     renderPersonalSummary(profile);
+    renderParcours(profile);
   }
   var _objMeta = {
     perte_poids: { label: 'Perdre du poids', icon: 'trending-down' },
@@ -2966,6 +2967,78 @@ window.initHome = async function() {
     performance: { label: 'Performance sportive', icon: 'run' },
     'r\u00e9\u00e9quilibrage': { label: 'Reequilibrage alimentaire', icon: 'salad' }
   };
+  var _pcWaypoints = [
+    {x:40,y:300},{x:55,y:270},{x:66,y:240},{x:60,y:210},{x:58,y:175},
+    {x:90,y:148},{x:130,y:133},{x:172,y:120},{x:172,y:95},{x:185,y:70},
+    {x:215,y:52},{x:250,y:38},{x:290,y:26}
+  ];
+  var _pcWorldNames = ["Foret de l'Eveil","Vallee de l'Equilibre","Montagne de la Force","Sommet de l'Harmonie"];
+  function advanceParcoursIfNeeded(profile) {
+    var todayStr = new Date().toISOString().split('T')[0];
+    if (profile.parcours_derniere_action === todayStr) return profile;
+    var scores = JSON.parse(localStorage.getItem('mirella_scores') || '[]');
+    var didToday = scores.some(function(s) { return s.date === todayStr; });
+    if (!didToday) return profile;
+    var currentCase = profile.parcours_case || 0;
+    var currentMonde = profile.parcours_monde || 1;
+    currentCase += 1;
+    if (currentCase > 12) { currentCase = 0; currentMonde += 1; }
+    profile.parcours_case = currentCase;
+    profile.parcours_monde = currentMonde;
+    profile.parcours_derniere_action = todayStr;
+    localStorage.setItem('nutricare_profile', JSON.stringify(profile));
+    try {
+      var token = authToken || window._authToken || localStorage.getItem('nutricare_token');
+      if (token) {
+        fetch(BACKEND_URL + '/api/profile', {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
+          body: JSON.stringify({ parcours_case: currentCase, parcours_monde: currentMonde, parcours_derniere_action: todayStr })
+        });
+      }
+    } catch(e) {}
+    return profile;
+  }
+  function renderParcours(profile) {
+    var card = document.getElementById('parcoursCard');
+    if (!card) return;
+    if (!profile.poids || !profile.taille) { card.style.display = 'none'; return; }
+    card.style.display = 'block';
+    profile = advanceParcoursIfNeeded(profile);
+    var caseIdx = Math.min(profile.parcours_case || 0, 12);
+    var mondeIdx = (profile.parcours_monde || 1) - 1;
+    var pt = _pcWaypoints[caseIdx];
+    document.getElementById('pcFoxWrap').setAttribute('transform', 'translate(' + pt.x + ',' + pt.y + ')');
+    document.getElementById('pcFoxShadow').setAttribute('cx', pt.x);
+    document.getElementById('pcFoxShadow').setAttribute('cy', pt.y);
+    document.getElementById('pcWorldName').textContent = _pcWorldNames[mondeIdx % _pcWorldNames.length];
+    document.getElementById('pcCaseLabel').textContent = caseIdx + '/12';
+    var checkpointsEl = document.getElementById('pcCheckpoints');
+    var html = '';
+    [4, 8].forEach(function(ci) {
+      var p = _pcWaypoints[ci];
+      var unlocked = caseIdx >= ci;
+      html += '<circle cx="' + p.x + '" cy="' + p.y + '" r="12" fill="url(#pcChest)" stroke="#fff" stroke-width="2.5" opacity="' + (unlocked ? '0.4' : '1') + '" style="animation:pcPulse 1.6s ease-in-out infinite"/>';
+      html += '<text x="' + p.x + '" y="' + (p.y + 4) + '" text-anchor="middle" font-size="12">\u{1F381}</text>';
+    });
+    var doorP = _pcWaypoints[12];
+    html += '<circle cx="' + doorP.x + '" cy="' + doorP.y + '" r="12" fill="none" stroke="#fff" stroke-width="2.2" stroke-dasharray="3 4" opacity="0.9"/>';
+    html += '<text x="' + doorP.x + '" y="' + (doorP.y + 4) + '" text-anchor="middle" font-size="12" opacity="0.9">\u{1F6AA}</text>';
+    checkpointsEl.innerHTML = html;
+    var msgEl = document.getElementById('pcMessage');
+    if (caseIdx >= 12) {
+      msgEl.textContent = 'Nouveau monde debloque ! Continue ton parcours.';
+    } else {
+      var nextChest = [4, 8].find(function(ci) { return ci > caseIdx; });
+      var casesToChest = nextChest ? nextChest - caseIdx : null;
+      var casesToWorld = 12 - caseIdx;
+      if (nextChest) {
+        msgEl.textContent = 'Prochain coffre dans ' + casesToChest + ' case' + (casesToChest > 1 ? 's' : '') + ' \u00b7 encore ' + casesToWorld + ' cases avant ' + _pcWorldNames[(mondeIdx + 1) % _pcWorldNames.length];
+      } else {
+        msgEl.textContent = 'Encore ' + casesToWorld + ' case' + (casesToWorld > 1 ? 's' : '') + ' avant ' + _pcWorldNames[(mondeIdx + 1) % _pcWorldNames.length];
+      }
+    }
+  }
   function renderPersonalSummary(profile) {
     var card = document.getElementById('personalSummaryCard');
     if (!card) return;
@@ -3092,6 +3165,7 @@ window.initHome = async function() {
 
   // Avatar
   renderPersonalSummary(profile);
+  renderParcours(profile);
   var avatarEl = document.getElementById('homeAvatar');
   if (avatarEl && profile.full_name) {
     avatarEl.textContent = profile.full_name.split(' ').map(function(n){return n[0];}).join('').toUpperCase().slice(0,2);
@@ -4395,6 +4469,70 @@ function switchLang(lang) {
             </div>
           </div>
         </div>
+
+        <!-- Parcours de progression -->
+        <div id="parcoursCard" style="display:none;border-radius:28px;overflow:hidden;margin-bottom:24px;box-shadow:0 12px 30px rgba(190,100,50,0.25)">
+          <div style="position:relative">
+            <svg viewBox="0 0 380 320" width="100%" style="display:block">
+              <defs>
+                <linearGradient id="pcSky" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stop-color="#FFF3DE"/>
+                  <stop offset="45%" stop-color="#FFDBA8"/>
+                  <stop offset="100%" stop-color="#FFAE6E"/>
+                </linearGradient>
+                <linearGradient id="pcH1" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#D6EBBB"/><stop offset="100%" stop-color="#B4DB94"/></linearGradient>
+                <linearGradient id="pcH2" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#A2D07E"/><stop offset="100%" stop-color="#83BA63"/></linearGradient>
+                <linearGradient id="pcH3" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#7CB25C"/><stop offset="100%" stop-color="#5C9647"/></linearGradient>
+                <linearGradient id="pcPath" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#FFD08A"/><stop offset="100%" stop-color="#FF9A56"/></linearGradient>
+                <radialGradient id="pcSun" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#FFFBEF" stop-opacity="1"/><stop offset="55%" stop-color="#FFDB94" stop-opacity="0.5"/><stop offset="100%" stop-color="#FFDB94" stop-opacity="0"/></radialGradient>
+                <radialGradient id="pcChest" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#FFF7D6"/><stop offset="100%" stop-color="#FFB84D"/></radialGradient>
+              </defs>
+              <rect width="380" height="320" fill="url(#pcSky)"/>
+              <g style="animation:pcSunPulse 4s ease-in-out infinite"><circle cx="300" cy="55" r="75" fill="url(#pcSun)"/><circle cx="300" cy="55" r="26" fill="#FFF7DA"/></g>
+              <g style="animation:pcCloud 22s linear infinite"><ellipse cx="65" cy="70" rx="30" ry="11" fill="#FFFFFF" opacity="0.85"/><ellipse cx="92" cy="64" rx="20" ry="8" fill="#FFFFFF" opacity="0.85"/></g>
+              <path d="M0 130 Q100 92 200 132 T380 112 V320 H0 Z" fill="url(#pcH1)"/>
+              <path d="M0 175 Q110 142 210 172 T380 152 V320 H0 Z" fill="url(#pcH2)"/>
+              <path d="M0 225 Q120 200 220 220 T380 202 V320 H0 Z" fill="url(#pcH3)"/>
+              <g style="animation:pcSway 3.2s ease-in-out infinite;transform-origin:30px 180px"><ellipse cx="30" cy="164" rx="14" ry="22" fill="#5D9346"/><rect x="27" y="184" width="6" height="14" fill="#8A5A32"/></g>
+              <g style="animation:pcSway 3.6s ease-in-out infinite;transform-origin:355px 160px;animation-delay:0.4s"><ellipse cx="355" cy="142" rx="16" ry="24" fill="#5D9346"/><rect x="351" y="164" width="6" height="14" fill="#8A5A32"/></g>
+              <path id="pcPathLine" d="M40 300 Q80 250 66 200 Q54 155 115 138 Q175 122 172 92 Q170 68 210 52 Q250 38 290 26" fill="none" stroke="#FFFFFF" stroke-width="18" stroke-linecap="round" opacity="0.6"/>
+              <path d="M40 300 Q80 250 66 200 Q54 155 115 138 Q175 122 172 92 Q170 68 210 52 Q250 38 290 26" fill="none" stroke="url(#pcPath)" stroke-width="12" stroke-linecap="round" stroke-dasharray="0.5 20"/>
+              <g id="pcCheckpoints" aria-hidden="true"></g>
+              <ellipse id="pcFoxShadow" cx="40" cy="300" rx="14" ry="4" fill="#3B2412" opacity="0.15" style="animation:pcShadowPulse 1.8s ease-in-out infinite"/>
+              <g id="pcFoxWrap" transform="translate(40,300)">
+                <g style="transform-origin:center;animation:pcFoxBob 1.8s ease-in-out infinite">
+                  <ellipse cx="-7" cy="2" rx="15" ry="12" fill="#F2884B"/>
+                  <ellipse cx="-9" cy="4" rx="8" ry="6" fill="#FFF6E8"/>
+                  <circle cx="7" cy="-8" r="12" fill="#F2884B"/>
+                  <path d="M -1 -18 L 3 -8 L 9 -18 Z" fill="#F2884B"/>
+                  <path d="M 12 -18 L 16 -8 L 21 -16 Z" fill="#F2884B"/>
+                  <circle cx="5" cy="-9" r="1.8" fill="#3B2412"/>
+                  <circle cx="12" cy="-10" r="1.8" fill="#3B2412"/>
+                  <ellipse cx="9" cy="-3" rx="3.5" ry="2.6" fill="#FFF6E8"/>
+                  <path d="M -19 3 Q -27 -4 -19 -11 Q -13 -7 -15 0 Z" fill="#F2884B"/>
+                </g>
+              </g>
+              <rect x="14" y="14" width="150" height="32" rx="16" fill="rgba(255,255,255,0.7)"/>
+              <text id="pcWorldName" x="30" y="35" font-size="13" fill="#8A4A1E" font-weight="700">Foret de l'Eveil</text>
+              <rect x="272" y="14" width="94" height="32" rx="16" fill="rgba(255,255,255,0.7)"/>
+              <text id="pcCaseLabel" x="358" y="35" text-anchor="end" font-size="13" fill="#8A4A1E" font-weight="700">0/12</text>
+            </svg>
+          </div>
+          <div style="background:linear-gradient(160deg,#fff,#FFF6EC);padding:16px 18px 20px">
+            <div style="display:flex;align-items:center;gap:10px;background:#FFF3E4;border-radius:14px;padding:13px 15px">
+              <div style="width:34px;height:34px;border-radius:11px;background:linear-gradient(135deg,#FFD166,#FF8A5B);display:flex;align-items:center;justify-content:center;flex-shrink:0"><i class="ti ti-gift" style="font-size:16px;color:#fff"></i></div>
+              <div id="pcMessage" style="font-size:12.5px;color:#5C3A1E;font-weight:600;line-height:1.45">Complete une action aujourd'hui pour avancer sur le chemin !</div>
+            </div>
+          </div>
+        </div>
+        <style>
+          @keyframes pcFoxBob { 0%,100%{transform:translateY(0) rotate(-2deg)} 50%{transform:translateY(-6px) rotate(2deg)} }
+          @keyframes pcShadowPulse { 0%,100%{transform:scale(1);opacity:0.15} 50%{transform:scale(0.75);opacity:0.1} }
+          @keyframes pcSunPulse { 0%,100%{opacity:1} 50%{opacity:0.85} }
+          @keyframes pcCloud { 0%{transform:translateX(-10px)} 50%{transform:translateX(10px)} 100%{transform:translateX(-10px)} }
+          @keyframes pcSway { 0%,100%{transform:rotate(-2deg)} 50%{transform:rotate(2deg)} }
+          @keyframes pcPulse { 0%,100%{transform:scale(1)} 50%{transform:scale(1.15)} }
+        </style>
 
         <!-- Popup Modifier mon profil -->
         <div id="editGoalsModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.65);z-index:99999;align-items:flex-end;justify-content:center">
