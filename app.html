@@ -2968,9 +2968,9 @@ window.initHome = async function() {
     'r\u00e9\u00e9quilibrage': { label: 'Reequilibrage alimentaire', icon: 'salad' }
   };
   var _pcWaypoints = [
-    {x:42,y:96},{x:43,y:87},{x:41,y:78},{x:44,y:68},{x:47,y:59},
-    {x:52,y:52},{x:58,y:45},{x:63,y:37},{x:67,y:29},{x:72,y:22},
-    {x:77,y:16},{x:81,y:11},{x:85,y:7}
+    {x:42,y:96},{x:40,y:85},{x:43,y:73},{x:48,y:66},{x:52,y:61},
+    {x:50,y:53},{x:55,y:45},{x:63,y:38},{x:71,y:31},{x:77,y:23},
+    {x:81,y:16},{x:84,y:10},{x:87,y:5}
   ];
   var _pcWorldNames = ["Foret de l'Eveil","Vallee de l'Equilibre","Montagne de la Force","Sommet de l'Harmonie"];
   function advanceParcoursIfNeeded(profile) {
@@ -3012,6 +3012,7 @@ window.initHome = async function() {
     foxEl.style.left = pt.x + '%';
     foxEl.style.top = pt.y + '%';
     document.getElementById('pcCaseLabel').textContent = caseIdx + '/12';
+    document.getElementById('pcWorldLabel').textContent = _pcWorldNames[mondeIdx % _pcWorldNames.length];
     var checkpointsEl = document.getElementById('pcCheckpoints');
     var html = '';
     _pcWaypoints.forEach(function(p, ci) {
@@ -4476,7 +4477,7 @@ function switchLang(lang) {
         </div>
 
         <!-- Parcours de progression -->
-        <div id="parcoursCard" style="display:none;border-radius:28px;overflow:hidden;margin-bottom:24px;box-shadow:0 12px 30px rgba(190,100,50,0.25)">
+        <div id="parcoursCard" style="display:none;border-radius:28px;overflow:hidden;margin-bottom:24px;box-shadow:0 0 0 1.5px rgba(255,154,108,0.22),0 14px 32px rgba(230,110,70,0.14)">
           <div style="position:relative;overflow:hidden">
             <div style="width:100%;aspect-ratio:2/3;overflow:hidden;position:relative">
               <video autoplay muted loop playsinline style="width:100%;height:100%;object-fit:cover;display:block">
@@ -4492,6 +4493,7 @@ function switchLang(lang) {
                 </div>
               </div>
               <div id="pcCaseLabel" style="position:absolute;top:12px;right:12px;background:rgba(255,255,255,0.85);backdrop-filter:blur(6px);border-radius:16px;padding:7px 15px;font-size:13px;font-weight:800;color:#8A4A1E;box-shadow:0 2px 8px rgba(0,0,0,0.1)">0/12</div>
+              <div id="pcWorldLabel" style="position:absolute;top:12px;left:12px;background:rgba(255,255,255,0.85);backdrop-filter:blur(6px);border-radius:16px;padding:7px 15px;font-size:13px;font-weight:800;color:#8A4A1E;box-shadow:0 2px 8px rgba(0,0,0,0.1)">La Foret de l'Eveil</div>
             </div>
           </div>
           <div style="background:linear-gradient(160deg,#2A1806,#4A2A12);padding:18px">
