@@ -2968,9 +2968,9 @@ window.initHome = async function() {
     'r\u00e9\u00e9quilibrage': { label: 'Reequilibrage alimentaire', icon: 'salad' }
   };
   var _pcWaypoints = [
-    {x:40,y:300},{x:55,y:270},{x:66,y:240},{x:60,y:210},{x:58,y:175},
-    {x:90,y:148},{x:130,y:133},{x:172,y:120},{x:172,y:95},{x:185,y:70},
-    {x:215,y:52},{x:250,y:38},{x:290,y:26}
+    {x:160,y:372},{x:167,y:331},{x:179,y:289},{x:167,y:247},{x:179,y:213},
+    {x:194,y:190},{x:213,y:167},{x:228,y:137},{x:239,y:106},{x:258,y:76},
+    {x:277,y:53},{x:293,y:38},{x:304,y:27}
   ];
   var _pcWorldNames = ["Foret de l'Eveil","Vallee de l'Equilibre","Montagne de la Force","Sommet de l'Harmonie"];
   function advanceParcoursIfNeeded(profile) {
@@ -4472,34 +4472,37 @@ function switchLang(lang) {
 
         <!-- Parcours de progression -->
         <div id="parcoursCard" style="display:none;border-radius:28px;overflow:hidden;margin-bottom:24px;box-shadow:0 12px 30px rgba(190,100,50,0.25)">
-          <div style="position:relative">
-            <svg viewBox="0 0 380 320" width="100%" style="display:block">
+          <div style="position:relative;overflow:hidden">
+            <div style="width:100%;aspect-ratio:1/1;animation:pcKenBurns 18s ease-in-out infinite;overflow:hidden">
+              <img src="https://raw.githubusercontent.com/avelia-ai/nutricare-frontend/main/map_foret_eveil.png" style="width:100%;height:100%;object-fit:cover;display:block">
+            </div>
+            <svg viewBox="0 0 380 380" width="100%" style="display:block;position:absolute;inset:0;pointer-events:none">
               <defs>
-                <linearGradient id="pcSky" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="0%" stop-color="#FFF3DE"/>
-                  <stop offset="45%" stop-color="#FFDBA8"/>
-                  <stop offset="100%" stop-color="#FFAE6E"/>
-                </linearGradient>
-                <linearGradient id="pcH1" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#D6EBBB"/><stop offset="100%" stop-color="#B4DB94"/></linearGradient>
-                <linearGradient id="pcH2" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#A2D07E"/><stop offset="100%" stop-color="#83BA63"/></linearGradient>
-                <linearGradient id="pcH3" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#7CB25C"/><stop offset="100%" stop-color="#5C9647"/></linearGradient>
-                <linearGradient id="pcPath" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#FFD08A"/><stop offset="100%" stop-color="#FF9A56"/></linearGradient>
-                <radialGradient id="pcSun" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#FFFBEF" stop-opacity="1"/><stop offset="55%" stop-color="#FFDB94" stop-opacity="0.5"/><stop offset="100%" stop-color="#FFDB94" stop-opacity="0"/></radialGradient>
                 <radialGradient id="pcChest" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#FFF7D6"/><stop offset="100%" stop-color="#FFB84D"/></radialGradient>
+                <clipPath id="pcRiverClip">
+                  <path d="M45 55 Q30 130 55 210 Q75 280 40 345 L95 345 Q120 280 95 210 Q75 130 90 55 Z"/>
+                </clipPath>
               </defs>
-              <rect width="380" height="320" fill="url(#pcSky)"/>
-              <g style="animation:pcSunPulse 4s ease-in-out infinite"><circle cx="300" cy="55" r="75" fill="url(#pcSun)"/><circle cx="300" cy="55" r="26" fill="#FFF7DA"/></g>
-              <g style="animation:pcCloud 22s linear infinite"><ellipse cx="65" cy="70" rx="30" ry="11" fill="#FFFFFF" opacity="0.85"/><ellipse cx="92" cy="64" rx="20" ry="8" fill="#FFFFFF" opacity="0.85"/></g>
-              <path d="M0 130 Q100 92 200 132 T380 112 V320 H0 Z" fill="url(#pcH1)"/>
-              <path d="M0 175 Q110 142 210 172 T380 152 V320 H0 Z" fill="url(#pcH2)"/>
-              <path d="M0 225 Q120 200 220 220 T380 202 V320 H0 Z" fill="url(#pcH3)"/>
-              <g style="animation:pcSway 3.2s ease-in-out infinite;transform-origin:30px 180px"><ellipse cx="30" cy="164" rx="14" ry="22" fill="#5D9346"/><rect x="27" y="184" width="6" height="14" fill="#8A5A32"/></g>
-              <g style="animation:pcSway 3.6s ease-in-out infinite;transform-origin:355px 160px;animation-delay:0.4s"><ellipse cx="355" cy="142" rx="16" ry="24" fill="#5D9346"/><rect x="351" y="164" width="6" height="14" fill="#8A5A32"/></g>
-              <path id="pcPathLine" d="M40 300 Q80 250 66 200 Q54 155 115 138 Q175 122 172 92 Q170 68 210 52 Q250 38 290 26" fill="none" stroke="#FFFFFF" stroke-width="18" stroke-linecap="round" opacity="0.6"/>
-              <path d="M40 300 Q80 250 66 200 Q54 155 115 138 Q175 122 172 92 Q170 68 210 52 Q250 38 290 26" fill="none" stroke="url(#pcPath)" stroke-width="12" stroke-linecap="round" stroke-dasharray="0.5 20"/>
               <g id="pcCheckpoints" aria-hidden="true"></g>
-              <ellipse id="pcFoxShadow" cx="40" cy="300" rx="14" ry="4" fill="#3B2412" opacity="0.15" style="animation:pcShadowPulse 1.8s ease-in-out infinite"/>
-              <g id="pcFoxWrap" transform="translate(40,300)">
+              <g clip-path="url(#pcRiverClip)" opacity="0.55">
+                <rect x="0" y="0" width="380" height="380" fill="none"/>
+                <g style="animation:pcRiverFlow 2.5s linear infinite">
+                  <rect x="20" y="-40" width="100" height="14" fill="#EAF6FF" opacity="0.7" transform="rotate(8 70 -33)"/>
+                  <rect x="20" y="10" width="100" height="14" fill="#EAF6FF" opacity="0.7" transform="rotate(8 70 17)"/>
+                  <rect x="20" y="60" width="100" height="14" fill="#EAF6FF" opacity="0.7" transform="rotate(8 70 67)"/>
+                  <rect x="20" y="110" width="100" height="14" fill="#EAF6FF" opacity="0.7" transform="rotate(8 70 117)"/>
+                  <rect x="20" y="160" width="100" height="14" fill="#EAF6FF" opacity="0.7" transform="rotate(8 70 167)"/>
+                  <rect x="20" y="210" width="100" height="14" fill="#EAF6FF" opacity="0.7" transform="rotate(8 70 217)"/>
+                  <rect x="20" y="260" width="100" height="14" fill="#EAF6FF" opacity="0.7" transform="rotate(8 70 267)"/>
+                  <rect x="20" y="310" width="100" height="14" fill="#EAF6FF" opacity="0.7" transform="rotate(8 70 317)"/>
+                  <rect x="20" y="360" width="100" height="14" fill="#EAF6FF" opacity="0.7" transform="rotate(8 70 367)"/>
+                  <rect x="20" y="410" width="100" height="14" fill="#EAF6FF" opacity="0.7" transform="rotate(8 70 417)"/>
+                </g>
+              </g>
+              <ellipse cx="45" cy="90" rx="30" ry="14" fill="#FFFFFF" style="animation:pcMist 2.2s ease-in-out infinite" opacity="0.5"/>
+              <ellipse cx="35" cy="105" rx="22" ry="10" fill="#FFFFFF" style="animation:pcMist 1.8s ease-in-out infinite;animation-delay:0.4s" opacity="0.45"/>
+              <ellipse id="pcFoxShadow" cx="167" cy="369" rx="13" ry="4" fill="#2A1806" opacity="0.2" style="animation:pcShadowPulse 1.8s ease-in-out infinite"/>
+              <g id="pcFoxWrap" transform="translate(167,369)">
                 <g style="transform-origin:center;animation:pcFoxBob 1.8s ease-in-out infinite">
                   <ellipse cx="-7" cy="2" rx="15" ry="12" fill="#F2884B"/>
                   <ellipse cx="-9" cy="4" rx="8" ry="6" fill="#FFF6E8"/>
@@ -4512,9 +4515,9 @@ function switchLang(lang) {
                   <path d="M -19 3 Q -27 -4 -19 -11 Q -13 -7 -15 0 Z" fill="#F2884B"/>
                 </g>
               </g>
-              <rect x="14" y="14" width="150" height="32" rx="16" fill="rgba(255,255,255,0.7)"/>
+              <rect x="14" y="14" width="150" height="32" rx="16" fill="rgba(255,255,255,0.75)"/>
               <text id="pcWorldName" x="30" y="35" font-size="13" fill="#8A4A1E" font-weight="700">Foret de l'Eveil</text>
-              <rect x="272" y="14" width="94" height="32" rx="16" fill="rgba(255,255,255,0.7)"/>
+              <rect x="272" y="14" width="94" height="32" rx="16" fill="rgba(255,255,255,0.75)"/>
               <text id="pcCaseLabel" x="358" y="35" text-anchor="end" font-size="13" fill="#8A4A1E" font-weight="700">0/12</text>
             </svg>
           </div>
@@ -4527,10 +4530,10 @@ function switchLang(lang) {
         </div>
         <style>
           @keyframes pcFoxBob { 0%,100%{transform:translateY(0) rotate(-2deg)} 50%{transform:translateY(-6px) rotate(2deg)} }
-          @keyframes pcShadowPulse { 0%,100%{transform:scale(1);opacity:0.15} 50%{transform:scale(0.75);opacity:0.1} }
-          @keyframes pcSunPulse { 0%,100%{opacity:1} 50%{opacity:0.85} }
-          @keyframes pcCloud { 0%{transform:translateX(-10px)} 50%{transform:translateX(10px)} 100%{transform:translateX(-10px)} }
-          @keyframes pcSway { 0%,100%{transform:rotate(-2deg)} 50%{transform:rotate(2deg)} }
+          @keyframes pcShadowPulse { 0%,100%{transform:scale(1);opacity:0.2} 50%{transform:scale(0.75);opacity:0.12} }
+          @keyframes pcKenBurns { 0%,100%{transform:scale(1.02) translate(0,0)} 50%{transform:scale(1.08) translate(-1%,-1%)} }
+          @keyframes pcRiverFlow { 0%{transform:translateY(-50px)} 100%{transform:translateY(0px)} }
+          @keyframes pcMist { 0%,100%{opacity:0.3;transform:translateY(0)} 50%{opacity:0.55;transform:translateY(-4px)} }
           @keyframes pcPulse { 0%,100%{transform:scale(1)} 50%{transform:scale(1.15)} }
         </style>
 
