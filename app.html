@@ -3033,6 +3033,25 @@ window.initHome = async function() {
       '</div>';
     }).join('');
 
+    var countdownWrap = document.getElementById('summaryCountdownWrap');
+    if (profile.objectif_date_debut && profile.objectif_delai_semaines) {
+      var startD = new Date(profile.objectif_date_debut + 'T00:00:00');
+      var totalDays = profile.objectif_delai_semaines * 7;
+      var elapsedDays = Math.floor((new Date() - startD) / 86400000);
+      var remainingDays = totalDays - elapsedDays;
+      countdownWrap.style.display = 'block';
+      var msgEl = document.getElementById('summaryCountdownMsg');
+      if (remainingDays > 0) {
+        document.getElementById('summaryCountdownDays').textContent = remainingDays;
+        msgEl.textContent = 'pour atteindre ton objectif, continue comme ca !';
+      } else {
+        document.getElementById('summaryCountdownDays').textContent = '0';
+        msgEl.textContent = "l'echeance est passee, fais le point avec Mirella sur la suite";
+      }
+    } else {
+      countdownWrap.style.display = 'none';
+    }
+
     var adviceParts = [];
     if (imc >= 25) adviceParts.push('ton IMC indique un ' + (imc >= 30 ? 'exces de poids notable' : 'leger surpoids') + ', privilegie les proteines maigres et les legumes a chaque repas');
     else if (imc < 18.5) adviceParts.push('ton IMC est en dessous de la normale, veille a ne pas sauter de repas et privilegie les apports caloriques de qualite');
@@ -3040,13 +3059,15 @@ window.initHome = async function() {
     if (profile.energie_actuelle && profile.energie_actuelle <= 4) adviceParts.push('ton energie est basse en ce moment, verifie ton sommeil et ton hydratation avant tout');
     if (profile.sommeil_heures_actuel && profile.sommeil_heures_actuel < 7) adviceParts.push('tu dors moins de 7h, essaie de te coucher 30 minutes plus tot ce soir');
     if (profile.sommeil_reveils_nocturnes === 'souvent') adviceParts.push('tes reveils nocturnes frequents peuvent impacter ta recuperation, evite les ecrans avant le coucher');
+    if (profile.sport_pratique) adviceParts.push('continue ta pratique de ' + profile.sport_pratique + ', la regularite est la cle des resultats');
     if (!adviceParts.length && objectifs.indexOf('rester en forme') === -1) adviceParts.push('continue comme ca, tes indicateurs sont dans de bonnes tendances');
     var adviceWrap = document.getElementById('summaryAdviceWrap');
     if (adviceParts.length) {
-      adviceWrap.style.display = 'flex';
-      var txt = adviceParts[0];
-      txt = txt.charAt(0).toUpperCase() + txt.slice(1) + '.';
-      document.getElementById('summaryAdviceText').textContent = txt;
+      adviceWrap.style.display = 'block';
+      document.getElementById('summaryAdviceText').innerHTML = adviceParts.map(function(p) {
+        var t = p.charAt(0).toUpperCase() + p.slice(1) + '.';
+        return '<div style="display:flex;gap:8px;margin-bottom:8px"><span style="color:#FF9A3C;flex-shrink:0">&#8226;</span><span>' + t + '</span></div>';
+      }).join('');
     } else {
       adviceWrap.style.display = 'none';
     }
@@ -4356,14 +4377,21 @@ function switchLang(lang) {
             <div style="font-size:0.68rem;color:#999;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:10px;font-weight:700">Mes indicateurs</div>
             <div id="summaryMetricsGrid" style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px"></div>
 
-            <div id="summaryAdviceWrap" style="display:none;background:linear-gradient(135deg,#FFF8E8,#FFF0EC);border-radius:14px;padding:14px 16px;display:flex;gap:12px;align-items:flex-start">
-              <div style="width:32px;height:32px;border-radius:10px;background:linear-gradient(135deg,#FFB347,#FF6B6B);display:flex;align-items:center;justify-content:center;flex-shrink:0">
-                <i class="ti ti-bulb" style="font-size:16px;color:#fff"></i>
+            <div id="summaryCountdownWrap" style="display:none;background:linear-gradient(135deg,#FF6B6B,#FF9A3C);border-radius:16px;padding:18px;margin-bottom:14px;text-align:center;position:relative;overflow:hidden">
+              <div style="position:absolute;top:-30px;right:-20px;width:110px;height:110px;background:radial-gradient(circle,rgba(255,255,255,0.18),transparent 70%);pointer-events:none"></div>
+              <div id="summaryCountdownDays" style="font-size:2.4rem;font-weight:800;color:#fff;line-height:1;position:relative;z-index:1">--</div>
+              <div style="font-size:0.72rem;color:rgba(255,255,255,0.9);font-weight:700;text-transform:uppercase;letter-spacing:0.04em;margin-top:2px;position:relative;z-index:1">jours restants</div>
+              <div id="summaryCountdownMsg" style="font-size:0.82rem;color:#fff;font-weight:600;margin-top:8px;position:relative;z-index:1"></div>
+            </div>
+
+            <div id="summaryAdviceWrap" style="display:none;background:linear-gradient(135deg,#FFF8E8,#FFF0EC);border-radius:14px;padding:16px">
+              <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">
+                <div style="width:32px;height:32px;border-radius:10px;background:linear-gradient(135deg,#FFB347,#FF6B6B);display:flex;align-items:center;justify-content:center;flex-shrink:0">
+                  <i class="ti ti-bulb" style="font-size:16px;color:#fff"></i>
+                </div>
+                <div style="font-size:0.72rem;font-weight:700;color:#D4730A;text-transform:uppercase;letter-spacing:0.04em">Conseils de Mirella</div>
               </div>
-              <div style="flex:1;min-width:0">
-                <div style="font-size:0.68rem;font-weight:700;color:#D4730A;text-transform:uppercase;letter-spacing:0.04em;margin-bottom:3px">Conseil de Mirella</div>
-                <div id="summaryAdviceText" style="font-size:0.82rem;color:#555;line-height:1.5"></div>
-              </div>
+              <div id="summaryAdviceText" style="font-size:0.84rem;color:#555;line-height:1.6"></div>
             </div>
           </div>
         </div>
