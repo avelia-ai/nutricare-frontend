@@ -2973,6 +2973,8 @@ window.initHome = async function() {
     {x:61,y:25},{x:62,y:18},{x:63,y:10}
   ];
   var _pcWorldNames = ["Foret de l'Eveil","Vallee de l'Equilibre","Montagne de la Force","Sommet de l'Harmonie"];
+  var _pcForkCase = 6;
+  var _pcWorldByChemin = { A: "Vallee de l'Equilibre", B: 'Montagne de la Force' };
   function advanceParcoursIfNeeded(profile) {
     var todayStr = new Date().toISOString().split('T')[0];
     if (profile.parcours_derniere_action === todayStr) return profile;
@@ -2982,7 +2984,8 @@ window.initHome = async function() {
     var currentCase = profile.parcours_case || 0;
     var currentMonde = profile.parcours_monde || 1;
     currentCase += 1;
-    if (currentCase > 12) { currentCase = 0; currentMonde += 1; }
+    if (currentCase > 12) { currentCase = 0; currentMonde += 1; profile.parcours_chemin = null; }
+    if (currentCase === _pcForkCase) { profile.parcours_chemin = null; }
     profile.parcours_case = currentCase;
     profile.parcours_monde = currentMonde;
     profile.parcours_derniere_action = todayStr;
@@ -2993,11 +2996,28 @@ window.initHome = async function() {
         fetch(BACKEND_URL + '/api/profile', {
           method: 'PUT',
           headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
-          body: JSON.stringify({ parcours_case: currentCase, parcours_monde: currentMonde, parcours_derniere_action: todayStr })
+          body: JSON.stringify({ parcours_case: currentCase, parcours_monde: currentMonde, parcours_derniere_action: todayStr, parcours_chemin: profile.parcours_chemin || null })
         });
       }
     } catch(e) {}
     return profile;
+  }
+  function saveParcoursChoice(choice) {
+    var profile = JSON.parse(localStorage.getItem('nutricare_profile') || '{}');
+    profile.parcours_chemin = choice;
+    localStorage.setItem('nutricare_profile', JSON.stringify(profile));
+    try {
+      var token = authToken || window._authToken || localStorage.getItem('nutricare_token');
+      if (token) {
+        fetch(BACKEND_URL + '/api/profile', {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
+          body: JSON.stringify({ parcours_chemin: choice })
+        });
+      }
+    } catch(e) {}
+    document.getElementById('parcoursForkModal').style.display = 'none';
+    renderParcours(profile);
   }
   function renderParcours(profile) {
     var card = document.getElementById('parcoursCard');
@@ -3007,6 +3027,9 @@ window.initHome = async function() {
     profile = advanceParcoursIfNeeded(profile);
     var caseIdx = Math.min(profile.parcours_case || 0, 12);
     var mondeIdx = (profile.parcours_monde || 1) - 1;
+    if (caseIdx >= _pcForkCase && !profile.parcours_chemin) {
+      document.getElementById('parcoursForkModal').style.display = 'flex';
+    }
     var pt = _pcWaypoints[caseIdx];
     var foxEl = document.getElementById('pcFoxWrap');
     foxEl.style.left = pt.x + '%';
@@ -3032,16 +3055,20 @@ window.initHome = async function() {
     document.getElementById('pcPercent').textContent = pct + '%';
     document.getElementById('pcProgressBar').style.width = pct + '%';
     var msgEl = document.getElementById('pcMessage');
+    var nextWorldName = (profile.parcours_chemin && _pcWorldByChemin[profile.parcours_chemin]) ? _pcWorldByChemin[profile.parcours_chemin] : _pcWorldNames[(mondeIdx + 1) % _pcWorldNames.length];
     if (caseIdx >= 12) {
       msgEl.textContent = 'Nouveau monde debloque ! Continue ton parcours.';
+    } else if (caseIdx < _pcForkCase) {
+      var casesToFork = _pcForkCase - caseIdx;
+      msgEl.textContent = 'Bifurcation dans ' + casesToFork + ' case' + (casesToFork > 1 ? 's' : '') + ' \u00b7 tu devras choisir ta direction';
     } else {
       var nextChest = [4, 8].find(function(ci) { return ci > caseIdx; });
       var casesToChest = nextChest ? nextChest - caseIdx : null;
       var casesToWorld = 12 - caseIdx;
       if (nextChest) {
-        msgEl.textContent = 'Prochain coffre dans ' + casesToChest + ' case' + (casesToChest > 1 ? 's' : '') + ' \u00b7 encore ' + casesToWorld + ' cases avant ' + _pcWorldNames[(mondeIdx + 1) % _pcWorldNames.length];
+        msgEl.textContent = 'Prochain coffre dans ' + casesToChest + ' case' + (casesToChest > 1 ? 's' : '') + ' \u00b7 encore ' + casesToWorld + ' cases avant ' + nextWorldName;
       } else {
-        msgEl.textContent = 'Encore ' + casesToWorld + ' case' + (casesToWorld > 1 ? 's' : '') + ' avant ' + _pcWorldNames[(mondeIdx + 1) % _pcWorldNames.length];
+        msgEl.textContent = 'Encore ' + casesToWorld + ' case' + (casesToWorld > 1 ? 's' : '') + ' avant ' + nextWorldName;
       }
     }
   }
@@ -4521,6 +4548,34 @@ function switchLang(lang) {
         </style>
 
         <!-- Popup Modifier mon profil -->
+        <!-- Popup bifurcation du parcours -->
+        <div id="parcoursForkModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.65);z-index:99999;align-items:center;justify-content:center;padding:20px">
+          <div style="background:linear-gradient(180deg,#fff,#FFFCFA);border-radius:24px;padding:24px 20px;width:100%;max-width:340px;text-align:center">
+            <div style="font-size:1.05rem;font-weight:800;color:#1a1a1a;margin-bottom:6px">Le chemin se divise !</div>
+            <div style="font-size:0.82rem;color:#888;margin-bottom:20px;line-height:1.4">Quelle direction veux-tu prendre ?</div>
+            <div style="display:flex;flex-direction:column;gap:10px">
+              <div onclick="saveParcoursChoice('A')" style="border-radius:16px;padding:1.5px;background:linear-gradient(135deg,#7EC8E3,#A8D8E8);cursor:pointer">
+                <div style="background:#fff;border-radius:14.5px;padding:14px;display:flex;align-items:center;gap:12px">
+                  <div style="width:38px;height:38px;border-radius:11px;background:linear-gradient(135deg,#7EC8E3,#A8D8E8);display:flex;align-items:center;justify-content:center;flex-shrink:0"><i class="ti ti-droplet" style="font-size:18px;color:#fff"></i></div>
+                  <div style="text-align:left">
+                    <div style="font-size:0.85rem;font-weight:700;color:#2D2D2D">Vallee de l'Equilibre</div>
+                    <div style="font-size:0.7rem;color:#999">Chemin de gauche</div>
+                  </div>
+                </div>
+              </div>
+              <div onclick="saveParcoursChoice('B')" style="border-radius:16px;padding:1.5px;background:linear-gradient(135deg,#FF9A3C,#FF6B6B);cursor:pointer">
+                <div style="background:#fff;border-radius:14.5px;padding:14px;display:flex;align-items:center;gap:12px">
+                  <div style="width:38px;height:38px;border-radius:11px;background:linear-gradient(135deg,#FF9A3C,#FF6B6B);display:flex;align-items:center;justify-content:center;flex-shrink:0"><i class="ti ti-mountain" style="font-size:18px;color:#fff"></i></div>
+                  <div style="text-align:left">
+                    <div style="font-size:0.85rem;font-weight:700;color:#2D2D2D">Montagne de la Force</div>
+                    <div style="font-size:0.7rem;color:#999">Chemin de droite</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
         <div id="editGoalsModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.65);z-index:99999;align-items:flex-end;justify-content:center">
           <div style="background:linear-gradient(180deg,#fff,#FFFCFA);border-radius:28px 28px 0 0;padding:0;width:100%;max-width:600px;max-height:min(85vh,85dvh);display:flex;flex-direction:column">
             <div style="width:40px;height:4px;background:#eee;border-radius:4px;margin:12px auto 0;flex-shrink:0"></div>
