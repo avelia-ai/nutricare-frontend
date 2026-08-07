@@ -3059,15 +3059,24 @@ window.initHome = async function() {
     overlay.appendChild(vid);
     document.body.appendChild(overlay);
     var done = false;
+    var safetyTimer = null;
     function finish() {
       if (done) return;
       done = true;
+      if (safetyTimer) clearTimeout(safetyTimer);
       overlay.remove();
       if (onEnd) onEnd();
     }
+    function armSafetyTimer(seconds) {
+      if (safetyTimer) clearTimeout(safetyTimer);
+      safetyTimer = setTimeout(finish, (seconds + 3) * 1000);
+    }
+    vid.addEventListener('loadedmetadata', function() {
+      if (vid.duration && isFinite(vid.duration)) { armSafetyTimer(vid.duration); }
+    });
     vid.addEventListener('ended', finish);
     vid.addEventListener('error', finish);
-    setTimeout(finish, 20000);
+    armSafetyTimer(20);
   }
   function pcPlaySequence(urls, onEnd) {
     var i = 0;
