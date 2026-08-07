@@ -3078,6 +3078,33 @@ window.initHome = async function() {
     vid.addEventListener('error', finish);
     armSafetyTimer(20);
   }
+  function pcRunUrlDebugTriggers() {
+    try {
+      var params = new URLSearchParams(window.location.search);
+      if (params.get('pc_debug_fork') === '1') {
+        var p = JSON.parse(localStorage.getItem('nutricare_profile') || '{}');
+        p.parcours_case = 6;
+        p.parcours_derniere_action = null;
+        p.parcours_chemin = null;
+        localStorage.setItem('nutricare_profile', JSON.stringify(p));
+        var monde = p.parcours_monde || 1;
+        localStorage.removeItem('mirella_pc_seen_fork_monde' + monde);
+        var cleanUrl = window.location.pathname;
+        window.history.replaceState({}, '', cleanUrl);
+      }
+      if (params.get('pc_debug_start') === '1') {
+        var p2 = JSON.parse(localStorage.getItem('nutricare_profile') || '{}');
+        p2.parcours_case = 0;
+        p2.parcours_derniere_action = null;
+        localStorage.setItem('nutricare_profile', JSON.stringify(p2));
+        var monde2 = p2.parcours_monde || 1;
+        localStorage.removeItem('mirella_pc_seen_intro_monde' + monde2);
+        var cleanUrl2 = window.location.pathname;
+        window.history.replaceState({}, '', cleanUrl2);
+      }
+    } catch(e) {}
+  }
+  pcRunUrlDebugTriggers();
   function pcPlaySequence(urls, onEnd) {
     var i = 0;
     function next() {
