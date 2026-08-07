@@ -3213,6 +3213,19 @@ window.initHome = async function() {
     var caseIdx = Math.min(profile.parcours_case || 0, 12);
     var mondeIdx = (profile.parcours_monde || 1) - 1;
     var mondeNum = mondeIdx + 1;
+    var _pcMapVideos = {
+      default: PC_VIDEO_BASE + 'map_foret_fork_light.mp4',
+      A: PC_VIDEO_BASE + 'map_foret_fork_light.mp4',
+      B: PC_VIDEO_BASE + 'map_montagne_force.mp4'
+    };
+    var desiredMapUrl = (profile.parcours_chemin && _pcMapVideos[profile.parcours_chemin]) ? _pcMapVideos[profile.parcours_chemin] : _pcMapVideos.default;
+    var mapVideoEl = document.getElementById('pcMapVideo');
+    var mapSourceEl = document.getElementById('pcMapVideoSource');
+    if (mapVideoEl && mapSourceEl && mapSourceEl.src !== desiredMapUrl) {
+      mapSourceEl.src = desiredMapUrl;
+      mapVideoEl.load();
+      mapVideoEl.play().catch(function(){});
+    }
     var startOverlayEl = document.getElementById('pcStartOverlay');
     if (startOverlayEl) {
       startOverlayEl.style.display = (caseIdx === 0 && localStorage.getItem(pcSeenKey('intro', mondeNum)) !== '1') ? 'flex' : 'none';
@@ -4735,8 +4748,8 @@ function switchLang(lang) {
           </div>
           <div style="position:relative;overflow:hidden">
             <div style="width:100%;aspect-ratio:2/3;overflow:hidden;position:relative">
-              <video autoplay muted loop playsinline style="width:100%;height:100%;object-fit:cover;display:block">
-                <source src="https://raw.githubusercontent.com/avelia-ai/nutricare-frontend/main/map_foret_fork_light.mp4" type="video/mp4">
+              <video id="pcMapVideo" autoplay muted loop playsinline style="width:100%;height:100%;object-fit:cover;display:block">
+                <source id="pcMapVideoSource" src="https://raw.githubusercontent.com/avelia-ai/nutricare-frontend/main/map_foret_fork_light.mp4" type="video/mp4">
               </video>
               <div id="pcCheckpoints" style="position:absolute;inset:0;pointer-events:none"></div>
               <div id="pcFoxWrap" style="position:absolute;left:42%;top:96%;width:13%;aspect-ratio:1/1;transform:translate(-50%,-50%);pointer-events:none">
