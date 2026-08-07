@@ -3037,6 +3037,46 @@ window.initHome = async function() {
   window.pcMarkScore = function(score) {
     localStorage.setItem('mirella_pc_score_' + pcTodayStr(), String(score));
   };
+  var PC_VIDEO_BASE = 'https://raw.githubusercontent.com/avelia-ai/nutricare-frontend/main/';
+  var _pcVideoMap = {
+    intro: function(m) { return PC_VIDEO_BASE + 'pc_intro_monde' + m + '.mp4'; },
+    fork: function(m) { return PC_VIDEO_BASE + 'pc_fork_arrival_monde' + m + '.mp4'; },
+    choiceA: function(m) { return PC_VIDEO_BASE + 'pc_choice_a_monde' + m + '.mp4'; },
+    choiceB: function(m) { return PC_VIDEO_BASE + 'pc_choice_b_monde' + m + '.mp4'; },
+    fin: function(m) { return PC_VIDEO_BASE + 'pc_fin_monde' + m + '.mp4'; }
+  };
+  function pcSeenKey(kind, monde) { return 'mirella_pc_seen_' + kind + '_monde' + monde; }
+  function pcPlayVideo(url, onEnd) {
+    var overlay = document.createElement('div');
+    overlay.style.cssText = 'position:fixed;inset:0;background:#000;z-index:999999;display:flex;align-items:center;justify-content:center';
+    var vid = document.createElement('video');
+    vid.src = url;
+    vid.autoplay = true;
+    vid.muted = true;
+    vid.playsInline = true;
+    vid.setAttribute('playsinline', '');
+    vid.style.cssText = 'width:100%;height:100%;object-fit:cover';
+    overlay.appendChild(vid);
+    document.body.appendChild(overlay);
+    var done = false;
+    function finish() {
+      if (done) return;
+      done = true;
+      overlay.remove();
+      if (onEnd) onEnd();
+    }
+    vid.addEventListener('ended', finish);
+    vid.addEventListener('error', finish);
+    setTimeout(finish, 20000);
+  }
+  window.pcStartAdventure = function() {
+    var profile = JSON.parse(localStorage.getItem('nutricare_profile') || '{}');
+    var mondeNum = profile.parcours_monde || 1;
+    document.getElementById('pcStartOverlay').style.display = 'none';
+    pcPlayVideo(_pcVideoMap.intro(mondeNum), function() {
+      localStorage.setItem(pcSeenKey('intro', mondeNum), '1');
+    });
+  };
   window.pcGoToTodayAction = function() {
     var key = pcTodayActionKey();
     if (key === 'suivi' || key === 'score') {
@@ -3066,7 +3106,16 @@ window.initHome = async function() {
     var currentCase = profile.parcours_case || 0;
     var currentMonde = profile.parcours_monde || 1;
     currentCase += 1;
-    if (currentCase > 12) { currentCase = 0; currentMonde += 1; profile.parcours_chemin = null; }
+    if (currentCase > 12) {
+      var finishedMonde = currentMonde;
+      currentCase = 0;
+      currentMonde += 1;
+      profile.parcours_chemin = null;
+      if (localStorage.getItem(pcSeenKey('fin', finishedMonde)) !== '1') {
+        localStorage.setItem(pcSeenKey('fin', finishedMonde), '1');
+        setTimeout(function() { pcPlayVideo(_pcVideoMap.fin(finishedMonde)); }, 300);
+      }
+    }
     if (currentCase === _pcForkCase) { profile.parcours_chemin = null; }
     profile.parcours_case = currentCase;
     profile.parcours_monde = currentMonde;
@@ -3085,21 +3134,26 @@ window.initHome = async function() {
     return profile;
   }
   function saveParcoursChoice(choice) {
-    var profile = JSON.parse(localStorage.getItem('nutricare_profile') || '{}');
-    profile.parcours_chemin = choice;
-    localStorage.setItem('nutricare_profile', JSON.stringify(profile));
-    try {
-      var token = authToken || window._authToken || localStorage.getItem('nutricare_token');
-      if (token) {
-        fetch(BACKEND_URL + '/api/profile', {
-          method: 'PUT',
-          headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
-          body: JSON.stringify({ parcours_chemin: choice })
-        });
-      }
-    } catch(e) {}
     document.getElementById('parcoursForkModal').style.display = 'none';
-    renderParcours(profile);
+    var profileForVideo = JSON.parse(localStorage.getItem('nutricare_profile') || '{}');
+    var mondeNumForVideo = profileForVideo.parcours_monde || 1;
+    var videoUrl = choice === 'B' ? _pcVideoMap.choiceB(mondeNumForVideo) : _pcVideoMap.choiceA(mondeNumForVideo);
+    pcPlayVideo(videoUrl, function() {
+      var profile = JSON.parse(localStorage.getItem('nutricare_profile') || '{}');
+      profile.parcours_chemin = choice;
+      localStorage.setItem('nutricare_profile', JSON.stringify(profile));
+      try {
+        var token = authToken || window._authToken || localStorage.getItem('nutricare_token');
+        if (token) {
+          fetch(BACKEND_URL + '/api/profile', {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
+            body: JSON.stringify({ parcours_chemin: choice })
+          });
+        }
+      } catch(e) {}
+      renderParcours(profile);
+    });
   }
   function renderParcours(profile) {
     var card = document.getElementById('parcoursCard');
@@ -3109,8 +3163,20 @@ window.initHome = async function() {
     profile = advanceParcoursIfNeeded(profile);
     var caseIdx = Math.min(profile.parcours_case || 0, 12);
     var mondeIdx = (profile.parcours_monde || 1) - 1;
+    var mondeNum = mondeIdx + 1;
+    var startOverlayEl = document.getElementById('pcStartOverlay');
+    if (startOverlayEl) {
+      startOverlayEl.style.display = (caseIdx === 0 && localStorage.getItem(pcSeenKey('intro', mondeNum)) !== '1') ? 'flex' : 'none';
+    }
     if (caseIdx >= _pcForkCase && !profile.parcours_chemin) {
-      document.getElementById('parcoursForkModal').style.display = 'flex';
+      if (localStorage.getItem(pcSeenKey('fork', mondeNum)) === '1') {
+        document.getElementById('parcoursForkModal').style.display = 'flex';
+      } else {
+        localStorage.setItem(pcSeenKey('fork', mondeNum), '1');
+        pcPlayVideo(_pcVideoMap.fork(mondeNum), function() {
+          document.getElementById('parcoursForkModal').style.display = 'flex';
+        });
+      }
     }
     var _pcWaypointsActive = getPcWaypoints(profile);
     var pt = _pcWaypointsActive[caseIdx];
@@ -4634,6 +4700,9 @@ function switchLang(lang) {
               </div>
               <div id="pcCaseLabel" style="position:absolute;top:12px;right:12px;background:rgba(255,255,255,0.85);backdrop-filter:blur(6px);border-radius:16px;padding:7px 15px;font-size:13px;font-weight:800;color:#8A4A1E;box-shadow:0 2px 8px rgba(0,0,0,0.1)">0/12</div>
               <div id="pcWorldLabel" style="position:absolute;top:12px;left:12px;background:rgba(255,255,255,0.85);backdrop-filter:blur(6px);border-radius:16px;padding:7px 15px;font-size:13px;font-weight:800;color:#8A4A1E;box-shadow:0 2px 8px rgba(0,0,0,0.1)">La Foret de l'Eveil</div>
+              <div id="pcStartOverlay" style="display:none;position:absolute;inset:0;background:rgba(0,0,0,0.45);z-index:6;align-items:center;justify-content:center">
+                <button onclick="pcStartAdventure()" style="background:linear-gradient(135deg,#FFD166,#FF8A5B);border:none;color:#4A2A12;font-weight:800;font-size:0.95rem;padding:14px 30px;border-radius:30px;box-shadow:0 8px 20px rgba(0,0,0,0.3);cursor:pointer">▶ Commencer</button>
+              </div>
             </div>
           </div>
           <div style="background:linear-gradient(160deg,#2A1806,#4A2A12);padding:18px">
