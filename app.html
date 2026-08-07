@@ -3117,6 +3117,25 @@ window.initHome = async function() {
         var cleanUrlR = window.location.pathname;
         window.history.replaceState({}, '', cleanUrlR);
       }
+      if (params.get('pc_debug_montagne') === '1') {
+        var pM = JSON.parse(localStorage.getItem('nutricare_profile') || '{}');
+        pM.parcours_case = 7;
+        pM.parcours_derniere_action = null;
+        pM.parcours_chemin = 'B';
+        localStorage.setItem('nutricare_profile', JSON.stringify(pM));
+        try {
+          var tokM = authToken || window._authToken || localStorage.getItem('nutricare_token');
+          if (tokM) {
+            fetch(BACKEND_URL + '/api/profile', {
+              method: 'PUT',
+              headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + tokM },
+              body: JSON.stringify({ parcours_case: 7, parcours_chemin: 'B', parcours_derniere_action: null })
+            });
+          }
+        } catch(e) {}
+        var cleanUrlM = window.location.pathname;
+        window.history.replaceState({}, '', cleanUrlM);
+      }
       if (params.get('pc_debug_start') === '1') {
         var p2 = JSON.parse(localStorage.getItem('nutricare_profile') || '{}');
         p2.parcours_case = 0;
