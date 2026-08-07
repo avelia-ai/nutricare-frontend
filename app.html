@@ -3039,7 +3039,7 @@ window.initHome = async function() {
   };
   var PC_VIDEO_BASE = 'https://raw.githubusercontent.com/avelia-ai/nutricare-frontend/main/';
   var _pcVideoMap = {
-    intro: function(m) { return m === 1 ? (PC_VIDEO_BASE + 'pc_intro_monde1_lighter.mp4') : (PC_VIDEO_BASE + 'pc_intro_monde' + m + '.mp4'); },
+    intro: function(m) { return m === 1 ? [PC_VIDEO_BASE + 'pc_intro_monde1_lighter.mp4', PC_VIDEO_BASE + 'pc_intro_monde1_partie2.mp4'] : (PC_VIDEO_BASE + 'pc_intro_monde' + m + '.mp4'); },
     fork: function(m) { return PC_VIDEO_BASE + 'pc_fork_arrival_monde' + m + '.mp4'; },
     choiceA: function(m) { return PC_VIDEO_BASE + 'pc_choice_a_monde' + m + '.mp4'; },
     choiceB: function(m) { return PC_VIDEO_BASE + 'pc_choice_b_monde' + m + '.mp4'; },
@@ -3069,11 +3069,22 @@ window.initHome = async function() {
     vid.addEventListener('error', finish);
     setTimeout(finish, 20000);
   }
+  function pcPlaySequence(urls, onEnd) {
+    var i = 0;
+    function next() {
+      if (i >= urls.length) { if (onEnd) onEnd(); return; }
+      var url = urls[i++];
+      pcPlayVideo(url, next);
+    }
+    next();
+  }
   window.pcStartAdventure = function() {
     var profile = JSON.parse(localStorage.getItem('nutricare_profile') || '{}');
     var mondeNum = profile.parcours_monde || 1;
     document.getElementById('pcStartOverlay').style.display = 'none';
-    pcPlayVideo(_pcVideoMap.intro(mondeNum), function() {
+    var introVal = _pcVideoMap.intro(mondeNum);
+    var introUrls = Array.isArray(introVal) ? introVal : [introVal];
+    pcPlaySequence(introUrls, function() {
       localStorage.setItem(pcSeenKey('intro', mondeNum), '1');
     });
   };
