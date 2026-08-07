@@ -3042,7 +3042,7 @@ window.initHome = async function() {
     intro: function(m) { return m === 1 ? [PC_VIDEO_BASE + 'pc_intro_monde1_lighter.mp4', PC_VIDEO_BASE + 'pc_intro_monde1_partie2.mp4', PC_VIDEO_BASE + 'pc_intro_monde1_partie3.mp4', PC_VIDEO_BASE + 'pc_intro_monde1_partie4.mp4', PC_VIDEO_BASE + 'pc_intro_monde1_partie5.mp4'] : (PC_VIDEO_BASE + 'pc_intro_monde' + m + '.mp4'); },
     fork: function(m) { return PC_VIDEO_BASE + 'pc_fork_arrival_monde' + m + '.mp4'; },
     choiceA: function(m) { return PC_VIDEO_BASE + 'pc_choice_a_monde' + m + '.mp4'; },
-    choiceB: function(m) { return PC_VIDEO_BASE + 'pc_choice_b_monde' + m + '.mp4'; },
+    choiceB: function(m) { return m === 1 ? [PC_VIDEO_BASE + 'pc_choice_b_monde1.mp4', PC_VIDEO_BASE + 'pc_choice_b_monde1_partie2.mp4'] : (PC_VIDEO_BASE + 'pc_choice_b_monde' + m + '.mp4'); },
     fin: function(m) { return PC_VIDEO_BASE + 'pc_fin_monde' + m + '.mp4'; }
   };
   function pcSeenKey(kind, monde) { return 'mirella_pc_seen_' + kind + '_monde' + monde; }
@@ -3184,8 +3184,9 @@ window.initHome = async function() {
     document.getElementById('parcoursForkModal').style.display = 'none';
     var profileForVideo = JSON.parse(localStorage.getItem('nutricare_profile') || '{}');
     var mondeNumForVideo = profileForVideo.parcours_monde || 1;
-    var videoUrl = choice === 'B' ? _pcVideoMap.choiceB(mondeNumForVideo) : _pcVideoMap.choiceA(mondeNumForVideo);
-    pcPlayVideo(videoUrl, function() {
+    var videoVal = choice === 'B' ? _pcVideoMap.choiceB(mondeNumForVideo) : _pcVideoMap.choiceA(mondeNumForVideo);
+    var videoUrls = Array.isArray(videoVal) ? videoVal : [videoVal];
+    pcPlaySequence(videoUrls, function() {
       var profile = JSON.parse(localStorage.getItem('nutricare_profile') || '{}');
       profile.parcours_chemin = choice;
       localStorage.setItem('nutricare_profile', JSON.stringify(profile));
