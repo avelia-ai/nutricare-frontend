@@ -2975,7 +2975,7 @@ window.initHome = async function() {
     {x:42.7,y:44.3},{x:32.8,y:33.4},{x:43.8,y:31.1},{x:45.5,y:24.0},{x:39.0,y:16.9},{x:31.9,y:7.3}
   ];
   var _pcBranchB = [
-    {x:66.3,y:44.3},{x:70.0,y:33.4},{x:84.0,y:31.1},{x:86.7,y:24.0},{x:78.1,y:16.9},{x:68.6,y:7.3}
+    {x:62.7,y:54.0},{x:70.0,y:34.5},{x:75.8,y:30.0},{x:72.4,y:24.0},{x:68.0,y:17.0},{x:64.8,y:7.5}
   ];
   function getPcWaypoints(profile) {
     var branch = (profile && profile.parcours_chemin === 'B') ? _pcBranchB : _pcBranchA;
@@ -3218,7 +3218,7 @@ window.initHome = async function() {
       A: PC_VIDEO_BASE + 'map_foret_fork_light.mp4',
       B: PC_VIDEO_BASE + 'map_montagne_force.mp4'
     };
-    var desiredMapUrl = (profile.parcours_chemin && _pcMapVideos[profile.parcours_chemin]) ? _pcMapVideos[profile.parcours_chemin] : _pcMapVideos.default;
+    var desiredMapUrl = (caseIdx > _pcForkCase && profile.parcours_chemin && _pcMapVideos[profile.parcours_chemin]) ? _pcMapVideos[profile.parcours_chemin] : _pcMapVideos.default;
     var mapVideoEl = document.getElementById('pcMapVideo');
     var mapSourceEl = document.getElementById('pcMapVideoSource');
     if (mapVideoEl && mapSourceEl && mapSourceEl.src !== desiredMapUrl) {
