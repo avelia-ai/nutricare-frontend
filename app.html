@@ -3092,6 +3092,10 @@ window.initHome = async function() {
         var cleanUrl = window.location.pathname;
         window.history.replaceState({}, '', cleanUrl);
       }
+      if (params.get('pc_debug_info') === '1') {
+        var pInfo = JSON.parse(localStorage.getItem('nutricare_profile') || '{}');
+        alert('case=' + pInfo.parcours_case + ' | monde=' + pInfo.parcours_monde + ' | chemin=' + pInfo.parcours_chemin + ' | derniere_action=' + pInfo.parcours_derniere_action);
+      }
       if (params.get('pc_debug_start') === '1') {
         var p2 = JSON.parse(localStorage.getItem('nutricare_profile') || '{}');
         p2.parcours_case = 0;
