@@ -3289,11 +3289,13 @@ window.initHome = async function() {
     var mondeNum = mondeIdx + 1;
     var mondeTheme = mondeIdx === 0 ? null : profile.parcours_monde_theme;
     var isMountainWorld = (mondeTheme === "B");
+    var isForetEnergieWorld = (mondeTheme === "A");
     var _pcMapVideos = {
       default: PC_VIDEO_BASE + 'map_foret_fork_light.mp4',
+      A: PC_VIDEO_BASE + 'map_foret_energie.mp4',
       B: PC_VIDEO_BASE + 'map_montagne_force.mp4'
     };
-    var desiredMapUrl = isMountainWorld ? _pcMapVideos.B : _pcMapVideos.default;
+    var desiredMapUrl = isMountainWorld ? _pcMapVideos.B : (isForetEnergieWorld ? _pcMapVideos.A : _pcMapVideos.default);
     var mapVideoEl = document.getElementById('pcMapVideo');
     var mapSourceEl = document.getElementById('pcMapVideoSource');
     if (mapVideoEl && mapSourceEl && mapSourceEl.src !== desiredMapUrl) {
@@ -3316,6 +3318,7 @@ window.initHome = async function() {
       }
     }
     var _pcWaypointsActive = isMountainWorld ? getPcWaypointsMountain(profile) : getPcWaypoints(profile, caseIdx);
+    if (isForetEnergieWorld) { _pcWaypointsActive = getPcWaypoints(profile, caseIdx); }
     var pt = _pcWaypointsActive[caseIdx];
     var foxEl = document.getElementById('pcFoxWrap');
     foxEl.style.left = pt.x + '%';
