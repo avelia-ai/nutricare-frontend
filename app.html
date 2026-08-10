@@ -13743,7 +13743,7 @@ function renderHealthScoreDelta(elId, delta) {
   var el = document.getElementById(elId);
   if (!el) return;
   if (delta === null || delta === undefined) { el.style.display = 'none'; return; }
-  var txt = delta > 0 ? ('Bravo, +' + delta + ' points depuis hier !') : delta < 0 ? (delta + ' points depuis hier') : 'Meme score qu'hier';
+  var txt = delta > 0 ? ('Bravo, +' + delta + ' points depuis hier !') : delta < 0 ? (delta + ' points depuis hier') : 'Score identique a hier';
   el.textContent = txt;
   el.style.color = delta > 0 ? '#8BE28B' : (delta < 0 ? '#FF8A8A' : 'rgba(255,255,255,0.6)');
   el.style.display = 'block';
