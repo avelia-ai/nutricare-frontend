@@ -6931,8 +6931,17 @@ function switchLang(lang) {
       </div>
     </div>
     <div id="healthScoreGoalWrap" style="display:none;margin-top:16px;padding-top:16px;border-top:1px solid rgba(255,255,255,0.08);position:relative;z-index:1">
-      <div style="font-size:0.66rem;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:rgba(255,255,255,0.45);margin-bottom:6px">Objectif demain</div>
-      <div id="healthScoreGoalText" style="font-size:0.8rem;color:#F5E6D8;line-height:1.5"></div>
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">
+        <div style="width:34px;height:34px;border-radius:11px;background:linear-gradient(135deg,#FFD166,#FF8A5B);display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:0 4px 10px rgba(255,154,60,0.35)">
+          <i class="ti ti-target-arrow" style="font-size:17px;color:#fff"></i>
+        </div>
+        <div style="flex:1;min-width:0">
+          <div style="font-size:0.62rem;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:rgba(255,255,255,0.45)">Objectif demain</div>
+          <div id="healthScoreGoalTarget" style="font-size:0.95rem;font-weight:800;color:#fff">Score 80</div>
+        </div>
+        <div id="healthScoreGoalBadge" style="font-size:0.72rem;font-weight:800;color:#1B1B2F;background:linear-gradient(135deg,#FFD166,#FFB347);padding:5px 12px;border-radius:20px;flex-shrink:0"></div>
+      </div>
+      <div id="healthScoreGoalChips" style="display:flex;flex-wrap:wrap;gap:7px"></div>
     </div>
   </div>
   <!-- RITUELS BIEN-ETRE -->
@@ -13729,15 +13738,13 @@ function computeLogScore(log) {
 function getHealthGoalTips(log) {
   var norm = normalizeHealthLog(log);
   var pillars = [
-    {val: norm.sleep, tip: "dors au moins 8h cette nuit"},
-    {val: norm.hydra, tip: "bois au moins 2L d'eau"},
-    {val: norm.activ, tip: "bouge au moins 30 min"},
-    {val: norm.calm, tip: "prends un moment pour te detendre et reduire ton stress"}
+    {val: norm.sleep, icon: "😴", tip: "Dors au moins 8h"},
+    {val: norm.hydra, icon: "💧", tip: "Bois au moins 2L d'eau"},
+    {val: norm.activ, icon: "🏃", tip: "Bouge au moins 30 min"},
+    {val: norm.calm, icon: "🧘", tip: "Prends un moment pour te detendre"}
   ];
   pillars.sort(function(a,b) { return a.val - b.val; });
-  var weakest = pillars.slice(0,2).filter(function(p) { return p.val < 0.8; });
-  if (weakest.length === 0) return "Continue comme ca, tu es sur la bonne voie !";
-  return "Pour l'atteindre : " + weakest.map(function(p){return p.tip;}).join(' et ') + '.';
+  return pillars.slice(0,2).filter(function(p) { return p.val < 0.8; });
 }
 function renderHealthScoreDelta(elId, delta) {
   var el = document.getElementById(elId);
@@ -14766,13 +14773,27 @@ function updateHealthScoreSummary(log, scoreDelta) {
   if (barActiv) barActiv.textContent = Math.round(norm.activ * 100) + '%';
   if (barStress) barStress.textContent = Math.round(norm.stress * 100) + '%';
   renderHealthScoreDelta('healthScoreDelta', scoreDelta);
-  if (goalWrap && goalText) {
+  if (goalWrap) {
     if (score >= 80) {
       goalWrap.style.display = 'none';
     } else {
       goalWrap.style.display = 'block';
       var need = 80 - score;
-      goalText.textContent = 'Score vise : 80 (+' + need + ' points). ' + getHealthGoalTips(log);
+      var goalTargetEl = document.getElementById('healthScoreGoalTarget');
+      var goalBadgeEl = document.getElementById('healthScoreGoalBadge');
+      var goalChipsEl = document.getElementById('healthScoreGoalChips');
+      if (goalTargetEl) goalTargetEl.textContent = 'Score 80';
+      if (goalBadgeEl) goalBadgeEl.textContent = '+' + need + ' pts';
+      if (goalChipsEl) {
+        var tips = getHealthGoalTips(log);
+        if (tips.length === 0) {
+          goalChipsEl.innerHTML = '<div style="display:flex;align-items:center;gap:6px;background:rgba(139,226,139,0.12);border:1px solid rgba(139,226,139,0.3);border-radius:20px;padding:7px 13px;font-size:0.78rem;color:#8BE28B;font-weight:600">🌟 Continue comme ca, tu es sur la bonne voie !</div>';
+        } else {
+          goalChipsEl.innerHTML = tips.map(function(t) {
+            return '<div style="display:flex;align-items:center;gap:6px;background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.12);border-radius:20px;padding:7px 13px;font-size:0.78rem;color:#F5E6D8;font-weight:600"><span style="font-size:0.95rem">' + t.icon + '</span>' + t.tip + '</div>';
+          }).join('');
+        }
+      }
     }
   }
 }
