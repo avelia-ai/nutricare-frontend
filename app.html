@@ -2983,6 +2983,7 @@ window.initHome = async function() {
   var _pcWaypointsMountain = [
     {x:41.5,y:99.0},{x:41.6,y:98.0},{x:42.0,y:92.0},{x:42.7,y:86.0},{x:38.2,y:76.0},{x:46.5,y:71.0},{x:50.1,y:65.0}
   ];
+  var _pcWaypointsMountainFull = _pcWaypointsMountain.concat(_pcBranchBMountain);
   function getPcWaypoints(profile, caseIdxForBg) {
     var onMountainBg = (profile && profile.parcours_chemin === "B" && caseIdxForBg > _pcForkCase);
     var branch = (profile && profile.parcours_chemin === "B") ? (onMountainBg ? _pcBranchBMountain : _pcBranchB) : _pcBranchA;
@@ -3222,6 +3223,7 @@ window.initHome = async function() {
       var finishedMonde = currentMonde;
       currentCase = 0;
       currentMonde += 1;
+      profile.parcours_monde_theme = profile.parcours_chemin || null;
       profile.parcours_chemin = null;
       if (localStorage.getItem(pcSeenKey('fin', finishedMonde)) !== '1') {
         localStorage.setItem(pcSeenKey('fin', finishedMonde), '1');
@@ -3239,7 +3241,7 @@ window.initHome = async function() {
         fetch(BACKEND_URL + '/api/profile', {
           method: 'PUT',
           headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
-          body: JSON.stringify({ parcours_case: currentCase, parcours_monde: currentMonde, parcours_derniere_action: todayStr, parcours_chemin: profile.parcours_chemin || null })
+          body: JSON.stringify({ parcours_case: currentCase, parcours_monde: currentMonde, parcours_derniere_action: todayStr, parcours_chemin: profile.parcours_chemin || null, parcours_monde_theme: profile.parcours_monde_theme || null })
         });
       }
     } catch(e) {}
@@ -3278,12 +3280,13 @@ window.initHome = async function() {
     var caseIdx = Math.min(profile.parcours_case || 0, 12);
     var mondeIdx = (profile.parcours_monde || 1) - 1;
     var mondeNum = mondeIdx + 1;
+    var mondeTheme = mondeIdx === 0 ? null : profile.parcours_monde_theme;
+    var isMountainWorld = (mondeTheme === "B");
     var _pcMapVideos = {
       default: PC_VIDEO_BASE + 'map_foret_fork_light.mp4',
-      A: PC_VIDEO_BASE + 'map_foret_fork_light.mp4',
       B: PC_VIDEO_BASE + 'map_montagne_force.mp4'
     };
-    var desiredMapUrl = (caseIdx > _pcForkCase && profile.parcours_chemin && _pcMapVideos[profile.parcours_chemin]) ? _pcMapVideos[profile.parcours_chemin] : _pcMapVideos.default;
+    var desiredMapUrl = isMountainWorld ? _pcMapVideos.B : _pcMapVideos.default;
     var mapVideoEl = document.getElementById('pcMapVideo');
     var mapSourceEl = document.getElementById('pcMapVideoSource');
     if (mapVideoEl && mapSourceEl && mapSourceEl.src !== desiredMapUrl) {
@@ -3305,13 +3308,14 @@ window.initHome = async function() {
         });
       }
     }
-    var _pcWaypointsActive = getPcWaypoints(profile, caseIdx);
+    var _pcWaypointsActive = isMountainWorld ? _pcWaypointsMountainFull : getPcWaypoints(profile, caseIdx);
     var pt = _pcWaypointsActive[caseIdx];
     var foxEl = document.getElementById('pcFoxWrap');
     foxEl.style.left = pt.x + '%';
     foxEl.style.top = pt.y + '%';
     document.getElementById('pcCaseLabel').textContent = caseIdx + '/12';
-    document.getElementById('pcWorldLabel').textContent = _pcWorldNames[mondeIdx % _pcWorldNames.length];
+    var worldLabelText = mondeIdx === 0 ? "Foret de l'Eveil" : ((mondeTheme && _pcWorldByChemin[mondeTheme]) ? _pcWorldByChemin[mondeTheme] : _pcWorldNames[mondeIdx % _pcWorldNames.length]);
+    document.getElementById('pcWorldLabel').textContent = worldLabelText;
     var checkpointsEl = document.getElementById('pcCheckpoints');
     var html = '';
     function pcDot(p, done) {
@@ -3323,25 +3327,34 @@ window.initHome = async function() {
     function pcDoor(p) {
       return '<div style="position:absolute;left:' + p.x + '%;top:' + p.y + '%;transform:translate(-50%,-50%);width:34px;height:34px;border-radius:50%;border:2.2px dashed #fff;display:flex;align-items:center;justify-content:center;font-size:15px;opacity:0.9">\u{1F6AA}</div>';
     }
-    // Tronc commun (cases 1-6, partage par les deux branches)
-    var _pcOnMountainNow = (profile.parcours_chemin === "B" && caseIdx > _pcForkCase);
-    var _pcTrunkActive = _pcOnMountainNow ? _pcWaypointsMountain : _pcWaypoints;
-    _pcTrunkActive.forEach(function(p, ci) {
-      if (ci === 0 || ci === 4) return;
-      html += pcDot(p, caseIdx >= ci);
-    });
-    html += pcTreasure(_pcTrunkActive[4], caseIdx >= 4);
-    // Cases 7-12 : si choix pas encore fait, on affiche LES DEUX branches (previsualisation de la bifurcation)
-    var branchesToShow = profile.parcours_chemin ? [(profile.parcours_chemin === "B" ? (_pcOnMountainNow ? _pcBranchBMountain : _pcBranchB) : _pcBranchA)] : [_pcBranchA, _pcBranchB];
-    branchesToShow.forEach(function(branchPts) {
-      branchPts.forEach(function(p, bi) {
-        var ci = bi + 7;
-        if (ci === 8 || ci === 12) return;
+    if (isMountainWorld) {
+      // Monde montagne : un seul tracé complet de 12 cases, pas de bifurcation visuelle
+      _pcWaypointsMountainFull.forEach(function(p, ci) {
+        if (ci === 0 || ci === 4 || ci === 8 || ci === 12) return;
         html += pcDot(p, caseIdx >= ci);
       });
-      html += pcTreasure(branchPts[1], caseIdx >= 8); // ci=8
-      html += pcDoor(branchPts[5]); // ci=12
-    });
+      html += pcTreasure(_pcWaypointsMountainFull[4], caseIdx >= 4);
+      html += pcTreasure(_pcWaypointsMountainFull[8], caseIdx >= 8);
+      html += pcDoor(_pcWaypointsMountainFull[12]);
+    } else {
+      // Tronc commun (cases 1-6, partage par les deux branches, decor foret)
+      _pcWaypoints.forEach(function(p, ci) {
+        if (ci === 0 || ci === 4) return;
+        html += pcDot(p, caseIdx >= ci);
+      });
+      html += pcTreasure(_pcWaypoints[4], caseIdx >= 4);
+      // Cases 7-12 : si choix pas encore fait, on affiche LES DEUX branches (previsualisation de la bifurcation), toujours sur le decor foret
+      var branchesToShow = profile.parcours_chemin ? [(profile.parcours_chemin === "B" ? _pcBranchB : _pcBranchA)] : [_pcBranchA, _pcBranchB];
+      branchesToShow.forEach(function(branchPts) {
+        branchPts.forEach(function(p, bi) {
+          var ci = bi + 7;
+          if (ci === 8 || ci === 12) return;
+          html += pcDot(p, caseIdx >= ci);
+        });
+        html += pcTreasure(branchPts[1], caseIdx >= 8); // ci=8
+        html += pcDoor(branchPts[5]); // ci=12
+      });
+    }
     checkpointsEl.innerHTML = html;
     var pct = Math.round((caseIdx / 12) * 100);
     document.getElementById('pcPercent').textContent = pct + '%';
