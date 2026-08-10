@@ -4720,6 +4720,7 @@ function switchLang(lang) {
             <div style="flex:1;min-width:0">
               <div style="font-size:0.66rem;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:rgba(255,255,255,0.45);margin-bottom:5px">Score de sante</div>
               <div id="healthScoreSummaryLabelHome" style="font-size:1.05rem;font-weight:700;color:#fff;margin-bottom:4px">Remplissez vos indicateurs</div>
+              <div id="healthScoreDeltaHome" style="display:none;font-size:0.76rem;font-weight:700;margin-bottom:4px"></div>
               <div style="font-size:0.74rem;color:rgba(255,255,255,0.55);display:flex;align-items:center;gap:4px">Voir le detail dans Suivi <i class="ti ti-chevron-right" style="font-size:13px"></i></div>
             </div>
           </div>
@@ -6889,6 +6890,7 @@ function switchLang(lang) {
       <div style="flex:1;min-width:0">
         <div style="font-size:0.66rem;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:rgba(255,255,255,0.45);margin-bottom:5px">Score de sante</div>
         <div id="healthScoreSummaryLabel" style="font-size:1.05rem;font-weight:700;color:#fff">Remplissez vos indicateurs</div>
+        <div id="healthScoreDelta" style="display:none;font-size:0.8rem;font-weight:700;margin-top:3px"></div>
       </div>
     </div>
     <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:6px;position:relative;z-index:1;border-top:1px solid rgba(255,255,255,0.08);padding-top:16px">
@@ -6927,6 +6929,10 @@ function switchLang(lang) {
         <div id="healthScoreBarStress" style="font-size:0.68rem;font-weight:700;color:#fff">--</div>
         <div style="font-size:0.56rem;color:rgba(255,255,255,0.4);margin-top:1px">Stress</div>
       </div>
+    </div>
+    <div id="healthScoreGoalWrap" style="display:none;margin-top:16px;padding-top:16px;border-top:1px solid rgba(255,255,255,0.08);position:relative;z-index:1">
+      <div style="font-size:0.66rem;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:rgba(255,255,255,0.45);margin-bottom:6px">Objectif demain</div>
+      <div id="healthScoreGoalText" style="font-size:0.8rem;color:#F5E6D8;line-height:1.5"></div>
     </div>
   </div>
   <!-- RITUELS BIEN-ETRE -->
@@ -13713,6 +13719,35 @@ function normalizeHealthLog(log) {
   const stress = log.stress_level != null ? Math.min(log.stress_level / 10, 1) : 0;
   return { sleep, hydra, activ, calm, stress };
 }
+function computeLogScore(log) {
+  if (!log) return null;
+  var energyNorm = (log.energy_level != null) ? Math.min(log.energy_level / 10, 1) : 0;
+  var norm = normalizeHealthLog(log);
+  var avg = (energyNorm + norm.sleep + norm.hydra + norm.activ + norm.calm) / 5;
+  return Math.round(avg * 100);
+}
+function getHealthGoalTips(log) {
+  var norm = normalizeHealthLog(log);
+  var pillars = [
+    {val: norm.sleep, tip: "dors au moins 8h cette nuit"},
+    {val: norm.hydra, tip: "bois au moins 2L d'eau"},
+    {val: norm.activ, tip: "bouge au moins 30 min"},
+    {val: norm.calm, tip: "prends un moment pour te detendre et reduire ton stress"}
+  ];
+  pillars.sort(function(a,b) { return a.val - b.val; });
+  var weakest = pillars.slice(0,2).filter(function(p) { return p.val < 0.8; });
+  if (weakest.length === 0) return "Continue comme ca, tu es sur la bonne voie !";
+  return "Pour l'atteindre : " + weakest.map(function(p){return p.tip;}).join(' et ') + '.';
+}
+function renderHealthScoreDelta(elId, delta) {
+  var el = document.getElementById(elId);
+  if (!el) return;
+  if (delta === null || delta === undefined) { el.style.display = 'none'; return; }
+  var txt = delta > 0 ? ('Bravo, +' + delta + ' points depuis hier !') : delta < 0 ? (delta + ' points depuis hier') : 'Meme score qu'hier';
+  el.textContent = txt;
+  el.style.color = delta > 0 ? '#8BE28B' : (delta < 0 ? '#FF8A8A' : 'rgba(255,255,255,0.6)');
+  el.style.display = 'block';
+}
 
 function calcDayPoints(log, prevLogExists) {
   const { sleep, hydra, activ, calm } = normalizeHealthLog(log);
@@ -14483,7 +14518,7 @@ function loadLeaderboard(page) {
   });
 }
 
-function updateHealthScoreSummaryHome(log) {
+function updateHealthScoreSummaryHome(log, scoreDelta) {
   var valEl = document.getElementById('healthScoreSummaryValueHome');
   var ringEl = document.getElementById('healthScoreSummaryRingHome');
   var lblEl = document.getElementById('healthScoreSummaryLabelHome');
@@ -14497,6 +14532,7 @@ function updateHealthScoreSummaryHome(log) {
       var e = document.getElementById('healthScoreBar' + k + 'Home');
       if (e) e.textContent = '--';
     });
+    renderHealthScoreDelta('healthScoreDeltaHome', null);
     return;
   }
   var energyNorm = (log.energy_level != null) ? Math.min(log.energy_level / 10, 1) : 0;
@@ -14517,6 +14553,7 @@ function updateHealthScoreSummaryHome(log) {
   if (barHydra) barHydra.textContent = Math.round(norm.hydra * 100) + '%';
   if (barActiv) barActiv.textContent = Math.round(norm.activ * 100) + '%';
   if (barStress) barStress.textContent = Math.round(norm.stress * 100) + '%';
+  renderHealthScoreDelta('healthScoreDeltaHome', scoreDelta);
 }
 function getWeekRange(offsetWeeks) {
   var now = new Date();
@@ -14690,12 +14727,14 @@ function renderWeeklyReport() {
     sportsWrapEl.style.display = 'none';
   }
 }
-function updateHealthScoreSummary(log) {
+function updateHealthScoreSummary(log, scoreDelta) {
   var valEl = document.getElementById('healthScoreSummaryValue');
   var ringEl = document.getElementById('healthScoreSummaryRing');
   var lblEl = document.getElementById('healthScoreSummaryLabel');
   if (!valEl || !ringEl || !lblEl) return;
   var circ = 226.2;
+  var goalWrap = document.getElementById('healthScoreGoalWrap');
+  var goalText = document.getElementById('healthScoreGoalText');
   if (!log) {
     valEl.textContent = '--';
     lblEl.textContent = 'Remplissez vos indicateurs du jour';
@@ -14704,6 +14743,8 @@ function updateHealthScoreSummary(log) {
       var e = document.getElementById('healthScoreBar' + k);
       if (e) e.textContent = '--';
     });
+    renderHealthScoreDelta('healthScoreDelta', null);
+    if (goalWrap) goalWrap.style.display = 'none';
     return;
   }
   var energyNorm = (log.energy_level != null) ? Math.min(log.energy_level / 10, 1) : 0;
@@ -14724,6 +14765,16 @@ function updateHealthScoreSummary(log) {
   if (barHydra) barHydra.textContent = Math.round(norm.hydra * 100) + '%';
   if (barActiv) barActiv.textContent = Math.round(norm.activ * 100) + '%';
   if (barStress) barStress.textContent = Math.round(norm.stress * 100) + '%';
+  renderHealthScoreDelta('healthScoreDelta', scoreDelta);
+  if (goalWrap && goalText) {
+    if (score >= 80) {
+      goalWrap.style.display = 'none';
+    } else {
+      goalWrap.style.display = 'block';
+      var need = 80 - score;
+      goalText.textContent = 'Score vise : 80 (+' + need + ' points). ' + getHealthGoalTips(log);
+    }
+  }
 }
 function refreshHarmonyAvatar(logs) {
   const defiBonus = parseInt(localStorage.getItem(_gamiKey()) || '0', 10);
@@ -14745,8 +14796,20 @@ function refreshHarmonyAvatar(logs) {
     var healthScore = calcHealthScore(lastLog.energy_level, lastLog.sleep_hours, lastLog.stress_level);
     window._foxHealthStatus = getFoxStatus(healthScore);
   }
-  updateHealthScoreSummary(lastLog);
-  updateHealthScoreSummaryHome(lastLog);
+  var scoreDelta = null;
+  if (lastLog) {
+    var todayScore = computeLogScore(lastLog);
+    var yDate = new Date(lastLog.date);
+    yDate.setDate(yDate.getDate() - 1);
+    var yStr = yDate.toISOString().split('T')[0];
+    var yesterdayLog = logs ? logs.find(function(l) { return (l.date || '').split('T')[0] === yStr; }) : null;
+    if (yesterdayLog) {
+      var yesterdayScore = computeLogScore(yesterdayLog);
+      if (todayScore !== null && yesterdayScore !== null) scoreDelta = todayScore - yesterdayScore;
+    }
+  }
+  updateHealthScoreSummary(lastLog, scoreDelta);
+  updateHealthScoreSummaryHome(lastLog, scoreDelta);
   updateHarmonyUI(totalPoints);
   var lvlData = getHarmonyLevel(totalPoints);
   norm.level = window._debugLevel || lvlData.level;
