@@ -3164,20 +3164,26 @@ window.initHome = async function() {
       var params = new URLSearchParams(window.location.search);
       var v = params.get('pc_debug_view');
       if (!v) return;
-      var branch = v.charAt(0).toUpperCase();
-      var caseNum = parseInt(v.slice(1), 10);
+      v = v.toLowerCase();
+      var monde, theme, caseNum;
+      if (v.indexOf('eveil') === 0) { monde = 1; theme = null; caseNum = parseInt(v.slice(5), 10); }
+      else if (v.indexOf('energie') === 0) { monde = 2; theme = 'A'; caseNum = parseInt(v.slice(7), 10); }
+      else if (v.indexOf('montagne') === 0) { monde = 2; theme = 'B'; caseNum = parseInt(v.slice(8), 10); }
+      else { monde = 1; theme = null; caseNum = 7; }
       if (isNaN(caseNum)) caseNum = 7;
       var realProfile = JSON.parse(localStorage.getItem('nutricare_profile') || '{}');
       var previewProfile = Object.assign({}, realProfile, {
         parcours_case: caseNum,
         parcours_chemin: null,
-        parcours_monde: (branch === 'A' || branch === 'B') ? 2 : 1,
-        parcours_monde_theme: (branch === 'A' || branch === 'B') ? branch : null
+        parcours_monde: monde,
+        parcours_monde_theme: theme
       });
       if (typeof renderParcours === 'function') renderParcours(previewProfile);
     } catch(e) { console.error('pcPreviewView error', e); }
   };
   setTimeout(function() { window.pcPreviewView(); }, 600);
+  setTimeout(function() { window.pcPreviewView(); }, 1500);
+  setInterval(function() { window.pcPreviewView(); }, 2000);
   function pcPlaySequence(urls, onEnd) {
     var i = 0;
     function next() {
