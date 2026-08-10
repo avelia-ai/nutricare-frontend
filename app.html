@@ -3197,6 +3197,9 @@ window.initHome = async function() {
         } catch(e) {}
         var cleanUrlV = window.location.pathname;
         window.history.replaceState({}, '', cleanUrlV);
+        setTimeout(function() {
+          alert('DEBUG ECRIT: case=' + vCase + ' monde=' + vMonde + ' theme=' + vTheme + ' | LU EN LOCALSTORAGE: ' + localStorage.getItem('nutricare_profile'));
+        }, 300);
       }
     } catch(e) {}
   }
