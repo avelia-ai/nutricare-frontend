@@ -4721,6 +4721,10 @@ function switchLang(lang) {
               <div style="font-size:0.66rem;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:rgba(255,255,255,0.45);margin-bottom:5px">Score de sante</div>
               <div id="healthScoreSummaryLabelHome" style="font-size:1.05rem;font-weight:700;color:#fff;margin-bottom:4px">Remplissez vos indicateurs</div>
               <div id="healthScoreDeltaHome" style="display:none;font-size:0.76rem;font-weight:700;margin-bottom:4px"></div>
+              <div id="healthScoreGoalHome" style="display:none;align-items:center;gap:5px;font-size:0.74rem;font-weight:700;color:#FFD166;margin-bottom:4px">
+                <i class="ti ti-target-arrow" style="font-size:13px"></i>
+                <span id="healthScoreGoalHomeText"></span>
+              </div>
               <div style="font-size:0.74rem;color:rgba(255,255,255,0.55);display:flex;align-items:center;gap:4px">Voir le detail dans Suivi <i class="ti ti-chevron-right" style="font-size:13px"></i></div>
             </div>
           </div>
@@ -14561,6 +14565,16 @@ function updateHealthScoreSummaryHome(log, scoreDelta) {
   if (barActiv) barActiv.textContent = Math.round(norm.activ * 100) + '%';
   if (barStress) barStress.textContent = Math.round(norm.stress * 100) + '%';
   renderHealthScoreDelta('healthScoreDeltaHome', scoreDelta);
+  var goalHomeWrap = document.getElementById('healthScoreGoalHome');
+  var goalHomeText = document.getElementById('healthScoreGoalHomeText');
+  if (goalHomeWrap && goalHomeText) {
+    if (score >= 80) {
+      goalHomeWrap.style.display = 'none';
+    } else {
+      goalHomeWrap.style.display = 'flex';
+      goalHomeText.textContent = 'Objectif demain : ' + (80 - score) + ' pts';
+    }
+  }
 }
 function getWeekRange(offsetWeeks) {
   var now = new Date();
