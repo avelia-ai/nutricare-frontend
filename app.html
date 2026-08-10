@@ -3169,41 +3169,46 @@ window.initHome = async function() {
         var cleanUrl2 = window.location.pathname;
         window.history.replaceState({}, '', cleanUrl2);
       }
-      var vView = params.get('pc_debug_view');
-      if (vView) {
-        vView = vView.toLowerCase();
-        var vMonde, vTheme, vCase;
-        if (vView.indexOf('eveil') === 0) { vMonde = 1; vTheme = null; vCase = parseInt(vView.slice(5), 10); }
-        else if (vView.indexOf('energie') === 0) { vMonde = 2; vTheme = 'A'; vCase = parseInt(vView.slice(7), 10); }
-        else if (vView.indexOf('montagne') === 0) { vMonde = 2; vTheme = 'B'; vCase = parseInt(vView.slice(8), 10); }
-        else { vMonde = 1; vTheme = null; vCase = 7; }
-        if (isNaN(vCase)) vCase = 7;
-        var pV = JSON.parse(localStorage.getItem('nutricare_profile') || '{}');
-        pV.parcours_case = vCase;
-        pV.parcours_derniere_action = null;
-        pV.parcours_chemin = null;
-        pV.parcours_monde = vMonde;
-        pV.parcours_monde_theme = vTheme;
-        localStorage.setItem('nutricare_profile', JSON.stringify(pV));
-        try {
-          var tokV = authToken || window._authToken || localStorage.getItem('nutricare_token');
-          if (tokV) {
-            fetch(BACKEND_URL + '/api/profile', {
-              method: 'PUT',
-              headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + tokV },
-              body: JSON.stringify({ parcours_case: vCase, parcours_chemin: null, parcours_monde: vMonde, parcours_monde_theme: vTheme, parcours_derniere_action: null })
-            });
-          }
-        } catch(e) {}
-        var cleanUrlV = window.location.pathname;
-        window.history.replaceState({}, '', cleanUrlV);
-        setTimeout(function() {
-          alert('DEBUG ECRIT: case=' + vCase + ' monde=' + vMonde + ' theme=' + vTheme + ' | LU EN LOCALSTORAGE: ' + localStorage.getItem('nutricare_profile'));
-        }, 300);
-      }
     } catch(e) {}
   }
   pcRunUrlDebugTriggers();
+  (function() {
+    try {
+      var paramsW = new URLSearchParams(window.location.search);
+      var vW = paramsW.get('pc_debug_view');
+      if (!vW) return;
+      if (typeof renderParcours !== 'function' || typeof advanceParcoursIfNeeded !== 'function') return;
+      if (window._pcPreviewInstalled) return;
+      window._pcPreviewInstalled = true;
+      var _pcOrigAdvance = advanceParcoursIfNeeded;
+      advanceParcoursIfNeeded = function(profile) {
+        var p2 = new URLSearchParams(window.location.search);
+        if (p2.get('pc_debug_view')) { return profile; }
+        return _pcOrigAdvance(profile);
+      };
+      var _pcOrigRender = renderParcours,c;
+      renderParcours = function(profile) {
+        var p3 = new URLSearchParams(window.location.search);
+        var v3 = p3.get('pc_debug_view');
+        if (v3) {
+          v3 = v3.toLowerCase();
+          var monde3, theme3, case3;
+          if (v3.indexOf('eveil') === 0) { monde3 = 1; theme3 = null; case3 = parseInt(v3.slice(5), 10); }
+          else if (v3.indexOf('energie') === 0) { monde3 = 2; theme3 = 'A'; case3 = parseInt(v3.slice(7), 10); }
+          else if (v3.indexOf('montagne') === 0) { monde3 = 2; theme3 = 'B'; case3 = parseInt(v3.slice(8), 10); }
+          else { monde3 = 1; theme3 = null; case3 = 7; }
+          if (isNaN(case3)) case3 = 7;
+          profile = Object.assign({}, profile, {
+            parcours_case: case3,
+            parcours_chemin: null,
+            parcours_monde: monde3,
+            parcours_monde_theme: theme3
+          });
+        }
+        return _pcOrigRender(profile);
+      };
+    } catch(e) { console.error('pc preview install error', e); }
+  })();
   function pcPlaySequence(urls, onEnd) {
     var i = 0;
     function next() {
