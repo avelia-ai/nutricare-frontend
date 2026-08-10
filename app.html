@@ -3152,6 +3152,24 @@ window.initHome = async function() {
     } catch(e) {}
   }
   pcRunUrlDebugTriggers();
+  window.pcPreviewView = function() {
+    try {
+      var params = new URLSearchParams(window.location.search);
+      var v = params.get('pc_debug_view');
+      if (!v) return;
+      var branch = v.charAt(0).toUpperCase();
+      var caseNum = parseInt(v.slice(1), 10);
+      if (isNaN(caseNum)) caseNum = 7;
+      var realProfile = JSON.parse(localStorage.getItem('nutricare_profile') || '{}');
+      var previewProfile = Object.assign({}, realProfile, {
+        parcours_case: caseNum,
+        parcours_chemin: (branch === 'A' || branch === 'B') ? branch : null,
+        parcours_monde: realProfile.parcours_monde || 1
+      });
+      if (typeof renderParcours === 'function') renderParcours(previewProfile);
+    } catch(e) { console.error('pcPreviewView error', e); }
+  };
+  setTimeout(function() { window.pcPreviewView(); }, 600);
   function pcPlaySequence(urls, onEnd) {
     var i = 0;
     function next() {
