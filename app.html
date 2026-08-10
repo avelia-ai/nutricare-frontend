@@ -3329,14 +3329,22 @@ window.initHome = async function() {
       return '<div style="position:absolute;left:' + p.x + '%;top:' + p.y + '%;transform:translate(-50%,-50%);width:34px;height:34px;border-radius:50%;border:2.2px dashed #fff;display:flex;align-items:center;justify-content:center;font-size:15px;opacity:0.9">\u{1F6AA}</div>';
     }
     if (isMountainWorld) {
-      // Monde montagne : un seul tracé complet de 12 cases, pas de bifurcation visuelle
-      _pcWaypointsMountainFull.forEach(function(p, ci) {
-        if (ci === 0 || ci === 4 || ci === 8 || ci === 12) return;
+      // Monde montagne : meme mecanique que la foret (tronc + bifurcation a la case 6)
+      _pcWaypointsMountain.forEach(function(p, ci) {
+        if (ci === 0 || ci === 4) return;
         html += pcDot(p, caseIdx >= ci);
       });
-      html += pcTreasure(_pcWaypointsMountainFull[4], caseIdx >= 4);
-      html += pcTreasure(_pcWaypointsMountainFull[8], caseIdx >= 8);
-      html += pcDoor(_pcWaypointsMountainFull[12]);
+      html += pcTreasure(_pcWaypointsMountain[4], caseIdx >= 4);
+      var branchesToShowMtn = profile.parcours_chemin ? [(profile.parcours_chemin === "A" ? _pcBranchAMountain : _pcBranchBMountain)] : [_pcBranchAMountain, _pcBranchBMountain];
+      branchesToShowMtn.forEach(function(branchPts) {
+        branchPts.forEach(function(p, bi) {
+          var ci = bi + 7;
+          if (ci === 8 || ci === 12) return;
+          html += pcDot(p, caseIdx >= ci);
+        });
+        html += pcTreasure(branchPts[1], caseIdx >= 8);
+        html += pcDoor(branchPts[5]);
+      });
     } else {
       // Tronc commun (cases 1-6, partage par les deux branches, decor foret)
       _pcWaypoints.forEach(function(p, ci) {
