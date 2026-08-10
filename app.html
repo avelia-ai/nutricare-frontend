@@ -3169,34 +3169,38 @@ window.initHome = async function() {
         var cleanUrl2 = window.location.pathname;
         window.history.replaceState({}, '', cleanUrl2);
       }
+      var vView = params.get('pc_debug_view');
+      if (vView) {
+        vView = vView.toLowerCase();
+        var vMonde, vTheme, vCase;
+        if (vView.indexOf('eveil') === 0) { vMonde = 1; vTheme = null; vCase = parseInt(vView.slice(5), 10); }
+        else if (vView.indexOf('energie') === 0) { vMonde = 2; vTheme = 'A'; vCase = parseInt(vView.slice(7), 10); }
+        else if (vView.indexOf('montagne') === 0) { vMonde = 2; vTheme = 'B'; vCase = parseInt(vView.slice(8), 10); }
+        else { vMonde = 1; vTheme = null; vCase = 7; }
+        if (isNaN(vCase)) vCase = 7;
+        var pV = JSON.parse(localStorage.getItem('nutricare_profile') || '{}');
+        pV.parcours_case = vCase;
+        pV.parcours_derniere_action = null;
+        pV.parcours_chemin = null;
+        pV.parcours_monde = vMonde;
+        pV.parcours_monde_theme = vTheme;
+        localStorage.setItem('nutricare_profile', JSON.stringify(pV));
+        try {
+          var tokV = authToken || window._authToken || localStorage.getItem('nutricare_token');
+          if (tokV) {
+            fetch(BACKEND_URL + '/api/profile', {
+              method: 'PUT',
+              headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + tokV },
+              body: JSON.stringify({ parcours_case: vCase, parcours_chemin: null, parcours_monde: vMonde, parcours_monde_theme: vTheme, parcours_derniere_action: null })
+            });
+          }
+        } catch(e) {}
+        var cleanUrlV = window.location.pathname;
+        window.history.replaceState({}, '', cleanUrlV);
+      }
     } catch(e) {}
   }
   pcRunUrlDebugTriggers();
-  window.pcPreviewView = function() {
-    try {
-      var params = new URLSearchParams(window.location.search);
-      var v = params.get('pc_debug_view');
-      if (!v) return;
-      v = v.toLowerCase();
-      var monde, theme, caseNum;
-      if (v.indexOf('eveil') === 0) { monde = 1; theme = null; caseNum = parseInt(v.slice(5), 10); }
-      else if (v.indexOf('energie') === 0) { monde = 2; theme = 'A'; caseNum = parseInt(v.slice(7), 10); }
-      else if (v.indexOf('montagne') === 0) { monde = 2; theme = 'B'; caseNum = parseInt(v.slice(8), 10); }
-      else { monde = 1; theme = null; caseNum = 7; }
-      if (isNaN(caseNum)) caseNum = 7;
-      var realProfile = JSON.parse(localStorage.getItem('nutricare_profile') || '{}');
-      var previewProfile = Object.assign({}, realProfile, {
-        parcours_case: caseNum,
-        parcours_chemin: null,
-        parcours_monde: monde,
-        parcours_monde_theme: theme
-      });
-      if (typeof renderParcours === 'function') renderParcours(previewProfile);
-    } catch(e) { console.error('pcPreviewView error', e); }
-  };
-  setTimeout(function() { window.pcPreviewView(); }, 600);
-  setTimeout(function() { window.pcPreviewView(); }, 1500);
-  setInterval(function() { window.pcPreviewView(); }, 2000);
   function pcPlaySequence(urls, onEnd) {
     var i = 0;
     function next() {
