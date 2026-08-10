@@ -3311,7 +3311,7 @@ window.initHome = async function() {
     }
     var startOverlayEl = document.getElementById('pcStartOverlay');
     if (startOverlayEl) {
-      startOverlayEl.style.display = (caseIdx === 0 && localStorage.getItem(pcSeenKey('intro', mondeNum)) !== '1') ? 'flex' : 'none';
+      startOverlayEl.style.display = (mondeIdx === 0 && caseIdx === 0 && localStorage.getItem(pcSeenKey('intro', mondeNum)) !== '1') ? 'flex' : 'none';
     }
     if (caseIdx >= _pcForkCase && !profile.parcours_chemin) {
       if (localStorage.getItem(pcSeenKey('fork', mondeNum)) === '1') {
