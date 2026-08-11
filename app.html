@@ -3169,6 +3169,26 @@ window.initHome = async function() {
             });
           }
         } catch(e) {}
+      }
+      if (params.get('pc_debug_fin_lac') === '1' || params.get('pc_debug_fin_zen') === '1') {
+        var cheminFin = params.get('pc_debug_fin_lac') === '1' ? 'A' : 'B';
+        var pFin = JSON.parse(localStorage.getItem('nutricare_profile') || '{}');
+        pFin.parcours_case = 12;
+        pFin.parcours_monde = 2;
+        pFin.parcours_derniere_action = null;
+        pFin.parcours_chemin = cheminFin;
+        localStorage.setItem('nutricare_profile', JSON.stringify(pFin));
+        localStorage.removeItem('mirella_pc_seen_fin_monde2');
+        try {
+          var tokFin = authToken || window._authToken || localStorage.getItem('nutricare_token');
+          if (tokFin) {
+            fetch(BACKEND_URL + '/api/profile', {
+              method: 'PUT',
+              headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + tokFin },
+              body: JSON.stringify({ parcours_case: 12, parcours_monde: 2, parcours_chemin: cheminFin, parcours_derniere_action: null })
+            });
+          }
+        } catch(e) {}
         var cleanUrlM = window.location.pathname;
         window.history.replaceState({}, '', cleanUrlM);
       }
