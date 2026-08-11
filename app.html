@@ -13734,11 +13734,23 @@ var FOX_STATUS_VIDEOS = {
     'https://raw.githubusercontent.com/avelia-ai/nutricare-frontend/main/renard_fatigue_v2.mp4'
   ]
 };
-function getFoxStatusVideoUrl(status) {
-  var variants = FOX_STATUS_VIDEOS[status];
-  if (!variants) return null;
+var FOX_STATUS_VIDEOS_LV2 = {
+  tres_en_forme: [
+    'https://raw.githubusercontent.com/avelia-ai/nutricare-frontend/main/renard_niveau2_tres_en_forme.mp4'
+  ],
+  en_forme: [],
+  moyennement_en_forme: [],
+  fatigue: []
+};
+function getFoxStatusVideoUrl(status, level) {
+  var videoSet = (level === 2) ? FOX_STATUS_VIDEOS_LV2 : FOX_STATUS_VIDEOS;
+  var variants = videoSet[status];
+  if (!variants || variants.length === 0) {
+    variants = FOX_STATUS_VIDEOS[status];
+  }
+  if (!variants || variants.length === 0) return null;
   var dayOfYear = Math.floor((new Date() - new Date(new Date().getFullYear(), 0, 0)) / 86400000);
-  var variantIndex = dayOfYear % 2;
+  var variantIndex = dayOfYear % variants.length;
   return variants[variantIndex] || variants[0];
 }
 
