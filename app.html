@@ -3674,13 +3674,13 @@ window.initHome = async function() {
   if (yScore) {
     if (scoreEl) scoreEl.textContent = yScore.score + '/100';
     var scoreMsg = yScore.score >= 70
-      ? 'Hier, ton score etait de <strong>' + yScore.score + '/100</strong> \u2014 belle energie ! Continue a t ecouter aujourd hui, chaque petit pas compte.'
-      : 'Hier, ton score etait de <strong>' + yScore.score + '/100</strong>. Aujourd hui est une nouvelle occasion de prendre soin de toi, doucement mais surement.';
+      ? 'Hier, ton score était de <strong>' + yScore.score + '/100</strong> \u2014 belle énergie\u00a0! Continue à t\u2019écouter aujourd\u2019hui, chaque petit pas compte.'
+      : 'Hier, ton score était de <strong>' + yScore.score + '/100</strong>. Aujourd\u2019hui est une nouvelle occasion de prendre soin de toi, doucement mais s\u00fbrement.';
     if (scoreText) scoreText.innerHTML = scoreMsg;
     if (scoreIconEl) scoreIconEl.className = 'ti ' + (yScore.score >= 70 ? 'ti-flame' : 'ti-heart');
   } else {
     if (scoreEl) scoreEl.textContent = '--';
-    if (scoreText) scoreText.textContent = 'Je suis la pour t accompagner aujourd hui' + (prenom ? ', ' + prenom : '') + '. Prends un instant pour remplir ton bilan sante du jour.';
+    if (scoreText) scoreText.textContent = 'Je suis là pour t\u2019accompagner aujourd\u2019hui' + (prenom ? ', ' + prenom : '') + '. Prends un instant pour remplir ton bilan santé du jour.';
     if (scoreIconEl) scoreIconEl.className = 'ti ti-sparkles';
   }
 
