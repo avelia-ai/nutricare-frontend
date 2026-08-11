@@ -3011,6 +3011,19 @@ window.initHome = async function() {
   var _pcWorldNames = ["Foret de l'Eveil","Foret de l'Energie","Montagne de la Force","Sommet de l'Harmonie"];
   var _pcForkCase = 6;
   var _pcWorldByChemin = { A: "Foret de l'Energie", B: 'Montagne de la Force' };
+  var _pcWorldKeyNames = {
+    foret_eveil: "Foret de l'Eveil",
+    foret_energie: "Foret de l'Energie",
+    montagne_force: 'Montagne de la Force',
+    lac_cristallin: 'Lac Cristallin',
+    territoire_zen: 'Territoire Zen'
+  };
+  function pcNextWorldKey(currentKey, chemin) {
+    if (currentKey === 'foret_eveil') {
+      return chemin === 'B' ? 'montagne_force' : 'foret_energie';
+    }
+    return chemin === 'B' ? 'territoire_zen' : 'lac_cristallin';
+  }
   var _pcActionsRotation = ['suivi','pas','menu','defi_jour','defi_mirella','score','photo'];
   var _pcActionLabels = {
     suivi: "complete ton suivi sante du jour (energie, sommeil, stress, hydratation)",
@@ -3202,11 +3215,13 @@ window.initHome = async function() {
       var vX = paramsX.get('pc_debug_view');
       if (vX) {
         vX = vX.toLowerCase();
-        var mondeX, themeX, caseX;
-        if (vX.indexOf('eveil') === 0) { mondeX = 1; themeX = null; caseX = parseInt(vX.slice(5), 10); }
-        else if (vX.indexOf('energie') === 0) { mondeX = 2; themeX = 'A'; caseX = parseInt(vX.slice(7), 10); }
-        else if (vX.indexOf('montagne') === 0) { mondeX = 2; themeX = 'B'; caseX = parseInt(vX.slice(8), 10); }
-        else { mondeX = 1; themeX = null; caseX = 7; }
+        var mondeX, themeX, caseX, worldKeyX;
+        if (vX.indexOf('eveil') === 0) { mondeX = 1; themeX = null; worldKeyX = 'foret_eveil'; caseX = parseInt(vX.slice(5), 10); }
+        else if (vX.indexOf('energie') === 0) { mondeX = 2; themeX = 'A'; worldKeyX = 'foret_energie'; caseX = parseInt(vX.slice(7), 10); }
+        else if (vX.indexOf('montagne') === 0) { mondeX = 2; themeX = 'B'; worldKeyX = 'montagne_force'; caseX = parseInt(vX.slice(8), 10); }
+        else if (vX.indexOf('lac') === 0) { mondeX = 3; themeX = null; worldKeyX = 'lac_cristallin'; caseX = parseInt(vX.slice(3), 10); }
+        else if (vX.indexOf('zen') === 0) { mondeX = 3; themeX = null; worldKeyX = 'territoire_zen'; caseX = parseInt(vX.slice(3), 10); }
+        else { mondeX = 1; themeX = null; worldKeyX = 'foret_eveil'; caseX = 7; }
         if (isNaN(caseX)) caseX = 7;
 
         var pX = JSON.parse(localStorage.getItem('nutricare_profile') || '{}');
@@ -3219,6 +3234,7 @@ window.initHome = async function() {
         pX.parcours_chemin = null;
         pX.parcours_monde = mondeX;
         pX.parcours_monde_theme = themeX;
+        pX.parcours_world_key = worldKeyX;
         localStorage.setItem('nutricare_profile', JSON.stringify(pX));
         try {
           var tokX = authToken || window._authToken || localStorage.getItem('nutricare_token');
@@ -3226,7 +3242,7 @@ window.initHome = async function() {
             fetch(BACKEND_URL + '/api/profile', {
               method: 'PUT',
               headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + tokX },
-              body: JSON.stringify({ parcours_case: caseX, parcours_chemin: null, parcours_monde: mondeX, parcours_monde_theme: themeX, parcours_derniere_action: todayStrX })
+              body: JSON.stringify({ parcours_case: caseX, parcours_chemin: null, parcours_monde: mondeX, parcours_monde_theme: themeX, parcours_world_key: worldKeyX, parcours_derniere_action: todayStrX })
             });
           }
         } catch(e) {}
@@ -3286,6 +3302,8 @@ window.initHome = async function() {
       var finishedMonde = currentMonde;
       currentCase = 0;
       currentMonde += 1;
+      var _prevWorldKey = profile.parcours_world_key || 'foret_eveil';
+      profile.parcours_world_key = profile.parcours_chemin ? pcNextWorldKey(_prevWorldKey, profile.parcours_chemin) : _prevWorldKey;
       profile.parcours_monde_theme = profile.parcours_chemin || null;
       profile.parcours_chemin = null;
       if (localStorage.getItem(pcSeenKey('fin', finishedMonde)) !== '1') {
@@ -3304,7 +3322,7 @@ window.initHome = async function() {
         fetch(BACKEND_URL + '/api/profile', {
           method: 'PUT',
           headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
-          body: JSON.stringify({ parcours_case: currentCase, parcours_monde: currentMonde, parcours_derniere_action: todayStr, parcours_chemin: profile.parcours_chemin || null, parcours_monde_theme: profile.parcours_monde_theme || null })
+          body: JSON.stringify({ parcours_case: currentCase, parcours_monde: currentMonde, parcours_derniere_action: todayStr, parcours_chemin: profile.parcours_chemin || null, parcours_monde_theme: profile.parcours_monde_theme || null, parcours_world_key: profile.parcours_world_key || null })
         });
       }
     } catch(e) {}
@@ -3343,15 +3361,17 @@ window.initHome = async function() {
     var caseIdx = Math.min(profile.parcours_case || 0, 12);
     var mondeIdx = (profile.parcours_monde || 1) - 1;
     var mondeNum = mondeIdx + 1;
-    var mondeTheme = mondeIdx === 0 ? null : profile.parcours_monde_theme;
-    var isMountainWorld = (mondeTheme === "B");
-    var isForetEnergieWorld = (mondeTheme === "A");
+    var worldKey = profile.parcours_world_key || (mondeIdx === 0 ? 'foret_eveil' : null);
+    var isMountainWorld = (worldKey === 'montagne_force');
+    var isForetEnergieWorld = (worldKey === 'foret_energie');
+    var isLacCristallinWorld = (worldKey === 'lac_cristallin');
     var _pcMapVideos = {
       default: PC_VIDEO_BASE + 'map_foret_fork_light.mp4',
-      A: PC_VIDEO_BASE + 'map_foret_energie.mp4',
-      B: PC_VIDEO_BASE + 'map_montagne_force.mp4'
+      foret_energie: PC_VIDEO_BASE + 'map_foret_energie.mp4',
+      montagne_force: PC_VIDEO_BASE + 'map_montagne_force.mp4',
+      lac_cristallin: PC_VIDEO_BASE + 'map_lac_cristallin.mp4'
     };
-    var desiredMapUrl = isMountainWorld ? _pcMapVideos.B : (isForetEnergieWorld ? _pcMapVideos.A : _pcMapVideos.default);
+    var desiredMapUrl = (worldKey && _pcMapVideos[worldKey]) ? _pcMapVideos[worldKey] : _pcMapVideos.default;
     var mapVideoEl = document.getElementById('pcMapVideo');
     var mapSourceEl = document.getElementById('pcMapVideoSource');
     if (mapVideoEl && mapSourceEl && mapSourceEl.src !== desiredMapUrl) {
@@ -3386,12 +3406,13 @@ window.initHome = async function() {
     }
     var _pcWaypointsActive = isMountainWorld ? getPcWaypointsMountain(profile) : getPcWaypoints(profile, caseIdx);
     if (isForetEnergieWorld) { _pcWaypointsActive = getPcWaypointsForetEnergie(profile); }
+    if (isLacCristallinWorld) { _pcWaypointsActive = getPcWaypoints(profile, caseIdx); }
     var pt = _pcWaypointsActive[caseIdx];
     var foxEl = document.getElementById('pcFoxWrap');
     foxEl.style.left = pt.x + '%';
     foxEl.style.top = pt.y + '%';
     document.getElementById('pcCaseLabel').textContent = caseIdx + '/12';
-    var worldLabelText = mondeIdx === 0 ? "Foret de l'Eveil" : ((mondeTheme && _pcWorldByChemin[mondeTheme]) ? _pcWorldByChemin[mondeTheme] : _pcWorldNames[mondeIdx % _pcWorldNames.length]);
+    var worldLabelText = (worldKey && _pcWorldKeyNames[worldKey]) ? _pcWorldKeyNames[worldKey] : _pcWorldNames[mondeIdx % _pcWorldNames.length];
     document.getElementById('pcWorldLabel').textContent = worldLabelText;
     var checkpointsEl = document.getElementById('pcCheckpoints');
     var html = '';
