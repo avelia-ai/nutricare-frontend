@@ -13690,7 +13690,7 @@ async function saveHealthLog() {
 
 var HARMONY_LEVELS = [
   { name: 'Éveil',      min: 0,    max: 199,  level: 1 },
-  { name: 'Alignement', min: 0,  max: 599,  level: 2 },  // TEMP TEST
+  { name: 'Alignement', min: 200,  max: 599,  level: 2 },
   { name: 'Harmonie',   min: 600,  max: 1499, level: 3 },
   { name: 'Expansion',  min: 1500, max: 2999, level: 4 },
   { name: 'Maîtrise',   min: 3000, max: Infinity, level: 5 },
@@ -13772,10 +13772,11 @@ function getFoxStatus(score) {
   if (score >= 40) return 'moyennement_en_forme';
   return 'fatigue';
 }
-function updateStatusFoxVideo(status) {
-  if (_lastHarmonyFoxLevel === status) return;
-  _lastHarmonyFoxLevel = status;
-  var url = getFoxStatusVideoUrl(status);
+function updateStatusFoxVideo(status, level) {
+  var cacheKey = status + '_lv' + (level || 1);
+  if (_lastHarmonyFoxLevel === cacheKey) return;
+  _lastHarmonyFoxLevel = cacheKey;
+  var url = getFoxStatusVideoUrl(status, level);
   ['harmonyFoxVideo', 'harmonyFoxVideoHome'].forEach(function(id) {
     var vid = document.getElementById(id);
     if (!vid) return;
@@ -14417,7 +14418,7 @@ function updateHarmonyUI(totalPoints) {
   if (window._foxDaysInactive >= 3) {
     updateSadFoxVideo();
   } else if (window._foxHealthStatus) {
-    updateStatusFoxVideo(window._foxHealthStatus);
+    updateStatusFoxVideo(window._foxHealthStatus, lvl.level);
   } else {
     updateHarmonyFoxVideo(lvl.level);
   }
