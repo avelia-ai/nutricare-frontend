@@ -3524,7 +3524,9 @@ window.initHome = async function() {
       if (_todayIconEl) { _todayIconEl.textContent = _pcActionIcons[_todayKey] || '🎯'; }
     }
   }
+  var _pcLastProfileForSummary = null;
   function renderPersonalSummary(profile) {
+    _pcLastProfileForSummary = profile;
     var card = document.getElementById('personalSummaryCard');
     if (!card) return;
     var poids = parseFloat(profile.poids);
@@ -3577,11 +3579,12 @@ window.initHome = async function() {
     var hydra = Math.round(poids * 0.033 * 10) / 10;
     var metrics = [];
     metrics.push({ icon: 'droplet', c1: '#0984E3', c2: '#74b9ff', val: hydra + ' L', label: 'Hydratation conseillee' });
-    if (profile.energie_actuelle) metrics.push({ icon: 'bolt', c1: '#FFB347', c2: '#FFD180', val: profile.energie_actuelle + '/10', label: 'Energie actuelle' });
-    if (profile.stress_actuel) metrics.push({ icon: 'yoga', c1: '#C3A9D1', c2: '#e0c9f0', val: profile.stress_actuel + '/10', label: 'Stress actuel' });
-    if (profile.sommeil_heures_actuel) metrics.push({ icon: 'moon', c1: '#7EC8E3', c2: '#a8dcf0', val: profile.sommeil_heures_actuel + 'h', label: 'Sommeil actuel' });
-    if (profile.sport_pratique) metrics.push({ icon: 'run', c1: '#27AE60', c2: '#82E0AA', val: profile.sport_pratique, label: 'Sport pratique' });
     if (profile.age) metrics.push({ icon: 'cake', c1: '#9B59B6', c2: '#c39bd3', val: profile.age + ' ans', label: 'Age' });
+    var _todayLog = window._pcTodayHealthLog || null;
+    metrics.push({ icon: 'bolt', c1: '#FFB347', c2: '#FFD180', val: (_todayLog && _todayLog.energy_level != null ? _todayLog.energy_level : 0) + '/10', label: 'Energie du jour' });
+    metrics.push({ icon: 'moon', c1: '#7EC8E3', c2: '#a8dcf0', val: (_todayLog && _todayLog.sleep_hours != null ? _todayLog.sleep_hours : 0) + 'h', label: 'Sommeil du jour' });
+    metrics.push({ icon: 'yoga', c1: '#C3A9D1', c2: '#e0c9f0', val: (_todayLog && _todayLog.stress_level != null ? _todayLog.stress_level : 0) + '/10', label: 'Stress du jour' });
+    if (profile.sport_pratique) metrics.push({ icon: 'run', c1: '#27AE60', c2: '#82E0AA', val: profile.sport_pratique, label: 'Sport pratique' });
     var metricsEl = document.getElementById('summaryMetricsGrid');
     metricsEl.innerHTML = metrics.map(function(m) {
       return '<div style="background:#FAFAFA;border-radius:14px;padding:14px">' +
@@ -3590,6 +3593,10 @@ window.initHome = async function() {
         '<div style="font-size:0.66rem;color:#999;margin-top:3px">' + m.label + '</div>' +
       '</div>';
     }).join('');
+    var _summaryEditWrap = document.getElementById('summaryEditSuiviLink');
+    if (_summaryEditWrap) {
+      _summaryEditWrap.style.display = (!_todayLog || _todayLog.energy_level == null || _todayLog.sleep_hours == null || _todayLog.stress_level == null) ? 'flex' : 'none';
+    }
 
     var countdownWrap = document.getElementById('summaryCountdownWrap');
     if (profile.objectif_date_debut && profile.objectif_delai_semaines) {
@@ -4940,6 +4947,16 @@ function switchLang(lang) {
 
             <div style="font-size:0.68rem;color:#999;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:10px;font-weight:700">Mes indicateurs</div>
             <div id="summaryMetricsGrid" style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px"></div>
+            <div id="summaryEditSuiviLink" onclick="showView(&#39;health&#39;)" style="display:none;align-items:center;gap:12px;background:linear-gradient(135deg,#FFF0EC,#FFF8E8);border-radius:14px;padding:14px 16px;margin-bottom:16px;cursor:pointer">
+              <div style="width:38px;height:38px;border-radius:11px;background:linear-gradient(135deg,var(--coral),var(--accent));display:flex;align-items:center;justify-content:center;flex-shrink:0">
+                <i class="ti ti-edit" style="font-size:18px;color:white"></i>
+              </div>
+              <div style="flex:1;min-width:0">
+                <div style="font-size:0.82rem;font-weight:700;color:#2D2D2D">Complete ton suivi du jour</div>
+                <div style="font-size:0.7rem;color:#999">Renseigne ton energie, sommeil et stress</div>
+              </div>
+              <i class="ti ti-chevron-right" style="font-size:16px;color:#ccc;flex-shrink:0"></i>
+            </div>
 
             <div id="summaryCountdownWrap" style="display:none;background:linear-gradient(135deg,#FF6B6B,#FF9A3C);border-radius:16px;padding:18px;margin-bottom:14px;text-align:center;position:relative;overflow:hidden">
               <div style="position:absolute;top:-30px;right:-20px;width:110px;height:110px;background:radial-gradient(circle,rgba(255,255,255,0.18),transparent 70%);pointer-events:none"></div>
@@ -14986,6 +15003,11 @@ function refreshHarmonyAvatar(logs) {
       var yesterdayScore = computeLogScore(yesterdayLog);
       if (todayScore !== null && yesterdayScore !== null) scoreDelta = todayScore - yesterdayScore;
     }
+  }
+  var _todayStrHA = new Date().toISOString().split('T')[0];
+  window._pcTodayHealthLog = logs ? (logs.find(function(l) { return (l.date || '').split('T')[0] === _todayStrHA; }) || null) : null;
+  if (typeof _pcLastProfileForSummary !== 'undefined' && _pcLastProfileForSummary) {
+    renderPersonalSummary(_pcLastProfileForSummary);
   }
   updateHealthScoreSummary(lastLog, scoreDelta);
   updateHealthScoreSummaryHome(lastLog, scoreDelta);
