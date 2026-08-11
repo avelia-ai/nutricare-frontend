@@ -22549,6 +22549,7 @@ document.addEventListener('DOMContentLoaded', function() {
     var status = window._foxHealthStatus || 'tres_en_forme';
     var url = getFoxStatusVideoUrl(status, 2);
     if (!url) { alert('Pas de vidéo niveau 2 pour le statut: ' + status); return; }
+    pcApplyFoxScale(2);
     ['harmonyFoxVideo', 'harmonyFoxVideoHome'].forEach(function(id) {
       var vid = document.getElementById(id);
       if (!vid) return;
