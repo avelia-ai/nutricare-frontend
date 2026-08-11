@@ -3223,30 +3223,36 @@ window.initHome = async function() {
         else if (vX.indexOf('zen') === 0) { mondeX = 3; themeX = null; worldKeyX = 'territoire_zen'; caseX = parseInt(vX.slice(3), 10); }
         else { mondeX = 1; themeX = null; worldKeyX = 'foret_eveil'; caseX = 7; }
         if (isNaN(caseX)) caseX = 7;
-
-        var pX = JSON.parse(localStorage.getItem('nutricare_profile') || '{}');
-        if (!localStorage.getItem('mirella_pc_profile_backup')) {
-          localStorage.setItem('mirella_pc_profile_backup', JSON.stringify(pX));
-        }
-        var todayStrX = new Date().toISOString().split('T')[0];
-        pX.parcours_case = caseX;
-        pX.parcours_derniere_action = todayStrX;
-        pX.parcours_chemin = null;
-        pX.parcours_monde = mondeX;
-        pX.parcours_monde_theme = themeX;
-        pX.parcours_world_key = worldKeyX;
-        localStorage.setItem('nutricare_profile', JSON.stringify(pX));
-        try {
-          var tokX = authToken || window._authToken || localStorage.getItem('nutricare_token');
-          if (tokX) {
-            fetch(BACKEND_URL + '/api/profile', {
-              method: 'PUT',
-              headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + tokX },
-              body: JSON.stringify({ parcours_case: caseX, parcours_chemin: null, parcours_monde: mondeX, parcours_monde_theme: themeX, parcours_world_key: worldKeyX, parcours_derniere_action: todayStrX })
-            });
-          }
-        } catch(e) {}
         window.history.replaceState({}, '', window.location.pathname);
+        function pcApplyDebugViewX() {
+          var pX = JSON.parse(localStorage.getItem('nutricare_profile') || '{}');
+          if (!localStorage.getItem('mirella_pc_profile_backup')) {
+            localStorage.setItem('mirella_pc_profile_backup', JSON.stringify(pX));
+          }
+          var todayStrX = new Date().toISOString().split('T')[0];
+          pX.parcours_case = caseX;
+          pX.parcours_derniere_action = todayStrX;
+          pX.parcours_chemin = null;
+          pX.parcours_monde = mondeX;
+          pX.parcours_monde_theme = themeX;
+          pX.parcours_world_key = worldKeyX;
+          localStorage.setItem('nutricare_profile', JSON.stringify(pX));
+          try {
+            var tokX = authToken || window._authToken || localStorage.getItem('nutricare_token');
+            if (tokX) {
+              fetch(BACKEND_URL + '/api/profile', {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + tokX },
+                body: JSON.stringify({ parcours_case: caseX, parcours_chemin: null, parcours_monde: mondeX, parcours_monde_theme: themeX, parcours_world_key: worldKeyX, parcours_derniere_action: todayStrX })
+              });
+            }
+          } catch(e) {}
+        }
+        pcApplyDebugViewX();
+        setTimeout(pcApplyDebugViewX, 1500);
+        setTimeout(pcApplyDebugViewX, 3000);
+        setTimeout(pcApplyDebugViewX, 5000);
+        setTimeout(function() { location.reload(); }, 5500);
       }
     } catch(e) { console.error('pc debug view error', e); }
   })();
