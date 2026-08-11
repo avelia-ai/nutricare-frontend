@@ -3212,48 +3212,7 @@ window.initHome = async function() {
         window.history.replaceState({}, '', window.location.pathname);
       }
 
-      var vX = paramsX.get('pc_debug_view');
-      if (vX) {
-        vX = vX.toLowerCase();
-        var mondeX, themeX, caseX, worldKeyX;
-        if (vX.indexOf('eveil') === 0) { mondeX = 1; themeX = null; worldKeyX = 'foret_eveil'; caseX = parseInt(vX.slice(5), 10); }
-        else if (vX.indexOf('energie') === 0) { mondeX = 2; themeX = 'A'; worldKeyX = 'foret_energie'; caseX = parseInt(vX.slice(7), 10); }
-        else if (vX.indexOf('montagne') === 0) { mondeX = 2; themeX = 'B'; worldKeyX = 'montagne_force'; caseX = parseInt(vX.slice(8), 10); }
-        else if (vX.indexOf('lac') === 0) { mondeX = 3; themeX = null; worldKeyX = 'lac_cristallin'; caseX = parseInt(vX.slice(3), 10); }
-        else if (vX.indexOf('zen') === 0) { mondeX = 3; themeX = null; worldKeyX = 'territoire_zen'; caseX = parseInt(vX.slice(3), 10); }
-        else { mondeX = 1; themeX = null; worldKeyX = 'foret_eveil'; caseX = 7; }
-        if (isNaN(caseX)) caseX = 7;
-        window.history.replaceState({}, '', window.location.pathname);
-        function pcApplyDebugViewX() {
-          var pX = JSON.parse(localStorage.getItem('nutricare_profile') || '{}');
-          if (!localStorage.getItem('mirella_pc_profile_backup')) {
-            localStorage.setItem('mirella_pc_profile_backup', JSON.stringify(pX));
-          }
-          var todayStrX = new Date().toISOString().split('T')[0];
-          pX.parcours_case = caseX;
-          pX.parcours_derniere_action = todayStrX;
-          pX.parcours_chemin = null;
-          pX.parcours_monde = mondeX;
-          pX.parcours_monde_theme = themeX;
-          pX.parcours_world_key = worldKeyX;
-          localStorage.setItem('nutricare_profile', JSON.stringify(pX));
-          try {
-            var tokX = authToken || window._authToken || localStorage.getItem('nutricare_token');
-            if (tokX) {
-              fetch(BACKEND_URL + '/api/profile', {
-                method: 'PUT',
-                headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + tokX },
-                body: JSON.stringify({ parcours_case: caseX, parcours_chemin: null, parcours_monde: mondeX, parcours_monde_theme: themeX, parcours_world_key: worldKeyX, parcours_derniere_action: todayStrX })
-              });
-            }
-          } catch(e) {}
-        }
-        pcApplyDebugViewX();
-        setTimeout(pcApplyDebugViewX, 1500);
-        setTimeout(pcApplyDebugViewX, 3000);
-        setTimeout(pcApplyDebugViewX, 5000);
-        setTimeout(function() { location.reload(); }, 5500);
-      }
+      // pc_debug_view est desormais gere directement dans renderParcours() (non-destructif, sans mutation ni rechargement)
     } catch(e) { console.error('pc debug view error', e); }
   })();
   function pcPlaySequence(urls, onEnd) {
@@ -3295,6 +3254,7 @@ window.initHome = async function() {
     }
   };
   function advanceParcoursIfNeeded(profile) {
+    if (new URLSearchParams(window.location.search).get('pc_debug_view')) { return profile; }
     var todayStr = new Date().toISOString().split('T')[0];
     if (profile.parcours_derniere_action === todayStr) return profile;
     var todayActionKey = pcTodayActionKey();
@@ -3372,6 +3332,25 @@ window.initHome = async function() {
     if (!card) return;
     if (!profile.poids || !profile.taille) { card.style.display = 'none'; return; }
     card.style.display = 'block';
+    var _dbgV = new URLSearchParams(window.location.search).get('pc_debug_view');
+    if (_dbgV) {
+      _dbgV = _dbgV.toLowerCase();
+      var _dbgMonde, _dbgTheme, _dbgCase, _dbgWorldKey;
+      if (_dbgV.indexOf('eveil') === 0) { _dbgMonde = 1; _dbgTheme = null; _dbgWorldKey = 'foret_eveil'; _dbgCase = parseInt(_dbgV.slice(5), 10); }
+      else if (_dbgV.indexOf('energie') === 0) { _dbgMonde = 2; _dbgTheme = 'A'; _dbgWorldKey = 'foret_energie'; _dbgCase = parseInt(_dbgV.slice(7), 10); }
+      else if (_dbgV.indexOf('montagne') === 0) { _dbgMonde = 2; _dbgTheme = 'B'; _dbgWorldKey = 'montagne_force'; _dbgCase = parseInt(_dbgV.slice(8), 10); }
+      else if (_dbgV.indexOf('lac') === 0) { _dbgMonde = 3; _dbgTheme = null; _dbgWorldKey = 'lac_cristallin'; _dbgCase = parseInt(_dbgV.slice(3), 10); }
+      else if (_dbgV.indexOf('zen') === 0) { _dbgMonde = 3; _dbgTheme = null; _dbgWorldKey = 'territoire_zen'; _dbgCase = parseInt(_dbgV.slice(3), 10); }
+      else { _dbgMonde = 1; _dbgTheme = null; _dbgWorldKey = 'foret_eveil'; _dbgCase = 7; }
+      if (isNaN(_dbgCase)) _dbgCase = 7;
+      profile = Object.assign({}, profile, {
+        parcours_case: _dbgCase,
+        parcours_chemin: null,
+        parcours_monde: _dbgMonde,
+        parcours_monde_theme: _dbgTheme,
+        parcours_world_key: _dbgWorldKey
+      });
+    }
     profile = advanceParcoursIfNeeded(profile);
     var caseIdx = Math.min(profile.parcours_case || 0, 12);
     var mondeIdx = (profile.parcours_monde || 1) - 1;
