@@ -3807,7 +3807,17 @@ window.initHome = async function() {
       adviceWrap.style.display = 'none';
     }
     var fullAdviceCard = document.getElementById('fullAdviceCard');
-    if (fullAdviceCard) { fullAdviceCard.style.display = 'none'; }
+    if (fullAdviceCard) {
+      if (adviceParts.length && healthViewOpen) {
+        fullAdviceCard.style.display = 'block';
+        document.getElementById('fullAdviceText').innerHTML = adviceParts.map(function(p) {
+          var t = p.charAt(0).toUpperCase() + p.slice(1) + '.';
+          return '<div style="display:flex;gap:8px;margin-bottom:8px"><span style="color:#FF9A3C;flex-shrink:0">&#8226;</span><span style="color:rgba(255,255,255,0.85)">' + t + '</span></div>';
+        }).join('');
+      } else {
+        fullAdviceCard.style.display = 'none';
+      }
+    }
   }
   window.renderPersonalSummary = renderPersonalSummary;
   var greeting = hours < 12 ? 'Bonjour' : hours < 18 ? 'Bon apres-midi' : 'Bonsoir';
@@ -7297,6 +7307,17 @@ function switchLang(lang) {
         <div id="healthScoreGoalBadge" style="font-size:0.72rem;font-weight:800;color:#1B1B2F;background:linear-gradient(135deg,#FFD166,#FFB347);padding:5px 12px;border-radius:20px;flex-shrink:0"></div>
       </div>
       <div id="healthScoreGoalChips" style="display:flex;flex-wrap:wrap;gap:7px"></div>
+    </div>
+    <div id="fullAdviceCard" style="display:none;margin-top:24px;padding-top:20px;border-top:1px solid rgba(255,255,255,0.08);position:relative;z-index:1">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">
+        <div style="width:34px;height:34px;border-radius:11px;background:linear-gradient(135deg,#FF9A3C,#FF6B6B);display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:0 4px 10px rgba(255,154,60,0.35)">
+          <i class="ti ti-bulb" style="font-size:17px;color:#fff"></i>
+        </div>
+        <div style="flex:1;min-width:0">
+          <div style="font-size:0.62rem;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:rgba(255,255,255,0.45)">Conseils</div>
+        </div>
+      </div>
+      <div id="fullAdviceText"></div>
     </div>
   </div>
 
