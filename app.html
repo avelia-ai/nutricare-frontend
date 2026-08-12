@@ -3714,6 +3714,7 @@ window.initHome = async function() {
     if (!advicePool.length) pushAdvice('continue comme ça, tes indicateurs sont dans de bonnes tendances', 1);
 
     advicePool.sort(function(a,b) { return b.weight - a.weight; });
+    window._pcAdvicePool = advicePool;
     var adviceParts = advicePool.slice(0, 3).map(function(a) { return a.txt; });
     var _ok = { perte_poids:'poids', masse:'masse', sommeil:'dormir', stress:'stress', energie:'energie', performance:'performance', maintien:'maintenir', forme:'tendances', reequilibrage:'reequilibrage' };
     if (!advicePool.slice(0,3).some(function(a){return objectifs.some(function(o){return _ok[o]&&a.txt.indexOf(_ok[o])>-1;});})) {
@@ -3731,16 +3732,7 @@ window.initHome = async function() {
       adviceWrap.style.display = 'none';
     }
     var fullAdviceCard = document.getElementById('fullAdviceCard');
-    var fullAdviceParts = advicePool.slice(0, 5).map(function(a) { return a.txt; });
-    if (fullAdviceCard && fullAdviceParts.length) {
-      fullAdviceCard.style.display = 'block';
-      document.getElementById('fullAdviceText').innerHTML = fullAdviceParts.map(function(p) {
-        var t = p.charAt(0).toUpperCase() + p.slice(1) + '.';
-        return '<div style="display:flex;gap:8px;margin-bottom:10px"><span style="color:#FF9A3C;flex-shrink:0">&#8226;</span><span>' + t + '</span></div>';
-      }).join('');
-    } else if (fullAdviceCard) {
-      fullAdviceCard.style.display = 'none';
-    }
+    if (fullAdviceCard) { fullAdviceCard.style.display = 'none'; }
   }
   window.renderPersonalSummary = renderPersonalSummary;
   var greeting = hours < 12 ? 'Bonjour' : hours < 18 ? 'Bon apres-midi' : 'Bonsoir';
@@ -5099,10 +5091,7 @@ function switchLang(lang) {
                 <div style="font-size:0.72rem;font-weight:700;color:#D4730A;text-transform:uppercase;letter-spacing:0.04em">Conseils de Mirella</div>
               </div>
               <div id="summaryAdviceText" style="font-size:0.84rem;color:#555;line-height:1.6"></div>
-              <div onclick="showView('health')" style="display:flex;align-items:center;gap:5px;margin-top:12px;padding-top:12px;border-top:1px solid rgba(0,0,0,0.06);cursor:pointer">
-                <span style="font-size:0.76rem;font-weight:700;color:#D4730A">Voir tous les conseils dans Suivi</span>
-                <i class="ti ti-chevron-right" style="font-size:14px;color:#D4730A"></i>
-              </div>
+
             </div>
           </div>
         </div>
@@ -15143,12 +15132,13 @@ function updateHealthScoreSummary(log, scoreDelta) {
       if (goalTargetEl) goalTargetEl.textContent = 'Score 80';
       if (goalBadgeEl) goalBadgeEl.textContent = '+' + need + ' pts';
       if (goalChipsEl) {
-        var tips = getHealthGoalTips(log);
-        if (tips.length === 0) {
-          goalChipsEl.innerHTML = '<div style="display:flex;align-items:center;gap:7px;background:rgba(139,226,139,0.12);border:1px solid rgba(139,226,139,0.3);border-radius:20px;padding:8px 14px;font-size:0.78rem;color:#8BE28B;font-weight:600"><i class="ti ti-sparkles" style="font-size:14px"></i>Continue comme ca, tu es sur la bonne voie !</div>';
+        var _advTips = (window._pcAdvicePool || []).slice(0, 4);
+        if (_advTips.length === 0) {
+          goalChipsEl.innerHTML = '<div style="display:flex;align-items:center;gap:10px;background:rgba(139,226,139,0.1);border:1px solid rgba(139,226,139,0.25);border-radius:14px;padding:12px 14px"><div style="width:30px;height:30px;border-radius:9px;background:linear-gradient(135deg,#8BE28B,#5FCF7F);display:flex;align-items:center;justify-content:center;flex-shrink:0"><i class="ti ti-sparkles" style="font-size:15px;color:#fff"></i></div><span style="font-size:0.8rem;color:#E8F5E9;font-weight:600;line-height:1.4">Continue comme ca, tu es sur la bonne voie !</span></div>';
         } else {
-          goalChipsEl.innerHTML = tips.map(function(t) {
-            return '<div style="display:flex;align-items:center;gap:7px;background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.12);border-radius:20px;padding:8px 14px;font-size:0.78rem;color:#F5E6D8;font-weight:600"><i class="ti ' + t.icon + '" style="font-size:14px;color:#FFD166"></i>' + t.tip + '</div>';
+          goalChipsEl.innerHTML = _advTips.map(function(a) {
+            var t = a.txt.charAt(0).toUpperCase() + a.txt.slice(1) + '.';
+            return '<div style="display:flex;align-items:center;gap:10px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:14px;padding:12px 14px;margin-bottom:8px"><div style="width:30px;height:30px;border-radius:9px;background:linear-gradient(135deg,#FFD166,#FF8A5B);display:flex;align-items:center;justify-content:center;flex-shrink:0"><i class="ti ti-bulb" style="font-size:15px;color:#fff"></i></div><span style="font-size:0.8rem;color:#F5E6D8;font-weight:500;line-height:1.4">' + t + '</span></div>';
           }).join('');
         }
       }
