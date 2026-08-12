@@ -3524,9 +3524,9 @@ window.initHome = async function() {
       if (_todayIconEl) { _todayIconEl.textContent = _pcActionIcons[_todayKey] || '🎯'; }
     }
   }
-  var _pcLastProfileForSummary = null;
+  window._pcLastProfileForSummary = null;
   function renderPersonalSummary(profile) {
-    _pcLastProfileForSummary = profile;
+    window._pcLastProfileForSummary = profile;
     var card = document.getElementById('personalSummaryCard');
     if (!card) return;
     var poids = parseFloat(profile.poids);
@@ -15023,8 +15023,8 @@ function refreshHarmonyAvatar(logs) {
   }
   var _todayStrHA = new Date().toISOString().split('T')[0];
   window._pcTodayHealthLog = logs ? (logs.find(function(l) { return (l.date || '').split('T')[0] === _todayStrHA; }) || null) : null;
-  if (typeof _pcLastProfileForSummary !== 'undefined' && _pcLastProfileForSummary) {
-    renderPersonalSummary(_pcLastProfileForSummary);
+  if (window._pcLastProfileForSummary) {
+    renderPersonalSummary(window._pcLastProfileForSummary);
   }
   updateHealthScoreSummary(lastLog, scoreDelta);
   updateHealthScoreSummaryHome(lastLog, scoreDelta);
