@@ -3637,6 +3637,7 @@ window.initHome = async function() {
       adviceWrap.style.display = 'none';
     }
   }
+  window.renderPersonalSummary = renderPersonalSummary;
   var greeting = hours < 12 ? 'Bonjour' : hours < 18 ? 'Bon apres-midi' : 'Bonsoir';
   var greetEl = document.getElementById('homeGreeting');
   if (greetEl) greetEl.textContent = greeting + (prenom ? ' ' + prenom + ' !' : ' !');
