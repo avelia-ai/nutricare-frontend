@@ -6709,6 +6709,19 @@ function switchLang(lang) {
           <option value="sante">Sante generale</option>
         </select>
       </div>
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:18px">
+        <div style="width:24px;height:24px;border-radius:50%;background:#f0f0f0;color:#999;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0">3</div>
+        <select id="menuRythme" style="flex:1;padding:11px 12px;border-radius:12px;border:1px solid #eee;font-size:0.82rem;background:white;color:#666">
+          <option value="">Rythme de repas (optionnel)</option>
+          <option value="3_repas_classiques">3 repas par jour (classique)</option>
+          <option value="5_6_petits_repas">5-6 petits repas par jour</option>
+          <option value="jeune_16_8">Jeune intermittent 16:8</option>
+          <option value="jeune_18_6">Jeune intermittent 18:6</option>
+          <option value="jeune_20_4">Jeune intermittent 20:4</option>
+          <option value="omad">OMAD (1 repas par jour)</option>
+          <option value="jeune_5_2">Jeune 5:2 (2 jours restreints/semaine)</option>
+        </select>
+      </div>
       <!-- Filtres en selects -->
       <div style="border-top:1px solid rgba(255,154,108,0.1);padding-top:14px;display:grid;grid-template-columns:1fr 1fr;gap:10px" id="menuFiltersGrid">
         <div style="grid-column:1/-1;font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#FF6B6B;margin-bottom:2px">Filtres</div>
@@ -12809,7 +12822,7 @@ var activeMenuFilters = new Set();
     const joursNoms = ['Dimanche','Lundi','Mardi','Mercredi','Jeudi','Vendredi','Samedi'];
     const jourAujourdhui = document.getElementById('menuJourSelect')?.value || joursNoms[new Date().getDay()];
     const dateAujourdhui = new Date().toISOString().split('T')[0];
-    const filtresKey = Array.from(activeMenuFilters || []).sort().join('_') + '_' + (document.getElementById('menuObjectif')?.value || '');
+    const filtresKey = Array.from(activeMenuFilters || []).sort().join('_') + '_' + (document.getElementById('menuObjectif')?.value || '') + '_' + (document.getElementById('menuRythme')?.value || '');
     const cacheKey = 'mirella_menu_jour_' + dateAujourdhui + '_' + filtresKey;
     const cached = localStorage.getItem(cacheKey);
     let menu;
@@ -12826,7 +12839,7 @@ var activeMenuFilters = new Set();
       const res = await fetch(`${BACKEND_URL}/api/menus/generate-day`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${authToken}` },
-        body: JSON.stringify({ lang: 'fr', menu_filters: Array.from(activeMenuFilters || []), objectif_nutritionnel: objectifMenuActuel, target_calories: targetCalories, jour: jourAujourdhui }),
+        body: JSON.stringify({ lang: 'fr', menu_filters: Array.from(activeMenuFilters || []), objectif_nutritionnel: objectifMenuActuel, rythme_repas: document.getElementById('menuRythme')?.value || '', target_calories: targetCalories, jour: jourAujourdhui }),
         signal: controller.signal
       });
       clearTimeout(timeoutId);
