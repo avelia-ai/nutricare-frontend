@@ -3968,7 +3968,8 @@ window.initHome = async function() {
     var authToken = localStorage.getItem('nutricare_token');
     if (authToken) {
       fetch('https://nutricare-backend-production.up.railway.app/api/health/logs?days=30', {
-        headers: { 'Authorization': 'Bearer ' + authToken }
+        headers: { 'Authorization': 'Bearer ' + authToken },
+        cache: 'no-store'
       })
       .then(function(r){ return r.json(); })
       .then(function(logs){ if (Array.isArray(logs) && logs.length) refreshHarmonyAvatar(logs); })
@@ -13781,8 +13782,8 @@ async function loadHealthDashboard() {
   applyHealthPlanGates();
   try {
     const [todayRes, logsRes] = await Promise.all([
-      fetch(`${BACKEND_URL}/api/health/today`, { headers: { 'Authorization': `Bearer ${authToken}` } }),
-      fetch(`${BACKEND_URL}/api/health/logs?days=30`, { headers: { 'Authorization': `Bearer ${authToken}` } })
+      fetch(`${BACKEND_URL}/api/health/today`, { headers: { 'Authorization': `Bearer ${authToken}` }, cache: 'no-store' }),
+      fetch(`${BACKEND_URL}/api/health/logs?days=30`, { headers: { 'Authorization': `Bearer ${authToken}` }, cache: 'no-store' })
     ]);
     const today = await todayRes.json();
     const logs = await logsRes.json();
