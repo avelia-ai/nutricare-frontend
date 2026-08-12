@@ -3525,6 +3525,80 @@ window.initHome = async function() {
     }
   }
   window._pcLastProfileForSummary = null;
+  function pcComputeAdvicePool(profile) {
+    var poids = parseFloat(profile.poids);
+    var taille = parseFloat(profile.taille);
+    var hasData = poids && taille;
+    var tailleM = hasData ? taille / 100 : 0;
+    var imc = hasData ? poids / (tailleM * tailleM) : 0;
+    var objectifs = profile.objectifs || [];
+    var _tlLog = window._pcTodayHealthLog || null;
+    var _tlSleep = (_tlLog && _tlLog.sleep_hours != null) ? _tlLog.sleep_hours : null;
+    var _tlEnergy = (_tlLog && _tlLog.energy_level != null) ? _tlLog.energy_level : null;
+    var _tlStress = (_tlLog && _tlLog.stress_level != null) ? _tlLog.stress_level : null;
+    var _tlHydra = (_tlLog && _tlLog.hydration_liters != null) ? _tlLog.hydration_liters : null;
+    var _tlHydraTarget = hasData ? Math.round(poids * 0.033 * 10) / 10 : 2;
+    var _tlActivity = (_tlLog && _tlLog.activity_minutes != null) ? _tlLog.activity_minutes : null;
+
+    var advicePool = [];
+    function pushAdvice(txt, weight) { advicePool.push({ txt: txt, weight: weight || 1 }); }
+
+    if (_tlStress !== null && _tlStress >= 7) pushAdvice('ton stress du jour est \u00e9lev\u00e9 (' + _tlStress + '/10), essaie une s\u00e9ance de coh\u00e9rence cardiaque de 2 minutes', 5);
+    if (_tlEnergy !== null && _tlEnergy <= 4) pushAdvice('ton \u00e9nergie du jour est basse (' + _tlEnergy + '/10), v\u00e9rifie ton sommeil et ton hydratation avant tout', 5);
+    if (_tlSleep !== null && _tlSleep < 7) pushAdvice('tu as dormi ' + _tlSleep + 'h cette nuit, essaie de te coucher 30 minutes plus t\u00f4t ce soir', 4);
+    if (_tlHydra !== null && _tlHydra < _tlHydraTarget) pushAdvice('tu as bu ' + _tlHydra + 'L aujourd\'hui sur un objectif de ' + _tlHydraTarget + 'L, pense \u00e0 boire un peu plus', 4);
+    if (_tlActivity !== null && _tlActivity < 20) pushAdvice('tu as boug\u00e9 ' + _tlActivity + ' min aujourd\'hui, m\u00eame une courte marche peut faire la diff\u00e9rence', 3);
+
+    if (hasData) {
+      if (imc >= 25) pushAdvice('ton IMC indique un ' + (imc >= 30 ? 'exc\u00e8s de poids notable' : 'l\u00e9ger surpoids') + ', privil\u00e9gie les prot\u00e9ines maigres et les l\u00e9gumes \u00e0 chaque repas', 2);
+      else if (imc < 18.5) pushAdvice('ton IMC est en dessous de la normale, veille \u00e0 ne pas sauter de repas et privil\u00e9gie les apports caloriques de qualit\u00e9', 2);
+    }
+
+    if (_tlStress === null && profile.stress_actuel && profile.stress_actuel >= 7) pushAdvice('ton niveau de stress est \u00e9lev\u00e9, essaie une s\u00e9ance de coh\u00e9rence cardiaque de 2 minutes aujourd\'hui', 2);
+    if (_tlEnergy === null && profile.energie_actuelle && profile.energie_actuelle <= 4) pushAdvice('ton \u00e9nergie est basse en ce moment, v\u00e9rifie ton sommeil et ton hydratation avant tout', 2);
+    if (_tlSleep === null && profile.sommeil_heures_actuel && profile.sommeil_heures_actuel < 7) pushAdvice('tu dors moins de 7h en g\u00e9n\u00e9ral, essaie de te coucher 30 minutes plus t\u00f4t ce soir', 2);
+    if (profile.sommeil_reveils_nocturnes === 'souvent') pushAdvice('tes r\u00e9veils nocturnes fr\u00e9quents peuvent impacter ta r\u00e9cup\u00e9ration, \u00e9vite les \u00e9crans avant le coucher', 2);
+    if (profile.sport_pratique) pushAdvice('continue ta pratique de ' + profile.sport_pratique + ', la r\u00e9gularit\u00e9 est la cl\u00e9 des r\u00e9sultats', 1);
+
+    if (objectifs.indexOf('perte_poids') > -1) {
+      if (hasData && profile.poids_objectif) {
+        var _ecartObj = Math.round((poids - profile.poids_objectif) * 10) / 10;
+        if (_ecartObj > 0) pushAdvice('il te reste ' + _ecartObj + ' kg pour atteindre ton objectif, mise sur des prot\u00e9ines \u00e0 chaque repas pour rester rassasi\u00e9(e)', 3);
+      } else {
+        pushAdvice('pour ton objectif de perte de poids, privil\u00e9gie les prot\u00e9ines et les fibres qui rassasient durablement', 2);
+      }
+      if (_tlActivity !== null && _tlActivity < 30) pushAdvice('pour progresser vers ta perte de poids, vise au moins 30 min d\'activit\u00e9 aujourd\'hui', 2);
+    }
+    if (objectifs.indexOf('masse') > -1) {
+      pushAdvice('pour ta prise de masse, assure-toi d\'avoir un apport calorique suffisant et des prot\u00e9ines \u00e0 chaque repas', 3);
+      if (_tlActivity !== null && _tlActivity < 20) pushAdvice('pense \u00e0 ta s\u00e9ance de renforcement musculaire aujourd\'hui pour soutenir ta prise de masse', 2);
+    }
+    if (objectifs.indexOf('sommeil') > -1) {
+      if (_tlSleep !== null && _tlSleep < 7.5) pushAdvice('ton objectif est de mieux dormir : essaie une routine calme sans \u00e9cran 30 min avant le coucher ce soir', 3);
+      else pushAdvice('continue ta routine de sommeil, elle porte ses fruits sur ton objectif de mieux dormir', 1);
+    }
+    if (objectifs.indexOf('stress') > -1) {
+      if (_tlStress !== null && _tlStress >= 5) pushAdvice('pour r\u00e9duire ton stress, prends 5 minutes aujourd\'hui pour un exercice de respiration ou de m\u00e9ditation', 3);
+      else pushAdvice('ton niveau de stress semble ma\u00eetris\u00e9, continue tes rituels de d\u00e9tente', 1);
+    }
+    if (objectifs.indexOf('energie') > -1) {
+      if (_tlEnergy !== null && _tlEnergy <= 6) pushAdvice('pour booster ton \u00e9nergie, v\u00e9rifie ton hydratation et privil\u00e9gie des collations riches en fibres plut\u00f4t qu\'en sucre rapide', 3);
+      else pushAdvice('ton \u00e9nergie est bonne aujourd\'hui, continue sur cette lanc\u00e9e', 1);
+    }
+    if (objectifs.indexOf('performance') > -1) {
+      pushAdvice('pour ta performance sportive, veille \u00e0 bien t\'hydrater et \u00e0 manger des glucides complexes avant l\'effort', 2);
+    }
+    if (objectifs.indexOf('r\u00e9\u00e9quilibrage') > -1) {
+      pushAdvice('pour ton r\u00e9\u00e9quilibrage alimentaire, vise des repas vari\u00e9s avec l\u00e9gumes, prot\u00e9ines et bonnes graisses \u00e0 chaque repas', 2);
+    }
+    if (objectifs.indexOf('maintien') > -1) {
+      pushAdvice('pour maintenir ton poids, garde une activit\u00e9 r\u00e9guli\u00e8re et une alimentation \u00e9quilibr\u00e9e comme tu le fais d\u00e9j\u00e0', 1);
+    }
+    if (!advicePool.length) pushAdvice('continue comme \u00e7a, tes indicateurs sont dans de bonnes tendances', 1);
+    advicePool.sort(function(a,b) { return b.weight - a.weight; });
+    return advicePool;
+  }
+  window.pcComputeAdvicePool = pcComputeAdvicePool;
   function renderPersonalSummary(profile) {
     window._pcLastProfileForSummary = profile;
     var card = document.getElementById('personalSummaryCard');
@@ -15132,7 +15206,8 @@ function updateHealthScoreSummary(log, scoreDelta) {
       if (goalTargetEl) goalTargetEl.textContent = 'Score 80';
       if (goalBadgeEl) goalBadgeEl.textContent = '+' + need + ' pts';
       if (goalChipsEl) {
-        var _advTips = (window._pcAdvicePool || []).slice(0, 4);
+        var _profileForChips = window._pcLastProfileForSummary || JSON.parse(localStorage.getItem('nutricare_profile') || '{}');
+        var _advTips = (typeof window.pcComputeAdvicePool === 'function' ? window.pcComputeAdvicePool(_profileForChips) : []).slice(0, 4);
         if (_advTips.length === 0) {
           goalChipsEl.innerHTML = '<div style="display:flex;align-items:center;gap:10px;background:rgba(139,226,139,0.1);border:1px solid rgba(139,226,139,0.25);border-radius:14px;padding:12px 14px"><div style="width:30px;height:30px;border-radius:9px;background:linear-gradient(135deg,#8BE28B,#5FCF7F);display:flex;align-items:center;justify-content:center;flex-shrink:0"><i class="ti ti-sparkles" style="font-size:15px;color:#fff"></i></div><span style="font-size:0.8rem;color:#E8F5E9;font-weight:600;line-height:1.4">Continue comme ca, tu es sur la bonne voie !</span></div>';
         } else {
@@ -15180,6 +15255,7 @@ function refreshHarmonyAvatar(logs) {
   var _todayStrHA = new Date().toISOString().split('T')[0];
   window._pcTodayHealthLog = logs ? (logs.find(function(l) { return (l.date || '').split('T')[0] === _todayStrHA; }) || null) : null;
   var _profileForAdvice = window._pcLastProfileForSummary || JSON.parse(localStorage.getItem('nutricare_profile') || '{}');
+  if (typeof window.pcComputeAdvicePool === 'function') { window._pcAdvicePool = window.pcComputeAdvicePool(_profileForAdvice); }
   if (typeof window.renderPersonalSummary === 'function') { window.renderPersonalSummary(_profileForAdvice); }
   updateHealthScoreSummary(lastLog, scoreDelta);
   updateHealthScoreSummaryHome(lastLog, scoreDelta);
