@@ -15132,9 +15132,9 @@ function updateHealthScoreSummary(log, scoreDelta) {
       if (goalTargetEl) goalTargetEl.textContent = 'Score 80';
       if (goalBadgeEl) goalBadgeEl.textContent = '+' + need + ' pts';
       if (goalChipsEl) {
-        var _advTips = (window._pcAdvicePool || []).slice(0, 4);
+        var _advTips = (window._pcAdvicePool || []).slice(0, 4); goalChipsEl.setAttribute('data-debug-len', (window._pcAdvicePool||[]).length + '|profil:' + (window._pcLastProfileForSummary?'oui':'non'));
         if (_advTips.length === 0) {
-          goalChipsEl.innerHTML = '<div style="display:flex;align-items:center;gap:10px;background:rgba(139,226,139,0.1);border:1px solid rgba(139,226,139,0.25);border-radius:14px;padding:12px 14px"><div style="width:30px;height:30px;border-radius:9px;background:linear-gradient(135deg,#8BE28B,#5FCF7F);display:flex;align-items:center;justify-content:center;flex-shrink:0"><i class="ti ti-sparkles" style="font-size:15px;color:#fff"></i></div><span style="font-size:0.8rem;color:#E8F5E9;font-weight:600;line-height:1.4">Continue comme ca, tu es sur la bonne voie !</span></div>';
+          goalChipsEl.innerHTML = '<div style="display:flex;align-items:center;gap:10px;background:rgba(139,226,139,0.1);border:1px solid rgba(139,226,139,0.25);border-radius:14px;padding:12px 14px"><div style="width:30px;height:30px;border-radius:9px;background:linear-gradient(135deg,#8BE28B,#5FCF7F);display:flex;align-items:center;justify-content:center;flex-shrink:0"><i class="ti ti-sparkles" style="font-size:15px;color:#fff"></i></div><span style="font-size:0.8rem;color:#E8F5E9;font-weight:600;line-height:1.4">DEBUG(' + goalChipsEl.getAttribute('data-debug-len') + ') Continue comme ca, tu es sur la bonne voie !</span></div>';
         } else {
           goalChipsEl.innerHTML = _advTips.map(function(a) {
             var t = a.txt.charAt(0).toUpperCase() + a.txt.slice(1) + '.';
