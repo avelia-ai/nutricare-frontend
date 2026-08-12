@@ -2953,8 +2953,8 @@ window.initHome = async function() {
     document.getElementById('editGoalsModal').style.display = 'none';
     var nav2 = document.getElementById('bottomNav');
     if (nav2) { nav2.style.zIndex = '1000'; nav2.style.visibility = 'visible'; }
-    renderPersonalSummary(profile);
-    renderParcours(profile);
+    if (typeof window.renderPersonalSummary === 'function') { window.renderPersonalSummary(profile); }
+    if (typeof window.renderParcours === 'function') { window.renderParcours(profile); } else if (typeof renderParcours === 'function') { renderParcours(profile); }
   }
   var _objMeta = {
     perte_poids: { label: 'Perdre du poids', icon: 'trending-down' },
@@ -3754,8 +3754,8 @@ window.initHome = async function() {
   if (bgEl) bgEl.style.backgroundImage = 'url(/images/food' + (now.getDate() % 3 + 1) + '.jpg)';
 
   // Avatar
-  renderPersonalSummary(profile);
-  renderParcours(profile);
+  if (typeof window.renderPersonalSummary === 'function') { window.renderPersonalSummary(profile); }
+  if (typeof window.renderParcours === 'function') { window.renderParcours(profile); } else if (typeof renderParcours === 'function') { renderParcours(profile); }
   var avatarEl = document.getElementById('homeAvatar');
   if (avatarEl && profile.full_name) {
     avatarEl.textContent = profile.full_name.split(' ').map(function(n){return n[0];}).join('').toUpperCase().slice(0,2);
