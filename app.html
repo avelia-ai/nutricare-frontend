@@ -3603,6 +3603,7 @@ window.initHome = async function() {
     window._pcLastProfileForSummary = profile;
     var card = document.getElementById('personalSummaryCard');
     if (!card) return;
+    try {
     var poids = parseFloat(profile.poids);
     var taille = parseFloat(profile.taille);
     var hasData = poids && taille;
@@ -3724,6 +3725,8 @@ window.initHome = async function() {
     var _tlHydra = (_todayLogAdvice && _todayLogAdvice.hydration_liters != null) ? _todayLogAdvice.hydration_liters : null;
     var _tlActivity = (_todayLogAdvice && _todayLogAdvice.activity_minutes != null) ? _todayLogAdvice.activity_minutes : null;
     var _tlHydraTarget = Math.round(poids * 0.033 * 10) / 10;
+
+    } catch (e) { console.error('renderPersonalSummary DOM error:', e); }
 
     var advicePool = [];
     function pushAdvice(txt, weight) { advicePool.push({ txt: txt, weight: weight || 1 }); }
