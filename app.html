@@ -15203,7 +15203,7 @@ function updateHealthScoreSummary(log, scoreDelta) {
       var need = 80 - score;
       var goalTargetEl = document.getElementById('healthScoreGoalTarget');
       var goalBadgeEl = document.getElementById('healthScoreGoalBadge');
-      var goalChipsEl = document.getElementById('healthScoreGoalChips');
+      var goalChipsEl = document.getElementById('healthScoreGoalChips'); if (goalChipsEl) goalChipsEl.style.display = 'none';
       if (goalTargetEl) goalTargetEl.textContent = 'Score 80';
       if (goalBadgeEl) goalBadgeEl.textContent = '+' + need + ' pts';
       if (goalChipsEl) {
