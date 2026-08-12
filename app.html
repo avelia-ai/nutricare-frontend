@@ -15180,7 +15180,7 @@ function refreshHarmonyAvatar(logs) {
   var _todayStrHA = new Date().toISOString().split('T')[0];
   window._pcTodayHealthLog = logs ? (logs.find(function(l) { return (l.date || '').split('T')[0] === _todayStrHA; }) || null) : null;
   var _profileForAdvice = window._pcLastProfileForSummary || JSON.parse(localStorage.getItem('nutricare_profile') || '{}');
-  renderPersonalSummary(_profileForAdvice);
+  if (typeof window.renderPersonalSummary === 'function') { window.renderPersonalSummary(_profileForAdvice); }
   updateHealthScoreSummary(lastLog, scoreDelta);
   updateHealthScoreSummaryHome(lastLog, scoreDelta);
   updateHarmonyUI(totalPoints);
