@@ -3715,7 +3715,7 @@ window.initHome = async function() {
 
     advicePool.sort(function(a,b) { return b.weight - a.weight; });
     var adviceParts = advicePool.slice(0, 3).map(function(a) { return a.txt; });
-    var _ok = { perte_poids:'poids', masse:'masse', sommeil:'dormir', stress:'stress', energie:'energie', performance:'performance', maintien:'maintenir' };
+    var _ok = { perte_poids:'poids', masse:'masse', sommeil:'dormir', stress:'stress', energie:'energie', performance:'performance', maintien:'maintenir', forme:'tendances', reequilibrage:'reequilibrage' };
     if (!advicePool.slice(0,3).some(function(a){return objectifs.some(function(o){return _ok[o]&&a.txt.indexOf(_ok[o])>-1;});})) {
       var _oo = advicePool.filter(function(a){return objectifs.some(function(o){return _ok[o]&&a.txt.indexOf(_ok[o])>-1;});});
       if (_oo.length) adviceParts[adviceParts.length-1] = _oo[0].txt;
