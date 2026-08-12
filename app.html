@@ -3655,63 +3655,63 @@ window.initHome = async function() {
     function pushAdvice(txt, weight) { advicePool.push({ txt: txt, weight: weight || 1 }); }
 
     // Conseils bases sur les donnees du jour (priorite haute si renseignees)
-    if (_tlStress !== null && _tlStress >= 7) pushAdvice('ton stress du jour est eleve (' + _tlStress + '/10), essaie une seance de coherence cardiaque de 2 minutes', 5);
-    if (_tlEnergy !== null && _tlEnergy <= 4) pushAdvice('ton energie du jour est basse (' + _tlEnergy + '/10), verifie ton sommeil et ton hydratation avant tout', 5);
-    if (_tlSleep !== null && _tlSleep < 7) pushAdvice('tu as dormi ' + _tlSleep + 'h cette nuit, essaie de te coucher 30 minutes plus tot ce soir', 4);
-    if (_tlHydra !== null && _tlHydra < _tlHydraTarget) pushAdvice('tu as bu ' + _tlHydra + 'L aujourd\'hui sur un objectif de ' + _tlHydraTarget + 'L, pense a boire un peu plus', 4);
-    if (_tlActivity !== null && _tlActivity < 20) pushAdvice('tu as bouge ' + _tlActivity + ' min aujourd\'hui, meme une courte marche peut faire la difference', 3);
+    if (_tlStress !== null && _tlStress >= 7) pushAdvice('ton stress du jour est élevé (' + _tlStress + '/10), essaie une séance de cohérence cardiaque de 2 minutes', 5);
+    if (_tlEnergy !== null && _tlEnergy <= 4) pushAdvice('ton énergie du jour est basse (' + _tlEnergy + '/10), vérifie ton sommeil et ton hydratation avant tout', 5);
+    if (_tlSleep !== null && _tlSleep < 7) pushAdvice('tu as dormi ' + _tlSleep + 'h cette nuit, essaie de te coucher 30 minutes plus tôt ce soir', 4);
+    if (_tlHydra !== null && _tlHydra < _tlHydraTarget) pushAdvice('tu as bu ' + _tlHydra + 'L aujourd\'hui sur un objectif de ' + _tlHydraTarget + 'L, pense à boire un peu plus', 4);
+    if (_tlActivity !== null && _tlActivity < 20) pushAdvice('tu as bougé ' + _tlActivity + ' min aujourd\'hui, même une courte marche peut faire la différence', 3);
 
     // Conseils bases sur l IMC
-    if (imc >= 25) pushAdvice('ton IMC indique un ' + (imc >= 30 ? 'exces de poids notable' : 'leger surpoids') + ', privilegie les proteines maigres et les legumes a chaque repas', 2);
-    else if (imc < 18.5) pushAdvice('ton IMC est en dessous de la normale, veille a ne pas sauter de repas et privilegie les apports caloriques de qualite', 2);
+    if (imc >= 25) pushAdvice('ton IMC indique un ' + (imc >= 30 ? 'excès de poids notable' : 'léger surpoids') + ', privilégie les protéines maigres et les légumes à chaque repas', 2);
+    else if (imc < 18.5) pushAdvice('ton IMC est en dessous de la normale, veille à ne pas sauter de repas et privilégie les apports caloriques de qualité', 2);
 
     // Conseils bases sur le profil statique (onboarding, si pas deja couverts par les donnees du jour)
-    if (_tlStress === null && profile.stress_actuel && profile.stress_actuel >= 7) pushAdvice('ton niveau de stress est eleve, essaie une seance de coherence cardiaque de 2 minutes aujourd\'hui', 2);
-    if (_tlEnergy === null && profile.energie_actuelle && profile.energie_actuelle <= 4) pushAdvice('ton energie est basse en ce moment, verifie ton sommeil et ton hydratation avant tout', 2);
-    if (_tlSleep === null && profile.sommeil_heures_actuel && profile.sommeil_heures_actuel < 7) pushAdvice('tu dors moins de 7h en general, essaie de te coucher 30 minutes plus tot ce soir', 2);
-    if (profile.sommeil_reveils_nocturnes === 'souvent') pushAdvice('tes reveils nocturnes frequents peuvent impacter ta recuperation, evite les ecrans avant le coucher', 2);
-    if (profile.sport_pratique) pushAdvice('continue ta pratique de ' + profile.sport_pratique + ', la regularite est la cle des resultats', 1);
+    if (_tlStress === null && profile.stress_actuel && profile.stress_actuel >= 7) pushAdvice('ton niveau de stress est élevé, essaie une séance de cohérence cardiaque de 2 minutes aujourd\'hui', 2);
+    if (_tlEnergy === null && profile.energie_actuelle && profile.energie_actuelle <= 4) pushAdvice('ton énergie est basse en ce moment, vérifie ton sommeil et ton hydratation avant tout', 2);
+    if (_tlSleep === null && profile.sommeil_heures_actuel && profile.sommeil_heures_actuel < 7) pushAdvice('tu dors moins de 7h en général, essaie de te coucher 30 minutes plus tôt ce soir', 2);
+    if (profile.sommeil_reveils_nocturnes === 'souvent') pushAdvice('tes réveils nocturnes fréquents peuvent impacter ta récupération, évite les écrans avant le coucher', 2);
+    if (profile.sport_pratique) pushAdvice('continue ta pratique de ' + profile.sport_pratique + ', la régularité est la clé des résultats', 1);
 
     // Conseils personnalises selon les objectifs choisis a l onboarding
     if (objectifs.indexOf('perte_poids') > -1) {
       if (profile.poids_objectif && poids) {
         var _ecartObj = Math.round((poids - profile.poids_objectif) * 10) / 10;
-        if (_ecartObj > 0) pushAdvice('il te reste ' + _ecartObj + ' kg pour atteindre ton objectif, mise sur des proteines a chaque repas pour rester rassasie(e)', 3);
+        if (_ecartObj > 0) pushAdvice('il te reste ' + _ecartObj + ' kg pour atteindre ton objectif, mise sur des protéines à chaque repas pour rester rassasié(e)', 3);
       } else {
-        pushAdvice('pour ton objectif de perte de poids, privilegie les proteines et les fibres qui rassasient durablement', 2);
+        pushAdvice('pour ton objectif de perte de poids, privilégie les protéines et les fibres qui rassasient durablement', 2);
       }
-      if (_tlActivity !== null && _tlActivity < 30) pushAdvice('pour progresser vers ta perte de poids, vise au moins 30 min d activite aujourd\'hui', 2);
+      if (_tlActivity !== null && _tlActivity < 30) pushAdvice('pour progresser vers ta perte de poids, vise au moins 30 min d\'activité aujourd\'hui', 2);
     }
     if (objectifs.indexOf('masse') > -1) {
-      pushAdvice('pour ta prise de masse, assure-toi d avoir un apport calorique suffisant et des proteines a chaque repas', 3);
-      if (_tlActivity !== null && _tlActivity < 20) pushAdvice('pense a ta seance de renforcement musculaire aujourd\'hui pour soutenir ta prise de masse', 2);
+      pushAdvice('pour ta prise de masse, assure-toi d\'avoir un apport calorique suffisant et des protéines à chaque repas', 3);
+      if (_tlActivity !== null && _tlActivity < 20) pushAdvice('pense à ta séance de renforcement musculaire aujourd\'hui pour soutenir ta prise de masse', 2);
     }
     if (objectifs.indexOf('sommeil') > -1) {
-      if (_tlSleep !== null && _tlSleep < 7.5) pushAdvice('ton objectif est de mieux dormir : essaie une routine calme sans ecran 30 min avant le coucher ce soir', 3);
+      if (_tlSleep !== null && _tlSleep < 7.5) pushAdvice('ton objectif est de mieux dormir : essaie une routine calme sans écran 30 min avant le coucher ce soir', 3);
       else pushAdvice('continue ta routine de sommeil, elle porte ses fruits sur ton objectif de mieux dormir', 1);
     }
     if (objectifs.indexOf('stress') > -1) {
-      if (_tlStress !== null && _tlStress >= 5) pushAdvice('pour reduire ton stress, prends 5 minutes aujourd\'hui pour un exercice de respiration ou de meditation', 3);
-      else pushAdvice('ton niveau de stress semble maitrise, continue tes rituels de detente', 1);
+      if (_tlStress !== null && _tlStress >= 5) pushAdvice('pour réduire ton stress, prends 5 minutes aujourd\'hui pour un exercice de respiration ou de méditation', 3);
+      else pushAdvice('ton niveau de stress semble maîtrisé, continue tes rituels de détente', 1);
     }
     if (objectifs.indexOf('energie') > -1) {
-      if (_tlEnergy !== null && _tlEnergy <= 6) pushAdvice('pour booster ton energie, verifie ton hydratation et privilegie des collations riches en fibres plutot qu en sucre rapide', 3);
-      else pushAdvice('ton energie est bonne aujourd\'hui, continue sur cette lancee', 1);
+      if (_tlEnergy !== null && _tlEnergy <= 6) pushAdvice('pour booster ton énergie, vérifie ton hydratation et privilégie des collations riches en fibres plutôt qu\'en sucre rapide', 3);
+      else pushAdvice('ton énergie est bonne aujourd\'hui, continue sur cette lancée', 1);
     }
     if (objectifs.indexOf('performance') > -1) {
-      pushAdvice('pour ta performance sportive, veille a bien t hydrater et a manger des glucides complexes avant l effort', 2);
+      pushAdvice('pour ta performance sportive, veille à bien t\'hydrater et à manger des glucides complexes avant l\'effort', 2);
     }
     if (objectifs.indexOf('r\u00e9\u00e9quilibrage') > -1) {
-      pushAdvice('pour ton reequilibrage alimentaire, vise des repas varies avec legumes, proteines et bonnes graisses a chaque repas', 2);
+      pushAdvice('pour ton rééquilibrage alimentaire, vise des repas variés avec légumes, protéines et bonnes graisses à chaque repas', 2);
     }
     if (objectifs.indexOf('maintien') > -1) {
-      pushAdvice('pour maintenir ton poids, garde une activite reguliere et une alimentation equilibree comme tu le fais deja', 1);
+      pushAdvice('pour maintenir ton poids, garde une activité régulière et une alimentation équilibrée comme tu le fais déjà', 1);
     }
     if (objectifs.indexOf('forme') > -1 && !advicePool.length) {
-      pushAdvice('continue comme ca, tes indicateurs sont dans de bonnes tendances', 1);
+      pushAdvice('continue comme ça, tes indicateurs sont dans de bonnes tendances', 1);
     }
 
-    if (!advicePool.length) pushAdvice('continue comme ca, tes indicateurs sont dans de bonnes tendances', 1);
+    if (!advicePool.length) pushAdvice('continue comme ça, tes indicateurs sont dans de bonnes tendances', 1);
 
     advicePool.sort(function(a,b) { return b.weight - a.weight; });
     var adviceParts = advicePool.slice(0, 3).map(function(a) { return a.txt; });
