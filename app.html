@@ -4916,7 +4916,7 @@ function switchLang(lang) {
           <div style="position:absolute;top:-40px;right:-30px;width:140px;height:140px;background:radial-gradient(circle,rgba(255,107,107,0.22),transparent 70%);pointer-events:none"></div>
           <div style="position:absolute;bottom:-50px;left:-20px;width:120px;height:120px;background:radial-gradient(circle,rgba(108,92,231,0.16),transparent 70%);pointer-events:none"></div>
           <div style="position:absolute;top:14px;right:14px;width:48px;height:48px;border-radius:50%;overflow:hidden;z-index:2;box-shadow:0 0 0 2px rgba(255,255,255,0.15)">
-            <video autoplay muted loop playsinline style="width:100%;height:100%;object-fit:cover;display:block">
+            <video id="healthScoreFoxVideoHome" autoplay muted loop playsinline style="width:100%;height:100%;object-fit:cover;display:block">
               <source src="https://raw.githubusercontent.com/avelia-ai/nutricare-frontend/main/renard_score_sante.mp4" type="video/mp4">
             </video>
           </div>
@@ -7120,7 +7120,7 @@ function switchLang(lang) {
     <div style="position:absolute;top:-40px;right:-30px;width:140px;height:140px;background:radial-gradient(circle,rgba(255,107,107,0.22),transparent 70%);pointer-events:none"></div>
     <div style="position:absolute;bottom:-50px;left:-20px;width:120px;height:120px;background:radial-gradient(circle,rgba(108,92,231,0.16),transparent 70%);pointer-events:none"></div>
     <div style="position:absolute;top:14px;right:14px;width:48px;height:48px;border-radius:50%;overflow:hidden;z-index:2;box-shadow:0 0 0 2px rgba(255,255,255,0.15)">
-      <video autoplay muted loop playsinline style="width:100%;height:100%;object-fit:cover;display:block">
+      <video id="healthScoreFoxVideo" autoplay muted loop playsinline style="width:100%;height:100%;object-fit:cover;display:block">
         <source src="https://raw.githubusercontent.com/avelia-ai/nutricare-frontend/main/renard_score_sante.mp4" type="video/mp4">
       </video>
     </div>
@@ -14017,6 +14017,24 @@ function getHealthGoalTips(log) {
   pillars.sort(function(a,b) { return a.val - b.val; });
   return pillars.slice(0,4).filter(function(p) { return p.val < 0.8; });
 }
+var HEALTH_SCORE_FOX_VIDEOS = {
+  tres_en_forme: 'https://raw.githubusercontent.com/avelia-ai/nutricare-frontend/main/renard_score_sante.mp4',
+  en_forme: 'https://raw.githubusercontent.com/avelia-ai/nutricare-frontend/main/renard_score_sante.mp4',
+  moyennement_en_forme: 'https://raw.githubusercontent.com/avelia-ai/nutricare-frontend/main/renard_score_sante.mp4',
+  fatigue: 'https://raw.githubusercontent.com/avelia-ai/nutricare-frontend/main/renard_score_sante.mp4'
+};
+function pcApplyHealthScoreFoxVideo(elId, score) {
+  var vid = document.getElementById(elId);
+  if (!vid) return;
+  var status = getFoxStatus(score);
+  var url = HEALTH_SCORE_FOX_VIDEOS[status] || HEALTH_SCORE_FOX_VIDEOS.en_forme;
+  var source = vid.querySelector('source');
+  if (source && source.src !== url) {
+    source.src = url;
+    vid.load();
+    vid.play().catch(function() {});
+  }
+}
 function renderHealthScoreDelta(elId, delta) {
   var el = document.getElementById(elId);
   if (!el) return;
@@ -14832,6 +14850,7 @@ function updateHealthScoreSummaryHome(log, scoreDelta) {
   if (barActiv) barActiv.textContent = Math.round(norm.activ * 100) + '%';
   if (barStress) barStress.textContent = Math.round(norm.stress * 100) + '%';
   renderHealthScoreDelta('healthScoreDeltaHome', scoreDelta);
+  pcApplyHealthScoreFoxVideo('healthScoreFoxVideoHome', score);
   var goalHomeWrap = document.getElementById('healthScoreGoalHome');
   var goalHomeText = document.getElementById('healthScoreGoalHomeText');
   if (goalHomeWrap && goalHomeText) {
@@ -15054,6 +15073,7 @@ function updateHealthScoreSummary(log, scoreDelta) {
   if (barActiv) barActiv.textContent = Math.round(norm.activ * 100) + '%';
   if (barStress) barStress.textContent = Math.round(norm.stress * 100) + '%';
   renderHealthScoreDelta('healthScoreDelta', scoreDelta);
+  pcApplyHealthScoreFoxVideo('healthScoreFoxVideo', score);
   if (goalWrap) {
     if (score >= 80) {
       goalWrap.style.display = 'none';
