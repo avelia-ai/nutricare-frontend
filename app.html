@@ -3730,6 +3730,17 @@ window.initHome = async function() {
     } else {
       adviceWrap.style.display = 'none';
     }
+    var fullAdviceCard = document.getElementById('fullAdviceCard');
+    var fullAdviceParts = advicePool.slice(0, 5).map(function(a) { return a.txt; });
+    if (fullAdviceCard && fullAdviceParts.length) {
+      fullAdviceCard.style.display = 'block';
+      document.getElementById('fullAdviceText').innerHTML = fullAdviceParts.map(function(p) {
+        var t = p.charAt(0).toUpperCase() + p.slice(1) + '.';
+        return '<div style="display:flex;gap:8px;margin-bottom:10px"><span style="color:#FF9A3C;flex-shrink:0">&#8226;</span><span>' + t + '</span></div>';
+      }).join('');
+    } else if (fullAdviceCard) {
+      fullAdviceCard.style.display = 'none';
+    }
   }
   window.renderPersonalSummary = renderPersonalSummary;
   var greeting = hours < 12 ? 'Bonjour' : hours < 18 ? 'Bon apres-midi' : 'Bonsoir';
@@ -5088,6 +5099,10 @@ function switchLang(lang) {
                 <div style="font-size:0.72rem;font-weight:700;color:#D4730A;text-transform:uppercase;letter-spacing:0.04em">Conseils de Mirella</div>
               </div>
               <div id="summaryAdviceText" style="font-size:0.84rem;color:#555;line-height:1.6"></div>
+              <div onclick="showView('health')" style="display:flex;align-items:center;gap:5px;margin-top:12px;padding-top:12px;border-top:1px solid rgba(0,0,0,0.06);cursor:pointer">
+                <span style="font-size:0.76rem;font-weight:700;color:#D4730A">Voir tous les conseils dans Suivi</span>
+                <i class="ti ti-chevron-right" style="font-size:14px;color:#D4730A"></i>
+              </div>
             </div>
           </div>
         </div>
@@ -7218,6 +7233,17 @@ function switchLang(lang) {
       </div>
       <div id="healthScoreGoalChips" style="display:flex;flex-wrap:wrap;gap:7px"></div>
     </div>
+  </div>
+  <div id="fullAdviceCard" style="display:none;background:#FFFCFA;border-radius:16px;padding:18px;margin-bottom:16px;box-shadow:0 0 0 1.5px rgba(255,154,108,0.22),0 14px 32px rgba(230,110,70,0.14)">
+    <div style="display:flex;align-items:center;gap:12px;margin-bottom:14px">
+      <div style="width:44px;height:44px;border-radius:14px;overflow:hidden;flex-shrink:0;box-shadow:0 4px 10px rgba(255,107,107,0.25)">
+        <video autoplay muted loop playsinline style="width:100%;height:100%;object-fit:cover;display:block">
+          <source src="https://raw.githubusercontent.com/avelia-ai/nutricare-frontend/main/renard_conseils_compressed_def.mp4" type="video/mp4">
+        </video>
+      </div>
+      <div style="font-size:0.9rem;font-weight:800;color:#2D2D2D">Tous les conseils de Mirella</div>
+    </div>
+    <div id="fullAdviceText" style="font-size:0.86rem;color:#555;line-height:1.7"></div>
   </div>
   <!-- RITUELS BIEN-ETRE -->
   <div id="rituelsBienEtreCard" data-suivi-tab="rituels" style="display:none;background:#FFFCFA;border-radius:16px;margin-bottom:16px;overflow:hidden;box-shadow:0 0 0 1.5px rgba(255,154,108,0.22),0 14px 32px rgba(230,110,70,0.14)">
