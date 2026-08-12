@@ -3551,7 +3551,9 @@ window.initHome = async function() {
     var objLine = '';
     var progressWrap = document.getElementById('summaryProgressWrap');
     var verbe = 'perdre';
-    if (profile.poids_objectif && profile.poids_delta_souhaite && profile.objectif_delai_semaines) {
+    var _hasPoidsObjectif = objectifs.indexOf('perte_poids') > -1 || objectifs.indexOf('masse') > -1;
+    var _todayLogSummary = window._pcTodayHealthLog || null;
+    if (_hasPoidsObjectif && profile.poids_objectif && profile.poids_delta_souhaite && profile.objectif_delai_semaines) {
       verbe = objectifs.indexOf('masse') > -1 && objectifs.indexOf('perte_poids') === -1 ? 'prendre' : 'perdre';
       objLine = 'Objectif : ' + verbe + ' ' + profile.poids_delta_souhaite + ' kg en ' + profile.objectif_delai_semaines + ' semaines';
       progressWrap.style.display = 'block';
@@ -3563,6 +3565,30 @@ window.initHome = async function() {
       var done = Math.abs(startW - poids);
       var pct = total > 0 ? Math.max(0, Math.min(100, Math.round((done / total) * 100))) : 0;
       document.getElementById('summaryProgressBar').style.width = pct + '%';
+    } else if (objectifs.indexOf('energie') > -1) {
+      var _energieVal = (_todayLogSummary && _todayLogSummary.energy_level != null) ? _todayLogSummary.energy_level : 0;
+      objLine = "Objectif : ameliorer ton energie (vise 7/10 ou plus)";
+      progressWrap.style.display = 'block';
+      document.getElementById('summaryProgressStart').textContent = '0/10';
+      document.getElementById('summaryProgressEnd').textContent = '10/10';
+      document.getElementById('summaryProgressLabel').textContent = _energieVal + '/10';
+      document.getElementById('summaryProgressBar').style.width = Math.max(0, Math.min(100, _energieVal * 10)) + '%';
+    } else if (objectifs.indexOf('sommeil') > -1) {
+      var _sommeilVal = (_todayLogSummary && _todayLogSummary.sleep_hours != null) ? _todayLogSummary.sleep_hours : 0;
+      objLine = "Objectif : mieux dormir (vise 8h ou plus)";
+      progressWrap.style.display = 'block';
+      document.getElementById('summaryProgressStart').textContent = '0h';
+      document.getElementById('summaryProgressEnd').textContent = '8h';
+      document.getElementById('summaryProgressLabel').textContent = _sommeilVal + 'h';
+      document.getElementById('summaryProgressBar').style.width = Math.max(0, Math.min(100, Math.round((_sommeilVal / 8) * 100))) + '%';
+    } else if (objectifs.indexOf('stress') > -1) {
+      var _stressVal = (_todayLogSummary && _todayLogSummary.stress_level != null) ? _todayLogSummary.stress_level : 10;
+      objLine = "Objectif : reduire ton stress (vise 3/10 ou moins)";
+      progressWrap.style.display = 'block';
+      document.getElementById('summaryProgressStart').textContent = '10/10';
+      document.getElementById('summaryProgressEnd').textContent = '0/10';
+      document.getElementById('summaryProgressLabel').textContent = _stressVal + '/10';
+      document.getElementById('summaryProgressBar').style.width = Math.max(0, Math.min(100, Math.round((10 - _stressVal) * 10))) + '%';
     } else {
       progressWrap.style.display = 'none';
     }
