@@ -3729,14 +3729,7 @@ window.initHome = async function() {
     var _tlActivity = (_todayLogAdvice && _todayLogAdvice.activity_minutes != null) ? _todayLogAdvice.activity_minutes : null;
     var _tlHydraTarget = Math.round(poids * 0.033 * 10) / 10;
 
-    } catch (e) {
-      console.error('renderPersonalSummary DOM error:', e);
-      var _dbgErr = document.createElement('div');
-      _dbgErr.style.cssText = 'position:fixed;top:60px;left:0;right:0;z-index:999999;background:#900;color:#fff;font-size:11px;padding:8px;word-break:break-all;max-height:40vh;overflow:auto';
-      _dbgErr.textContent = 'ERREUR renderPersonalSummary: ' + (e && e.message ? e.message : String(e));
-      document.documentElement.appendChild(_dbgErr);
-      setTimeout(function(){ _dbgErr.remove(); }, 20000);
-    }
+    } catch (e) { console.error('renderPersonalSummary DOM error:', e); }
 
     var advicePool = [];
     function pushAdvice(txt, weight) { advicePool.push({ txt: txt, weight: weight || 1 }); }
@@ -3820,13 +3813,6 @@ window.initHome = async function() {
       adviceWrap.style.display = 'none';
     }
     var fullAdviceCard = document.getElementById('fullAdviceCard');
-    (function(){
-      var _d = document.createElement('div');
-      _d.style.cssText = 'position:fixed;top:60px;left:0;right:0;z-index:999999;background:#005;color:#fff;font-size:11px;padding:8px;word-break:break-all;max-height:40vh;overflow:auto';
-      _d.textContent = 'fullAdviceCard=' + (!!fullAdviceCard) + ' | adviceParts.length=' + adviceParts.length + ' | card(personalSummaryCard)=' + (!!card) + ' | hasData=' + hasData;
-      document.documentElement.appendChild(_d);
-      setTimeout(function(){ _d.remove(); }, 20000);
-    })();
     if (fullAdviceCard) {
       if (adviceParts.length) {
         fullAdviceCard.style.display = 'block';
@@ -13811,13 +13797,6 @@ function applyCorpoPlanGates() {
 }
 
 async function loadHealthDashboard() {
-  (function(){
-    var _d = document.createElement('div');
-    _d.style.cssText = 'position:fixed;top:100px;left:0;right:0;z-index:999999;background:#808;color:#fff;font-size:12px;padding:8px';
-    _d.textContent = 'loadHealthDashboard() APPELEE a ' + new Date().toLocaleTimeString();
-    document.documentElement.appendChild(_d);
-    setTimeout(function(){ _d.remove(); }, 20000);
-  })();
   applyHealthPlanGates();
   try {
     const [todayRes, logsRes] = await Promise.all([
@@ -15295,15 +15274,24 @@ function refreshHarmonyAvatar(logs) {
   var _todayStrHA = new Date().toISOString().split('T')[0];
   window._pcTodayHealthLog = (logs ? (logs.find(function(l) { return (l.date || '').split('T')[0] === _todayStrHA; }) || null) : null) || lastLog || null;
   var _profileForAdvice = window._pcLastProfileForSummary || JSON.parse(localStorage.getItem('nutricare_profile') || '{}');
-  (function(){
-    var _d = document.createElement('div');
-    _d.style.cssText = 'position:fixed;top:140px;left:0;right:0;z-index:999999;background:#a50;color:#fff;font-size:12px;padding:8px';
-    _d.textContent = 'AVANT appel: typeof pcComputeAdvicePool=' + typeof window.pcComputeAdvicePool + ' | typeof renderPersonalSummary=' + typeof window.renderPersonalSummary;
-    document.documentElement.appendChild(_d);
-    setTimeout(function(){ _d.remove(); }, 20000);
-  })();
   if (typeof window.pcComputeAdvicePool === 'function') { window._pcAdvicePool = window.pcComputeAdvicePool(_profileForAdvice); }
   if (typeof window.renderPersonalSummary === 'function') { window.renderPersonalSummary(_profileForAdvice); }
+  var _fac = document.getElementById('fullAdviceCard');
+  if (_fac) {
+    var _parts = (window._pcAdvicePool || []).slice(0, 5);
+    if (_parts.length) {
+      _fac.style.display = 'block';
+      var _facText = document.getElementById('fullAdviceText');
+      if (_facText) {
+        _facText.innerHTML = _parts.map(function(a) {
+          var t = a.txt.charAt(0).toUpperCase() + a.txt.slice(1) + '.';
+          return '<div style="display:flex;gap:8px;margin-bottom:8px"><span style="color:#FF9A3C;flex-shrink:0">&#8226;</span><span style="color:rgba(255,255,255,0.85)">' + t + '</span></div>';
+        }).join('');
+      }
+    } else {
+      _fac.style.display = 'none';
+    }
+  }
   updateHealthScoreSummary(lastLog, scoreDelta);
   updateHealthScoreSummaryHome(lastLog, scoreDelta);
   updateHarmonyUI(totalPoints);
