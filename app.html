@@ -11379,16 +11379,22 @@ function switchLang(lang) {
     await video.play();
 
     var track = cardioStream.getVideoTracks()[0];
-    try {
-      await track.applyConstraints({ advanced: [{ torch: true }] });
-    } catch (e) {
-      try { await track.applyConstraints({ torch: true }); } catch (e2) {
-        try {
-          if (window.ImageCapture) {
-            var ic = new ImageCapture(track);
-            await ic.setOptions({ fillLightMode: 'flash' });
-          }
-        } catch (e3) {}
+    var _torchNative = !!(window.Capacitor && window.Capacitor.isNativePlatform && window.Capacitor.isNativePlatform() && window.Capacitor.Plugins && window.Capacitor.Plugins.Torch);
+    if (_torchNative) {
+      try { await window.Capacitor.Plugins.Torch.enable(); } catch (eNativeTorch) { _torchNative = false; }
+    }
+    if (!_torchNative) {
+      try {
+        await track.applyConstraints({ advanced: [{ torch: true }] });
+      } catch (e) {
+        try { await track.applyConstraints({ torch: true }); } catch (e2) {
+          try {
+            if (window.ImageCapture) {
+              var ic = new ImageCapture(track);
+              await ic.setOptions({ fillLightMode: 'flash' });
+            }
+          } catch (e3) {}
+        }
       }
     }
 
@@ -11438,6 +11444,9 @@ function switchLang(lang) {
 
   function finishCardioMeasurement(track) {
     if (cardioRAF) cancelAnimationFrame(cardioRAF);
+    if (window.Capacitor && window.Capacitor.isNativePlatform && window.Capacitor.isNativePlatform() && window.Capacitor.Plugins && window.Capacitor.Plugins.Torch) {
+      try { window.Capacitor.Plugins.Torch.disable(); } catch (eNativeTorchOff) {}
+    }
     try {
       track.applyConstraints({ torch: false });
     } catch (e) {
