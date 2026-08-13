@@ -72,6 +72,20 @@ window._pcAdvicePool = [];
     if (objectifs.indexOf('maintien') > -1) {
       pushAdvice('pour maintenir ton poids, garde une activit\u00e9 r\u00e9guli\u00e8re et une alimentation \u00e9quilibr\u00e9e comme tu le fais d\u00e9j\u00e0', 1);
     }
+    var _goalTexts = {
+      perte_poids: 'ton objectif est la perte de poids, reste concentre(e) sur ton deficit calorique et la regularite de tes efforts',
+      masse: 'ton objectif est la prise de masse, veille a un apport calorique suffisant et a bien recuperer entre les seances',
+      sommeil: 'ton objectif est d\'ameliorer ton sommeil, garde une routine de coucher reguliere chaque soir',
+      stress: 'ton objectif est de reduire ton stress, accorde-toi des pauses regulieres dans ta journee',
+      energie: 'ton objectif est de booster ton energie, surveille en priorite ton hydratation et ton sommeil',
+      performance: 'ton objectif est la performance sportive, soigne ta recuperation autant que tes entrainements',
+      r\u00e9\u00e9quilibrage: 'ton objectif est le reequilibrage alimentaire, vise des repas varies et equilibres au quotidien',
+      maintien: 'ton objectif est de maintenir tes acquis, continue sur cette bonne lancee'
+    };
+    if (objectifs.length) {
+      var _goalKey = objectifs[0];
+      if (_goalTexts[_goalKey]) pushAdvice(_goalTexts[_goalKey], 10);
+    }
     if (!advicePool.length) pushAdvice('continue comme \u00e7a, tes indicateurs sont dans de bonnes tendances', 1);
     advicePool.sort(function(a,b) { return b.weight - a.weight; });
     return advicePool;
@@ -3668,6 +3682,20 @@ window.initHome = async function() {
     }
     if (objectifs.indexOf('maintien') > -1) {
       pushAdvice('pour maintenir ton poids, garde une activit\u00e9 r\u00e9guli\u00e8re et une alimentation \u00e9quilibr\u00e9e comme tu le fais d\u00e9j\u00e0', 1);
+    }
+    var _goalTexts = {
+      perte_poids: 'ton objectif est la perte de poids, reste concentre(e) sur ton deficit calorique et la regularite de tes efforts',
+      masse: 'ton objectif est la prise de masse, veille a un apport calorique suffisant et a bien recuperer entre les seances',
+      sommeil: 'ton objectif est d\'ameliorer ton sommeil, garde une routine de coucher reguliere chaque soir',
+      stress: 'ton objectif est de reduire ton stress, accorde-toi des pauses regulieres dans ta journee',
+      energie: 'ton objectif est de booster ton energie, surveille en priorite ton hydratation et ton sommeil',
+      performance: 'ton objectif est la performance sportive, soigne ta recuperation autant que tes entrainements',
+      r\u00e9\u00e9quilibrage: 'ton objectif est le reequilibrage alimentaire, vise des repas varies et equilibres au quotidien',
+      maintien: 'ton objectif est de maintenir tes acquis, continue sur cette bonne lancee'
+    };
+    if (objectifs.length) {
+      var _goalKey = objectifs[0];
+      if (_goalTexts[_goalKey]) pushAdvice(_goalTexts[_goalKey], 10);
     }
     if (!advicePool.length) pushAdvice('continue comme \u00e7a, tes indicateurs sont dans de bonnes tendances', 1);
     advicePool.sort(function(a,b) { return b.weight - a.weight; });
@@ -15356,12 +15384,22 @@ function refreshHarmonyAvatar(logs) {
           _injected.style.cssText = 'margin-top:24px;padding-top:20px;border-top:1px solid rgba(255,255,255,0.08);position:relative;z-index:1';
           _host.appendChild(_injected);
         }
-        var _html = '<div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">' +
+        var _html = '<div style="display:flex;align-items:center;gap:10px;margin-bottom:14px">' +
           '<div style="width:34px;height:34px;border-radius:11px;background:linear-gradient(135deg,#FF9A3C,#FF6B6B);display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:0 4px 10px rgba(255,154,60,0.35)"><i class="ti ti-bulb" style="font-size:17px;color:#fff"></i></div>' +
           '<div style="font-size:0.62rem;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:rgba(255,255,255,0.45)">Conseils</div></div>';
-        _html += _adviceSnapshot.map(function(a) {
+        var _adviceGradients = [
+          ['#FF9A3C','#FF6B6B'],
+          ['#6BCBFF','#4A90E2'],
+          ['#8BE28B','#5FCF7F'],
+          ['#FFD166','#FF8A5B'],
+          ['#C08CFF','#8B5CF6']
+        ];
+        _html += _adviceSnapshot.map(function(a, i) {
           var t = a.txt.charAt(0).toUpperCase() + a.txt.slice(1) + '.';
-          return '<div style="display:flex;gap:8px;margin-bottom:8px"><span style="color:#FF9A3C;flex-shrink:0">&#8226;</span><span style="color:rgba(255,255,255,0.85);font-size:0.84rem">' + t + '</span></div>';
+          var g = _adviceGradients[i % _adviceGradients.length];
+          return '<div style="display:flex;gap:12px;align-items:flex-start;margin-bottom:10px;padding:12px 14px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:14px">' +
+            '<div style="width:26px;height:26px;border-radius:8px;background:linear-gradient(135deg,' + g[0] + ',' + g[1] + ');display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:0.72rem;font-weight:800;color:#fff;box-shadow:0 2px 6px rgba(0,0,0,0.25)">' + (i+1) + '</div>' +
+            '<span style="color:rgba(255,255,255,0.9);font-size:0.84rem;line-height:1.45;padding-top:2px">' + t + '</span></div>';
         }).join('');
         _injected.innerHTML = _html;
       });
