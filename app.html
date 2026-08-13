@@ -15268,27 +15268,31 @@ function refreshHarmonyAvatar(logs) {
   (function() {
     var _adviceSnapshot = (window._pcAdvicePool || []).slice(0, 5);
     function _pcForceAdviceDisplay() {
-      var _host = document.getElementById('healthScoreSummaryCard');
-      if (!_host) return;
-      var _injected = document.getElementById('pcInjectedAdvice');
-      if (!_adviceSnapshot.length) {
-        if (_injected) _injected.remove();
-        return;
-      }
-      if (!_injected) {
-        _injected = document.createElement('div');
-        _injected.id = 'pcInjectedAdvice';
-        _injected.style.cssText = 'margin-top:24px;padding-top:20px;border-top:1px solid rgba(255,255,255,0.08);position:relative;z-index:1';
-        _host.appendChild(_injected);
-      }
-      var _html = '<div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">' +
-        '<div style="width:34px;height:34px;border-radius:11px;background:linear-gradient(135deg,#FF9A3C,#FF6B6B);display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:0 4px 10px rgba(255,154,60,0.35)"><i class="ti ti-bulb" style="font-size:17px;color:#fff"></i></div>' +
-        '<div style="font-size:0.62rem;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:rgba(255,255,255,0.45)">Conseils (essai ' + _pcAdviceTries + '/20, ' + _adviceSnapshot.length + ' trouves)</div></div>';
-      _html += _adviceSnapshot.map(function(a) {
-        var t = a.txt.charAt(0).toUpperCase() + a.txt.slice(1) + '.';
-        return '<div style="display:flex;gap:8px;margin-bottom:8px"><span style="color:#FF9A3C;flex-shrink:0">&#8226;</span><span style="color:rgba(255,255,255,0.85);font-size:0.84rem">' + t + '</span></div>';
-      }).join('');
-      _injected.innerHTML = _html;
+      var _hostIds = ['healthScoreSummaryCard', 'healthScoreSummaryCardHome'];
+      _hostIds.forEach(function(_hostId) {
+        var _host = document.getElementById(_hostId);
+        if (!_host) return;
+        var _injectedId = 'pcInjectedAdvice_' + _hostId;
+        var _injected = document.getElementById(_injectedId);
+        if (!_adviceSnapshot.length) {
+          if (_injected) _injected.remove();
+          return;
+        }
+        if (!_injected) {
+          _injected = document.createElement('div');
+          _injected.id = _injectedId;
+          _injected.style.cssText = 'margin-top:24px;padding-top:20px;border-top:1px solid rgba(255,255,255,0.08);position:relative;z-index:1';
+          _host.appendChild(_injected);
+        }
+        var _html = '<div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">' +
+          '<div style="width:34px;height:34px;border-radius:11px;background:linear-gradient(135deg,#FF9A3C,#FF6B6B);display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:0 4px 10px rgba(255,154,60,0.35)"><i class="ti ti-bulb" style="font-size:17px;color:#fff"></i></div>' +
+          '<div style="font-size:0.62rem;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:rgba(255,255,255,0.45)">Conseils</div></div>';
+        _html += _adviceSnapshot.map(function(a) {
+          var t = a.txt.charAt(0).toUpperCase() + a.txt.slice(1) + '.';
+          return '<div style="display:flex;gap:8px;margin-bottom:8px"><span style="color:#FF9A3C;flex-shrink:0">&#8226;</span><span style="color:rgba(255,255,255,0.85);font-size:0.84rem">' + t + '</span></div>';
+        }).join('');
+        _injected.innerHTML = _html;
+      });
     }
     var _pcAdviceTries = 0;
     var _pcAdviceInterval = setInterval(function() {
