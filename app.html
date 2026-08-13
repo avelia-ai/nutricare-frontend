@@ -2,6 +2,8 @@
 <html lang="fr">
 <head>
 <script>
+window._pcAdvicePool = [];
+window.pcComputeAdvicePool = window.pcComputeAdvicePool || function(profile) { return []; };
 window.addEventListener("error", function(e) {
   var div = document.createElement("div");
   div.style.cssText = "position:fixed;top:0;left:0;right:0;z-index:999999;background:#c00;color:#fff;font-size:11px;padding:8px;word-break:break-all;max-height:40vh;overflow:auto";
@@ -15273,13 +15275,6 @@ function refreshHarmonyAvatar(logs) {
   var _profileForAdvice = window._pcLastProfileForSummary || JSON.parse(localStorage.getItem('nutricare_profile') || '{}');
   if (typeof window.pcComputeAdvicePool === 'function') { window._pcAdvicePool = window.pcComputeAdvicePool(_profileForAdvice); }
   if (typeof window.renderPersonalSummary === 'function') { window.renderPersonalSummary(_profileForAdvice); }
-  (function(){
-    var d = document.createElement('div');
-    d.style.cssText = 'position:fixed;top:60px;left:0;right:0;z-index:999999;background:#0a0;color:#fff;font-size:11px;padding:8px;word-break:break-all;max-height:40vh;overflow:auto';
-    d.textContent = 'DEBUG advicePool=' + JSON.stringify(window._pcAdvicePool) + ' | fullAdviceCard exists=' + (!!document.getElementById('fullAdviceCard')) + ' | healthView display=' + (document.getElementById('healthView') ? document.getElementById('healthView').style.display : 'N/A');
-    document.documentElement.appendChild(d);
-    setTimeout(function(){ d.remove(); }, 15000);
-  })();
   updateHealthScoreSummary(lastLog, scoreDelta);
   updateHealthScoreSummaryHome(lastLog, scoreDelta);
   updateHarmonyUI(totalPoints);
