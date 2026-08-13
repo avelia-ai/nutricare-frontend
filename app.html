@@ -3812,18 +3812,7 @@ window.initHome = async function() {
     } else {
       adviceWrap.style.display = 'none';
     }
-    var fullAdviceCard = document.getElementById('fullAdviceCard');
-    if (fullAdviceCard) {
-      if (adviceParts.length) {
-        fullAdviceCard.style.display = 'block';
-        document.getElementById('fullAdviceText').innerHTML = adviceParts.map(function(p) {
-          var t = p.charAt(0).toUpperCase() + p.slice(1) + '.';
-          return '<div style="display:flex;gap:8px;margin-bottom:8px"><span style="color:#FF9A3C;flex-shrink:0">&#8226;</span><span style="color:rgba(255,255,255,0.85)">' + t + '</span></div>';
-        }).join('');
-      } else {
-        fullAdviceCard.style.display = 'none';
-      }
-    }
+
   }
   window.renderPersonalSummary = renderPersonalSummary;
   var greeting = hours < 12 ? 'Bonjour' : hours < 18 ? 'Bon apres-midi' : 'Bonsoir';
@@ -15294,7 +15283,7 @@ function refreshHarmonyAvatar(logs) {
       }
       var _html = '<div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">' +
         '<div style="width:34px;height:34px;border-radius:11px;background:linear-gradient(135deg,#FF9A3C,#FF6B6B);display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:0 4px 10px rgba(255,154,60,0.35)"><i class="ti ti-bulb" style="font-size:17px;color:#fff"></i></div>' +
-        '<div style="font-size:0.62rem;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:rgba(255,255,255,0.45)">Conseils</div></div>';
+        '<div style="font-size:0.62rem;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:rgba(255,255,255,0.45)">Conseils (essai ' + _pcAdviceTries + '/20, ' + _adviceSnapshot.length + ' trouves)</div></div>';
       _html += _adviceSnapshot.map(function(a) {
         var t = a.txt.charAt(0).toUpperCase() + a.txt.slice(1) + '.';
         return '<div style="display:flex;gap:8px;margin-bottom:8px"><span style="color:#FF9A3C;flex-shrink:0">&#8226;</span><span style="color:rgba(255,255,255,0.85);font-size:0.84rem">' + t + '</span></div>';
