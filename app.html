@@ -11489,13 +11489,14 @@ function switchLang(lang) {
   }
 
   function saveCardioMeasurement(bpm) {
-    fetch(BACKEND_URL + '/api/health', {
+    fetch(BACKEND_URL + '/api/health/log', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + authToken },
       body: JSON.stringify({ date: new Date().toISOString().split('T')[0], frequence_cardiaque: bpm })
-    }).then(function() {
+    }).then(function(r) {
+      if (!r.ok) { r.json().then(function(e){ console.error('saveCardioMeasurement failed:', e); }).catch(function(){}); return; }
       if (typeof loadHealthDashboard === 'function') loadHealthDashboard();
-    }).catch(function() {});
+    }).catch(function(e) { console.error('saveCardioMeasurement network error:', e); });
   }
 
   window.resetCardioCard = function() {
