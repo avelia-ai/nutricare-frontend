@@ -13946,7 +13946,7 @@ async function saveHealthLog() {
       if (data.energy_level !== null && data.sleep_hours !== null && data.stress_level !== null) {
         var healthScore = calcHealthScore(data.energy_level, data.sleep_hours, data.stress_level);
         if (data.hydration !== null && data.hydration !== undefined) { window.pcMarkAction('suivi'); }
-        window.pcMarkScore(healthScore);
+        if (typeof window.pcMarkScore === 'function') { window.pcMarkScore(healthScore); }
         var foxStatus = getFoxStatus(healthScore);
         var NOTIF_MESSAGES = {
           tres_en_forme: 'Waouh, tu es en pleine forme aujourd\'hui ! 🎉',
