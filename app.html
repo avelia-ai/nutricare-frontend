@@ -13811,6 +13811,13 @@ function applyCorpoPlanGates() {
 }
 
 async function loadHealthDashboard() {
+  (function(){
+    var _d = document.createElement('div');
+    _d.style.cssText = 'position:fixed;top:100px;left:0;right:0;z-index:999999;background:#808;color:#fff;font-size:12px;padding:8px';
+    _d.textContent = 'loadHealthDashboard() APPELEE a ' + new Date().toLocaleTimeString();
+    document.documentElement.appendChild(_d);
+    setTimeout(function(){ _d.remove(); }, 20000);
+  })();
   applyHealthPlanGates();
   try {
     const [todayRes, logsRes] = await Promise.all([
