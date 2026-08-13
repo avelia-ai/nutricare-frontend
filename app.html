@@ -15295,6 +15295,13 @@ function refreshHarmonyAvatar(logs) {
   var _todayStrHA = new Date().toISOString().split('T')[0];
   window._pcTodayHealthLog = (logs ? (logs.find(function(l) { return (l.date || '').split('T')[0] === _todayStrHA; }) || null) : null) || lastLog || null;
   var _profileForAdvice = window._pcLastProfileForSummary || JSON.parse(localStorage.getItem('nutricare_profile') || '{}');
+  (function(){
+    var _d = document.createElement('div');
+    _d.style.cssText = 'position:fixed;top:140px;left:0;right:0;z-index:999999;background:#a50;color:#fff;font-size:12px;padding:8px';
+    _d.textContent = 'AVANT appel: typeof pcComputeAdvicePool=' + typeof window.pcComputeAdvicePool + ' | typeof renderPersonalSummary=' + typeof window.renderPersonalSummary;
+    document.documentElement.appendChild(_d);
+    setTimeout(function(){ _d.remove(); }, 20000);
+  })();
   if (typeof window.pcComputeAdvicePool === 'function') { window._pcAdvicePool = window.pcComputeAdvicePool(_profileForAdvice); }
   if (typeof window.renderPersonalSummary === 'function') { window.renderPersonalSummary(_profileForAdvice); }
   updateHealthScoreSummary(lastLog, scoreDelta);
