@@ -15278,11 +15278,11 @@ function refreshHarmonyAvatar(logs) {
   if (typeof window.renderPersonalSummary === 'function') { window.renderPersonalSummary(_profileForAdvice); }
   (function() {
     var _adviceSnapshot = (window._pcAdvicePool || []).slice(0, 5);
-    setTimeout(function() {
+    function _pcForceAdviceDisplay() {
       var _fac = document.getElementById('fullAdviceCard');
       if (!_fac) return;
       if (_adviceSnapshot.length) {
-        _fac.style.display = 'block';
+        _fac.style.setProperty('display', 'block', 'important');
         var _facText = document.getElementById('fullAdviceText');
         if (_facText) {
           _facText.innerHTML = _adviceSnapshot.map(function(a) {
@@ -15290,10 +15290,14 @@ function refreshHarmonyAvatar(logs) {
             return '<div style="display:flex;gap:8px;margin-bottom:8px"><span style="color:#FF9A3C;flex-shrink:0">&#8226;</span><span style="color:rgba(255,255,255,0.85)">' + t + '</span></div>';
           }).join('');
         }
-      } else {
-        _fac.style.display = 'none';
       }
-    }, 150);
+    }
+    var _pcAdviceTries = 0;
+    var _pcAdviceInterval = setInterval(function() {
+      _pcForceAdviceDisplay();
+      _pcAdviceTries++;
+      if (_pcAdviceTries >= 20) clearInterval(_pcAdviceInterval);
+    }, 300);
   })();
   updateHealthScoreSummary(lastLog, scoreDelta);
   updateHealthScoreSummaryHome(lastLog, scoreDelta);
