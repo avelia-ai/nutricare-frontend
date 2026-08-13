@@ -11311,6 +11311,15 @@ function switchLang(lang) {
     return 60000 / avgInterval;
   }
   window.startCardioMeasurement = async function() {
+    if (cardioRAF) { cancelAnimationFrame(cardioRAF); cardioRAF = null; }
+    if (cardioStream) {
+      try { cardioStream.getTracks().forEach(function(t) { t.stop(); }); } catch (ePreStop) {}
+      cardioStream = null;
+    }
+    if (cardioVideoEl) { try { cardioVideoEl.remove(); } catch (ePreRemove) {} cardioVideoEl = null; }
+    if (window.Capacitor && window.Capacitor.isNativePlatform && window.Capacitor.isNativePlatform() && window.Capacitor.Plugins && window.Capacitor.Plugins.Torch) {
+      try { await window.Capacitor.Plugins.Torch.disable(); } catch (ePreTorchOff) {}
+    }
     document.getElementById('cardioEntryState').style.display = 'none';
     document.getElementById('cardioMeasuringState').style.display = 'block';
     document.getElementById('cardioResultState').style.display = 'none';
@@ -11505,6 +11514,15 @@ function switchLang(lang) {
   }
 
   window.resetCardioCard = function() {
+    if (cardioRAF) { cancelAnimationFrame(cardioRAF); cardioRAF = null; }
+    if (window.Capacitor && window.Capacitor.isNativePlatform && window.Capacitor.isNativePlatform() && window.Capacitor.Plugins && window.Capacitor.Plugins.Torch) {
+      try { window.Capacitor.Plugins.Torch.disable(); } catch (eResetTorchOff) {}
+    }
+    if (cardioStream) {
+      try { cardioStream.getTracks().forEach(function(t) { t.stop(); }); } catch (eResetStop) {}
+      cardioStream = null;
+    }
+    if (cardioVideoEl) { try { cardioVideoEl.remove(); } catch (eResetRemove) {} cardioVideoEl = null; }
     document.getElementById('cardioResultState').style.display = 'none';
     document.getElementById('cardioMeasuringState').style.display = 'none';
     document.getElementById('cardioEntryState').style.display = 'block';
