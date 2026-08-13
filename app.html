@@ -3820,6 +3820,13 @@ window.initHome = async function() {
       adviceWrap.style.display = 'none';
     }
     var fullAdviceCard = document.getElementById('fullAdviceCard');
+    (function(){
+      var _d = document.createElement('div');
+      _d.style.cssText = 'position:fixed;top:60px;left:0;right:0;z-index:999999;background:#005;color:#fff;font-size:11px;padding:8px;word-break:break-all;max-height:40vh;overflow:auto';
+      _d.textContent = 'fullAdviceCard=' + (!!fullAdviceCard) + ' | adviceParts.length=' + adviceParts.length + ' | card(personalSummaryCard)=' + (!!card) + ' | hasData=' + hasData;
+      document.documentElement.appendChild(_d);
+      setTimeout(function(){ _d.remove(); }, 20000);
+    })();
     if (fullAdviceCard) {
       if (adviceParts.length) {
         fullAdviceCard.style.display = 'block';
