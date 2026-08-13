@@ -15263,10 +15263,10 @@ function refreshHarmonyAvatar(logs) {
   var _todayStrHA = new Date().toISOString().split('T')[0];
   window._pcTodayHealthLog = (logs ? (logs.find(function(l) { return (l.date || '').split('T')[0] === _todayStrHA; }) || null) : null) || lastLog || null;
   var _profileForAdvice = window._pcLastProfileForSummary || JSON.parse(localStorage.getItem('nutricare_profile') || '{}');
-  if (typeof window.pcComputeAdvicePool === 'function') { window._pcAdvicePool = window.pcComputeAdvicePool(_profileForAdvice); }
   if (typeof window.renderPersonalSummary === 'function') { window.renderPersonalSummary(_profileForAdvice); }
   (function() {
     function _pcForceAdviceDisplay() {
+      if (typeof window.pcComputeAdvicePool === 'function') { window._pcAdvicePool = window.pcComputeAdvicePool(_profileForAdvice); }
       var _adviceSnapshot = (window._pcAdvicePool || []).slice(0, 5);
       var _hostIds = ['healthScoreSummaryCard'];
       _hostIds.forEach(function(_hostId) {
