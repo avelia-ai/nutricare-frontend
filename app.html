@@ -15276,22 +15276,25 @@ function refreshHarmonyAvatar(logs) {
   var _profileForAdvice = window._pcLastProfileForSummary || JSON.parse(localStorage.getItem('nutricare_profile') || '{}');
   if (typeof window.pcComputeAdvicePool === 'function') { window._pcAdvicePool = window.pcComputeAdvicePool(_profileForAdvice); }
   if (typeof window.renderPersonalSummary === 'function') { window.renderPersonalSummary(_profileForAdvice); }
-  var _fac = document.getElementById('fullAdviceCard');
-  if (_fac) {
-    var _parts = (window._pcAdvicePool || []).slice(0, 5);
-    if (_parts.length) {
-      _fac.style.display = 'block';
-      var _facText = document.getElementById('fullAdviceText');
-      if (_facText) {
-        _facText.innerHTML = _parts.map(function(a) {
-          var t = a.txt.charAt(0).toUpperCase() + a.txt.slice(1) + '.';
-          return '<div style="display:flex;gap:8px;margin-bottom:8px"><span style="color:#FF9A3C;flex-shrink:0">&#8226;</span><span style="color:rgba(255,255,255,0.85)">' + t + '</span></div>';
-        }).join('');
+  (function() {
+    var _adviceSnapshot = (window._pcAdvicePool || []).slice(0, 5);
+    setTimeout(function() {
+      var _fac = document.getElementById('fullAdviceCard');
+      if (!_fac) return;
+      if (_adviceSnapshot.length) {
+        _fac.style.display = 'block';
+        var _facText = document.getElementById('fullAdviceText');
+        if (_facText) {
+          _facText.innerHTML = _adviceSnapshot.map(function(a) {
+            var t = a.txt.charAt(0).toUpperCase() + a.txt.slice(1) + '.';
+            return '<div style="display:flex;gap:8px;margin-bottom:8px"><span style="color:#FF9A3C;flex-shrink:0">&#8226;</span><span style="color:rgba(255,255,255,0.85)">' + t + '</span></div>';
+          }).join('');
+        }
+      } else {
+        _fac.style.display = 'none';
       }
-    } else {
-      _fac.style.display = 'none';
-    }
-  }
+    }, 150);
+  })();
   updateHealthScoreSummary(lastLog, scoreDelta);
   updateHealthScoreSummaryHome(lastLog, scoreDelta);
   updateHarmonyUI(totalPoints);
