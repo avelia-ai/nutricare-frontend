@@ -15266,16 +15266,15 @@ function refreshHarmonyAvatar(logs) {
   if (typeof window.pcComputeAdvicePool === 'function') { window._pcAdvicePool = window.pcComputeAdvicePool(_profileForAdvice); }
   if (typeof window.renderPersonalSummary === 'function') { window.renderPersonalSummary(_profileForAdvice); }
   (function() {
-    var _adviceSnapshot = (window._pcAdvicePool || []).slice(0, 5);
     function _pcForceAdviceDisplay() {
-      var _hostIds = ['healthScoreSummaryCard', 'healthScoreSummaryCardHome'];
+      var _adviceSnapshot = (window._pcAdvicePool || []).slice(0, 5);
+      var _hostIds = ['healthScoreSummaryCard'];
       _hostIds.forEach(function(_hostId) {
         var _host = document.getElementById(_hostId);
         if (!_host) return;
         var _injectedId = 'pcInjectedAdvice_' + _hostId;
         var _injected = document.getElementById(_injectedId);
         if (!_adviceSnapshot.length) {
-          if (_injected) _injected.remove();
           return;
         }
         if (!_injected) {
