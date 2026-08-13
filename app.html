@@ -3604,13 +3604,14 @@ window.initHome = async function() {
   function renderPersonalSummary(profile) {
     window._pcLastProfileForSummary = profile;
     var card = document.getElementById('personalSummaryCard');
-    if (!card) return;
     try {
     var poids = parseFloat(profile.poids);
     var taille = parseFloat(profile.taille);
     var hasData = poids && taille;
-    if (!hasData) { card.style.display = 'none'; }
-    else { card.style.display = 'block'; }
+    if (card) {
+      if (!hasData) { card.style.display = 'none'; }
+      else { card.style.display = 'block'; }
+    }
     var tailleM = taille / 100;
     var imc = poids / (tailleM * tailleM);
     var imcRound = Math.round(imc * 10) / 10;
@@ -3728,7 +3729,14 @@ window.initHome = async function() {
     var _tlActivity = (_todayLogAdvice && _todayLogAdvice.activity_minutes != null) ? _todayLogAdvice.activity_minutes : null;
     var _tlHydraTarget = Math.round(poids * 0.033 * 10) / 10;
 
-    } catch (e) { console.error('renderPersonalSummary DOM error:', e); }
+    } catch (e) {
+      console.error('renderPersonalSummary DOM error:', e);
+      var _dbgErr = document.createElement('div');
+      _dbgErr.style.cssText = 'position:fixed;top:60px;left:0;right:0;z-index:999999;background:#900;color:#fff;font-size:11px;padding:8px;word-break:break-all;max-height:40vh;overflow:auto';
+      _dbgErr.textContent = 'ERREUR renderPersonalSummary: ' + (e && e.message ? e.message : String(e));
+      document.documentElement.appendChild(_dbgErr);
+      setTimeout(function(){ _dbgErr.remove(); }, 20000);
+    }
 
     var advicePool = [];
     function pushAdvice(txt, weight) { advicePool.push({ txt: txt, weight: weight || 1 }); }
