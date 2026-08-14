@@ -4732,16 +4732,16 @@ window.renderPlanning = function renderPlanning() {
     }).sort(function(a,b) { return a.time.localeCompare(b.time); });
 
     var dayDiv = document.createElement('div');
-    dayDiv.style.cssText = 'background:white;border-radius:16px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,0.06)' + (isToday ? ';border:2px solid var(--coral)' : '');
+    dayDiv.style.cssText = 'background:#FFFCFA;border-radius:18px;overflow:hidden;box-shadow:0 0 0 1.5px rgba(255,154,108,0.22),0 14px 32px rgba(230,110,70,0.14)' + (isToday ? ';box-shadow:0 0 0 2px var(--coral),0 14px 32px rgba(230,110,70,0.2)' : '');
 
-    var header = '<div onclick="window.openAddEvent(\''+dateStr+'\')" style="display:flex;align-items:center;justify-content:space-between;padding:12px 16px;background:' + (isToday ? 'linear-gradient(135deg,var(--coral),var(--accent))' : '#f9f9f9') + ';cursor:pointer">';
-    header += '<div style="font-weight:700;font-size:0.9rem;color:' + (isToday ? 'white' : '#1a1a1a') + '">' + days[i] + ' ' + day.getDate() + '</div>';
-    header += '<div style="font-size:0.75rem;color:' + (isToday ? 'rgba(255,255,255,0.8)' : '#bbb') + '">+ Ajouter</div>';
+    var header = '<div onclick="window.openAddEvent(\''+dateStr+'\')" style="display:flex;align-items:center;justify-content:space-between;padding:14px 16px;background:' + (isToday ? 'linear-gradient(135deg,var(--coral),var(--accent))' : '#FFF6EE') + ';cursor:pointer">';
+    header += '<div style="font-weight:700;font-size:0.9rem;color:' + (isToday ? 'white' : '#2D2D2D') + '">' + days[i] + ' ' + day.getDate() + (isToday ? ' <span style=\"font-size:0.65rem;font-weight:700;background:rgba(255,255,255,0.25);padding:2px 8px;border-radius:8px;margin-left:6px;vertical-align:middle\">AUJOURD\'HUI</span>' : '') + '</div>';
+    header += '<div style="font-size:0.75rem;font-weight:600;color:' + (isToday ? 'rgba(255,255,255,0.85)' : '#c99') + '">+ Ajouter</div>';
     header += '</div>';
 
     var eventsHtml = '';
     if (dayEvents.length === 0) {
-      eventsHtml = '<div style="padding:12px 16px;font-size:0.82rem;color:#bbb;text-align:center">Aucun événement</div>';
+      eventsHtml = '<div style="padding:18px 16px;font-size:0.82rem;color:#bbb;text-align:center;display:flex;flex-direction:column;align-items:center;gap:6px"><i class="ti ti-calendar" style="font-size:20px;color:#e5cfc0"></i>Aucun événement</div>';
     } else {
       dayEvents.forEach(function(e) {
         var colors = {repas:'var(--cream)',medicament:'#F0F4FF',sport:'#F0FFF5',rappel:'#FFFBF0',rdv:'#FDF0FF'};
@@ -5755,19 +5755,29 @@ function switchLang(lang) {
     <!-- DASHBOARD VIEW -->
     <!-- PLANNING VIEW -->
 <div id="planningView" style="display:none;padding:0;overflow-y:auto;background:var(--cream);width:100%;height:100%;">
-  <div class="view-header" style="background:linear-gradient(135deg,var(--coral),var(--accent));margin:0;padding:32px 32px 28px">
-    <div style="display:flex;align-items:center;justify-content:space-between">
+  <div class="view-header" style="background:linear-gradient(135deg,var(--coral),var(--accent));margin:0;padding:32px 32px 28px;position:relative;overflow:hidden">
+    <div style="position:absolute;top:-30px;right:-30px;width:130px;height:130px;border-radius:50%;background:rgba(255,255,255,0.08);pointer-events:none"></div>
+    <div style="display:flex;align-items:center;justify-content:space-between;position:relative">
       <div>
         <div style="font-size:1.6rem;font-weight:700;color:white;font-family:'Open Sans',sans-serif">Mon Planning</div>
         <div style="font-size:0.9rem;color:rgba(255,255,255,0.8);margin-top:4px">Repas · Médicaments · Sport · Rappels</div>
       </div>
-      <button onclick="openAddEvent()" style="background:rgba(255,255,255,0.2);border:none;border-radius:12px;padding:10px 16px;color:white;font-size:0.85rem;font-weight:600;cursor:pointer">+ Ajouter</button>
+      <div style="display:flex;align-items:center;gap:10px">
+        <div style="width:48px;height:48px;border-radius:50%;overflow:hidden;flex-shrink:0;box-shadow:0 4px 12px rgba(0,0,0,0.25);border:2px solid rgba(255,255,255,0.5)">
+          <video autoplay muted loop playsinline style="width:100%;height:100%;object-fit:cover;display:block">
+            <source src="https://raw.githubusercontent.com/avelia-ai/nutricare-frontend/main/renard_score_sante.mp4" type="video/mp4">
+          </video>
+        </div>
+        <button onclick="openAddEvent()" style="background:rgba(255,255,255,0.22);border:1px solid rgba(255,255,255,0.3);border-radius:12px;padding:10px 16px;color:white;font-size:0.85rem;font-weight:700;cursor:pointer;white-space:nowrap">+ Ajouter</button>
+      </div>
     </div>
   </div>
   <!-- Onglets Agenda/Routines -->
-  <div style="display:flex;gap:8px;padding:12px 20px;background:white;border-bottom:1px solid #f0f0f0">
-    <button id="tabAgenda" onclick="document.getElementById('planningAgendaContent').style.display='block';document.getElementById('planningRoutinesView').style.display='none';this.style.background='var(--coral)';this.style.color='white';document.getElementById('tabRoutines').style.background='#f0f0f0';document.getElementById('tabRoutines').style.color='#888';" style="flex:1;padding:10px;border:none;border-radius:10px;background:var(--coral);color:white;font-weight:700;font-size:0.85rem;cursor:pointer;font-family:DM Sans,sans-serif">Agenda</button>
-    <button id="tabRoutines" onclick="document.getElementById('planningAgendaContent').style.display='none';document.getElementById('planningRoutinesView').style.display='block';this.style.background='var(--coral)';this.style.color='white';document.getElementById('tabAgenda').style.background='#f0f0f0';document.getElementById('tabAgenda').style.color='#888';var rl=document.getElementById('planningRoutinesLockOverlay');if(rl)rl.style.display=(window.currentPlan==='premium')?'none':'flex';" style="flex:1;padding:10px;border:none;border-radius:10px;background:#f0f0f0;color:#888;font-weight:700;font-size:0.85rem;cursor:pointer;font-family:DM Sans,sans-serif">Routines</button>
+  <div style="padding:14px 20px;background:var(--cream)">
+    <div style="display:flex;gap:6px;background:#FFF6EE;border-radius:14px;padding:5px;box-shadow:inset 0 1px 3px rgba(0,0,0,0.04)">
+      <button id="tabAgenda" onclick="document.getElementById('planningAgendaContent').style.display='block';document.getElementById('planningRoutinesView').style.display='none';this.style.background='linear-gradient(135deg,var(--coral),var(--accent))';this.style.color='white';this.style.boxShadow='0 4px 12px rgba(255,107,107,0.3)';document.getElementById('tabRoutines').style.background='transparent';document.getElementById('tabRoutines').style.color='#999';document.getElementById('tabRoutines').style.boxShadow='none';" style="flex:1;padding:11px;border:none;border-radius:11px;background:linear-gradient(135deg,var(--coral),var(--accent));color:white;font-weight:700;font-size:0.85rem;cursor:pointer;font-family:DM Sans,sans-serif;box-shadow:0 4px 12px rgba(255,107,107,0.3);transition:all .2s">Agenda</button>
+      <button id="tabRoutines" onclick="document.getElementById('planningAgendaContent').style.display='none';document.getElementById('planningRoutinesView').style.display='block';this.style.background='linear-gradient(135deg,var(--coral),var(--accent))';this.style.color='white';this.style.boxShadow='0 4px 12px rgba(255,107,107,0.3)';document.getElementById('tabAgenda').style.background='transparent';document.getElementById('tabAgenda').style.color='#999';document.getElementById('tabAgenda').style.boxShadow='none';var rl=document.getElementById('planningRoutinesLockOverlay');if(rl)rl.style.display=(window.currentPlan==='premium')?'none':'flex';" style="flex:1;padding:11px;border:none;border-radius:11px;background:transparent;color:#999;font-weight:700;font-size:0.85rem;cursor:pointer;font-family:DM Sans,sans-serif;transition:all .2s">Routines</button>
+    </div>
   </div>
 
   <div id="planningAgendaContent" style="padding:20px">
