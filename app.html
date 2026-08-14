@@ -22095,6 +22095,17 @@ window.showRoutineDetail = function(idx) {
     if (t.indexOf('respir') > -1 || t.indexOf('médit') > -1 || t.indexOf('stress') > -1) return 'ti-brain';
     return 'ti-check';
   }
+  function _routineIcon(routine) {
+    var t = (routine.nom + ' ' + routine.desc).toLowerCase();
+    if (t.indexOf('sommeil') > -1 || t.indexOf('dormir') > -1) return { icon:'ti-moon', grad:'#6C5CE7,#7EC8E3' };
+    if (t.indexOf('poids') > -1 || t.indexOf('minceur') > -1) return { icon:'ti-salad', grad:'#27AE60,#7EC8E3' };
+    if (t.indexOf('muscle') > -1 || t.indexOf('masse') > -1) return { icon:'ti-barbell', grad:'#FF6B6B,#FF9A3C' };
+    if (t.indexOf('detox') > -1) return { icon:'ti-leaf', grad:'#27AE60,#8BE28B' };
+    if (t.indexOf('skincare') > -1 || t.indexOf('peau') > -1) return { icon:'ti-sparkles', grad:'#FF9A6C,#FFB88C' };
+    if (t.indexOf('immunit') > -1) return { icon:'ti-shield-check', grad:'#FFD166,#FF8A5B' };
+    if (t.indexOf('stress') > -1 || t.indexOf('médit') > -1 || t.indexOf('mental') > -1) return { icon:'ti-brain', grad:'#9B59B6,#c39bd3' };
+    return { icon:'ti-star', grad:'#FF9A3C,#FF6B6B' };
+  }
   function _routineBenefits(routine) {
     var allText = (routine.desc + ' ' + routine.etapes.join(' ')).toLowerCase();
     var tags = [];
@@ -22111,6 +22122,8 @@ window.showRoutineDetail = function(idx) {
   var _benefits = _routineBenefits(r);
   var _durMatch = (r.duree.match(/\d+/) || ['7'])[0];
   var _estimEffort = parseInt(_durMatch) <= 7 ? '10-15 min/jour' : '15-25 min/jour';
+  var _rIcon = _routineIcon(r);
+  var _actionText = r.action.replace(/^[^\w\s]+\s*/u, '');
 
   var modal = document.createElement('div');
   modal.id = 'routineDetailModal';
@@ -22120,9 +22133,9 @@ window.showRoutineDetail = function(idx) {
     '<div style="background:linear-gradient(135deg,var(--coral),var(--accent));margin:16px 20px 0;border-radius:20px;padding:20px;position:relative;overflow:hidden">' +
       '<div style="position:absolute;top:-20px;right:-20px;width:90px;height:90px;border-radius:50%;background:rgba(255,255,255,0.14);pointer-events:none"></div>' +
       '<div style="display:flex;align-items:center;gap:14px;position:relative">' +
-        '<div style="width:56px;height:56px;background:rgba(255,255,255,0.2);border-radius:16px;display:flex;align-items:center;justify-content:center;font-size:1.8rem;flex-shrink:0">' + r.icone + '</div>' +
+        '<div style="width:56px;height:56px;background:linear-gradient(135deg,' + _rIcon.grad + ');border-radius:16px;display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:0 4px 12px rgba(0,0,0,0.2)"><i class="ti ' + _rIcon.icon + '" style="font-size:26px;color:#fff"></i></div>' +
         '<div><div style="font-family:Open Sans,serif;font-size:1.25rem;font-weight:800;color:white">' + r.nom + '</div>' +
-        '<div style="font-size:0.8rem;color:rgba(255,255,255,0.85);font-weight:600;margin-top:2px">⏱ ' + r.duree + ' · ' + r.action + '</div></div>' +
+        '<div style="display:flex;align-items:center;gap:6px;font-size:0.8rem;color:rgba(255,255,255,0.85);font-weight:600;margin-top:4px"><i class="ti ti-clock" style="font-size:13px"></i>' + r.duree + ' · ' + _actionText + '</div></div>' +
       '</div>' +
     '</div>' +
     '<div style="padding:20px 24px 40px">' +
@@ -22141,7 +22154,7 @@ window.showRoutineDetail = function(idx) {
           '<span style="font-size:0.85rem;color:#333;font-weight:500">' + e + '</span></div>';
       }).join('') +
     '</div>' +
-    '<button onclick="addRoutineToPlanning(' + idx + ')" style="width:100%;background:linear-gradient(135deg,var(--coral),var(--accent));color:white;border:none;border-radius:14px;padding:15px;font-family:DM Sans,sans-serif;font-size:0.95rem;font-weight:700;cursor:pointer;margin-bottom:10px;box-shadow:0 8px 20px rgba(255,107,107,0.3)">Ajouter à mon planning ✓</button>' +
+    '<button onclick="addRoutineToPlanning(' + idx + ')" style="width:100%;background:linear-gradient(135deg,var(--coral),var(--accent));color:white;border:none;border-radius:14px;padding:15px;font-family:DM Sans,sans-serif;font-size:0.95rem;font-weight:700;cursor:pointer;margin-bottom:10px;box-shadow:0 8px 20px rgba(255,107,107,0.3);display:flex;align-items:center;justify-content:center;gap:8px"><i class="ti ti-circle-check-filled" style="font-size:17px"></i>Ajouter à mon planning</button>' +
     "<button onclick=\"document.getElementById('routineDetailModal').remove()\" style=\"width:100%;background:transparent;color:#999;border:none;padding:10px;font-size:0.85rem;cursor:pointer\">Fermer</button>" +
     '</div>' +
   '</div>';
