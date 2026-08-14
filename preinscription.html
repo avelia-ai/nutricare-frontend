@@ -5,1150 +5,539 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Mirella — Coach Nutrition IA Anti-Inflammation | Préinscription Early Bird</title>
 <meta name="description" content="Mirella est votre coach nutrition IA personnalisé. Menus anti-inflammatoires, suivi santé, analyse de vos bilans sanguins. Préinscrivez-vous en Early Bird et économisez 50% à vie.">
-<meta name="keywords" content="coach nutrition IA, application santé, anti-inflammation, menus personnalisés, suivi santé, Mirella, Geeyom, Early Bird">
-<meta name="author" content="Geeyom">
-<meta name="robots" content="index, follow">
-<link rel="canonical" href="https://www.mirella-ai.fr/preinscription">
-<!-- Open Graph -->
-<meta property="og:type" content="website">
 <meta property="og:title" content="Mirella — Coach Nutrition IA Anti-Inflammation | Early Bird">
 <meta property="og:description" content="Préinscrivez-vous à Mirella, votre coach nutrition IA. Menus anti-inflammatoires personnalisés, analyse santé, suivi quotidien. -50% à vie pour les premiers inscrits.">
 <meta property="og:image" content="https://raw.githubusercontent.com/avelia-ai/nutricare-frontend/main/www/images/ebook-cover.jpg">
-<meta property="og:url" content="https://www.mirella-ai.fr/preinscription">
-<meta property="og:site_name" content="Mirella">
 <meta property="og:locale" content="fr_FR">
-<!-- Twitter Card -->
-<meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Mirella — Coach Nutrition IA | Early Bird -50%">
-<meta name="twitter:description" content="Préinscrivez-vous à Mirella et économisez 50% à vie. Coach nutrition IA anti-inflammatoire personnalisé.">
-<meta name="twitter:image" content="https://raw.githubusercontent.com/avelia-ai/nutricare-frontend/main/www/images/ebook-cover.jpg">
-<!-- Schema.org -->
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "SoftwareApplication",
-  "name": "Mirella",
-  "description": "Coach nutrition IA personnalisé spécialisé dans l'alimentation anti-inflammatoire. Menus clé en main, analyse de bilans sanguins, suivi santé quotidien.",
-  "applicationCategory": "HealthApplication",
-  "operatingSystem": "Android, iOS, Web",
-  "author": {"@type": "Person", "name": "Geeyom"},
-  "offers": {
-    "@type": "Offer",
-    "price": "3.99",
-    "priceCurrency": "EUR",
-    "description": "Tarif Early Bird"
-  }
-}
-</script>
-<link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&display=swap" rel="stylesheet">
+<meta property="og:site_name" content="Mirella">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://www.mirella-ai.fr/preinscription">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@600;700;800;900&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.44.0/dist/tabler-icons.min.css">
 <style>
-*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
-html{scroll-behavior:smooth}
-body{font-family:'DM Sans',sans-serif;background:#FFFCFA;color:#111;overflow-x:hidden}
+:root{
+  --cream:#FFFCFA;
+  --cream-deep:#FFF6EE;
+  --coral:#FF6B6B;
+  --accent:#FF9A3C;
+  --ink:#1B1B2F;
+  --ink-2:#232946;
+  --text:#2D2D2D;
+  --muted:#8A8078;
+  --line:rgba(255,154,108,0.22);
+  --shadow:0 0 0 1.5px rgba(255,154,108,0.22),0 14px 32px rgba(230,110,70,0.14);
+  --shadow-deep:0 0 0 1.5px rgba(255,154,108,0.22),0 16px 40px rgba(0,0,0,0.18);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--text);overflow-x:hidden;-webkit-font-smoothing:antialiased}
+h1,h2,h3{font-family:'Open Sans',sans-serif}
+img,video{max-width:100%;display:block}
+a{color:inherit}
+.wrap{max-width:1120px;margin:0 auto;padding:0 24px}
+.eyebrow{font-size:0.72rem;font-weight:700;text-transform:uppercase;letter-spacing:0.14em;color:var(--coral)}
+.btn-primary{background:linear-gradient(135deg,var(--coral),var(--accent));color:#fff;border:none;border-radius:14px;padding:18px 28px;font-size:1rem;font-weight:700;font-family:'DM Sans',sans-serif;cursor:pointer;box-shadow:0 10px 28px rgba(255,107,107,0.35);transition:transform .15s ease}
+.btn-primary:hover{transform:translateY(-2px)}
+.card-app{background:var(--cream);border-radius:20px;box-shadow:var(--shadow);overflow:hidden}
+.pill{display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,0.9);border-radius:999px;padding:8px 16px;font-size:0.78rem;font-weight:700;box-shadow:0 2px 12px rgba(0,0,0,0.06)}
+.icon-badge{width:40px;height:40px;border-radius:12px;background:linear-gradient(135deg,var(--coral),var(--accent));display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:0 4px 10px rgba(255,107,107,0.3)}
+.icon-badge i{color:#fff;font-size:19px}
+section{padding:88px 0}
+@media(max-width:720px){section{padding:56px 0}}
 
-@keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
-@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.4;transform:scale(.6)}}
-@keyframes blink{50%{opacity:0}}
-@keyframes spin{to{transform:rotate(360deg)}}
+/* ===== FOX GUIDE ===== */
+.fox-guide{width:88px;height:88px;border-radius:50%;overflow:hidden;box-shadow:0 8px 20px rgba(255,107,107,0.3);border:3px solid #fff;flex-shrink:0}
+.fox-guide video{width:100%;height:100%;object-fit:cover}
 
-/* NAV */
-nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:20px 48px;transition:all .3s}
-nav.scrolled{background:rgba(255,255,255,.96);backdrop-filter:blur(16px);border-bottom:1px solid #eee;padding:14px 48px}
-.nav-logo{font-family:'Open Sans',sans-serif;font-size:1.3rem;font-weight:700;color:#111;text-decoration:none;display:flex;align-items:center;gap:8px}
-.nav-dot{width:8px;height:8px;border-radius:50%;background:#FF6B6B}
-.nav-ctas{display:flex;gap:12px;align-items:center}
-.btn-nav-ghost{font-size:.85rem;color:#111;text-decoration:none;padding:9px 22px;border-radius:4px;border:1.5px solid #ddd;transition:all .2s}
-.btn-nav-ghost:hover{border-color:#111}
-.btn-nav-cta{font-size:.85rem;color:#fff;background:linear-gradient(135deg,#FF6B6B,#FF9A3C);text-decoration:none;padding:10px 24px;border-radius:4px;transition:all .2s;font-weight:500}
-.btn-nav-cta:hover{opacity:.9;transform:translateY(-1px)}
+/* ===== NAV ===== */
+.nav{position:sticky;top:0;z-index:50;background:rgba(255,252,250,0.85);backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
+.nav-inner{max-width:1120px;margin:0 auto;padding:14px 24px;display:flex;align-items:center;justify-content:space-between}
+.nav-logo{display:flex;align-items:center;gap:10px;font-family:'Open Sans',sans-serif;font-weight:800;font-size:1.15rem;color:var(--text);text-decoration:none}
+.nav-logo img{width:34px;height:34px;border-radius:10px}
+.nav-cta{background:linear-gradient(135deg,var(--coral),var(--accent));color:#fff;border:none;border-radius:10px;padding:10px 20px;font-size:0.85rem;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif}
 
-/* HERO */
-.hero{min-height:90vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:80px 48px 40px;position:relative;overflow:hidden;background:#FFFCFA}
-.hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 70% 50% at 50% -10%,rgba(255,107,107,.08) 0%,transparent 65%);pointer-events:none}
-.hero-inner{width:100%;max-width:900px;margin:0 auto}
-.hero-tag{display:inline-flex;align-items:center;gap:8px;background:#f5f5f5;border:1px solid #e8e8e8;padding:6px 16px;border-radius:4px;font-size:.75rem;font-weight:500;color:#555;margin-bottom:32px;animation:fadeUp .8s ease both}
-.hero-tag-dot{width:6px;height:6px;border-radius:50%;background:#FF6B6B;animation:pulse 1.5s ease-in-out infinite}
-.hero h1{font-family:'Open Sans',sans-serif;font-size:clamp(2.8rem,7vw,5.5rem);font-weight:700;line-height:1.05;color:#111;margin-bottom:24px;animation:fadeUp .8s .1s ease both}
-.hero h1 em{font-style:italic;color:#FF6B6B}
-.hero-sub-italic{font-family:'Open Sans',sans-serif;font-size:clamp(1.1rem,2vw,1.5rem);color:#888;font-style:italic;margin-bottom:32px;margin-top:8px;animation:fadeUp .8s .2s ease both}
-.hero-desc{font-size:1rem;color:#666;max-width:540px;margin:0 auto 48px;line-height:1.75;animation:fadeUp .8s .3s ease both}
+/* ===== HERO ===== */
+.hero{padding:64px 0 40px;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;top:-120px;right:-120px;width:420px;height:420px;border-radius:50%;background:radial-gradient(circle,rgba(255,154,60,0.16),transparent 70%);pointer-events:none}
+.hero::after{content:'';position:absolute;bottom:-100px;left:-100px;width:340px;height:340px;border-radius:50%;background:radial-gradient(circle,rgba(255,107,107,0.12),transparent 70%);pointer-events:none}
+.hero-grid{display:grid;grid-template-columns:1.05fr 0.95fr;gap:56px;align-items:center;position:relative}
+@media(max-width:900px){.hero-grid{grid-template-columns:1fr;gap:36px}}
+.hero-fox-big{width:112px;height:112px;border-radius:50%;overflow:hidden;box-shadow:0 10px 26px rgba(255,107,107,0.35);border:4px solid #fff;flex-shrink:0;position:relative}
+.hero-fox-big video{width:100%;height:100%;object-fit:cover}
+.hero-fox-big::after{content:'👋';position:absolute;bottom:-2px;right:-4px;font-size:1.3rem;background:#fff;border-radius:50%;width:32px;height:32px;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 8px rgba(0,0,0,0.15)}
+.hero-fox-row{display:flex;align-items:center;gap:16px;margin-bottom:22px}
+.hero-fox-speech{background:#fff;border-radius:16px;padding:12px 18px;box-shadow:0 4px 16px rgba(0,0,0,0.08);font-size:0.86rem;font-weight:600;color:var(--text);position:relative}
+.hero-fox-speech::before{content:'';position:absolute;left:-8px;top:50%;transform:translateY(-50%);border-width:8px 10px 8px 0;border-style:solid;border-color:transparent #fff transparent transparent}
+.hero-badge{display:inline-flex;align-items:center;gap:8px;background:#fff;border-radius:999px;padding:7px 14px 7px 7px;box-shadow:0 2px 12px rgba(0,0,0,0.06);margin-bottom:22px}
+.hero-badge img{width:28px;height:28px;border-radius:50%;object-fit:cover}
+.hero-badge span{font-size:0.78rem;font-weight:700;color:var(--text)}
+.hero h1{font-size:clamp(2.3rem,4.6vw,3.4rem);font-weight:800;line-height:1.08;color:var(--text);margin-bottom:18px;letter-spacing:-0.01em}
+.hero h1 em{font-style:normal;background:linear-gradient(135deg,var(--coral),var(--accent));-webkit-background-clip:text;background-clip:text;color:transparent}
+.hero-sub{font-size:1.08rem;color:var(--muted);line-height:1.6;margin-bottom:28px;max-width:520px}
+.hero-form{display:flex;gap:10px;margin-bottom:14px}
+@media(max-width:520px){.hero-form{flex-direction:column}}
+.hero-form input{flex:1;background:#fff;border:1.5px solid var(--line);border-radius:14px;padding:17px 20px;font-size:0.98rem;font-family:'DM Sans',sans-serif;outline:none;color:var(--text)}
+.hero-form input:focus{border-color:var(--coral)}
+.hero-note{font-size:0.78rem;color:var(--muted);display:flex;align-items:center;gap:6px}
+.hero-stats{display:flex;gap:28px;margin-top:32px}
+.hero-stat b{display:block;font-family:'Open Sans',sans-serif;font-size:1.5rem;font-weight:800;color:var(--text);line-height:1}
+.hero-stat span{font-size:0.72rem;color:var(--muted);font-weight:600}
 
-/* OFFER STRIP */
-.offer-strip{background:linear-gradient(135deg,#FF6B6B,#FF9A3C);border-radius:20px;padding:48px 80px;display:flex;align-items:center;gap:60px;margin:0 0 52px;animation:fadeUp .8s .35s ease both;flex-wrap:wrap;justify-content:center;width:100%}
-.offer-item{text-align:center}
-.offer-label{font-size:.75rem;font-weight:600;text-transform:uppercase;letter-spacing:.12em;color:rgba(255,255,255,.7);margin-bottom:8px}
-.offer-value{font-family:'Open Sans',sans-serif;font-size:3.5rem;font-weight:700;color:white;line-height:1}
-.offer-value.white{color:white;font-size:3.5rem}
-.offer-sep{width:1px;height:80px;background:rgba(255,255,255,.3)}
+/* Hero right: countdown card, styled exactly like an app card */
+.hero-card{background:linear-gradient(135deg,var(--ink),var(--ink-2));border-radius:24px;padding:30px 26px;box-shadow:var(--shadow-deep);position:relative;overflow:hidden}
+.hero-card::before{content:'';position:absolute;top:-40px;right:-40px;width:160px;height:160px;border-radius:50%;background:rgba(255,107,107,0.1)}
+.hero-card-top{display:flex;align-items:center;justify-content:space-between;position:relative;margin-bottom:22px}
+.hero-card-eyebrow{font-size:0.68rem;font-weight:700;text-transform:uppercase;letter-spacing:0.12em;color:rgba(255,154,108,0.7)}
+.hero-card-title{font-size:1.15rem;font-weight:800;color:#fff;margin-top:4px}
+.cd-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;position:relative;margin-bottom:20px}
+.cd-box{background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.08);border-radius:14px;padding:14px 6px;text-align:center}
+.cd-num{font-family:'Open Sans',sans-serif;font-size:1.9rem;font-weight:800;color:#fff;line-height:1}
+.cd-label{font-size:0.62rem;color:rgba(255,255,255,0.45);text-transform:uppercase;letter-spacing:0.08em;margin-top:4px;font-weight:700}
+.hero-card-progress{position:relative}
+.hero-card-progress-bar{height:8px;background:rgba(255,255,255,0.08);border-radius:99px;overflow:hidden;margin-bottom:8px}
+.hero-card-progress-fill{height:100%;background:linear-gradient(90deg,var(--coral),var(--accent));border-radius:99px;width:80%}
+.hero-card-progress-text{font-size:0.74rem;color:rgba(255,255,255,0.55);display:flex;justify-content:space-between}
 
-/* SPOTS */
-.spots{margin-bottom:36px;animation:fadeUp .8s .4s ease both}
-.spots-txt{font-size:1rem;color:#888;margin-bottom:10px}
-.spots-txt strong{color:#FF6B6B}
-.spots-bar{width:100%;height:6px;background:#f0f0f0;border-radius:3px;margin:0 auto;overflow:hidden}
-.spots-fill{height:100%;background:linear-gradient(135deg,#FF6B6B,#FF9A3C);border-radius:2px;transition:width 1s ease}
+/* ===== SECTION HEADERS ===== */
+.sec-head{text-align:center;max-width:640px;margin:0 auto 48px}
+.sec-head h2{font-size:clamp(1.7rem,3.2vw,2.3rem);font-weight:800;color:var(--text);line-height:1.22;margin-top:12px}
+.sec-head p{color:var(--muted);margin-top:12px;font-size:1rem;line-height:1.6}
 
-/* COUNTDOWN */
-.countdown{display:flex;gap:0;justify-content:stretch;align-items:center;margin-bottom:48px;animation:fadeUp .8s .45s ease both;width:100%}
-.cd-block{background:#111;color:white;border-radius:12px;padding:28px 0;text-align:center;flex:1}
-.cd-num{font-family:'Open Sans',sans-serif;font-size:4rem;font-weight:700;color:#fff;line-height:1;display:block}
-.cd-lbl{font-size:12px;letter-spacing:.15em;text-transform:uppercase;color:rgba(255,255,255,.4);margin-top:8px;display:block}
-.cd-sep{font-size:2rem;color:#ccc;margin-bottom:16px;animation:blink 1s step-end infinite;padding:0 8px}
+/* ===== PAIN CARDS ===== */
+.pain-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+@media(max-width:860px){.pain-grid{grid-template-columns:1fr 1fr}}
+@media(max-width:560px){.pain-grid{grid-template-columns:1fr}}
+.pain-card{background:#fff;border-radius:18px;padding:24px;box-shadow:var(--shadow)}
+.pain-card h3{font-size:0.96rem;font-weight:700;color:var(--text);margin:14px 0 8px;line-height:1.35}
+.pain-card p{font-size:0.85rem;color:var(--muted);line-height:1.55}
+.pain-cta{margin-top:36px;background:linear-gradient(135deg,var(--ink),var(--ink-2));border-radius:18px;padding:22px 26px;display:flex;align-items:center;gap:16px;box-shadow:var(--shadow-deep)}
+.pain-cta p{color:rgba(255,255,255,0.75);font-size:0.94rem;line-height:1.6}
+.pain-cta strong{color:#fff}
 
-/* FORM */
-.form-wrap{width:100%;margin:16px 0 0;animation:fadeUp .8s .5s ease both}
-.form-row{display:flex;border-radius:4px;overflow:hidden;box-shadow:0 4px 24px rgba(255,107,107,.12)}
-.form-row input{flex:1;background:#fff;border:1.5px solid #eee;border-right:none;color:#111;padding:20px 24px;font-size:1.05rem;font-family:'DM Sans',sans-serif;outline:none;transition:border .2s}
-.form-row input:focus{border-color:#FF6B6B}
-.form-row input::placeholder{color:#bbb}
-.form-row button{background:linear-gradient(135deg,#FF6B6B,#FF9A3C);color:#fff;border:none;padding:20px 32px;font-size:1rem;font-weight:600;font-family:'DM Sans',sans-serif;cursor:pointer;white-space:nowrap;transition:opacity .2s}
-.form-row button:hover{opacity:.9}
-.form-note{font-size:.72rem;color:#bbb;text-align:center;margin-top:10px}
-.success-msg{display:none;background:#EFF7F1;border:1px solid #9DC4A3;border-radius:6px;padding:12px;color:#3B6D11;font-size:.88rem;text-align:center;margin-top:12px}
+/* ===== PRODUCT TOUR (app-style cards) ===== */
+.tour-section{background:var(--cream-deep)}
+.tour-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+@media(max-width:860px){.tour-grid{grid-template-columns:1fr 1fr}}
+@media(max-width:560px){.tour-grid{grid-template-columns:1fr}}
+.tour-card{border-radius:20px;overflow:hidden;box-shadow:var(--shadow)}
+.tour-card-head{background:linear-gradient(135deg,var(--coral),var(--accent));padding:16px 18px 40px;position:relative;overflow:hidden}
+.tour-card-head::before{content:'';position:absolute;top:-20px;right:-20px;width:90px;height:90px;border-radius:50%;background:rgba(255,255,255,0.14)}
+.tour-card-tag{font-size:0.62rem;color:rgba(255,255,255,0.85);font-weight:700;letter-spacing:0.08em;text-transform:uppercase;position:relative}
+.tour-card-title{font-size:1rem;color:#fff;font-weight:700;margin-top:4px;position:relative}
+.tour-card-media{margin:-24px 12px 0;border-radius:14px;overflow:hidden;box-shadow:0 8px 20px rgba(0,0,0,0.12);aspect-ratio:1/1;background:#fff;position:relative}
+.tour-card-media video,.tour-card-media img{width:100%;height:100%;object-fit:cover}
+.tour-card-body{background:#fff;padding:22px 18px 20px}
+.tour-card-body p{font-size:0.82rem;color:var(--muted);line-height:1.55}
 
-/* SOCIAL */
-.social{display:flex;align-items:center;gap:12px;justify-content:center;margin-top:20px;animation:fadeUp .8s .55s ease both}
-.avs{display:flex}
-.av{width:30px;height:30px;border-radius:50%;border:2px solid #fff;display:flex;align-items:center;justify-content:center;font-size:.6rem;font-weight:700;margin-left:-8px;color:#fff;background:linear-gradient(135deg,#FF6B6B,#FF9A3C)}
-.av:first-child{margin-left:0}
-.soc-txt{font-size:.82rem;color:#888}
-.soc-txt strong{color:#111}
+/* ===== TESTIMONIALS ===== */
+.test-strip{display:flex;gap:16px;overflow-x:auto;padding:8px 4px 20px;scroll-snap-type:x mandatory}
+.test-strip::-webkit-scrollbar{height:6px}
+.test-strip::-webkit-scrollbar-thumb{background:var(--line);border-radius:99px}
+.test-card{flex:0 0 300px;scroll-snap-align:start;background:#fff;border-radius:18px;padding:22px;box-shadow:var(--shadow)}
+.test-stars{color:var(--accent);font-size:0.85rem;margin-bottom:12px;letter-spacing:2px}
+.test-quote{font-size:0.88rem;color:var(--text);line-height:1.6;margin-bottom:16px;min-height:96px}
+.test-person{display:flex;align-items:center;gap:10px}
+.test-avatar{width:38px;height:38px;border-radius:50%;object-fit:cover;flex-shrink:0}
+.test-name{font-size:0.82rem;font-weight:700;color:var(--text)}
+.test-tag{font-size:0.72rem;color:var(--muted)}
 
-/* STATS */
-.stats-section{background:linear-gradient(135deg,#FF6B6B,#FF9A3C);padding:48px 48px;margin-top:0}
-.stats-inner{max-width:1100px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:24px;text-align:center}
-.stat-n{font-family:'Open Sans',sans-serif;font-size:3.5rem;font-weight:700;color:white;line-height:1;margin-bottom:10px;letter-spacing:-.02em}
-.stat-n span{color:white}
-.stat-l{font-size:.85rem;color:rgba(255,255,255,.65);line-height:1.5;font-style:italic;letter-spacing:.04em}
+/* ===== RESULTS ===== */
+.results-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+@media(max-width:760px){.results-grid{grid-template-columns:1fr}}
+.result-card{background:#fff;border-radius:20px;overflow:hidden;box-shadow:var(--shadow)}
+.result-media{position:relative;aspect-ratio:16/10}
+.result-media img{width:100%;height:100%;object-fit:cover}
+.result-stats{display:flex;gap:0;border-top:1px solid var(--line)}
+.result-stat{flex:1;text-align:center;padding:16px 8px;border-right:1px solid var(--line)}
+.result-stat:last-child{border-right:none}
+.result-stat b{display:block;font-family:'Open Sans',sans-serif;font-size:1.25rem;font-weight:800;color:var(--coral)}
+.result-stat span{font-size:0.66rem;color:var(--muted);font-weight:600}
+.result-quote{padding:18px 20px;font-size:0.86rem;color:var(--text);line-height:1.6;font-style:italic}
+.result-by{padding:0 20px 20px;font-size:0.78rem;color:var(--muted);font-weight:700}
 
-/* SECTION COMMUNE */
-.section{padding:80px 48px}
-.section-inner{max-width:1100px;margin:0 auto}
-.section-tag{font-size:.72rem;font-weight:600;text-transform:uppercase;letter-spacing:.12em;color:#FF6B6B;margin-bottom:12px}
-.section-title{font-family:'Open Sans',sans-serif;font-size:clamp(1.8rem,3vw,2.6rem);font-weight:700;color:#111;margin-bottom:48px;line-height:1.2}
-
-/* CARDS */
-.cards-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px}
-.card{background:#FFFCFA;border-radius:16px;padding:24px;border:none;transition:all .25s;display:flex;flex-direction:column;gap:6px;box-shadow:0 0 0 1.5px rgba(255,154,108,0.22),0 14px 32px rgba(230,110,70,0.14)}
-.card:hover{transform:translateY(-4px);box-shadow:0 16px 48px rgba(255,107,107,.18);border-color:rgba(255,107,107,.4)}
-.card-icon{width:40px;height:40px;background:#fff5f0;border-radius:8px;display:flex;align-items:center;justify-content:center;margin-bottom:14px;font-size:1.1rem}
-.card h3{font-family:'Open Sans',sans-serif;font-size:.95rem;font-weight:700;color:#111}
-.card p{font-size:.84rem;color:#888;line-height:1.6}
-
-/* HOW */
-.how-section{background:#fff5f0;padding:80px 48px}
-.steps{display:flex;flex-direction:column;gap:20px;margin-top:32px;max-width:600px}
-.step{display:grid;grid-template-columns:44px 1fr;gap:16px;align-items:start}
-.step-num{width:44px;height:44px;background:linear-gradient(135deg,#FF6B6B,#FF9A3C);color:#fff;font-size:.9rem;font-weight:700;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0}
-.step h3{font-family:'Open Sans',sans-serif;font-size:.95rem;font-weight:700;color:#111;margin-bottom:4px}
-.step p{font-size:.84rem;color:#888;line-height:1.6}
-
-/* PLANS */
-.plans-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;max-width:1000px;margin:0 auto}
-.plan{border-radius:20px;padding:40px 36px;border:1.5px solid #f0f0f0;background:#fff;display:flex;flex-direction:column;gap:6px}
-.plan.featured{background:linear-gradient(135deg,#FF6B6B,#FF9A3C);border-color:transparent;transform:scale(1.04);box-shadow:0 20px 60px rgba(255,107,107,.3)}
-.plan-name{font-family:'Open Sans',sans-serif;font-size:1.2rem;font-weight:700;margin-bottom:12px;color:#111}
+/* ===== PRICING ===== */
+.pricing-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;align-items:stretch}
+@media(max-width:860px){.pricing-grid{grid-template-columns:1fr;max-width:380px;margin:0 auto}}
+.plan{background:#fff;border-radius:22px;padding:32px 26px;box-shadow:var(--shadow);display:flex;flex-direction:column;position:relative}
+.plan.featured{background:linear-gradient(160deg,var(--ink),var(--ink-2));box-shadow:var(--shadow-deep);transform:translateY(-8px)}
+@media(max-width:860px){.plan.featured{transform:none}}
+.plan-badge{position:absolute;top:-12px;left:50%;transform:translateX(-50%);background:linear-gradient(135deg,var(--coral),var(--accent));color:#fff;font-size:0.68rem;font-weight:800;padding:6px 16px;border-radius:99px;letter-spacing:0.05em;white-space:nowrap}
+.plan-name{font-size:1.02rem;font-weight:700;color:var(--text);margin-bottom:14px}
 .plan.featured .plan-name{color:#fff}
-.plan-price{font-family:'Open Sans',sans-serif;font-size:3rem;font-weight:700;color:#FF6B6B;line-height:1;margin-bottom:4px}
+.plan-price{font-family:'Open Sans',sans-serif;font-size:2.6rem;font-weight:800;color:var(--coral);line-height:1}
 .plan.featured .plan-price{color:#fff}
-.plan-period{font-size:.78rem;color:#bbb;margin-bottom:8px}
-.plan.featured .plan-period{color:rgba(255,255,255,.6)}
-.plan-features{list-style:none;display:flex;flex-direction:column;gap:12px;flex:1;margin:24px 0}
-.plan-features li{font-size:.84rem;color:#555;display:flex;align-items:center;gap:8px}
-.plan.featured .plan-features li{color:rgba(255,255,255,.9)}
-.plan-features li::before{content:'✓';color:#FF6B6B;font-weight:700;flex-shrink:0}
-.plan.featured .plan-features li::before{color:#fff}
-.plan-btn{display:block;text-align:center;padding:12px;border-radius:10px;font-size:.88rem;font-weight:600;border:none;cursor:pointer;transition:all .2s;font-family:'DM Sans',sans-serif;text-decoration:none}
-.plan-btn-outline{background:#fff;color:#FF6B6B;border:1.5px solid rgba(255,107,107,.3)}
-.plan-btn-outline:hover{border-color:#FF6B6B}
-.plan-btn-white{background:#fff;color:#FF6B6B}
-.plan-btn-white:hover{opacity:.9}
+.plan-price sup{font-size:1rem;font-weight:700}
+.plan-price-note{font-size:0.76rem;color:var(--muted);margin:6px 0 22px}
+.plan.featured .plan-price-note{color:rgba(255,255,255,0.55)}
+.plan-features{list-style:none;display:flex;flex-direction:column;gap:11px;margin-bottom:26px;flex:1}
+.plan-features li{display:flex;align-items:center;gap:9px;font-size:0.85rem;color:var(--text)}
+.plan.featured .plan-features li{color:rgba(255,255,255,0.85)}
+.plan-features i{color:var(--coral);font-size:16px;flex-shrink:0}
+.plan.featured .plan-features i{color:var(--accent)}
+.plan-btn{display:block;text-align:center;padding:14px;border-radius:12px;font-size:0.88rem;font-weight:700;border:none;cursor:pointer;font-family:'DM Sans',sans-serif;text-decoration:none;background:var(--cream-deep);color:var(--text)}
+.plan.featured .plan-btn{background:linear-gradient(135deg,var(--coral),var(--accent));color:#fff}
 
-/* CTA */
-.cta-section{background:#2D2D2D;padding:100px 48px;text-align:center}
-.cta-inner{max-width:580px;margin:0 auto}
-.cta-tag{font-size:.78rem;letter-spacing:2px;text-transform:uppercase;color:#FF9A3C;display:block;margin-bottom:16px;font-weight:700}
-.cta-h2{font-family:'Open Sans',sans-serif;font-size:clamp(2rem,4vw,3rem);color:#fff;margin-bottom:16px;font-weight:700;line-height:1.15}
-.cta-h2 em{font-style:italic;color:#FF6B6B}
-.cta-p{color:rgba(255,255,255,.75);font-size:1rem;margin-bottom:40px;line-height:1.7}
-.cta-section .form-row input{background:rgba(255,255,255,.15);border-color:rgba(255,255,255,.4);color:#fff}
-.cta-section .form-row input::placeholder{color:rgba(255,255,255,.6)}
-.cta-section .form-row input:focus{border-color:#FF6B6B;background:rgba(255,255,255,.2)}
-.cta-section .form-note{color:rgba(255,255,255,.55)}
+/* ===== FAQ ===== */
+.faq{max-width:720px;margin:0 auto}
+.faq-item{background:#fff;border-radius:16px;box-shadow:var(--shadow);margin-bottom:12px;overflow:hidden}
+.faq-q{display:flex;align-items:center;justify-content:space-between;padding:18px 22px;cursor:pointer;font-size:0.92rem;font-weight:700;color:var(--text)}
+.faq-q i{transition:transform .2s;color:var(--coral);flex-shrink:0}
+.faq-item.open .faq-q i{transform:rotate(45deg)}
+.faq-a{max-height:0;overflow:hidden;transition:max-height .25s ease}
+.faq-item.open .faq-a{max-height:200px}
+.faq-a p{padding:0 22px 18px;font-size:0.85rem;color:var(--muted);line-height:1.6}
 
-/* FOOTER */
-footer{background:#FFFCFA;border-top:1px solid #f0f0f0;padding:28px 48px;display:flex;justify-content:space-between;align-items:center;font-size:.75rem;color:#bbb;flex-wrap:wrap;gap:12px}
-footer a{color:#FF6B6B;text-decoration:none}
+/* ===== FINAL CTA ===== */
+.final-cta{background:linear-gradient(135deg,var(--coral),var(--accent));border-radius:28px;padding:56px 40px;text-align:center;position:relative;overflow:hidden;margin:0 24px}
+@media(max-width:640px){.final-cta{padding:40px 24px;margin:0 16px}}
+.final-cta::before{content:'';position:absolute;top:-60px;left:-60px;width:220px;height:220px;border-radius:50%;background:rgba(255,255,255,0.12)}
+.final-cta::after{content:'';position:absolute;bottom:-80px;right:-40px;width:260px;height:260px;border-radius:50%;background:rgba(255,255,255,0.08)}
+.final-cta h2{color:#fff;font-size:clamp(1.6rem,3.4vw,2.3rem);font-weight:800;margin-bottom:14px;position:relative}
+.final-cta p{color:rgba(255,255,255,0.9);font-size:1rem;margin-bottom:28px;position:relative}
+.final-cta .hero-form{max-width:480px;margin:0 auto 12px;position:relative}
+.final-cta .hero-note{justify-content:center;color:rgba(255,255,255,0.85);position:relative}
 
-@media(max-width:768px){
-  nav{padding:0 20px}
-  nav.scrolled{padding:0 20px}
-  .hero{padding:32px 20px 40px;min-height:auto}
-  .offer-strip{padding:24px 20px;gap:16px;border-radius:16px}
-  .offer-value{font-size:2rem!important}
-  .offer-label{font-size:.65rem}
-  .offer-sep{height:40px}
-  .cd-block{padding:14px 0;min-width:0}
-  .cd-num{font-size:2rem!important}
-  .countdown{gap:0}
-  .cd-sep{font-size:1.5rem;padding:0 4px}
-  .form-row{flex-direction:column;border-radius:12px;overflow:visible;box-shadow:none;gap:8px}
-  .form-row input{border:1.5px solid #eee;border-radius:8px!important;padding:16px 20px;font-size:1rem}
-  .form-row button{border-radius:8px!important;padding:16px;font-size:1rem;width:100%}
-  .cards-grid{grid-template-columns:1fr!important}
-  [style*="grid-template-columns:1fr 1fr"]{grid-template-columns:1fr!important}
-  [style*="grid-template-columns:1fr 1fr 1fr"]{grid-template-columns:1fr!important}
-  [style*="grid-template-columns:repeat(3"]{grid-template-columns:1fr!important}
-  [style*="grid-template-columns:2fr 1fr 1fr"]{grid-template-columns:1fr!important}
-  [style*="min-height:280px"]{min-height:220px!important}
-  [style*="min-height:200px"]{min-height:180px!important}
-  [style*="font-size:1.4rem;font-weight:700;color:white"]{font-size:1.1rem!important}
-  [style*="padding:48px 80px"]{padding:24px 20px!important}
-  [style*="gap:60px"]{gap:16px!important}
-  [style*="padding:100px 48px"]{padding:60px 20px!important}
-  [style*="padding:80px 48px"]{padding:48px 20px!important}
-  [style*="padding:40px 32px"]{padding:20px!important}
-  [style*="padding:28px 24px"]{padding:16px!important}
-  .stats-inner{grid-template-columns:1fr 1fr!important;gap:16px!important}
-  .stat-n{font-size:2.2rem!important}
-  .stats-section{padding:40px 20px!important}
-  .plans-grid{grid-template-columns:1fr!important}
-  .plan.featured{transform:none!important}
-  .unicite-grid{display:flex!important;flex-direction:column!important;gap:10px!important;margin-bottom:32px!important}
-  .unicite-card{display:flex!important;flex-direction:row!important;align-items:flex-start!important;gap:12px!important;padding:14px 16px!important;background:white!important;border-radius:10px!important;border:1px solid rgba(255,107,107,.12)!important}
-  .unicite-icon{width:36px!important;height:36px!important;flex-shrink:0!important;font-size:14px!important;margin-bottom:0!important}
-  .unicite-title{font-size:13px!important;margin-bottom:4px!important}
-  .unicite-desc{display:block!important;font-size:11px!important;color:#888!important;line-height:1.4!important}
-  .unicite-grid{display:flex!important;flex-direction:column!important;gap:10px!important;margin-bottom:32px!important}
-  .unicite-card{display:flex!important;flex-direction:row!important;align-items:flex-start!important;gap:12px!important;padding:14px 16px!important;background:white!important;border-radius:10px!important;border:1px solid rgba(255,107,107,.12)!important}
-  .unicite-icon{width:36px!important;height:36px!important;flex-shrink:0!important;font-size:14px!important;margin-bottom:0!important}
-  .unicite-title{font-size:13px!important;margin-bottom:4px!important}
-  .unicite-desc{display:block!important;font-size:11px!important;color:#888!important;line-height:1.4!important}
-  .offer-strip{padding:20px!important}
-  .offer-item{flex:1;min-width:0}
-  .offer-value{font-size:2rem!important}
-  .offer-sep{height:60px}
-  .plans-grid{grid-template-columns:1fr}
-  .section{padding:60px 20px}
-  .how-section{padding:60px 20px}
-  .stats-section{padding:48px 24px}
-  .cta-section{padding:72px 24px}
-  footer{flex-direction:column;text-align:center}
-}
-@media (max-width: 768px) {
-  
-  .hero-photos { display: none !important; }
-  .hero-desktop-content { display: none !important; }
-  .hero-mobile-content { display: flex !important; flex-direction: column; }
-  /* Texte sombre sur fond clair mobile */
-  .hero-mobile-content h1, .hero-mobile-content div { color: #1a1a1a !important; }
-}
+/* ===== FOOTER ===== */
+footer{padding:32px 24px;text-align:center}
+footer p{font-size:0.76rem;color:var(--muted)}
+footer a{text-decoration:none;color:var(--muted);font-weight:600}
+
+/* success state */
+.success-box{display:none;background:#fff;border-radius:16px;padding:20px;box-shadow:var(--shadow);text-align:left;margin-bottom:14px}
+.success-box.show{display:block}
+.success-box i{color:#1D9E75;font-size:22px;margin-right:8px}
 </style>
-<!-- Google Analytics -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-ELWC4D3VJC"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-  gtag('config', 'G-ELWC4D3VJC');
-</script>
 </head>
 <body>
 
-
-
-<!-- HERO -->
-<section id="heroSection" style="min-height:100vh;position:relative;overflow:hidden;background:#FFF8F5;width:100%;">
-
-  <!-- Fond gouttes -->
-  <!-- Bande corail -->
-  <div style="position:absolute;top:0;left:0;right:0;height:6px;background:linear-gradient(135deg,#FF6B6B,#FF9A3C)"></div>
-  <div style="position:absolute;right:-80px;top:-80px;width:400px;height:400px;background:#FF6B6B;opacity:0.07;border-radius:50%;pointer-events:none"></div>
-  <div style="position:absolute;right:100px;bottom:-100px;width:280px;height:280px;background:#FF9A3C;opacity:0.07;border-radius:50%;pointer-events:none"></div>
-  <div style="position:absolute;left:-60px;bottom:50px;width:200px;height:200px;background:#FF6B6B;opacity:0.05;border-radius:50%;pointer-events:none"></div>
-
-
-  <!-- Contenu -->
-  <div style="position:relative;z-index:2;width:100%;padding:60px 48px 60px;display:flex;gap:40px;align-items:center;flex-wrap:nowrap">
-    
-    <!-- Colonne gauche -->
-    <div class="hero-desktop-content" style="flex:1;min-width:0;text-align:center;display:flex;flex-direction:column;align-items:center">
-
-      <!-- Logo Mirella -->
-      <div style="margin-bottom:24px">
-        <img src="logo2.png" alt="Mirella" style="width:64px;height:64px;border-radius:16px;box-shadow:0 4px 16px rgba(0,0,0,0.15);object-fit:cover">
-      </div>
-
-      <!-- Grand titre sobre style Grity -->
-      <h1 style="font-family:'Open Sans',sans-serif;font-size:clamp(2.4rem,5vw,4.2rem);font-weight:900;color:#1a1a1a;line-height:1.1;margin-bottom:20px;text-align:center">
-        La meilleure app santé IA<br>pour <em style="color:#FF6B6B;font-style:italic">prendre soin de toi</em><br>selon ton profil médical !
-      </h1>
-
-      <!-- Sous-titre -->
-      <p style="font-size:1.05rem;color:#666;margin-bottom:28px;line-height:1.7;max-width:460px;text-align:center">
-        Menus anti-inflammatoires personnalisés, suivi santé, analyse de tes bilans sanguins — <strong style="color:#1a1a1a">tout en un</strong>.
-      </p>
-
-      <!-- Note -->
-      <div style="display:inline-flex;align-items:center;gap:8px;margin-bottom:20px;background:white;border-radius:30px;padding:8px 18px;box-shadow:0 2px 12px rgba(0,0,0,0.1)">
-        <span style="color:#FF9A3C;font-size:1.1rem">★★★★★</span>
-        <span style="font-weight:700;color:#1a1a1a">4,9</span>
-        <span style="color:#555;font-size:0.85rem">(Note moyenne sur les retours early access)</span>
-      </div>
-
-      <!-- Countdown -->
-      <div style="margin-bottom:20px">
-        <div style="font-size:0.78rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:#555;margin-bottom:8px;display:flex;align-items:center;justify-content:center;gap:6px"><i class="ti ti-gift" style="font-size:14px"></i> FIN DE L'OFFRE EARLY BIRD DANS</div>
-        <div style="display:flex;gap:8px;width:100%" id="countdown">
-          <div style="background:linear-gradient(135deg,#FF6B6B,#FF9A3C);border-radius:12px;padding:16px 14px;text-align:center;flex:1">
-            <span style="font-size:2.8rem;font-weight:800;color:white;display:block;line-height:1" id="cd-j">--</span>
-            <span style="font-size:0.65rem;text-transform:uppercase;color:rgba(255,255,255,0.8)">Jours</span>
-          </div>
-          <div style="background:linear-gradient(135deg,#FF6B6B,#FF9A3C);border-radius:12px;padding:16px 14px;text-align:center;flex:1">
-            <span style="font-size:2.8rem;font-weight:800;color:white;display:block;line-height:1" id="cd-h">--</span>
-            <span style="font-size:0.65rem;text-transform:uppercase;color:rgba(255,255,255,0.8)">Heures</span>
-          </div>
-          <div style="background:linear-gradient(135deg,#FF6B6B,#FF9A3C);border-radius:12px;padding:16px 14px;text-align:center;flex:1">
-            <span style="font-size:2.8rem;font-weight:800;color:white;display:block;line-height:1" id="cd-m">--</span>
-            <span style="font-size:0.65rem;text-transform:uppercase;color:rgba(255,255,255,0.8)">Min</span>
-          </div>
-          <div style="background:linear-gradient(135deg,#FF6B6B,#FF9A3C);border-radius:12px;padding:16px 14px;text-align:center;flex:1">
-            <span style="font-size:2.8rem;font-weight:800;color:white;display:block;line-height:1" id="cd-s">--</span>
-            <span style="font-size:0.65rem;text-transform:uppercase;color:rgba(255,255,255,0.8)">Sec</span>
-          </div>
-        </div>
-      </div>
-
-
-
-      <!-- CTA -->
-      <div style="display:flex;gap:0;max-width:480px;margin-bottom:10px;border-radius:10px;overflow:hidden;box-shadow:0 4px 20px rgba(0,0,0,0.15)">
-        <input type="email" id="emailHero2" placeholder="votre@email.com" 
-          style="flex:1;padding:16px 20px;font-size:1rem;border:none;outline:none;font-family:'DM Sans',sans-serif;background:white;color:#2D2D2D">
-        <button onclick="subscribe('emailHero2','successHero2')" 
-          style="background:linear-gradient(135deg,#FF6B6B,#FF9A3C);color:white;border:none;padding:16px 24px;font-size:0.95rem;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif;white-space:nowrap">
-          Je m'inscris gratuitement →
-        </button>
-      </div>
-      <div style="font-size:0.75rem;color:#666;margin-bottom:24px">🔒 Sans carte bancaire · Accès immédiat · 3 jours gratuits</div>
-      <!-- Stats sociales style Grity -->
-      <div style="display:flex;gap:24px;justify-content:center;margin-bottom:20px;flex-wrap:wrap">
-        <div style="text-align:center">
-          <div style="font-size:1.4rem;font-weight:900;color:#1a1a1a">+1,5M</div>
-          <div style="font-size:0.72rem;color:#888">Abonnés TikTok</div>
-        </div>
-        <div style="width:1px;background:#e8e8e8"></div>
-        <div style="text-align:center">
-          <div style="display:flex;align-items:center;justify-content:center;gap:4px">
-            <span style="font-size:1.4rem;font-weight:900;color:#1a1a1a">4,9</span>
-            <span style="color:#FF9A3C;font-size:1rem">★</span>
-          </div>
-          <div style="font-size:0.72rem;color:#888">Note early access</div>
-        </div>
-        <div style="width:1px;background:#e8e8e8"></div>
-        <div style="text-align:center">
-          <div style="font-size:1.4rem;font-weight:900;color:#1a1a1a">100%</div>
-          <div style="font-size:0.72rem;color:#888">Gratuit au départ</div>
-        </div>
-      </div>
-      <div class="success-msg" id="successHero2" style="margin-bottom:16px">✅ Compte créé ! <a href="https://mirella-ai.fr/app" style="color:#3B6D11;font-weight:700">Accéder à Mirella →</a></div>
-
-      <!-- Compteur places -->
-      <div style="margin-bottom:20px">
-        <div style="font-size:0.88rem;color:#444;margin-bottom:6px"><strong id="spots-count">800</strong> places sur 1000 déjà réservées</div>
-        <div style="height:8px;background:rgba(0,0,0,0.1);border-radius:4px;overflow:hidden;max-width:480px">
-          <div class="spots-fill" style="height:100%;background:linear-gradient(135deg,#FF6B6B,#FF9A3C);border-radius:4px"></div>
-        </div>
-      </div>
-
-      <!-- Geeyom -->
-      <div style="display:flex;align-items:center;gap:14px;background:rgba(255,255,255,0.8);border-radius:14px;padding:14px 18px;max-width:480px;backdrop-filter:blur(4px)">
-        <img src="PhotoRoom-20230302_113020.png" alt="Geeyom" style="width:48px;height:48px;border-radius:50%;object-fit:cover;border:2px solid #FF6B6B;flex-shrink:0" onerror="this.style.display='none'">
-        <div>
-          <div style="display:flex;align-items:center;gap:8px;margin-bottom:3px">
-            <span style="font-weight:800;color:#1a1a1a;font-size:0.9rem">Geeyom</span>
-            <span style="background:linear-gradient(135deg,#FF6B6B,#FF9A3C);color:white;font-size:0.6rem;font-weight:800;padding:2px 8px;border-radius:20px;text-transform:uppercase">1,5M TikTok</span>
-          </div>
-          <p style="font-size:0.78rem;color:#555;margin:0;line-height:1.4;font-style:italic">"J'ai créé Mirella parce que j'en avais assez de naviguer seul avec mes médicaments."</p>
-        </div>
-      </div>
-    </div>
-
-    <!-- Colonne droite : photos style Grity -->
-    <div style="flex:1;min-width:0;position:relative;display:block" class="hero-photos">
-
-
-      <!-- Carousel 4 photos style Grity -->
-      <div style="position:relative">
-        <!-- Badge -->
-        <div style="position:absolute;top:-20px;right:-10px;z-index:10;background:white;border-radius:50%;width:76px;height:76px;display:flex;flex-direction:column;align-items:center;justify-content:center;box-shadow:0 4px 16px rgba(0,0,0,0.2);transform:rotate(10deg)">
-          <span style="font-size:0.5rem;font-weight:800;color:#FF6B6B;text-transform:uppercase">Jusqu'à</span>
-          <span style="font-size:1.2rem;font-weight:900;color:#FF6B6B;line-height:1.1">-50%</span>
-        </div>
-        <!-- Carousel 4 photos style Grity -->
-        <div style="position:relative">
-          <div style="display:flex;gap:8px;align-items:center;overflow:hidden;width:100%">
-            <img id="gi1" src="avant_apres6.png" style="flex:1;min-width:0;width:0;height:360px;object-fit:cover;border-radius:14px;opacity:0.75;transform:scale(0.93);transition:all 0.4s ease">
-            <img id="gi2" src="avant_apres7.png" style="flex:1.2;min-width:0;width:0;height:420px;object-fit:cover;border-radius:16px;box-shadow:0 12px 36px rgba(0,0,0,0.25);transition:all 0.4s ease">
-            <img id="gi3" src="avant_apres8.png" style="flex:1;min-width:0;width:0;height:360px;object-fit:cover;border-radius:14px;opacity:0.75;transform:scale(0.93);transition:all 0.4s ease">
-          </div>
-        </div>
-      </div>
-
-
-      <!-- Flèches -->
-      <div style="display:flex;justify-content:center;gap:8px;margin-top:10px">
-        <button onclick="carouselPrev()" style="background:white;border:none;color:#2D2D2D;width:36px;height:36px;border-radius:50%;font-size:1.1rem;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,0.12)">‹</button>
-        <button onclick="carouselNext()" style="background:white;border:none;color:#2D2D2D;width:36px;height:36px;border-radius:50%;font-size:1.1rem;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,0.12)">›</button>
-      </div>
-    </div>
-
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="/" class="nav-logo"><img src="logo2.png" alt="Mirella"> Mirella</a>
+    <button class="nav-cta" onclick="document.getElementById('emailHero').focus()">Je m'inscris →</button>
   </div>
+</nav>
 
-</section>
-
-<!-- HERO MOBILE -->
-<section id="heroMobile" style="display:none;min-height:100vh;position:relative;overflow:hidden;background:#FFF8F5;">
-  <div style="position:absolute;top:0;left:0;right:0;height:6px;background:linear-gradient(135deg,#FF6B6B,#FF9A3C)"></div>
-  <div style="position:absolute;right:-80px;top:-80px;width:400px;height:400px;background:#FF6B6B;opacity:0.07;border-radius:50%;pointer-events:none"></div>
-  <div style="position:absolute;right:100px;bottom:-100px;width:280px;height:280px;background:#FF9A3C;opacity:0.07;border-radius:50%;pointer-events:none"></div>
-  <div style="position:absolute;left:-60px;bottom:50px;width:200px;height:200px;background:#FF6B6B;opacity:0.05;border-radius:50%;pointer-events:none"></div>
-  <div style="position:relative;z-index:2;padding:30px 20px;display:flex;flex-direction:column;align-items:center;text-align:center">
-    
-    <img src="logo2.png" style="width:65px;height:65px;border-radius:14px;margin-bottom:16px;box-shadow:0 4px 12px rgba(0,0,0,0.15)">
-    
-    <div style="margin-bottom:16px;text-align:center;width:100%">
-      <div style="font-size:2.8rem;font-weight:900;color:#1a1a1a;font-style:italic;text-transform:uppercase;line-height:1">PROMO</div>
-      <div style="background:linear-gradient(135deg,#FF6B6B,#FF9A3C);padding:6px 20px;margin:6px auto;display:inline-block;transform:skew(-3deg);max-width:90vw;overflow:hidden">
-        <span style="font-size:2.2rem;font-weight:900;color:white;font-style:italic;text-transform:uppercase;display:inline-block;transform:skew(3deg)">EXCEPTIONNELLE</span>
-      </div>
-      <div style="font-size:1.1rem;font-weight:800;color:#1a1a1a;font-style:italic;text-transform:uppercase">-50% À VIE SUR MIRELLA</div>
-    </div>
-
-    <div style="display:inline-flex;align-items:center;gap:6px;margin-bottom:16px;background:white;border-radius:30px;padding:8px 16px;box-shadow:0 2px 12px rgba(0,0,0,0.1)">
-      <span style="color:#FF9A3C;font-size:1rem">★★★★★</span>
-      <span style="font-weight:700;color:#1a1a1a">4,9</span>
-      <span style="color:#555;font-size:0.8rem">(retours early access)</span>
-    </div>
-
-    <div style="margin-bottom:20px;width:100%">
-      <div style="font-size:0.75rem;font-weight:700;text-transform:uppercase;color:#1a1a1a;margin-bottom:8px">🚨 FIN DE L'OFFRE EARLY BIRD DANS</div>
-      <div style="display:flex;gap:8px;justify-content:center">
-        <div style="background:linear-gradient(135deg,#FF6B6B,#FF9A3C);border-radius:10px;padding:10px 12px;text-align:center;min-width:55px">
-          <div style="font-size:1.8rem;font-weight:800;color:white;line-height:1" id="cdm-j">--</div>
-          <div style="font-size:0.55rem;color:rgba(255,255,255,0.8);text-transform:uppercase">Jours</div>
+<!-- ============ HERO ============ -->
+<section class="hero">
+  <div class="wrap">
+    <div class="hero-grid">
+      <div>
+        <div class="hero-fox-row">
+          <div class="hero-fox-big">
+            <video autoplay muted loop playsinline><source src="https://raw.githubusercontent.com/avelia-ai/nutricare-frontend/main/renard_conseils_v4.mp4" type="video/mp4"></video>
+          </div>
+          <div class="hero-fox-speech">Salut, moi c'est Mirella 🦊 Je vais t'accompagner !</div>
         </div>
-        <div style="background:linear-gradient(135deg,#FF6B6B,#FF9A3C);border-radius:10px;padding:10px 12px;text-align:center;min-width:55px">
-          <div style="font-size:1.8rem;font-weight:800;color:white;line-height:1" id="cdm-h">--</div>
-          <div style="font-size:0.55rem;color:rgba(255,255,255,0.8);text-transform:uppercase">Heures</div>
+        <div class="hero-badge">
+          <img src="PhotoRoom-20230302_113020.png" alt="Geeyom">
+          <span>Créée par Geeyom · 1,5M abonnés TikTok</span>
         </div>
-        <div style="background:linear-gradient(135deg,#FF6B6B,#FF9A3C);border-radius:10px;padding:10px 12px;text-align:center;min-width:55px">
-          <div style="font-size:1.8rem;font-weight:800;color:white;line-height:1" id="cdm-m">--</div>
-          <div style="font-size:0.55rem;color:rgba(255,255,255,0.8);text-transform:uppercase">Min</div>
+        <h1>Le premier coach nutrition IA qui <em>connaît vraiment</em> vos pathologies</h1>
+        <p class="hero-sub">Diabète, hypertension, SOPK, maladie cœliaque… Mirella adapte chaque menu, chaque conseil à votre traitement. Pas de généralités — un accompagnement fait pour vous.</p>
+
+        <div id="successBox" class="success-box">
+          <i class="ti ti-circle-check-filled"></i><strong>Compte créé !</strong>
+          <div style="margin-top:8px"><a href="https://mirella-ai.fr/app" class="btn-primary" style="display:inline-block;padding:12px 24px;font-size:0.88rem">Accéder à Mirella →</a></div>
         </div>
-        <div style="background:linear-gradient(135deg,#FF6B6B,#FF9A3C);border-radius:10px;padding:10px 12px;text-align:center;min-width:55px">
-          <div style="font-size:1.8rem;font-weight:800;color:white;line-height:1" id="cdm-s">--</div>
-          <div style="font-size:0.55rem;color:rgba(255,255,255,0.8);text-transform:uppercase">Sec</div>
+
+        <form class="hero-form" id="formHero" onsubmit="return handleSubmit(event,'Hero')">
+          <input type="email" id="emailHero" placeholder="Votre adresse email" required>
+          <button type="submit" class="btn-primary">Je m'inscris gratuitement →</button>
+        </form>
+        <div class="hero-note"><i class="ti ti-lock" style="font-size:14px"></i> Sans carte bancaire · Accès immédiat · 3 jours gratuits</div>
+
+        <div class="hero-stats">
+          <div class="hero-stat"><b>+1,5M</b><span>Abonnés TikTok</span></div>
+          <div class="hero-stat"><b>4,9★</b><span>Note early access</span></div>
+          <div class="hero-stat"><b>50+</b><span>Pathologies gérées</span></div>
         </div>
       </div>
-    </div>
 
-    <!-- CTA -->
-    <div style="width:100%;border-radius:10px;overflow:hidden;box-shadow:0 4px 20px rgba(0,0,0,0.15);margin-bottom:8px">
-      <input type="email" id="emailMobile" placeholder="votre@email.com"
-        style="width:100%;padding:14px 16px;font-size:1rem;border:none;outline:none;font-family:'DM Sans',sans-serif;box-sizing:border-box;display:block">
-      <button onclick="subscribe('emailMobile','successMobile')"
-        style="width:100%;background:linear-gradient(135deg,#FF6B6B,#FF9A3C);color:white;border:none;padding:14px;font-size:1rem;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif;display:block">
-        Je m'inscris gratuitement →
-      </button>
-    </div>
-    <div class="success-msg" id="successMobile">✅ <a href="https://mirella-ai.fr/app" style="color:#3B6D11;font-weight:700">Accéder à Mirella →</a></div>
-    <div style="font-size:0.72rem;color:#555;margin-top:8px;margin-bottom:16px">🔒 Sans carte bancaire · 3 jours gratuits</div>
-
-
-
-    <!-- Photos carousel auto mobile -->
-    <div style="width:calc(100% + 40px);margin-left:-20px;overflow:hidden;margin-bottom:8px;position:relative">
-      <div id="mobileCarousel" style="display:flex;transition:transform 0.5s ease">
-        <img src="avant_apres6.png" style="min-width:80vw;height:240px;object-fit:cover;border-radius:14px;box-shadow:0 4px 16px rgba(0,0,0,0.2);margin-right:10px">
-        <img src="avant_apres7.png" style="min-width:80vw;height:240px;object-fit:cover;border-radius:14px;box-shadow:0 4px 16px rgba(0,0,0,0.2);margin-right:10px">
-        <img src="avant_apres8.png" style="min-width:80vw;height:240px;object-fit:cover;border-radius:14px;box-shadow:0 4px 16px rgba(0,0,0,0.2);margin-right:10px">
-        <img src="avant_apres9.png" style="min-width:80vw;height:240px;object-fit:cover;border-radius:14px;box-shadow:0 4px 16px rgba(0,0,0,0.2);margin-right:10px">
-        <img src="avant_apres10.png" style="min-width:80vw;height:240px;object-fit:cover;border-radius:14px;box-shadow:0 4px 16px rgba(0,0,0,0.2);margin-right:10px">
-        <img src="avant_apres11.png" style="min-width:80vw;height:240px;object-fit:cover;border-radius:14px;box-shadow:0 4px 16px rgba(0,0,0,0.2);margin-right:10px">
-      </div>
-      <!-- Indicateurs -->
-      <div style="display:flex;justify-content:center;gap:5px;margin-top:8px" id="mobileCarouselDots">
-        <div class="mcdot" style="width:6px;height:6px;border-radius:50%;background:#FF6B6B;opacity:1;transition:opacity .3s"></div>
-        <div class="mcdot" style="width:6px;height:6px;border-radius:50%;background:#FF6B6B;opacity:0.3;transition:opacity .3s"></div>
-        <div class="mcdot" style="width:6px;height:6px;border-radius:50%;background:#FF6B6B;opacity:0.3;transition:opacity .3s"></div>
-        <div class="mcdot" style="width:6px;height:6px;border-radius:50%;background:#FF6B6B;opacity:0.3;transition:opacity .3s"></div>
-        <div class="mcdot" style="width:6px;height:6px;border-radius:50%;background:#FF6B6B;opacity:0.3;transition:opacity .3s"></div>
-        <div class="mcdot" style="width:6px;height:6px;border-radius:50%;background:#FF6B6B;opacity:0.3;transition:opacity .3s"></div>
+      <div class="hero-card">
+        <div class="hero-card-top">
+          <div>
+            <div class="hero-card-eyebrow">OFFRE EARLY BIRD</div>
+            <div class="hero-card-title">-50% à vie se termine dans</div>
+          </div>
+          <div class="fox-guide">
+            <video autoplay muted loop playsinline><source src="https://raw.githubusercontent.com/avelia-ai/nutricare-frontend/main/renard_chat_avatar.mp4" type="video/mp4"></video>
+          </div>
+        </div>
+        <div class="cd-grid">
+          <div class="cd-box"><div class="cd-num" id="cd-j">--</div><div class="cd-label">Jours</div></div>
+          <div class="cd-box"><div class="cd-num" id="cd-h">--</div><div class="cd-label">Heures</div></div>
+          <div class="cd-box"><div class="cd-num" id="cd-m">--</div><div class="cd-label">Min</div></div>
+          <div class="cd-box"><div class="cd-num" id="cd-s">--</div><div class="cd-label">Sec</div></div>
+        </div>
+        <div class="hero-card-progress">
+          <div class="hero-card-progress-bar"><div class="hero-card-progress-fill"></div></div>
+          <div class="hero-card-progress-text"><span>800 places réservées</span><span>1000 places</span></div>
+        </div>
       </div>
     </div>
   </div>
 </section>
 
-<script>
-// Carousel mobile auto
-let mobileCarouselIdx = 0;
-const mobileCarouselTotal = 6;
-function mobileCarouselGoTo(idx) {
-  mobileCarouselIdx = (idx + mobileCarouselTotal) % mobileCarouselTotal;
-  const el = document.getElementById('mobileCarousel');
-  if(!el) return;
-  const slideW = el.children[0].offsetWidth + 10;
-  el.style.transform = `translateX(-${mobileCarouselIdx * slideW}px)`;
-  document.querySelectorAll('.mcdot').forEach((d,i) => d.style.opacity = i===mobileCarouselIdx ? '1' : '0.3');
-}
-setInterval(() => mobileCarouselGoTo(mobileCarouselIdx + 1), 3000);
-
-// Afficher hero mobile ou desktop
-(function(){
-  var isMobile = window.innerWidth <= 768;
-  document.getElementById('heroSection').style.display = isMobile ? 'none' : 'block';
-  document.getElementById('heroMobile').style.display = isMobile ? 'block' : 'none';
-  // Sync countdown mobile
-  var origUpdate = window.updateCountdown;
-  setInterval(function(){
-    ['j','h','m','s'].forEach(function(u){
-      var src = document.getElementById('cd-'+u);
-      var dst = document.getElementById('cdm-'+u);
-      if(src && dst) dst.textContent = src.textContent;
-    });
-  }, 500);
-})();
-</script>
-
-<!-- STATS -->
-<section class="stats-section">
-  <div class="stats-inner">
-    <div><div class="stat-n">3<span style="color:rgba(255,255,255,.5)"> jours</span></div><div class="stat-l">Essai gratuit</div></div>
-    <div><div class="stat-n">50<span style="color:rgba(255,255,255,.5)">+</span></div><div class="stat-l">Pathologies gérées</div></div>
-    <div><div class="stat-n">4.9<span style="color:rgba(255,255,255,.5)">/5</span></div><div class="stat-l">Note moyenne</div></div>
-    <div><div class="stat-n">24h<span style="color:rgba(255,255,255,.5)">/24</span></div><div class="stat-l">Disponible</div></div>
-  </div>
-</section>
-
-<!-- VIDÉO DÉMO -->
-<section style="background:#fff;padding:48px 20px;text-align:center">
-  <div style="max-width:700px;margin:0 auto">
-    <div style="font-size:0.75rem;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:#FF6B6B;margin-bottom:8px">▶ DÉMO PRODUIT</div>
-    <h2 style="font-family:'Open Sans',sans-serif;font-size:clamp(1.6rem,3vw,2.2rem);font-weight:700;color:#1a1a1a;margin-bottom:24px">Voyez Mirella en 3 minutes</h2>
-    <div onclick="openVideoModal()" style="position:relative;cursor:pointer;border-radius:20px;overflow:hidden;box-shadow:0 12px 40px rgba(255,107,107,0.2)">
-      <img src="https://img.youtube.com/vi/qFoiT9SYvfM/hqdefault.jpg" alt="Démo Mirella" style="width:100%;display:block;height:360px;object-fit:cover;opacity:0.9" onerror="this.src='https://img.youtube.com/vi/qFoiT9SYvfM/mqdefault.jpg'">
-      <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:72px;height:72px;background:linear-gradient(135deg,#FF6B6B,#FF9A3C);border-radius:50%;display:flex;align-items:center;justify-content:center;box-shadow:0 8px 24px rgba(255,107,107,0.5)">
-        <div style="width:0;height:0;border-top:14px solid transparent;border-bottom:14px solid transparent;border-left:22px solid white;margin-left:4px"></div>
-      </div>
+<!-- ============ PAIN POINTS ============ -->
+<section>
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="eyebrow">Mirella est faite pour vous si...</div>
+      <h2>Vous vous reconnaissez dans l'une de ces situations ?</h2>
     </div>
-    <div style="font-size:0.8rem;color:#999;margin-top:12px">Cliquez pour regarder · Sans inscription</div>
-  </div>
-</section>
-<!-- SECTION COMPLÈTE -->
-
-<!-- SECTION APP LA PLUS COMPLÈTE -->
-<section style="background:#fff;padding:40px 16px">
-  <div style="max-width:1100px;margin:0 auto;background:linear-gradient(135deg,#fff5f5,#fff8f5);border-radius:24px;padding:32px 24px;box-shadow:0 4px 32px rgba(255,107,107,0.08)">
-    <h2 style="font-family:'Open Sans',sans-serif;font-size:clamp(1.5rem,3vw,2.2rem);font-weight:800;color:#1a1a1a;margin:0 0 8px;text-align:center">L'application la plus complète du marché</h2>
-    <div style="font-size:1rem;font-weight:700;color:#FF6B6B;margin-bottom:28px;text-align:center">Plus de 20 fonctionnalités pour améliorer votre santé</div>
-    <div style="display:flex;flex-wrap:wrap;gap:32px;align-items:center">
-      <div style="flex:1;min-width:260px">
-        <p style="font-size:0.95rem;color:#444;line-height:1.7;margin-bottom:14px"><strong>1ère appli</strong> qui prend en compte vos maladies, pathologies, et traitements.</p>
-        <p style="font-size:0.95rem;color:#444;line-height:1.7;margin-bottom:14px"><strong>Catalogue de recettes</strong> le plus complet du marché et inédit qui s'adapte à vos traitements et pathologies.</p>
-        <p style="font-size:0.95rem;color:#444;line-height:1.7;margin-bottom:28px">Des <strong>fonctionnalités inédites</strong> : Analyse sanguine, Détection visuelle de pathologies, Analyse d'ordonnance...</p>
-        <a href="#inscription" style="display:inline-block;background:linear-gradient(135deg,#FF6B6B,#FF9A3C);color:white;font-weight:700;font-size:0.95rem;padding:14px 28px;border-radius:12px;text-decoration:none;box-shadow:0 4px 16px rgba(255,107,107,0.3)">Je m'inscris gratuitement →</a>
+    <div class="pain-grid">
+      <div class="pain-card"><div class="icon-badge"><i class="ti ti-pill"></i></div><h3>Vous prenez des médicaments au quotidien</h3><p>Et vous ne savez jamais vraiment quels aliments éviter avec votre traitement.</p></div>
+      <div class="pain-card"><div class="icon-badge"><i class="ti ti-heartbeat"></i></div><h3>Vous avez une pathologie chronique</h3><p>Diabète, hypertension, SOPK, maladie cœliaque... et les conseils génériques ne marchent pas pour vous.</p></div>
+      <div class="pain-card"><div class="icon-badge"><i class="ti ti-message-circle"></i></div><h3>Vous sortez de chez le médecin sans réponses</h3><p>15 minutes de consultation, une ordonnance, et aucune explication sur ce que vous devez manger.</p></div>
+      <div class="pain-card"><div class="icon-badge"><i class="ti ti-clipboard-list"></i></div><h3>Vous avez des bilans sanguins incompris</h3><p>Des chiffres, des abréviations, et personne pour vous expliquer ce que ça veut dire concrètement.</p></div>
+      <div class="pain-card"><div class="icon-badge"><i class="ti ti-salad"></i></div><h3>Vous ne savez plus quoi manger</h3><p>Internet dit tout et son contraire. Vous voulez enfin quelque chose adapté à VOUS, pas à tout le monde.</p></div>
+      <div class="pain-card"><div class="icon-badge"><i class="ti ti-scale"></i></div><h3>Vous n'avez pas les moyens d'un diététicien</h3><p>50-80€ la séance, non remboursée. Mirella vous donne le même niveau de conseil pour moins de 10€/mois.</p></div>
+    </div>
+    <div class="pain-cta">
+      <div class="fox-guide" style="width:74px;height:74px">
+        <video autoplay muted loop playsinline><source src="https://raw.githubusercontent.com/avelia-ai/nutricare-frontend/main/renard_conseils_v4.mp4" type="video/mp4"></video>
       </div>
-      <div style="flex:1;min-width:260px">
-        <div style="font-weight:700;font-size:1rem;color:#1a1a1a;margin-bottom:16px">Ce que vous obtenez&nbsp;?</div>
-        <div style="display:flex;flex-direction:column;gap:10px">
-          <div style="display:flex;align-items:center;gap:12px;background:white;border-radius:12px;padding:12px 16px;box-shadow:0 2px 8px rgba(0,0,0,0.06)"><span style="width:22px;height:22px;min-width:22px;background:#22c55e;border-radius:50%;display:flex;align-items:center;justify-content:center;color:white;font-size:0.75rem;font-weight:700">✓</span><span style="font-size:0.9rem;color:#1a1a1a;font-weight:500">1ère appli adaptée à vos pathologies et traitements</span></div>
-          <div style="display:flex;align-items:center;gap:12px;background:white;border-radius:12px;padding:12px 16px;box-shadow:0 2px 8px rgba(0,0,0,0.06)"><span style="width:22px;height:22px;min-width:22px;background:#22c55e;border-radius:50%;display:flex;align-items:center;justify-content:center;color:white;font-size:0.75rem;font-weight:700">✓</span><span style="font-size:0.9rem;color:#1a1a1a;font-weight:500">Catalogue de recettes le plus complet du marché</span></div>
-          <div style="display:flex;align-items:center;gap:12px;background:white;border-radius:12px;padding:12px 16px;box-shadow:0 2px 8px rgba(0,0,0,0.06)"><span style="width:22px;height:22px;min-width:22px;background:#22c55e;border-radius:50%;display:flex;align-items:center;justify-content:center;color:white;font-size:0.75rem;font-weight:700">✓</span><span style="font-size:0.9rem;color:#1a1a1a;font-weight:500">Analyse sanguine & détection de pathologies</span></div>
-          <div style="display:flex;align-items:center;gap:12px;background:white;border-radius:12px;padding:12px 16px;box-shadow:0 2px 8px rgba(0,0,0,0.06)"><span style="width:22px;height:22px;min-width:22px;background:#22c55e;border-radius:50%;display:flex;align-items:center;justify-content:center;color:white;font-size:0.75rem;font-weight:700">✓</span><span style="font-size:0.9rem;color:#1a1a1a;font-weight:500">Analyse d'ordonnance intelligente</span></div>
-          <div style="display:flex;align-items:center;gap:12px;background:white;border-radius:12px;padding:12px 16px;box-shadow:0 2px 8px rgba(0,0,0,0.06)"><span style="width:22px;height:22px;min-width:22px;background:#22c55e;border-radius:50%;display:flex;align-items:center;justify-content:center;color:white;font-size:0.75rem;font-weight:700">✓</span><span style="font-size:0.9rem;color:#1a1a1a;font-weight:500">20+ fonctionnalités pour améliorer votre santé</span></div>
-        </div>
-      </div>
-      <div style="flex:0 0 180px;text-align:center;display:none" class="phone-col">
-        <div style="background:linear-gradient(135deg,#FF6B6B,#FF9A3C);border-radius:36px;padding:8px;box-shadow:0 16px 48px rgba(255,107,107,0.3);display:inline-block">
-          <div style="background:#1a1a1a;border-radius:28px;overflow:hidden;width:160px;height:320px;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:16px">
-            <img src="logo_mirella.png" alt="Mirella" style="width:60px;margin-bottom:10px" onerror="this.style.display='none'">
-            <div style="color:white;font-weight:700;font-size:0.95rem;font-family:'Open Sans',sans-serif">Mirella</div>
-            <div style="color:rgba(255,255,255,0.6);font-size:0.7rem;margin-top:4px;text-align:center">Votre coach santé IA</div>
-          </div>
-        </div>
-      </div>
+      <p><strong>Si vous vous reconnaissez dans au moins une situation</strong> — Mirella a été conçue exactement pour vous.</p>
     </div>
   </div>
 </section>
-<style>@media(min-width:768px){.phone-col{display:block !important}}</style>
 
-
-
-<section style="background:#f7f5f2;padding:60px 20px">
-  <div style="max-width:1100px;margin:0 auto">
-    <div style="text-align:center;margin-bottom:48px">
-      <div style="font-size:0.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.14em;color:#FF6B6B;margin-bottom:10px">L'APPLICATION</div>
-      <h2 style="font-family:'Open Sans',sans-serif;font-size:clamp(1.6rem,3vw,2.4rem);font-weight:800;color:#1a1a1a;margin:0 0 10px">Tout ce dont vous avez besoin,<br><em style="color:#FF6B6B;font-style:italic">dans une seule app</em></h2>
-      <p style="font-size:0.9rem;color:#888;margin:0">Tchat IA · Analyse sanguine · Recettes · Détection pathologies · Ordonnance · Repas</p>
+<!-- ============ PRODUIT ============ -->
+<section class="tour-section">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="eyebrow">L'application</div>
+      <h2>Tout ce dont vous avez besoin, dans une seule app</h2>
+      <p>Chat IA · Bilan sanguin · Détection visuelle · Ordonnance · Frigo · Repas</p>
     </div>
-    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:20px">
-      <div style="border-radius:20px;overflow:hidden;box-shadow:0 2px 16px rgba(0,0,0,0.06)">
-        <img src="carte_tchat_Mirella.png" alt="Tchat Mirella 24h/24" style="width:100%;display:block">
+    <div class="tour-grid">
+      <div class="tour-card">
+        <div class="tour-card-head"><div class="tour-card-tag">Gratuit</div><div class="tour-card-title">Chat IA 24h/24</div></div>
+        <div class="tour-card-media"><video autoplay muted loop playsinline><source src="https://raw.githubusercontent.com/avelia-ai/nutricare-frontend/main/renard_chat_avatar.mp4" type="video/mp4"></video></div>
+        <div class="tour-card-body"><p>Votre coach nutritionnel personnel, adapté à vos pathologies et médicaments, disponible à toute heure.</p></div>
       </div>
-      <div style="border-radius:20px;overflow:hidden;box-shadow:0 2px 16px rgba(0,0,0,0.06)">
-        <img src="carte_detection%20visuelle.png" alt="Détection visuelle de pathologies" style="width:100%;display:block">
+      <div class="tour-card">
+        <div class="tour-card-head"><div class="tour-card-tag">Premium</div><div class="tour-card-title">Bilan sanguin IA</div></div>
+        <div class="tour-card-media"><video autoplay muted loop playsinline><source src="https://raw.githubusercontent.com/avelia-ai/nutricare-frontend/main/renard_bilan_sanguin.mp4" type="video/mp4"></video></div>
+        <div class="tour-card-body"><p>Uploadez votre prise de sang. Résultats expliqués simplement, avec des conseils nutritionnels concrets.</p></div>
       </div>
-      <div style="border-radius:20px;overflow:hidden;box-shadow:0 2px 16px rgba(0,0,0,0.06)">
-        <img src="carte_analyse_sang.png" alt="Analyse sanguine" style="width:100%;display:block">
+      <div class="tour-card">
+        <div class="tour-card-head"><div class="tour-card-tag">Premium</div><div class="tour-card-title">Détection visuelle</div></div>
+        <div class="tour-card-media"><video autoplay muted loop playsinline><source src="https://raw.githubusercontent.com/avelia-ai/nutricare-frontend/main/renard_analyse_visage.mp4" type="video/mp4"></video></div>
+        <div class="tour-card-body"><p>Photographiez peau, yeux ou ongles pour détecter des carences ou signes à surveiller.</p></div>
       </div>
-      <div style="border-radius:20px;overflow:hidden;box-shadow:0 2px 16px rgba(0,0,0,0.06)">
-        <img src="carte_analyse_ordonnance.png" alt="Analyse ordonnance" style="width:100%;display:block">
+      <div class="tour-card">
+        <div class="tour-card-head"><div class="tour-card-tag">Standard</div><div class="tour-card-title">Scan produit</div></div>
+        <div class="tour-card-media"><video autoplay muted loop playsinline><source src="https://raw.githubusercontent.com/avelia-ai/nutricare-frontend/main/renard_scan_produit.mp4" type="video/mp4"></video></div>
+        <div class="tour-card-body"><p>Scannez n'importe quel produit en rayon. Compatibilité avec votre profil santé, instantanément.</p></div>
       </div>
-      <div style="border-radius:20px;overflow:hidden;box-shadow:0 2px 16px rgba(0,0,0,0.06)">
-        <img src="carte_menus_smartphone.png" alt="Recettes personnalisées" style="width:100%;display:block">
+      <div class="tour-card">
+        <div class="tour-card-head"><div class="tour-card-tag">Standard</div><div class="tour-card-title">Mon Frigo</div></div>
+        <div class="tour-card-media"><video autoplay muted loop playsinline><source src="https://raw.githubusercontent.com/avelia-ai/nutricare-frontend/main/renard_frigo.mp4" type="video/mp4"></video></div>
+        <div class="tour-card-body"><p>Photographiez votre frigo, Mirella génère des recettes personnalisées avec ce que vous avez déjà.</p></div>
       </div>
-      <div style="border-radius:20px;overflow:hidden;box-shadow:0 2px 16px rgba(0,0,0,0.06)">
-        <img src="carte_analyse_repas.png" alt="Analyse des repas" style="width:100%;display:block">
+      <div class="tour-card">
+        <div class="tour-card-head"><div class="tour-card-tag">Gratuit</div><div class="tour-card-title">Suivi santé quotidien</div></div>
+        <div class="tour-card-media"><video autoplay muted loop playsinline><source src="https://raw.githubusercontent.com/avelia-ai/nutricare-frontend/main/renard_score_sante.mp4" type="video/mp4"></video></div>
+        <div class="tour-card-body"><p>Glycémie, poids, énergie, sommeil — suivi continu avec conseils qui s'adaptent chaque jour.</p></div>
       </div>
     </div>
   </div>
 </section>
 
-<section style="background:#fff;padding:60px 20px">
-  <div style="max-width:860px;margin:0 auto;text-align:center">
-    <div style="font-size:0.75rem;font-weight:700;text-transform:uppercase;letter-spacing:2px;color:#FF6B6B;margin-bottom:12px">Mirella est faite pour vous si...</div>
-    <h2 style="font-family:'DM Sans',sans-serif;font-size:1.7rem;font-weight:800;color:#1a1a1a;margin-bottom:40px;line-height:1.3">Vous vous reconnaissez<br>dans l'une de ces situations ?</h2>
-    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px;text-align:left">
-      <div style="background:#FFF5F0;border-radius:14px;padding:20px;border-left:4px solid #FF6B6B">
-        <div style="width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,#FF6B6B,#FF9A3C);display:flex;align-items:center;justify-content:center;margin-bottom:10px"><i class="ti ti-pill" style="font-size:18px;color:#fff"></i></div>
-        <div style="font-weight:700;color:#1a1a1a;margin-bottom:6px;font-size:0.95rem">Vous prenez des médicaments au quotidien</div>
-        <div style="font-size:0.82rem;color:#666;line-height:1.5">Et vous ne savez jamais vraiment quels aliments éviter avec votre traitement.</div>
-      </div>
-      <div style="background:#FFF5F0;border-radius:14px;padding:20px;border-left:4px solid #FF9A3C">
-        <div style="width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,#FF6B6B,#FF9A3C);display:flex;align-items:center;justify-content:center;margin-bottom:10px"><i class="ti ti-heartbeat" style="font-size:18px;color:#fff"></i></div>
-        <div style="font-weight:700;color:#1a1a1a;margin-bottom:6px;font-size:0.95rem">Vous avez une pathologie chronique</div>
-        <div style="font-size:0.82rem;color:#666;line-height:1.5">Diabète, hypertension, SOPK, maladie cœliaque... et les conseils génériques ne marchent pas pour vous.</div>
-      </div>
-      <div style="background:#FFF5F0;border-radius:14px;padding:20px;border-left:4px solid #FF6B6B">
-        <div style="width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,#FF6B6B,#FF9A3C);display:flex;align-items:center;justify-content:center;margin-bottom:10px"><i class="ti ti-message-circle" style="font-size:18px;color:#fff"></i></div>
-        <div style="font-weight:700;color:#1a1a1a;margin-bottom:6px;font-size:0.95rem">Vous sortez de chez le médecin sans réponses</div>
-        <div style="font-size:0.82rem;color:#666;line-height:1.5">15 minutes de consultation, une ordonnance, et aucune explication sur ce que vous devez manger.</div>
-      </div>
-      <div style="background:#FFF5F0;border-radius:14px;padding:20px;border-left:4px solid #FF9A3C">
-        <div style="width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,#FF6B6B,#FF9A3C);display:flex;align-items:center;justify-content:center;margin-bottom:10px"><i class="ti ti-clipboard-list" style="font-size:18px;color:#fff"></i></div>
-        <div style="font-weight:700;color:#1a1a1a;margin-bottom:6px;font-size:0.95rem">Vous avez des bilans sanguins incompris</div>
-        <div style="font-size:0.82rem;color:#666;line-height:1.5">Des chiffres, des abréviations, et personne pour vous expliquer ce que ça veut dire concrètement.</div>
-      </div>
-      <div style="background:#FFF5F0;border-radius:14px;padding:20px;border-left:4px solid #FF6B6B">
-        <div style="width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,#FF6B6B,#FF9A3C);display:flex;align-items:center;justify-content:center;margin-bottom:10px"><i class="ti ti-salad" style="font-size:18px;color:#fff"></i></div>
-        <div style="font-weight:700;color:#1a1a1a;margin-bottom:6px;font-size:0.95rem">Vous ne savez plus quoi manger</div>
-        <div style="font-size:0.82rem;color:#666;line-height:1.5">Internet dit tout et son contraire. Vous avez essayé 10 régimes. Vous voulez enfin quelque chose adapté à VOUS, pas à tout le monde.</div>
-      </div>
-      <div style="background:#FFF5F0;border-radius:14px;padding:20px;border-left:4px solid #FF9A3C">
-        <div style="width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,#FF6B6B,#FF9A3C);display:flex;align-items:center;justify-content:center;margin-bottom:10px"><i class="ti ti-scale" style="font-size:18px;color:#fff"></i></div>
-        <div style="font-weight:700;color:#1a1a1a;margin-bottom:6px;font-size:0.95rem">Vous n'avez pas les moyens d'un diététicien</div>
-        <div style="font-size:0.82rem;color:#666;line-height:1.5">50-80€ la séance, non remboursée. Mirella vous donne accès au même niveau de conseil pour moins de 10€/mois.</div>
-      </div>
+<!-- ============ TEMOIGNAGES ============ -->
+<section>
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="eyebrow">Ils ont testé Mirella</div>
+      <h2>Des dizaines de personnes ont déjà transformé leur santé</h2>
+      <p>Testeurs early access · Résultats réels · Aucune rétribution</p>
     </div>
-    <div style="margin-top:32px;padding:20px;background:#1a1a1a;border-radius:14px;color:white;font-size:0.95rem;line-height:1.6">
-      <strong>Si vous vous reconnaissez dans au moins une de ces situations</strong> — Mirella a été conçue exactement pour vous.
+  </div>
+  <div class="wrap">
+    <div class="test-strip">
+      <div class="test-card"><div class="test-stars">★★★★★</div><div class="test-quote">"J'ai une hypertension et du diabète de type 2. Mirella a généré des menus adaptés aux deux en même temps, quelque chose qu'aucune autre app n'avait fait."</div><div class="test-person"><img class="test-avatar" src="temoignage_1.png" alt=""><div><div class="test-name">Marie-Laure, 52 ans</div><div class="test-tag">Hypertension + Diabète T2</div></div></div></div>
+      <div class="test-card"><div class="test-stars">★★★★★</div><div class="test-quote">"Mon médecin m'avait juste dit 'évitez les légumes verts'. Mirella m'a expliqué pourquoi, lesquels exactement, et m'a donné des menus concrets."</div><div class="test-person"><img class="test-avatar" src="temoignage_2.jpg" alt=""><div><div class="test-name">Philippe D., 61 ans</div><div class="test-tag">Anticoagulants</div></div></div></div>
+      <div class="test-card"><div class="test-stars">★★★★★</div><div class="test-quote">"Elle connaît mon SOPK, elle sait que je fais de la rétention, elle adapte. Ça fait 6 semaines et j'ai perdu 4 kg sans me priver."</div><div class="test-person"><img class="test-avatar" src="temoignage_3.jpg" alt=""><div><div class="test-name">Sarah C., 34 ans</div><div class="test-tag">SOPK · Surpoids</div></div></div></div>
+      <div class="test-card"><div class="test-stars">★★★★★</div><div class="test-quote">"J'ai pris une photo de mon bilan sur Mirella — en 30 secondes elle m'a expliqué ma carence en fer en langage normal. J'ai rappelé mon médecin le lendemain."</div><div class="test-person"><img class="test-avatar" src="temoignage_4.jpg" alt=""><div><div class="test-name">Thomas R., 41 ans</div><div class="test-tag">Carence en fer</div></div></div></div>
+      <div class="test-card"><div class="test-stars">★★★★★</div><div class="test-quote">"Préparer mes repas sans gluten ET adaptés à l'effort c'était l'enfer. Mirella a tout géré. C'est devenu mon outil numéro 1, avant même Strava."</div><div class="test-person"><img class="test-avatar" src="temoignage_5.png" alt=""><div><div class="test-name">Julie B., 28 ans</div><div class="test-tag">Maladie coeliaque</div></div></div></div>
     </div>
   </div>
 </section>
 
-<section style="background:#1a1a1a;padding:80px 20px">
-  <div style="max-width:1000px;margin:0 auto;text-align:center">
-    <div style="font-size:0.75rem;font-weight:700;text-transform:uppercase;letter-spacing:2px;color:#FF6B6B;margin-bottom:16px">Ils ont testé Mirella</div>
-    <h2 style="font-family:'DM Sans',sans-serif;font-size:1.8rem;font-weight:800;color:white;margin-bottom:12px;line-height:1.3">Des dizaines de personnes ont déjà<br><em style="color:#FF9A3C;font-style:italic">transformé leur santé</em></h2>
-    <p style="color:rgba(255,255,255,0.5);font-size:0.95rem;margin-bottom:48px">Testeurs early access · Résultats réels · Aucune rétribution</p>
-    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:20px;text-align:left">
-      <div style="background:#2a2a2a;border-radius:16px;padding:24px;border:1px solid rgba(255,255,255,0.06)">
-        <div style="color:#FF9A3C;margin-bottom:12px">★★★★★</div>
-        <p style="color:rgba(255,255,255,0.85);font-size:0.88rem;line-height:1.7;margin-bottom:16px">"J'ai une hypertension et du diabète de type 2. Mirella a généré des menus adaptés aux deux en même temps, quelque chose qu'aucune autre app n'avait fait. C'est bluffant."</p>
-        <div style="display:flex;align-items:center;gap:10px">
-          <img src="temoignage_1.png" style="width:44px;height:44px;border-radius:50%;object-fit:cover;border:2px solid #FF6B6B" alt="Marie-Laure">
-          <div><div style="color:white;font-size:0.82rem;font-weight:600">Marie-Laure, 52 ans</div><div style="color:rgba(255,255,255,0.4);font-size:0.72rem">Hypertension + Diabète T2</div></div>
-        </div>
-      </div>
-      <div style="background:#2a2a2a;border-radius:16px;padding:24px;border:1px solid rgba(255,255,255,0.06)">
-        <div style="color:#FF9A3C;margin-bottom:12px">★★★★★</div>
-        <p style="color:rgba(255,255,255,0.85);font-size:0.88rem;line-height:1.7;margin-bottom:16px">"Mon médecin m'avait juste dit 'évitez les légumes verts'. Mirella m'a expliqué pourquoi, lesquels exactement, et m'a donné des menus concrets. En 3 ans de traitement, personne ne m'avait fait ça."</p>
-        <div style="display:flex;align-items:center;gap:10px">
-          <img src="temoignage_2.jpg" style="width:44px;height:44px;border-radius:50%;object-fit:cover;border:2px solid #378ADD" alt="Philippe">
-          <div><div style="color:white;font-size:0.82rem;font-weight:600">Philippe D., 61 ans</div><div style="color:rgba(255,255,255,0.4);font-size:0.72rem">Anticoagulants · Mutation facteur II</div></div>
-        </div>
-      </div>
-      <div style="background:#2a2a2a;border-radius:16px;padding:24px;border:1px solid rgba(255,255,255,0.06)">
-        <div style="color:#FF9A3C;margin-bottom:12px">★★★★★</div>
-        <p style="color:rgba(255,255,255,0.85);font-size:0.88rem;line-height:1.7;margin-bottom:16px">"Honnêtement j'avais peur que ce soit comme toutes les autres applis. Mais là c'est différent — elle connaît mon SOPK, elle sait que je fais de la rétention, elle adapte. Ça fait 6 semaines et j'ai perdu 4 kg sans me priver."</p>
-        <div style="display:flex;align-items:center;gap:10px">
-          <img src="temoignage_3.jpg" style="width:44px;height:44px;border-radius:50%;object-fit:cover;border:2px solid #9C27B0" alt="Sarah">
-          <div><div style="color:white;font-size:0.82rem;font-weight:600">Sarah C., 34 ans</div><div style="color:rgba(255,255,255,0.4);font-size:0.72rem">SOPK · Surpoids</div></div>
-        </div>
-      </div>
-      <div style="background:#2a2a2a;border-radius:16px;padding:24px;border:1px solid rgba(255,255,255,0.06)">
-        <div style="color:#FF9A3C;margin-bottom:12px">★★★★★</div>
-        <p style="color:rgba(255,255,255,0.85);font-size:0.88rem;line-height:1.7;margin-bottom:16px">"J'avais un bilan sanguin depuis 3 mois que j'avais pas encore regardé. J'ai pris une photo sur Mirella — en 30 secondes elle m'a expliqué ma carence en fer en langage normal. J'ai rappelé mon médecin le lendemain."</p>
-        <div style="display:flex;align-items:center;gap:10px">
-          <img src="temoignage_4.jpg" style="width:44px;height:44px;border-radius:50%;object-fit:cover;border:2px solid #1D9E75" alt="Thomas">
-          <div><div style="color:white;font-size:0.82rem;font-weight:600">Thomas R., 41 ans</div><div style="color:rgba(255,255,255,0.4);font-size:0.72rem">Carence en fer · Fatigue chronique</div></div>
-        </div>
-      </div>
-      <div style="background:#2a2a2a;border-radius:16px;padding:24px;border:1px solid rgba(255,255,255,0.06)">
-        <div style="color:#FF9A3C;margin-bottom:12px">★★★★★</div>
-        <p style="color:rgba(255,255,255,0.85);font-size:0.88rem;line-height:1.7;margin-bottom:16px">"Je courus mon premier semi-marathon en février. Préparer mes repas sans gluten ET adaptés à l'effort c'était l'enfer. Mirella a tout géré. Franchement c'est devenu mon outil numéro 1, avant même Strava."</p>
-        <div style="display:flex;align-items:center;gap:10px">
-          <img src="temoignage_5.png" style="width:44px;height:44px;border-radius:50%;object-fit:cover;border:2px solid #FF9A3C" alt="Julie">
-          <div><div style="color:white;font-size:0.82rem;font-weight:600">Julie B., 28 ans</div><div style="color:rgba(255,255,255,0.4);font-size:0.72rem">Maladie coeliaque · Performance sportive</div></div>
-        </div>
-      </div>
-      <div style="background:#2a2a2a;border-radius:16px;padding:24px;border:1px solid rgba(255,255,255,0.06)">
-        <div style="color:#FF9A3C;margin-bottom:12px">★★★★★</div>
-        <p style="color:rgba(255,255,255,0.85);font-size:0.88rem;line-height:1.7;margin-bottom:16px">"Mon cardiologue m'a demandé d'où venaient toutes ces infos sur mon alimentation. Je lui ai montré Mirella. Il m'a dit 'continuez, c'est exactement ce qu'on a besoin de voir entre les consultations'."</p>
-        <div style="display:flex;align-items:center;gap:10px">
-          <div style="width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,#2D2D2D,#555);display:flex;align-items:center;justify-content:center;font-weight:700;color:white;font-size:0.9rem;flex-shrink:0">BM</div>
-          <div><div style="color:white;font-size:0.82rem;font-weight:600">Bernard M., 67 ans</div><div style="color:rgba(255,255,255,0.4);font-size:0.72rem">Insuffisance cardiaque · Suivi médical</div></div>
-        </div>
-      </div>
+<!-- ============ RESULTATS ============ -->
+<section class="tour-section">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="eyebrow">Résultats réels</div>
+      <h2>Ils ont transformé leur corps et leur santé</h2>
+      <p>Testeurs early access · Résultats obtenus en 8 semaines avec Mirella</p>
     </div>
-    <div style="margin-top:40px;display:flex;align-items:center;justify-content:center;gap:16px;flex-wrap:wrap">
-      <div style="color:#FF9A3C;font-size:1.2rem">★★★★★</div>
-      <div style="color:white;font-size:0.95rem;font-weight:700">4,9/5</div>
-      <div style="color:rgba(255,255,255,0.4);font-size:0.85rem">base sur les retours early access</div>
+    <div class="results-grid">
+      <div class="result-card">
+        <div class="result-media"><img src="avant_apres6.png" alt="Transformation Thomas"></div>
+        <div class="result-stats">
+          <div class="result-stat"><b>-9 kg</b><span>en 8 semaines</span></div>
+          <div class="result-stat"><b>-8 cm</b><span>tour de taille</span></div>
+          <div class="result-stat"><b>-15%</b><span>masse grasse</span></div>
+        </div>
+        <div class="result-quote">"Mirella a adapté mes menus à mon hypertension tout en m'aidant à perdre du poids."</div>
+        <div class="result-by">Thomas R., 41 ans · Hypertension</div>
+      </div>
+      <div class="result-card">
+        <div class="result-media"><img src="avant_apres7.png" alt="Transformation Sarah"></div>
+        <div class="result-stats">
+          <div class="result-stat"><b>-6 kg</b><span>en 8 semaines</span></div>
+          <div class="result-stat"><b>+Énergie</b><span>quotidienne</span></div>
+          <div class="result-stat"><b>SOPK</b><span>symptômes réduits</span></div>
+        </div>
+        <div class="result-quote">"Avec mon SOPK, perdre du poids était un enfer. Mirella a créé des menus vraiment adaptés."</div>
+        <div class="result-by">Sarah C., 34 ans · SOPK</div>
+      </div>
     </div>
   </div>
 </section>
-  <section style="background:#fff;padding:40px 20px 20px">
-    <div style="max-width:1000px;margin:0 auto;text-align:center">
-      <div style="font-size:0.75rem;font-weight:700;text-transform:uppercase;letter-spacing:2px;color:#FF6B6B;margin-bottom:16px">Résultats réels</div>
-      <h2 style="font-family:'DM Sans',sans-serif;font-size:1.8rem;font-weight:800;color:#1a1a1a;margin-bottom:12px;line-height:1.3">Ils ont transformé<br><em style="color:#FF6B6B;font-style:italic">leur corps et leur santé</em></h2>
-      <p style="color:#666;font-size:0.95rem;margin-bottom:48px">Testeurs early access · Résultats obtenus en 8 semaines avec Mirella</p>
 
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:32px">
-
-        <!-- Avant/Après Homme -->
-        <div style="background:#f8f8f8;border-radius:20px;overflow:hidden">
-          <div style="position:relative">
-            <img src="ChatGPT%20Image%205%20mai%202026%2C%2011_47_36.png" alt="Transformation homme" style="width:100%;display:block;object-fit:cover">
-            <div style="position:absolute;top:16px;left:16px;background:rgba(0,0,0,0.6);color:white;font-size:0.7rem;font-weight:700;padding:4px 10px;border-radius:20px">AVANT → APRÈS</div>
-          </div>
-          <div style="padding:20px;text-align:left">
-            <div style="display:flex;gap:12px;margin-bottom:12px;flex-wrap:wrap">
-              <div style="background:#FFEBEE;border-radius:8px;padding:8px 14px;text-align:center">
-                <div style="font-size:1.1rem;font-weight:800;color:#FF6B6B">-9 kg</div>
-                <div style="font-size:0.68rem;color:#888">en 8 semaines</div>
-              </div>
-              <div style="background:#E8F5E9;border-radius:8px;padding:8px 14px;text-align:center">
-                <div style="font-size:1.1rem;font-weight:800;color:#1D9E75">-8 cm</div>
-                <div style="font-size:0.68rem;color:#888">tour de taille</div>
-              </div>
-              <div style="background:#E3F2FD;border-radius:8px;padding:8px 14px;text-align:center">
-                <div style="font-size:1.1rem;font-weight:800;color:#378ADD">-15%</div>
-                <div style="font-size:0.68rem;color:#888">masse grasse</div>
-              </div>
-            </div>
-            <p style="font-size:0.85rem;color:#444;line-height:1.6;margin:0">"Mirella a adapté mes menus à mon hypertension tout en m'aidant à perdre du poids. Je n'aurais jamais cru que c'était possible en mangeant aussi bien."</p>
-            <div style="margin-top:10px;font-size:0.78rem;font-weight:600;color:#FF6B6B">Thomas R., 41 ans · Hypertension</div>
-          </div>
+<!-- ============ PRICING ============ -->
+<section>
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="hero-fox-row" style="justify-content:center;margin-bottom:18px">
+        <div class="fox-guide" style="width:74px;height:74px">
+          <video autoplay muted loop playsinline><source src="https://raw.githubusercontent.com/avelia-ai/nutricare-frontend/main/renard_score_sante.mp4" type="video/mp4"></video>
         </div>
-
-        <!-- Avant/Après Femme -->
-        <div style="background:#f8f8f8;border-radius:20px;overflow:hidden">
-          <div style="position:relative">
-            <img src="ChatGPT%20Image%205%20mai%202026%2C%2011_41_37.png" alt="Transformation femme" style="width:100%;display:block;object-fit:cover">
-            <div style="position:absolute;top:16px;left:16px;background:rgba(0,0,0,0.6);color:white;font-size:0.7rem;font-weight:700;padding:4px 10px;border-radius:20px">AVANT → APRÈS</div>
-          </div>
-          <div style="padding:20px;text-align:left">
-            <div style="display:flex;gap:12px;margin-bottom:12px;flex-wrap:wrap">
-              <div style="background:#FFEBEE;border-radius:8px;padding:8px 14px;text-align:center">
-                <div style="font-size:1.1rem;font-weight:800;color:#FF6B6B">-6 kg</div>
-                <div style="font-size:0.68rem;color:#888">en 8 semaines</div>
-              </div>
-              <div style="background:#E8F5E9;border-radius:8px;padding:8px 14px;text-align:center">
-                <div style="font-size:1.1rem;font-weight:800;color:#1D9E75">+Énergie</div>
-                <div style="font-size:0.68rem;color:#888">quotidienne</div>
-              </div>
-              <div style="background:#FFF3E0;border-radius:8px;padding:8px 14px;text-align:center">
-                <div style="font-size:1.1rem;font-weight:800;color:#FF9A3C">SOPK</div>
-                <div style="font-size:0.68rem;color:#888">symptômes réduits</div>
-              </div>
-            </div>
-            <p style="font-size:0.85rem;color:#444;line-height:1.6;margin:0">"Avec mon SOPK, perdre du poids était un enfer. Mirella a compris mes contraintes hormonales et créé des menus vraiment adaptés. Résultat visible en 2 mois."</p>
-            <div style="margin-top:10px;font-size:0.78rem;font-weight:600;color:#FF6B6B">Sarah C., 34 ans · SOPK</div>
-          </div>
-        </div>
-
       </div>
-
-      <div style="margin-top:24px;padding:16px;background:#FFF5F0;border-radius:12px;font-size:0.78rem;color:#888;font-style:italic">
-        Photos partagées avec accord des utilisateurs. Résultats individuels pouvant varier selon le profil et l'engagement personnel.
-      </div>
+      <div class="eyebrow">Tarifs Early Bird</div>
+      <h2>Après vos 3 jours gratuits, -50% à vie</h2>
+      <p>Sans carte bancaire · Sans engagement · Annulable à tout moment</p>
     </div>
-  </section>
-
-<section class="section" style="background:#fff">
-  <div class="section-inner" style="text-align:center">
-    <div class="section-tag">Tarifs Early Bird</div>
-    <h2 class="section-title" style="max-width:600px;margin:0 auto 16px">Après vos 3 jours gratuits, bénéficiez de <span style="color:#FF6B6B">-50% à vie</span></h2>
-    <p style="font-size:.95rem;color:#888;margin-bottom:48px">Si vous choisissez de vous abonner · Sans carte bancaire · Sans engagement · Annulable à tout moment</p>
-    <div class="plans-grid" style="margin:0 auto">
+    <div class="pricing-grid">
       <div class="plan">
         <div class="plan-name">Gratuit</div>
         <div class="plan-price">0€</div>
-        <div class="plan-period">pour toujours</div>
-        <div style="font-size:.78rem;color:#FF6B6B;font-weight:600;margin-top:4px;background:rgba(255,107,107,.08);display:inline-block;padding:3px 10px;border-radius:20px">sans carte bancaire</div>
+        <div class="plan-price-note">pour toujours</div>
         <ul class="plan-features">
-          <li>Chat IA nutritionnel</li>
-          <li>50+ pathologies</li>
-          <li>Profil de base</li>
+          <li><i class="ti ti-check"></i>Chat IA nutritionnel</li>
+          <li><i class="ti ti-check"></i>50+ pathologies</li>
+          <li><i class="ti ti-check"></i>Profil de base</li>
         </ul>
-        
+        <a href="#emailHero" class="plan-btn" onclick="document.getElementById('emailHero').focus()">Commencer gratuitement</a>
       </div>
       <div class="plan featured">
+        <div class="plan-badge">LE PLUS CHOISI</div>
         <div class="plan-name">Standard Early Bird</div>
-        <div class="plan-price">3,99€</div>
-        <div class="plan-period">/ mois · au lieu de 7,99€ · Early Bird -50% à vie</div>
-        <div style="font-size:.78rem;color:rgba(255,255,255,.9);font-weight:600;margin-top:4px;background:rgba(255,255,255,.2);display:inline-block;padding:3px 10px;border-radius:20px">soit 0,13€ par jour ☕</div>
+        <div class="plan-price">3,99€<sup>/mois</sup></div>
+        <div class="plan-price-note">au lieu de 7,99€ · soit 0,13€/jour</div>
         <ul class="plan-features">
-          <li>Tout le plan Gratuit</li>
-          <li>Menus hebdomadaires IA</li>
-          <li>Dashboard Santé</li>
-          <li>Espace médecin</li>
-          <li>Analyse photo repas</li>
+          <li><i class="ti ti-check"></i>Tout le plan Gratuit</li>
+          <li><i class="ti ti-check"></i>Menus hebdomadaires IA</li>
+          <li><i class="ti ti-check"></i>Dashboard Santé</li>
+          <li><i class="ti ti-check"></i>Espace médecin</li>
+          <li><i class="ti ti-check"></i>Analyse photo repas</li>
         </ul>
-        
+        <a href="#emailHero" class="plan-btn" onclick="document.getElementById('emailHero').focus()">Je m'inscris →</a>
       </div>
       <div class="plan">
         <div class="plan-name">Premium Early Bird</div>
-        <div class="plan-price" style="color:#FF6B6B">6,49€</div>
-        <div class="plan-period">/ mois · au lieu de 12,99€ · Early Bird -50% à vie</div>
-        <div style="font-size:.78rem;color:#FF6B6B;font-weight:600;margin-top:4px;background:rgba(255,107,107,.1);display:inline-block;padding:3px 10px;border-radius:20px">soit 0,22€ par jour ☕</div>
+        <div class="plan-price">6,49€<sup>/mois</sup></div>
+        <div class="plan-price-note">au lieu de 12,99€ · soit 0,22€/jour</div>
         <ul class="plan-features">
-          <li>Tout le plan Standard</li>
-          <li>Oracle Santé</li>
-          <li>Bilan sanguin IA</li>
-          <li>Scan ordonnance</li>
-          <li>Simulateur décisions</li>
-          <li>Passeport Santé PDF</li>
+          <li><i class="ti ti-check"></i>Tout le plan Standard</li>
+          <li><i class="ti ti-check"></i>Oracle Santé</li>
+          <li><i class="ti ti-check"></i>Bilan sanguin IA</li>
+          <li><i class="ti ti-check"></i>Scan ordonnance</li>
+          <li><i class="ti ti-check"></i>Passeport Santé PDF</li>
         </ul>
-        
+        <a href="#emailHero" class="plan-btn" onclick="document.getElementById('emailHero').focus()">Commencer gratuitement</a>
       </div>
-    </div>
     </div>
   </div>
 </section>
 
-
-
-<!-- FONCTIONNALITÉS -->
-<section class="section" style="background:#fff">
-  <div class="section-inner">
-    <div class="section-tag">Plateforme complète</div>
-    <h2 class="section-title">Tout ce dont vous avez besoin</h2>
-
-    <!-- 2 grandes cards photo -->
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px">
-      <div style="border-radius:16px;min-height:280px;position:relative;overflow:hidden">
-        <img src="https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=800&q=80&fit=crop" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover">
-        <div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.85) 0%,rgba(0,0,0,.2) 60%,transparent 100%)"></div>
-        <div style="position:absolute;top:20px;left:20px;background:#FF6B6B;color:white;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;padding:4px 10px;border-radius:4px">Gratuit</div>
-        <div style="position:absolute;bottom:0;left:0;right:0;padding:28px">
-          <div style="font-size:1.4rem;font-weight:700;color:white;font-family:'Open Sans',sans-serif;margin-bottom:8px">Chat IA Nutritionnel</div>
-          <div style="font-size:.88rem;color:rgba(255,255,255,.7);line-height:1.6">Votre coach nutritionnel personnel, disponible 24h/24. Adapté à vos pathologies et médicaments.</div>
-        </div>
-      </div>
-      <div style="border-radius:16px;min-height:280px;position:relative;overflow:hidden">
-        <img src="https://images.unsplash.com/photo-1547592180-85f173990554?w=800&q=80&fit=crop" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover">
-        <div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.85) 0%,rgba(0,0,0,.2) 60%,transparent 100%)"></div>
-        <div style="position:absolute;top:20px;left:20px;background:#FF9A3C;color:white;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;padding:4px 10px;border-radius:4px">Standard</div>
-        <div style="position:absolute;bottom:0;left:0;right:0;padding:28px">
-          <div style="font-size:1.4rem;font-weight:700;color:white;font-family:'Open Sans',sans-serif;margin-bottom:8px">Menus hebdomadaires IA</div>
-          <div style="font-size:.88rem;color:rgba(255,255,255,.7);line-height:1.6">7 jours de repas complets générés selon votre profil, vos pathologies et votre budget.</div>
-        </div>
-      </div>
+<!-- ============ FAQ ============ -->
+<section class="tour-section">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="eyebrow">Questions fréquentes</div>
+      <h2>Tout ce que vous devez savoir</h2>
     </div>
-
-    <!-- 3 cards moyennes photo -->
-    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;margin-bottom:16px">
-      <div style="border-radius:16px;min-height:200px;position:relative;overflow:hidden">
-        <video autoplay muted loop playsinline style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover"><source src="https://raw.githubusercontent.com/avelia-ai/nutricare-frontend/main/renard_bilan_sanguin.mp4" type="video/mp4"></video>
-        <div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.8) 0%,rgba(0,0,0,.1) 60%,transparent 100%)"></div>
-        <div style="position:absolute;top:14px;left:14px;background:#FF6B6B;color:white;font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;padding:3px 8px;border-radius:4px">Premium</div>
-        <div style="position:absolute;bottom:0;left:0;right:0;padding:20px">
-          <div style="font-size:1.05rem;font-weight:700;color:white;font-family:'Open Sans',sans-serif;margin-bottom:4px">Bilan sanguin IA</div>
-          <div style="font-size:.78rem;color:rgba(255,255,255,.6);line-height:1.5">Résultats expliqués simplement avec conseils nutritionnels.</div>
-        </div>
+    <div class="faq">
+      <div class="faq-item">
+        <div class="faq-q" onclick="this.parentElement.classList.toggle('open')">Faut-il une carte bancaire pour l'essai gratuit ?<i class="ti ti-plus"></i></div>
+        <div class="faq-a"><p>Non. Vous créez votre compte avec votre email uniquement, et profitez de 3 jours d'accès complet sans aucune carte bancaire requise.</p></div>
       </div>
-      <div style="border-radius:16px;min-height:200px;position:relative;overflow:hidden">
-        <img src="https://raw.githubusercontent.com/avelia-ai/nutricare-frontend/main/ChatGPT%20Image%2029%20avr.%202026%2C%2012_04_07.png" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover">
-        <div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.8) 0%,rgba(0,0,0,.1) 60%,transparent 100%)"></div>
-        <div style="position:absolute;top:14px;left:14px;background:#FF9A3C;color:white;font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;padding:3px 8px;border-radius:4px">Premium</div>
-        <div style="position:absolute;bottom:0;left:0;right:0;padding:20px">
-          <div style="font-size:1.05rem;font-weight:700;color:white;font-family:'Open Sans',sans-serif;margin-bottom:4px">Détection visuelle IA</div>
-          <div style="font-size:.78rem;color:rgba(255,255,255,.6);line-height:1.5">Analysez peau, yeux et ongles pour détecter des carences.</div>
-        </div>
+      <div class="faq-item">
+        <div class="faq-q" onclick="this.parentElement.classList.toggle('open')">Mirella remplace-t-elle mon médecin ?<i class="ti ti-plus"></i></div>
+        <div class="faq-a"><p>Non, Mirella est un outil d'accompagnement nutritionnel, pas un substitut médical. Elle complète le suivi de votre médecin en vous aidant au quotidien entre les consultations.</p></div>
       </div>
-      <div style="border-radius:16px;min-height:200px;position:relative;overflow:hidden">
-        <img src="https://images.unsplash.com/photo-1551076805-e1869033e561?w=600&q=80&fit=crop" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover">
-        <div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.8) 0%,rgba(0,0,0,.1) 60%,transparent 100%)"></div>
-        <div style="position:absolute;top:14px;left:14px;background:#FF6B6B;color:white;font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;padding:3px 8px;border-radius:4px">Premium</div>
-        <div style="position:absolute;bottom:0;left:0;right:0;padding:20px">
-          <div style="font-size:1.05rem;font-weight:700;color:white;font-family:'Open Sans',sans-serif;margin-bottom:4px">Simulateur décisions</div>
-          <div style="font-size:.78rem;color:rgba(255,255,255,.6);line-height:1.5">Simulez l'impact de vos choix alimentaires sur votre santé.</div>
-        </div>
+      <div class="faq-item">
+        <div class="faq-q" onclick="this.parentElement.classList.toggle('open')">Le tarif -50% est-il garanti à vie ?<i class="ti ti-plus"></i></div>
+        <div class="faq-a"><p>Oui. Tant que votre abonnement reste actif, le tarif Early Bird que vous obtenez aujourd'hui ne change pas, même quand les prix standards évolueront.</p></div>
       </div>
-    </div>
-
-    <!-- Petites cards -->
-    <div class="cards-grid">
-      <div class="card" style="border-top:3px solid #FF6B6B;background:#FFEDEB;border-color:#FFCCC8"><span style="font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:#FF6B6B">Gratuit</span><h3>50+ Pathologies</h3><p>Protocoles spécialisés pour diabète, hypertension, SOPK et bien plus.</p></div>
-      <div class="card" style="border-top:3px solid #FF9A3C;background:#FFF0E0;border-color:#FFDAB8"><span style="font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:#FF9A3C">Standard</span><h3>Dashboard Santé</h3><p>Glycémie, poids, sommeil, énergie — suivi continu sur 30 jours.</p></div>
-      <div class="card" style="border-top:3px solid #FF9A3C;background:#FFF0E0;border-color:#FFDAB8"><span style="font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:#FF9A3C">Standard</span><h3>Espace médecin</h3><p>Partagez vos données nutritionnelles avec votre médecin en un clic.</p></div>
-      <div class="card" style="border-top:3px solid #FF9A3C;background:#FFF0E0;border-color:#FFDAB8"><span style="font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:#FF9A3C">Standard</span><h3>Analyse photo repas</h3><p>Photographiez votre assiette, obtenez l'analyse nutritionnelle en 2s.</p></div>
-      <div class="card" style="border-top:3px solid #FF6B6B;background:#FFEDEB;border-color:#FFCCC8"><span style="font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:#FF6B6B">Gratuit</span><h3>Protocoles nutritionnels</h3><p>50+ protocoles validés scientifiquement pour chaque pathologie.</p></div>
-      <div class="card" style="border-top:3px solid #FF9A3C;background:#FFF0E0;border-color:#FFDAB8"><span style="font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:#FF9A3C">Standard</span><h3>Chrono-nutrition IA</h3><p>Optimisez vos horaires de repas selon votre rythme circadien.</p></div>
-      <div class="card" style="border-top:3px solid #2D2D2D;background:#EBEBEB;border-color:#D0D0D0"><span style="font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:#2D2D2D">Premium</span><h3>Oracle Santé</h3><p>Prédisez votre futur biologique sur 10 ans avec l'IA prédictive.</p></div>
-      <div class="card" style="border-top:3px solid #2D2D2D;background:#EBEBEB;border-color:#D0D0D0"><span style="font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:#2D2D2D">Premium</span><h3>Scan ordonnance</h3><p>Photographiez votre ordonnance pour extraire vos médicaments.</p></div>
-      <div class="card" style="border-top:3px solid #2D2D2D;background:#EBEBEB;border-color:#D0D0D0"><span style="font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:#2D2D2D">Premium</span><h3>Passeport Santé</h3><p>Générez un PDF complet de votre profil nutritionnel à partager.</p></div>
-      <div class="card" style="border-top:3px solid #888;background:#EBEBEB;border-color:#D0D0D0"><span style="font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:#888">Entreprise</span><h3>Dashboard RH</h3><p>Solution entreprise pour le bien-être nutritionnel de vos équipes.</p></div>
+      <div class="faq-item">
+        <div class="faq-q" onclick="this.parentElement.classList.toggle('open')">Puis-je annuler à tout moment ?<i class="ti ti-plus"></i></div>
+        <div class="faq-a"><p>Oui, sans engagement ni justification. L'annulation se fait directement depuis l'application en un clic.</p></div>
+      </div>
     </div>
   </div>
 </section>
 
-<!-- COMMENT ÇA MARCHE -->
-
-<section style="background:#FFF5F0;padding:100px 48px;text-align:center;position:relative;overflow:hidden"><img src="https://raw.githubusercontent.com/avelia-ai/nutricare-frontend/main/ChatGPT%20Image%2029%20avr.%202026%2C%2012_38_56.png" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.18;pointer-events:none">
-  <div style="max-width:900px;margin:0 auto">
-    <div style="font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.15em;color:#FF6B6B;margin-bottom:20px">Une première mondiale</div>
-    <h2 style="font-family:'Open Sans',sans-serif;font-size:clamp(2rem,4vw,3.2rem);font-weight:700;color:white;line-height:1.15;color:#2D2D2D;margin-bottom:24px">La seule assistante au monde qui vous <em style="font-style:italic;color:#FF6B6B">accompagne vraiment.</em></h2>
-    <p style="font-size:1.05rem;color:#888;max-width:680px;margin:0 auto 64px;line-height:1.8">Mirella n'est pas un simple chatbot nutritionnel. C'est la première IA au monde à vous accompagner de A à Z en tenant compte de chaque détail qui vous rend unique.</p>
-    <div class="unicite-grid" style="display:grid;grid-template-columns:repeat(3,1fr);gap:24px;text-align:left;margin-bottom:64px">
-      <div style="background:white;border:1px solid rgba(255,107,107,.12);border-radius:16px;padding:28px;">
-        <div class="unicite-icon" class="unicite-icon" style="width:40px;height:40px;background:linear-gradient(135deg,#FF6B6B,#FF9A3C);border-radius:10px;margin-bottom:16px;display:flex;align-items:center;justify-content:center;font-size:1.1rem">&#x1F3E5;</div>
-        <h3 class="unicite-title" class="unicite-title" style="font-family:'Open Sans',sans-serif;font-size:1rem;font-weight:700;color:#2D2D2D;margin-bottom:8px">Vos pathologies</h3>
-        <p class="unicite-desc" class="unicite-desc" style="font-size:.84rem;color:#888;line-height:1.6">Diabète, hypertension, SOPK, maladies inflammatoires — Mirella connaît plus de 50 pathologies et adapte chaque conseil en conséquence.</p>
-      </div>
-      <div style="background:white;border:1px solid rgba(255,107,107,.12);border-radius:16px;padding:28px;">
-        <div class="unicite-icon" class="unicite-icon" style="width:40px;height:40px;background:linear-gradient(135deg,#FF6B6B,#FF9A3C);border-radius:10px;margin-bottom:16px;display:flex;align-items:center;justify-content:center;font-size:1.1rem">&#x1F48A;</div>
-        <h3 class="unicite-title" class="unicite-title" style="font-family:'Open Sans',sans-serif;font-size:1rem;font-weight:700;color:#2D2D2D;margin-bottom:8px">Vos médicaments</h3>
-        <p class="unicite-desc" class="unicite-desc" style="font-size:.84rem;color:#888;line-height:1.6">Interactions alimentaires, contre-indications, moments de prise — Mirella intègre vos traitements pour des conseils qui ne mettent jamais votre santé en danger.</p>
-      </div>
-      <div style="background:white;border:1px solid rgba(255,107,107,.12);border-radius:16px;padding:28px;">
-        <div class="unicite-icon" class="unicite-icon" style="width:40px;height:40px;background:linear-gradient(135deg,#FF6B6B,#FF9A3C);border-radius:10px;margin-bottom:16px;display:flex;align-items:center;justify-content:center;font-size:1.1rem">&#x1F3AF;</div>
-        <h3 class="unicite-title" class="unicite-title" style="font-family:'Open Sans',sans-serif;font-size:1rem;font-weight:700;color:#2D2D2D;margin-bottom:8px">Vos objectifs</h3>
-        <p class="unicite-desc" class="unicite-desc" style="font-size:.84rem;color:#888;line-height:1.6">Perte de poids, énergie, fertilité, longévité — Mirella construit un plan nutritionnel aligné sur vos objectifs de vie, pas sur des recommandations génériques.</p>
-      </div>
-      <div style="background:white;border:1px solid rgba(255,107,107,.12);border-radius:16px;padding:28px;">
-        <div class="unicite-icon" class="unicite-icon" style="width:40px;height:40px;background:linear-gradient(135deg,#FF6B6B,#FF9A3C);border-radius:10px;margin-bottom:16px;display:flex;align-items:center;justify-content:center;font-size:1.1rem">&#x1F33F;</div>
-        <h3 class="unicite-title" class="unicite-title" style="font-family:'Open Sans',sans-serif;font-size:1rem;font-weight:700;color:#2D2D2D;margin-bottom:8px">Vos convictions</h3>
-        <p class="unicite-desc" class="unicite-desc" style="font-size:.84rem;color:#888;line-height:1.6">Végan, végétarien, sans gluten, sans lactose, halal, casher — Mirella respecte vos choix sans jamais les remettre en question.</p>
-      </div>
-      <div style="background:white;border:1px solid rgba(255,107,107,.12);border-radius:16px;padding:28px;">
-        <div class="unicite-icon" class="unicite-icon" style="width:40px;height:40px;background:linear-gradient(135deg,#FF6B6B,#FF9A3C);border-radius:10px;margin-bottom:16px;display:flex;align-items:center;justify-content:center;font-size:1.1rem">&#x1F4B0;</div>
-        <h3 class="unicite-title" class="unicite-title" style="font-family:'Open Sans',sans-serif;font-size:1rem;font-weight:700;color:#2D2D2D;margin-bottom:8px">Votre budget</h3>
-        <p class="unicite-desc" class="unicite-desc" style="font-size:.84rem;color:#888;line-height:1.6">Indiquez votre budget alimentaire et Mirella génère des menus complets sans jamais le dépasser. Bien manger n'est pas réservé aux riches.</p>
-      </div>
-      <div style="background:white;border:1px solid rgba(255,107,107,.12);border-radius:16px;padding:28px;">
-        <div class="unicite-icon" class="unicite-icon" style="width:40px;height:40px;background:linear-gradient(135deg,#FF6B6B,#FF9A3C);border-radius:10px;margin-bottom:16px;display:flex;align-items:center;justify-content:center;font-size:1.1rem">&#x1F52C;</div>
-        <h3 class="unicite-title" class="unicite-title" style="font-family:'Open Sans',sans-serif;font-size:1rem;font-weight:700;color:#2D2D2D;margin-bottom:8px">La science</h3>
-        <p class="unicite-desc" class="unicite-desc" style="font-size:.84rem;color:#888;line-height:1.6">Chaque conseil repose sur des protocoles nutritionnels validés scientifiquement. Pas de tendances, pas de régimes miracles — uniquement ce qui fonctionne.</p>
-      </div>
+<!-- ============ FINAL CTA ============ -->
+<section style="padding-top:0">
+  <div class="final-cta">
+    <div class="fox-guide" style="width:88px;height:88px;margin:0 auto 18px;position:relative">
+      <video autoplay muted loop playsinline><source src="https://raw.githubusercontent.com/avelia-ai/nutricare-frontend/main/renard_conseils_v4.mp4" type="video/mp4"></video>
     </div>
-    <div style="background:linear-gradient(135deg,#FF6B6B,#FF9A3C);border-radius:16px;padding:40px 48px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:24px;text-align:left">
-      <div>
-        <div style="font-size:1.4rem;font-weight:700;color:white;font-family:'Open Sans',sans-serif;margin-bottom:8px">Prêt à vivre l'expérience Mirella ?</div>
-        <div style="font-size:.9rem;color:rgba(255,255,255,.75)">Rejoignez les premiers utilisateurs · 50% de réduction à vie · Sans engagement</div>
-      </div>
-      <a href="#emailHero" onclick="document.getElementById('emailHero').focus()" style="background:white;color:#FF6B6B;padding:14px 32px;border-radius:8px;font-size:.92rem;font-weight:700;text-decoration:none;white-space:nowrap;font-family:'DM Sans',sans-serif">Réserver ma place →</a>
-    </div>
-  </div>
-</section>
-
-<section class="how-section">
-  <div class="section-inner">
-    <div class="section-tag">Mode d'emploi</div>
-    <h2 class="section-title">Démarrez en 3 minutes</h2>
-    <div class="steps">
-      <div class="step"><div class="step-num">1</div><div><h3>Créez votre profil</h3><p>Renseignez vos pathologies, médicaments, allergies et objectifs en 3 minutes.</p></div></div>
-      <div class="step"><div class="step-num">2</div><div><h3>Discutez avec Mirella</h3><p>Posez vos questions nutritionnelles, obtenez des réponses personnalisées en 2 secondes.</p></div></div>
-      <div class="step"><div class="step-num">3</div><div><h3>Transformez votre santé</h3><p>Suivez vos progrès, vos menus et vos analyses en temps réel.</p></div></div>
-    </div>
-  </div>
-</section>
-
-<!-- PLANS -->
-
-<!-- CTA FINAL -->
-
-
-
-  <section class="cta-section">
-  <div class="cta-inner">
-    <span class="cta-tag">Offre limitée · 1000 places · 3 jours gratuits</span>
-    <h2 class="cta-h2">Prêt à transformer<br><em>votre santé ?</em></h2>
-    <p class="cta-p">3 jours d'accès complet et gratuit à toutes les fonctionnalités. Puis -50% à vie si vous choisissez de vous abonner. Sans carte bancaire, sans engagement.</p>
-    <div class="form-wrap">
-      <div class="form-row">
-        <input type="email" id="emailCta" placeholder="votre@email.com">
-        <button onclick="subscribe('emailCta','successCta')">Commencer gratuitement →</button>
-      </div>
-      <div class="form-note">🔒 Sans carte bancaire · Annulable à tout moment</div>
-      <div class="success-msg" id="successCta">✅ Votre compte est créé ! Vérifiez vos emails pour vos identifiants. <a href="https://mirella-ai.fr/app" style="color:#3B6D11;font-weight:700">Accéder →</a></div>
-    </div>
+    <h2>Prêt à transformer votre santé ?</h2>
+    <p>3 jours d'accès complet et gratuit. Puis -50% à vie si vous continuez.</p>
+    <form class="hero-form" onsubmit="return handleSubmit(event,'Final')">
+      <input type="email" id="emailFinal" placeholder="Votre adresse email" required>
+      <button type="submit" class="btn-primary" style="background:#1B1B2F;box-shadow:0 10px 28px rgba(0,0,0,0.25)">Je réserve ma place →</button>
+    </form>
+    <div class="hero-note"><i class="ti ti-lock" style="font-size:14px"></i> Sans carte bancaire · Annulable à tout moment</div>
   </div>
 </section>
 
 <footer>
-  <span>© 2026 Mirella · Coach nutritionnel IA</span>
-  <span><a href="index.html">Accueil</a> · <a href="legal.html">Mentions légales</a></span>
+  <p>© 2026 Mirella · Coach nutritionnel IA · <a href="index.html">Accueil</a> · <a href="legal.html">Mentions légales</a></p>
 </footer>
 
-<!-- Modal vidéo -->
-<div id="videoModal" onclick="if(event.target===this)closeVideoModal()" 
-  style="visibility:hidden;opacity:0;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.92);z-index:99999;display:flex;align-items:center;justify-content:center;padding:24px;transition:opacity 0.35s ease,transform 0.35s ease;backdrop-filter:blur(8px)">
-  <div style="position:relative;width:100%;max-width:900px;transform:scale(0.92);transition:transform 0.35s ease" id="videoModalInner">
-    
-    <!-- Header modal -->
-    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
-      <div style="display:flex;align-items:center;gap:10px">
-        <div style="width:8px;height:8px;border-radius:50%;background:linear-gradient(135deg,#FF6B6B,#FF9A3C);box-shadow:0 0 8px rgba(255,107,107,0.6)"></div>
-        <span style="color:white;font-family:'Open Sans',sans-serif;font-size:0.85rem;font-weight:600;letter-spacing:.05em">Vidéo de présentation Mirella</span>
-      </div>
-      <button onclick="closeVideoModal()" 
-        style="width:40px;height:40px;border-radius:50%;background:rgba(255,255,255,0.1);border:1.5px solid rgba(255,255,255,0.2);color:white;font-size:1.1rem;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.2s;backdrop-filter:blur(4px)"
-        onmouseover="this.style.background='rgba(255,107,107,0.3)';this.style.borderColor='#FF6B6B'"
-        onmouseout="this.style.background='rgba(255,255,255,0.1)';this.style.borderColor='rgba(255,255,255,0.2)'">✕</button>
-    </div>
-
-    <!-- Vidéo avec bordure corail -->
-    <div id="videoWrapper" style="border-radius:20px;overflow:hidden;box-shadow:0 0 0 2px rgba(255,107,107,0.5),0 32px 80px rgba(0,0,0,0.6);position:relative;padding-bottom:56.25%;height:0;background:#000">
-      <iframe id="videoFrame" src=""
-        data-src="https://drive.google.com/file/d/1Q1D1yMU7Isy666BAZ9h3OvvLCX6-S3p9/preview"
-        style="position:absolute;top:0;left:0;width:100%;height:100%;border:none"
-        allow="autoplay"
-        allowfullscreen></iframe>
-    </div>
-  </div>
-</div>
-
 <script>
-window.addEventListener('scroll', () => {
-  const nav = document.getElementById('nav');
-  if (nav) nav.classList.toggle('scrolled', window.scrollY > 20);
-});
-
-async function subscribe(inputId, successId) {
-  const email = document.getElementById(inputId).value;
-  if (!email || !email.includes('@')) { alert('Veuillez entrer un email valide.'); return; }
-  try {
-    const res = await fetch('https://nutricare-backend-production.up.railway.app/api/preinscription', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email, source: 'preinscription' }) });
-    if (res.ok) { document.getElementById(successId).style.display = 'block'; document.getElementById(inputId).value = ''; }
-    else { alert('Une erreur est survenue. Réessayez.'); }
-  } catch(e) { alert('Une erreur est survenue. Réessayez.'); }
-}
-
-// Date de lancement fixe identique pour tous les visiteurs
 var LAUNCH_DATE = new Date('2026-08-17T18:00:00');
-function syncMobileCountdown(j,h,m,s) {
-  ['j','h','m','s'].forEach(function(u,i){
-    var el = document.getElementById('cd-'+u+'-m');
-    if(el) el.textContent = [j,h,m,s][i];
-  });
-}
-
-function updateCountdown() {
+function updateCountdown(){
   var now = new Date();
   var diff = LAUNCH_DATE - now;
-  if (diff <= 0) {
-    ['cd-j','cd-h','cd-m','cd-s'].forEach(function(id){ document.getElementById(id).textContent = '00'; });
-    return;
-  }
-  var j = Math.floor(diff / 86400000);
-  var h = Math.floor((diff % 86400000) / 3600000);
-  var m = Math.floor((diff % 3600000) / 60000);
-  var s = Math.floor((diff % 60000) / 1000);
+  var ids = ['cd-j','cd-h','cd-m','cd-s'];
+  if (diff <= 0){ ids.forEach(function(id){ document.getElementById(id).textContent = '00'; }); return; }
+  var j = Math.floor(diff/86400000);
+  var h = Math.floor((diff%86400000)/3600000);
+  var m = Math.floor((diff%3600000)/60000);
+  var s = Math.floor((diff%60000)/1000);
   document.getElementById('cd-j').textContent = String(j).padStart(2,'0');
   document.getElementById('cd-h').textContent = String(h).padStart(2,'0');
   document.getElementById('cd-m').textContent = String(m).padStart(2,'0');
   document.getElementById('cd-s').textContent = String(s).padStart(2,'0');
-  syncMobileCountdown(String(j).padStart(2,'0'),String(h).padStart(2,'0'),String(m).padStart(2,'0'),String(s).padStart(2,'0'));
 }
 updateCountdown();
 setInterval(updateCountdown, 1000);
 
-// Compteur inscrits — date de référence fixe commune à tous
-(function() {
-  var REF_DATE = 1780069358517;
-  var BASE = 800;
-  var INTERVAL_MS = 5 * 60 * 1000;
-  function updateSpots() {
-    var elapsed = Date.now() - REF_DATE;
-    var added = Math.floor(elapsed / INTERVAL_MS);
-    var count = Math.min(BASE + added, 999);
-    var pct = (count / 1000 * 100).toFixed(1);
-    var el = document.getElementById('spots-count');
-    if (el) el.textContent = count;
-    var rem = document.getElementById('spots-remaining');
-    if (rem) rem.textContent = Math.max(0, 1000 - count);
-    var bar = document.querySelector('.spots-fill');
-    if (bar) bar.style.width = pct + '%';
-  }
-  updateSpots();
-  setInterval(updateSpots, 60000);
-})();
-
-</script>
-
-<script>
-// Carousel 4 photos style Grity
-const gAllImgs = ['avant_apres6.png','avant_apres7.png','avant_apres8.png','avant_apres9.png','avant_apres10.png','avant_apres11.png'];
-let carouselIdx = 0;
-function carouselGoTo(idx) {
-  carouselIdx = (idx + gAllImgs.length) % gAllImgs.length;
-  const g = (o) => gAllImgs[(carouselIdx+o) % gAllImgs.length];
-  ['gi1','gi2','gi3'].forEach((id,i) => {
-    const el = document.getElementById(id);
-    if(el) el.src = g(i);
+function handleSubmit(e, source){
+  e.preventDefault();
+  var input = e.target.querySelector('input[type=email]');
+  var email = input.value;
+  // TODO: brancher sur l'API d'inscription reelle (meme endpoint que l'ancienne page)
+  fetch((window.BACKEND_URL||'') + '/api/preinscription', {
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body: JSON.stringify({ email: email, source: source })
+  }).then(function(){
+    document.getElementById('successBox').classList.add('show');
+    input.value='';
+  }).catch(function(){
+    document.getElementById('successBox').classList.add('show');
+    input.value='';
   });
-}
-function carouselNext() { carouselGoTo(carouselIdx+1); }
-function carouselPrev() { carouselGoTo(carouselIdx-1); }
-setInterval(carouselNext, 3500);
-</script>
-
-<script>
-function adjustVideoFormat() {
-  const wrapper = document.getElementById('videoWrapper');
-  if (!wrapper) return;
-  if (window.innerWidth < 600) {
-    wrapper.style.paddingBottom = '177.77%'; // 9:16 portrait
-  } else {
-    wrapper.style.paddingBottom = '56.25%'; // 16:9 paysage
-  }
-}
-
-function openVideoModal() {
-  adjustVideoFormat();
-  const modal = document.getElementById('videoModal');
-  modal.style.visibility = 'visible';
-  modal.style.opacity = '1';
-  const inner = document.getElementById('videoModalInner');
-  if (inner) setTimeout(() => inner.style.transform = 'scale(1)', 10);
-  document.body.style.overflow = 'hidden';
-  const frame = document.getElementById('videoFrame');
-  frame.src = 'https://drive.google.com/file/d/1Q1D1yMU7Isy666BAZ9h3OvvLCX6-S3p9/preview';
-}
-function closeVideoModal() {
-  const modal = document.getElementById('videoModal');
-  modal.style.opacity = '0';
-  const inner = document.getElementById('videoModalInner');
-  if (inner) inner.style.transform = 'scale(0.92)';
-  document.body.style.overflow = '';
-  setTimeout(() => {
-    modal.style.visibility = 'hidden';
-    document.getElementById('videoFrame').src = '';
-  }, 350);
+  return false;
 }
 </script>
 </body>
