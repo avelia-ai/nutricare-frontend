@@ -4228,10 +4228,34 @@ window.updateCycle = function() {
 
   var result = window.getCyclePhase(lastPeriod, cycleLength, periodLength);
   var phases = {
-    menstruelle: {name: 'Phase Menstruelle', emoji: '🔴', color: 'var(--coral)', desc: 'Votre corps se régénère. Privilégiez le repos et les aliments riches en fer.', conseils: ['Aliments riches en fer : viande rouge, lentilles, épinards', 'Anti-inflammatoires naturels : gingembre, curcuma, oméga-3', 'Évitez alcool et caféine qui aggravent les crampes', 'Hydratation++, tisanes apaisantes', 'Sport léger : yoga, marche']},
-    folliculaire: {name: 'Phase Folliculaire', emoji: '🌱', color: '#FFB347', desc: 'Votre énergie remonte. Profitez-en pour des activités plus intenses et des repas équilibrés.', conseils: ['Protéines maigres pour soutenir la croissance folliculaire', 'Légumes crucifères : brocoli, chou-fleur, chou kale', 'Graines de lin et de citrouille (phytooestrogènes)', 'Bon moment pour introduire de nouveaux aliments', 'Sport : cardio, musculation possible']},
-    ovulation: {name: 'Phase Ovulation', emoji: '⭐', color: 'var(--accent)', desc: 'Pic energie ! Votre métabolisme est au maximum. Ideal pour les efforts physiques.', conseils: ['Antioxydants : fruits rouges, tomates, poivrons', 'Fibres pour soutenir la détoxification hormonale', 'Zinc : huîtres, graines de courge, légumineuses', 'Limitez les graisses saturées', 'Sport intensif possible : HIIT, course, natation']},
-    luteale: {name: 'Phase Lutéale', emoji: '🌙', color: '#DDA0DD', desc: 'Votre corps se prépare. Les fringales sont normales. Misez sur le magnésium.', conseils: ['Magnésium : chocolat noir, noix, banane, légumineuses', 'Réduire sel et sucre raffiné contre la rétention', 'Tryptophane pour la sérotonine : dinde, oeufs, noix', 'Évitez la caféine qui amplifie le SPM', 'Sport doux : pilates, natation, yoga']}
+    menstruelle: {name: 'Phase Menstruelle', emoji: '🔴', color: 'var(--coral)', desc: 'Votre corps se régénère. Privilégiez le repos et les aliments riches en fer.', conseils: ['Aliments riches en fer : viande rouge, lentilles, épinards', 'Anti-inflammatoires naturels : gingembre, curcuma, oméga-3', 'Évitez alcool et caféine qui aggravent les crampes', 'Hydratation++, tisanes apaisantes', 'Sport léger : yoga, marche'], lifestyle: [
+      {icon:'ti-moon', text:'Accordez-vous du repos et visez un sommeil de qualité cette semaine'},
+      {icon:'ti-heart', text:'Une bouillotte sur le bas-ventre peut soulager les crampes'},
+      {icon:'ti-droplet', text:'Buvez des tisanes apaisantes (gingembre, camomille) tout au long de la journée'},
+      {icon:'ti-walk', text:'Privilégiez une activité douce comme la marche ou le yoga'},
+      {icon:'ti-sparkles', text:'Accordez-vous un moment pour vous : bain chaud, lecture, journaling'}
+    ]},
+    folliculaire: {name: 'Phase Folliculaire', emoji: '🌱', color: '#FFB347', desc: 'Votre énergie remonte. Profitez-en pour des activités plus intenses et des repas équilibrés.', conseils: ['Protéines maigres pour soutenir la croissance folliculaire', 'Légumes crucifères : brocoli, chou-fleur, chou kale', 'Graines de lin et de citrouille (phytooestrogènes)', 'Bon moment pour introduire de nouveaux aliments', 'Sport : cardio, musculation possible'], lifestyle: [
+      {icon:'ti-sun', text:'Profitez de la lumière du matin pour caler votre rythme et votre énergie'},
+      {icon:'ti-target', text:'Votre motivation est au top, c\'est le bon moment pour fixer de nouveaux objectifs'},
+      {icon:'ti-run', text:'Essayez une nouvelle activité sportive, votre corps récupère vite en ce moment'},
+      {icon:'ti-message-circle', text:'Votre humeur est stable, profitez-en pour les échanges et projets sociaux'},
+      {icon:'ti-bulb', text:'Lancez les projets qui demandent de la créativité et de l\'énergie'}
+    ]},
+    ovulation: {name: 'Phase Ovulation', emoji: '⭐', color: 'var(--accent)', desc: 'Pic energie ! Votre métabolisme est au maximum. Ideal pour les efforts physiques.', conseils: ['Antioxydants : fruits rouges, tomates, poivrons', 'Fibres pour soutenir la détoxification hormonale', 'Zinc : huîtres, graines de courge, légumineuses', 'Limitez les graisses saturées', 'Sport intensif possible : HIIT, course, natation'], lifestyle: [
+      {icon:'ti-sparkles', text:'Votre confiance et votre communication sont à leur meilleur niveau'},
+      {icon:'ti-run', text:'Profitez de ce pic d\'énergie pour les entraînements intenses'},
+      {icon:'ti-droplet', text:'Restez bien hydratée, votre température corporelle augmente légèrement'},
+      {icon:'ti-bulb', text:'Moment idéal pour la créativité et les nouvelles idées'},
+      {icon:'ti-heart', text:'De légères tensions pelviennes sont normales autour de l\'ovulation'}
+    ]},
+    luteale: {name: 'Phase Lutéale', emoji: '🌙', color: '#DDA0DD', desc: 'Votre corps se prépare. Les fringales sont normales. Misez sur le magnésium.', conseils: ['Magnésium : chocolat noir, noix, banane, légumineuses', 'Réduire sel et sucre raffiné contre la rétention', 'Tryptophane pour la sérotonine : dinde, oeufs, noix', 'Évitez la caféine qui amplifie le SPM', 'Sport doux : pilates, natation, yoga'], lifestyle: [
+      {icon:'ti-moon', text:'Ralentissez progressivement, votre énergie redescend naturellement'},
+      {icon:'ti-brain', text:'Testez des techniques de gestion du stress : respiration, méditation, marche'},
+      {icon:'ti-heart', text:'Le SPM peut perturber vos nuits, priorisez un coucher régulier'},
+      {icon:'ti-message-circle', text:'Limitez les engagements sociaux si vous ressentez le besoin de calme'},
+      {icon:'ti-target', text:'Anticipez et planifiez plutôt que de lancer de nouveaux projets'}
+    ]}
   };
 
   var phase = phases[result.phase];
@@ -4254,11 +4278,23 @@ window.updateCycle = function() {
   if (el2) el2.textContent = (daysToOvul > 0 ? 'J-' + daysToOvul : 'Auj.');
   if (el3) el3.textContent = 'J-' + daysToNext;
 
-  // Teaser gratuit: 2 premiers conseils de la phase
+  // Teaser gratuit: 2 premiers conseils nutrition, style premium avec icone
   var teaserEl = document.getElementById('cyclePhaseTeaser');
   if (teaserEl) {
-    teaserEl.innerHTML = phase.conseils.slice(0, 2).map(function(c) {
-      return '<div style="display:flex;align-items:flex-start;gap:8px;font-size:11px;color:rgba(255,255,255,0.65);line-height:1.5"><span style="color:#FF9A6C;flex-shrink:0">&#8226;</span><span>' + c + '</span></div>';
+    teaserEl.innerHTML = '<div style="font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:rgba(255,154,108,0.5);margin-bottom:2px">Nutrition</div>' +
+      phase.conseils.slice(0, 2).map(function(c) {
+        return '<div style="display:flex;align-items:center;gap:10px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08);border-radius:12px;padding:10px 12px">' +
+          '<div style="width:28px;height:28px;border-radius:9px;background:linear-gradient(135deg,#FF6B6B,#FF9A3C);display:flex;align-items:center;justify-content:center;flex-shrink:0"><i class="ti ti-salad" style="font-size:14px;color:#fff"></i></div>' +
+          '<span style="font-size:12px;color:rgba(255,255,255,0.75);line-height:1.45">' + c + '</span></div>';
+      }).join('');
+  }
+  // Conseils bien-etre / hygiene de vie
+  var lifestyleEl = document.getElementById('cyclePhaseLifestyle');
+  if (lifestyleEl && phase.lifestyle) {
+    lifestyleEl.innerHTML = phase.lifestyle.map(function(t) {
+      return '<div style="display:flex;align-items:center;gap:10px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08);border-radius:12px;padding:10px 12px">' +
+        '<div style="width:28px;height:28px;border-radius:9px;background:linear-gradient(135deg,#DDA0DD,#B77FD9);display:flex;align-items:center;justify-content:center;flex-shrink:0"><i class="ti ' + t.icon + '" style="font-size:14px;color:#fff"></i></div>' +
+        '<span style="font-size:12px;color:rgba(255,255,255,0.75);line-height:1.45">' + t.text + '</span></div>';
     }).join('');
   }
   // Aperçu de la phase suivante
@@ -17757,6 +17793,8 @@ function toggleQuickMenu() {
       <div id="cyclePhaseIcons" style="display:flex;gap:8px;position:relative;margin-bottom:14px"></div>
       <div id="cyclePhaseTeaser" style="display:flex;flex-direction:column;gap:8px;position:relative;margin-bottom:14px"></div>
       <div id="cyclePhaseNext" style="display:flex;align-items:center;gap:10px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08);border-radius:12px;padding:11px 14px;position:relative;margin-bottom:14px;font-size:11px;color:rgba(255,255,255,0.55)"></div>
+      <div style="font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:rgba(255,154,108,0.5);margin-bottom:10px;position:relative">Conseils bien-être</div>
+      <div id="cyclePhaseLifestyle" style="display:flex;flex-direction:column;gap:8px;position:relative;margin-bottom:14px"></div>
       <div style="border-radius:16px;overflow:hidden;width:100%;aspect-ratio:16/9;background:#ffffff;position:relative">
         <video autoplay muted loop playsinline style="width:100%;height:100%;object-fit:cover;display:block">
           <source src="https://raw.githubusercontent.com/avelia-ai/nutricare-frontend/main/renard_cycle_feminin.mp4" type="video/mp4">
