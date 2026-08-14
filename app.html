@@ -4254,6 +4254,24 @@ window.updateCycle = function() {
   if (el2) el2.textContent = (daysToOvul > 0 ? 'J-' + daysToOvul : 'Auj.');
   if (el3) el3.textContent = 'J-' + daysToNext;
 
+  // Teaser gratuit: 2 premiers conseils de la phase
+  var teaserEl = document.getElementById('cyclePhaseTeaser');
+  if (teaserEl) {
+    teaserEl.innerHTML = phase.conseils.slice(0, 2).map(function(c) {
+      return '<div style="display:flex;align-items:flex-start;gap:8px;font-size:11px;color:rgba(255,255,255,0.65);line-height:1.5"><span style="color:#FF9A6C;flex-shrink:0">&#8226;</span><span>' + c + '</span></div>';
+    }).join('');
+  }
+  // Aperçu de la phase suivante
+  var nextEl = document.getElementById('cyclePhaseNext');
+  if (nextEl) {
+    var dayOfCycle = result.day - 1;
+    var nextInfo;
+    if (result.phase === 'menstruelle') nextInfo = { name: 'Phase Folliculaire', daysUntil: periodLength - dayOfCycle };
+    else if (result.phase === 'folliculaire') nextInfo = { name: 'Phase Ovulation', daysUntil: 13 - dayOfCycle };
+    else if (result.phase === 'ovulation') nextInfo = { name: 'Phase Lutéale', daysUntil: 16 - dayOfCycle };
+    else nextInfo = { name: 'Phase Menstruelle', daysUntil: cycleLength - dayOfCycle };
+    nextEl.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.5)" stroke-width="2" stroke-linecap="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg><span>Prochaine phase : <strong style="color:rgba(255,255,255,0.8)">' + nextInfo.name + '</strong> dans ' + nextInfo.daysUntil + 'j</span>';
+  }
   var adviceEl = document.getElementById('cycleAdvice');
   adviceEl.innerHTML = phase.conseils.map(function(c) {
     return '<div style="display:flex;align-items:flex-start;gap:10px;padding:11px 14px;background:#FFFCFA;border-radius:12px;border:1px solid rgba(255,154,108,0.1)">' +
@@ -17737,6 +17755,8 @@ function toggleQuickMenu() {
       </div>
       <div id="cyclePhaseDesc" style="font-size:12px;color:rgba(255,255,255,0.45);line-height:1.6;position:relative;margin-bottom:16px"></div>
       <div id="cyclePhaseIcons" style="display:flex;gap:8px;position:relative;margin-bottom:14px"></div>
+      <div id="cyclePhaseTeaser" style="display:flex;flex-direction:column;gap:8px;position:relative;margin-bottom:14px"></div>
+      <div id="cyclePhaseNext" style="display:flex;align-items:center;gap:10px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08);border-radius:12px;padding:11px 14px;position:relative;margin-bottom:14px;font-size:11px;color:rgba(255,255,255,0.55)"></div>
       <div style="border-radius:16px;overflow:hidden;width:100%;aspect-ratio:16/9;background:#ffffff;position:relative">
         <video autoplay muted loop playsinline style="width:100%;height:100%;object-fit:cover;display:block">
           <source src="https://raw.githubusercontent.com/avelia-ai/nutricare-frontend/main/renard_cycle_feminin.mp4" type="video/mp4">
