@@ -521,21 +521,31 @@ function updateCountdown(){
 updateCountdown();
 setInterval(updateCountdown, 1000);
 
+var BACKEND_URL = 'https://nutricare-backend-production.up.railway.app';
 function handleSubmit(e, source){
   e.preventDefault();
+  var btn = e.target.querySelector('button[type=submit]');
   var input = e.target.querySelector('input[type=email]');
   var email = input.value;
-  // TODO: brancher sur l'API d'inscription reelle (meme endpoint que l'ancienne page)
-  fetch((window.BACKEND_URL||'') + '/api/preinscription', {
+  var originalText = btn.textContent;
+  btn.disabled = true;
+  btn.textContent = 'Inscription...';
+  fetch(BACKEND_URL + '/api/preinscription', {
     method:'POST',
     headers:{'Content-Type':'application/json'},
     body: JSON.stringify({ email: email, source: source })
+  }).then(function(r){
+    if (!r.ok) return r.json().then(function(d){ throw new Error(d.error || 'Erreur'); });
+    return r.json();
   }).then(function(){
     document.getElementById('successBox').classList.add('show');
     input.value='';
-  }).catch(function(){
-    document.getElementById('successBox').classList.add('show');
-    input.value='';
+    btn.disabled = false;
+    btn.textContent = originalText;
+  }).catch(function(err){
+    alert(err.message || 'Une erreur est survenue, reessayez.');
+    btn.disabled = false;
+    btn.textContent = originalText;
   });
   return false;
 }
