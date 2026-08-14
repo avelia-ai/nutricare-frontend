@@ -22082,31 +22082,70 @@ window.showRoutineDetail = function(idx) {
 
   var r = ROUTINES[idx];
   if (!r) return;
-
   var existing = document.getElementById('routineDetailModal');
   if (existing) existing.remove();
+
+  function _stepIcon(txt) {
+    var t = txt.toLowerCase();
+    if (t.indexOf('eau') > -1 || t.indexOf('boire') > -1 || t.indexOf('hydrat') > -1) return 'ti-droplet';
+    if (t.indexOf('sommeil') > -1 || t.indexOf('dormir') > -1 || t.indexOf('tisane') > -1 || t.indexOf('écran') > -1 || t.indexOf('lecture') > -1) return 'ti-moon';
+    if (t.indexOf('marche') > -1 || t.indexOf('sport') > -1 || t.indexOf('entrainement') > -1 || t.indexOf('exercice') > -1) return 'ti-run';
+    if (t.indexOf('protéin') > -1 || t.indexOf('repas') > -1 || t.indexOf('petit-dej') > -1 || t.indexOf('collation') > -1 || t.indexOf('aliment') > -1 || t.indexOf('sucre') > -1 || t.indexOf('légume') > -1) return 'ti-salad';
+    if (t.indexOf('crème') > -1 || t.indexOf('nettoyant') > -1 || t.indexOf('peau') > -1) return 'ti-sparkles';
+    if (t.indexOf('respir') > -1 || t.indexOf('médit') > -1 || t.indexOf('stress') > -1) return 'ti-brain';
+    return 'ti-check';
+  }
+  function _routineBenefits(routine) {
+    var allText = (routine.desc + ' ' + routine.etapes.join(' ')).toLowerCase();
+    var tags = [];
+    if (allText.indexOf('eau') > -1 || allText.indexOf('hydrat') > -1) tags.push('Hydratation');
+    if (allText.indexOf('sommeil') > -1 || allText.indexOf('dormir') > -1) tags.push('Meilleur sommeil');
+    if (allText.indexOf('sucre') > -1) tags.push('Moins de sucre');
+    if (allText.indexOf('marche') > -1 || allText.indexOf('sport') > -1 || allText.indexOf('entrainement') > -1) tags.push('Plus actif');
+    if (allText.indexOf('protéin') > -1 || allText.indexOf('muscle') > -1) tags.push('Récupération musculaire');
+    if (allText.indexOf('peau') > -1 || allText.indexOf('crème') > -1) tags.push('Peau saine');
+    if (allText.indexOf('stress') > -1 || allText.indexOf('respir') > -1) tags.push('Moins de stress');
+    if (tags.length === 0) tags.push('Bien-être global');
+    return tags.slice(0, 3);
+  }
+  var _benefits = _routineBenefits(r);
+  var _durMatch = (r.duree.match(/\d+/) || ['7'])[0];
+  var _estimEffort = parseInt(_durMatch) <= 7 ? '10-15 min/jour' : '15-25 min/jour';
 
   var modal = document.createElement('div');
   modal.id = 'routineDetailModal';
   modal.style.cssText = 'position:fixed;top:0;left:0;right:0;bottom:0;z-index:9999;display:flex;align-items:flex-end;background:rgba(0,0,0,0.4);backdrop-filter:blur(4px)';
-  modal.innerHTML = '<div style="background:white;border-radius:28px 28px 0 0;padding:28px 24px 40px;width:100%;max-height:85vh;overflow-y:auto">' +
-    '<div style="width:40px;height:4px;background:#E0D8D0;border-radius:2px;margin:0 auto 24px"></div>' +
-    '<div style="display:flex;align-items:center;gap:14px;margin-bottom:16px">' +
-      '<div style="width:56px;height:56px;background:' + r.couleur + ';border-radius:18px;display:flex;align-items:center;justify-content:center;font-size:1.8rem;flex-shrink:0">' + r.icone + '</div>' +
-      '<div><div style="font-family:Open Sans,serif;font-size:1.3rem;font-weight:700;color:#1a1a1a">' + r.nom + '</div>' +
-      '<div style="font-size:0.8rem;color:var(--coral);font-weight:600;margin-top:2px">⏱ ' + r.duree + ' · ' + r.action + '</div></div>' +
+  modal.innerHTML = '<div style="background:#FFFCFA;border-radius:28px 28px 0 0;padding:0;width:100%;max-height:88vh;overflow-y:auto;box-shadow:0 -8px 30px rgba(0,0,0,0.2)">' +
+    '<div style="width:40px;height:4px;background:#E0D8D0;border-radius:2px;margin:14px auto 0"></div>' +
+    '<div style="background:linear-gradient(135deg,var(--coral),var(--accent));margin:16px 20px 0;border-radius:20px;padding:20px;position:relative;overflow:hidden">' +
+      '<div style="position:absolute;top:-20px;right:-20px;width:90px;height:90px;border-radius:50%;background:rgba(255,255,255,0.14);pointer-events:none"></div>' +
+      '<div style="display:flex;align-items:center;gap:14px;position:relative">' +
+        '<div style="width:56px;height:56px;background:rgba(255,255,255,0.2);border-radius:16px;display:flex;align-items:center;justify-content:center;font-size:1.8rem;flex-shrink:0">' + r.icone + '</div>' +
+        '<div><div style="font-family:Open Sans,serif;font-size:1.25rem;font-weight:800;color:white">' + r.nom + '</div>' +
+        '<div style="font-size:0.8rem;color:rgba(255,255,255,0.85);font-weight:600;margin-top:2px">⏱ ' + r.duree + ' · ' + r.action + '</div></div>' +
+      '</div>' +
     '</div>' +
-    '<div style="font-size:0.85rem;color:#666;line-height:1.6;margin-bottom:20px">' + r.desc + '</div>' +
-    '<div style="font-weight:700;font-size:0.85rem;color:#1a1a1a;margin-bottom:12px;text-transform:uppercase;letter-spacing:.06em">Étapes clés</div>' +
+    '<div style="padding:20px 24px 40px">' +
+    '<div style="font-size:0.85rem;color:#666;line-height:1.6;margin-bottom:18px">' + r.desc + '</div>' +
+    '<div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:20px">' +
+      _benefits.map(function(b) {
+        return '<span style="background:#FFF0E8;color:#D4730A;font-size:0.72rem;font-weight:700;padding:6px 12px;border-radius:999px">' + b + '</span>';
+      }).join('') +
+      '<span style="background:#EFF6FF;color:#2563A8;font-size:0.72rem;font-weight:700;padding:6px 12px;border-radius:999px">~' + _estimEffort + '</span>' +
+    '</div>' +
+    '<div style="font-weight:800;font-size:0.85rem;color:#1a1a1a;margin-bottom:12px;text-transform:uppercase;letter-spacing:.06em">Étapes clés</div>' +
     '<div style="display:flex;flex-direction:column;gap:10px;margin-bottom:28px">' +
       r.etapes.map(function(e, i) {
-        return '<div style="display:flex;gap:12px;align-items:center">' +
-          '<span style="width:26px;height:26px;border-radius:50%;background:linear-gradient(135deg,var(--coral),var(--accent));color:white;font-size:0.7rem;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0">' + (i+1) + '</span>' +
-          '<span style="font-size:0.85rem;color:#333">' + e + '</span></div>';
+        return '<div style="display:flex;gap:12px;align-items:center;background:#fff;border-radius:14px;padding:12px 14px;box-shadow:0 0 0 1.5px rgba(255,154,108,0.15)">' +
+          '<span style="width:32px;height:32px;border-radius:10px;background:linear-gradient(135deg,var(--coral),var(--accent));display:flex;align-items:center;justify-content:center;flex-shrink:0"><i class="ti ' + _stepIcon(e) + '" style="font-size:15px;color:#fff"></i></span>' +
+          '<span style="font-size:0.85rem;color:#333;font-weight:500">' + e + '</span></div>';
       }).join('') +
     '</div>' +
-    '<button onclick="addRoutineToPlanning(' + idx + ')" style="width:100%;background:linear-gradient(135deg,var(--coral),var(--accent));color:white;border:none;border-radius:14px;padding:15px;font-family:DM Sans,sans-serif;font-size:0.95rem;font-weight:600;cursor:pointer;margin-bottom:10px">Ajouter à mon planning ✓</button>' +
+    '<button onclick="addRoutineToPlanning(' + idx + ')" style="width:100%;background:linear-gradient(135deg,var(--coral),var(--accent));color:white;border:none;border-radius:14px;padding:15px;font-family:DM Sans,sans-serif;font-size:0.95rem;font-weight:700;cursor:pointer;margin-bottom:10px;box-shadow:0 8px 20px rgba(255,107,107,0.3)">Ajouter à mon planning ✓</button>' +
     "<button onclick=\"document.getElementById('routineDetailModal').remove()\" style=\"width:100%;background:transparent;color:#999;border:none;padding:10px;font-size:0.85rem;cursor:pointer\">Fermer</button>" +
+    '</div>' +
+  '</div>';
+  modal.addEventListener('click', function(e) { if(e.target===modal) modal.remove(); });
   '</div>';
   modal.addEventListener('click', function(e) { if(e.target===modal) modal.remove(); });
   document.body.appendChild(modal);
