@@ -11,6 +11,8 @@ window._pcAdvicePool = [];
     var imc = hasData ? poids / (tailleM * tailleM) : 0;
     var objectifs = profile.objectifs || [];
     var _tlLog = window._pcTodayHealthLog || null;
+    var _todayStrTL = new Date().toISOString().split('T')[0];
+    if (_tlLog && (_tlLog.date || '').split('T')[0] !== _todayStrTL) _tlLog = null;
     var _tlSleep = (_tlLog && _tlLog.sleep_hours != null) ? _tlLog.sleep_hours : null;
     var _tlEnergy = (_tlLog && _tlLog.energy_level != null) ? _tlLog.energy_level : null;
     var _tlStress = (_tlLog && _tlLog.stress_level != null) ? _tlLog.stress_level : null;
@@ -35,8 +37,8 @@ window._pcAdvicePool = [];
     if (_tlStress === null && profile.stress_actuel && profile.stress_actuel >= 7) pushAdvice('ton niveau de stress est \u00e9lev\u00e9, essaie une s\u00e9ance de coh\u00e9rence cardiaque de 2 minutes aujourd\'hui', 2);
     if (_tlEnergy === null && profile.energie_actuelle && profile.energie_actuelle <= 4) pushAdvice('ton \u00e9nergie est basse en ce moment, v\u00e9rifie ton sommeil et ton hydratation avant tout', 2);
     if (_tlSleep === null && profile.sommeil_heures_actuel && profile.sommeil_heures_actuel < 7) pushAdvice('tu dors moins de 7h en g\u00e9n\u00e9ral, essaie de te coucher 30 minutes plus t\u00f4t ce soir', 2);
-    if (profile.sommeil_reveils_nocturnes === 'souvent') pushAdvice('tes r\u00e9veils nocturnes fr\u00e9quents peuvent impacter ta r\u00e9cup\u00e9ration, \u00e9vite les \u00e9crans avant le coucher', 2);
-    if (profile.sport_pratique) pushAdvice('continue ta pratique de ' + profile.sport_pratique + ', la r\u00e9gularit\u00e9 est la cl\u00e9 des r\u00e9sultats', 1);
+    if (profile.sommeil_reveils_nocturnes === 'souvent') pushAdvice('tes r\u00e9veils nocturnes fr\u00e9quents peuvent impacter ta r\u00e9cup\u00e9ration : \u00e9vite les \u00e9crans et les repas lourds avant le coucher, et limite la caf\u00e9ine apr\u00e8s 14h', 2);
+    if (profile.sport_pratique) pushAdvice('continue ta pratique de ' + profile.sport_pratique + ', la r\u00e9gularit\u00e9 est la cl\u00e9 des r\u00e9sultats : vise 2 \u00e0 3 s\u00e9ances par semaine et laisse au moins un jour de repos entre deux efforts intenses', 1);
 
     if (objectifs.indexOf('perte_poids') > -1) {
       if (hasData && profile.poids_objectif) {
@@ -73,14 +75,14 @@ window._pcAdvicePool = [];
       pushAdvice('pour maintenir ton poids, garde 150 a 200 min d\'activite moderee par semaine et pese-toi une fois par semaine pour reperer toute derive avant qu\'elle ne s\'installe', 1);
     }
     var _goalTexts = {
-      perte_poids: 'ton objectif est la perte de poids, reste concentre(e) sur ton deficit calorique et la regularite de tes efforts',
-      masse: 'ton objectif est la prise de masse, veille a un apport calorique suffisant et a bien recuperer entre les seances',
-      sommeil: 'ton objectif est d\'ameliorer ton sommeil, garde une routine de coucher reguliere chaque soir',
-      stress: 'ton objectif est de reduire ton stress, accorde-toi des pauses regulieres dans ta journee',
-      energie: 'ton objectif est de booster ton energie, surveille en priorite ton hydratation et ton sommeil',
-      performance: 'ton objectif est la performance sportive, soigne ta recuperation autant que tes entrainements',
-      r\u00e9\u00e9quilibrage: 'ton objectif est le reequilibrage alimentaire, vise des repas varies et equilibres au quotidien',
-      maintien: 'ton objectif est de maintenir tes acquis, continue sur cette bonne lancee'
+      perte_poids: 'ton objectif est la perte de poids : privilegie les proteines a chaque repas, vise un leger deficit calorique et bouge au moins 30 minutes par jour pour preserver ta masse musculaire',
+      masse: 'ton objectif est la prise de masse : assure un surplus calorique modere, des proteines a chaque repas et un entrainement en resistance regulier pour que les calories se transforment en muscle',
+      sommeil: 'ton objectif est d\'ameliorer ton sommeil : garde des horaires de coucher reguliers, evite les ecrans 30 minutes avant de dormir et privilegie une chambre fraiche et sombre',
+      stress: 'ton objectif est de reduire ton stress : accorde-toi des pauses regulieres dans la journee, teste la coherence cardiaque et limite les excitants apres 16h',
+      energie: 'ton objectif est de booster ton energie : surveille ton hydratation, ton sommeil et evite les pics de sucre qui provoquent des coups de fatigue',
+      performance: 'ton objectif est la performance sportive : soigne ta recuperation, ton sommeil et tes apports en glucides autour des seances autant que l\'entrainement lui-meme',
+      r\u00e9\u00e9quilibrage: 'ton objectif est le reequilibrage alimentaire : vise des repas varies et complets a base d\'aliments peu transformes, sans te priver',
+      maintien: 'ton objectif est de maintenir tes acquis : garde tes habitudes actuelles, elles fonctionnent, et reste a l\'ecoute de tes sensations'
     };
     if (objectifs.length) {
       var _goalKey = objectifs[0];
@@ -3622,6 +3624,8 @@ window.initHome = async function() {
     var imc = hasData ? poids / (tailleM * tailleM) : 0;
     var objectifs = profile.objectifs || [];
     var _tlLog = window._pcTodayHealthLog || null;
+    var _todayStrTL = new Date().toISOString().split('T')[0];
+    if (_tlLog && (_tlLog.date || '').split('T')[0] !== _todayStrTL) _tlLog = null;
     var _tlSleep = (_tlLog && _tlLog.sleep_hours != null) ? _tlLog.sleep_hours : null;
     var _tlEnergy = (_tlLog && _tlLog.energy_level != null) ? _tlLog.energy_level : null;
     var _tlStress = (_tlLog && _tlLog.stress_level != null) ? _tlLog.stress_level : null;
@@ -3646,8 +3650,8 @@ window.initHome = async function() {
     if (_tlStress === null && profile.stress_actuel && profile.stress_actuel >= 7) pushAdvice('ton niveau de stress est \u00e9lev\u00e9, essaie une s\u00e9ance de coh\u00e9rence cardiaque de 2 minutes aujourd\'hui', 2);
     if (_tlEnergy === null && profile.energie_actuelle && profile.energie_actuelle <= 4) pushAdvice('ton \u00e9nergie est basse en ce moment, v\u00e9rifie ton sommeil et ton hydratation avant tout', 2);
     if (_tlSleep === null && profile.sommeil_heures_actuel && profile.sommeil_heures_actuel < 7) pushAdvice('tu dors moins de 7h en g\u00e9n\u00e9ral, essaie de te coucher 30 minutes plus t\u00f4t ce soir', 2);
-    if (profile.sommeil_reveils_nocturnes === 'souvent') pushAdvice('tes r\u00e9veils nocturnes fr\u00e9quents peuvent impacter ta r\u00e9cup\u00e9ration, \u00e9vite les \u00e9crans avant le coucher', 2);
-    if (profile.sport_pratique) pushAdvice('continue ta pratique de ' + profile.sport_pratique + ', la r\u00e9gularit\u00e9 est la cl\u00e9 des r\u00e9sultats', 1);
+    if (profile.sommeil_reveils_nocturnes === 'souvent') pushAdvice('tes r\u00e9veils nocturnes fr\u00e9quents peuvent impacter ta r\u00e9cup\u00e9ration : \u00e9vite les \u00e9crans et les repas lourds avant le coucher, et limite la caf\u00e9ine apr\u00e8s 14h', 2);
+    if (profile.sport_pratique) pushAdvice('continue ta pratique de ' + profile.sport_pratique + ', la r\u00e9gularit\u00e9 est la cl\u00e9 des r\u00e9sultats : vise 2 \u00e0 3 s\u00e9ances par semaine et laisse au moins un jour de repos entre deux efforts intenses', 1);
 
     if (objectifs.indexOf('perte_poids') > -1) {
       if (hasData && profile.poids_objectif) {
@@ -3684,14 +3688,14 @@ window.initHome = async function() {
       pushAdvice('pour maintenir ton poids, garde 150 a 200 min d\'activite moderee par semaine et pese-toi une fois par semaine pour reperer toute derive avant qu\'elle ne s\'installe', 1);
     }
     var _goalTexts = {
-      perte_poids: 'ton objectif est la perte de poids, reste concentre(e) sur ton deficit calorique et la regularite de tes efforts',
-      masse: 'ton objectif est la prise de masse, veille a un apport calorique suffisant et a bien recuperer entre les seances',
-      sommeil: 'ton objectif est d\'ameliorer ton sommeil, garde une routine de coucher reguliere chaque soir',
-      stress: 'ton objectif est de reduire ton stress, accorde-toi des pauses regulieres dans ta journee',
-      energie: 'ton objectif est de booster ton energie, surveille en priorite ton hydratation et ton sommeil',
-      performance: 'ton objectif est la performance sportive, soigne ta recuperation autant que tes entrainements',
-      r\u00e9\u00e9quilibrage: 'ton objectif est le reequilibrage alimentaire, vise des repas varies et equilibres au quotidien',
-      maintien: 'ton objectif est de maintenir tes acquis, continue sur cette bonne lancee'
+      perte_poids: 'ton objectif est la perte de poids : privilegie les proteines a chaque repas, vise un leger deficit calorique et bouge au moins 30 minutes par jour pour preserver ta masse musculaire',
+      masse: 'ton objectif est la prise de masse : assure un surplus calorique modere, des proteines a chaque repas et un entrainement en resistance regulier pour que les calories se transforment en muscle',
+      sommeil: 'ton objectif est d\'ameliorer ton sommeil : garde des horaires de coucher reguliers, evite les ecrans 30 minutes avant de dormir et privilegie une chambre fraiche et sombre',
+      stress: 'ton objectif est de reduire ton stress : accorde-toi des pauses regulieres dans la journee, teste la coherence cardiaque et limite les excitants apres 16h',
+      energie: 'ton objectif est de booster ton energie : surveille ton hydratation, ton sommeil et evite les pics de sucre qui provoquent des coups de fatigue',
+      performance: 'ton objectif est la performance sportive : soigne ta recuperation, ton sommeil et tes apports en glucides autour des seances autant que l\'entrainement lui-meme',
+      r\u00e9\u00e9quilibrage: 'ton objectif est le reequilibrage alimentaire : vise des repas varies et complets a base d\'aliments peu transformes, sans te priver',
+      maintien: 'ton objectif est de maintenir tes acquis : garde tes habitudes actuelles, elles fonctionnent, et reste a l\'ecoute de tes sensations'
     };
     if (objectifs.length) {
       var _goalKey = objectifs[0];
@@ -3823,6 +3827,8 @@ window.initHome = async function() {
     }
 
     var _todayLogAdvice = window._pcTodayHealthLog || null;
+    var _todayStrLA = new Date().toISOString().split('T')[0];
+    if (_todayLogAdvice && (_todayLogAdvice.date || '').split('T')[0] !== _todayStrLA) _todayLogAdvice = null;
     var _tlEnergy = (_todayLogAdvice && _todayLogAdvice.energy_level != null) ? _todayLogAdvice.energy_level : null;
     var _tlSleep = (_todayLogAdvice && _todayLogAdvice.sleep_hours != null) ? _todayLogAdvice.sleep_hours : null;
     var _tlStress = (_todayLogAdvice && _todayLogAdvice.stress_level != null) ? _todayLogAdvice.stress_level : null;
@@ -3850,8 +3856,8 @@ window.initHome = async function() {
     if (_tlStress === null && profile.stress_actuel && profile.stress_actuel >= 7) pushAdvice('ton niveau de stress est élevé, essaie une séance de cohérence cardiaque de 2 minutes aujourd\'hui', 2);
     if (_tlEnergy === null && profile.energie_actuelle && profile.energie_actuelle <= 4) pushAdvice('ton énergie est basse en ce moment, vérifie ton sommeil et ton hydratation avant tout', 2);
     if (_tlSleep === null && profile.sommeil_heures_actuel && profile.sommeil_heures_actuel < 7) pushAdvice('tu dors moins de 7h en général, essaie de te coucher 30 minutes plus tôt ce soir', 2);
-    if (profile.sommeil_reveils_nocturnes === 'souvent') pushAdvice('tes réveils nocturnes fréquents peuvent impacter ta récupération, évite les écrans avant le coucher', 2);
-    if (profile.sport_pratique) pushAdvice('continue ta pratique de ' + profile.sport_pratique + ', la régularité est la clé des résultats', 1);
+    if (profile.sommeil_reveils_nocturnes === 'souvent') pushAdvice('tes réveils nocturnes fréquents peuvent impacter ta récupération : évite les écrans et les repas lourds avant le coucher, et limite la caféine après 14h', 2);
+    if (profile.sport_pratique) pushAdvice('continue ta pratique de ' + profile.sport_pratique + ', la régularité est la clé des résultats : vise 2 à 3 séances par semaine et laisse au moins un jour de repos entre deux efforts intenses', 1);
 
     // Conseils personnalises selon les objectifs choisis a l onboarding
     if (objectifs.indexOf('perte_poids') > -1) {
