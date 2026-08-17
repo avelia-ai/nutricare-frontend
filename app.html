@@ -15637,26 +15637,36 @@ function refreshHarmonyAvatar(logs) {
             '<span style="color:rgba(255,255,255,0.9);font-size:0.84rem;line-height:1.45;padding-top:2px">' + t + '</span></div>';
         }).join('');
 
-        var _ritualByObjectif = {
-          stress: { type: 'coherence', title: 'Coh\u00e9rence Cardiaque', duration: '5 min', icon: 'ti-heart' },
-          sommeil: { type: 'soir', title: 'Rituel du Soir', duration: '7 min', icon: 'ti-moon' },
-          energie: { type: 'reveil', title: 'R\u00e9veil en Douceur', duration: '5 min', icon: 'ti-sun' }
+        var _actionByObjectif = {
+          perte_poids: { kind: 'nav', target: 'menus', title: 'Voir mes menus adapt\u00e9s', sub: 'Nutrition personnalis\u00e9e', icon: 'ti-tools-kitchen-2' },
+          maintien: { kind: 'nav', target: 'menus', title: 'Voir mes menus', sub: 'Nutrition personnalis\u00e9e', icon: 'ti-tools-kitchen-2' },
+          forme: { kind: 'ritual', target: 'reveil', title: 'R\u00e9veil en Douceur', sub: '5 min', icon: 'ti-sun' },
+          energie: { kind: 'ritual', target: 'reveil', title: 'R\u00e9veil en Douceur', sub: '5 min', icon: 'ti-sun' },
+          masse: { kind: 'nav', target: 'menus', title: 'Voir mes menus', sub: 'Nutrition personnalis\u00e9e', icon: 'ti-tools-kitchen-2' },
+          sommeil: { kind: 'ritual', target: 'soir', title: 'Rituel du Soir', sub: '7 min', icon: 'ti-moon' },
+          stress: { kind: 'ritual', target: 'coherence', title: 'Coh\u00e9rence Cardiaque', sub: '5 min', icon: 'ti-heart' },
+          performance: { kind: 'routines', target: 'corps', title: 'Routines Corps', sub: 'Planning', icon: 'ti-barbell' },
+          r\u00e9\u00e9quilibrage: { kind: 'nav', target: 'menus', title: 'Voir mes menus', sub: 'Nutrition personnalis\u00e9e', icon: 'ti-tools-kitchen-2' }
         };
         var _objList = (_profileForAdvice.objectifs || []);
-        var _matchedRitual = null;
+        var _matchedAction = null;
         for (var _oi = 0; _oi < _objList.length; _oi++) {
-          if (_ritualByObjectif[_objList[_oi]]) { _matchedRitual = _ritualByObjectif[_objList[_oi]]; break; }
+          if (_actionByObjectif[_objList[_oi]]) { _matchedAction = _actionByObjectif[_objList[_oi]]; break; }
         }
-        var _ritualHtml = '';
-        if (_matchedRitual) {
-          _ritualHtml = '<div onclick="startRituel(\'' + _matchedRitual.type + '\')" style="display:flex;gap:12px;align-items:center;margin-top:4px;padding:14px;background:linear-gradient(135deg,rgba(255,154,60,0.15),rgba(255,107,107,0.15));border:1px solid rgba(255,154,60,0.3);border-radius:14px;cursor:pointer">' +
-            '<div style="width:38px;height:38px;border-radius:11px;background:linear-gradient(135deg,#FF9A3C,#FF6B6B);display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:0 4px 10px rgba(255,107,107,0.3)"><i class="ti ' + _matchedRitual.icon + '" style="font-size:18px;color:#fff"></i></div>' +
-            '<div style="flex:1;min-width:0"><div style="font-size:0.68rem;color:rgba(255,255,255,0.5);font-weight:700;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:2px">Rituel sugg\u00e9r\u00e9 pour toi</div>' +
-            '<div style="color:#fff;font-size:0.88rem;font-weight:700">' + _matchedRitual.title + ' \u00b7 ' + _matchedRitual.duration + '</div></div>' +
+        var _actionHtml = '';
+        if (_matchedAction) {
+          var _onclickAttr = '';
+          if (_matchedAction.kind === 'ritual') _onclickAttr = "startRituel('" + _matchedAction.target + "')";
+          else if (_matchedAction.kind === 'nav') _onclickAttr = "showView('" + _matchedAction.target + "')";
+          else if (_matchedAction.kind === 'routines') _onclickAttr = "showView('planning');setTimeout(function(){var tr=document.getElementById('tabRoutines');if(tr)tr.click();setTimeout(function(){if(typeof filterRoutines==='function')filterRoutines('" + _matchedAction.target + "');},150);},300)";
+          _actionHtml = '<div onclick="' + _onclickAttr + '" style="display:flex;gap:12px;align-items:center;margin-top:4px;padding:14px;background:linear-gradient(135deg,rgba(255,154,60,0.15),rgba(255,107,107,0.15));border:1px solid rgba(255,154,60,0.3);border-radius:14px;cursor:pointer">' +
+            '<div style="width:38px;height:38px;border-radius:11px;background:linear-gradient(135deg,#FF9A3C,#FF6B6B);display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:0 4px 10px rgba(255,107,107,0.3)"><i class="ti ' + _matchedAction.icon + '" style="font-size:18px;color:#fff"></i></div>' +
+            '<div style="flex:1;min-width:0"><div style="font-size:0.68rem;color:rgba(255,255,255,0.5);font-weight:700;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:2px">Sugg\u00e9r\u00e9 pour toi</div>' +
+            '<div style="color:#fff;font-size:0.88rem;font-weight:700">' + _matchedAction.title + ' \u00b7 ' + _matchedAction.sub + '</div></div>' +
             '<i class="ti ti-chevron-right" style="font-size:18px;color:rgba(255,255,255,0.5);flex-shrink:0"></i></div>';
         }
 
-        _listEl.innerHTML = _bulletsHtml + _ritualHtml;
+        _listEl.innerHTML = _bulletsHtml + _actionHtml;
       });
     }
     var _pcAdviceTries = 0;
