@@ -15629,13 +15629,34 @@ function refreshHarmonyAvatar(logs) {
           ['#FFD166','#FF8A5B'],
           ['#C08CFF','#8B5CF6']
         ];
-        _listEl.innerHTML = _adviceSnapshot.map(function(a, i) {
+        var _bulletsHtml = _adviceSnapshot.map(function(a, i) {
           var t = a.txt.charAt(0).toUpperCase() + a.txt.slice(1) + '.';
           var g = _adviceGradients[i % _adviceGradients.length];
           return '<div style="display:flex;gap:12px;align-items:flex-start;margin-bottom:10px;padding:12px 14px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:14px">' +
             '<div style="width:26px;height:26px;border-radius:8px;background:linear-gradient(135deg,' + g[0] + ',' + g[1] + ');display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:0.72rem;font-weight:800;color:#fff;box-shadow:0 2px 6px rgba(0,0,0,0.25)">' + (i+1) + '</div>' +
             '<span style="color:rgba(255,255,255,0.9);font-size:0.84rem;line-height:1.45;padding-top:2px">' + t + '</span></div>';
         }).join('');
+
+        var _ritualByObjectif = {
+          stress: { type: 'coherence', title: 'Coh\u00e9rence Cardiaque', duration: '5 min', icon: 'ti-heart' },
+          sommeil: { type: 'soir', title: 'Rituel du Soir', duration: '7 min', icon: 'ti-moon' },
+          energie: { type: 'reveil', title: 'R\u00e9veil en Douceur', duration: '5 min', icon: 'ti-sun' }
+        };
+        var _objList = (_profileForAdvice.objectifs || []);
+        var _matchedRitual = null;
+        for (var _oi = 0; _oi < _objList.length; _oi++) {
+          if (_ritualByObjectif[_objList[_oi]]) { _matchedRitual = _ritualByObjectif[_objList[_oi]]; break; }
+        }
+        var _ritualHtml = '';
+        if (_matchedRitual) {
+          _ritualHtml = '<div onclick="startRituel(\'' + _matchedRitual.type + '\')" style="display:flex;gap:12px;align-items:center;margin-top:4px;padding:14px;background:linear-gradient(135deg,rgba(255,154,60,0.15),rgba(255,107,107,0.15));border:1px solid rgba(255,154,60,0.3);border-radius:14px;cursor:pointer">' +
+            '<div style="width:38px;height:38px;border-radius:11px;background:linear-gradient(135deg,#FF9A3C,#FF6B6B);display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:0 4px 10px rgba(255,107,107,0.3)"><i class="ti ' + _matchedRitual.icon + '" style="font-size:18px;color:#fff"></i></div>' +
+            '<div style="flex:1;min-width:0"><div style="font-size:0.68rem;color:rgba(255,255,255,0.5);font-weight:700;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:2px">Rituel sugg\u00e9r\u00e9 pour toi</div>' +
+            '<div style="color:#fff;font-size:0.88rem;font-weight:700">' + _matchedRitual.title + ' \u00b7 ' + _matchedRitual.duration + '</div></div>' +
+            '<i class="ti ti-chevron-right" style="font-size:18px;color:rgba(255,255,255,0.5);flex-shrink:0"></i></div>';
+        }
+
+        _listEl.innerHTML = _bulletsHtml + _ritualHtml;
       });
     }
     var _pcAdviceTries = 0;
