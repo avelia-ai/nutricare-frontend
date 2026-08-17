@@ -3929,9 +3929,13 @@ window.initHome = async function() {
     var healthViewOpen = document.getElementById('healthView') && document.getElementById('healthView').style.display !== 'none';
     if (adviceParts.length && !healthViewOpen) {
       adviceWrap.style.display = 'block';
-      document.getElementById('summaryAdviceText').innerHTML = adviceParts.map(function(p) {
+      var _summaryGradients = [['#FF9A3C','#FF6B6B'],['#6BCBFF','#4A90E2'],['#8BE28B','#5FCF7F']];
+      document.getElementById('summaryAdviceText').innerHTML = adviceParts.map(function(p, i) {
         var t = p.charAt(0).toUpperCase() + p.slice(1) + '.';
-        return '<div style="display:flex;gap:8px;margin-bottom:8px"><span style="color:#FF9A3C;flex-shrink:0">&#8226;</span><span>' + t + '</span></div>';
+        var g = _summaryGradients[i % _summaryGradients.length];
+        return '<div style="display:flex;gap:10px;align-items:flex-start;margin-bottom:8px;padding:10px 12px;background:rgba(255,255,255,0.55);border-radius:12px">' +
+          '<div style="width:22px;height:22px;border-radius:7px;background:linear-gradient(135deg,' + g[0] + ',' + g[1] + ');display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:0.62rem;font-weight:800;color:#fff">' + (i+1) + '</div>' +
+          '<span style="color:#444;line-height:1.5">' + t + '</span></div>';
       }).join('');
     } else {
       adviceWrap.style.display = 'none';
