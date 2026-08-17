@@ -3039,6 +3039,22 @@ window.initHome = async function() {
           headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
           body: JSON.stringify(payload)
         });
+        // Synchronise aussi le journal sante du jour avec les valeurs saisies ici,
+        // pour eviter qu'un ancien log affiche une donnee perimee sur le dashboard.
+        var _todayLogPayload = { date: new Date().toISOString().split('T')[0] };
+        var _hasTodayUpdate = false;
+        if (sel_has('energie') && energie) { _todayLogPayload.energy_level = parseInt(energie); _hasTodayUpdate = true; }
+        if (sel_has('stress') && stress) { _todayLogPayload.stress_level = parseInt(stress); _hasTodayUpdate = true; }
+        if (sel_has('sommeil') && sommeilH) { _todayLogPayload.sleep_hours = parseFloat(sommeilH); _hasTodayUpdate = true; }
+        if (_hasTodayUpdate) {
+          try {
+            await fetch(BACKEND_URL + '/api/health/log', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
+              body: JSON.stringify(_todayLogPayload)
+            });
+          } catch(eSync) {}
+        }
       }
     } catch(e) {}
     document.getElementById('editGoalsModal').style.display = 'none';
@@ -3046,6 +3062,7 @@ window.initHome = async function() {
     if (nav2) { nav2.style.display = 'block'; nav2.style.zIndex = '1000'; nav2.style.visibility = 'visible'; }
     if (typeof window.renderPersonalSummary === 'function') { window.renderPersonalSummary(profile); }
     if (typeof window.renderParcours === 'function') { window.renderParcours(profile); } else if (typeof renderParcours === 'function') { renderParcours(profile); }
+    if (typeof window.loadHealthDashboard === 'function') { window.loadHealthDashboard(); }
   }
   var _objMeta = {
     perte_poids: { label: 'Perdre du poids', icon: 'trending-down' },
