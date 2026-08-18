@@ -4123,6 +4123,29 @@ window.initHome = async function() {
     var _uid = (JSON.parse(localStorage.getItem('nutricare_user')||'{}').id || JSON.parse(localStorage.getItem('nutricare_user')||'{}').email || 'default');
     var defiState = JSON.parse(localStorage.getItem('gami_defis_' + _uid + '_' + todayKey) || '{}');
     var seed = parseInt(todayKey.replace(/-/g,''));
+    var _defiJourIcons = {
+      d1:'ti-droplet', d2:'ti-walk', d3:'ti-moon', d4:'ti-salad', d5:'ti-brain',
+      d6:'ti-clipboard-list', d7:'ti-tools-kitchen-2', d8:'ti-ban', d9:'ti-sun', d10:'ti-device-mobile-off',
+      d11:'ti-fish', d12:'ti-leaf', d13:'ti-pill', d14:'ti-notebook', d15:'ti-salad',
+      d16:'ti-run', d17:'ti-alert-triangle', d18:'ti-apple', d19:'ti-lungs', d20:'ti-clock',
+      d21:'ti-apple', d22:'ti-ban', d23:'ti-egg', d24:'ti-heartbeat', d25:'ti-moon',
+      d26:'ti-salad', d27:'ti-camera', d28:'ti-ban', d29:'ti-droplet', d30:'ti-snowflake'
+    };
+    function _defiJourBenefits(d) {
+      var t = (d.text + ' ' + d.desc).toLowerCase();
+      var tags = [];
+      if (t.indexOf('eau') > -1 || t.indexOf('hydrat') > -1) tags.push('Hydratation');
+      if (t.indexOf('sommeil') > -1 || t.indexOf('dormir') > -1 || t.indexOf('coucher') > -1) tags.push('Meilleur sommeil');
+      if (t.indexOf('stress') > -1 || t.indexOf('meditat') > -1 || t.indexOf('respirat') > -1) tags.push('Moins de stress');
+      if (t.indexOf('activit') > -1 || t.indexOf('courir') > -1 || t.indexOf('cardio') > -1 || t.indexOf('marche') > -1) tags.push('Forme physique');
+      if (t.indexOf('sucre') > -1 || t.indexOf('glyc') > -1) tags.push('Glycemie stable');
+      if (t.indexOf('fruit') > -1 || t.indexOf('legume') > -1 || t.indexOf('vitamin') > -1 || t.indexOf('fibre') > -1) tags.push('Vitamines & fibres');
+      if (t.indexOf('poisson') > -1 || t.indexOf('omega') > -1) tags.push('Omega-3');
+      if (t.indexOf('ecran') > -1) tags.push('Recuperation');
+      if (t.indexOf('sante') > -1 || t.indexOf('suivi') > -1) tags.push('Suivi personnalise');
+      if (tags.length === 0) tags.push('Bien-etre global');
+      return tags.slice(0, 3);
+    }
     var DEFIS_POOL = [
       { id:'d1', icon:'💧', text:"2L d'eau aujourd'hui", points:5, img:'https://images.pexels.com/photos/416528/pexels-photo-416528.jpeg?auto=compress&cs=tinysrgb&w=400', desc:"Boire 2 litres d eau par jour favorise l hydratation et la digestion." },
       { id:'d2', icon:'🚶', text:"30 min d'activite", points:5, img:'https://images.pexels.com/photos/2526878/pexels-photo-2526878.jpeg?auto=compress&cs=tinysrgb&w=400', desc:"30 minutes d activite physique ameliorent la sante cardiovasculaire." },
@@ -4163,10 +4186,15 @@ window.initHome = async function() {
       var defiState = JSON.parse(localStorage.getItem('gami_defis_' + _uid + '_' + todayKey) || '{}');
       var done = !!defiState[id];
       document.getElementById('defiJourPhoto').style.backgroundImage = "url('" + d.img + "')";
-      document.getElementById('defiJourIcon').textContent = d.icon;
+      var _iconD = _defiJourIcons[d.id] || 'ti-star';
+      document.getElementById('defiJourIconBadge').innerHTML = '<i class="ti ' + _iconD + '" style="font-size:20px;color:#fff"></i>';
       document.getElementById('defiJourTitre').textContent = d.text;
       document.getElementById('defiJourDesc').textContent = d.desc;
-      document.getElementById('defiJourPoints').textContent = '+' + d.points + ' points';
+      var _benefitsD = _defiJourBenefits(d);
+      document.getElementById('defiJourBenefits').innerHTML = _benefitsD.map(function(b) {
+        return '<span style="background:#FFF0E8;color:#D4730A;font-size:0.72rem;font-weight:700;padding:6px 12px;border-radius:999px">' + b + '</span>';
+      }).join('');
+      document.getElementById('defiJourPoints').innerHTML = '<i class="ti ti-star" style="font-size:14px"></i>+' + d.points + ' points';
       var btn = document.getElementById('defiJourActionBtn');
       if (done) {
         btn.textContent = 'Defi releve';
@@ -4200,14 +4228,6 @@ window.initHome = async function() {
       listEl.style.flexDirection = 'column';
       listEl.style.gap = '10px';
       listEl.style.overflow = 'visible';
-      var _defiJourIcons = {
-        d1:'ti-droplet', d2:'ti-walk', d3:'ti-moon', d4:'ti-salad', d5:'ti-brain',
-        d6:'ti-clipboard-list', d7:'ti-tools-kitchen-2', d8:'ti-ban', d9:'ti-sun', d10:'ti-device-mobile-off',
-        d11:'ti-fish', d12:'ti-leaf', d13:'ti-pill', d14:'ti-notebook', d15:'ti-salad',
-        d16:'ti-run', d17:'ti-alert-triangle', d18:'ti-apple', d19:'ti-lungs', d20:'ti-clock',
-        d21:'ti-apple', d22:'ti-ban', d23:'ti-egg', d24:'ti-heartbeat', d25:'ti-moon',
-        d26:'ti-salad', d27:'ti-camera', d28:'ti-ban', d29:'ti-droplet', d30:'ti-snowflake'
-      };
       listEl.innerHTML = defisDuJour.map(function(d) {
         var done = !!defiState[d.id];
         var cardBg = done ? 'linear-gradient(135deg,#f0faf0,#e6f5e6)' : '#fff';
@@ -5575,19 +5595,20 @@ function switchLang(lang) {
           </div>
         </div>
         <!-- PANNEAU DETAIL DEFI DU JOUR -->
-        <div id="defiJourDetailPanel" style="display:none;background:#FFFCFA;border-radius:16px;overflow:hidden;margin-bottom:16px;box-shadow:0 0 0 1.5px rgba(255,154,108,0.22),0 14px 32px rgba(230,110,70,0.14)">
-          <div id="defiJourPhoto" style="height:140px;background:center/cover;position:relative">
-            <div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,0.55) 30%,rgba(0,0,0,0) 100%);pointer-events:none"></div>
-            <div onclick="document.getElementById('defiJourDetailPanel').style.display='none'" style="position:absolute;top:10px;right:10px;width:32px;height:32px;border-radius:50%;background:rgba(0,0,0,0.4);color:white;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:16px;z-index:2">x</div>
-            <div style="position:absolute;bottom:12px;left:16px;right:16px">
-              <div id="defiJourIcon" style="font-size:1.6rem;margin-bottom:4px"></div>
-              <div id="defiJourTitre" style="font-size:1.1rem;font-weight:700;color:white"></div>
+        <div id="defiJourDetailPanel" style="display:none;background:#FFFCFA;border-radius:20px;overflow:hidden;margin-bottom:16px;box-shadow:0 0 0 1.5px rgba(255,154,108,0.22),0 16px 40px rgba(230,110,70,0.14)">
+          <div id="defiJourPhoto" style="height:180px;background:center/cover;position:relative">
+            <div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,0.7) 20%,rgba(0,0,0,0.05) 100%);pointer-events:none"></div>
+            <div onclick="document.getElementById('defiJourDetailPanel').style.display='none'" style="position:absolute;top:12px;right:12px;width:34px;height:34px;border-radius:50%;background:rgba(0,0,0,0.45);backdrop-filter:blur(6px);color:white;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:16px;z-index:2">✕</div>
+            <div id="defiJourIconBadge" style="position:absolute;top:16px;left:16px;width:44px;height:44px;border-radius:14px;background:linear-gradient(135deg,#FF9A3C,#FF6B6B);display:flex;align-items:center;justify-content:center;box-shadow:0 6px 16px rgba(255,107,107,0.4);z-index:2"></div>
+            <div style="position:absolute;bottom:14px;left:16px;right:16px">
+              <div id="defiJourTitre" style="font-size:1.25rem;font-weight:800;color:white;line-height:1.2"></div>
             </div>
           </div>
-          <div style="padding:18px">
-            <div id="defiJourDesc" style="font-size:0.85rem;color:#555;line-height:1.5;margin-bottom:12px"></div>
-            <div id="defiJourPoints" style="display:inline-block;background:rgba(255,154,60,0.12);color:#FF9A3C;font-weight:700;font-size:13px;padding:6px 14px;border-radius:20px;margin-bottom:16px"></div>
-            <button id="defiJourActionBtn" style="width:100%;border:none;border-radius:14px;padding:13px;font-size:14px;font-weight:700;cursor:pointer;font-family:DM Sans,sans-serif">Marquer comme fait</button>
+          <div style="padding:20px">
+            <div id="defiJourDesc" style="font-size:0.86rem;color:#666;line-height:1.6;margin-bottom:16px"></div>
+            <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:18px" id="defiJourBenefits"></div>
+            <div id="defiJourPoints" style="display:inline-flex;align-items:center;gap:6px;background:rgba(255,154,60,0.12);color:#FF9A3C;font-weight:800;font-size:13px;padding:7px 16px;border-radius:20px;margin-bottom:18px"></div>
+            <button id="defiJourActionBtn" style="width:100%;border:none;border-radius:16px;padding:15px;font-size:14px;font-weight:800;cursor:pointer;font-family:DM Sans,sans-serif;box-shadow:0 8px 20px rgba(255,107,107,0.3)">Marquer comme fait</button>
           </div>
         </div>
         <!-- SECTION DÉFIS -->
