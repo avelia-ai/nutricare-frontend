@@ -20603,7 +20603,11 @@ function _startRituelExercise() {
   var bgScrim = document.getElementById('rituelBgScrim');
   var sunGlow = document.getElementById('rituelSunGlow');
   var petalsBox = document.getElementById('rituelPetals');
-  if (bgImage) bgImage.style.display = isGratitude ? 'block' : 'none';
+  if (bgImage) {
+    bgImage.style.display = isGratitude ? 'block' : 'none';
+    if (isGratitude) { bgImage.currentTime = 0; bgImage.play().catch(function(){}); }
+    else { bgImage.pause(); }
+  }
   if (bgScrim) bgScrim.style.display = isGratitude ? 'block' : 'none';
   if (sunGlow) sunGlow.style.display = isGratitude ? 'block' : 'none';
   if (petalsBox) {
@@ -22449,7 +22453,7 @@ function closeRituel() {
   var bgScrimEl = document.getElementById('rituelBgScrim');
   var sunGlowEl = document.getElementById('rituelSunGlow');
   var petalsEl = document.getElementById('rituelPetals');
-  if (bgImageEl) bgImageEl.style.display = 'none';
+  if (bgImageEl) { bgImageEl.style.display = 'none'; bgImageEl.pause(); }
   if (bgScrimEl) bgScrimEl.style.display = 'none';
   if (sunGlowEl) sunGlowEl.style.display = 'none';
   if (petalsEl) { petalsEl.style.display = 'none'; petalsEl.innerHTML = ''; }
