@@ -1448,12 +1448,15 @@ window.renderPersoMenus = function() {
   if (!container) return;
   var jours = window.PERSO_JOURS;
   var jourActif = window._persoMenusJour;
-  var selectorHtml = '<div style="display:flex;gap:6px;overflow-x:auto;margin-bottom:14px;padding-bottom:4px">' + jours.map(function(j){
+  var selectorHtml = '<div style="display:flex;gap:8px;overflow-x:auto;margin-bottom:16px;padding-bottom:6px">' + jours.map(function(j){
     var active = j === jourActif;
-    return '<button onclick="window.selectPersoJour(\'' + j + '\')" style="flex-shrink:0;padding:6px 14px;border-radius:20px;border:1.5px solid ' + (active?'var(--coral)':'#eee') + ';background:' + (active?'var(--coral)':'white') + ';color:' + (active?'white':'#555') + ';font-size:0.78rem;font-weight:600;cursor:pointer">' + j + '</button>';
+    var bg = active ? 'background:linear-gradient(135deg,var(--coral),var(--accent));box-shadow:0 4px 12px rgba(255,107,107,0.3)' : 'background:#fff;box-shadow:0 0 0 1.5px rgba(255,154,108,0.18)';
+    return '<button onclick="window.selectPersoJour(\'' + j + '\')" style="flex-shrink:0;padding:9px 16px;border-radius:14px;border:none;' + bg + ';color:' + (active?'white':'#555') + ';font-size:0.8rem;font-weight:700;cursor:pointer">' + j + '</button>';
   }).join('') + '</div>';
   var data = window.getPersoMenus();
   var jourData = data[jourActif] || {};
+  var _mealIcons = { petit_dejeuner:'ti-coffee', dejeuner:'ti-tools-kitchen-2', collation:'ti-apple', diner:'ti-moon' };
+  var _mealGrads = { petit_dejeuner:'#FFD166,#FF8A5B', dejeuner:'#FF6B6B,#FF9A3C', collation:'#8BE28B,#5FCF7F', diner:'#6C5CE7,#7EC8E3' };
   var repasHtml = window.PERSO_REPAS.map(function(r){
     var key = r[0], label = r[1];
     var items = jourData[key] || [];
@@ -1463,11 +1466,14 @@ window.renderPersoMenus = function() {
       var checkKey = 'mealcheck_perso_' + jourActif + '_' + key + '_' + idx;
       var isChecked = !!checkedMeals[checkKey];
       var checkStyle = 'flex-shrink:0;width:28px;height:28px;border-radius:50%;border:2px solid ' + (isChecked ? '#22c55e' : '#eee') + ';background:' + (isChecked ? '#22c55e' : 'white') + ';color:' + (isChecked ? 'white' : '#ccc') + ';font-size:0.85rem;cursor:pointer;display:flex;align-items:center;justify-content:center;margin-right:8px';
-      return '<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid #f5f5f5"><div style="display:flex;align-items:center;flex:1;min-width:0"><button onclick="window.togglePersoRepasChecked(\'' + checkKey + '\',\'' + key + '\',' + idx + ')" style="' + checkStyle + '" title="Marquer comme pris">&#10003;</button><span style="font-size:0.85rem;color:#333;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">' + it.nom + macros + '</span></div><button onclick="window.removePersoRepas(\'' + key + '\',' + idx + ')" style="background:none;border:none;color:#ccc;cursor:pointer;font-size:1rem;flex-shrink:0">&times;</button></div>';
+      return '<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid #f5f0ea"><div style="display:flex;align-items:center;flex:1;min-width:0"><button onclick="window.togglePersoRepasChecked(\'' + checkKey + '\',\'' + key + '\',' + idx + ')" style="' + checkStyle + '" title="Marquer comme pris">&#10003;</button><span style="font-size:0.85rem;color:#333;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">' + it.nom + macros + '</span></div><button onclick="window.removePersoRepas(\'' + key + '\',' + idx + ')" style="background:none;border:none;color:#ccc;cursor:pointer;font-size:1rem;flex-shrink:0">&times;</button></div>';
     }).join('');
-    return '<div style="background:#fafafa;border-radius:12px;padding:14px;margin-bottom:10px">' +
-      '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px"><span style="font-size:0.85rem;font-weight:700;color:#2D2D2D">' + label + '</span>' +
-      '<button onclick="window.openAddPersoRepas(\'' + key + '\')" style="background:none;border:none;color:var(--coral);font-size:0.78rem;font-weight:700;cursor:pointer">+ Ajouter</button></div>' +
+    var icon = _mealIcons[key] || 'ti-tools-kitchen-2';
+    var grad = _mealGrads[key] || '#FF6B6B,#FF9A3C';
+    return '<div style="background:#fff;border-radius:16px;padding:16px;margin-bottom:12px;box-shadow:0 0 0 1.5px rgba(255,154,108,0.18),0 4px 14px rgba(230,110,70,0.06)">' +
+      '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">' +
+      '<div style="display:flex;align-items:center;gap:10px"><span style="width:30px;height:30px;border-radius:9px;background:linear-gradient(135deg,' + grad + ');display:flex;align-items:center;justify-content:center;flex-shrink:0"><i class="ti ' + icon + '" style="font-size:15px;color:#fff"></i></span><span style="font-size:0.88rem;font-weight:700;color:#2D2D2D">' + label + '</span></div>' +
+      '<button onclick="window.openAddPersoRepas(\'' + key + '\')" style="background:#FFF0E8;border:none;color:var(--coral);font-size:0.74rem;font-weight:700;cursor:pointer;padding:6px 12px;border-radius:999px">+ Ajouter</button></div>' +
       (itemsHtml || '<div style="font-size:0.78rem;color:#bbb;padding:4px 0">Aucun repas ajoute</div>') +
       '</div>';
   }).join('');
@@ -7228,7 +7234,7 @@ function switchLang(lang) {
         <select id="persoObjectif" style="width:100%;padding:10px 12px;border-radius:11px;border:1px solid #eee;font-size:0.82rem;background:white;color:#666;margin-bottom:12px"><option value="">Objectif nutritionnel (optionnel)</option><option value="perte_de_poids">Perte de poids</option><option value="prise_de_masse">Prise de masse</option><option value="seche">Seche</option><option value="maintenance">Maintien du poids</option><option value="performance">Performance sportive</option><option value="sante">Sante generale</option></select></div>
       <div id="persoAddBtnWrap" style="display:none;padding:0 18px 18px" data-flex="1">
         <input type="file" id="persoPhotoInput" accept="image/*" style="display:none" onchange="window.analyzePersoPhoto(this)">
-        <button onclick="document.getElementById('persoPhotoInput').click()" style="width:100%;background:#f0ece8;color:#FF6B6B;border:none;border-radius:12px;padding:12px;font-size:12.5px;font-weight:700;display:flex;align-items:center;justify-content:center;gap:6px;margin-top:12px"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#FF6B6B" stroke-width="2" stroke-linecap="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>Analyser un repas par photo</button>
+        <button onclick="document.getElementById('persoPhotoInput').click()" style="width:100%;background:linear-gradient(135deg,var(--coral),var(--accent));color:white;border:none;border-radius:14px;padding:14px;font-size:13px;font-weight:700;display:flex;align-items:center;justify-content:center;gap:8px;margin-top:12px;box-shadow:0 6px 16px rgba(255,107,107,0.3)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#FF6B6B" stroke-width="2" stroke-linecap="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>Analyser un repas par photo</button>
       </div>
     </div>
     <!-- Conseils Mirella en haut -->
