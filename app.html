@@ -18444,6 +18444,10 @@ function toggleQuickMenu() {
 
     <!-- Gratitude -->
     <div id="soirGratitudeWrap" style="display:none;flex-direction:column;align-items:center;width:100%;max-width:330px;margin-bottom:26px">
+      <p style="color:rgba(255,255,255,0.65);font-size:0.82rem;line-height:1.6;text-align:center;max-width:280px;margin:0 auto 18px">Chaque soir, notez 3 choses qui ont réchauffé votre journée. Ce rituel entretient la flamme de votre gratitude et apaise l'esprit avant de dormir.</p>
+      <div style="position:relative;height:220px;width:220px;display:flex;align-items:center;justify-content:center;margin-bottom:16px">
+        <canvas id="soirGratitudeFlame" width="220" height="240" style="width:220px;height:240px"></canvas>
+      </div>
       <div id="soirGratitudeItems" style="display:flex;flex-direction:column;gap:12px;width:100%"></div>
     </div>
 
@@ -22133,11 +22137,119 @@ function _startSoirMuscle(phase) {
   runGroup();
 }
 
+// ---------- Flamme Gratitude ----------
+var _soirGratitudeFlameInst = null;
+
+function _startGratitudeFlame() {
+  _stopGratitudeFlame();
+  var canvas = document.getElementById('soirGratitudeFlame');
+  if (!canvas) return;
+  var ctx = canvas.getContext('2d');
+  var W = canvas.width, H = canvas.height, baseX = W / 2, baseY = H - 20;
+  var particles = [];
+  var t = 0;
+  var running = true;
+  var rafId = null;
+
+  function spawn() {
+    for (var i = 0; i < 5; i++) {
+      var spread = (Math.random() - 0.5);
+      particles.push({
+        x: baseX + spread * 24,
+        y: baseY + Math.random() * 6,
+        vx: spread * 0.4,
+        vy: -(2.4 + Math.random() * 1.8),
+        life: 0,
+        maxLife: 46 + Math.random() * 30,
+        size: 16 + Math.random() * 14,
+        wob: Math.random() * Math.PI * 2,
+        wobSpeed: 0.08 + Math.random() * 0.08
+      });
+    }
+  }
+
+  function loop() {
+    if (!running) return;
+    t++;
+
+    ctx.globalCompositeOperation = 'destination-out';
+    ctx.fillStyle = 'rgba(0,0,0,0.28)';
+    ctx.fillRect(0, 0, W, H);
+    ctx.globalCompositeOperation = 'lighter';
+
+    spawn();
+
+    var next = [];
+    for (var i = 0; i < particles.length; i++) {
+      var p = particles[i];
+      p.life++;
+      var shrink = 1 - p.life / p.maxLife;
+      p.x += p.vx + Math.sin(p.life * p.wobSpeed + p.wob) * (1.1 * (1 - shrink * 0.4));
+      p.y += p.vy;
+      p.vy *= 0.978;
+
+      var tt = p.life / p.maxLife;
+      var size = p.size * (1 - tt * 0.8) * (0.7 + 0.3 * Math.sin(p.life * 0.3 + p.wob));
+
+      if (size > 0.5 && tt < 1) {
+        var r, g, b, a;
+        a = Math.min(1, (1 - tt) * 1.4) * 0.9;
+        if (tt < 0.18) { r = 255; g = 255; b = 235; }
+        else if (tt < 0.4) { var k1 = (tt - 0.18) / 0.22; r = 255; g = 255 - k1 * 45; b = 235 - k1 * 135; }
+        else if (tt < 0.65) { var k2 = (tt - 0.4) / 0.25; r = 255; g = 210 - k2 * 90; b = 100 - k2 * 80; }
+        else if (tt < 0.85) { var k3 = (tt - 0.65) / 0.2; r = 255 - k3 * 40; g = 120 - k3 * 70; b = 20 - k3 * 15; }
+        else { var k4 = (tt - 0.85) / 0.15; r = 215 - k4 * 160; g = 50 - k4 * 40; b = 5; }
+
+        var grad = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, size);
+        grad.addColorStop(0, 'rgba(' + (r | 0) + ',' + (g | 0) + ',' + (b | 0) + ',' + a + ')');
+        grad.addColorStop(0.6, 'rgba(' + (r | 0) + ',' + (g | 0) + ',' + (b | 0) + ',' + (a * 0.5) + ')');
+        grad.addColorStop(1, 'rgba(' + (r | 0) + ',' + (g | 0) + ',' + (b | 0) + ',0)');
+        ctx.fillStyle = grad;
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, size, 0, Math.PI * 2);
+        ctx.fill();
+
+        next.push(p);
+      }
+    }
+    particles = next;
+
+    var flicker = 0.85 + Math.sin(t * 0.2) * 0.05 + Math.random() * 0.06;
+    ctx.globalCompositeOperation = 'lighter';
+    var baseGrad = ctx.createRadialGradient(baseX, baseY - 18, 4, baseX, baseY - 18, 70 * flicker);
+    baseGrad.addColorStop(0, 'rgba(140,190,255,0.35)');
+    baseGrad.addColorStop(0.4, 'rgba(255,210,140,0.14)');
+    baseGrad.addColorStop(1, 'rgba(255,210,140,0)');
+    ctx.fillStyle = baseGrad;
+    ctx.beginPath();
+    ctx.arc(baseX, baseY - 18, 70 * flicker, 0, Math.PI * 2);
+    ctx.fill();
+
+    rafId = requestAnimationFrame(loop);
+  }
+  loop();
+
+  _soirGratitudeFlameInst = {
+    destroy: function() {
+      running = false;
+      if (rafId) cancelAnimationFrame(rafId);
+    }
+  };
+}
+
+function _stopGratitudeFlame() {
+  if (_soirGratitudeFlameInst) {
+    _soirGratitudeFlameInst.destroy();
+    _soirGratitudeFlameInst = null;
+  }
+}
+
 // ---------- Gratitude ----------
 function _startSoirGratitude(phase) {
   var wrap = document.getElementById('soirGratitudeWrap');
   wrap.style.display = 'flex';
   setTimeout(function() { wrap.style.opacity = '1'; wrap.style.transition = 'opacity 1s'; }, 30);
+  _startGratitudeFlame();
 
   var container = document.getElementById('soirGratitudeItems');
   container.innerHTML = '';
@@ -22206,6 +22318,7 @@ function closeRituel() {
   if (window._stopBodyScan) { window._stopBodyScan(); window._stopBodyScan = null; }
   if (window._stopReveil) { window._stopReveil(); window._stopReveil = null; }
   if (window._stopSoir) { window._stopSoir(); window._stopSoir = null; }
+  _stopGratitudeFlame();
   var soirScreen = document.getElementById('rituelSoirScreen');
   if (soirScreen) soirScreen.style.display = 'none';
   var reveilScreen = document.getElementById('rituelReveilScreen');
