@@ -20604,6 +20604,12 @@ function _startRituelExercise() {
   var _lgParticleCount = [4, 10, 16];
   var _lgTotalSteps = (cfg.steps && cfg.steps.length) ? cfg.steps.length : 3;
 
+  var elapsed = 0, stepIdx = 0, stepElapsed = 0;
+  var arc = document.getElementById('rituelTimerArc');
+  var circumference = 879.6;
+  var totalDuration = cfg.duration;
+  var _rituelAnimRunning = true;
+
   function _lgSpawnDust(n) {
     var box = document.getElementById('lgDustBox');
     if (!box) return;
