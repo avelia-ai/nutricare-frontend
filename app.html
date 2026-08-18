@@ -7087,9 +7087,9 @@ function switchLang(lang) {
       <div style="font-size:12px;color:rgba(255,255,255,0.35);margin-top:10px">Menu personnalise selon votre profil et pathologies</div>
     </div>
     <div id="iaMenusContent" style="display:block;padding:20px;display:flex;flex-direction:column;background:#FFFCFA">
-      <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">
-        <div style="width:24px;height:24px;border-radius:50%;background:var(--coral);color:white;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0">1</div>
-        <select id="menuJourSelect" style="flex:1;padding:11px 12px;border-radius:12px;border:1.5px solid var(--coral);font-size:0.82rem;font-weight:700;background:#FFF5F2;color:#2D2D2D">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px">
+        <div style="width:28px;height:28px;border-radius:9px;background:linear-gradient(135deg,var(--coral),var(--accent));color:white;font-size:12px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:0 3px 8px rgba(255,107,107,0.3)">1</div>
+        <select id="menuJourSelect" style="flex:1;padding:13px 14px;border-radius:14px;border:none;font-size:0.85rem;font-weight:700;background:#fff;color:#2D2D2D;box-shadow:0 0 0 1.5px rgba(255,154,108,0.3),0 4px 12px rgba(230,110,70,0.1)">
           <option value="Lundi">Lundi</option>
           <option value="Mardi">Mardi</option>
           <option value="Mercredi">Mercredi</option>
@@ -7099,9 +7099,9 @@ function switchLang(lang) {
           <option value="Dimanche">Dimanche</option>
         </select>
       </div>
-      <div style="display:flex;align-items:center;gap:10px;margin-bottom:18px">
-        <div style="width:24px;height:24px;border-radius:50%;background:#f0f0f0;color:#999;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0">2</div>
-        <select id="menuObjectif" style="flex:1;padding:11px 12px;border-radius:12px;border:1px solid #eee;font-size:0.82rem;background:white;color:#666">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px">
+        <div style="width:28px;height:28px;border-radius:9px;background:linear-gradient(135deg,#6BCBFF,#4A90E2);color:white;font-size:12px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:0 3px 8px rgba(74,144,226,0.3)">2</div>
+        <select id="menuObjectif" style="flex:1;padding:13px 14px;border-radius:14px;border:none;font-size:0.85rem;font-weight:600;background:#fff;color:#2D2D2D;box-shadow:0 0 0 1.5px rgba(255,154,108,0.15),0 2px 8px rgba(0,0,0,0.04)">
           <option value="">Objectif nutritionnel</option>
           <option value="perte_de_poids">Perte de poids</option>
           <option value="prise_de_masse">Prise de masse</option>
@@ -7111,9 +7111,9 @@ function switchLang(lang) {
           <option value="sante">Sante generale</option>
         </select>
       </div>
-      <div style="display:flex;align-items:center;gap:10px;margin-bottom:18px">
-        <div style="width:24px;height:24px;border-radius:50%;background:#f0f0f0;color:#999;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0">3</div>
-        <select id="menuRythme" style="flex:1;padding:11px 12px;border-radius:12px;border:1px solid #eee;font-size:0.82rem;background:white;color:#666">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:20px">
+        <div style="width:28px;height:28px;border-radius:9px;background:linear-gradient(135deg,#8BE28B,#5FCF7F);color:white;font-size:12px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:0 3px 8px rgba(95,207,127,0.3)">3</div>
+        <select id="menuRythme" style="flex:1;padding:13px 14px;border-radius:14px;border:none;font-size:0.85rem;font-weight:600;background:#fff;color:#2D2D2D;box-shadow:0 0 0 1.5px rgba(255,154,108,0.15),0 2px 8px rgba(0,0,0,0.04)">
           <option value="">Rythme de repas (optionnel)</option>
           <option value="3_repas_classiques">3 repas par jour (classique)</option>
           <option value="5_6_petits_repas">5-6 petits repas par jour</option>
@@ -7125,11 +7125,11 @@ function switchLang(lang) {
         </select>
       </div>
       <!-- Filtres en selects -->
-      <div style="border-top:1px solid rgba(255,154,108,0.1);padding-top:14px;display:grid;grid-template-columns:1fr 1fr;gap:10px" id="menuFiltersGrid">
+      <div style="background:#FFF6EE;border-radius:16px;padding:16px;display:grid;grid-template-columns:1fr 1fr;gap:12px" id="menuFiltersGrid">
         <div style="grid-column:1/-1;font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#FF6B6B;margin-bottom:2px">Filtres</div>
         <div>
           <div style="font-size:0.68rem;font-weight:700;text-transform:uppercase;letter-spacing:0.8px;color:#aaa;margin-bottom:6px">Exclusions</div>
-          <select id="filterExclusions" onchange="window.applySelectFilter('filterExclusions')" style="width:100%;padding:9px 12px;border:1.5px solid #e8e8e8;border-radius:10px;font-size:0.82rem;color:#2D2D2D;background:white;cursor:pointer;font-family:DM Sans,sans-serif">
+          <select id="filterExclusions" onchange="window.applySelectFilter('filterExclusions')" style="width:100%;padding:11px 12px;border:none;border-radius:12px;font-size:0.82rem;color:#2D2D2D;background:#fff;cursor:pointer;font-family:DM Sans,sans-serif;box-shadow:0 2px 8px rgba(0,0,0,0.05)">
             <option value="">Aucune exclusion</option>
             <option value="sans_gluten">Sans gluten</option>
             <option value="sans_lactose">Sans lactose</option>
@@ -7146,7 +7146,7 @@ function switchLang(lang) {
         </div>
         <div>
           <div style="font-size:0.68rem;font-weight:700;text-transform:uppercase;letter-spacing:0.8px;color:#aaa;margin-bottom:6px">Cuisine</div>
-          <select id="filterCuisine" onchange="window.applySelectFilter('filterCuisine')" style="width:100%;padding:9px 12px;border:1.5px solid #e8e8e8;border-radius:10px;font-size:0.82rem;color:#2D2D2D;background:white;cursor:pointer;font-family:DM Sans,sans-serif">
+          <select id="filterCuisine" onchange="window.applySelectFilter('filterCuisine')" style="width:100%;padding:11px 12px;border:none;border-radius:12px;font-size:0.82rem;color:#2D2D2D;background:#fff;cursor:pointer;font-family:DM Sans,sans-serif;box-shadow:0 2px 8px rgba(0,0,0,0.05)">
             <option value="">Toutes cuisines</option>
             <option value="cuisine_africaine">Africaine</option>
             <option value="cuisine_asiatique">Asiatique</option>
@@ -7160,7 +7160,7 @@ function switchLang(lang) {
         </div>
         <div>
           <div style="font-size:0.68rem;font-weight:700;text-transform:uppercase;letter-spacing:0.8px;color:#aaa;margin-bottom:6px">Objectif sante</div>
-          <select id="filterSante" onchange="window.applySelectFilter('filterSante')" style="width:100%;padding:9px 12px;border:1.5px solid #e8e8e8;border-radius:10px;font-size:0.82rem;color:#2D2D2D;background:white;cursor:pointer;font-family:DM Sans,sans-serif">
+          <select id="filterSante" onchange="window.applySelectFilter('filterSante')" style="width:100%;padding:11px 12px;border:none;border-radius:12px;font-size:0.82rem;color:#2D2D2D;background:#fff;cursor:pointer;font-family:DM Sans,sans-serif;box-shadow:0 2px 8px rgba(0,0,0,0.05)">
             <option value="">Aucun objectif spécifique</option>
             <option value="skincare">🌿 Skincare</option>
             <option value="boost_cognitif">🧠 Boost cognitif</option>
@@ -7170,7 +7170,7 @@ function switchLang(lang) {
         </div>
         <div id="filterCycleWrap">
           <div style="font-size:0.68rem;font-weight:700;text-transform:uppercase;letter-spacing:0.8px;color:#aaa;margin-bottom:6px">Cycle menstruel</div>
-          <select id="filterCycle" onchange="window.applySelectFilter('filterCycle')" style="width:100%;padding:9px 12px;border:1.5px solid #e8e8e8;border-radius:10px;font-size:0.82rem;color:#2D2D2D;background:white;cursor:pointer;font-family:DM Sans,sans-serif">
+          <select id="filterCycle" onchange="window.applySelectFilter('filterCycle')" style="width:100%;padding:11px 12px;border:none;border-radius:12px;font-size:0.82rem;color:#2D2D2D;background:#fff;cursor:pointer;font-family:DM Sans,sans-serif;box-shadow:0 2px 8px rgba(0,0,0,0.05)">
             <option value="">Non renseigné</option>
             <option value="cycle_menstrues">🔴 Menstrues (J1-J5)</option>
             <option value="cycle_folliculaire">🌱 Folliculaire (J6-J13)</option>
