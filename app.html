@@ -20145,7 +20145,11 @@ function openSubscriptionModal(context) {
 </style>
 <div id="rituelOverlay" style="display:none;position:fixed;inset:0;z-index:9999;background:rgba(10,5,20,0.92);backdrop-filter:blur(8px);flex-direction:column;align-items:center;justify-content:center">
   <div id="rituelBgImage" style="display:none;position:absolute;inset:0;background-image:url('/assets/gratitude-bg.png');background-size:cover;background-position:center;z-index:0"></div>
-  <div id="rituelBgScrim" style="display:none;position:absolute;inset:0;background:linear-gradient(180deg,rgba(10,5,15,0.55) 0%,rgba(10,5,15,0.7) 60%,rgba(10,5,15,0.88) 100%);z-index:1"></div>
+  <div id="rituelSunGlow" style="display:none;position:absolute;top:24%;left:57%;width:260px;height:260px;margin-left:-130px;margin-top:-130px;border-radius:50%;background:radial-gradient(circle,rgba(255,230,170,0.55) 0%,rgba(255,200,120,0.22) 40%,transparent 70%);z-index:1;animation:rituelSunPulse 4.2s ease-in-out infinite"></div>
+  <div id="rituelWaterShine" style="display:none;position:absolute;top:56%;left:50%;width:70%;height:16%;margin-left:-35%;z-index:1;overflow:hidden;opacity:0.7">
+    <div style="position:absolute;inset:0;background:linear-gradient(90deg,transparent,rgba(255,220,160,0.5),transparent);width:60%;animation:rituelWaterSweep 5.5s ease-in-out infinite"></div>
+  </div>
+  <div id="rituelBgScrim" style="display:none;position:absolute;inset:0;background:linear-gradient(180deg,rgba(10,5,15,0.32) 0%,rgba(10,5,15,0.42) 55%,rgba(10,5,15,0.62) 100%);z-index:1"></div>
   <div id="rituelPetals" style="display:none;position:absolute;inset:0;z-index:2;pointer-events:none;overflow:hidden"></div>
   <button onclick="closeRituel()" style="position:absolute;top:20px;right:20px;background:rgba(255,255,255,0.1);border:none;color:white;width:40px;height:40px;border-radius:50%;font-size:1.2rem;cursor:pointer;z-index:2">✕</button>
 
@@ -20166,6 +20170,8 @@ function openSubscriptionModal(context) {
   @keyframes reveilTextIn { 0%{opacity:0;transform:translateY(14px)} 100%{opacity:1;transform:translateY(0)} }
   @keyframes reveilBreath { 0%,100%{transform:scale(1)} 50%{transform:scale(1.08)} }
   @keyframes rituelPetalFall { 0%{transform:translateY(0) translateX(0) rotate(0deg);opacity:0} 8%{opacity:0.85} 92%{opacity:0.7} 100%{transform:translateY(480px) translateX(var(--drift)) rotate(230deg);opacity:0} }
+  @keyframes rituelSunPulse { 0%,100%{opacity:0.75;transform:scale(1)} 50%{opacity:1;transform:scale(1.12)} }
+  @keyframes rituelWaterSweep { 0%{transform:translateX(-120%)} 100%{transform:translateX(220%)} }
   </style>
   <!-- ECRAN INTRO -->
   <div id="rituelIntroScreen" style="display:none;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:40px 32px;max-width:380px;width:100%;position:relative">
@@ -20597,9 +20603,13 @@ function _startRituelExercise() {
   var isGratitude = (window._currentRituelType === 'gratitude');
   var bgImage = document.getElementById('rituelBgImage');
   var bgScrim = document.getElementById('rituelBgScrim');
+  var sunGlow = document.getElementById('rituelSunGlow');
+  var waterShine = document.getElementById('rituelWaterShine');
   var petalsBox = document.getElementById('rituelPetals');
   if (bgImage) bgImage.style.display = isGratitude ? 'block' : 'none';
   if (bgScrim) bgScrim.style.display = isGratitude ? 'block' : 'none';
+  if (sunGlow) sunGlow.style.display = isGratitude ? 'block' : 'none';
+  if (waterShine) waterShine.style.display = isGratitude ? 'block' : 'none';
   if (petalsBox) {
     petalsBox.style.display = isGratitude ? 'block' : 'none';
     petalsBox.innerHTML = '';
@@ -22441,9 +22451,13 @@ function closeRituel() {
   _stopGratitudeFlame();
   var bgImageEl = document.getElementById('rituelBgImage');
   var bgScrimEl = document.getElementById('rituelBgScrim');
+  var sunGlowEl = document.getElementById('rituelSunGlow');
+  var waterShineEl = document.getElementById('rituelWaterShine');
   var petalsEl = document.getElementById('rituelPetals');
   if (bgImageEl) bgImageEl.style.display = 'none';
   if (bgScrimEl) bgScrimEl.style.display = 'none';
+  if (sunGlowEl) sunGlowEl.style.display = 'none';
+  if (waterShineEl) waterShineEl.style.display = 'none';
   if (petalsEl) { petalsEl.style.display = 'none'; petalsEl.innerHTML = ''; }
   var soirScreen = document.getElementById('rituelSoirScreen');
   if (soirScreen) soirScreen.style.display = 'none';
