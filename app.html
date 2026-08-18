@@ -20144,6 +20144,9 @@ function openSubscriptionModal(context) {
 
 </style>
 <div id="rituelOverlay" style="display:none;position:fixed;inset:0;z-index:9999;background:rgba(10,5,20,0.92);backdrop-filter:blur(8px);flex-direction:column;align-items:center;justify-content:center">
+  <div id="rituelBgImage" style="display:none;position:absolute;inset:0;background-image:url('/assets/gratitude-bg.png');background-size:cover;background-position:center;z-index:0"></div>
+  <div id="rituelBgScrim" style="display:none;position:absolute;inset:0;background:linear-gradient(180deg,rgba(10,5,15,0.55) 0%,rgba(10,5,15,0.7) 60%,rgba(10,5,15,0.88) 100%);z-index:1"></div>
+  <div id="rituelPetals" style="display:none;position:absolute;inset:0;z-index:2;pointer-events:none;overflow:hidden"></div>
   <button onclick="closeRituel()" style="position:absolute;top:20px;right:20px;background:rgba(255,255,255,0.1);border:none;color:white;width:40px;height:40px;border-radius:50%;font-size:1.2rem;cursor:pointer;z-index:2">✕</button>
 
   <style>
@@ -20162,6 +20165,7 @@ function openSubscriptionModal(context) {
   @keyframes reveilParticle { 0%{transform:translateY(0px) scale(1);opacity:0.9} 100%{transform:translateY(-120px) scale(0);opacity:0} }
   @keyframes reveilTextIn { 0%{opacity:0;transform:translateY(14px)} 100%{opacity:1;transform:translateY(0)} }
   @keyframes reveilBreath { 0%,100%{transform:scale(1)} 50%{transform:scale(1.08)} }
+  @keyframes rituelPetalFall { 0%{transform:translateY(0) translateX(0) rotate(0deg);opacity:0} 8%{opacity:0.85} 92%{opacity:0.7} 100%{transform:translateY(480px) translateX(var(--drift)) rotate(230deg);opacity:0} }
   </style>
   <!-- ECRAN INTRO -->
   <div id="rituelIntroScreen" style="display:none;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:40px 32px;max-width:380px;width:100%;position:relative">
@@ -20220,7 +20224,7 @@ function openSubscriptionModal(context) {
     <div style="color:rgba(255,255,255,0.6);font-size:1rem;margin-top:12px;letter-spacing:2px">PRÊT ?</div>
   </div>
     <!-- ECRAN EXERCICE -->
-  <div id="rituelExerciseScreen" style="display:none;flex-direction:column;align-items:center;justify-content:center">
+  <div id="rituelExerciseScreen" style="display:none;flex-direction:column;align-items:center;justify-content:center;position:relative;z-index:3">
   <div id="rituelTitle" style="color:white;font-size:1.1rem;font-weight:700;margin-bottom:8px;letter-spacing:1px"></div>
   <div id="rituelPhase" style="color:rgba(255,255,255,0.6);font-size:0.85rem;margin-bottom:24px;min-height:1.2em"></div>
   <div style="position:relative;width:300px;height:300px">
@@ -20591,6 +20595,27 @@ function _startRituelExercise() {
 
   var rc = document.getElementById('rituelHarmonyCanvas');
   var isGratitude = (window._currentRituelType === 'gratitude');
+  var bgImage = document.getElementById('rituelBgImage');
+  var bgScrim = document.getElementById('rituelBgScrim');
+  var petalsBox = document.getElementById('rituelPetals');
+  if (bgImage) bgImage.style.display = isGratitude ? 'block' : 'none';
+  if (bgScrim) bgScrim.style.display = isGratitude ? 'block' : 'none';
+  if (petalsBox) {
+    petalsBox.style.display = isGratitude ? 'block' : 'none';
+    petalsBox.innerHTML = '';
+    if (isGratitude) {
+      for (var pi = 0; pi < 16; pi++) {
+        var petal = document.createElement('div');
+        var startLeft = Math.random() * 100;
+        var dur = 8 + Math.random() * 7;
+        var delay = Math.random() * 12;
+        var size = 6 + Math.random() * 6;
+        var drift = (Math.random() * 80 - 40) + 'px';
+        petal.style.cssText = 'position:absolute;top:-20px;left:' + startLeft + '%;width:' + size + 'px;height:' + size + 'px;border-radius:60% 0 60% 0;background:linear-gradient(135deg,#ff9a8a,#e8556a);opacity:0;--drift:' + drift + ';animation:rituelPetalFall ' + dur + 's linear infinite;animation-delay:' + delay + 's';
+        petalsBox.appendChild(petal);
+      }
+    }
+  }
   var flameCanvas = document.getElementById('rituelGratitudeFlameCanvas');
   var lanternWrap = document.getElementById('rituelGratitudeLanternWrap');
   rc.style.display = isGratitude ? 'none' : 'block';
@@ -22414,6 +22439,12 @@ function closeRituel() {
   if (window._stopReveil) { window._stopReveil(); window._stopReveil = null; }
   if (window._stopSoir) { window._stopSoir(); window._stopSoir = null; }
   _stopGratitudeFlame();
+  var bgImageEl = document.getElementById('rituelBgImage');
+  var bgScrimEl = document.getElementById('rituelBgScrim');
+  var petalsEl = document.getElementById('rituelPetals');
+  if (bgImageEl) bgImageEl.style.display = 'none';
+  if (bgScrimEl) bgScrimEl.style.display = 'none';
+  if (petalsEl) { petalsEl.style.display = 'none'; petalsEl.innerHTML = ''; }
   var soirScreen = document.getElementById('rituelSoirScreen');
   if (soirScreen) soirScreen.style.display = 'none';
   var reveilScreen = document.getElementById('rituelReveilScreen');
