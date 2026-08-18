@@ -16871,7 +16871,7 @@ window.addEventListener('load', function() {
     <!-- Onglets -->
     <div style="display:flex;gap:0;margin-bottom:28px;border-bottom:2px solid #f0f0f0">
       <button onclick="switchFitnessTab('library')" id="ftab-library" style="padding:12px 24px;border:none;background:none;font-size:0.88rem;font-weight:700;color:var(--coral);border-bottom:2px solid var(--coral);margin-bottom:-2px;cursor:pointer;font-family:DM Sans,sans-serif">🏋️ Bibliothèque</button>
-      <button onclick="switchFitnessTab('program')" id="ftab-program" style="padding:12px 24px;border:none;background:none;font-size:0.88rem;font-weight:700;color:#aaa;border-bottom:2px solid transparent;margin-bottom:-2px;cursor:pointer;font-family:DM Sans,sans-serif">🤖 Mon programme IA</button>
+      <button onclick="switchFitnessTab('program')" id="ftab-program" style="padding:12px 24px;border:none;background:none;font-size:0.88rem;font-weight:700;color:#aaa;border-bottom:2px solid transparent;margin-bottom:-2px;cursor:pointer;font-family:DM Sans,sans-serif;display:inline-flex;align-items:center;gap:6px"><i class="ti ti-sparkles" style="font-size:15px"></i>Mon programme IA</button>
     </div>
 
     <!-- TAB: Bibliothèque -->
@@ -17053,14 +17053,14 @@ window.addEventListener('load', function() {
     <!-- TAB: Programme IA -->
     <div id="fitnessProgramTab" style="display:none">
       <div id="fitnessPlanRequired" style="display:none;background:#FFFCFA;border-radius:16px;padding:28px;text-align:center;margin-bottom:20px;border:1px solid rgba(255,154,108,0.3);box-shadow:0 0 0 1.5px rgba(255,154,108,0.22),0 14px 32px rgba(230,110,70,0.14)">
-        <div style="font-size:2rem;margin-bottom:12px">&#x1F512;</div>
+        <div style="width:56px;height:56px;border-radius:16px;background:linear-gradient(135deg,#1B1B2F,#232946);display:flex;align-items:center;justify-content:center;margin:0 auto 14px;box-shadow:0 8px 20px rgba(0,0,0,0.2)"><i class="ti ti-lock" style="font-size:26px;color:#fff"></i></div>
         <div style="font-size:1rem;font-weight:700;color:#2D2D2D;margin-bottom:8px">Fonctionnalité Premium</div>
         <div style="font-size:0.85rem;color:#aaa;margin-bottom:16px">Accédez à votre programme fitness personnalisé avec le plan Premium.</div>
         <button onclick="showView('pricing')" style="background:linear-gradient(135deg,var(--coral),var(--accent));color:white;border:none;border-radius:12px;padding:12px 28px;font-size:0.88rem;font-weight:700;cursor:pointer">Voir les offres</button>
       </div>
       <div id="fitnessContent">
         <div style="display:flex;gap:8px;overflow-x:auto;padding-bottom:8px;margin-bottom:16px">
-          <button onclick="selectFitnessDay(0)" id="fd-0" class="fd-btn" style="flex-shrink:0;padding:8px 14px;border-radius:20px;border:none;background:#2D2D2D;color:white;font-size:0.75rem;font-weight:700;cursor:pointer">Lun</button>
+          <button onclick="selectFitnessDay(0)" id="fd-0" class="fd-btn" style="flex-shrink:0;padding:8px 14px;border-radius:20px;border:none;background:linear-gradient(135deg,#1B1B2F,#232946);color:white;font-size:0.75rem;font-weight:700;cursor:pointer;box-shadow:0 3px 10px rgba(0,0,0,0.2)">Lun</button>
           <button onclick="selectFitnessDay(1)" id="fd-1" class="fd-btn" style="flex-shrink:0;padding:8px 14px;border-radius:20px;border:none;background:#f5f5f5;color:#aaa;font-size:0.75rem;font-weight:700;cursor:pointer">Mar</button>
           <button onclick="selectFitnessDay(2)" id="fd-2" class="fd-btn" style="flex-shrink:0;padding:8px 14px;border-radius:20px;border:none;background:#f5f5f5;color:#aaa;font-size:0.75rem;font-weight:700;cursor:pointer">Mer</button>
           <button onclick="selectFitnessDay(3)" id="fd-3" class="fd-btn" style="flex-shrink:0;padding:8px 14px;border-radius:20px;border:none;background:#f5f5f5;color:#aaa;font-size:0.75rem;font-weight:700;cursor:pointer">Jeu</button>
@@ -17080,14 +17080,15 @@ window.addEventListener('load', function() {
           </div>
         </div>
         <div id="fitnessLoading" style="display:none;text-align:center;padding:48px">
-          <div style="font-size:2rem;margin-bottom:12px">&#x23F3;</div>
+          <div style="width:44px;height:44px;border:3px solid rgba(255,107,107,0.15);border-top-color:var(--coral);border-radius:50%;animation:spin 1s linear infinite;margin:0 auto 16px"></div>
           <div style="font-size:0.95rem;color:#2D2D2D;font-weight:600">Mirella génère votre programme...</div>
         </div>
         <div id="fitnessExercises"></div>
-        <button onclick="generateFitnessProgram()" id="generateFitnessBtn" style="width:100%;background:#2D2D2D;color:white;border:none;border-radius:16px;padding:16px;font-size:0.9rem;font-weight:700;cursor:pointer;font-family:DM Sans,sans-serif;margin-top:8px">
-          &#x1F916; Générer mon programme fitness IA
+        <button onclick="generateFitnessProgram()" id="generateFitnessBtn" style="width:100%;background:linear-gradient(135deg,#1B1B2F,#232946);color:white;border:none;border-radius:16px;padding:16px;font-size:0.9rem;font-weight:700;cursor:pointer;font-family:DM Sans,sans-serif;margin-top:8px;box-shadow:0 8px 20px rgba(0,0,0,0.2);display:flex;align-items:center;justify-content:center;gap:8px">
+          <i class="ti ti-sparkles" style="font-size:17px"></i>Générer mon programme fitness IA
         </button>
       </div>
+      <div style="height:96px"></div>
     </div>
 
     <!-- Modal vidéo plein écran -->
