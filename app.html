@@ -20963,6 +20963,11 @@ function _startRituelExercise() {
   }
 
   rc.style.display = (isGratitude || isVisualisation || isAncrage || isPauseActive) ? 'none' : 'block';
+  var _customRitualActive = (isGratitude || isVisualisation || isAncrage || isPauseActive);
+  var _timerArcSvg = document.getElementById('rituelTimerArc');
+  if (_timerArcSvg && _timerArcSvg.parentElement) {
+    _timerArcSvg.parentElement.style.display = _customRitualActive ? 'none' : '';
+  }
   if (flameCanvas) flameCanvas.style.display = 'none';
   if (lanternWrap) lanternWrap.style.display = isGratitude ? 'flex' : 'none';
 
