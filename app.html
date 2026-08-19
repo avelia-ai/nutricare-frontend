@@ -20653,36 +20653,82 @@ function _startRituelExercise() {
   var isGratitude = (window._currentRituelType === 'gratitude');
   var isVisualisation = (window._currentRituelType === 'visualisation');
   var isAncrage = (window._currentRituelType === 'ancrage');
-  var ancrageWrap = document.getElementById('rituelAncrageWrap');
-  if (ancrageWrap) ancrageWrap.style.display = isAncrage ? 'block' : 'none';
+  var ancrageBg = document.getElementById('rituelAncrageBg');
+  if (ancrageBg) ancrageBg.style.display = isAncrage ? 'block' : 'none';
 
-  var _rtHaloR = [35, 45, 55, 65, 80];
+  var _rtRootPaths = [
+    'M200 185 Q170 210 145 250 Q125 285 118 330',
+    'M200 185 Q230 210 255 250 Q275 285 282 330',
+    'M200 185 Q188 225 178 270 Q170 310 168 355',
+    'M200 185 Q212 225 222 270 Q230 310 232 355',
+    'M200 185 Q200 230 200 275 Q200 320 200 365'
+  ];
+  var _rtRootEls = [];
+  var _rtDustBox = document.getElementById('rtDustGroup');
+  var _rtRootsGroup = document.getElementById('rtRootsGroup');
+  var _rtHaloR = [70, 85, 100, 115, 135];
+  var _rtGrowthRaf = null;
+  var _rtCurrentStepStart = 0;
+  var _rtCurrentStepDuration = 60;
+  var _rtCurrentRootIdx = 0;
 
-  function _rtSpawnDust(n) {
-    var box = document.getElementById('rtParticles');
-    if (!box) return;
-    for (var i = 0; i < n; i++) {
-      var c = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
-      var x = 140 + Math.random() * 40, y = 100 + Math.random() * 90;
-      c.setAttribute('cx', x); c.setAttribute('cy', y); c.setAttribute('r', 0.8 + Math.random());
-      c.setAttribute('fill', '#a8dcf0'); c.setAttribute('opacity', '0.6');
-      box.appendChild(c);
+  function _rtBuildRoot(idx) {
+    if (!_rtRootsGroup || _rtRootEls[idx]) return;
+    var p = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+    p.setAttribute('d', _rtRootPaths[idx]);
+    p.setAttribute('stroke', 'url(#rootG)');
+    p.setAttribute('stroke-width', '3');
+    p.setAttribute('fill', 'none');
+    p.setAttribute('stroke-linecap', 'round');
+    _rtRootsGroup.appendChild(p);
+    var len = p.getTotalLength();
+    p.style.strokeDasharray = len;
+    p.style.strokeDashoffset = len;
+    _rtRootEls[idx] = { el: p, len: len };
+  }
+
+  function _rtSpawnDustAt(pathEl, len) {
+    if (!_rtDustBox || !pathEl) return;
+    var pt = pathEl.getPointAtLength(Math.random() * len);
+    var c = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+    c.setAttribute('cx', pt.x); c.setAttribute('cy', pt.y); c.setAttribute('r', 1 + Math.random() * 1.2);
+    c.setAttribute('fill', '#bfeaf7'); c.setAttribute('opacity', '0.75');
+    _rtDustBox.appendChild(c);
+    setTimeout(function () { if (c.parentNode) c.parentNode.removeChild(c); }, 1800);
+  }
+
+  function _rtSetStepContext(stepIdx, stepDuration) {
+    _rtCurrentRootIdx = stepIdx;
+    _rtCurrentStepDuration = stepDuration || 60;
+    _rtCurrentStepStart = Date.now();
+    for (var i = 0; i <= stepIdx; i++) _rtBuildRoot(i);
+    var haloEl = document.getElementById('rtHaloCircle');
+    var coreEl = document.getElementById('rtCore');
+    if (haloEl) haloEl.setAttribute('r', _rtHaloR[Math.min(stepIdx, _rtHaloR.length - 1)]);
+    if (coreEl) coreEl.setAttribute('r', 10 + stepIdx * 2.5);
+  }
+
+  function _rtGrowthLoop() {
+    if (!isAncrage) return;
+    var current = _rtRootEls[_rtCurrentRootIdx];
+    if (current) {
+      var elapsedMs = Date.now() - _rtCurrentStepStart;
+      var progress = Math.min(elapsedMs / (_rtCurrentStepDuration * 1000), 1);
+      current.el.style.strokeDashoffset = current.len * (1 - progress);
+      if (Math.random() < 0.06) _rtSpawnDustAt(current.el, current.len * progress);
     }
+    _rtGrowthRaf = requestAnimationFrame(_rtGrowthLoop);
   }
 
   function _rtApplyState(stepIndex) {
-    var idx = Math.min(stepIndex, _rtHaloR.length - 1);
-    var haloEl = document.getElementById('rtHaloCircle');
-    if (!haloEl) return;
-    haloEl.setAttribute('r', _rtHaloR[idx]);
-    document.getElementById('rtCore').setAttribute('r', 9 + idx * 2);
-    for (var i = 1; i <= 5; i++) {
-      var rootEl = document.getElementById('root' + i);
-      if (rootEl) rootEl.style.opacity = i <= (idx + 1) ? 1 : 0;
-    }
-    _rtSpawnDust(3);
+    var step = (cfg.steps && cfg.steps[stepIndex]) || { duration: 60 };
+    _rtSetStepContext(stepIndex, step.duration);
   }
-  if (isAncrage) _rtApplyState(0);
+
+  if (isAncrage) {
+    _rtApplyState(0);
+    _rtGrowthLoop();
+  }
 
   var horizonWrap = document.getElementById('rituelHorizonWrap');
   if (horizonWrap) horizonWrap.style.display = isVisualisation ? 'block' : 'none';
