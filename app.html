@@ -22545,6 +22545,10 @@ function closeRituel() {
   if (bgScrimEl) bgScrimEl.style.display = 'none';
   if (sunGlowEl) sunGlowEl.style.display = 'none';
   if (petalsEl) { petalsEl.style.display = 'none'; petalsEl.innerHTML = ''; }
+  var visuBgVideoEl = document.getElementById('rituelVisuBgVideo');
+  if (visuBgVideoEl) { visuBgVideoEl.style.display = 'none'; visuBgVideoEl.pause(); }
+  var visuMusicEl = document.getElementById('rituelVisuMusic');
+  if (visuMusicEl) visuMusicEl.pause();
   var soirScreen = document.getElementById('rituelSoirScreen');
   if (soirScreen) soirScreen.style.display = 'none';
   var reveilScreen = document.getElementById('rituelReveilScreen');
