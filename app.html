@@ -20174,6 +20174,19 @@ function openSubscriptionModal(context) {
   </video>
   <div id="rituelVisuVignette" style="display:none;position:absolute;inset:0;z-index:1;pointer-events:none;background:radial-gradient(circle at 50% 45%,rgba(255,220,160,0.10),transparent 65%);transition:opacity 1.2s ease"></div>
   <div id="rituelVisuParticles" style="display:none;position:absolute;inset:0;z-index:1;pointer-events:none;overflow:hidden"></div>
+  <div id="rituelAncrageBg" style="display:none;position:absolute;inset:0;z-index:0;background:radial-gradient(circle at 50% 22%,#182a34,#08111a 72%)">
+    <svg id="rtSvg" viewBox="0 0 400 720" preserveAspectRatio="xMidYMid slice" style="width:100%;height:100%;display:block">
+      <defs>
+        <radialGradient id="rtHalo" cx="50%" cy="16%" r="30%"><stop offset="0%" stop-color="#7ec8e8" stop-opacity="0.4"/><stop offset="100%" stop-color="#7ec8e8" stop-opacity="0"/></radialGradient>
+        <linearGradient id="rootG" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#a8e0f5"/><stop offset="100%" stop-color="#3a6a82"/></linearGradient>
+      </defs>
+      <circle cx="200" cy="120" r="70" fill="url(#rtHalo)" id="rtHaloCircle" style="transition:r 1.2s ease"/>
+      <circle cx="200" cy="120" r="10" fill="#e8f6fc" id="rtCore" style="transition:r 1.2s ease"/>
+      <line x1="200" y1="130" x2="200" y2="185" stroke="#5a8ca8" stroke-width="3"/>
+      <g id="rtRootsGroup"></g>
+      <g id="rtDustGroup"></g>
+    </svg>
+  </div>
   <audio id="rituelVisuMusic" loop preload="none">
     <source src="/assets/visualisation-music.mp3" type="audio/mpeg">
   </audio>
