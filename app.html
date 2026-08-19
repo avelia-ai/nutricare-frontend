@@ -20169,6 +20169,9 @@ function openSubscriptionModal(context) {
   <video id="rituelBgImage" muted loop playsinline preload="none" style="display:none;position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0">
     <source src="/assets/gratitude-bg.mp4" type="video/mp4">
   </video>
+  <video id="rituelVisuBgVideo" muted loop playsinline preload="none" style="display:none;position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0">
+    <source src="/assets/visualisation-bg.mp4" type="video/mp4">
+  </video>
   <div id="rituelSunGlow" style="display:none;position:absolute;top:24%;left:57%;width:260px;height:260px;margin-left:-130px;margin-top:-130px;border-radius:50%;background:radial-gradient(circle,rgba(255,230,170,0.55) 0%,rgba(255,200,120,0.22) 40%,transparent 70%);z-index:1;animation:rituelSunPulse 4.2s ease-in-out infinite"></div>
   <div id="rituelBgScrim" style="display:none;position:absolute;inset:0;background:linear-gradient(180deg,rgba(10,5,15,0.16) 0%,rgba(10,5,15,0.24) 55%,rgba(10,5,15,0.48) 100%);z-index:1"></div>
   <div id="rituelPetals" style="display:none;position:absolute;inset:0;z-index:2;pointer-events:none;overflow:hidden"></div>
@@ -20675,6 +20678,14 @@ function _startRituelExercise() {
     if (isGratitude) { bgImage.currentTime = 0; bgImage.play().catch(function(){}); }
     else { bgImage.pause(); }
   }
+  var visuBgVideo = document.getElementById('rituelVisuBgVideo');
+  if (visuBgVideo) {
+    visuBgVideo.style.display = isVisualisation ? 'block' : 'none';
+    if (isVisualisation) { visuBgVideo.currentTime = 0; visuBgVideo.play().catch(function(){}); }
+    else { visuBgVideo.pause(); }
+  }
+  if (bgScrim) bgScrim.style.display = (isGratitude || isVisualisation) ? 'block' : 'none';
+  if (sunGlow) sunGlow.style.display = isGratitude ? 'block' : 'none';
   if (bgScrim) bgScrim.style.display = isGratitude ? 'block' : 'none';
   if (sunGlow) sunGlow.style.display = isGratitude ? 'block' : 'none';
   if (petalsBox) {
