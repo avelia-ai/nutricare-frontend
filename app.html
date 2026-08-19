@@ -20866,7 +20866,69 @@ function _startRituelExercise() {
   }
   var flameCanvas = document.getElementById('rituelGratitudeFlameCanvas');
   var lanternWrap = document.getElementById('rituelGratitudeLanternWrap');
-  rc.style.display = (isGratitude || isVisualisation || isAncrage) ? 'none' : 'block';
+  var isPauseActive = (window._currentRituelType === 'pause_active');
+  var pauseActiveBg = document.getElementById('rituelPauseActiveBg');
+  if (pauseActiveBg) pauseActiveBg.style.display = isPauseActive ? 'block' : 'none';
+
+  var _paFillWidths = [0, 80, 160, 240];
+  var _paCurrentStepStart = 0;
+  var _paCurrentStepDuration = 40;
+  var _paCurrentStepIdx = 0;
+
+  function _paSpawnAmbient() {
+    var box = document.getElementById('paAmbientGroup');
+    if (!box) return;
+    box.innerHTML = '';
+    for (var i = 0; i < 18; i++) {
+      var c = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+      var x = Math.random() * 400, y = Math.random() * 800;
+      var r = 0.6 + Math.random() * 1.3;
+      c.setAttribute('cx', x); c.setAttribute('cy', y); c.setAttribute('r', r);
+      c.setAttribute('fill', '#ffcf9a'); c.setAttribute('opacity', (0.12 + Math.random() * 0.3).toFixed(2));
+      var anim = document.createElementNS('http://www.w3.org/2000/svg', 'animate');
+      anim.setAttribute('attributeName', 'opacity');
+      anim.setAttribute('values', '0.08;0.4;0.08');
+      anim.setAttribute('dur', (3 + Math.random() * 3) + 's');
+      anim.setAttribute('repeatCount', 'indefinite');
+      c.appendChild(anim);
+      box.appendChild(c);
+    }
+  }
+
+  function _paSetStepContext(stepIdx, stepDuration) {
+    _paCurrentStepIdx = stepIdx;
+    _paCurrentStepDuration = stepDuration || 40;
+    _paCurrentStepStart = Date.now();
+  }
+
+  function _paGrowthLoop() {
+    if (!isPauseActive) return;
+    var fillEl = document.getElementById('paFillRect');
+    var pctEl = document.getElementById('paPercent');
+    if (fillEl) {
+      var elapsedMs = Date.now() - _paCurrentStepStart;
+      var stepProgress = Math.min(elapsedMs / (_paCurrentStepDuration * 1000), 1);
+      var fromW = _paFillWidths[_paCurrentStepIdx];
+      var toW = _paFillWidths[_paCurrentStepIdx + 1];
+      var currentW = fromW + (toW - fromW) * stepProgress;
+      fillEl.setAttribute('width', currentW);
+      if (pctEl) pctEl.textContent = Math.round((currentW / 240) * 100) + '%';
+    }
+    window._paGrowthRaf = requestAnimationFrame(_paGrowthLoop);
+  }
+
+  function _paApplyState(stepIndex) {
+    var step = (cfg.steps && cfg.steps[stepIndex]) || { duration: 40 };
+    _paSetStepContext(stepIndex, step.duration);
+  }
+
+  if (isPauseActive) {
+    _paSpawnAmbient();
+    _paApplyState(0);
+    _paGrowthLoop();
+  }
+
+  rc.style.display = (isGratitude || isVisualisation || isAncrage || isPauseActive) ? 'none' : 'block';
   if (flameCanvas) flameCanvas.style.display = 'none';
   if (lanternWrap) lanternWrap.style.display = isGratitude ? 'flex' : 'none';
 
@@ -20921,7 +20983,7 @@ function _startRituelExercise() {
   var CYCLE = 8000;
   function animLoop() {
     if (!_rituelAnimRunning) return;
-    if (isGratitude || isVisualisation || isAncrage) {
+    if (isGratitude || isVisualisation || isAncrage || isPauseActive) {
       requestAnimationFrame(animLoop);
       return;
     }
@@ -20949,7 +21011,7 @@ function _startRituelExercise() {
     document.getElementById('rituelPhase').textContent = Math.floor(elapsed/60) + 'min ' + (elapsed%60) + 's';
     arc.style.strokeDashoffset = circumference * (1 - elapsed / totalDuration);
     stepElapsed++; elapsed++;
-    if (stepElapsed >= step.duration) { stepElapsed=0; stepIdx++; if (isGratitude) _lgApplyState(stepIdx); if (isVisualisation) _hzApplyState(stepIdx); if (isAncrage) _rtApplyState(stepIdx); }
+    if (stepElapsed >= step.duration) { stepElapsed=0; stepIdx++; if (isGratitude) _lgApplyState(stepIdx); if (isVisualisation) _hzApplyState(stepIdx); if (isAncrage) _rtApplyState(stepIdx); if (isPauseActive) _paApplyState(stepIdx); }
     if (elapsed >= totalDuration) {
       _rituelAnimRunning = false;
       finishRituel(cfg.pts);
@@ -22706,6 +22768,9 @@ function closeRituel() {
   if (window._rtGrowthRaf) { cancelAnimationFrame(window._rtGrowthRaf); window._rtGrowthRaf = null; }
   var ancrageMusicEl = document.getElementById('rituelAncrageMusic');
   if (ancrageMusicEl) ancrageMusicEl.pause();
+  if (window._paGrowthRaf) { cancelAnimationFrame(window._paGrowthRaf); window._paGrowthRaf = null; }
+  var pauseActiveBgEl = document.getElementById('rituelPauseActiveBg');
+  if (pauseActiveBgEl) pauseActiveBgEl.style.display = 'none';
   var ancrageBgEl = document.getElementById('rituelAncrageBg');
   if (ancrageBgEl) {
     ancrageBgEl.style.display = 'none';
