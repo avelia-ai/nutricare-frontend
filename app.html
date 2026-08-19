@@ -14304,6 +14304,18 @@ async function saveHealthLog() {
     hydration_liters: parseFloat(document.getElementById('hHydration').value) || null,
     notes: document.getElementById('hNotes').value || null
   };
+  // Preserve la mesure cardio existante du jour pour eviter qu'elle soit ecrasee par cette sauvegarde
+  try {
+    const _existingRes = await fetch(`${BACKEND_URL}/api/health/logs?days=90`, { headers: { 'Authorization': `Bearer ${authToken}` } });
+    if (_existingRes.ok) {
+      const _existingData = await _existingRes.json();
+      const _existingLogs = _existingData.logs || _existingData || [];
+      const _existingLog = _existingLogs.find(function(l) { return l.date && l.date.startsWith(selectedDate); });
+      if (_existingLog && _existingLog.frequence_cardiaque) {
+        data.frequence_cardiaque = _existingLog.frequence_cardiaque;
+      }
+    }
+  } catch (ePreserveCardio) { console.error('preserve cardio failed:', ePreserveCardio); }
   try {
     const res = await fetch(`${BACKEND_URL}/api/health/log`, {
       method: 'POST',
