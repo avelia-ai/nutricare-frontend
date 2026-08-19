@@ -20201,6 +20201,9 @@ function openSubscriptionModal(context) {
   <audio id="rituelAncrageMusic" loop preload="none">
     <source src="/assets/ancrage-music.mp3" type="audio/mpeg">
   </audio>
+  <audio id="rituelPauseActiveMusic" loop preload="none">
+    <source src="/assets/pause-active-music.mp3" type="audio/mpeg">
+  </audio>
   <div id="rituelPauseActiveBg" style="display:none;position:absolute;inset:0;z-index:0;background:radial-gradient(circle at 50% 38%,#3a2414,#120a06 72%)">
     <svg id="paSvg" viewBox="0 0 400 800" style="width:100%;height:100%;display:block">
       <defs>
@@ -20659,6 +20662,10 @@ function launchRituelExercise() {
     var ancrageMusic = document.getElementById('rituelAncrageMusic');
     if (ancrageMusic) { ancrageMusic.currentTime = 0; ancrageMusic.volume = 0.5; ancrageMusic.play().catch(function(){}); }
   }
+  if (window._currentRituelType === 'pause_active') {
+    var paMusic = document.getElementById('rituelPauseActiveMusic');
+    if (paMusic) { paMusic.currentTime = 0; paMusic.volume = 0.5; paMusic.play().catch(function(){}); }
+  }
 
   // Décompte avant exercice
   document.getElementById('rituelIntroScreen').style.display = 'none';
@@ -20890,7 +20897,7 @@ function _startRituelExercise() {
   var pauseActiveBg = document.getElementById('rituelPauseActiveBg');
   if (pauseActiveBg) pauseActiveBg.style.display = isPauseActive ? 'block' : 'none';
 
-  var _paFillWidths = [0, 80, 160, 240];
+  var _paFillWidths = [0, 75.3, 150.6, 226];
   var _paCurrentStepStart = 0;
   var _paCurrentStepDuration = 40;
   var _paCurrentStepIdx = 0;
@@ -20932,7 +20939,9 @@ function _startRituelExercise() {
       var toW = _paFillWidths[_paCurrentStepIdx + 1];
       var currentW = fromW + (toW - fromW) * stepProgress;
       fillEl.setAttribute('width', currentW);
-      if (pctEl) pctEl.textContent = Math.round((currentW / 240) * 100) + '%';
+      var fillTopEl = document.getElementById('paFillTopRect');
+      if (fillTopEl) fillTopEl.setAttribute('width', currentW);
+      if (pctEl) pctEl.textContent = Math.round((currentW / 226) * 100) + '%';
     }
     window._paGrowthRaf = requestAnimationFrame(_paGrowthLoop);
   }
@@ -22791,6 +22800,8 @@ function closeRituel() {
   if (window._paGrowthRaf) { cancelAnimationFrame(window._paGrowthRaf); window._paGrowthRaf = null; }
   var pauseActiveBgEl = document.getElementById('rituelPauseActiveBg');
   if (pauseActiveBgEl) pauseActiveBgEl.style.display = 'none';
+  var paMusicEl = document.getElementById('rituelPauseActiveMusic');
+  if (paMusicEl) paMusicEl.pause();
   var ancrageBgEl = document.getElementById('rituelAncrageBg');
   if (ancrageBgEl) {
     ancrageBgEl.style.display = 'none';
