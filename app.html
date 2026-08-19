@@ -7695,43 +7695,7 @@ function switchLang(lang) {
     </div>
   </div>
 
-  <!-- POPUP CONSEIL CARDIO -->
-  <div id="cardioAdvicePopup" style="display:none;position:fixed;inset:0;z-index:99999;background:rgba(20,10,15,0.6);backdrop-filter:blur(6px);align-items:center;justify-content:center;padding:20px;animation:cardioPopupFadeIn 0.3s ease">
-    <div style="background:#FFFCFA;border-radius:24px;overflow:hidden;max-width:360px;width:100%;box-shadow:0 24px 60px rgba(0,0,0,0.35);animation:cardioPopupScaleIn 0.35s cubic-bezier(0.34,1.56,0.64,1)">
-      <div style="background:linear-gradient(135deg,var(--coral),var(--accent));padding:22px 22px 46px;position:relative;overflow:hidden">
-        <button onclick="closeCardioAdvicePopup()" style="position:absolute;top:14px;right:14px;background:rgba(255,255,255,0.2);border:none;color:white;width:30px;height:30px;border-radius:50%;font-size:1rem;cursor:pointer;z-index:2">✕</button>
-        <div style="position:absolute;top:-20px;right:-10px;width:100px;height:100px;background:radial-gradient(circle,rgba(255,255,255,0.16),transparent 70%);pointer-events:none"></div>
-        <div style="font-size:0.68rem;color:rgba(255,255,255,0.85);font-weight:700;letter-spacing:0.06em;text-transform:uppercase;margin-bottom:4px;position:relative;z-index:1">Résultat de la mesure</div>
-        <div style="display:flex;align-items:baseline;gap:8px;position:relative;z-index:1">
-          <span id="cardioAdviceBpm" style="font-size:2.6rem;font-weight:800;color:white;line-height:1">--</span>
-          <span style="font-size:0.95rem;color:rgba(255,255,255,0.85);font-weight:600">bpm</span>
-        </div>
-      </div>
-      <div style="margin:-26px 16px 0;position:relative;background:white;border-radius:18px;box-shadow:0 4px 16px rgba(0,0,0,0.06);overflow:hidden">
-        <div style="width:100%;aspect-ratio:16/9;background:#000">
-          <video autoplay muted loop playsinline style="width:100%;height:100%;object-fit:cover;display:block">
-            <source src="/assets/rituels-fox.mp4" type="video/mp4">
-          </video>
-        </div>
-        <div style="padding:14px 18px">
-          <div id="cardioAdviceBadge" style="font-size:0.72rem;font-weight:700;padding:6px 14px;border-radius:14px;display:inline-block">Normal</div>
-        </div>
-      </div>
-      <div style="padding:16px 22px 22px">
-        <p id="cardioAdviceText" style="font-size:0.85rem;color:#2D2D2D;line-height:1.55;margin:0 0 14px"></p>
-        <div style="background:#FFF7F0;border-radius:14px;padding:14px;display:flex;gap:10px;align-items:flex-start">
-          <span style="font-size:1.1rem;flex-shrink:0;line-height:1">💡</span>
-          <p id="cardioAdviceTip" style="font-size:0.78rem;color:#7a6a5a;line-height:1.5;margin:0"></p>
-        </div>
-        <p style="font-size:0.65rem;color:#bbb;line-height:1.4;margin:14px 0 0;text-align:center">Cette mesure est indicative et ne remplace pas un avis médical.</p>
-        <button onclick="closeCardioAdvicePopup()" style="width:100%;margin-top:16px;background:linear-gradient(135deg,var(--coral),var(--accent));color:white;border:none;border-radius:16px;padding:13px;font-size:0.88rem;font-weight:700;cursor:pointer">Compris</button>
-      </div>
-    </div>
-  </div>
-  <style>
-  @keyframes cardioPopupFadeIn { from{opacity:0} to{opacity:1} }
-  @keyframes cardioPopupScaleIn { from{opacity:0;transform:scale(0.9) translateY(10px)} to{opacity:1;transform:scale(1) translateY(0)} }
-  </style>
+
 
   <!-- SOMMEIL -->
   <div id="sommeilCard" data-suivi-tab="sommeil" style="display:none;background:#FFFCFA;border-radius:16px;margin-bottom:16px;overflow:hidden;box-shadow:0 0 0 1.5px rgba(255,154,108,0.22),0 14px 32px rgba(230,110,70,0.14)">
@@ -24252,6 +24216,43 @@ document.addEventListener('DOMContentLoaded', function() {
   _pcVideoMutObserver.observe(document.body, { childList: true, subtree: true });
 })();
 </script>
+  <!-- POPUP CONSEIL CARDIO -->
+  <div id="cardioAdvicePopup" style="display:none;position:fixed;inset:0;z-index:99999;background:rgba(20,10,15,0.6);backdrop-filter:blur(6px);align-items:center;justify-content:center;padding:20px;animation:cardioPopupFadeIn 0.3s ease">
+    <div style="background:#FFFCFA;border-radius:24px;overflow:hidden;max-width:360px;width:100%;box-shadow:0 24px 60px rgba(0,0,0,0.35);animation:cardioPopupScaleIn 0.35s cubic-bezier(0.34,1.56,0.64,1)">
+      <div style="background:linear-gradient(135deg,var(--coral),var(--accent));padding:22px 22px 46px;position:relative;overflow:hidden">
+        <button onclick="closeCardioAdvicePopup()" style="position:absolute;top:14px;right:14px;background:rgba(255,255,255,0.2);border:none;color:white;width:30px;height:30px;border-radius:50%;font-size:1rem;cursor:pointer;z-index:2">✕</button>
+        <div style="position:absolute;top:-20px;right:-10px;width:100px;height:100px;background:radial-gradient(circle,rgba(255,255,255,0.16),transparent 70%);pointer-events:none"></div>
+        <div style="font-size:0.68rem;color:rgba(255,255,255,0.85);font-weight:700;letter-spacing:0.06em;text-transform:uppercase;margin-bottom:4px;position:relative;z-index:1">Résultat de la mesure</div>
+        <div style="display:flex;align-items:baseline;gap:8px;position:relative;z-index:1">
+          <span id="cardioAdviceBpm" style="font-size:2.6rem;font-weight:800;color:white;line-height:1">--</span>
+          <span style="font-size:0.95rem;color:rgba(255,255,255,0.85);font-weight:600">bpm</span>
+        </div>
+      </div>
+      <div style="margin:-26px 16px 0;position:relative;background:white;border-radius:18px;box-shadow:0 4px 16px rgba(0,0,0,0.06);overflow:hidden">
+        <div style="width:100%;aspect-ratio:16/9;background:#000">
+          <video autoplay muted loop playsinline style="width:100%;height:100%;object-fit:cover;display:block">
+            <source src="/assets/rituels-fox.mp4" type="video/mp4">
+          </video>
+        </div>
+        <div style="padding:14px 18px">
+          <div id="cardioAdviceBadge" style="font-size:0.72rem;font-weight:700;padding:6px 14px;border-radius:14px;display:inline-block">Normal</div>
+        </div>
+      </div>
+      <div style="padding:16px 22px 22px">
+        <p id="cardioAdviceText" style="font-size:0.85rem;color:#2D2D2D;line-height:1.55;margin:0 0 14px"></p>
+        <div style="background:#FFF7F0;border-radius:14px;padding:14px;display:flex;gap:10px;align-items:flex-start">
+          <span style="font-size:1.1rem;flex-shrink:0;line-height:1">💡</span>
+          <p id="cardioAdviceTip" style="font-size:0.78rem;color:#7a6a5a;line-height:1.5;margin:0"></p>
+        </div>
+        <p style="font-size:0.65rem;color:#bbb;line-height:1.4;margin:14px 0 0;text-align:center">Cette mesure est indicative et ne remplace pas un avis médical.</p>
+        <button onclick="closeCardioAdvicePopup()" style="width:100%;margin-top:16px;background:linear-gradient(135deg,var(--coral),var(--accent));color:white;border:none;border-radius:16px;padding:13px;font-size:0.88rem;font-weight:700;cursor:pointer">Compris</button>
+      </div>
+    </div>
+  </div>
+  <style>
+  @keyframes cardioPopupFadeIn { from{opacity:0} to{opacity:1} }
+  @keyframes cardioPopupScaleIn { from{opacity:0;transform:scale(0.9) translateY(10px)} to{opacity:1;transform:scale(1) translateY(0)} }
+  </style>
 </body>
 </html>
 <div style="display:none">build-trigger</div>
