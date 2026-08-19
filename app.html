@@ -20667,7 +20667,7 @@ function _startRituelExercise() {
   var _rtDustBox = document.getElementById('rtDustGroup');
   var _rtRootsGroup = document.getElementById('rtRootsGroup');
   var _rtHaloR = [70, 85, 100, 115, 135];
-  var _rtGrowthRaf = null;
+  window._rtGrowthRaf = null;
   var _rtCurrentStepStart = 0;
   var _rtCurrentStepDuration = 60;
   var _rtCurrentRootIdx = 0;
@@ -20717,7 +20717,7 @@ function _startRituelExercise() {
       current.el.style.strokeDashoffset = current.len * (1 - progress);
       if (Math.random() < 0.06) _rtSpawnDustAt(current.el, current.len * progress);
     }
-    _rtGrowthRaf = requestAnimationFrame(_rtGrowthLoop);
+    window._rtGrowthRaf = requestAnimationFrame(_rtGrowthLoop);
   }
 
   function _rtApplyState(stepIndex) {
@@ -22650,6 +22650,15 @@ function closeRituel() {
   var visuParticlesEl = document.getElementById('rituelVisuParticles');
   if (visuVignetteEl) visuVignetteEl.style.display = 'none';
   if (visuParticlesEl) { visuParticlesEl.style.display = 'none'; visuParticlesEl.innerHTML = ''; }
+  if (window._rtGrowthRaf) { cancelAnimationFrame(window._rtGrowthRaf); window._rtGrowthRaf = null; }
+  var ancrageBgEl = document.getElementById('rituelAncrageBg');
+  if (ancrageBgEl) {
+    ancrageBgEl.style.display = 'none';
+    var rootsGroupEl = document.getElementById('rtRootsGroup');
+    var dustGroupEl = document.getElementById('rtDustGroup');
+    if (rootsGroupEl) rootsGroupEl.innerHTML = '';
+    if (dustGroupEl) dustGroupEl.innerHTML = '';
+  }
   var soirScreen = document.getElementById('rituelSoirScreen');
   if (soirScreen) soirScreen.style.display = 'none';
   var reveilScreen = document.getElementById('rituelReveilScreen');
