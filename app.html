@@ -20174,16 +20174,24 @@ function openSubscriptionModal(context) {
   </video>
   <div id="rituelVisuVignette" style="display:none;position:absolute;inset:0;z-index:1;pointer-events:none;background:radial-gradient(circle at 50% 45%,rgba(255,220,160,0.10),transparent 65%);transition:opacity 1.2s ease"></div>
   <div id="rituelVisuParticles" style="display:none;position:absolute;inset:0;z-index:1;pointer-events:none;overflow:hidden"></div>
-  <div id="rituelAncrageBg" style="display:none;position:absolute;inset:0;z-index:0;background:radial-gradient(circle at 50% 22%,#182a34,#08111a 72%)">
-    <svg id="rtSvg" viewBox="0 0 400 720" preserveAspectRatio="xMidYMid slice" style="width:100%;height:100%;display:block">
+  <div id="rituelAncrageBg" style="display:none;position:absolute;inset:0;z-index:0;background:radial-gradient(circle at 50% 38%,#1c2f3a,#08111a 72%)">
+    <svg id="rtSvg" viewBox="0 0 400 800" preserveAspectRatio="xMidYMid slice" style="width:100%;height:100%;display:block">
       <defs>
-        <radialGradient id="rtHalo" cx="50%" cy="16%" r="30%"><stop offset="0%" stop-color="#7ec8e8" stop-opacity="0.4"/><stop offset="100%" stop-color="#7ec8e8" stop-opacity="0"/></radialGradient>
-        <linearGradient id="rootG" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#a8e0f5"/><stop offset="100%" stop-color="#3a6a82"/></linearGradient>
+        <radialGradient id="rtHalo" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#a8e0f5" stop-opacity="0.45"/><stop offset="100%" stop-color="#a8e0f5" stop-opacity="0"/></radialGradient>
+        <linearGradient id="rootG0" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#a8e0f5"/><stop offset="100%" stop-color="#3a6a82"/></linearGradient>
+        <linearGradient id="rootG1" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#a8f5d0"/><stop offset="100%" stop-color="#3a8266"/></linearGradient>
+        <linearGradient id="rootG2" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#f5d8a8"/><stop offset="100%" stop-color="#82653a"/></linearGradient>
+        <linearGradient id="rootG3" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#e8b8f0"/><stop offset="100%" stop-color="#764a82"/></linearGradient>
+        <linearGradient id="rootG4" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#ffe0a0"/><stop offset="100%" stop-color="#a87a3a"/></linearGradient>
+        <filter id="rtGlow" x="-80%" y="-80%" width="260%" height="260%"><feGaussianBlur stdDeviation="3" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
       </defs>
-      <circle cx="200" cy="120" r="70" fill="url(#rtHalo)" id="rtHaloCircle" style="transition:r 1.2s ease"/>
-      <circle cx="200" cy="120" r="10" fill="#e8f6fc" id="rtCore" style="transition:r 1.2s ease"/>
-      <line x1="200" y1="130" x2="200" y2="185" stroke="#5a8ca8" stroke-width="3"/>
-      <g id="rtRootsGroup"></g>
+      <g id="rtAmbientGroup"></g>
+      <g id="rtSceneGroup" transform="translate(0,230)">
+        <circle cx="200" cy="0" r="70" fill="url(#rtHalo)" id="rtHaloCircle" style="transition:r 1.2s ease" opacity="0.9"/>
+        <circle cx="200" cy="0" r="10" fill="#e8f6fc" id="rtCore" style="transition:r 1.2s ease"/>
+        <line x1="200" y1="10" x2="200" y2="65" stroke="#5a8ca8" stroke-width="3"/>
+        <g id="rtRootsGroup" filter="url(#rtGlow)"></g>
+      </g>
       <g id="rtDustGroup"></g>
     </svg>
   </div>
@@ -20657,17 +20665,18 @@ function _startRituelExercise() {
   if (ancrageBg) ancrageBg.style.display = isAncrage ? 'block' : 'none';
 
   var _rtRootPaths = [
-    'M200 185 Q170 210 145 250 Q125 285 118 330',
-    'M200 185 Q230 210 255 250 Q275 285 282 330',
-    'M200 185 Q188 225 178 270 Q170 310 168 355',
-    'M200 185 Q212 225 222 270 Q230 310 232 355',
-    'M200 185 Q200 230 200 275 Q200 320 200 365'
+    'M200 65 C170 90 152 130 148 175 C145 215 130 260 118 305',
+    'M200 65 C230 90 248 130 252 175 C255 215 270 260 282 305',
+    'M200 65 C195 105 185 150 180 195 C176 235 172 280 168 325',
+    'M200 65 C205 105 215 150 220 195 C224 235 228 280 232 325',
+    'M200 65 C200 110 200 155 200 200 C200 240 200 285 200 330'
   ];
+  var _rtRootColors = ['url(#rootG0)', 'url(#rootG1)', 'url(#rootG2)', 'url(#rootG3)', 'url(#rootG4)'];
   var _rtRootEls = [];
   var _rtDustBox = document.getElementById('rtDustGroup');
   var _rtRootsGroup = document.getElementById('rtRootsGroup');
   var _rtHaloR = [70, 85, 100, 115, 135];
-  window._rtGrowthRaf = null;
+  var _rtGrowthRaf = null;
   var _rtCurrentStepStart = 0;
   var _rtCurrentStepDuration = 60;
   var _rtCurrentRootIdx = 0;
@@ -20676,8 +20685,8 @@ function _startRituelExercise() {
     if (!_rtRootsGroup || _rtRootEls[idx]) return;
     var p = document.createElementNS('http://www.w3.org/2000/svg', 'path');
     p.setAttribute('d', _rtRootPaths[idx]);
-    p.setAttribute('stroke', 'url(#rootG)');
-    p.setAttribute('stroke-width', '3');
+    p.setAttribute('stroke', _rtRootColors[idx]);
+    p.setAttribute('stroke-width', '3.5');
     p.setAttribute('fill', 'none');
     p.setAttribute('stroke-linecap', 'round');
     _rtRootsGroup.appendChild(p);
@@ -20691,7 +20700,7 @@ function _startRituelExercise() {
     if (!_rtDustBox || !pathEl) return;
     var pt = pathEl.getPointAtLength(Math.random() * len);
     var c = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
-    c.setAttribute('cx', pt.x); c.setAttribute('cy', pt.y); c.setAttribute('r', 1 + Math.random() * 1.2);
+    c.setAttribute('cx', pt.x); c.setAttribute('cy', pt.y + 230); c.setAttribute('r', 1 + Math.random() * 1.2);
     c.setAttribute('fill', '#bfeaf7'); c.setAttribute('opacity', '0.75');
     _rtDustBox.appendChild(c);
     setTimeout(function () { if (c.parentNode) c.parentNode.removeChild(c); }, 1800);
@@ -20725,7 +20734,28 @@ function _startRituelExercise() {
     _rtSetStepContext(stepIndex, step.duration);
   }
 
+  function _rtSpawnAmbient() {
+    var box = document.getElementById('rtAmbientGroup');
+    if (!box) return;
+    box.innerHTML = '';
+    for (var i = 0; i < 22; i++) {
+      var c = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+      var x = Math.random() * 400, y = Math.random() * 800;
+      var r = 0.6 + Math.random() * 1.4;
+      c.setAttribute('cx', x); c.setAttribute('cy', y); c.setAttribute('r', r);
+      c.setAttribute('fill', '#8fd0e8'); c.setAttribute('opacity', (0.15 + Math.random() * 0.35).toFixed(2));
+      var anim = document.createElementNS('http://www.w3.org/2000/svg', 'animate');
+      anim.setAttribute('attributeName', 'opacity');
+      anim.setAttribute('values', '0.1;0.5;0.1');
+      anim.setAttribute('dur', (3 + Math.random() * 3) + 's');
+      anim.setAttribute('repeatCount', 'indefinite');
+      c.appendChild(anim);
+      box.appendChild(c);
+    }
+  }
+
   if (isAncrage) {
+    _rtSpawnAmbient();
     _rtApplyState(0);
     _rtGrowthLoop();
   }
