@@ -20172,6 +20172,9 @@ function openSubscriptionModal(context) {
   <video id="rituelVisuBgVideo" muted loop playsinline preload="none" style="display:none;position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0">
     <source src="/assets/visualisation-bg.mp4" type="video/mp4">
   </video>
+  <audio id="rituelVisuMusic" loop preload="none">
+    <source src="/assets/visualisation-music.mp3" type="audio/mpeg">
+  </audio>
   <div id="rituelSunGlow" style="display:none;position:absolute;top:24%;left:57%;width:260px;height:260px;margin-left:-130px;margin-top:-130px;border-radius:50%;background:radial-gradient(circle,rgba(255,230,170,0.55) 0%,rgba(255,200,120,0.22) 40%,transparent 70%);z-index:1;animation:rituelSunPulse 4.2s ease-in-out infinite"></div>
   <div id="rituelBgScrim" style="display:none;position:absolute;inset:0;background:linear-gradient(180deg,rgba(10,5,15,0.16) 0%,rgba(10,5,15,0.24) 55%,rgba(10,5,15,0.48) 100%);z-index:1"></div>
   <div id="rituelPetals" style="display:none;position:absolute;inset:0;z-index:2;pointer-events:none;overflow:hidden"></div>
@@ -20584,6 +20587,11 @@ function launchRituelExercise() {
   var cfg = window._currentRituelCfg;
   if (!cfg) return;
 
+  if (window._currentRituelType === 'visualisation') {
+    var visuMusic = document.getElementById('rituelVisuMusic');
+    if (visuMusic) { visuMusic.currentTime = 0; visuMusic.volume = 0.55; visuMusic.play().catch(function(){}); }
+  }
+
   // Décompte avant exercice
   document.getElementById('rituelIntroScreen').style.display = 'none';
   var cdScreen = document.getElementById('rituelCountdownScreen');
@@ -20683,6 +20691,10 @@ function _startRituelExercise() {
     visuBgVideo.style.display = isVisualisation ? 'block' : 'none';
     if (isVisualisation) { visuBgVideo.currentTime = 0; visuBgVideo.play().catch(function(){}); }
     else { visuBgVideo.pause(); }
+  }
+  if (!isVisualisation) {
+    var visuMusicStop = document.getElementById('rituelVisuMusic');
+    if (visuMusicStop) visuMusicStop.pause();
   }
   if (bgScrim) bgScrim.style.display = (isGratitude || isVisualisation) ? 'block' : 'none';
   if (sunGlow) sunGlow.style.display = isGratitude ? 'block' : 'none';
