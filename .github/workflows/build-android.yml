@@ -6,6 +6,7 @@ on:
       - 'app.html'
       - 'www/**'
       - 'android/**'
+      - 'assets/**'
   workflow_dispatch:
 jobs:
   build:
@@ -22,11 +23,16 @@ jobs:
         run: |
           cp -f app.html www/app.html
           cp -f app.html www/index.html
+          mkdir -p www/assets
+          cp -rf assets/. www/assets/
           npx cap sync android
           cp -f app.html android/app/src/main/assets/public/app.html
           cp -f app.html android/app/src/main/assets/public/index.html
+          mkdir -p android/app/src/main/assets/public/assets
+          cp -rf assets/. android/app/src/main/assets/public/assets/
           echo "micronutrimentsCard (app.html):" $(grep -c micronutrimentsCard android/app/src/main/assets/public/app.html)
           echo "harmonyCanvas (index.html):" $(grep -c harmonyCanvas android/app/src/main/assets/public/index.html)
+          echo "assets copies:" $(ls android/app/src/main/assets/public/assets/ | wc -l)
       - name: Setup Java
         uses: actions/setup-java@v4
         with:
