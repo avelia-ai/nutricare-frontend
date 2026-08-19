@@ -20201,18 +20201,38 @@ function openSubscriptionModal(context) {
   <audio id="rituelAncrageMusic" loop preload="none">
     <source src="/assets/ancrage-music.mp3" type="audio/mpeg">
   </audio>
-  <div id="rituelPauseActiveBg" style="display:none;position:absolute;inset:0;z-index:0;background:radial-gradient(circle at 50% 38%,#3a2414,#150c08 72%)">
+  <div id="rituelPauseActiveBg" style="display:none;position:absolute;inset:0;z-index:0;background:radial-gradient(circle at 50% 38%,#3a2414,#120a06 72%)">
     <svg id="paSvg" viewBox="0 0 400 800" style="width:100%;height:100%;display:block">
       <defs>
-        <linearGradient id="paBattG" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#ff8a4a"/><stop offset="100%" stop-color="#ffcf85"/></linearGradient>
-        <filter id="paGlow" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="5" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+        <radialGradient id="paRGlow" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#ffb877" stop-opacity="0.28"/><stop offset="100%" stop-color="#ffb877" stop-opacity="0"/></radialGradient>
+        <linearGradient id="paCaseOuter" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#e8bf8e"/><stop offset="15%" stop-color="#b8875a"/><stop offset="50%" stop-color="#7a5236"/><stop offset="85%" stop-color="#4a3020"/><stop offset="100%" stop-color="#2a1a10"/></linearGradient>
+        <linearGradient id="paCaseInner" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#1a1008"/><stop offset="8%" stop-color="#0e0805"/><stop offset="92%" stop-color="#0e0805"/><stop offset="100%" stop-color="#2a1a10"/></linearGradient>
+        <linearGradient id="paFillG" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#e8531a"/><stop offset="35%" stop-color="#ff8a3a"/><stop offset="70%" stop-color="#ffb85c"/><stop offset="100%" stop-color="#fff0c8"/></linearGradient>
+        <linearGradient id="paFillTop" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#fff" stop-opacity="0.55"/><stop offset="35%" stop-color="#fff" stop-opacity="0.08"/><stop offset="100%" stop-color="#fff" stop-opacity="0"/></linearGradient>
+        <filter id="paSoftGlow" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="7" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+        <filter id="paBoltGlow" x="-100%" y="-100%" width="300%" height="300%"><feGaussianBlur stdDeviation="4" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+        <filter id="paDropShadow" x="-30%" y="-30%" width="160%" height="160%"><feDropShadow dx="0" dy="6" stdDeviation="8" flood-color="#000" flood-opacity="0.45"/></filter>
       </defs>
       <g id="paAmbientGroup"></g>
-      <g transform="translate(0,330)">
-        <rect x="80" y="0" width="240" height="96" rx="20" fill="none" stroke="#6a4a34" stroke-width="5"/>
-        <rect x="320" y="30" width="18" height="36" rx="5" fill="#6a4a34"/>
-        <rect id="paFillRect" x="90" y="10" width="0" height="76" rx="12" fill="url(#paBattG)" filter="url(#paGlow)"/>
-        <text id="paPercent" x="200" y="58" text-anchor="middle" fill="#3a2010" font-size="34" font-weight="700" font-family="sans-serif">0%</text>
+      <g transform="translate(0,270)">
+        <circle cx="200" cy="60" r="160" fill="url(#paRGlow)" style="animation:paPulse 3.4s ease-in-out infinite"/>
+        <g style="transform-origin:200px 60px;animation:paSpin 34s linear infinite" opacity="0.4">
+          <line x1="200" y1="-56" x2="200" y2="-30" stroke="#ffcf9a" stroke-width="2" stroke-linecap="round"/>
+          <line x1="200" y1="150" x2="200" y2="176" stroke="#ffcf9a" stroke-width="2" stroke-linecap="round"/>
+          <line x1="20" y1="60" x2="46" y2="60" stroke="#ffcf9a" stroke-width="2" stroke-linecap="round"/>
+          <line x1="354" y1="60" x2="380" y2="60" stroke="#ffcf9a" stroke-width="2" stroke-linecap="round"/>
+        </g>
+        <g filter="url(#paDropShadow)">
+          <rect x="100" y="10" width="240" height="122" rx="28" fill="url(#paCaseOuter)"/>
+          <rect x="107" y="17" width="226" height="108" rx="22" fill="url(#paCaseInner)"/>
+          <rect x="340" y="48" width="22" height="44" rx="7" fill="url(#paCaseOuter)"/>
+          <rect x="343" y="56" width="12" height="30" rx="4" fill="#0e0805"/>
+        </g>
+        <rect id="paFillRect" x="117" y="27" width="0" height="88" rx="17" fill="url(#paFillG)" filter="url(#paSoftGlow)"/>
+        <rect id="paFillTopRect" x="117" y="27" width="0" height="36" rx="17" fill="url(#paFillTop)"/>
+        <path d="M215 30 L182 76 L204 76 L188 122 L235 68 L210 68 Z" fill="#fff8e8" filter="url(#paBoltGlow)"/>
+        <rect x="100" y="10" width="240" height="122" rx="28" fill="none" stroke="#fff" stroke-opacity="0.12" stroke-width="1.5"/>
+        <text id="paPercent" x="200" y="162" text-anchor="middle" fill="#ffddb0" font-size="19" font-weight="700" font-family="sans-serif" opacity="0.9" letter-spacing="1">0%</text>
       </g>
     </svg>
   </div>
