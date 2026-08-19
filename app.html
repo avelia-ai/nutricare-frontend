@@ -7623,15 +7623,23 @@ function switchLang(lang) {
   </div>
 
   <!-- BLOC EXPLICATIF RITUELS -->
-  <div data-suivi-tab="rituels" style="display:none;background:#FFFCFA;border-radius:16px;margin-bottom:16px;overflow:hidden;box-shadow:0 0 0 1.5px rgba(255,154,108,0.22),0 14px 32px rgba(230,110,70,0.14)">
-    <div style="position:relative;width:100%;aspect-ratio:16/9;background:#000">
-      <video autoplay muted loop playsinline style="width:100%;height:100%;object-fit:cover;display:block">
-        <source src="/assets/rituels-fox.mp4" type="video/mp4">
-      </video>
-    </div>
-    <div style="padding:18px 20px 20px">
-      <div style="font-size:0.95rem;font-weight:700;color:#2D2D2D;margin-bottom:8px">Pourquoi des rituels ?</div>
-      <div style="font-size:0.8rem;color:#888;line-height:1.55">Ces courtes pratiques guidées vous aident à réduire le stress, mieux respirer et préparer un sommeil réparateur. Intégrés à votre routine quotidienne, quelques minutes suffisent pour ressentir un vrai apaisement du corps et de l'esprit.</div>
+  <div id="rituelsExplainerCard" data-suivi-tab="rituels" style="display:none;border-radius:20px;padding:2px;margin-bottom:16px;background:linear-gradient(135deg,#E8D5FF,#C9B8E8,#F0C9A6);box-shadow:0 10px 30px rgba(156,134,201,0.25)">
+    <div style="background:#fff;border-radius:18px;overflow:hidden">
+      <div style="position:relative;width:100%;aspect-ratio:16/9;background:#1e1730">
+        <video autoplay muted loop playsinline style="width:100%;height:100%;object-fit:cover;display:block">
+          <source src="/assets/rituels-fox.mp4" type="video/mp4">
+        </video>
+        <div style="position:absolute;bottom:0;left:0;right:0;height:55%;background:linear-gradient(0deg,rgba(20,10,30,0.55),transparent);pointer-events:none"></div>
+        <span style="position:absolute;top:10px;left:10px;background:rgba(255,255,255,0.92);color:#7a5aa8;font-size:9px;font-weight:700;letter-spacing:0.05em;padding:4px 9px;border-radius:20px;text-transform:uppercase">Découvrez</span>
+      </div>
+      <div style="padding:18px 20px 20px">
+        <div style="display:flex;align-items:center;gap:6px;margin-bottom:8px">
+          <span style="width:5px;height:5px;border-radius:50%;background:#9C86C9"></span>
+          <span style="font-size:10px;color:#9C86C9;font-weight:700;letter-spacing:0.06em;text-transform:uppercase">Le mot de Mirella</span>
+        </div>
+        <div style="font-size:0.95rem;font-weight:700;color:#2D2D2D;margin-bottom:8px">Pourquoi des rituels ?</div>
+        <div style="font-size:0.8rem;color:#888;line-height:1.55">Ces courtes pratiques guidées vous aident à réduire le stress, mieux respirer et préparer un sommeil réparateur. Intégrés à votre routine quotidienne, quelques minutes suffisent pour ressentir un vrai apaisement du corps et de l'esprit.</div>
+      </div>
     </div>
   </div>
 
@@ -7898,7 +7906,7 @@ function switchLang(lang) {
     var container = document.getElementById('healthView');
     var refNode = document.getElementById('healthDateIndicator');
     if (!container || !refNode) return;
-    ['infoDuJourCard', 'coeurHarmonieCard', 'rituelsBienEtreCard', 'cardioCard'].forEach(function(id) {
+    ['infoDuJourCard', 'coeurHarmonieCard', 'rituelsBienEtreCard', 'rituelsExplainerCard', 'cardioCard'].forEach(function(id) {
       var el = document.getElementById(id);
       if (el) container.insertBefore(el, refNode);
     });
