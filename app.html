@@ -11797,6 +11797,7 @@ function switchLang(lang) {
       trendEl.textContent = 'Première mesure enregistrée';
     }
     localStorage.setItem('mirella_cardio_last', String(bpm));
+    window._cardioFreshMeasurement = true;
     showCardioAdvicePopup(bpm);
   }
 
@@ -11804,6 +11805,17 @@ function switchLang(lang) {
     var popup = document.getElementById('cardioAdvicePopup');
     if (popup) popup.style.display = 'none';
   };
+
+  // Protection: garantit que la popup ne s'affiche jamais automatiquement
+  // au chargement/rechargement de page, meme via bfcache (back-forward cache)
+  window.addEventListener('pageshow', function() {
+    var popup = document.getElementById('cardioAdvicePopup');
+    if (popup) popup.style.display = 'none';
+  });
+  document.addEventListener('DOMContentLoaded', function() {
+    var popup = document.getElementById('cardioAdvicePopup');
+    if (popup) popup.style.display = 'none';
+  });
 
   var _cardioAdviceTiers = [
     { max: 50, label: 'Très bas', color: '#3B6D11', bg: '#EAF3DE', text: 'Un rythme sous 50 bpm au repos est fréquent chez les sportifs entraînés, mais peut aussi mériter un avis médical si tu ressens des vertiges ou une fatigue inhabituelle.', tip: 'Si tu ne pratiques pas de sport intensif, parles-en à un professionnel de santé pour en avoir le cœur net.' },
@@ -11822,6 +11834,8 @@ function switchLang(lang) {
   }
 
   function showCardioAdvicePopup(bpm) {
+    if (!window._cardioFreshMeasurement) return;
+    window._cardioFreshMeasurement = false;
     var popup = document.getElementById('cardioAdvicePopup');
     if (!popup) return;
     var tier = _cardioGetTier(bpm);
