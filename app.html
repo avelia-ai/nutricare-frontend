@@ -4258,8 +4258,8 @@ window.toggleSymptom = function(sym, btn) {
   }
 };
 
-window.getCyclePhase = function(lastPeriod, cycleLength, periodLength) {
-  var today = new Date();
+window.getCyclePhase = function(lastPeriod, cycleLength, periodLength, targetDate) {
+  var today = targetDate ? new Date(targetDate) : new Date();
   var last = new Date(lastPeriod);
   var dayOfCycle = Math.floor((today - last) / 86400000) % cycleLength;
   if (dayOfCycle < 0) dayOfCycle += cycleLength;
