@@ -20264,6 +20264,23 @@ function openSubscriptionModal(context) {
   <div id="rituelPhase" style="color:rgba(255,255,255,0.6);font-size:0.85rem;margin-bottom:24px;min-height:1.2em"></div>
   <div style="position:relative;width:300px;height:300px">
     <canvas id="rituelHarmonyCanvas" style="width:300px;height:300px;display:block"></canvas>
+    <div id="rituelAncrageWrap" style="display:none;position:absolute;inset:0;border-radius:18px;overflow:hidden;background:radial-gradient(circle at 50% 20%,#152028,#0a1014 75%)">
+      <svg viewBox="0 0 320 300" style="width:100%;height:100%">
+        <defs>
+          <radialGradient id="rtHalo" cx="50%" cy="18%" r="45%"><stop offset="0%" stop-color="#7ec8e8" stop-opacity="0.35"/><stop offset="100%" stop-color="#7ec8e8" stop-opacity="0"/></radialGradient>
+          <linearGradient id="rootG" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#7ec8e8"/><stop offset="100%" stop-color="#3a6a82"/></linearGradient>
+        </defs>
+        <circle cx="160" cy="55" r="35" fill="url(#rtHalo)" id="rtHaloCircle" style="transition:r 1s ease,opacity 1s ease"/>
+        <circle cx="160" cy="55" r="9" fill="#cde8f5" id="rtCore" style="transition:r 1s ease"/>
+        <line x1="160" y1="64" x2="160" y2="105" stroke="#5a8ca8" stroke-width="2.5"/>
+        <path id="root1" d="M160 105 Q130 120 105 150" stroke="url(#rootG)" stroke-width="2.5" fill="none" stroke-linecap="round" opacity="0" style="transition:opacity 0.8s ease"/>
+        <path id="root2" d="M160 105 Q190 120 215 150" stroke="url(#rootG)" stroke-width="2.5" fill="none" stroke-linecap="round" opacity="0" style="transition:opacity 0.8s ease"/>
+        <path id="root3" d="M160 105 Q148 140 138 180" stroke="url(#rootG)" stroke-width="2.5" fill="none" stroke-linecap="round" opacity="0" style="transition:opacity 0.8s ease"/>
+        <path id="root4" d="M160 105 Q172 140 182 180" stroke="url(#rootG)" stroke-width="2.5" fill="none" stroke-linecap="round" opacity="0" style="transition:opacity 0.8s ease"/>
+        <path id="root5" d="M160 105 Q160 145 160 195" stroke="url(#rootG)" stroke-width="2.5" fill="none" stroke-linecap="round" opacity="0" style="transition:opacity 0.8s ease"/>
+        <g id="rtParticles"></g>
+      </svg>
+    </div>
     <div id="rituelGratitudeLanternWrap" style="display:none;position:absolute;inset:-10px 0 0 0;align-items:center;justify-content:center">
       <svg viewBox="0 0 320 320" style="width:300px;height:300px;position:absolute">
         <defs><radialGradient id="lgAmbG" cx="50%" cy="45%" r="55%"><stop offset="0%" stop-color="#ffb35c" stop-opacity="0.4"/><stop offset="55%" stop-color="#e8a35f" stop-opacity="0.16"/><stop offset="100%" stop-color="#e8a35f" stop-opacity="0"/></radialGradient></defs>
@@ -20639,6 +20656,38 @@ function _startRituelExercise() {
   var rc = document.getElementById('rituelHarmonyCanvas');
   var isGratitude = (window._currentRituelType === 'gratitude');
   var isVisualisation = (window._currentRituelType === 'visualisation');
+  var isAncrage = (window._currentRituelType === 'ancrage');
+  var ancrageWrap = document.getElementById('rituelAncrageWrap');
+  if (ancrageWrap) ancrageWrap.style.display = isAncrage ? 'block' : 'none';
+
+  var _rtHaloR = [35, 45, 55, 65, 80];
+
+  function _rtSpawnDust(n) {
+    var box = document.getElementById('rtParticles');
+    if (!box) return;
+    for (var i = 0; i < n; i++) {
+      var c = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+      var x = 140 + Math.random() * 40, y = 100 + Math.random() * 90;
+      c.setAttribute('cx', x); c.setAttribute('cy', y); c.setAttribute('r', 0.8 + Math.random());
+      c.setAttribute('fill', '#a8dcf0'); c.setAttribute('opacity', '0.6');
+      box.appendChild(c);
+    }
+  }
+
+  function _rtApplyState(stepIndex) {
+    var idx = Math.min(stepIndex, _rtHaloR.length - 1);
+    var haloEl = document.getElementById('rtHaloCircle');
+    if (!haloEl) return;
+    haloEl.setAttribute('r', _rtHaloR[idx]);
+    document.getElementById('rtCore').setAttribute('r', 9 + idx * 2);
+    for (var i = 1; i <= 5; i++) {
+      var rootEl = document.getElementById('root' + i);
+      if (rootEl) rootEl.style.opacity = i <= (idx + 1) ? 1 : 0;
+    }
+    _rtSpawnDust(3);
+  }
+  if (isAncrage) _rtApplyState(0);
+
   var horizonWrap = document.getElementById('rituelHorizonWrap');
   if (horizonWrap) horizonWrap.style.display = isVisualisation ? 'block' : 'none';
 
@@ -20722,7 +20771,7 @@ function _startRituelExercise() {
   }
   var flameCanvas = document.getElementById('rituelGratitudeFlameCanvas');
   var lanternWrap = document.getElementById('rituelGratitudeLanternWrap');
-  rc.style.display = (isGratitude || isVisualisation) ? 'none' : 'block';
+  rc.style.display = (isGratitude || isVisualisation || isAncrage) ? 'none' : 'block';
   if (flameCanvas) flameCanvas.style.display = 'none';
   if (lanternWrap) lanternWrap.style.display = isGratitude ? 'flex' : 'none';
 
@@ -20777,7 +20826,7 @@ function _startRituelExercise() {
   var CYCLE = 8000;
   function animLoop() {
     if (!_rituelAnimRunning) return;
-    if (isGratitude || isVisualisation) {
+    if (isGratitude || isVisualisation || isAncrage) {
       requestAnimationFrame(animLoop);
       return;
     }
@@ -20805,7 +20854,7 @@ function _startRituelExercise() {
     document.getElementById('rituelPhase').textContent = Math.floor(elapsed/60) + 'min ' + (elapsed%60) + 's';
     arc.style.strokeDashoffset = circumference * (1 - elapsed / totalDuration);
     stepElapsed++; elapsed++;
-    if (stepElapsed >= step.duration) { stepElapsed=0; stepIdx++; if (isGratitude) _lgApplyState(stepIdx); if (isVisualisation) _hzApplyState(stepIdx); }
+    if (stepElapsed >= step.duration) { stepElapsed=0; stepIdx++; if (isGratitude) _lgApplyState(stepIdx); if (isVisualisation) _hzApplyState(stepIdx); if (isAncrage) _rtApplyState(stepIdx); }
     if (elapsed >= totalDuration) {
       _rituelAnimRunning = false;
       finishRituel(cfg.pts);
