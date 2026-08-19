@@ -11726,7 +11726,9 @@ function switchLang(lang) {
     if (cardioStream) cardioStream.getTracks().forEach(function(t) { t.stop(); });
     if (cardioVideoEl) { cardioVideoEl.remove(); cardioVideoEl = null; }
 
-    var bpm = cardioEstimateBpm(cardioSamples);
+    var _cardioFinalSamples = cardioSamples.length > 300 ? cardioSamples.slice(-300) : cardioSamples;
+    var bpm = cardioEstimateBpm(_cardioFinalSamples);
+    if (!bpm) bpm = cardioEstimateBpm(cardioSamples);
     if (!bpm || bpm < 40 || bpm > 200) {
       document.getElementById('cardioMeasuringState').style.display = 'none';
       document.getElementById('cardioEntryState').style.display = 'block';
