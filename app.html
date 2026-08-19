@@ -20172,6 +20172,8 @@ function openSubscriptionModal(context) {
   <video id="rituelVisuBgVideo" muted loop playsinline preload="none" style="display:none;position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0">
     <source src="/assets/visualisation-bg.mp4" type="video/mp4">
   </video>
+  <div id="rituelVisuVignette" style="display:none;position:absolute;inset:0;z-index:1;pointer-events:none;background:radial-gradient(circle at 50% 45%,rgba(255,220,160,0.10),transparent 65%);transition:opacity 1.2s ease"></div>
+  <div id="rituelVisuParticles" style="display:none;position:absolute;inset:0;z-index:1;pointer-events:none;overflow:hidden"></div>
   <audio id="rituelVisuMusic" loop preload="none">
     <source src="/assets/visualisation-music.mp3" type="audio/mpeg">
   </audio>
@@ -20198,6 +20200,7 @@ function openSubscriptionModal(context) {
   @keyframes reveilBreath { 0%,100%{transform:scale(1)} 50%{transform:scale(1.08)} }
   @keyframes rituelPetalFall { 0%{transform:translateY(0) translateX(0) rotate(0deg);opacity:0} 8%{opacity:0.85} 92%{opacity:0.7} 100%{transform:translateY(480px) translateX(var(--drift)) rotate(230deg);opacity:0} }
   @keyframes rituelSunPulse { 0%,100%{opacity:0.75;transform:scale(1)} 50%{opacity:1;transform:scale(1.12)} }
+  @keyframes rituelVisuFloat { 0%{transform:translateY(0) translateX(0);opacity:0} 15%{opacity:1} 85%{opacity:1} 100%{transform:translateY(-40px) translateX(var(--dx));opacity:0} }
   </style>
   <!-- ECRAN INTRO -->
   <div id="rituelIntroScreen" style="display:none;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:40px 32px;max-width:380px;width:100%;position:relative">
@@ -20648,32 +20651,30 @@ function _startRituelExercise() {
   var _hzCoreOp = [0.7, 0.9, 1];
 
   function _hzSpawnParticles(n) {
-    var box = document.getElementById('hzParticles');
+    var box = document.getElementById('rituelVisuParticles');
     if (!box) return;
     box.innerHTML = '';
     for (var i = 0; i < n; i++) {
-      var c = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
-      var x = 40 + Math.random() * 240, y = 40 + Math.random() * 180;
-      c.setAttribute('cx', x); c.setAttribute('cy', y); c.setAttribute('r', 0.8 + Math.random() * 1.4);
-      c.setAttribute('fill', '#ffe9c4'); c.setAttribute('opacity', '0.7');
-      box.appendChild(c);
+      var p = document.createElement('div');
+      var size = 1.5 + Math.random() * 2.5;
+      var left = 10 + Math.random() * 80;
+      var top = 15 + Math.random() * 65;
+      var dx = (Math.random() * 30 - 15) + 'px';
+      var dur = 4 + Math.random() * 3;
+      var delay = Math.random() * 5;
+      p.style.cssText = 'position:absolute;left:' + left + '%;top:' + top + '%;width:' + size + 'px;height:' + size + 'px;border-radius:50%;background:#ffe9c4;box-shadow:0 0 6px #ffd9a0;--dx:' + dx + ';animation:rituelVisuFloat ' + dur + 's ease-in-out infinite;animation-delay:' + delay + 's';
+      box.appendChild(p);
     }
   }
 
+  var _hzParticleCounts = [6, 16, 28];
+  var _hzVignetteOpacity = [0.5, 0.8, 1];
+
   function _hzApplyState(stepIndex) {
-    var idx = Math.min(stepIndex, _hzSkyColors.length - 1);
-    var sky1 = document.getElementById('hzSky1');
-    if (!sky1) return;
-    document.getElementById('hzSky1').setAttribute('stop-color', _hzSkyColors[idx][0]);
-    document.getElementById('hzSky2').setAttribute('stop-color', _hzSkyColors[idx][1]);
-    document.getElementById('hzSky3').setAttribute('stop-color', _hzSkyColors[idx][2]);
-    document.getElementById('hzSky4').setAttribute('stop-color', _hzSkyColors[idx][3]);
-    document.getElementById('hzSunHalo').setAttribute('r', _hzSunR[idx]);
-    document.getElementById('hzSunCore').setAttribute('r', _hzCoreR[idx]);
-    document.getElementById('hzSunCore').style.opacity = _hzCoreOp[idx];
-    document.getElementById('hzStars').style.opacity = idx === 0 ? 1 : (idx === 1 ? 0.3 : 0);
-    document.getElementById('hzBirds').style.opacity = idx >= 1 ? 1 : 0;
-    _hzSpawnParticles(idx === 0 ? 3 : (idx === 1 ? 8 : 14));
+    var idx = Math.min(stepIndex, _hzParticleCounts.length - 1);
+    _hzSpawnParticles(_hzParticleCounts[idx]);
+    var vignette = document.getElementById('rituelVisuVignette');
+    if (vignette) vignette.style.opacity = _hzVignetteOpacity[idx];
   }
   if (isVisualisation) _hzApplyState(0);
 
@@ -20692,6 +20693,10 @@ function _startRituelExercise() {
     if (isVisualisation) { visuBgVideo.currentTime = 0; visuBgVideo.play().catch(function(){}); }
     else { visuBgVideo.pause(); }
   }
+  var visuVignette = document.getElementById('rituelVisuVignette');
+  var visuParticles = document.getElementById('rituelVisuParticles');
+  if (visuVignette) visuVignette.style.display = isVisualisation ? 'block' : 'none';
+  if (visuParticles) { visuParticles.style.display = isVisualisation ? 'block' : 'none'; if (!isVisualisation) visuParticles.innerHTML = ''; }
   if (!isVisualisation) {
     var visuMusicStop = document.getElementById('rituelVisuMusic');
     if (visuMusicStop) visuMusicStop.pause();
@@ -22549,6 +22554,10 @@ function closeRituel() {
   if (visuBgVideoEl) { visuBgVideoEl.style.display = 'none'; visuBgVideoEl.pause(); }
   var visuMusicEl = document.getElementById('rituelVisuMusic');
   if (visuMusicEl) visuMusicEl.pause();
+  var visuVignetteEl = document.getElementById('rituelVisuVignette');
+  var visuParticlesEl = document.getElementById('rituelVisuParticles');
+  if (visuVignetteEl) visuVignetteEl.style.display = 'none';
+  if (visuParticlesEl) { visuParticlesEl.style.display = 'none'; visuParticlesEl.innerHTML = ''; }
   var soirScreen = document.getElementById('rituelSoirScreen');
   if (soirScreen) soirScreen.style.display = 'none';
   var reveilScreen = document.getElementById('rituelReveilScreen');
