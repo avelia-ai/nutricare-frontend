@@ -2813,34 +2813,60 @@ window.toggleFavoriIdx = async function(idx, btn) {
 };
 window.showRecetteDetail = function(rJson) {
   var r = JSON.parse(rJson);
-  var catIcons = { petit_dejeuner:'🌅', dejeuner:'☀️', diner:'🌙', collation:'🍎', dessert:'🍰', entree:'🥗' };
-  var existing = document.getElementById('recetteDetailModal');
-  if (existing) existing.remove();
-  var modal = document.createElement('div');
-  modal.id = 'recetteDetailModal';
-  modal.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:9999;display:flex;align-items:flex-end;justify-content:center';
-  modal.innerHTML = '<div style="background:white;border-radius:24px 24px 0 0;padding:24px;width:100%;max-width:600px;max-height:85vh;overflow-y:auto">' +
-    '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">' +
-    '<div style="font-size:1rem;font-weight:800;color:#1a1a1a;flex:1;padding-right:12px">' + (catIcons[r.categorie]||'🍽️') + ' ' + r.nom + '</div>' +
-    '<button onclick="document.getElementById(\'recetteDetailModal\').remove()" style="background:#f5f5f5;border:none;border-radius:50%;width:32px;height:32px;cursor:pointer;flex-shrink:0">✕</button></div>' +
-    '<div style="display:flex;gap:12px;margin-bottom:16px">' +
-    '<div style="background:var(--cream);border-radius:10px;padding:10px;text-align:center;flex:1"><div style="font-size:1rem;font-weight:800;color:var(--coral)">' + (r.calories||0) + '</div><div style="font-size:0.65rem;color:#888">kcal</div></div>' +
-    '<div style="background:var(--cream);border-radius:10px;padding:10px;text-align:center;flex:1"><div style="font-size:1rem;font-weight:800;color:var(--accent)">' + (r.prep_minutes||0) + '</div><div style="font-size:0.65rem;color:#888">min</div></div>' +
-    '<div style="background:var(--cream);border-radius:10px;padding:10px;text-align:center;flex:1"><div style="font-size:1rem;font-weight:800;color:#22c55e">' + (r.proteines||0) + 'g</div><div style="font-size:0.65rem;color:#888">protéines</div></div>' +
-    '<div style="background:var(--cream);border-radius:10px;padding:10px;text-align:center;flex:1"><div style="font-size:1rem;font-weight:800;color:#3B82F6">' + (r.portions||2) + '</div><div style="font-size:0.65rem;color:#888">portions</div></div>' +
+  var portionsBase = r.portions || 2;
+  // Titre + badges sur la photo (meme DA que "Mes recettes")
+  var titlePhoto = document.getElementById('recipeModalTitlePhoto');
+  if (titlePhoto) titlePhoto.textContent = r.nom;
+  var badges = document.getElementById('recipeModalBadges');
+  if (badges) {
+    var badgeList = [];
+    if (r.prep_minutes) badgeList.push('⏱ ' + r.prep_minutes + ' min');
+    if (r.calories) badgeList.push('🔥 ' + r.calories + ' kcal');
+    var tagEmojis = {'végétarien':'🥦','vegan':'🌱','sans gluten':'🌾','sans lactose':'🥛','sans oeuf':'🥚','sans porc':'🐷','riche en protéines':'💪','faible en calories':'⚡'};
+    if (r.tags && r.tags.length) r.tags.forEach(function(t){ badgeList.push((tagEmojis[t]||'✓') + ' ' + t.replace(/_/g,' ')); });
+    badges.innerHTML = badgeList.map(function(b){ return '<span style="background:rgba(255,255,255,0.2);backdrop-filter:blur(4px);color:white;padding:5px 12px;border-radius:20px;font-size:0.75rem;font-weight:600;border:1px solid rgba(255,255,255,0.3)">' + b + '</span>'; }).join('');
+  }
+  var imgEl = document.getElementById('recipeModalImg');
+  if (imgEl) {
+    imgEl.src = '';
+    if (typeof loadMealPhoto === 'function') loadMealPhoto(r.nom, r.photo_keyword || r.nom, imgEl);
+  }
+  document.getElementById('recipeModalMacros').innerHTML =
+    '<div style="background:linear-gradient(135deg,#1B1B2F,#2D2440);border-radius:22px;padding:24px 20px;position:relative;overflow:hidden;box-shadow:0 16px 36px rgba(30,15,10,0.22)">' +
+    '<div style="position:absolute;top:-40px;right:-30px;width:140px;height:140px;border-radius:50%;background:radial-gradient(circle,rgba(255,154,60,0.18),transparent 70%)"></div>' +
+    '<div style="position:relative;z-index:1;display:flex;align-items:center;gap:18px;margin-bottom:18px">' +
+    '<div style="position:relative;width:74px;height:74px;flex-shrink:0">' +
+    '<svg width="74" height="74" viewBox="0 0 74 74" style="transform:rotate(-90deg)">' +
+    '<circle cx="37" cy="37" r="31" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="7"/>' +
+    '<circle cx="37" cy="37" r="31" fill="none" stroke="url(#kcalGrad2)" stroke-width="7" stroke-linecap="round" stroke-dasharray="194.7" stroke-dashoffset="0"/>' +
+    '<defs><linearGradient id="kcalGrad2" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#FF9A3C"/><stop offset="100%" stop-color="#FF6B6B"/></linearGradient></defs>' +
+    '</svg>' +
+    '<div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center"><i class="ti ti-flame" style="font-size:22px;color:#FF9A3C"></i></div>' +
     '</div>' +
-    '<div style="font-size:0.85rem;font-weight:700;color:#1a1a1a;margin-bottom:8px">Ingrédients</div>' +
-    '<div style="margin-bottom:16px">' + (r.ingredients||[]).map(function(i){ return '<div style="padding:6px 0;border-bottom:1px solid #f5f5f5;font-size:0.82rem;color:#444">• ' + i + '</div>'; }).join('') + '</div>' +
-    '<div style="font-size:0.85rem;font-weight:700;color:#1a1a1a;margin-bottom:8px">Préparation</div>' +
-    '<div>' + (r.etapes||[]).map(function(e,i){ return '<div style="display:flex;gap:10px;margin-bottom:10px"><span style="background:linear-gradient(135deg,var(--coral),var(--accent));color:white;border-radius:50%;min-width:22px;height:22px;display:flex;align-items:center;justify-content:center;font-size:0.7rem;font-weight:700">' + (i+1) + '</span><div style="font-size:0.82rem;color:#444;line-height:1.5">' + e + '</div></div>'; }).join('') + '</div>' +
-    '<div style="display:flex;gap:10px;margin-top:20px;padding-top:16px;border-top:1px solid #f5f5f5">' +
-    '<button onclick="partagerRecette(\'whatsapp\',\''+encodeURIComponent(r.nom)+'\',\''+encodeURIComponent(r.calories||0)+'\',\''+encodeURIComponent(r.prep_minutes||0)+'\')" style="flex:1;padding:10px;background:#25D366;color:white;border:none;border-radius:10px;font-size:0.8rem;font-weight:700;cursor:pointer">💬 WhatsApp</button>' +
-    '<button onclick="partagerRecette(\'copy\',\''+encodeURIComponent(r.nom)+'\',\''+encodeURIComponent(r.calories||0)+'\',\''+encodeURIComponent(r.prep_minutes||0)+'\')" style="flex:1;padding:10px;background:#f5f5f5;color:#333;border:none;border-radius:10px;font-size:0.8rem;font-weight:700;cursor:pointer">📋 Copier</button>' +
-    '<button onclick="partagerRecette(\'native\',\''+encodeURIComponent(r.nom)+'\',\''+encodeURIComponent(r.calories||0)+'\',\''+encodeURIComponent(r.prep_minutes||0)+'\')" style="flex:1;padding:10px;background:linear-gradient(135deg,var(--coral),var(--accent));color:white;border:none;border-radius:10px;font-size:0.8rem;font-weight:700;cursor:pointer">📤 Partager</button>' +
+    '<div style="flex:1;min-width:0">' +
+    '<div style="font-size:2rem;font-weight:800;color:white;line-height:1;letter-spacing:-0.02em">' + (r.calories||0) + '<span style="font-size:0.95rem;font-weight:600;color:rgba(255,255,255,0.55);margin-left:6px">kcal</span></div>' +
+    '<div style="font-size:0.74rem;color:rgba(255,255,255,0.45);margin-top:4px;font-weight:600;text-transform:uppercase;letter-spacing:0.06em">Valeur nutritionnelle</div>' +
     '</div>' +
-    '</div>';
-  document.body.appendChild(modal);
-  modal.onclick = function(e) { if(e.target===modal) modal.remove(); };
+    '</div>' +
+    '<div style="position:relative;z-index:1;display:grid;grid-template-columns:repeat(3,1fr);gap:10px">' +
+    '<div style="background:rgba(255,255,255,0.06);border-radius:14px;padding:12px 8px;text-align:center;box-shadow:0 0 0 1px rgba(255,255,255,0.06) inset"><div style="width:8px;height:8px;border-radius:50%;background:#7EC8E3;margin:0 auto 8px"></div><div style="font-size:0.68rem;color:rgba(255,255,255,0.5);font-weight:600;margin-bottom:3px;text-transform:uppercase;letter-spacing:0.04em">Lipides</div><div style="font-size:1.05rem;font-weight:800;color:white">' + (r.lipides||0) + 'g</div></div>' +
+    '<div style="background:rgba(255,255,255,0.06);border-radius:14px;padding:12px 8px;text-align:center;box-shadow:0 0 0 1px rgba(255,255,255,0.06) inset"><div style="width:8px;height:8px;border-radius:50%;background:#FFD166;margin:0 auto 8px"></div><div style="font-size:0.68rem;color:rgba(255,255,255,0.5);font-weight:600;margin-bottom:3px;text-transform:uppercase;letter-spacing:0.04em">Glucides</div><div style="font-size:1.05rem;font-weight:800;color:white">' + (r.glucides||0) + 'g</div></div>' +
+    '<div style="background:rgba(255,255,255,0.06);border-radius:14px;padding:12px 8px;text-align:center;box-shadow:0 0 0 1px rgba(255,255,255,0.06) inset"><div style="width:8px;height:8px;border-radius:50%;background:#82E0AA;margin:0 auto 8px"></div><div style="font-size:0.68rem;color:rgba(255,255,255,0.5);font-weight:600;margin-bottom:3px;text-transform:uppercase;letter-spacing:0.04em">Protéines</div><div style="font-size:1.05rem;font-weight:800;color:white">' + (r.proteines||0) + 'g</div></div>' +
+    '</div></div>';
+  // Normalise les macros par portion pour que le selecteur +/- fonctionne comme dans Mes recettes
+  _recipeBase = { nom: r.nom, calories: (r.calories||0)/portionsBase, lipides: (r.lipides||0)/portionsBase, glucides: (r.glucides||0)/portionsBase, proteines: (r.proteines||0)/portionsBase, cout_estime: r.cout_estime, ingredients: r.ingredients || [] };
+  _portions = portionsBase;
+  document.getElementById('portionsCount').textContent = _portions + (_portions === 1 ? ' personne' : ' personnes');
+  changePortions(0);
+  // Les etapes sont deja connues pour les recettes du catalogue (pas besoin d'appel reseau)
+  var etapes = r.etapes || [];
+  document.getElementById('recipeModalEtapes').innerHTML = etapes.length ? ('<div style="position:relative">' + etapes.map(function(e,i){
+    return '<div style="display:flex;gap:14px;padding-bottom:' + (i===etapes.length-1?0:22) + 'px;position:relative">' +
+      (i===etapes.length-1 ? '' : '<div style="position:absolute;left:15px;top:32px;bottom:0;width:2px;background:linear-gradient(180deg,rgba(255,107,107,0.35),rgba(255,154,60,0.1))"></div>') +
+      '<span style="background:linear-gradient(135deg,#FF6B6B,#FF9A3C);color:white;border-radius:50%;width:32px;height:32px;min-width:32px;display:flex;align-items:center;justify-content:center;font-size:0.8rem;font-weight:800;box-shadow:0 4px 10px rgba(255,107,107,0.3);position:relative;z-index:1">' + (i+1) + '</span>' +
+      '<span style="font-size:0.86rem;color:#2D2D2D;line-height:1.6;padding-top:5px;font-weight:500">' + e + '</span></div>';
+  }).join('') + '</div>') : '<div style="color:var(--accent);font-size:0.85rem;padding:16px 0">Aucune etape disponible pour cette recette.</div>';
+  document.getElementById('recipeModal').style.display = 'flex';
 };
 
 window.partagerRecette = async function(type, nomEnc, calEnc, tempsEnc) {
