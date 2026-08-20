@@ -24784,6 +24784,41 @@ document.addEventListener('DOMContentLoaded', function() {
   </div>
 </div>
 
+<script>
+(function() {
+  var observedVideos = new WeakSet();
+  var io = new IntersectionObserver(function(entries) {
+    entries.forEach(function(entry) {
+      var v = entry.target;
+      if (entry.isIntersecting) {
+        v.play().catch(function() {});
+      } else {
+        v.pause();
+      }
+    });
+  }, { threshold: 0.05 });
+
+  function observeAllVideos() {
+    document.querySelectorAll('video[autoplay]').forEach(function(v) {
+      if (!observedVideos.has(v)) {
+        observedVideos.add(v);
+        io.observe(v);
+      }
+    });
+  }
+
+  observeAllVideos();
+  setInterval(observeAllVideos, 2000);
+
+  document.addEventListener('visibilitychange', function() {
+    if (document.hidden) {
+      document.querySelectorAll('video[autoplay]').forEach(function(v) { v.pause(); });
+    } else {
+      observeAllVideos();
+    }
+  });
+})();
+</script>
 </body>
 </html>
 <div style="display:none">build-trigger</div>
