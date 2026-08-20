@@ -19293,10 +19293,6 @@ window.showCyclePhaseChangePopup = function() {
   try {
     cycleData = JSON.parse(localStorage.getItem('mirella_cycle') || 'null');
   } catch(e) { cycleData = null; }
-  // TEMP TEST: force des donnees pour que demain soit un changement de phase (jour 12 -> jour 13)
-  var _testLastPeriod = new Date();
-  _testLastPeriod.setDate(_testLastPeriod.getDate() - 12);
-  cycleData = { lastPeriod: _testLastPeriod.toISOString().split('T')[0], cycleLength: 28, periodLength: 5 };
   if (!cycleData || !cycleData.lastPeriod) return;
 
   if (typeof window.getCyclePhase !== 'function') return;
