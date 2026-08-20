@@ -20685,9 +20685,9 @@ function openSubscriptionModal(context) {
         <filter id="mGlowFilter" x="-150%" y="-150%" width="400%" height="400%"><feGaussianBlur stdDeviation="8" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
       </defs>
       <g id="mStars"></g>
-      <circle cx="200" cy="330" id="mRing1" r="140" fill="none" stroke="#3a4560" stroke-width="1" opacity="0.5"/>
-      <circle cx="200" cy="330" id="mRing2" r="105" fill="none" stroke="#4a5878" stroke-width="1" opacity="0.4"/>
-      <circle cx="200" cy="330" id="mRing3" r="72" fill="none" stroke="#5a6a90" stroke-width="1.5" opacity="0.5"/>
+      <circle cx="200" cy="330" id="mRing1" r="175" fill="none" stroke="#3a4560" stroke-width="1.2" opacity="0.5"/>
+      <circle cx="200" cy="330" id="mRing2" r="135" fill="none" stroke="#4a5878" stroke-width="1.2" opacity="0.4"/>
+      <circle cx="200" cy="330" id="mRing3" r="95" fill="none" stroke="#5a6a90" stroke-width="1.8" opacity="0.5"/>
       <g id="mCoreGroup" filter="url(#mGlowFilter)">
         <circle cx="200" cy="330" id="mCore" r="130" fill="url(#mCoreG)"/>
         <circle cx="200" cy="330" id="mCoreInner" r="46" fill="#fff3d8"/>
@@ -21393,7 +21393,7 @@ function _startRituelExercise() {
   var militaryBg = document.getElementById('rituelMilitaryBg');
   if (militaryBg) militaryBg.style.display = isMilitary ? 'block' : 'none';
 
-  var _mCoreR = [130, 105, 82, 62, 44, 30];
+  var _mCoreR = [175, 142, 112, 85, 62, 45];
   var _mCoreOpacity = [1, 0.92, 0.82, 0.68, 0.52, 0.35];
   var _mRingOpacity = [0.55, 0.46, 0.37, 0.28, 0.19, 0.1];
   var _mCoreColorStops = [
@@ -21414,7 +21414,7 @@ function _startRituelExercise() {
     var box = document.getElementById('mStars');
     if (!box) return;
     box.innerHTML = '';
-    for (var i = 0; i < 20; i++) {
+    for (var i = 0; i < 45; i++) {
       var c = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
       var x = Math.random() * 400, y = Math.random() * 800;
       var r = 0.5 + Math.random() * 1.2;
