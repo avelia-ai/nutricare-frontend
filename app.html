@@ -18877,17 +18877,47 @@ window.loadMesRecettes = async function() {
   var tab = window._recettesTab || 'mes';
   try {
     var catStyle = {
-      petit_dejeuner:{icon:'🌅',c1:'#FFD180',c2:'#FFB347'},
-      dejeuner:{icon:'☀️',c1:'#FFE566',c2:'#FFB300'},
-      diner:{icon:'🌙',c1:'#A8DCF0',c2:'#7EC8E3'},
-      collation:{icon:'🍎',c1:'#B6E3B6',c2:'#82E0AA'},
-      dessert:{icon:'🍰',c1:'#F0C9E0',c2:'#DDA0DD'},
-      entree:{icon:'🥗',c1:'#C6E8B0',c2:'#9ED66E'}
+      petit_dejeuner:{c1:'#FFD180',c2:'#FFB347'},
+      dejeuner:{c1:'#FFE566',c2:'#FFB300'},
+      diner:{c1:'#A8DCF0',c2:'#7EC8E3'},
+      collation:{c1:'#B6E3B6',c2:'#82E0AA'},
+      dessert:{c1:'#F0C9E0',c2:'#DDA0DD'},
+      entree:{c1:'#C6E8B0',c2:'#9ED66E'}
     };
+    var kcalIcon = '<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#FF6B6B" stroke-width="2.5" stroke-linecap="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>';
+    var clockIcon = '<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#999" stroke-width="2.5" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>';
+    var lockIcon = '<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>';
+    var globeIcon = '<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18a14 14 0 0 1 0-18"/></svg>';
+    var trashIcon = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16M9 7V5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2M18 7l-.8 12.2a2 2 0 0 1-2 1.8H8.8a2 2 0 0 1-2-1.8L6 7"/></svg>';
     function emptyState(msg) {
       return '<div style="text-align:center;padding:56px 24px">' +
         '<div style="width:56px;height:56px;border-radius:16px;background:linear-gradient(135deg,#FFF0EC,#FFF8E8);display:flex;align-items:center;justify-content:center;margin:0 auto 14px"><i class="ti ti-tools-kitchen-2" style="font-size:24px;color:var(--coral)"></i></div>' +
         '<div style="font-size:0.85rem;color:#aaa;font-weight:600">' + msg + '</div></div>';
+    }
+    function cardHTML(r, opts) {
+      var cs = catStyle[r.categorie] || {c1:'#FFD9C4',c2:'#FFB89A'};
+      var rJson = JSON.stringify(r).replace(/"/g, '&quot;');
+      var visBadge = opts.showVis
+        ? '<span style="display:inline-flex;align-items:center;gap:4px;background:' + (opts.isPublic ? 'rgba(76,175,80,0.1)' : 'rgba(0,0,0,0.045)') + ';color:' + (opts.isPublic ? '#2e7d32' : '#8a8a8a') + ';font-size:0.63rem;font-weight:700;padding:3px 9px 3px 7px;border-radius:100px;text-transform:uppercase;letter-spacing:0.04em">' + (opts.isPublic ? globeIcon + ' Publique' : lockIcon + ' Privée') + '</span>'
+        : '';
+      var delBtn = opts.showDelete
+        ? '<button onclick="event.stopPropagation();' + opts.deleteAction + '" style="background:transparent;border:none;color:#d8d0cb;width:30px;height:30px;border-radius:9px;cursor:pointer;flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:color .15s"' +
+          ' onmouseover="this.style.color=\'#e74c3c\'" onmouseout="this.style.color=\'#d8d0cb\'">' + trashIcon + '</button>'
+        : '';
+      return '<div data-recipe="' + rJson + '" onclick="showRecipeModal(this)" style="background:#FFFCFA;border-radius:18px;padding:13px;margin-bottom:12px;display:flex;align-items:center;gap:14px;box-shadow:0 0 0 1.5px rgba(255,154,108,0.16),0 10px 26px rgba(230,110,70,0.09);cursor:pointer">' +
+        '<div style="width:60px;height:60px;flex-shrink:0;border-radius:14px;overflow:hidden;position:relative;background:linear-gradient(135deg,' + cs.c1 + ',' + cs.c2 + ')">' +
+        '<img data-recette-photo data-meal-name="' + r.nom.replace(/"/g,'&quot;') + '" data-keyword="' + (r.photo_keyword||'').replace(/"/g,'&quot;') + '" style="width:100%;height:100%;object-fit:cover;position:relative;z-index:1" onerror="this.style.display=\'none\'">' +
+        '</div>' +
+        '<div style="flex:1;min-width:0">' +
+        '<div style="font-weight:800;font-size:0.92rem;color:#1a1a1a;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-bottom:6px;letter-spacing:-0.01em">' + r.nom + '</div>' +
+        '<div style="display:flex;gap:12px;align-items:center;margin-bottom:' + (visBadge ? '6px' : '0') + '">' +
+        '<span style="display:inline-flex;align-items:center;gap:4px;font-size:0.74rem;color:#FF6B6B;font-weight:700">' + kcalIcon + (r.calories||0) + ' kcal</span>' +
+        '<span style="display:inline-flex;align-items:center;gap:4px;font-size:0.74rem;color:#999;font-weight:600">' + clockIcon + (r.prep_minutes||0) + ' min</span>' +
+        '</div>' +
+        visBadge +
+        '</div>' +
+        delBtn +
+        '</div>';
     }
     if (tab === 'favoris') {
       var resF = await fetch(BACKEND_URL + '/api/favoris', {
@@ -18901,19 +18931,12 @@ window.loadMesRecettes = async function() {
       }
       list.innerHTML = favoris.map(function(f) {
         var r = f.recette_data || {};
-        var cs = catStyle[r.categorie] || {icon:'🍽️',c1:'#FFD9C4',c2:'#FFB89A'};
-        var rJson = JSON.stringify(r).replace(/"/g, '&quot;');
-        return '<div data-recipe="' + rJson + '" onclick="showRecipeModal(this)" style="background:#fff;border-radius:16px;padding:14px;margin-bottom:12px;display:flex;align-items:center;gap:14px;box-shadow:0 0 0 1px rgba(0,0,0,0.035),0 8px 20px rgba(0,0,0,0.05);cursor:pointer">' +
-          '<div style="width:52px;height:52px;flex-shrink:0;border-radius:13px;background:linear-gradient(135deg,' + cs.c1 + ',' + cs.c2 + ');display:flex;align-items:center;justify-content:center;font-size:1.5rem">' + cs.icon + '</div>' +
-          '<div style="flex:1;min-width:0">' +
-          '<div style="font-weight:700;font-size:0.9rem;color:#1a1a1a;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-bottom:5px">' + (f.recette_nom||r.nom||'Recette') + '</div>' +
-          '<div style="display:flex;gap:6px;flex-wrap:wrap">' +
-          '<span style="background:#FFF3ED;color:#C2604A;font-size:0.68rem;font-weight:700;padding:3px 9px;border-radius:100px">' + (r.calories||0) + ' kcal</span>' +
-          '<span style="background:#F4F4F4;color:#888;font-size:0.68rem;font-weight:700;padding:3px 9px;border-radius:100px">' + (r.prep_minutes||0) + ' min</span>' +
-          '</div></div>' +
-          '<button onclick="event.stopPropagation();window.retirerFavori(\'' + encodeURIComponent(f.recette_nom) + '\')" style="background:#FAFAFA;border:none;color:#bbb;width:28px;height:28px;border-radius:9px;font-size:1rem;cursor:pointer;flex-shrink:0;display:flex;align-items:center;justify-content:center">×</button>' +
-          '</div>';
+        if (!r.nom) r.nom = f.recette_nom || 'Recette';
+        return cardHTML(r, { showVis:false, showDelete:true, deleteAction:"window.retirerFavori('" + encodeURIComponent(f.recette_nom) + "')" });
       }).join('');
+      list.querySelectorAll('img[data-recette-photo]').forEach(function(img) {
+        loadMealPhoto(img.getAttribute('data-meal-name'), img.getAttribute('data-keyword'), img);
+      });
       return;
     }
     var apiType = tab === 'mes' ? 'mes' : 'communaute';
@@ -18927,21 +18950,11 @@ window.loadMesRecettes = async function() {
       return;
     }
     list.innerHTML = recettes.map(function(r) {
-      var cs = catStyle[r.categorie] || {icon:'🍽️',c1:'#FFD9C4',c2:'#FFB89A'};
-      var isPublic = r.visibilite === 'public';
-      var rJson = JSON.stringify(r).replace(/"/g, '&quot;');
-      return '<div data-recipe="' + rJson + '" onclick="showRecipeModal(this)" style="background:#fff;border-radius:16px;padding:14px;margin-bottom:12px;display:flex;align-items:center;gap:14px;box-shadow:0 0 0 1px rgba(0,0,0,0.035),0 8px 20px rgba(0,0,0,0.05);cursor:pointer;position:relative">' +
-        '<div style="width:52px;height:52px;flex-shrink:0;border-radius:13px;background:linear-gradient(135deg,' + cs.c1 + ',' + cs.c2 + ');display:flex;align-items:center;justify-content:center;font-size:1.5rem">' + cs.icon + '</div>' +
-        '<div style="flex:1;min-width:0">' +
-        '<div style="font-weight:700;font-size:0.9rem;color:#1a1a1a;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-bottom:5px">' + r.nom + '</div>' +
-        '<div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center">' +
-        '<span style="background:#FFF3ED;color:#C2604A;font-size:0.68rem;font-weight:700;padding:3px 9px;border-radius:100px">' + (r.calories||0) + ' kcal</span>' +
-        '<span style="background:#F4F4F4;color:#888;font-size:0.68rem;font-weight:700;padding:3px 9px;border-radius:100px">' + (r.prep_minutes||0) + ' min</span>' +
-        '<span style="background:' + (isPublic ? 'rgba(76,175,80,0.1)' : 'rgba(0,0,0,0.05)') + ';color:' + (isPublic ? '#2e7d32' : '#888') + ';font-size:0.65rem;font-weight:700;padding:3px 9px;border-radius:100px;text-transform:uppercase;letter-spacing:0.03em">' + (isPublic ? 'Publique' : 'Privée') + '</span>' +
-        '</div></div>' +
-        (tab === 'mes' ? '<button onclick="event.stopPropagation();window.supprimerRecette(\'' + r.id + '\')" style="background:#FAFAFA;border:none;color:#bbb;width:28px;height:28px;border-radius:9px;font-size:1rem;cursor:pointer;flex-shrink:0;display:flex;align-items:center;justify-content:center">×</button>' : '') +
-        '</div>';
+      return cardHTML(r, { showVis:true, isPublic: r.visibilite === 'public', showDelete: tab === 'mes', deleteAction:"window.supprimerRecette('" + r.id + "')" });
     }).join('');
+    list.querySelectorAll('img[data-recette-photo]').forEach(function(img) {
+      loadMealPhoto(img.getAttribute('data-meal-name'), img.getAttribute('data-keyword'), img);
+    });
   } catch(e) {
     list.innerHTML = '<div style="text-align:center;padding:40px;color:#e74c3c">Erreur de chargement</div>';
   }
