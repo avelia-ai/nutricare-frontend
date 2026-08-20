@@ -11793,7 +11793,7 @@ function switchLang(lang) {
     if (popup) popup.style.display = 'none';
   });
 
-  var _cardioAdviceTiers = [
+  window._cardioAdviceTiers = [
     { max: 50, label: 'Très bas', color: '#3B6D11', bg: '#EAF3DE', text: 'Un rythme sous 50 bpm au repos est fréquent chez les sportifs entraînés, mais peut aussi mériter un avis médical si tu ressens des vertiges ou une fatigue inhabituelle.', tip: 'Si tu ne pratiques pas de sport intensif, parles-en à un professionnel de santé pour en avoir le cœur net.' },
     { max: 60, label: 'Bas', color: '#3B6D11', bg: '#EAF3DE', text: 'Ton rythme cardiaque est plutôt bas, ce qui est souvent bon signe d\'une bonne condition cardiovasculaire.', tip: 'Continue sur cette lancée avec une activité physique régulière et une bonne hydratation.' },
     { max: 90, label: 'Normal', color: '#3B6D11', bg: '#EAF3DE', text: 'Ton rythme cardiaque au repos se situe dans la fourchette généralement considérée comme normale pour un adulte.', tip: 'Un rythme stable jour après jour est un bon indicateur de récupération et de sommeil de qualité.' },
@@ -11802,12 +11802,12 @@ function switchLang(lang) {
     { max: 999, label: 'Élevé', color: '#C23B2E', bg: '#FFE0DC', text: 'Cette valeur est nettement au-dessus de la normale pour une mesure au repos.', tip: 'Si tu n\'as pas fait d\'effort récent et que ce chiffre te semble inhabituel, nous te recommandons de consulter un professionnel de santé.' }
   ];
 
-  function _cardioGetTier(bpm) {
-    for (var i = 0; i < _cardioAdviceTiers.length; i++) {
-      if (bpm <= _cardioAdviceTiers[i].max) return _cardioAdviceTiers[i];
+  window._cardioGetTier = function(bpm) {
+    for (var i = 0; i < window._cardioAdviceTiers.length; i++) {
+      if (bpm <= window._cardioAdviceTiers[i].max) return window._cardioAdviceTiers[i];
     }
-    return _cardioAdviceTiers[_cardioAdviceTiers.length - 1];
-  }
+    return window._cardioAdviceTiers[window._cardioAdviceTiers.length - 1];
+  };
 
   function showCardioAdvicePopup(bpm) {
     if (!window._cardioFreshMeasurement) return;
@@ -15958,48 +15958,118 @@ function renderCardioSection(logs) {
   var listEl = document.getElementById('cardioHistoryList');
   if (!canvas || !listEl) return;
 
-  var ctx = canvas.getContext('2d');
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
-
   if (points.length === 0) {
+    var ctxEmpty = canvas.getContext('2d');
+    ctxEmpty.clearRect(0, 0, canvas.width, canvas.height);
     listEl.innerHTML = '<div style="padding:8px 0;color:#aaa">Aucune mesure enregistr\u00e9e pour le moment.</div>';
     return;
   }
 
   var recent = points.slice(-14);
-  var w = canvas.width, h = canvas.height, pad = 10;
+
+  var dpr = window.devicePixelRatio || 1;
+  var cssWidth = canvas.clientWidth || 300;
+  var cssHeight = canvas.clientHeight || 90;
+  canvas.width = cssWidth * dpr;
+  canvas.height = cssHeight * dpr;
+  var ctx = canvas.getContext('2d');
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  ctx.clearRect(0, 0, cssWidth, cssHeight);
+
+  var w = cssWidth, h = cssHeight, pad = 12;
   var values = recent.map(function(p) { return p.bpm; });
   var minV = Math.min.apply(null, values) - 5;
   var maxV = Math.max.apply(null, values) + 5;
   var range = Math.max(1, maxV - minV);
   var stepX = recent.length > 1 ? (w - pad * 2) / (recent.length - 1) : 0;
 
-  ctx.beginPath();
-  recent.forEach(function(p, i) {
+  function getXY(p, i) {
     var x = pad + i * stepX;
     var y = h - pad - ((p.bpm - minV) / range) * (h - pad * 2);
-    if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+    return { x: x, y: y };
+  }
+
+  ctx.strokeStyle = 'rgba(0,0,0,0.05)';
+  ctx.lineWidth = 1;
+  for (var gi = 0; gi <= 3; gi++) {
+    var gy = pad + (gi / 3) * (h - pad * 2);
+    ctx.beginPath();
+    ctx.moveTo(pad, gy);
+    ctx.lineTo(w - pad, gy);
+    ctx.stroke();
+  }
+
+  var gradient = ctx.createLinearGradient(0, pad, 0, h - pad);
+  gradient.addColorStop(0, 'rgba(255,107,107,0.22)');
+  gradient.addColorStop(1, 'rgba(255,107,107,0.02)');
+  ctx.beginPath();
+  recent.forEach(function(p, i) {
+    var pt = getXY(p, i);
+    if (i === 0) ctx.moveTo(pt.x, pt.y); else ctx.lineTo(pt.x, pt.y);
+  });
+  ctx.lineTo(pad + (recent.length - 1) * stepX, h - pad);
+  ctx.lineTo(pad, h - pad);
+  ctx.closePath();
+  ctx.fillStyle = gradient;
+  ctx.fill();
+
+  ctx.beginPath();
+  recent.forEach(function(p, i) {
+    var pt = getXY(p, i);
+    if (i === 0) ctx.moveTo(pt.x, pt.y); else ctx.lineTo(pt.x, pt.y);
   });
   ctx.strokeStyle = '#FF6B6B';
   ctx.lineWidth = 2.5;
   ctx.lineJoin = 'round';
+  ctx.lineCap = 'round';
   ctx.stroke();
 
   recent.forEach(function(p, i) {
-    var x = pad + i * stepX;
-    var y = h - pad - ((p.bpm - minV) / range) * (h - pad * 2);
+    var pt = getXY(p, i);
     ctx.beginPath();
-    ctx.arc(x, y, 3, 0, Math.PI * 2);
-    ctx.fillStyle = '#FF6B6B';
+    ctx.arc(pt.x, pt.y, 6, 0, Math.PI * 2);
+    ctx.fillStyle = 'rgba(255,107,107,0.15)';
     ctx.fill();
+    ctx.beginPath();
+    ctx.arc(pt.x, pt.y, 3.2, 0, Math.PI * 2);
+    ctx.fillStyle = '#FFFFFF';
+    ctx.fill();
+    ctx.beginPath();
+    ctx.arc(pt.x, pt.y, 3.2, 0, Math.PI * 2);
+    ctx.strokeStyle = '#FF6B6B';
+    ctx.lineWidth = 2;
+    ctx.stroke();
   });
 
-  listEl.innerHTML = [...recent].reverse().slice(0, 5).map(function(p) {
+  var displayed = [...recent].reverse().slice(0, 8);
+  listEl.innerHTML = displayed.map(function(p) {
     var d = new Date(p.date);
     var dateStr = d.toLocaleDateString('fr-FR', { day: 'numeric', month: 'short' });
-    return '<div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid #F2EFE9"><span>' + dateStr + '</span><span style="font-weight:700;color:#FF6B6B">' + p.bpm + ' bpm</span></div>';
+    var tier = (typeof window._cardioGetTier === 'function') ? window._cardioGetTier(p.bpm) : null;
+    var tierLabel = tier ? tier.label : '';
+    var tierColor = tier ? tier.color : '#888';
+    var tierBg = tier ? tier.bg : '#F5F5F5';
+    return '<div onclick=\'window.showCardioHistoryDetail(' + p.bpm + ', \"' + p.date + '\")\' style="display:flex;align-items:center;justify-content:space-between;padding:10px 4px;border-bottom:1px solid #F2EFE9;cursor:pointer"><div style="display:flex;align-items:center;gap:10px"><span style="font-size:0.82rem;color:#666">' + dateStr + '</span><span style="font-size:0.65rem;font-weight:700;padding:2px 8px;border-radius:10px;background:' + tierBg + ';color:' + tierColor + '">' + tierLabel + '</span></div><div style="display:flex;align-items:center;gap:6px"><span style="font-weight:700;color:#FF6B6B">' + p.bpm + ' bpm</span><i class="ti ti-chevron-right" style="font-size:14px;color:#ccc"></i></div></div>';
   }).join('');
 }
+
+window.showCardioHistoryDetail = function(bpm, dateStr) {
+  var tier = (typeof window._cardioGetTier === 'function') ? window._cardioGetTier(bpm) : null;
+  if (!tier) return;
+  var d = new Date(dateStr);
+  var dateLabel = d.toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' });
+
+  var popup = document.getElementById('cardioAdvicePopup');
+  if (!popup) return;
+  document.getElementById('cardioAdviceBpm').textContent = bpm;
+  var badgeEl = document.getElementById('cardioAdviceBadge');
+  badgeEl.textContent = tier.label;
+  badgeEl.style.background = tier.bg;
+  badgeEl.style.color = tier.color;
+  document.getElementById('cardioAdviceText').textContent = tier.text;
+  document.getElementById('cardioAdviceTip').textContent = tier.tip;
+  popup.style.display = 'flex';
+};
 
 function renderSommeilSection(logs) {
   var points = (logs || [])
