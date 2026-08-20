@@ -19300,7 +19300,7 @@ window.showSoirReminderPopup = function() {
   try {
     profile = JSON.parse(localStorage.getItem('nutricare_profile') || '{}');
   } catch(e) { profile = {}; }
-  var sleepTime = '11:30'; // TEMP TEST: force une heure de coucher pour declencher tout de suite
+  var sleepTime = profile.sleep_time;
   if (!sleepTime) return;
 
   var sleepH = parseInt(sleepTime.split(':')[0], 10);
