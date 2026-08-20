@@ -34,9 +34,9 @@ window._pcAdvicePool = [];
       else if (imc < 18.5) pushAdvice('ton IMC est en dessous de la normale, veille \u00e0 ne pas sauter de repas et privil\u00e9gie les apports caloriques de qualit\u00e9', 2);
     }
 
-    if (_tlStress === null && profile.stress_actuel && profile.stress_actuel >= 7) pushAdvice('ton niveau de stress est \u00e9lev\u00e9, essaie une s\u00e9ance de coh\u00e9rence cardiaque de 2 minutes aujourd\'hui', 2);
-    if (_tlEnergy === null && profile.energie_actuelle && profile.energie_actuelle <= 4) pushAdvice('ton \u00e9nergie est basse en ce moment, v\u00e9rifie ton sommeil et ton hydratation avant tout', 2);
-    if (_tlSleep === null && profile.sommeil_heures_actuel && profile.sommeil_heures_actuel < 7) pushAdvice('tu dors moins de 7h en g\u00e9n\u00e9ral, essaie de te coucher 30 minutes plus t\u00f4t ce soir', 2);
+    if (_tlStress === null && ((window._pcRecentAverages && window._pcRecentAverages.stress !== null) ? window._pcRecentAverages.stress >= 7 : (profile.stress_actuel && profile.stress_actuel >= 7))) pushAdvice('ton niveau de stress est \u00e9lev\u00e9, essaie une s\u00e9ance de coh\u00e9rence cardiaque de 2 minutes aujourd\'hui', 2);
+    if (_tlEnergy === null && ((window._pcRecentAverages && window._pcRecentAverages.energy !== null) ? window._pcRecentAverages.energy <= 4 : (profile.energie_actuelle && profile.energie_actuelle <= 4))) pushAdvice('ton \u00e9nergie est basse en ce moment, v\u00e9rifie ton sommeil et ton hydratation avant tout', 2);
+    if (_tlSleep === null && ((window._pcRecentAverages && window._pcRecentAverages.sleep !== null) ? window._pcRecentAverages.sleep < 7 : (profile.sommeil_heures_actuel && profile.sommeil_heures_actuel < 7))) pushAdvice('tu dors moins de 7h en g\u00e9n\u00e9ral, essaie de te coucher 30 minutes plus t\u00f4t ce soir', 2);
     if (profile.sommeil_reveils_nocturnes === 'souvent') pushAdvice('tes r\u00e9veils nocturnes fr\u00e9quents peuvent impacter ta r\u00e9cup\u00e9ration : \u00e9vite les \u00e9crans et les repas lourds avant le coucher, et limite la caf\u00e9ine apr\u00e8s 14h', 2);
     if (profile.sport_pratique) pushAdvice('continue ta pratique de ' + profile.sport_pratique + ', la r\u00e9gularit\u00e9 est la cl\u00e9 des r\u00e9sultats : vise 2 \u00e0 3 s\u00e9ances par semaine et laisse au moins un jour de repos entre deux efforts intenses', 1);
 
@@ -3670,9 +3670,9 @@ window.initHome = async function() {
       else if (imc < 18.5) pushAdvice('ton IMC est en dessous de la normale, veille \u00e0 ne pas sauter de repas et privil\u00e9gie les apports caloriques de qualit\u00e9', 2);
     }
 
-    if (_tlStress === null && profile.stress_actuel && profile.stress_actuel >= 7) pushAdvice('ton niveau de stress est \u00e9lev\u00e9, essaie une s\u00e9ance de coh\u00e9rence cardiaque de 2 minutes aujourd\'hui', 2);
-    if (_tlEnergy === null && profile.energie_actuelle && profile.energie_actuelle <= 4) pushAdvice('ton \u00e9nergie est basse en ce moment, v\u00e9rifie ton sommeil et ton hydratation avant tout', 2);
-    if (_tlSleep === null && profile.sommeil_heures_actuel && profile.sommeil_heures_actuel < 7) pushAdvice('tu dors moins de 7h en g\u00e9n\u00e9ral, essaie de te coucher 30 minutes plus t\u00f4t ce soir', 2);
+    if (_tlStress === null && ((window._pcRecentAverages && window._pcRecentAverages.stress !== null) ? window._pcRecentAverages.stress >= 7 : (profile.stress_actuel && profile.stress_actuel >= 7))) pushAdvice('ton niveau de stress est \u00e9lev\u00e9, essaie une s\u00e9ance de coh\u00e9rence cardiaque de 2 minutes aujourd\'hui', 2);
+    if (_tlEnergy === null && ((window._pcRecentAverages && window._pcRecentAverages.energy !== null) ? window._pcRecentAverages.energy <= 4 : (profile.energie_actuelle && profile.energie_actuelle <= 4))) pushAdvice('ton \u00e9nergie est basse en ce moment, v\u00e9rifie ton sommeil et ton hydratation avant tout', 2);
+    if (_tlSleep === null && ((window._pcRecentAverages && window._pcRecentAverages.sleep !== null) ? window._pcRecentAverages.sleep < 7 : (profile.sommeil_heures_actuel && profile.sommeil_heures_actuel < 7))) pushAdvice('tu dors moins de 7h en g\u00e9n\u00e9ral, essaie de te coucher 30 minutes plus t\u00f4t ce soir', 2);
     if (profile.sommeil_reveils_nocturnes === 'souvent') pushAdvice('tes r\u00e9veils nocturnes fr\u00e9quents peuvent impacter ta r\u00e9cup\u00e9ration : \u00e9vite les \u00e9crans et les repas lourds avant le coucher, et limite la caf\u00e9ine apr\u00e8s 14h', 2);
     if (profile.sport_pratique) pushAdvice('continue ta pratique de ' + profile.sport_pratique + ', la r\u00e9gularit\u00e9 est la cl\u00e9 des r\u00e9sultats : vise 2 \u00e0 3 s\u00e9ances par semaine et laisse au moins un jour de repos entre deux efforts intenses', 1);
 
@@ -3876,9 +3876,9 @@ window.initHome = async function() {
     else if (imc < 18.5) pushAdvice('ton IMC est en dessous de la normale, veille à ne pas sauter de repas et privilégie les apports caloriques de qualité', 2);
 
     // Conseils bases sur le profil statique (onboarding, si pas deja couverts par les donnees du jour)
-    if (_tlStress === null && profile.stress_actuel && profile.stress_actuel >= 7) pushAdvice('ton niveau de stress est élevé, essaie une séance de cohérence cardiaque de 2 minutes aujourd\'hui', 2);
-    if (_tlEnergy === null && profile.energie_actuelle && profile.energie_actuelle <= 4) pushAdvice('ton énergie est basse en ce moment, vérifie ton sommeil et ton hydratation avant tout', 2);
-    if (_tlSleep === null && profile.sommeil_heures_actuel && profile.sommeil_heures_actuel < 7) pushAdvice('tu dors moins de 7h en général, essaie de te coucher 30 minutes plus tôt ce soir', 2);
+    if (_tlStress === null && ((window._pcRecentAverages && window._pcRecentAverages.stress !== null) ? window._pcRecentAverages.stress >= 7 : (profile.stress_actuel && profile.stress_actuel >= 7))) pushAdvice('ton niveau de stress est élevé, essaie une séance de cohérence cardiaque de 2 minutes aujourd\'hui', 2);
+    if (_tlEnergy === null && ((window._pcRecentAverages && window._pcRecentAverages.energy !== null) ? window._pcRecentAverages.energy <= 4 : (profile.energie_actuelle && profile.energie_actuelle <= 4))) pushAdvice('ton énergie est basse en ce moment, vérifie ton sommeil et ton hydratation avant tout', 2);
+    if (_tlSleep === null && ((window._pcRecentAverages && window._pcRecentAverages.sleep !== null) ? window._pcRecentAverages.sleep < 7 : (profile.sommeil_heures_actuel && profile.sommeil_heures_actuel < 7))) pushAdvice('tu dors moins de 7h en général, essaie de te coucher 30 minutes plus tôt ce soir', 2);
     if (profile.sommeil_reveils_nocturnes === 'souvent') pushAdvice('tes réveils nocturnes fréquents peuvent impacter ta récupération : évite les écrans et les repas lourds avant le coucher, et limite la caféine après 14h', 2);
     if (profile.sport_pratique) pushAdvice('continue ta pratique de ' + profile.sport_pratique + ', la régularité est la clé des résultats : vise 2 à 3 séances par semaine et laisse au moins un jour de repos entre deux efforts intenses', 1);
 
@@ -15738,6 +15738,17 @@ function refreshHarmonyAvatar(logs) {
   }
   var _todayStrHA = new Date().toISOString().split('T')[0];
   window._pcTodayHealthLog = (logs ? (logs.find(function(l) { return (l.date || '').split('T')[0] === _todayStrHA; }) || null) : null) || lastLog || null;
+  window._pcRecentAverages = (function() {
+    if (!logs || !logs.length) return { sleep: null, energy: null, stress: null };
+    var d7 = new Date(); d7.setDate(d7.getDate() - 7);
+    var recentLogs = logs.filter(function(l) { return l.date && new Date(l.date) >= d7; });
+    function avg(field) {
+      var vals = recentLogs.map(function(l) { return l[field]; }).filter(function(v) { return v !== null && v !== undefined; });
+      if (!vals.length) return null;
+      return Math.round((vals.reduce(function(a,b){return a+b;},0) / vals.length) * 10) / 10;
+    }
+    return { sleep: avg('sleep_hours'), energy: avg('energy_level'), stress: avg('stress_level') };
+  })();
   var _profileForAdvice = window._pcLastProfileForSummary || JSON.parse(localStorage.getItem('nutricare_profile') || '{}');
   if (typeof window.renderPersonalSummary === 'function') { window.renderPersonalSummary(_profileForAdvice); }
   (function() {
