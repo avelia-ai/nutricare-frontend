@@ -19289,7 +19289,70 @@ window.initMirellaNotifications = function() {
   window.showCyclePhaseChangePopup();
   setInterval(function() { window.showSoirReminderPopup(); }, 5 * 60 * 1000);
   window.showSoirReminderPopup();
+  setInterval(function() { window.showMilestonePopup(); }, 5 * 60 * 1000);
+  window.showMilestonePopup();
 };
+
+window.checkRitualMilestone = function() {
+  try {
+    var total = parseInt(localStorage.getItem('mirella_rituels_total_count') || '0', 10) + 1;
+    localStorage.setItem('mirella_rituels_total_count', String(total));
+    if (total === 10 && !localStorage.getItem('mirella_milestone_10_pending') && !localStorage.getItem('mirella_milestone_10_shown')) {
+      localStorage.setItem('mirella_milestone_10_pending', '1');
+    }
+  } catch(e) {}
+};
+
+window.showMilestonePopup = function() {
+  var titleEl = document.getElementById('milestoneTitle');
+  var textEl = document.getElementById('milestoneText');
+  var popup = document.getElementById('milestonePopup');
+  if (!titleEl || !textEl || !popup) return;
+
+  var prenom = '';
+  try {
+    var p = JSON.parse(localStorage.getItem('mirella_profile') || '{}');
+    prenom = (p.prenom || p.firstName || p.name || '').split(' ')[0];
+  } catch(e) {}
+  var hello = prenom ? prenom + ' ! ' : '';
+
+  if (localStorage.getItem('mirella_milestone_10_pending') && !localStorage.getItem('mirella_milestone_10_shown')) {
+    titleEl.textContent = '🎉 ' + hello + '10 rituels complétés !';
+    textEl.textContent = 'Tu as accompli ton 10e rituel bien-être. Cette régularité fait vraiment la différence sur le long terme, continue comme ça !';
+    popup.style.display = 'flex';
+    localStorage.setItem('mirella_milestone_10_shown', '1');
+    localStorage.removeItem('mirella_milestone_10_pending');
+    return;
+  }
+
+  var logs = window._lastLogs || [];
+  if (logs.length >= 7) {
+    var sorted = logs.slice().sort(function(a,b){ return new Date(b.date) - new Date(a.date); });
+    var consecutive = 0;
+    var checkDate = new Date();
+    for (var i = 0; i < 14; i++) {
+      var dStr = checkDate.toISOString().split('T')[0];
+      var found = sorted.some(function(l) { return (l.date || '').split('T')[0] === dStr; });
+      if (found) { consecutive++; } else { break; }
+      checkDate.setDate(checkDate.getDate() - 1);
+    }
+    if (consecutive >= 7) {
+      var lastCelebrated = parseInt(localStorage.getItem('mirella_milestone_streak_celebrated') || '0', 10);
+      if (consecutive > lastCelebrated) {
+        titleEl.textContent = '🔥 ' + hello + consecutive + ' jours de suivi d\'affilée !';
+        textEl.textContent = 'Tu renseignes ton suivi santé depuis ' + consecutive + ' jours consécutifs. C\'est cette régularité qui me permet de te donner des conseils vraiment adaptés à toi.';
+        popup.style.display = 'flex';
+        localStorage.setItem('mirella_milestone_streak_celebrated', String(consecutive));
+      }
+    }
+  }
+};
+
+window.closeMilestonePopup = function() {
+  var popup = document.getElementById('milestonePopup');
+  if (popup) popup.style.display = 'none';
+};
+
 
 window.showSoirReminderPopup = function() {
   var today = new Date().toDateString();
@@ -21843,6 +21906,7 @@ function finishRituel(pts) {
     }
     localStorage.setItem('mirella_rituels_completed', JSON.stringify(_ritLog));
   } catch(eRitTrack) {}
+  if (typeof window.checkRitualMilestone === 'function') window.checkRitualMilestone();
   if (typeof updateHarmonyUI === 'function') {
     var logs = JSON.parse(localStorage.getItem('nutricare_logs')||'[]');
     var total = (typeof calcHarmonyFromLogs==='function' ? calcHarmonyFromLogs(logs) : 0) + bonus;
@@ -24645,6 +24709,39 @@ document.addEventListener('DOMContentLoaded', function() {
         <p id="soirReminderText" style="font-size:0.95rem;color:#2D2D2D;line-height:1.6;margin:0 0 20px;font-weight:500"></p>
         <button onclick="goToSoirRitual()" style="width:100%;background:linear-gradient(135deg,#8A7AE0,#6C5CE7);color:white;border:none;border-radius:16px;padding:15px;font-size:0.92rem;font-weight:700;box-shadow:0 8px 20px rgba(108,92,231,0.35);cursor:pointer">Faire mon rituel du soir</button>
         <button onclick="closeSoirReminderPopup()" style="width:100%;margin-top:10px;background:none;border:none;color:#aaa;font-size:0.78rem;padding:6px;cursor:pointer">Plus tard</button>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- POPUP CELEBRATION JALON -->
+<div id="milestonePopup" style="display:none;position:fixed;inset:0;z-index:99999;background:rgba(20,10,15,0.6);backdrop-filter:blur(6px);align-items:center;justify-content:center;padding:20px;animation:cardioPopupFadeIn 0.3s ease">
+  <div style="border-radius:28px;padding:2px;max-width:360px;width:100%;background:linear-gradient(135deg,#FFE566,#FFB300,#FF8A5B);box-shadow:0 20px 50px rgba(255,179,0,0.4);animation:cardioPopupScaleIn 0.35s cubic-bezier(0.34,1.56,0.64,1)">
+    <div style="background:#FFFCFA;border-radius:26px;overflow:hidden;position:relative">
+      <button onclick="closeMilestonePopup()" style="position:absolute;top:14px;right:14px;z-index:3;width:30px;height:30px;border-radius:50%;background:rgba(255,255,255,0.9);border:none;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 8px rgba(0,0,0,0.15);cursor:pointer;font-size:1rem;color:#666">✕</button>
+
+      <div style="position:relative;background:radial-gradient(circle at 50% 30%,#FFF0C4,#FFD980 45%,#FFB347 100%);padding:30px 20px 0;overflow:hidden">
+        <div style="position:absolute;top:-20px;left:-20px;width:120px;height:120px;background:radial-gradient(circle,rgba(255,255,255,0.4),transparent 70%);border-radius:50%"></div>
+        <div style="position:absolute;bottom:10px;right:-10px;width:90px;height:90px;background:radial-gradient(circle,rgba(255,255,255,0.3),transparent 70%);border-radius:50%"></div>
+        <span style="position:absolute;top:15%;left:10%;font-size:16px">✨</span>
+        <span style="position:absolute;top:25%;right:14%;font-size:12px">✨</span>
+        <span style="position:absolute;top:65%;left:15%;font-size:14px">✨</span>
+        <span style="position:absolute;top:55%;right:10%;font-size:10px">✨</span>
+
+        <div style="position:relative;z-index:1;display:flex;justify-content:center">
+          <div style="width:190px;height:190px;border-radius:50%;overflow:hidden;box-shadow:0 12px 30px rgba(200,140,0,0.3);border:5px solid white">
+            <video autoplay muted loop playsinline style="width:118%;height:118%;object-fit:cover;display:block;margin:-9%">
+              <source src="/assets/rituels-fox.mp4" type="video/mp4">
+            </video>
+          </div>
+        </div>
+      </div>
+
+      <div style="padding:22px 24px 26px;text-align:center">
+        <div id="milestoneTitle" style="font-size:1.15rem;color:#2D2D2D;font-weight:800;margin-bottom:8px"></div>
+        <p id="milestoneText" style="font-size:0.9rem;color:#666;line-height:1.6;margin:0 0 20px"></p>
+        <button onclick="closeMilestonePopup()" style="width:100%;background:linear-gradient(135deg,#FFD166,#FF8A5B);color:white;border:none;border-radius:16px;padding:15px;font-size:0.92rem;font-weight:700;box-shadow:0 8px 20px rgba(255,138,91,0.35);cursor:pointer">Continuer</button>
       </div>
 
     </div>
