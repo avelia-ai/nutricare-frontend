@@ -18605,13 +18605,13 @@ function toggleQuickMenu() {
     <div style="font-size:1.3rem;font-weight:800;color:white;margin-bottom:4px">Mes Recettes</div>
     <div style="font-size:0.82rem;color:rgba(255,255,255,0.85)">Créez et gérez vos recettes personnelles</div>
   </div>
-  <div style="display:flex;gap:8px;padding:16px 16px 0">
-    <button onclick="switchRecettesTab('mes')" id="tabMesRecettes" style="flex:1;padding:10px;border:none;border-radius:10px;font-weight:700;font-size:0.82rem;cursor:pointer;background:var(--coral);color:white">Mes recettes</button>
-    <button onclick="switchRecettesTab('communaute')" id="tabCommunaute" style="flex:1;padding:10px;border:none;border-radius:10px;font-weight:700;font-size:0.82rem;cursor:pointer;background:white;color:#888">Communauté</button>
-    <button onclick="switchRecettesTab('favoris')" id="tabFavoris" style="flex:1;padding:10px;border:none;border-radius:10px;font-weight:700;font-size:0.82rem;cursor:pointer;background:white;color:#888">Favoris</button>
+  <div style="display:flex;gap:6px;padding:16px 16px 0;background:#FBF3EE;margin:16px 16px 0;border-radius:16px;box-shadow:inset 0 1px 3px rgba(180,110,80,0.08);padding:5px">
+    <button onclick="switchRecettesTab('mes')" id="tabMesRecettes" style="flex:1;padding:10px 8px;border:none;border-radius:12px;font-weight:700;font-size:0.8rem;cursor:pointer;letter-spacing:-0.01em;transition:all .25s cubic-bezier(.4,0,.2,1);background:linear-gradient(135deg,#FF6B6B,#FF9A3C);color:white;box-shadow:0 4px 12px rgba(255,107,107,0.35),0 0 0 1px rgba(255,255,255,0.15) inset">Mes recettes</button>
+    <button onclick="switchRecettesTab('communaute')" id="tabCommunaute" style="flex:1;padding:10px 8px;border:none;border-radius:12px;font-weight:700;font-size:0.8rem;cursor:pointer;letter-spacing:-0.01em;transition:all .25s cubic-bezier(.4,0,.2,1);background:transparent;color:#9a8a82;box-shadow:none">Communauté</button>
+    <button onclick="switchRecettesTab('favoris')" id="tabFavoris" style="flex:1;padding:10px 8px;border:none;border-radius:12px;font-weight:700;font-size:0.8rem;cursor:pointer;letter-spacing:-0.01em;transition:all .25s cubic-bezier(.4,0,.2,1);background:transparent;color:#9a8a82;box-shadow:none">Favoris</button>
   </div>
-  <div style="padding:16px">
-    <button onclick="showFormulaireRecette()" style="width:100%;padding:14px;background:linear-gradient(135deg,var(--coral),var(--accent));color:white;border:none;border-radius:14px;font-weight:700;font-size:0.9rem;cursor:pointer">+ Créer une recette</button>
+  <div style="padding:20px 16px 8px">
+    <button onclick="showFormulaireRecette()" style="width:100%;padding:15px;background:linear-gradient(135deg,#FF6B6B,#FF9A3C);color:white;border:none;border-radius:16px;font-weight:800;font-size:0.9rem;letter-spacing:-0.01em;cursor:pointer;box-shadow:0 8px 20px rgba(255,107,107,0.32),0 0 0 1px rgba(255,255,255,0.2) inset;display:flex;align-items:center;justify-content:center;gap:8px;transition:transform .15s,box-shadow .15s" onmousedown="this.style.transform='scale(0.98)'" onmouseup="this.style.transform='scale(1)'"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>Créer une recette</button>
   </div>
   <div id="mesRecettesList" style="padding:0 16px 100px">
     <div style="text-align:center;padding:40px;color:#ccc">Chargement...</div>
@@ -18863,8 +18863,9 @@ window.switchRecettesTab = function(tab) {
     var btn = document.getElementById(id);
     if (!btn) return;
     var active = (id === 'tabMesRecettes' && tab === 'mes') || (id === 'tabCommunaute' && tab === 'communaute') || (id === 'tabFavoris' && tab === 'favoris');
-    btn.style.background = active ? 'var(--coral)' : 'white';
-    btn.style.color = active ? 'white' : '#888';
+    btn.style.background = active ? 'linear-gradient(135deg,#FF6B6B,#FF9A3C)' : 'transparent';
+    btn.style.color = active ? 'white' : '#9a8a82';
+    btn.style.boxShadow = active ? '0 4px 12px rgba(255,107,107,0.35),0 0 0 1px rgba(255,255,255,0.15) inset' : 'none';
   });
   window.loadMesRecettes();
 };
@@ -18904,7 +18905,7 @@ window.loadMesRecettes = async function() {
         ? '<button onclick="event.stopPropagation();' + opts.deleteAction + '" style="background:transparent;border:none;color:#d8d0cb;width:30px;height:30px;border-radius:9px;cursor:pointer;flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:color .15s"' +
           ' onmouseover="this.style.color=\'#e74c3c\'" onmouseout="this.style.color=\'#d8d0cb\'">' + trashIcon + '</button>'
         : '';
-      return '<div data-recipe="' + rJson + '" onclick="showRecipeModal(this)" style="background:#FFFCFA;border-radius:18px;padding:13px;margin-bottom:12px;display:flex;align-items:center;gap:14px;box-shadow:0 0 0 1.5px rgba(255,154,108,0.16),0 10px 26px rgba(230,110,70,0.09);cursor:pointer">' +
+      return '<div data-recipe="' + rJson + '" onclick="showRecipeModal(this)" style="background:#FFFCFA;border-radius:20px;padding:14px;margin-bottom:12px;display:flex;align-items:center;gap:14px;box-shadow:0 0 0 1px rgba(255,154,108,0.12),0 2px 6px rgba(230,110,70,0.06),0 14px 32px rgba(230,110,70,0.12);cursor:pointer;transition:transform .2s,box-shadow .2s" onmousedown="this.style.transform=\'scale(0.985)\'" onmouseup="this.style.transform=\'scale(1)\'">' +
         '<div style="width:60px;height:60px;flex-shrink:0;border-radius:14px;overflow:hidden;position:relative;background:linear-gradient(135deg,' + cs.c1 + ',' + cs.c2 + ')">' +
         '<img data-recette-photo data-meal-name="' + r.nom.replace(/"/g,'&quot;') + '" data-keyword="' + (r.photo_keyword||'').replace(/"/g,'&quot;') + '" style="width:100%;height:100%;object-fit:cover;position:relative;z-index:1" onerror="this.style.display=\'none\'">' +
         '</div>' +
