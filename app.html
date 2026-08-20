@@ -19256,33 +19256,8 @@ window.getMirellaMsg = function(type) {
 
 window.initMirellaNotifications = function() {
   window.updateNotifBadge();
-
-  var lastVisit = localStorage.getItem('mirella_last_visit');
-  var today = new Date().toDateString();
-  if(lastVisit !== today) {
-    localStorage.setItem('mirella_last_visit', today);
-    setTimeout(function() {
-      window.addNotif('conseil', window.getMirellaMsg('conseil'), '💡');
-    }, 5000);
-  }
-
-  setInterval(function() {
-    var h = new Date().getHours();
-    if(h >= 8 && h <= 20) window.addNotif('hydratation', window.getMirellaMsg('hydratation'), '💧');
-  }, 2 * 60 * 60 * 1000);
-
-  setInterval(function() {
-    var h = new Date().getHours();
-    var m = new Date().getMinutes();
-    if((h === 12 && m < 5) || (h === 19 && m < 5)) window.addNotif('repas', window.getMirellaMsg('repas'), '🍽️');
-  }, 5 * 60 * 1000);
-
   setInterval(function() { window.checkPlanningReminders(); }, 30 * 1000);
   window.checkPlanningReminders();
-
-  setInterval(function() {
-    var h = new Date().getHours();
-    if(h >= 9 && h <= 21) window.addNotif('motivation', window.getMirellaMsg('motivation'), '💪');
   }, 4 * 60 * 60 * 1000);
 };
 
