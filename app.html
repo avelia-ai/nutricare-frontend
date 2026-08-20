@@ -19277,10 +19277,10 @@ window.showHealthReminderPopup = function() {
   var today = new Date().toDateString();
   var flagKey = 'mirella_health_reminder_shown_' + today;
   if (localStorage.getItem(flagKey)) return;
-  // if (window._pcTodayHealthLog) return; // DESACTIVE TEMPORAIREMENT POUR TEST
+  if (window._pcTodayHealthLog) return;
 
   var h = new Date().getHours();
-  // if (h < 20) return; // DESACTIVE TEMPORAIREMENT POUR TEST
+  if (h < 20) return;
 
   var yesterday = new Date();
   yesterday.setDate(yesterday.getDate() - 1);
