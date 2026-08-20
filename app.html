@@ -20678,6 +20678,19 @@ function openSubscriptionModal(context) {
   <audio id="rituelPauseActiveMusic" loop preload="none">
     <source src="/assets/pause-active-music.mp3" type="audio/mpeg">
   </audio>
+  <div id="rituelMilitaryBg" style="display:none;position:absolute;inset:0;z-index:0;background:radial-gradient(circle at 50% 30%,#1a2030,#0a0e18 75%)">
+    <svg id="mSvg" viewBox="0 0 400 800" style="width:100%;height:100%;display:block">
+      <defs>
+        <radialGradient id="mCoreG" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#ffd9a0"/><stop offset="60%" stop-color="#c98a4a"/><stop offset="100%" stop-color="#c98a4a" stop-opacity="0"/></radialGradient>
+      </defs>
+      <g id="mStars"></g>
+      <circle cx="200" cy="330" id="mRing1" r="140" fill="none" stroke="#3a4560" stroke-width="1" opacity="0.5"/>
+      <circle cx="200" cy="330" id="mRing2" r="105" fill="none" stroke="#4a5878" stroke-width="1" opacity="0.4"/>
+      <circle cx="200" cy="330" id="mRing3" r="72" fill="none" stroke="#5a6a90" stroke-width="1.5" opacity="0.5"/>
+      <circle cx="200" cy="330" id="mCore" r="42" fill="url(#mCoreG)"/>
+      <circle cx="200" cy="330" id="mCoreInner" r="15" fill="#fff3d8"/>
+    </svg>
+  </div>
   <div id="rituelPauseActiveBg" style="display:none;position:absolute;inset:0;z-index:0;background:radial-gradient(circle at 50% 38%,#3a2414,#120a06 72%)">
     <svg id="paSvg" viewBox="0 0 400 800" style="width:100%;height:100%;display:block">
       <defs>
@@ -21373,6 +21386,68 @@ function _startRituelExercise() {
   }
   var flameCanvas = document.getElementById('rituelGratitudeFlameCanvas');
   var lanternWrap = document.getElementById('rituelGratitudeLanternWrap');
+  var isMilitary = (window._currentRituelType === 'military');
+  var militaryBg = document.getElementById('rituelMilitaryBg');
+  if (militaryBg) militaryBg.style.display = isMilitary ? 'block' : 'none';
+
+  var _mCoreR = [42, 35, 28, 22, 16, 10];
+  var _mCoreOpacity = [1, 0.9, 0.8, 0.65, 0.5, 0.35];
+  var _mRingOpacity = [0.5, 0.42, 0.34, 0.26, 0.18, 0.1];
+  var _mCoreColors = [
+    ['#fff3d8', '#ffd9a0', '#c98a4a'],
+    ['#fff3d8', '#ffd9a0', '#c98a4a'],
+    ['#f5ecd8', '#e8c898', '#a87a52'],
+    ['#e8e4d8', '#c8b498', '#8a6a58'],
+    ['#d8dce8', '#a8a8c8', '#6a6a8a'],
+    ['#c8d0e8', '#8a94c8', '#4a5478']
+  ];
+
+  function _mSpawnStars() {
+    var box = document.getElementById('mStars');
+    if (!box) return;
+    box.innerHTML = '';
+    for (var i = 0; i < 20; i++) {
+      var c = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+      var x = Math.random() * 400, y = Math.random() * 800;
+      var r = 0.5 + Math.random() * 1.2;
+      c.setAttribute('cx', x); c.setAttribute('cy', y); c.setAttribute('r', r);
+      c.setAttribute('fill', '#a8dcf0'); c.setAttribute('opacity', (0.15 + Math.random() * 0.3).toFixed(2));
+      var anim = document.createElementNS('http://www.w3.org/2000/svg', 'animate');
+      anim.setAttribute('attributeName', 'opacity');
+      anim.setAttribute('values', '0.1;0.5;0.1');
+      anim.setAttribute('dur', (3 + Math.random() * 3) + 's');
+      anim.setAttribute('repeatCount', 'indefinite');
+      c.appendChild(anim);
+      box.appendChild(c);
+    }
+  }
+
+  function _mApplyState(stepIndex) {
+    var idx = Math.min(stepIndex, _mCoreR.length - 1);
+    var coreEl = document.getElementById('mCore');
+    var coreInnerEl = document.getElementById('mCoreInner');
+    if (!coreEl) return;
+    coreEl.setAttribute('r', _mCoreR[idx]);
+    coreEl.style.opacity = _mCoreOpacity[idx];
+    if (coreInnerEl) {
+      coreInnerEl.setAttribute('r', Math.max(3, _mCoreR[idx] * 0.35));
+      coreInnerEl.setAttribute('fill', _mCoreColors[idx][0]);
+    }
+    var mCoreG = document.getElementById('mCoreG');
+    document.getElementById('ring1') && document.getElementById('ring1');
+    var ring1 = document.getElementById('mRing1');
+    var ring2 = document.getElementById('mRing2');
+    var ring3 = document.getElementById('mRing3');
+    if (ring1) ring1.style.opacity = _mRingOpacity[idx];
+    if (ring2) ring2.style.opacity = _mRingOpacity[idx] * 0.85;
+    if (ring3) ring3.style.opacity = _mRingOpacity[idx] * 1.1;
+  }
+
+  if (isMilitary) {
+    _mSpawnStars();
+    _mApplyState(0);
+  }
+
   var isPauseActive = (window._currentRituelType === 'pause_active');
   var pauseActiveBg = document.getElementById('rituelPauseActiveBg');
   if (pauseActiveBg) pauseActiveBg.style.display = isPauseActive ? 'block' : 'none';
@@ -21441,7 +21516,7 @@ function _startRituelExercise() {
     _paGrowthLoop();
   }
 
-  rc.style.display = (isGratitude || isVisualisation || isAncrage || isPauseActive) ? 'none' : 'block';
+  rc.style.display = (isGratitude || isVisualisation || isAncrage || isPauseActive || isMilitary) ? 'none' : 'block';
   var _customRitualActive = (isGratitude || isVisualisation || isAncrage || isPauseActive);
   var _timerArcSvg = document.getElementById('rituelTimerArc');
   if (_timerArcSvg && _timerArcSvg.parentElement) {
@@ -21501,7 +21576,7 @@ function _startRituelExercise() {
   var CYCLE = 8000;
   function animLoop() {
     if (!_rituelAnimRunning) return;
-    if (isGratitude || isVisualisation || isAncrage || isPauseActive) {
+    if (isGratitude || isVisualisation || isAncrage || isPauseActive || isMilitary) {
       requestAnimationFrame(animLoop);
       return;
     }
@@ -21529,7 +21604,7 @@ function _startRituelExercise() {
     document.getElementById('rituelPhase').textContent = Math.floor(elapsed/60) + 'min ' + (elapsed%60) + 's';
     arc.style.strokeDashoffset = circumference * (1 - elapsed / totalDuration);
     stepElapsed++; elapsed++;
-    if (stepElapsed >= step.duration) { stepElapsed=0; stepIdx++; if (isGratitude) _lgApplyState(stepIdx); if (isVisualisation) _hzApplyState(stepIdx); if (isAncrage) _rtApplyState(stepIdx); if (isPauseActive) _paApplyState(stepIdx); }
+    if (stepElapsed >= step.duration) { stepElapsed=0; stepIdx++; if (isGratitude) _lgApplyState(stepIdx); if (isVisualisation) _hzApplyState(stepIdx); if (isAncrage) _rtApplyState(stepIdx); if (isPauseActive) _paApplyState(stepIdx); if (isMilitary) _mApplyState(stepIdx); }
     if (elapsed >= totalDuration) {
       _rituelAnimRunning = false;
       finishRituel(cfg.pts);
@@ -23300,6 +23375,8 @@ function closeRituel() {
   if (window._paGrowthRaf) { cancelAnimationFrame(window._paGrowthRaf); window._paGrowthRaf = null; }
   var pauseActiveBgEl = document.getElementById('rituelPauseActiveBg');
   if (pauseActiveBgEl) pauseActiveBgEl.style.display = 'none';
+  var militaryBgEl = document.getElementById('rituelMilitaryBg');
+  if (militaryBgEl) militaryBgEl.style.display = 'none';
   var paMusicEl = document.getElementById('rituelPauseActiveMusic');
   if (paMusicEl) paMusicEl.pause();
   var ancrageBgEl = document.getElementById('rituelAncrageBg');
