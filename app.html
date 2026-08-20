@@ -11011,7 +11011,7 @@ function switchLang(lang) {
       document.getElementById('gamiNextNiveau').textContent = `${nextMin - totalPoints} pts pour le niveau suivant`;
     } else {
       document.getElementById('gamiProgressBar').style.width = '100%';
-      document.getElementById('gamiNextNiveau').textContent = 'Niveau maximum atteint ✨';
+      document.getElementById('gamiNextNiveau').innerHTML = 'Niveau maximum atteint <i class="ti ti-sparkles"></i>';
     }
 
     // ── Streak ───────────────────────────────────────────────────────────────
@@ -11028,10 +11028,10 @@ function switchLang(lang) {
     }
     document.getElementById('gamiStreak').textContent = streak;
     document.getElementById('gamiStreakMsg').textContent =
-      streak >= 30 ? '🏆 Légendaire !' :
-      streak >= 14 ? '🔥 Incroyable série !' :
-      streak >= 7  ? '💪 Impressionnant !' :
-      streak >= 3  ? '👍 Continuez !' :
+      streak >= 30 ? '<i class="ti ti-trophy"></i> Légendaire !' :
+      streak >= 14 ? '<i class="ti ti-flame"></i> Incroyable série !' :
+      streak >= 7  ? '<i class="ti ti-mood-boy"></i> Impressionnant !' :
+      streak >= 3  ? '<i class="ti ti-thumb-up"></i> Continuez !' :
       'Connectez-vous chaque jour !';
     if (streak >= 7) document.getElementById('gamiStreakShield').style.display = 'block';
 
@@ -11084,10 +11084,10 @@ function switchLang(lang) {
     const joursActivite = logsWeek.filter(l => (l.activity_minutes||0) >= 30).length;
     const joursSommeil = logsWeek.filter(l => (l.sleep_hours||0) >= 7).length;
     const objectifs = [
-      { icon:'📋', nom:'Jours de suivi', actuel:joursAvecLog, cible:7 },
-      { icon:'💧', nom:'Jours hydratation atteinte', actuel:joursHydra, cible:5 },
-      { icon:'🏃', nom:"Jours d'activité", actuel:joursActivite, cible:4 },
-      { icon:'😴', nom:'Nuits de sommeil suffisant', actuel:joursSommeil, cible:5 },
+      { icon:'<i class="ti ti-clipboard-list"></i>', nom:'Jours de suivi', actuel:joursAvecLog, cible:7 },
+      { icon:'<i class="ti ti-droplet"></i>', nom:'Jours hydratation atteinte', actuel:joursHydra, cible:5 },
+      { icon:'<i class="ti ti-run"></i>', nom:"Jours d'activité", actuel:joursActivite, cible:4 },
+      { icon:'<i class="ti ti-moon"></i>', nom:'Nuits de sommeil suffisant', actuel:joursSommeil, cible:5 },
     ];
     document.getElementById('gamiObjectifs').innerHTML = objectifs.map(o => {
       const pct = Math.min(100, (o.actuel / o.cible) * 100);
@@ -11103,7 +11103,7 @@ function switchLang(lang) {
             <div style="background:${done ? '#6B8F71' : 'linear-gradient(90deg,var(--coral),#FFB870)'};height:100%;border-radius:100px;width:${pct}%;transition:width 1s"></div>
           </div>
         </div>
-        ${done ? '<div style="color:#6B8F71;font-size:1rem">✅</div>' : ''}
+        ${done ? '<div style="color:#6B8F71;font-size:1rem"><i class="ti ti-circle-check"></i></div>' : ''}
       </div>`;
     }).join('');
 
