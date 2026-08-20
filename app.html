@@ -4279,6 +4279,18 @@ window.updateCycle = function() {
   // Sauvegarder
   localStorage.setItem('mirella_cycle', JSON.stringify({lastPeriod, cycleLength, periodLength}));
 
+  // Ajouter aussi a l'historique des cycles si cette date n'y est pas deja
+  if (typeof window.getCycleHistory === 'function' && typeof window.saveCycleHistory === 'function') {
+    var _cycleHist = window.getCycleHistory();
+    var _alreadyIn = _cycleHist.some(function(h) { return h.date === lastPeriod; });
+    if (!_alreadyIn) {
+      _cycleHist.push({ date: lastPeriod, addedAt: new Date().toISOString() });
+      _cycleHist.sort(function(a,b){ return new Date(b.date) - new Date(a.date); });
+      window.saveCycleHistory(_cycleHist);
+      if (typeof window.renderCycleHistory === 'function') window.renderCycleHistory();
+    }
+  }
+
   var result = window.getCyclePhase(lastPeriod, cycleLength, periodLength);
   var phases = {
     menstruelle: {name: 'Phase Menstruelle', emoji: '🔴', color: 'var(--coral)', desc: 'Votre corps se régénère. Privilégiez le repos et les aliments riches en fer.', details: "Vos hormones (œstrogènes et progestérone) sont à leur plus bas niveau, ce qui déclenche les règles et peut expliquer une baisse d'énergie et une sensibilité accrue. L'utérus se contracte pour évacuer sa muqueuse, d'où les crampes possibles. Votre corps consomme aussi plus de fer durant cette phase. C'est une période propice à l'introspection et au ralentissement, avant que l'énergie ne remonte progressivement.", conseils: ['Aliments riches en fer : viande rouge, lentilles, épinards', 'Anti-inflammatoires naturels : gingembre, curcuma, oméga-3', 'Évitez alcool et caféine qui aggravent les crampes', 'Hydratation++, tisanes apaisantes', 'Sport léger : yoga, marche'], lifestyle: [
