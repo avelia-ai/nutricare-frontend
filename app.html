@@ -21390,17 +21390,22 @@ function _startRituelExercise() {
   var militaryBg = document.getElementById('rituelMilitaryBg');
   if (militaryBg) militaryBg.style.display = isMilitary ? 'block' : 'none';
 
-  var _mCoreR = [42, 35, 28, 22, 16, 10];
-  var _mCoreOpacity = [1, 0.9, 0.8, 0.65, 0.5, 0.35];
-  var _mRingOpacity = [0.5, 0.42, 0.34, 0.26, 0.18, 0.1];
-  var _mCoreColors = [
-    ['#fff3d8', '#ffd9a0', '#c98a4a'],
-    ['#fff3d8', '#ffd9a0', '#c98a4a'],
-    ['#f5ecd8', '#e8c898', '#a87a52'],
-    ['#e8e4d8', '#c8b498', '#8a6a58'],
-    ['#d8dce8', '#a8a8c8', '#6a6a8a'],
-    ['#c8d0e8', '#8a94c8', '#4a5478']
+  var _mCoreR = [62, 50, 40, 31, 23, 15];
+  var _mCoreOpacity = [1, 0.92, 0.82, 0.68, 0.52, 0.35];
+  var _mRingOpacity = [0.55, 0.46, 0.37, 0.28, 0.19, 0.1];
+  var _mCoreColorStops = [
+    [255,243,216],
+    [255,217,160],
+    [245,236,216],
+    [232,228,216],
+    [216,220,232],
+    [200,208,232]
   ];
+  var _mCurrentStepStart = 0;
+  var _mCurrentStepDuration = 50;
+  var _mCurrentStepIdx = 0;
+
+  function _mLerp(a, b, t) { return a + (b - a) * t; }
 
   function _mSpawnStars() {
     var box = document.getElementById('mStars');
@@ -21422,30 +21427,54 @@ function _startRituelExercise() {
     }
   }
 
-  function _mApplyState(stepIndex) {
-    var idx = Math.min(stepIndex, _mCoreR.length - 1);
+  function _mSetStepContext(stepIdx, stepDuration) {
+    _mCurrentStepIdx = stepIdx;
+    _mCurrentStepDuration = stepDuration || 50;
+    _mCurrentStepStart = Date.now();
+  }
+
+  function _mGrowthLoop() {
+    if (!isMilitary) return;
+    var fromIdx = Math.min(_mCurrentStepIdx, _mCoreR.length - 1);
+    var toIdx = Math.min(_mCurrentStepIdx + 1, _mCoreR.length - 1);
+    var elapsedMs = Date.now() - _mCurrentStepStart;
+    var t = Math.min(elapsedMs / (_mCurrentStepDuration * 1000), 1);
+
+    var r = _mLerp(_mCoreR[fromIdx], _mCoreR[toIdx], t);
+    var op = _mLerp(_mCoreOpacity[fromIdx], _mCoreOpacity[toIdx], t);
+    var ringOp = _mLerp(_mRingOpacity[fromIdx], _mRingOpacity[toIdx], t);
+    var col0 = _mCoreColorStops[fromIdx], col1 = _mCoreColorStops[toIdx];
+    var cr = Math.round(_mLerp(col0[0], col1[0], t));
+    var cg = Math.round(_mLerp(col0[1], col1[1], t));
+    var cb = Math.round(_mLerp(col0[2], col1[2], t));
+
     var coreEl = document.getElementById('mCore');
     var coreInnerEl = document.getElementById('mCoreInner');
-    if (!coreEl) return;
-    coreEl.setAttribute('r', _mCoreR[idx]);
-    coreEl.style.opacity = _mCoreOpacity[idx];
-    if (coreInnerEl) {
-      coreInnerEl.setAttribute('r', Math.max(3, _mCoreR[idx] * 0.35));
-      coreInnerEl.setAttribute('fill', _mCoreColors[idx][0]);
-    }
-    var mCoreG = document.getElementById('mCoreG');
-    document.getElementById('ring1') && document.getElementById('ring1');
     var ring1 = document.getElementById('mRing1');
     var ring2 = document.getElementById('mRing2');
     var ring3 = document.getElementById('mRing3');
-    if (ring1) ring1.style.opacity = _mRingOpacity[idx];
-    if (ring2) ring2.style.opacity = _mRingOpacity[idx] * 0.85;
-    if (ring3) ring3.style.opacity = _mRingOpacity[idx] * 1.1;
+
+    if (coreEl) { coreEl.setAttribute('r', r); coreEl.style.opacity = op; }
+    if (coreInnerEl) {
+      coreInnerEl.setAttribute('r', Math.max(3, r * 0.35));
+      coreInnerEl.setAttribute('fill', 'rgb(' + cr + ',' + cg + ',' + cb + ')');
+    }
+    if (ring1) ring1.style.opacity = ringOp;
+    if (ring2) ring2.style.opacity = ringOp * 0.85;
+    if (ring3) ring3.style.opacity = ringOp * 1.1;
+
+    window._mGrowthRaf = requestAnimationFrame(_mGrowthLoop);
+  }
+
+  function _mApplyState(stepIndex) {
+    var step = (cfg.steps && cfg.steps[stepIndex]) || { duration: 50 };
+    _mSetStepContext(stepIndex, step.duration);
   }
 
   if (isMilitary) {
     _mSpawnStars();
     _mApplyState(0);
+    _mGrowthLoop();
   }
 
   var isPauseActive = (window._currentRituelType === 'pause_active');
@@ -21517,7 +21546,7 @@ function _startRituelExercise() {
   }
 
   rc.style.display = (isGratitude || isVisualisation || isAncrage || isPauseActive || isMilitary) ? 'none' : 'block';
-  var _customRitualActive = (isGratitude || isVisualisation || isAncrage || isPauseActive);
+  var _customRitualActive = (isGratitude || isVisualisation || isAncrage || isPauseActive || isMilitary);
   var _timerArcSvg = document.getElementById('rituelTimerArc');
   if (_timerArcSvg && _timerArcSvg.parentElement) {
     _timerArcSvg.parentElement.style.display = _customRitualActive ? 'none' : '';
@@ -23377,6 +23406,7 @@ function closeRituel() {
   if (pauseActiveBgEl) pauseActiveBgEl.style.display = 'none';
   var militaryBgEl = document.getElementById('rituelMilitaryBg');
   if (militaryBgEl) militaryBgEl.style.display = 'none';
+  if (window._mGrowthRaf) { cancelAnimationFrame(window._mGrowthRaf); window._mGrowthRaf = null; }
   var paMusicEl = document.getElementById('rituelPauseActiveMusic');
   if (paMusicEl) paMusicEl.pause();
   var ancrageBgEl = document.getElementById('rituelAncrageBg');
