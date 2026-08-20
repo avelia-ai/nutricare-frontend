@@ -21771,6 +21771,16 @@ function finishRituel(pts) {
   _hcState.calm=1; _hcState.sleep=1; _hcState.hydra=1; _hcState.activ=1;
   var bonus = parseInt(localStorage.getItem(_gamiKey())||'0') + pts;
   localStorage.setItem(_gamiKey(), bonus);
+  // Enregistre le type de rituel complete aujourd'hui, pour les rappels intelligents
+  try {
+    var _todayRit = new Date().toDateString();
+    var _ritLog = JSON.parse(localStorage.getItem('mirella_rituels_completed') || '{}');
+    if (_ritLog.date !== _todayRit) { _ritLog = { date: _todayRit, types: [] }; }
+    if (window._currentRituelType && _ritLog.types.indexOf(window._currentRituelType) === -1) {
+      _ritLog.types.push(window._currentRituelType);
+    }
+    localStorage.setItem('mirella_rituels_completed', JSON.stringify(_ritLog));
+  } catch(eRitTrack) {}
   if (typeof updateHarmonyUI === 'function') {
     var logs = JSON.parse(localStorage.getItem('nutricare_logs')||'[]');
     var total = (typeof calcHarmonyFromLogs==='function' ? calcHarmonyFromLogs(logs) : 0) + bonus;
