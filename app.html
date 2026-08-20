@@ -19269,7 +19269,60 @@ window.initMirellaNotifications = function() {
   window.updateNotifBadge();
   setInterval(function() { window.checkPlanningReminders(); }, 30 * 1000);
   window.checkPlanningReminders();
+  setInterval(function() { window.showHealthReminderPopup(); }, 5 * 60 * 1000);
+  window.showHealthReminderPopup();
 };
+
+window.showHealthReminderPopup = function() {
+  var today = new Date().toDateString();
+  var flagKey = 'mirella_health_reminder_shown_' + today;
+  if (localStorage.getItem(flagKey)) return;
+  if (window._pcTodayHealthLog) return;
+
+  var h = new Date().getHours();
+  if (h < 20) return;
+
+  var yesterday = new Date();
+  yesterday.setDate(yesterday.getDate() - 1);
+  var yStr = yesterday.toISOString().split('T')[0];
+  var yLog = (window._lastLogs || []).find(function(l) { return (l.date || '').split('T')[0] === yStr; });
+
+  var msg;
+  var prenom = '';
+  try {
+    var p = JSON.parse(localStorage.getItem('mirella_profile') || '{}');
+    prenom = (p.prenom || p.firstName || p.name || '').split(' ')[0];
+  } catch(e) {}
+  var hello = prenom ? prenom + ', ' : '';
+
+  if (yLog && yLog.energy_level !== null && yLog.energy_level !== undefined && yLog.energy_level <= 4) {
+    msg = hello + 'hier ton énergie était basse (' + yLog.energy_level + '/10). Comment tu te sens aujourd\'hui ? Prends un instant pour faire le point.';
+  } else if (yLog && yLog.stress_level !== null && yLog.stress_level !== undefined && yLog.stress_level >= 7) {
+    msg = hello + 'hier ton stress était élevé (' + yLog.stress_level + '/10). J\'aimerais savoir comment se passe ta journée aujourd\'hui.';
+  } else if (yLog && yLog.sleep_hours !== null && yLog.sleep_hours !== undefined && yLog.sleep_hours < 6) {
+    msg = hello + 'tu as peu dormi hier (' + yLog.sleep_hours + 'h). Ton bien-être aujourd\'hui m\'intéresse, tu peux me le dire ?';
+  } else {
+    msg = hello + 'tu n\'as pas encore renseigné ton suivi santé aujourd\'hui. Deux minutes suffisent pour que je puisse mieux t\'accompagner.';
+  }
+
+  var textEl = document.getElementById('healthReminderText');
+  var popup = document.getElementById('healthReminderPopup');
+  if (!textEl || !popup) return;
+  textEl.textContent = msg;
+  popup.style.display = 'flex';
+  localStorage.setItem(flagKey, '1');
+};
+
+window.closeHealthReminderPopup = function() {
+  var popup = document.getElementById('healthReminderPopup');
+  if (popup) popup.style.display = 'none';
+};
+
+window.goToHealthTracking = function() {
+  window.closeHealthReminderPopup();
+  if (typeof window.showView === 'function') window.showView('health');
+};
+
 
 // ===== SYSTÈME NOTIFICATIONS IN-APP =====
 var _notifList = [];
@@ -24243,6 +24296,27 @@ document.addEventListener('DOMContentLoaded', function() {
   @keyframes cardioPopupFadeIn { from{opacity:0} to{opacity:1} }
   @keyframes cardioPopupScaleIn { from{opacity:0;transform:scale(0.9) translateY(10px)} to{opacity:1;transform:scale(1) translateY(0)} }
   </style>
+<!-- POPUP RAPPEL SUIVI SANTE -->
+<div id="healthReminderPopup" style="display:none;position:fixed;inset:0;z-index:99999;background:rgba(20,10,15,0.6);backdrop-filter:blur(6px);align-items:center;justify-content:center;padding:20px;animation:cardioPopupFadeIn 0.3s ease">
+  <div style="background:#FFFCFA;border-radius:24px;overflow:hidden;max-width:360px;width:100%;box-shadow:0 24px 60px rgba(0,0,0,0.35);animation:cardioPopupScaleIn 0.35s cubic-bezier(0.34,1.56,0.64,1);position:relative">
+    <button onclick="closeHealthReminderPopup()" style="position:absolute;top:14px;right:14px;background:rgba(0,0,0,0.35);border:none;color:white;width:30px;height:30px;border-radius:50%;font-size:1rem;cursor:pointer;z-index:2">✕</button>
+    <div style="width:100%;aspect-ratio:16/9;background:#000">
+      <video autoplay muted loop playsinline style="width:100%;height:100%;object-fit:cover;display:block">
+        <source src="/assets/rituels-fox.mp4" type="video/mp4">
+      </video>
+    </div>
+    <div style="padding:20px 22px 22px">
+      <div style="display:flex;align-items:center;gap:6px;margin-bottom:8px">
+        <span style="width:5px;height:5px;border-radius:50%;background:var(--coral)"></span>
+        <span style="font-size:10px;color:var(--coral);font-weight:700;letter-spacing:0.06em;text-transform:uppercase">Mirella</span>
+      </div>
+      <p id="healthReminderText" style="font-size:0.9rem;color:#2D2D2D;line-height:1.55;margin:0 0 18px;font-weight:500"></p>
+      <button onclick="goToHealthTracking()" style="width:100%;background:linear-gradient(135deg,var(--coral),var(--accent));color:white;border:none;border-radius:16px;padding:14px;font-size:0.9rem;font-weight:700;cursor:pointer">Remplir mon suivi</button>
+      <button onclick="closeHealthReminderPopup()" style="width:100%;margin-top:8px;background:none;border:none;color:#999;font-size:0.78rem;padding:8px;cursor:pointer">Plus tard</button>
+    </div>
+  </div>
+</div>
+
 </body>
 </html>
 <div style="display:none">build-trigger</div>
