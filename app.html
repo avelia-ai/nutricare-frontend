@@ -2730,9 +2730,9 @@ window.loadCatalogue = async function() {
         ? '<img src="'+r.photo_url+'" loading="lazy" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block" onerror="this.style.display=\'none\'">'
         : '<div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center"><i class="ti '+cs.ico+'" style="font-size:2.4rem;color:rgba(255,255,255,0.5)"></i></div>';
 
-      return '<div id="' + cardId + '" data-photo="' + ((r.photo_keyword||r.nom).replace(/['"]/g,"")) + '" data-icon="' + (catIcons[r.categorie]||'🍽️') + '" style="border-radius:22px;overflow:hidden;background:#FFFCFA;box-shadow:0 3px 10px rgba(0,0,0,0.04),0 16px 36px -8px rgba(230,110,70,0.26);border:1px solid rgba(255,255,255,0.6);position:relative' + (r.locked ? ';opacity:0.85' : '') + '">' +
+      return '<div id="' + cardId + '" data-photo="' + ((r.photo_keyword||r.nom).replace(/['"]/g,"")) + '" data-icon="' + (catIcons[r.categorie]||'🍽️') + '" style="border-radius:22px;overflow:hidden;background:#FFFCFA;box-shadow:0 3px 10px rgba(0,0,0,0.04),0 16px 36px -8px rgba(230,110,70,0.26);border:1px solid rgba(255,255,255,0.6);position:relative;min-width:0;width:100%' + (r.locked ? ';opacity:0.85' : '') + '">' +
         '<div onclick="' + cardClick + '" style="cursor:pointer">' +
-        '<div class="rc-img" style="position:relative;height:150px;overflow:hidden;background:'+cs.grad+'">' +
+        '<div class="rc-img" style="position:relative;height:150px;width:100%;overflow:hidden;background:'+cs.grad+'">' +
         imgHtml +
         '<div style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,0.04) 0%,transparent 32%,rgba(10,6,4,0.72) 100%)"></div>' +
         lockBadge + favBtn +
