@@ -13147,6 +13147,19 @@ Réponds UNIQUEMENT en JSON valide avec cette structure exacte:
     if (document.getElementById('shopView')) document.getElementById('shopView').style.display = view === 'shop' ? 'block' : 'none';
     if (document.getElementById('mirelsBoutiqueView')) { document.getElementById('mirelsBoutiqueView').style.display = view === 'mirelsBoutique' ? 'block' : 'none'; if (view === 'mirelsBoutique') loadMirelsBoutique(); }
     document.getElementById('programsView').style.display = view === 'programs' ? 'block' : 'none';
+    // Force un recalcul de la hauteur de scroll (bug connu Chrome mobile ou le max-scroll
+    // reste fige sur une ancienne mesure quand une vue passe de display:none a block)
+    (function() {
+      var activeViewEl = document.getElementById(view + 'View');
+      if (activeViewEl) {
+        requestAnimationFrame(function() {
+          var prevOverflow = activeViewEl.style.overflowY;
+          activeViewEl.style.overflowY = 'hidden';
+          void activeViewEl.offsetHeight;
+          activeViewEl.style.overflowY = prevOverflow || 'auto';
+        });
+      }
+    })();
     document.getElementById('ordonnanceView').style.display = view === 'ordonnance' ? 'block' : 'none';
     document.getElementById('scanproduitView').style.display = view === 'scanproduit' ? 'block' : 'none'; if (view === 'scanproduit') applyScanproduitPlanGates();
     document.getElementById('insightsView').style.display = view === 'insights' ? 'block' : 'none';
