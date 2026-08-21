@@ -13172,7 +13172,7 @@ Réponds UNIQUEMENT en JSON valide avec cette structure exacte:
   } catch(e) {}
   window.renderVisageHistorique();
 }, 200); applyVisagePlanGates(); } }
-    var fv = document.getElementById('frigoView'); if(fv) { fv.style.display = view === 'frigo' ? 'block' : 'none'; var mc = document.querySelector('.main-content'); if(mc) mc.style.overflow = view === 'frigo' ? 'auto' : 'hidden'; if(view==='frigo') { applyFrigoPlanGates();
+    var fv = document.getElementById('frigoView'); if(fv) { fv.style.display = view === 'frigo' ? 'block' : 'none'; if(view==='frigo') { applyFrigoPlanGates();
   setTimeout(function(){
     try {
       var fh = JSON.parse(localStorage.getItem('mirella_frigo_historique') || '[]');
