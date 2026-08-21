@@ -13525,6 +13525,15 @@ async function loadAnalysisHistory() {
         </div>
         <i class="ti ti-chevron-right" style="font-size:16px;color:#ddd;flex-shrink:0"></i>
       </div>`).join('');
+    requestAnimationFrame(function() {
+      var sv = document.getElementById('analysisView');
+      if (sv) {
+        var prevOv = sv.style.overflowY;
+        sv.style.overflowY = 'hidden';
+        void sv.offsetHeight;
+        sv.style.overflowY = prevOv || 'auto';
+      }
+    });
   } catch(e) { console.error(e); }
 }
   async function loadMenus() {
