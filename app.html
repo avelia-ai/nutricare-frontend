@@ -2702,44 +2702,57 @@ window.loadCatalogue = async function() {
     }
 
     var catIcons = { petit_dejeuner:'🌅', dejeuner:'☀️', diner:'🌙', collation:'🍎', dessert:'🍰', entree:'🥗' };
+    var tagLabels = {vegetarien:'Végétarien', vegan:'Vegan', sans_gluten:'Sans gluten', riche_proteines:'Protéines', faible_calories:'Léger', halal:'Halal', dessert:'Dessert', entree:'Entrée', epice:'Épicé', rapide:'Rapide', gourmand:'Gourmand'};
     var cards = recettes.map(function(r) {
-      var icon = catIcons[r.categorie] || '🍽️';
-      var tagColors = {vegetarien:'#EAF3DE:#27500A', vegan:'#E1F5EE:#085041', sans_gluten:'#FFFBEC:#633806', riche_proteines:'#EAF3DE:#27500A', faible_calories:'#FFF0EC:#993C1D', halal:'#E6F1FB:#0C447C', dessert:'#FFF0EC:#993C1D', entree:'#EAF3DE:#27500A'};
-      var tags = (r.tags || []).slice(0,2).map(function(t){
-        var tc = (tagColors[t]||'#FFF0EC:#993C1D').split(':');
-        return '<span style="background:'+tc[0]+';color:'+tc[1]+';font-size:0.6rem;padding:2px 8px;border-radius:10px;font-weight:600">' + t.replace(/_/g,' ') + '</span>';
-      }).join('');
+      var tagLabel = (r.tags && r.tags[0]) ? (tagLabels[r.tags[0]] || r.tags[0].replace(/_/g,' ')) : '';
       var cardId = 'rc-' + Math.random().toString(36).slice(2,8);
       window._catalogueRecettes = window._catalogueRecettes || {};
       var rcIdx = Object.keys(window._catalogueRecettes).length;
       window._catalogueRecettes[rcIdx] = r;
-      var lockBadge = r.locked ? '<div style="position:absolute;top:8px;left:8px;z-index:3;background:rgba(45,45,45,0.85);color:white;border-radius:20px;padding:4px 10px;font-size:0.65rem;font-weight:700;display:flex;align-items:center;gap:4px">🔒 Premium</div>' : '';
+      var isFav = (window._favorisNoms||[]).includes(r.nom);
+      var heartSvg = isFav
+        ? '<svg width="15" height="15" viewBox="0 0 24 24" fill="#FF6B6B" stroke="#fff" stroke-width="1.5"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 21l7.8-7.8 1-1a5.5 5.5 0 0 0 0-7.8z"/></svg>'
+        : '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 21l7.8-7.8 1-1a5.5 5.5 0 0 0 0-7.8z"/></svg>';
+      var lockBadge = r.locked ? '<div style="position:absolute;top:10px;left:10px;z-index:3;background:rgba(255,255,255,0.16);backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,0.35);color:#fff;border-radius:20px;padding:5px 11px;font-size:0.62rem;font-weight:700;display:flex;align-items:center;gap:4px"><i class="ti ti-lock" style="font-size:11px"></i>Premium</div>' : (tagLabel ? '<div style="position:absolute;top:10px;left:10px;z-index:3;background:rgba(255,255,255,0.16);backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,0.35);color:#fff;font-size:0.62rem;font-weight:700;padding:5px 11px;border-radius:20px;letter-spacing:0.03em;text-transform:uppercase">' + tagLabel + '</div>' : '');
       var cardClick = r.locked ? "openSubscriptionModal('lock')" : ('window.showRecetteDetail(JSON.stringify(window._catalogueRecettes[' + rcIdx + ']))');
-      return '<div id="' + cardId + '" data-photo="' + ((r.photo_keyword||r.nom).replace(/['"]/g,"")) + '" data-icon="' + icon + '" style="background:#FFFCFA;border-radius:16px;overflow:hidden;box-shadow:0 0 0 1.5px rgba(255,154,108,0.22),0 14px 32px rgba(230,110,70,0.14);position:relative">' +
-        lockBadge +
-        (r.locked ? '' : '<button onclick="event.stopPropagation();toggleFavoriIdx(' + rcIdx + ',this)" id="fav-btn-' + cardId + '" style="position:absolute;top:8px;right:8px;z-index:3;background:rgba(255,255,255,0.95);border:none;border-radius:50%;width:30px;height:30px;cursor:pointer;font-size:1rem;line-height:1;display:flex;align-items:center;justify-content:center;box-shadow:0 1px 4px rgba(0,0,0,0.1)">' + ((window._favorisNoms||[]).includes(r.nom) ? '❤️' : '🤍') + '</button>') +
-        '<div onclick="' + cardClick + '" style="cursor:pointer' + (r.locked ? ';opacity:0.7' : '') + '">' +
-        (function(){
-          var catStyles = {
-            petit_dejeuner: { grad:'linear-gradient(135deg,#FFB74D,#FF8A50)', ico:'ti-coffee' },
-            dejeuner: { grad:'linear-gradient(135deg,#FF8A65,#FF6B6B)', ico:'ti-salad' },
-            diner: { grad:'linear-gradient(135deg,#6C5B9E,#3F3470)', ico:'ti-moon-stars' },
-            collation: { grad:'linear-gradient(135deg,#8BC98A,#4E9B5C)', ico:'ti-apple' },
-            dessert: { grad:'linear-gradient(135deg,#F096B8,#D96B95)', ico:'ti-cookie' },
-            entree: { grad:'linear-gradient(135deg,#5BC0A8,#2E8B75)', ico:'ti-tools-kitchen-2' }
-          };
-          var cs = catStyles[r.categorie] || { grad:'linear-gradient(135deg,#B0A99F,#8A8378)', ico:'ti-tools-kitchen-2' };
-          if (r.photo_url) return '<div class="rc-img" style="height:130px;overflow:hidden;position:relative;background:'+cs.grad+'"><img src="'+r.photo_url+'" loading="lazy" style="width:100%;height:130px;object-fit:cover;display:block" onerror="this.parentElement.innerHTML=\'<div style=&quot;height:130px;display:flex;align-items:center;justify-content:center&quot;><i class=&quot;ti '+cs.ico+'&quot; style=&quot;font-size:2.4rem;color:rgba(255,255,255,0.9)&quot;></i></div>\'"></div>';
-          return '<div class="rc-img" style="height:130px;background:'+cs.grad+';display:flex;align-items:center;justify-content:center;overflow:hidden;position:relative"><i class="ti '+cs.ico+'" style="font-size:2.4rem;color:rgba(255,255,255,0.9)"></i></div>';
-        })() +
-        '<div style="padding:12px">' +
-        '<div style="font-size:0.82rem;font-weight:700;color:#1a1a1a;margin-bottom:5px;line-height:1.3;min-height:32px">' + r.nom + '</div>' +
-        '<div style="display:flex;gap:8px;font-size:0.7rem;color:#888;margin-bottom:7px">' +
-        '<span>⏱ ' + (r.prep_minutes||0) + 'min</span>' +
-        '<span>🔥 ' + (r.calories||0) + ' kcal</span>' +
+      var favBtn = r.locked ? '' : ('<button onclick="event.stopPropagation();toggleFavoriIdx(' + rcIdx + ',this)" id="fav-btn-' + cardId + '" style="position:absolute;top:10px;right:10px;z-index:3;background:rgba(255,255,255,0.16);backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,0.35);border-radius:50%;width:32px;height:32px;cursor:pointer;display:flex;align-items:center;justify-content:center">' + heartSvg + '</button>');
+
+      var catStyles = {
+        petit_dejeuner: { grad:'linear-gradient(160deg,#FFB74D,#C2600E)', ico:'ti-coffee' },
+        dejeuner: { grad:'linear-gradient(160deg,#FF8A65,#B8342A)', ico:'ti-salad' },
+        diner: { grad:'linear-gradient(160deg,#6C5B9E,#241F42)', ico:'ti-moon-stars' },
+       collation: { grad:'linear-gradient(160deg,#8BC98A,#2E6B3A)', ico:'ti-apple' },
+        dessert: { grad:'linear-gradient(160deg,#F096B8,#9C4A6E)', ico:'ti-cookie' },
+        entree: { grad:'linear-gradient(160deg,#5BC0A8,#1E5C4E)', ico:'ti-tools-kitchen-2' }
+      };
+      var cs = catStyles[r.categorie] || { grad:'linear-gradient(160deg,#B0A99F,#5A5348)', ico:'ti-tools-kitchen-2' };
+      var imgHtml = r.photo_url
+        ? '<img src="'+r.photo_url+'" loading="lazy" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block" onerror="this.style.display=\'none\'">'
+        : '<div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center"><i class="ti '+cs.ico+'" style="font-size:2.4rem;color:rgba(255,255,255,0.5)"></i></div>';
+
+      return '<div id="' + cardId + '" data-photo="' + ((r.photo_keyword||r.nom).replace(/['"]/g,"")) + '" data-icon="' + (catIcons[r.categorie]||'🍽️') + '" style="border-radius:22px;overflow:hidden;background:#FFFCFA;box-shadow:0 3px 10px rgba(0,0,0,0.04),0 16px 36px -8px rgba(230,110,70,0.26);border:1px solid rgba(255,255,255,0.6);position:relative' + (r.locked ? ';opacity:0.85' : '') + '">' +
+        '<div onclick="' + cardClick + '" style="cursor:pointer">' +
+        '<div class="rc-img" style="position:relative;height:150px;overflow:hidden;background:'+cs.grad+'">' +
+        imgHtml +
+        '<div style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,0.04) 0%,transparent 32%,rgba(10,6,4,0.72) 100%)"></div>' +
+        lockBadge + favBtn +
+        '<div style="position:absolute;bottom:0;left:0;right:0;padding:10px 12px">' +
+        '<div style="font-size:0.86rem;font-weight:800;color:#fff;line-height:1.25;letter-spacing:-0.01em;text-shadow:0 2px 8px rgba(0,0,0,0.35);min-height:34px">' + r.nom + '</div>' +
         '</div>' +
-        '<div style="display:flex;gap:4px;flex-wrap:wrap">' + tags + '</div>' +
-        '</div></div></div>';
+        '</div>' +
+        '<div style="padding:10px 12px 12px">' +
+        '<div style="display:flex;align-items:center;gap:5px">' +
+        '<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#C2A896" stroke-width="2.2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>' +
+        '<span style="font-size:0.66rem;color:#8a7a70;font-weight:600">' + (r.prep_minutes||0) + ' min</span>' +
+        '<span style="width:3px;height:3px;border-radius:50%;background:#e0d5cc;margin:0 3px"></span>' +
+        '<svg width="11" height="11" viewBox="0 0 24 24" fill="#FF9A6C" stroke="none"><path d="M12 2c-1 3-4 4-4 8a4 4 0 0 0 8 0c0-1.5-.7-2.3-1.3-3.2-.4.9-1 1.2-1.5.7.6-1.5-.3-3.3-1.2-5.5z"/></svg>' +
+        '<span style="font-size:0.66rem;color:#8a7a70;font-weight:600">' + (r.calories||0) + ' kcal</span>' +
+        '<div style="margin-left:auto;background:linear-gradient(135deg,#FF9A6C,#FF6B6B);width:22px;height:22px;border-radius:7px;display:flex;align-items:center;justify-content:center;box-shadow:0 3px 8px rgba(255,107,107,0.35)">' +
+        '<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5"><path d="M5 12h14M13 5l7 7-7 7"/></svg>' +
+        '</div>' +
+        '</div>' +
+        '</div>' +
+        '</div>';
     });
     grid.innerHTML = cards.join('');
     setTimeout(window.updateFavBtns, 100);
