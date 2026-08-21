@@ -7127,7 +7127,6 @@ function switchLang(lang) {
       <div id="analysisDetailMicros" style="display:none;background:#FAFAFA;border-radius:14px;padding:16px;margin-bottom:16px"></div>
       <div id="analysisDetailConseil" style="display:none;background:#FFF8E8;border-left:3px solid #FFD700;border-radius:10px;padding:14px;font-size:0.85rem;color:#555;line-height:1.5;margin-bottom:16px"></div>
       <div id="analysisDetailPoints" style="display:none"></div>
-      <div style="background:cyan;color:black;font-size:1.5rem;font-weight:900;padding:30px;text-align:center;margin-top:20px">MARQUEUR ANALYSE 789</div>
     </div>
   </div>
 </div>
@@ -13512,7 +13511,7 @@ async function loadAnalysisHistory() {
           <div style="font-size:0.7rem;color:#999;margin-top:2px">${new Date(h.analyzed_at).toLocaleDateString('fr-FR', { day:'numeric', month:'short', hour:'2-digit', minute:'2-digit' })} · ⭐ ${h.analysis_data?.score_sante}/10 · ${h.analysis_data?.calories_estimees} kcal</div>
         </div>
         <i class="ti ti-chevron-right" style="font-size:16px;color:#ddd;flex-shrink:0"></i>
-      </div>`).join('');
+      </div>`).join('') + '<div style="background:cyan;color:black;font-size:1.5rem;font-weight:900;padding:30px;text-align:center;margin-top:20px">MARQUEUR ANALYSE 789</div>';
   } catch(e) { console.error(e); }
 }
   async function loadMenus() {
