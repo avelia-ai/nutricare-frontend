@@ -25210,6 +25210,42 @@ document.addEventListener('DOMContentLoaded', function() {
   });
 })();
 </script>
+<script>
+// Lecture du podometre materiel Android (continue de compter meme app fermee/ecran verrouille)
+// via le plugin natif StepCounter (Sensor.TYPE_STEP_COUNTER)
+window._readNativeStepCounter = async function() {
+  try {
+    if (!window.Capacitor || !window.Capacitor.Plugins || !window.Capacitor.Plugins.StepCounter) return;
+    var result = await window.Capacitor.Plugins.StepCounter.getStepsSinceBoot();
+    if (!result || !result.available) return;
+    var stepsSinceBoot = result.stepsSinceBoot;
+    var todayStr = new Date().toISOString().split('T')[0];
+    var baseline = JSON.parse(localStorage.getItem('mirella_step_baseline') || 'null');
+
+    // Nouveau jour, ou premiere lecture, ou redemarrage du telephone detecte (compteur qui a diminue)
+    if (!baseline || baseline.date !== todayStr || stepsSinceBoot < baseline.stepsAtBaseline) {
+      baseline = { date: todayStr, stepsAtBaseline: stepsSinceBoot };
+      localStorage.setItem('mirella_step_baseline', JSON.stringify(baseline));
+    }
+
+    var todaySteps = Math.max(0, stepsSinceBoot - baseline.stepsAtBaseline);
+    if (typeof setTodaySteps === 'function') setTodaySteps(todaySteps);
+    var countEl = document.getElementById('activitePasCount');
+    if (countEl) countEl.textContent = todaySteps;
+    var input = document.getElementById('activitePasInput');
+    if (input) input.value = todaySteps;
+    if (typeof updateActiviteCalories === 'function') updateActiviteCalories();
+  } catch (e) { console.warn('Lecture podometre natif echouee', e); }
+};
+
+// Lit le podometre natif au chargement de l'app, puis a chaque fois qu'elle revient au premier plan
+document.addEventListener('DOMContentLoaded', function() {
+  setTimeout(window._readNativeStepCounter, 800);
+});
+document.addEventListener('visibilitychange', function() {
+  if (!document.hidden) window._readNativeStepCounter();
+});
+</script>
 </body>
 </html>
 <div style="display:none">build-trigger</div>

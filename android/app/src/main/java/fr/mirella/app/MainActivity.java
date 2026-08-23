@@ -6,6 +6,7 @@ import com.getcapacitor.BridgeActivity;
 public class MainActivity extends BridgeActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        registerPlugin(StepCounterPlugin.class);
         super.onCreate(savedInstanceState);
         // Fond coral pendant le chargement de la WebView
         if (getBridge() != null && getBridge().getWebView() != null) {
