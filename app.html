@@ -7899,7 +7899,7 @@ function switchLang(lang) {
           <input type="number" id="activitePasInput" min="0" placeholder="Saisir mes pas" style="flex:1;max-width:150px;padding:10px;border:1.5px solid #eee;border-radius:10px;font-size:0.9rem;text-align:center;box-sizing:border-box;font-family:DM Sans,sans-serif">
           <button onclick="saveManualSteps()" style="background:linear-gradient(135deg,var(--coral),var(--accent));color:white;border:none;border-radius:10px;padding:10px 14px;font-size:0.8rem;font-weight:700;cursor:pointer">OK</button>
         </div>
-        <button id="activiteSensorBtn" onclick="startStepSensor()" style="width:100%;background:#F5F5F5;color:#555;border:none;border-radius:10px;padding:10px;font-size:0.78rem;font-weight:600;cursor:pointer">Activer le suivi via capteur</button>
+        <button id="activiteSensorBtn" onclick="stopStepSensor(true)" style="width:100%;background:#F5F5F5;color:#555;border:none;border-radius:10px;padding:10px;font-size:0.78rem;font-weight:600;cursor:pointer">Arrêter et enregistrer</button>
       </div>
       <div style="background:linear-gradient(135deg,#1B1B2F,#232946);border-radius:18px;padding:20px;margin-top:14px;position:relative;overflow:hidden">
         <div style="position:absolute;top:-40px;right:-30px;width:140px;height:140px;background:radial-gradient(circle,rgba(255,107,107,0.25),transparent 70%);pointer-events:none"></div>
@@ -16360,7 +16360,8 @@ function startStepSensor() {
     window._lastStepTime = 0;
     window.addEventListener('devicemotion', handleMotionForSteps);
     var btn = document.getElementById('activiteSensorBtn');
-    if (btn) { btn.textContent = 'Arrêter et enregistrer'; btn.onclick = stopStepSensor; }
+    if (btn) { btn.textContent = 'Arrêter et enregistrer'; btn.onclick = function(){ stopStepSensor(true); }; }
+    localStorage.removeItem('mirella_podometre_desactive');
   }
   if (typeof DeviceMotionEvent !== 'undefined' && typeof DeviceMotionEvent.requestPermission === 'function') {
     DeviceMotionEvent.requestPermission().then(function(state) {
@@ -16373,7 +16374,7 @@ function startStepSensor() {
     alert("Les capteurs de mouvement ne sont pas disponibles sur cet appareil ou ce navigateur.");
   }
 }
-function stopStepSensor() {
+function stopStepSensor(manual) {
   window.removeEventListener('devicemotion', handleMotionForSteps);
   window._stepsSensorActive = false;
   setTodaySteps(window._stepsSensorBaseCount + window._stepsSensorSessionCount);
@@ -16381,6 +16382,7 @@ function stopStepSensor() {
   if (input) input.value = getTodaySteps();
   var btn = document.getElementById('activiteSensorBtn');
   if (btn) { btn.textContent = 'Activer le suivi via capteur'; btn.onclick = startStepSensor; }
+  if (manual) localStorage.setItem('mirella_podometre_desactive', 'true');
 }
 function renderActiviteTab() {
   var countEl = document.getElementById('activitePasCount');
@@ -16390,6 +16392,12 @@ function renderActiviteTab() {
   if (typeof window.renderSportSeances === 'function') window.renderSportSeances();
   if (typeof renderSportHistory === 'function') renderSportHistory();
   updateActiviteCalories();
+  // Demarre automatiquement le suivi par capteur, sauf si l'utilisateur l'a explicitement desactive
+  if (localStorage.getItem('mirella_podometre_desactive') !== 'true' && !window._stepsSensorActive) {
+    if (typeof DeviceMotionEvent !== 'undefined' && typeof DeviceMotionEvent.requestPermission !== 'function') {
+      startStepSensor();
+    }
+  }
 }
 
 function switchSuiviTab(tab, btn) {
