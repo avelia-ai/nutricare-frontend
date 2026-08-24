@@ -11941,19 +11941,91 @@ function switchLang(lang) {
   });
 
   window._cardioAdviceTiers = [
-    { max: 50, label: 'Très bas', color: '#3B6D11', bg: '#EAF3DE', text: 'Un rythme sous 50 bpm au repos est fréquent chez les sportifs entraînés, mais peut aussi mériter un avis médical si tu ressens des vertiges ou une fatigue inhabituelle.', tip: 'Si tu ne pratiques pas de sport intensif, parles-en à un professionnel de santé pour en avoir le cœur net.' },
-    { max: 60, label: 'Bas', color: '#3B6D11', bg: '#EAF3DE', text: 'Ton rythme cardiaque est plutôt bas, ce qui est souvent bon signe d\'une bonne condition cardiovasculaire.', tip: 'Continue sur cette lancée avec une activité physique régulière et une bonne hydratation.' },
-    { max: 90, label: 'Normal', color: '#3B6D11', bg: '#EAF3DE', text: 'Ton rythme cardiaque au repos se situe dans la fourchette généralement considérée comme normale pour un adulte.', tip: 'Un rythme stable jour après jour est un bon indicateur de récupération et de sommeil de qualité.' },
-    { max: 100, label: 'Légèrement élevé', color: '#B0790C', bg: '#FFF3D6', text: 'Ton rythme est un peu au-dessus de la moyenne au repos. Cela peut venir du stress, de la caféine, ou simplement d\'un moment d\'activité récent.', tip: 'Essaie de refaire une mesure dans un moment calme, assis depuis quelques minutes, pour confirmer.' },
-    { max: 140, label: 'Modéré à élevé', color: '#B0790C', bg: '#FFF3D6', text: 'Cette valeur est plus élevée que ce qu\'on attend au repos. Elle peut refléter une activité récente, du stress, ou une mesure prise dans de mauvaises conditions.', tip: 'Reprends une mesure au calme. Si ce niveau se répète sans effort ni stress apparent, consulte un professionnel de santé.' },
-    { max: 999, label: 'Élevé', color: '#C23B2E', bg: '#FFE0DC', text: 'Cette valeur est nettement au-dessus de la normale pour une mesure au repos.', tip: 'Si tu n\'as pas fait d\'effort récent et que ce chiffre te semble inhabituel, nous te recommandons de consulter un professionnel de santé.' }
-  ];
-
-  window._cardioGetTier = function(bpm) {
-    for (var i = 0; i < window._cardioAdviceTiers.length; i++) {
-      if (bpm <= window._cardioAdviceTiers[i].max) return window._cardioAdviceTiers[i];
+    { max: 50, label: 'Très bas', color: '#3B6D11', bg: '#EAF3DE',
+      textVariants: [
+        'Un rythme sous 50 bpm au repos est fréquent chez les sportifs entraînés, mais peut aussi mériter un avis médical si tu ressens des vertiges ou une fatigue inhabituelle.',
+        'Un cœur qui bat lentement au repos peut simplement traduire une excellente forme cardiovasculaire, surtout si tu es actif régulièrement.',
+        'Ce chiffre est bas, ce qui est souvent normal chez les personnes entraînées, mais reste attentif à d\'éventuels signes inhabituels (vertiges, fatigue).'
+      ],
+      tipVariants: [
+        'Si tu ne pratiques pas de sport intensif, parles-en à un professionnel de santé pour en avoir le cœur net.',
+        'Note l\'évolution de cette valeur sur quelques jours : c\'est plus informatif qu\'une mesure isolée.',
+        'Une bonne hydratation et un sommeil régulier aident à maintenir un rythme cardiaque stable.'
+      ]
+    },
+    { max: 60, label: 'Bas', color: '#3B6D11', bg: '#EAF3DE',
+      textVariants: [
+        'Ton rythme cardiaque est plutôt bas, ce qui est souvent bon signe d\'une bonne condition cardiovasculaire.',
+        'Un rythme cardiaque bas au repos traduit généralement un cœur efficace, qui pompe plus de sang à chaque battement.',
+        'Cette valeur basse est généralement rassurante et associée à une bonne endurance.'
+      ],
+      tipVariants: [
+        'Continue sur cette lancée avec une activité physique régulière et une bonne hydratation.',
+        'Le cardio régulier (marche rapide, vélo, natation) entretient ce type de rythme favorable.',
+        'Surveille ta valeur dans le temps pour repérer toute variation inhabituelle.'
+      ]
+    },
+    { max: 90, label: 'Normal', color: '#3B6D11', bg: '#EAF3DE',
+      textVariants: [
+        'Ton rythme cardiaque au repos se situe dans la fourchette généralement considérée comme normale pour un adulte.',
+        'Cette mesure est dans la moyenne attendue au repos, un bon signe de stabilité générale.',
+        'Ton cœur bat à un rythme tout à fait cohérent avec une activité de repos normale.'
+      ],
+      tipVariants: [
+        'Un rythme stable jour après jour est un bon indicateur de récupération et de sommeil de qualité.',
+        'Continue de mesurer régulièrement pour suivre l\'évolution de ta condition cardiovasculaire.',
+        'Une activité physique régulière t\'aidera à maintenir ce bon équilibre sur la durée.'
+      ]
+    },
+    { max: 100, label: 'Légèrement élevé', color: '#B0790C', bg: '#FFF3D6',
+      textVariants: [
+        'Ton rythme est un peu au-dessus de la moyenne au repos. Cela peut venir du stress, de la caféine, ou simplement d\'un moment d\'activité récent.',
+        'Cette valeur légèrement élevée peut simplement refléter le contexte de la mesure (stress, café, activité récente).',
+        'Un léger dépassement de la moyenne n\'est pas alarmant en soi, mais mérite d\'être surveillé.'
+      ],
+      tipVariants: [
+        'Essaie de refaire une mesure dans un moment calme, assis depuis quelques minutes, pour confirmer.',
+        'Évite la caféine juste avant une mesure pour avoir une valeur plus représentative.',
+        'Quelques minutes de respiration calme avant la mesure peuvent donner un résultat plus fiable.'
+      ]
+    },
+    { max: 140, label: 'Modéré à élevé', color: '#B0790C', bg: '#FFF3D6',
+      textVariants: [
+        'Cette valeur est plus élevée que ce qu\'on attend au repos. Elle peut refléter une activité récente, du stress, ou une mesure prise dans de mauvaises conditions.',
+        'Un rythme aussi élevé au repos est notable ; le contexte de la mesure (effort, stress, position) joue souvent un rôle important.',
+        'Cette mesure sort de la fourchette habituelle de repos, ce qui justifie une nouvelle prise dans de meilleures conditions.'
+      ],
+      tipVariants: [
+        'Reprends une mesure au calme. Si ce niveau se répète sans effort ni stress apparent, consulte un professionnel de santé.',
+        'Assieds-toi, détends-toi 5 minutes, puis reprends une mesure pour confirmer la tendance.',
+        'Si cette valeur revient régulièrement au repos, parles-en à un professionnel de santé.'
+      ]
+    },
+    { max: 999, label: 'Élevé', color: '#C23B2E', bg: '#FFE0DC',
+      textVariants: [
+        'Cette valeur est nettement au-dessus de la normale pour une mesure au repos.',
+        'Un rythme aussi élevé au repos sort largement des valeurs attendues.',
+        'Cette mesure est significativement plus haute que la normale pour un moment de repos.'
+      ],
+      tipVariants: [
+        'Si tu n\'as pas fait d\'effort récent et que ce chiffre te semble inhabituel, nous te recommandons de consulter un professionnel de santé.',
+        'Reprends la mesure au calme dans quelques minutes ; si la valeur reste élevée, consulte un professionnel de santé.',
+        'Une valeur élevée persistante au repos mérite un avis médical, surtout si elle s\'accompagne d\'autres symptômes.'
+      ]
     }
-    return window._cardioAdviceTiers[window._cardioAdviceTiers.length - 1];
+  ];
+  window._cardioGetTier = function(bpm) {
+    var _dayIdxCardio = Math.floor(Date.now() / 86400000);
+    var tierFound = null;
+    for (var i = 0; i < window._cardioAdviceTiers.length; i++) {
+      if (bpm <= window._cardioAdviceTiers[i].max) { tierFound = window._cardioAdviceTiers[i]; break; }
+    }
+    if (!tierFound) tierFound = window._cardioAdviceTiers[window._cardioAdviceTiers.length - 1];
+    var out = { max: tierFound.max, label: tierFound.label, color: tierFound.color, bg: tierFound.bg };
+    out.text = tierFound.textVariants[_dayIdxCardio % tierFound.textVariants.length];
+    out.tip = tierFound.tipVariants[(_dayIdxCardio + 1) % tierFound.tipVariants.length];
+    return out;
+  };
   };
 
   function showCardioAdvicePopup(bpm) {
