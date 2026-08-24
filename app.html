@@ -7860,19 +7860,19 @@ function switchLang(lang) {
         <div style="display:flex;flex-direction:column;gap:10px">
           <div style="display:flex;gap:10px;align-items:flex-start">
             <span style="font-size:14px;flex-shrink:0">🌙</span>
-            <div style="font-size:0.8rem;color:#666;line-height:1.5"><b style="color:#2D2D2D">Favoriser l'endormissement.</b> Couchez-vous à heure fixe et évitez les écrans 30 minutes avant de dormir : la lumière bleue retarde la production de mélatonine.</div>
+            <div id="sommeilTipText1" style="font-size:0.8rem;color:#666;line-height:1.5"><b style="color:#2D2D2D">Favoriser l'endormissement.</b> Couchez-vous à heure fixe et évitez les écrans 30 minutes avant de dormir : la lumière bleue retarde la production de mélatonine.</div>
           </div>
           <div style="display:flex;gap:10px;align-items:flex-start">
             <span style="font-size:14px;flex-shrink:0">✨</span>
-            <div style="font-size:0.8rem;color:#666;line-height:1.5"><b style="color:#2D2D2D">Améliorer la qualité du sommeil.</b> Gardez votre chambre fraîche (18-19°C) et plongée dans l'obscurité : ce sont les deux facteurs qui influencent le plus la profondeur de vos cycles.</div>
+            <div id="sommeilTipText2" style="font-size:0.8rem;color:#666;line-height:1.5"><b style="color:#2D2D2D">Améliorer la qualité du sommeil.</b> Gardez votre chambre fraîche (18-19°C) et plongée dans l'obscurité : ce sont les deux facteurs qui influencent le plus la profondeur de vos cycles.</div>
           </div>
           <div style="display:flex;gap:10px;align-items:flex-start">
             <span style="font-size:14px;flex-shrink:0">☕</span>
-            <div style="font-size:0.8rem;color:#666;line-height:1.5"><b style="color:#2D2D2D">Éviter les réveils nocturnes.</b> Limitez la caféine après 14h et l'alcool le soir : ils fragmentent le sommeil même sans que vous vous en rendiez compte.</div>
+            <div id="sommeilTipText3" style="font-size:0.8rem;color:#666;line-height:1.5"><b style="color:#2D2D2D">Éviter les réveils nocturnes.</b> Limitez la caféine après 14h et l'alcool le soir : ils fragmentent le sommeil même sans que vous vous en rendiez compte.</div>
           </div>
           <div style="display:flex;gap:10px;align-items:flex-start">
             <span style="font-size:14px;flex-shrink:0">🍽️</span>
-            <div style="font-size:0.8rem;color:#666;line-height:1.5"><b style="color:#2D2D2D">Dîner léger.</b> Terminez votre repas 2 à 3h avant le coucher pour laisser le temps à la digestion de ne pas perturber votre endormissement.</div>
+            <div id="sommeilTipText4" style="font-size:0.8rem;color:#666;line-height:1.5"><b style="color:#2D2D2D">Dîner léger.</b> Terminez votre repas 2 à 3h avant le coucher pour laisser le temps à la digestion de ne pas perturber votre endormissement.</div>
           </div>
         </div>
       </div>
@@ -16392,6 +16392,37 @@ function renderSommeilSection(logs) {
     return '<div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid #F2EFE9"><span>' + dateStr + '</span><span style="font-weight:700;color:#6C5CE7">' + p.h + 'h</span></div>';
   }).join('');
 }
+window._sommeilTipVariants = {
+  t1: [
+    '<b style="color:#2D2D2D">Favoriser l\'endormissement.</b> Couchez-vous à heure fixe et évitez les écrans 30 minutes avant de dormir : la lumière bleue retarde la production de mélatonine.',
+    '<b style="color:#2D2D2D">Favoriser l\'endormissement.</b> Instaurez un rituel calme avant le coucher (lecture, étirements doux) : votre cerveau apprend à associer ces gestes au sommeil.',
+    '<b style="color:#2D2D2D">Favoriser l\'endormissement.</b> Évitez le sport intense et les repas copieux dans les 2 heures précédant le coucher, ils retardent l\'endormissement.'
+  ],
+  t2: [
+    '<b style="color:#2D2D2D">Améliorer la qualité du sommeil.</b> Gardez votre chambre fraîche (18-19°C) et plongée dans l\'obscurité : ce sont les deux facteurs qui influencent le plus la profondeur de vos cycles.',
+    '<b style="color:#2D2D2D">Améliorer la qualité du sommeil.</b> Une activité physique régulière en journée favorise un sommeil plus profond et plus réparateur la nuit suivante.',
+    '<b style="color:#2D2D2D">Améliorer la qualité du sommeil.</b> Exposez-vous à la lumière naturelle le matin : cela aide à synchroniser votre horloge interne et améliore la qualité des cycles.'
+  ],
+  t3: [
+    '<b style="color:#2D2D2D">Éviter les réveils nocturnes.</b> Limitez la caféine après 14h et l\'alcool le soir : ils fragmentent le sommeil même sans que vous vous en rendiez compte.',
+    '<b style="color:#2D2D2D">Éviter les réveils nocturnes.</b> Gardez votre chambre aussi silencieuse que possible : même de légers bruits peuvent alléger vos phases de sommeil profond sans vous réveiller complètement.',
+    '<b style="color:#2D2D2D">Éviter les réveils nocturnes.</b> Évitez de consulter votre téléphone si vous vous réveillez la nuit : la lumière de l\'écran retarde le retour à l\'endormissement.'
+  ],
+  t4: [
+    '<b style="color:#2D2D2D">Dîner léger.</b> Terminez votre repas 2 à 3h avant le coucher pour laisser le temps à la digestion de ne pas perturber votre endormissement.',
+    '<b style="color:#2D2D2D">Dîner léger.</b> Privilégiez les glucides complexes le soir (légumineuses, céréales complètes) : ils favorisent la production de sérotonine, précurseur de la mélatonine.',
+    '<b style="color:#2D2D2D">Dîner léger.</b> Évitez les plats épicés ou très gras au dîner, ils peuvent perturber la digestion et fragmenter votre sommeil.'
+  ]
+};
+window._sommeilApplyDailyTips = function() {
+  var dayIdx = Math.floor(Date.now() / 86400000);
+  var map = { sommeilTipText1: 't1', sommeilTipText2: 't2', sommeilTipText3: 't3', sommeilTipText4: 't4' };
+  Object.keys(map).forEach(function(elId) {
+    var el = document.getElementById(elId);
+    var variants = window._sommeilTipVariants[map[elId]];
+    if (el && variants) el.innerHTML = variants[dayIdx % variants.length];
+  });
+};
 
 function getTodaySteps() {
   var key = 'mirella_steps_' + new Date().toISOString().slice(0,10);
@@ -16522,7 +16553,7 @@ function switchSuiviTab(tab, btn) {
     if (defaultBtn) { defaultBtn.style.background = '#2D2D2D'; defaultBtn.style.boxShadow = 'none'; defaultBtn.style.color = '#fff'; }
   }
   window._suiviActiveTab = tab;
-  if (tab === 'sommeil' && typeof renderSommeilSection === 'function') { renderSommeilSection(_healthLogs); }
+  if (tab === 'sommeil' && typeof renderSommeilSection === 'function') { renderSommeilSection(_healthLogs); if (typeof window._sommeilApplyDailyTips === 'function') window._sommeilApplyDailyTips(); }
   if (tab === 'cardio' && typeof renderCardioSection === 'function') { renderCardioSection(_healthLogs); }
   if (tab === 'activite' && typeof renderActiviteTab === 'function') { renderActiviteTab(); }
 }
