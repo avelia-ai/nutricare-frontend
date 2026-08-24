@@ -15920,7 +15920,7 @@ function refreshHarmonyAvatar(logs) {
     }
   }
   var _todayStrHA = new Date().toISOString().split('T')[0];
-  window._pcTodayHealthLog = (logs ? (logs.find(function(l) { return (l.date || '').split('T')[0] === _todayStrHA; }) || null) : null) || lastLog || null;
+  window._pcTodayHealthLog = logs ? (logs.find(function(l) { return (l.date || '').split('T')[0] === _todayStrHA; }) || null) : null;
   window._pcRecentAverages = (function() {
     if (!logs || !logs.length) return { sleep: null, energy: null, stress: null };
     var d7 = new Date(); d7.setDate(d7.getDate() - 7);
