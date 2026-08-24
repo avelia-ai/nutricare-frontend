@@ -3425,6 +3425,7 @@ window.initHome = async function() {
   };
   window.pcGoToTodayAction = function() {
     var key = pcTodayActionKey();
+    if (pcCheckAction(key)) return;
     if (key === 'suivi' || key === 'score') {
       showView('health');
       setTimeout(function(){ if (typeof switchSuiviTab === 'function') switchSuiviTab('principal'); }, 80);
@@ -3686,11 +3687,28 @@ window.initHome = async function() {
       var _pcActionIcons = { suivi:'❤️', pas:'👣', menu:'🍽️', defi_jour:'🎯', defi_mirella:'🏆', score:'💯', photo:'📸' };
       var _todayTextEl = document.getElementById('pcTodayActionText');
       var _todayIconEl = document.getElementById('pcTodayActionIcon');
-      if (_todayTextEl) {
-        var _label = _pcActionLabels[_todayKey];
-        _todayTextEl.textContent = _label.charAt(0).toUpperCase() + _label.slice(1) + '.';
+      var _todayCardEl = document.getElementById('pcTodayActionCard');
+      var _todayDone = pcCheckAction(_todayKey);
+      if (_todayDone) {
+        if (_todayTextEl) { _todayTextEl.textContent = 'Defi valide aujourd\'hui !'; }
+        if (_todayIconEl) { _todayIconEl.textContent = '✅'; }
+        if (_todayCardEl) {
+          _todayCardEl.style.opacity = '0.55';
+          _todayCardEl.style.cursor = 'default';
+          _todayCardEl.style.pointerEvents = 'none';
+        }
+      } else {
+        if (_todayTextEl) {
+          var _label = _pcActionLabels[_todayKey];
+          _todayTextEl.textContent = _label.charAt(0).toUpperCase() + _label.slice(1) + '.';
+        }
+        if (_todayIconEl) { _todayIconEl.textContent = _pcActionIcons[_todayKey] || '🎯'; }
+        if (_todayCardEl) {
+          _todayCardEl.style.opacity = '1';
+          _todayCardEl.style.cursor = 'pointer';
+          _todayCardEl.style.pointerEvents = 'auto';
+        }
       }
-      if (_todayIconEl) { _todayIconEl.textContent = _pcActionIcons[_todayKey] || '🎯'; }
     }
   }
   window._pcLastProfileForSummary = null;
@@ -5494,7 +5512,7 @@ function switchLang(lang) {
               <div style="width:36px;height:36px;border-radius:12px;background:linear-gradient(135deg,#FFD166,#FF8A5B);display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:0 4px 10px rgba(255,154,60,0.35)"><i class="ti ti-gift" style="font-size:17px;color:#fff"></i></div>
               <div id="pcMessage" style="font-size:12.5px;color:#F5E6D8;font-weight:600;line-height:1.45">Complete une action aujourd'hui pour avancer sur le chemin !</div>
             </div>
-            <div onclick="pcGoToTodayAction()" style="display:flex;align-items:center;gap:12px;background:linear-gradient(135deg,rgba(255,154,60,0.16),rgba(255,107,107,0.16));border:1px solid rgba(255,209,102,0.3);border-radius:14px;padding:13px 15px;cursor:pointer">
+            <div id="pcTodayActionCard" onclick="pcGoToTodayAction()" style="display:flex;align-items:center;gap:12px;background:linear-gradient(135deg,rgba(255,154,60,0.16),rgba(255,107,107,0.16));border:1px solid rgba(255,209,102,0.3);border-radius:14px;padding:13px 15px;cursor:pointer">
               <div id="pcTodayActionIcon" style="width:36px;height:36px;border-radius:12px;background:linear-gradient(135deg,#FF9A3C,#FF6B6B);display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:0 4px 10px rgba(255,107,107,0.35);font-size:16px">🎯</div>
               <div style="min-width:0;flex:1">
                 <div style="font-size:9.5px;color:#FFD166;font-weight:800;text-transform:uppercase;letter-spacing:0.06em;margin-bottom:3px">Aujourd'hui pour avancer</div>
