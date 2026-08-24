@@ -24523,9 +24523,16 @@ window.maybeShowReviewPrompt = function() {
   <div id="onboarding2b" style="display:none;position:fixed;inset:0;flex-direction:column;background:white;overflow-y:auto;z-index:10000">
     <div style="width:100%;height:100%;display:flex;flex-direction:column">
       <!-- Vidéo -->
-      <video autoplay muted loop playsinline style="width:100%;height:20vh;object-fit:cover;flex-shrink:0;display:block">
+      <video autoplay muted loop playsinline style="width:100%;height:20vh;object-fit:contain;background:#FFFCFA;flex-shrink:0;display:block">
         <source src="https://www.mirella-ai.fr/ren_niveau1_compressed.mp4" type="video/mp4">
       </video>
+      <!-- Indicateur de scroll -->
+      <div id="ob2bScrollHint" style="display:none;position:fixed;left:50%;bottom:18px;transform:translateX(-50%);z-index:10001;width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,#FF6B6B,#FF9A3C);align-items:center;justify-content:center;box-shadow:0 4px 14px rgba(255,107,107,0.4);animation:ob2bBounce 1.4s ease-in-out infinite;pointer-events:none">
+        <i class="ti ti-chevron-down" style="font-size:1.1rem;color:#fff"></i>
+      </div>
+      <style>
+        @keyframes ob2bBounce { 0%,100%{transform:translateX(-50%) translateY(0)} 50%{transform:translateX(-50%) translateY(6px)} }
+      </style>
       <!-- Titre -->
       <div style="text-align:center;padding:18px 24px 10px;flex-shrink:0">
         <h2 style="font-family:Open Sans,serif;font-size:1.4rem;font-weight:800;color:#2D2D2D;margin:0 0 5px;letter-spacing:-0.3px">Vos objectifs</h2>
@@ -24736,6 +24743,18 @@ function obNext(step) {
     document.getElementById('onboarding3').style.display = 'none';
     var s2b = document.getElementById('onboarding2b');
     s2b.style.display = 'flex';
+    setTimeout(function() {
+      var hint = document.getElementById('ob2bScrollHint');
+      if (!hint) return;
+      function updateHint() {
+        var needsScroll = s2b.scrollHeight > s2b.clientHeight + 10;
+        var atBottom = (s2b.scrollTop + s2b.clientHeight) >= (s2b.scrollHeight - 20);
+        hint.style.display = (needsScroll && !atBottom) ? 'flex' : 'none';
+      }
+      updateHint();
+      s2b.addEventListener('scroll', updateHint);
+      window.addEventListener('resize', updateHint);
+    }, 200);
   } else if (step === 4) {
     document.getElementById('onboarding2b').style.display = 'none';
     var s4 = document.getElementById('onboarding4');
