@@ -3049,6 +3049,22 @@ window.initHome = async function() {
     var payload = { objectifs: selected };
     if (poids) { payload.poids = parseFloat(poids); profile.poids = parseFloat(poids); }
     profile.objectifs = selected;
+    // Nettoyer les champs des objectifs desselectionnes pour ne pas garder d'anciennes donnees perimees
+    var _prevSelected = window._pcPrevObjectifs || (JSON.parse(localStorage.getItem('nutricare_profile') || '{}').objectifs) || [];
+    var _objFields = {
+      energie: ['energie_actuelle'],
+      stress: ['stress_actuel'],
+      sommeil: ['sommeil_heures_actuel', 'sommeil_qualite_endormissement', 'sommeil_reveils_nocturnes'],
+      performance: ['sport_pratique']
+    };
+    Object.keys(_objFields).forEach(function(objKey) {
+      if (_prevSelected.indexOf(objKey) > -1 && selected.indexOf(objKey) === -1) {
+        _objFields[objKey].forEach(function(field) {
+          delete profile[field];
+          payload[field] = null;
+        });
+      }
+    });
     var poidsRef = parseFloat(poids) || parseFloat(profile.poids);
     if (delta && poidsRef) {
       var deltaNum = parseFloat(delta);
