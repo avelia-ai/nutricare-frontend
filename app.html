@@ -3242,9 +3242,39 @@ window.initHome = async function() {
     if (key === 'suivi') localStorage.setItem('mirella_pc_suivi_' + today, '1');
     if (key === 'photo') localStorage.setItem('mirella_pc_photo_' + today, '1');
     if (key === 'menu') localStorage.setItem('mirella_pc_menu_' + today, '1');
+    if (typeof window.pcRefreshTodayActionCard === 'function') window.pcRefreshTodayActionCard();
+  };
+  window.pcRefreshTodayActionCard = function() {
+    var _todayKey = pcTodayActionKey();
+    var _pcActionIcons = { suivi:'❤️', pas:'👣', menu:'🍽️', defi_jour:'🎯', defi_mirella:'🏆', score:'💯', photo:'📸' };
+    var _todayTextEl = document.getElementById('pcTodayActionText');
+    var _todayIconEl = document.getElementById('pcTodayActionIcon');
+    var _todayCardEl = document.getElementById('pcTodayActionCard');
+    var _todayDone = pcCheckAction(_todayKey);
+    if (_todayDone) {
+      if (_todayTextEl) { _todayTextEl.textContent = 'Defi valide aujourd\'hui !'; }
+      if (_todayIconEl) { _todayIconEl.textContent = '✅'; }
+      if (_todayCardEl) {
+        _todayCardEl.style.opacity = '0.55';
+        _todayCardEl.style.cursor = 'default';
+        _todayCardEl.style.pointerEvents = 'none';
+      }
+    } else {
+      if (_todayTextEl && typeof _pcActionLabels !== 'undefined') {
+        var _label = _pcActionLabels[_todayKey];
+        if (_label) _todayTextEl.textContent = _label.charAt(0).toUpperCase() + _label.slice(1) + '.';
+      }
+      if (_todayIconEl) { _todayIconEl.textContent = _pcActionIcons[_todayKey] || '🎯'; }
+      if (_todayCardEl) {
+        _todayCardEl.style.opacity = '1';
+        _todayCardEl.style.cursor = 'pointer';
+        _todayCardEl.style.pointerEvents = 'auto';
+      }
+    }
   };
   window.pcMarkScore = function(score) {
     localStorage.setItem('mirella_pc_score_' + pcTodayStr(), String(score));
+    if (typeof window.pcRefreshTodayActionCard === 'function') window.pcRefreshTodayActionCard();
   };
   var PC_VIDEO_BASE = 'https://www.mirella-ai.fr/';
   var _pcVideoMap = {
@@ -3682,33 +3712,8 @@ window.initHome = async function() {
         msgEl.textContent = 'Encore ' + casesToWorld + ' case' + (casesToWorld > 1 ? 's' : '') + ' avant ' + nextWorldName;
       }
     }
-    if (caseIdx < 12) {
-      var _todayKey = pcTodayActionKey();
-      var _pcActionIcons = { suivi:'❤️', pas:'👣', menu:'🍽️', defi_jour:'🎯', defi_mirella:'🏆', score:'💯', photo:'📸' };
-      var _todayTextEl = document.getElementById('pcTodayActionText');
-      var _todayIconEl = document.getElementById('pcTodayActionIcon');
-      var _todayCardEl = document.getElementById('pcTodayActionCard');
-      var _todayDone = pcCheckAction(_todayKey);
-      if (_todayDone) {
-        if (_todayTextEl) { _todayTextEl.textContent = 'Defi valide aujourd\'hui !'; }
-        if (_todayIconEl) { _todayIconEl.textContent = '✅'; }
-        if (_todayCardEl) {
-          _todayCardEl.style.opacity = '0.55';
-          _todayCardEl.style.cursor = 'default';
-          _todayCardEl.style.pointerEvents = 'none';
-        }
-      } else {
-        if (_todayTextEl) {
-          var _label = _pcActionLabels[_todayKey];
-          _todayTextEl.textContent = _label.charAt(0).toUpperCase() + _label.slice(1) + '.';
-        }
-        if (_todayIconEl) { _todayIconEl.textContent = _pcActionIcons[_todayKey] || '🎯'; }
-        if (_todayCardEl) {
-          _todayCardEl.style.opacity = '1';
-          _todayCardEl.style.cursor = 'pointer';
-          _todayCardEl.style.pointerEvents = 'auto';
-        }
-      }
+    if (caseIdx < 12 && typeof window.pcRefreshTodayActionCard === 'function') {
+      window.pcRefreshTodayActionCard();
     }
   }
   window._pcLastProfileForSummary = null;
