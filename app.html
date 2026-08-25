@@ -9986,7 +9986,6 @@ function switchLang(lang) {
       setTimeout(function() { if (typeof initBottomNav === 'function') initBottomNav(); }, 100);
       if (localStorage.getItem('mirella_new_user') === 'true') {
         localStorage.removeItem('mirella_new_user');
-        setTimeout(showFabTutorial, 900);
       }
       const redirectUrl = new URLSearchParams(window.location.search).get('redirect');
       if (redirectUrl) { setTimeout(() => window.location.href = decodeURIComponent(redirectUrl), 500); return; }
