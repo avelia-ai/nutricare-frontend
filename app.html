@@ -24915,43 +24915,38 @@ function closeOnboarding() {
   40% { opacity: 1; }
 }
 </style>
-<div id="ratingModal" style="display:none;position:fixed;inset:0;z-index:99999;align-items:center;justify-content:center;padding:20px;background:rgba(20,10,8,0.72)">
-  <div style="width:100%;max-width:380px;background:#FFFFFF;border-radius:28px;overflow:hidden;box-shadow:0 24px 60px rgba(0,0,0,0.35);position:relative">
-    <!-- Vidéo haut, hauteur fixe -->
-    <div style="width:100%;height:230px;overflow:hidden;position:relative">
-      <video id="ratingVideo" autoplay muted loop playsinline style="width:100%;height:100%;object-fit:cover;display:block">
-        <source src="https://www.mirella-ai.fr/onboarding_success_final2.mp4" type="video/mp4">
-      </video>
-      <div style="position:absolute;inset:0;background:linear-gradient(to bottom,rgba(0,0,0,0.15) 0%,transparent 40%);pointer-events:none"></div>
-      <!-- Phylactere premium borde -->
-      <div style="position:absolute;top:14px;left:50%;transform:translateX(-50%);width:88%;z-index:10">
-        <div style="background:#FFFFFF;border:1.5px solid #FFD1AE;border-radius:18px;padding:12px 18px;box-shadow:0 8px 24px rgba(230,110,70,0.16);text-align:center;position:relative">
-          <div style="font-family:DM Sans,sans-serif;font-size:0.88rem;font-weight:700;color:#2D2D2D;line-height:1.4">Tu aimes Mirella jusqu'ici ? Dis-le moi</div>
-          <div style="position:absolute;bottom:-9px;left:50%;width:16px;height:16px;background:#FFFFFF;border-right:1.5px solid #FFD1AE;border-bottom:1.5px solid #FFD1AE;transform:translateX(-50%) rotate(45deg)"></div>
-        </div>
+<div id="ratingModal" style="display:none;position:fixed;inset:0;z-index:99999;flex-direction:column;padding:0;background:#000">
+  <div style="width:100%;flex:1;overflow:hidden;position:relative;min-height:0">
+    <video id="ratingVideo" autoplay muted loop playsinline style="width:100%;height:100%;object-fit:cover;display:block">
+      <source src="https://www.mirella-ai.fr/onboarding_success_final2.mp4" type="video/mp4">
+    </video>
+    <div style="position:absolute;inset:0;background:linear-gradient(to bottom,rgba(0,0,0,0.15) 0%,transparent 35%);pointer-events:none"></div>
+    <div style="position:absolute;top:9%;left:50%;transform:translateX(-50%);width:84%;z-index:10">
+      <div style="background:#FFFFFF;border:1.5px solid #FFD1AE;border-radius:18px;padding:14px 20px;box-shadow:0 8px 24px rgba(230,110,70,0.16);text-align:center;position:relative">
+        <div style="font-family:DM Sans,sans-serif;font-size:0.92rem;font-weight:700;color:#2D2D2D;line-height:1.4">Tu aimes Mirella jusqu'ici ? Dis-le moi</div>
+        <div style="position:absolute;bottom:-10px;left:50%;width:18px;height:18px;background:#FFFFFF;border-right:1.5px solid #FFD1AE;border-bottom:1.5px solid #FFD1AE;transform:translateX(-50%) rotate(45deg)"></div>
       </div>
     </div>
-    <!-- Carte etoiles en bas, premium -->
-    <div style="background:#FFFFFF;padding:22px 26px 26px;text-align:center">
-      <div style="display:inline-flex;align-items:center;gap:6px;background:rgba(255,107,107,0.12);border:1px solid #FF6B6B;color:#E24B4A;font-size:0.7rem;font-weight:700;padding:6px 16px;border-radius:20px;margin-bottom:14px;font-family:DM Sans,sans-serif;letter-spacing:0.02em;text-transform:uppercase">
-        <i class="ti ti-heart-filled" style="font-size:12px"></i> Ton avis compte
-      </div>
-      <div style="font-family:Open Sans,serif;font-size:1.22rem;font-weight:800;color:#2D2D2D;margin-bottom:6px;letter-spacing:-0.2px">Ton avis compte enormement</div>
-      <div style="font-family:DM Sans,sans-serif;font-size:0.82rem;color:#aaa;margin-bottom:20px;line-height:1.5">Il nous aide a t'accompagner encore mieux chaque jour</div>
-      <div id="ratingStars" style="display:flex;justify-content:center;gap:8px;margin-bottom:20px">
-        <i onclick="setRating(1)" class="ti ti-star" style="font-size:2.2rem;cursor:pointer;transition:transform .25s cubic-bezier(.34,1.56,.64,1),color .2s;color:#D4AF37" id="star1"></i>
-        <i onclick="setRating(2)" class="ti ti-star" style="font-size:2.2rem;cursor:pointer;transition:transform .25s cubic-bezier(.34,1.56,.64,1),color .2s;color:#D4AF37" id="star2"></i>
-        <i onclick="setRating(3)" class="ti ti-star" style="font-size:2.2rem;cursor:pointer;transition:transform .25s cubic-bezier(.34,1.56,.64,1),color .2s;color:#D4AF37" id="star3"></i>
-        <i onclick="setRating(4)" class="ti ti-star" style="font-size:2.2rem;cursor:pointer;transition:transform .25s cubic-bezier(.34,1.56,.64,1),color .2s;color:#D4AF37" id="star4"></i>
-        <i onclick="setRating(5)" class="ti ti-star" style="font-size:2.2rem;cursor:pointer;transition:transform .25s cubic-bezier(.34,1.56,.64,1),color .2s;color:#D4AF37" id="star5"></i>
-      </div>
-      <button id="ratingSubmitBtn" onclick="submitRating()" style="display:none;width:100%;background:linear-gradient(135deg,#FF6B6B,#FF9A3C);color:white;border:none;border-radius:16px;padding:16px;font-size:0.98rem;font-weight:700;cursor:pointer;font-family:DM Sans,sans-serif;box-shadow:0 10px 30px rgba(255,107,107,0.4);margin-bottom:10px;letter-spacing:0.3px">
-        Laisser un avis
-      </button>
-      <button onclick="document.getElementById('ratingModal').style.display='none';showAppAfterOnboarding()" style="background:none;border:none;color:#ccc;font-size:0.8rem;cursor:pointer;font-family:DM Sans,sans-serif;padding:4px">
-        Plus tard
-      </button>
+  </div>
+  <div style="flex-shrink:0;background:#FFFFFF;border-radius:32px 32px 0 0;padding:26px 26px 30px;text-align:center;position:relative;z-index:2;box-shadow:0 -12px 40px rgba(230,110,70,0.12)">
+    <div style="display:inline-flex;align-items:center;gap:6px;background:rgba(255,107,107,0.12);border:1px solid #FF6B6B;color:#E24B4A;font-size:0.72rem;font-weight:700;padding:6px 16px;border-radius:20px;margin-bottom:14px;font-family:DM Sans,sans-serif;letter-spacing:0.02em;text-transform:uppercase">
+      <i class="ti ti-heart-filled" style="font-size:13px"></i> Ton avis compte
     </div>
+    <div style="font-family:Open Sans,serif;font-size:1.28rem;font-weight:800;color:#2D2D2D;margin-bottom:6px;letter-spacing:-0.2px">Ton avis compte enormement</div>
+    <div style="font-family:DM Sans,sans-serif;font-size:0.83rem;color:#aaa;margin-bottom:22px;line-height:1.5">Il nous aide a t'accompagner encore mieux chaque jour</div>
+    <div id="ratingStars" style="display:flex;justify-content:center;gap:9px;margin-bottom:22px">
+      <i onclick="setRating(1)" class="ti ti-star" style="font-size:2.4rem;cursor:pointer;transition:transform .25s cubic-bezier(.34,1.56,.64,1),color .2s;color:#D4AF37" id="star1"></i>
+      <i onclick="setRating(2)" class="ti ti-star" style="font-size:2.4rem;cursor:pointer;transition:transform .25s cubic-bezier(.34,1.56,.64,1),color .2s;color:#D4AF37" id="star2"></i>
+      <i onclick="setRating(3)" class="ti ti-star" style="font-size:2.4rem;cursor:pointer;transition:transform .25s cubic-bezier(.34,1.56,.64,1),color .2s;color:#D4AF37" id="star3"></i>
+      <i onclick="setRating(4)" class="ti ti-star" style="font-size:2.4rem;cursor:pointer;transition:transform .25s cubic-bezier(.34,1.56,.64,1),color .2s;color:#D4AF37" id="star4"></i>
+      <i onclick="setRating(5)" class="ti ti-star" style="font-size:2.4rem;cursor:pointer;transition:transform .25s cubic-bezier(.34,1.56,.64,1),color .2s;color:#D4AF37" id="star5"></i>
+    </div>
+    <button id="ratingSubmitBtn" onclick="submitRating()" style="display:none;width:100%;background:linear-gradient(135deg,#FF6B6B,#FF9A3C);color:white;border:none;border-radius:16px;padding:17px;font-size:1rem;font-weight:700;cursor:pointer;font-family:DM Sans,sans-serif;box-shadow:0 10px 30px rgba(255,107,107,0.4);margin-bottom:10px;letter-spacing:0.3px">
+      Laisser un avis
+    </button>
+    <button onclick="document.getElementById('ratingModal').style.display='none';showAppAfterOnboarding()" style="background:none;border:none;color:#ccc;font-size:0.82rem;cursor:pointer;font-family:DM Sans,sans-serif;padding:4px">
+      Plus tard
+    </button>
   </div>
 </div>
 
