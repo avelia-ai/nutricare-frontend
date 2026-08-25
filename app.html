@@ -4192,7 +4192,7 @@ window.initHome = async function() {
         cache: 'no-store'
       })
       .then(function(r){ return r.json(); })
-      .then(function(logs){ if (Array.isArray(logs) && logs.length) refreshHarmonyAvatar(logs); })
+      .then(function(logs){ if (Array.isArray(logs)) refreshHarmonyAvatar(logs); })
       .catch(function(){});
     }
   } catch(e) {}
