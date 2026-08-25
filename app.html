@@ -24465,7 +24465,7 @@ window.maybeShowReviewPrompt = function() {
     <div style="width:100%;max-width:420px;padding:0;position:relative;z-index:2;display:flex;flex-direction:column">
       <!-- Vidéo renard -->
       <div style="width:100%;height:38vh;overflow:hidden;background:#ffffff;display:flex;align-items:center;justify-content:center">
-        <video autoplay muted loop playsinline style="width:100%;height:100%;object-fit:contain;transform:scale(1.55);background:#ffffff;display:block">
+        <video autoplay muted loop playsinline style="width:100%;height:100%;object-fit:contain;transform:scale(1);background:#ffffff;display:block">
           <source src="https://www.mirella-ai.fr/renard_onboarding_identite.mp4" type="video/mp4">
         </video>
       </div>
@@ -24491,6 +24491,16 @@ window.maybeShowReviewPrompt = function() {
           <i class="ti ti-cake" style="position:absolute;left:16px;top:50%;transform:translateY(-50%);font-size:1.05rem;color:#FF6B6B;pointer-events:none;z-index:1"></i>
           <input id="obAge" type="number" placeholder="Votre âge" min="10" max="120"
             style="width:100%;padding:13px 16px 13px 44px;border:none;border-radius:14.5px;font-family:DM Sans,sans-serif;font-size:0.9rem;outline:none;background:#fff;color:#2D2D2D;box-sizing:border-box">
+        </div>
+        <div style="position:relative;border-radius:16px;padding:1.5px;background:linear-gradient(135deg,#FF6B6B,#FF9A3C)">
+          <i class="ti ti-gender-bigender" style="position:absolute;left:16px;top:50%;transform:translateY(-50%);font-size:1.05rem;color:#FF6B6B;pointer-events:none;z-index:1"></i>
+          <select id="obSexe"
+            style="width:100%;padding:13px 16px 13px 44px;border:none;border-radius:14.5px;font-family:DM Sans,sans-serif;font-size:0.9rem;outline:none;background:#fff;color:#2D2D2D;box-sizing:border-box;appearance:none">
+            <option value="">Genre (non renseigné)</option>
+            <option value="femme">Femme</option>
+            <option value="homme">Homme</option>
+            <option value="autre">Autre / Ne souhaite pas préciser</option>
+          </select>
         </div>
         <div style="display:flex;gap:10px">
           <div style="position:relative;width:100%;border-radius:16px;padding:1.5px;background:linear-gradient(135deg,#FF6B6B,#FF9A3C)">
@@ -24788,11 +24798,14 @@ function obSaveIdentite() {
   var prenom = document.getElementById('obPrenom').value.trim();
   var nom = document.getElementById('obNom').value.trim();
   var age = document.getElementById('obAge').value.trim();
+  var sexeEl = document.getElementById('obSexe');
+  var sexe = sexeEl ? sexeEl.value : '';
   var taille = document.getElementById('obTaille').value.trim();
   var poids = document.getElementById('obPoids').value.trim();
   var profile = JSON.parse(localStorage.getItem('nutricare_profile') || '{}');
   if (prenom) profile.full_name = prenom + (nom ? ' ' + nom : '');
   if (age) profile.age = parseInt(age);
+  if (sexe) profile.sexe = sexe;
   if (taille) profile.taille = parseFloat(taille);
   if (poids) profile.poids = parseFloat(poids);
   localStorage.setItem('nutricare_profile', JSON.stringify(profile));
@@ -24801,6 +24814,7 @@ function obSaveIdentite() {
     var updates = {};
     if (prenom) updates.full_name = prenom + (nom ? ' ' + nom : '');
     if (age) updates.age = parseInt(age);
+    if (sexe) updates.sexe = sexe;
     if (taille) updates.taille = parseFloat(taille);
     if (poids) updates.poids = parseFloat(poids);
     fetch(BACKEND_URL + '/api/profile', {
