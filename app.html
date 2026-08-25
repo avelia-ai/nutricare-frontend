@@ -24949,9 +24949,87 @@ function closeOnboarding() {
     </button>
   </div>
 </div>
+<div id="premiumPaywallModal" style="display:none;position:fixed;inset:0;z-index:99999;align-items:flex-start;justify-content:center;padding:0;background:rgba(20,10,8,0.72);overflow-y:auto">
+  <div style="width:100%;max-width:400px;background:#FFFCF8;border-radius:0;overflow:hidden;min-height:100%">
+    <div style="background:linear-gradient(155deg,#FF6B6B,#FF9A3C 55%,#FFD166);padding:20px 20px 30px;position:relative">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:22px">
+        <i class="ti ti-x" onclick="closePremiumPaywall()" style="font-size:22px;color:#fff;cursor:pointer"></i>
+        <span onclick="closePremiumPaywall();if(typeof showView==='function')showView('pricing')" style="font-size:12px;color:rgba(255,255,255,0.9);display:flex;align-items:center;gap:4px;cursor:pointer"><i class="ti ti-refresh" style="font-size:14px"></i>Restaurer</span>
+      </div>
+      <div style="width:72px;height:72px;border-radius:22px;overflow:hidden;background:rgba(255,255,255,0.25);margin:0 auto 14px;box-shadow:0 4px 14px rgba(0,0,0,0.12)">
+        <video autoplay muted loop playsinline style="width:100%;height:100%;object-fit:cover;display:block">
+          <source src="https://www.mirella-ai.fr/onboarding_success_final2.mp4" type="video/mp4">
+        </video>
+      </div>
+      <div style="font-family:Open Sans,serif;text-align:center;font-size:1.55rem;font-weight:800;color:#fff;margin:0 0 8px">Mirella Premium</div>
+      <div style="text-align:center;font-size:0.85rem;color:rgba(255,255,255,0.92);line-height:1.5;max-width:270px;margin:0 auto">Un coach sante qui ne dort jamais et un plan qui s'adapte a chaque jour.</div>
+    </div>
+    <div style="padding:20px 20px 34px">
+      <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:18px">
+        <div style="display:flex;align-items:center;gap:12px;background:#fff;border-radius:14px;padding:11px 14px;box-shadow:0 1px 3px rgba(0,0,0,0.04)">
+          <div style="width:32px;height:32px;border-radius:10px;background:#FAECE7;display:flex;align-items:center;justify-content:center;flex-shrink:0"><i class="ti ti-infinity" style="font-size:16px;color:#D85A30"></i></div>
+          <div><div style="font-size:0.82rem;font-weight:700;color:#2D2D2D">Menus et analyses illimites</div><div style="font-size:0.7rem;color:#999">Sans quota, sans limite quotidienne</div></div>
+        </div>
+        <div style="display:flex;align-items:center;gap:12px;background:#fff;border-radius:14px;padding:11px 14px;box-shadow:0 1px 3px rgba(0,0,0,0.04)">
+          <div style="width:32px;height:32px;border-radius:10px;background:#FAECE7;display:flex;align-items:center;justify-content:center;flex-shrink:0"><i class="ti ti-message-circle" style="font-size:16px;color:#D85A30"></i></div>
+          <div><div style="font-size:0.82rem;font-weight:700;color:#2D2D2D">Coach Mirella 24 heures sur 24</div><div style="font-size:0.7rem;color:#999">Reponses instantanees, jour et nuit</div></div>
+        </div>
+        <div style="display:flex;align-items:center;gap:12px;background:#fff;border-radius:14px;padding:11px 14px;box-shadow:0 1px 3px rgba(0,0,0,0.04)">
+          <div style="width:32px;height:32px;border-radius:10px;background:#FAECE7;display:flex;align-items:center;justify-content:center;flex-shrink:0"><i class="ti ti-crown" style="font-size:16px;color:#D85A30"></i></div>
+          <div><div style="font-size:0.82rem;font-weight:700;color:#2D2D2D">Badges et statuts exclusifs</div><div style="font-size:0.7rem;color:#999">Renard premium et recompenses rares</div></div>
+        </div>
+      </div>
+      <div style="display:flex;align-items:center;justify-content:center;gap:5px;margin-bottom:14px">
+        <i class="ti ti-star-filled" style="font-size:15px;color:#EF9F27"></i>
+        <span style="font-size:0.8rem;color:#993C1D;font-weight:700">4,9</span>
+      </div>
+      <div style="display:flex;gap:10px;margin-bottom:14px">
+        <div id="premPlanMonthly" onclick="selectPremiumPlan('monthly')" style="flex:1;background:#fff;border:1.5px solid #E8E2D8;border-radius:16px;padding:14px 12px;text-align:center;cursor:pointer">
+          <div style="font-size:0.68rem;color:#999;font-weight:700;margin-bottom:6px">MENSUEL</div>
+          <div style="font-size:1.05rem;font-weight:800;color:#2D2D2D">4,99 &euro;</div>
+          <div style="font-size:0.68rem;color:#999"><span style="text-decoration:line-through">9,99 &euro;</span> /mois</div>
+          <div style="font-size:0.65rem;color:#993C1D;margin-top:4px;font-weight:600">soit 0,16 &euro;/jour</div>
+        </div>
+        <div id="premPlanAnnual" onclick="selectPremiumPlan('annual')" style="flex:1;position:relative;background:#fff;border:2px solid #D85A30;border-radius:16px;padding:14px 12px;text-align:center;cursor:pointer">
+          <div style="position:absolute;top:-11px;left:50%;transform:translateX(-50%);background:linear-gradient(135deg,#FFD166,#FF9A3C);color:#fff;font-size:0.62rem;font-weight:800;padding:3px 10px;border-radius:10px;white-space:nowrap">ECONOMISEZ 50%</div>
+          <div style="font-size:0.68rem;color:#993C1D;font-weight:700;margin-bottom:6px">ANNUEL</div>
+          <div style="font-size:1.05rem;font-weight:800;color:#2D2D2D">59,90 &euro;</div>
+          <div style="font-size:0.68rem;color:#999"><span style="text-decoration:line-through">119,90 &euro;</span> /an</div>
+          <div style="font-size:0.65rem;color:#993C1D;margin-top:4px;font-weight:600">soit 0,16 &euro;/jour</div>
+        </div>
+      </div>
+      <div style="display:flex;align-items:center;justify-content:space-between;background:#fff;border-radius:14px;padding:12px 14px;margin-bottom:16px;border:1px solid #E8E2D8">
+        <span style="font-size:0.82rem;font-weight:700;color:#2D2D2D">Essai gratuit de 3 jours</span>
+        <div style="width:38px;height:22px;border-radius:20px;background:#D85A30;position:relative"><div style="width:18px;height:18px;border-radius:50%;background:#fff;position:absolute;top:2px;left:2px"></div></div>
+      </div>
+      <button onclick="closePremiumPaywall();if(typeof showView==='function')showView('pricing')" style="width:100%;background:linear-gradient(135deg,#FF6B6B,#FF9A3C);color:#fff;border:none;border-radius:16px;padding:16px;font-size:0.95rem;font-weight:800;cursor:pointer;font-family:DM Sans,sans-serif;margin-bottom:10px">Commencer mon essai gratuit</button>
+      <div style="text-align:center;font-size:0.7rem;color:#999">Annulable a tout moment, sans engagement</div>
+    </div>
+  </div>
+</div>
 
 <script>
 var _currentRating = 0;
+window._premiumSelectedPlan = 'annual';
+window.selectPremiumPlan = function(plan) {
+  window._premiumSelectedPlan = plan;
+  var m = document.getElementById('premPlanMonthly');
+  var a = document.getElementById('premPlanAnnual');
+  if (m) m.style.border = plan === 'monthly' ? '2px solid #D85A30' : '1.5px solid #E8E2D8';
+  if (a) a.style.border = plan === 'annual' ? '2px solid #D85A30' : '1.5px solid #E8E2D8';
+};
+window.showMirellaPremiumPaywall = function() {
+  var modal = document.getElementById('premiumPaywallModal');
+  if (!modal) return;
+  modal.style.display = 'flex';
+  var v = modal.querySelector('video');
+  if (v) { v.currentTime = 0; v.play().catch(function(){}); }
+};
+window.closePremiumPaywall = function() {
+  var modal = document.getElementById('premiumPaywallModal');
+  if (modal) modal.style.display = 'none';
+};
+
   function showAppAfterOnboarding() {
     var loadingScreen = document.getElementById('onboardingLoadingScreen');
     loadingScreen.style.display = 'flex';
@@ -24964,6 +25042,7 @@ var _currentRating = 0;
       setTimeout(function() {
         window.showMirellaVideoPopup('https://www.mirella-ai.fr/notif_1_compressed.mp4', "Voilà, bienvenue sur l'appli ! C'est ici que notre histoire commence 🦊");
       }, 800);
+      setTimeout(function() { if (typeof window.showMirellaPremiumPaywall === 'function') window.showMirellaPremiumPaywall(); }, 5500);
       // Le décompte des Mirels quotidiens démarre seulement maintenant que l'utilisateur
       // est vraiment arrivé sur l'appli (pas pendant l'onboarding).
       if (typeof claimDailyConnexion === 'function') { setTimeout(claimDailyConnexion, 2000); }
