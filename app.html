@@ -15487,10 +15487,8 @@ function updateHarmonyUI(totalPoints) {
   const lvl = getHarmonyLevel(totalPoints);
   if (window._foxDaysInactive >= 3) {
     updateSadFoxVideo();
-  } else if (window._foxHealthStatus) {
-    updateStatusFoxVideo(window._foxHealthStatus, lvl.level);
   } else {
-    updateHarmonyFoxVideo(lvl.level);
+    updateStatusFoxVideo(window._foxHealthStatus || 'tres_en_forme', lvl.level);
   }
   const badge = document.getElementById('harmonyLevelBadge');
   const stage = document.getElementById('harmonyStageName');
