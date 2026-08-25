@@ -24925,25 +24925,25 @@ function closeOnboarding() {
       <div style="position:absolute;inset:0;background:linear-gradient(to bottom,rgba(0,0,0,0.15) 0%,transparent 35%);pointer-events:none"></div>
     </div>
     <!-- Phylactère premium bordé -->
-    <div style="position:absolute;top:22px;left:50%;transform:translateX(-50%);width:84%;z-index:10">
+    <div style="position:absolute;top:7%;left:50%;transform:translateX(-50%);width:84%;z-index:10">
       <div style="background:#FFFFFF;border:1.5px solid #FFD1AE;border-radius:18px;padding:14px 20px;box-shadow:0 8px 24px rgba(230,110,70,0.16);text-align:center;position:relative">
         <div style="font-family:DM Sans,sans-serif;font-size:0.92rem;font-weight:700;color:#2D2D2D;line-height:1.4">Tu aimes Mirella jusqu'ici ? Dis-le moi</div>
         <div style="position:absolute;bottom:-10px;left:50%;transform:translateX(-50%);width:18px;height:18px;background:#FFFFFF;border-right:1.5px solid #FFD1AE;border-bottom:1.5px solid #FFD1AE;transform:translateX(-50%) rotate(45deg)"></div>
       </div>
     </div>
     <!-- Carte étoiles en bas, premium -->
-    <div style="flex:1;background:#FFFFFF;border-radius:32px 32px 0 0;padding:28px 28px 34px;text-align:center;margin-top:-28px;position:relative;z-index:2;box-shadow:0 -12px 40px rgba(230,110,70,0.12)">
+    <div style="flex:1;background:#FFFFFF;border-radius:32px 32px 0 0;padding:28px 28px 34px;text-align:center;margin-top:-28px;position:relative;z-index:2;box-shadow:0 -12px 40px rgba(230,110,70,0.12);display:flex;flex-direction:column;justify-content:center">
       <div style="display:inline-flex;align-items:center;gap:6px;background:#FFF0EC;border:1px solid #FFC9B8;color:#993C1D;font-size:0.72rem;font-weight:700;padding:6px 16px;border-radius:20px;margin-bottom:16px;font-family:DM Sans,sans-serif;letter-spacing:0.02em;text-transform:uppercase">
         <i class="ti ti-heart-filled" style="font-size:13px"></i> Ton avis compte
       </div>
       <div style="font-family:Open Sans,serif;font-size:1.3rem;font-weight:800;color:#2D2D2D;margin-bottom:6px;letter-spacing:-0.2px">Ton avis compte énormément</div>
       <div style="font-family:DM Sans,sans-serif;font-size:0.84rem;color:#aaa;margin-bottom:24px;line-height:1.5">Il nous aide à t'accompagner encore mieux chaque jour</div>
       <div id="ratingStars" style="display:flex;justify-content:center;gap:10px;margin-bottom:24px">
-        <i onclick="setRating(1)" class="ti ti-star" style="font-size:2.5rem;cursor:pointer;transition:transform .25s cubic-bezier(.34,1.56,.64,1),color .2s;color:#e0dcd6" id="star1"></i>
-        <i onclick="setRating(2)" class="ti ti-star" style="font-size:2.5rem;cursor:pointer;transition:transform .25s cubic-bezier(.34,1.56,.64,1),color .2s;color:#e0dcd6" id="star2"></i>
-        <i onclick="setRating(3)" class="ti ti-star" style="font-size:2.5rem;cursor:pointer;transition:transform .25s cubic-bezier(.34,1.56,.64,1),color .2s;color:#e0dcd6" id="star3"></i>
-        <i onclick="setRating(4)" class="ti ti-star" style="font-size:2.5rem;cursor:pointer;transition:transform .25s cubic-bezier(.34,1.56,.64,1),color .2s;color:#e0dcd6" id="star4"></i>
-        <i onclick="setRating(5)" class="ti ti-star" style="font-size:2.5rem;cursor:pointer;transition:transform .25s cubic-bezier(.34,1.56,.64,1),color .2s;color:#e0dcd6" id="star5"></i>
+        <i onclick="setRating(1)" class="ti ti-star" style="font-size:2.5rem;cursor:pointer;transition:transform .25s cubic-bezier(.34,1.56,.64,1),color .2s;color:#F0C89A" id="star1"></i>
+        <i onclick="setRating(2)" class="ti ti-star" style="font-size:2.5rem;cursor:pointer;transition:transform .25s cubic-bezier(.34,1.56,.64,1),color .2s;color:#F0C89A" id="star2"></i>
+        <i onclick="setRating(3)" class="ti ti-star" style="font-size:2.5rem;cursor:pointer;transition:transform .25s cubic-bezier(.34,1.56,.64,1),color .2s;color:#F0C89A" id="star3"></i>
+        <i onclick="setRating(4)" class="ti ti-star" style="font-size:2.5rem;cursor:pointer;transition:transform .25s cubic-bezier(.34,1.56,.64,1),color .2s;color:#F0C89A" id="star4"></i>
+        <i onclick="setRating(5)" class="ti ti-star" style="font-size:2.5rem;cursor:pointer;transition:transform .25s cubic-bezier(.34,1.56,.64,1),color .2s;color:#F0C89A" id="star5"></i>
       </div>
       <button id="ratingSubmitBtn" onclick="submitRating()" style="display:none;width:100%;background:linear-gradient(135deg,#FF6B6B,#FF9A3C);color:white;border:none;border-radius:16px;padding:17px;font-size:1.02rem;font-weight:700;cursor:pointer;font-family:DM Sans,sans-serif;box-shadow:0 10px 30px rgba(255,107,107,0.4);margin-bottom:12px;letter-spacing:0.3px">
         Laisser un avis
@@ -24980,7 +24980,7 @@ function setRating(n) {
   for (var i = 1; i <= 5; i++) {
     var star = document.getElementById('star' + i);
     star.className = i <= n ? 'ti ti-star-filled' : 'ti ti-star';
-    star.style.color = i <= n ? '#EF9F27' : '#e0dcd6';
+    star.style.color = i <= n ? '#EF9F27' : '#F0C89A';
     star.style.transform = i === n ? 'scale(1.3)' : 'scale(1)';
   }
   document.getElementById('ratingSubmitBtn').style.display = 'block';
