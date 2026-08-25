@@ -13065,13 +13065,17 @@ Réponds UNIQUEMENT en JSON valide avec cette structure exacte:
     var topbar = document.getElementById('mobileTopbar');
     if (topbar) topbar.style.top = '40px';
     // Ajuster les vues fixed pour tenir compte du banner
-    document.querySelectorAll('#homeView,#menusView,#frigoView,#cycleView,#catalogueView,#mesRecettesView,#visageView,#chatView,#profileView,#analysisView,#leaderboardView,#visualView,#biologieView,#scanproduitView,#ordonnanceView,#programsView,#pricingView,#chronoView,#gamificationView,#shopView').forEach(function(el) {
+    document.querySelectorAll('#homeView,#menusView,#frigoView,#cycleView,#catalogueView,#mesRecettesView,#visageView,#chatView,#profileView,#leaderboardView,#visualView,#biologieView,#scanproduitView,#ordonnanceView,#programsView,#pricingView,#chronoView,#gamificationView,#shopView').forEach(function(el) {
       if (el) el.style.top = '96px';
     });
     // healthView et protocolsView ne sont pas en position:fixed, le top ci-dessus n'a aucun effet dessus.
     // On compense avec un margin-top pour ne pas que le titre soit masque par la banniere.
-    document.querySelectorAll('#healthView,#protocolsView').forEach(function(el) {
-      if (el) el.style.marginTop = '40px';
+    document.querySelectorAll('#healthView,#protocolsView,#analysisView').forEach(function(el) {
+      if (el) {
+        var _curMt = parseInt(window.getComputedStyle(el).marginTop, 10) || 0;
+        if (!el.dataset.trialMtBase) el.dataset.trialMtBase = String(_curMt);
+        el.style.marginTop = (parseInt(el.dataset.trialMtBase, 10) + 40) + 'px';
+      }
     });
     window._trialBannerActive = true;
   }
