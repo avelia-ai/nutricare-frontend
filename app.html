@@ -11585,19 +11585,21 @@ function switchLang(lang) {
         </div>
         <div style="padding:20px 20px 24px">
           <div style="display:flex;gap:10px;margin-bottom:18px">
-            <div style="flex:1;background:#fff;border:1.5px solid #E8E2D8;border-radius:16px;padding:14px 12px;text-align:center">
+            <div onclick="document.getElementById('trialExpiredModal').remove();if(typeof selectPlan==='function')selectPlan('standard')" style="flex:1;background:#fff;border:1.5px solid #E8E2D8;border-radius:16px;padding:14px 12px;text-align:center;cursor:pointer">
               <div style="font-size:0.66rem;color:#999;font-weight:700;margin-bottom:6px;letter-spacing:0.06em">STANDARD</div>
               <div style="font-size:1.15rem;font-weight:800;color:#2D2D2D">2,99 &euro;</div>
               <div style="font-size:0.68rem;color:#999"><span style="text-decoration:line-through">5,99 &euro;</span> /mois</div>
+              <div style="font-size:0.62rem;color:#993C1D;margin-top:4px;font-weight:600">soit 0,09 &euro;/jour</div>
             </div>
-            <div style="flex:1;position:relative;background:#fff;border:2px solid #D85A30;border-radius:16px;padding:14px 12px;text-align:center">
+            <div onclick="document.getElementById('trialExpiredModal').remove();if(typeof selectPlan==='function')selectPlan('premium')" style="flex:1;position:relative;background:#fff;border:2px solid #D85A30;border-radius:16px;padding:14px 12px;text-align:center;cursor:pointer">
               <div style="position:absolute;top:-11px;left:50%;transform:translateX(-50%);background:linear-gradient(135deg,#FFD166,#FF9A3C);color:#fff;font-size:0.6rem;font-weight:800;padding:3px 10px;border-radius:10px;white-space:nowrap">POPULAIRE</div>
               <div style="font-size:0.66rem;color:#993C1D;font-weight:700;margin-bottom:6px;letter-spacing:0.06em">PREMIUM</div>
               <div style="font-size:1.15rem;font-weight:800;color:#2D2D2D">4,99 &euro;</div>
               <div style="font-size:0.68rem;color:#999"><span style="text-decoration:line-through">9,99 &euro;</span> /mois</div>
+              <div style="font-size:0.62rem;color:#993C1D;margin-top:4px;font-weight:600">soit 0,16 &euro;/jour</div>
             </div>
           </div>
-          <button id="trialCta" onclick="document.getElementById('trialExpiredModal').remove();showView('pricing')" style="width:100%;background:linear-gradient(135deg,#FF6B6B,#FF9A3C);color:#fff;border:none;border-radius:16px;padding:16px;font-size:0.95rem;font-weight:800;cursor:pointer;font-family:DM Sans,sans-serif;box-shadow:0 10px 30px rgba(255,107,107,0.4);margin-bottom:12px">Voir les offres -50%</button>
+          <button id="trialCta" onclick="document.getElementById('trialExpiredModal').remove();if(typeof selectPlan==='function')selectPlan('premium')" style="width:100%;background:linear-gradient(135deg,#FF6B6B,#FF9A3C);color:#fff;border:none;border-radius:16px;padding:16px;font-size:0.95rem;font-weight:800;cursor:pointer;font-family:DM Sans,sans-serif;box-shadow:0 10px 30px rgba(255,107,107,0.4);margin-bottom:12px">Voir les offres -50%</button>
           <div onclick="document.getElementById('trialExpiredModal').remove()" style="text-align:center;font-size:0.76rem;color:#bbb;cursor:pointer">Continuer en accès limité</div>
         </div>
       </div>
