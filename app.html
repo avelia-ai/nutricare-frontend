@@ -24915,31 +24915,34 @@ function closeOnboarding() {
   40% { opacity: 1; }
 }
 </style>
-<div id="ratingModal" style="display:none;position:fixed;inset:0;z-index:99999;align-items:stretch;justify-content:stretch;padding:0;background:#000">
-  <div style="width:100%;height:100%;display:flex;flex-direction:column;background:white">
-    <!-- Vidéo haut -->
-    <video id="ratingVideo" autoplay muted loop playsinline style="width:100%;height:65%;object-fit:cover;display:block;flex-shrink:0">
-      <source src="https://www.mirella-ai.fr/mirelle_video_avis_haute_qualite.mp4" type="video/mp4">
-    </video>
-    <!-- Phylactère -->
-    <div style="position:absolute;top:20px;left:50%;transform:translateX(-50%);width:82%;z-index:10">
-      <div style="background:white;border-radius:18px;padding:14px 18px;box-shadow:0 6px 20px rgba(0,0,0,0.2);text-align:center;position:relative">
-        <div style="font-family:DM Sans,sans-serif;font-size:0.92rem;font-weight:700;color:#2D2D2D;line-height:1.4">Tu aimes Mirella jusqu'ici ? Dis-le moi ! 🥰</div>
-        <div style="position:absolute;bottom:-12px;left:50%;transform:translateX(-50%);width:0;height:0;border-left:12px solid transparent;border-right:12px solid transparent;border-top:12px solid white"></div>
+<div id="ratingModal" style="display:none;position:fixed;inset:0;z-index:99999;align-items:stretch;justify-content:stretch;padding:0;background:#1a1210">
+  <div style="width:100%;height:100%;display:flex;flex-direction:column;background:linear-gradient(180deg,#FFF6EC,#FFFFFF);position:relative">
+    <!-- Vidéo haut avec fond degrade et renard entier visible -->
+    <div style="width:100%;height:46vh;overflow:hidden;background:linear-gradient(160deg,#FFE8D1,#FFF6EC);flex-shrink:0;display:flex;align-items:center;justify-content:center;position:relative">
+      <video id="ratingVideo" autoplay muted loop playsinline style="width:100%;height:100%;object-fit:contain;display:block">
+        <source src="https://www.mirella-ai.fr/mirelle_video_avis_haute_qualite.mp4" type="video/mp4">
+      </video>
+    </div>
+    <!-- Phylactère premium -->
+    <div style="position:absolute;top:22px;left:50%;transform:translateX(-50%);width:84%;z-index:10">
+      <div style="background:rgba(255,255,255,0.94);backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,0.8);border-radius:20px;padding:15px 20px;box-shadow:0 10px 30px rgba(255,107,107,0.18),0 2px 8px rgba(0,0,0,0.06);text-align:center;position:relative">
+        <div style="font-family:DM Sans,sans-serif;font-size:0.92rem;font-weight:700;color:#2D2D2D;line-height:1.4">✨ Tu aimes Mirella jusqu'ici ? Dis-le moi ! 🥰</div>
+        <div style="position:absolute;bottom:-11px;left:50%;transform:translateX(-50%);width:0;height:0;border-left:11px solid transparent;border-right:11px solid transparent;border-top:11px solid rgba(255,255,255,0.94)"></div>
       </div>
     </div>
-    <!-- Carte étoiles en bas -->
-    <div style="flex:1;background:white;border-radius:32px 32px 0 0;padding:28px 28px 32px;text-align:center;margin-top:-32px;position:relative;z-index:2;box-shadow:0 -8px 32px rgba(0,0,0,0.08)">
-      <div style="font-family:Open Sans,serif;font-size:1.25rem;font-weight:800;color:#2D2D2D;margin-bottom:4px">Ton avis compte énormément 💛</div>
-      <div style="font-family:DM Sans,sans-serif;font-size:0.82rem;color:#aaa;margin-bottom:20px;line-height:1.5">Il nous aide à t'accompagner encore mieux chaque jour</div>
-      <div id="ratingStars" style="display:flex;justify-content:center;gap:12px;margin-bottom:20px">
-        <span onclick="setRating(1)" style="font-size:2.8rem;cursor:pointer;transition:transform .2s" id="star1">☆</span>
-        <span onclick="setRating(2)" style="font-size:2.8rem;cursor:pointer;transition:transform .2s" id="star2">☆</span>
-        <span onclick="setRating(3)" style="font-size:2.8rem;cursor:pointer;transition:transform .2s" id="star3">☆</span>
-        <span onclick="setRating(4)" style="font-size:2.8rem;cursor:pointer;transition:transform .2s" id="star4">☆</span>
-        <span onclick="setRating(5)" style="font-size:2.8rem;cursor:pointer;transition:transform .2s" id="star5">☆</span>
+    <!-- Carte étoiles en bas, premium -->
+    <div style="flex:1;background:linear-gradient(180deg,#FFFFFF,#FFFBF6);border-radius:32px 32px 0 0;padding:30px 28px 34px;text-align:center;margin-top:-28px;position:relative;z-index:2;box-shadow:0 -12px 40px rgba(230,110,70,0.1)">
+      <div style="width:44px;height:3px;background:linear-gradient(90deg,#FFD166,#FF9A3C);border-radius:4px;margin:0 auto 16px"></div>
+      <div style="font-family:Open Sans,serif;font-size:1.32rem;font-weight:800;color:#2D2D2D;margin-bottom:6px;letter-spacing:-0.2px">Ton avis compte énormément <span style="display:inline-block">💛</span></div>
+      <div style="font-family:DM Sans,sans-serif;font-size:0.84rem;color:#aaa;margin-bottom:24px;line-height:1.5">Il nous aide à t'accompagner encore mieux chaque jour</div>
+      <div id="ratingStars" style="display:flex;justify-content:center;gap:10px;margin-bottom:24px">
+        <span onclick="setRating(1)" style="font-size:2.9rem;cursor:pointer;transition:transform .25s cubic-bezier(.34,1.56,.64,1),filter .25s" id="star1">☆</span>
+        <span onclick="setRating(2)" style="font-size:2.9rem;cursor:pointer;transition:transform .25s cubic-bezier(.34,1.56,.64,1),filter .25s" id="star2">☆</span>
+        <span onclick="setRating(3)" style="font-size:2.9rem;cursor:pointer;transition:transform .25s cubic-bezier(.34,1.56,.64,1),filter .25s" id="star3">☆</span>
+        <span onclick="setRating(4)" style="font-size:2.9rem;cursor:pointer;transition:transform .25s cubic-bezier(.34,1.56,.64,1),filter .25s" id="star4">☆</span>
+        <span onclick="setRating(5)" style="font-size:2.9rem;cursor:pointer;transition:transform .25s cubic-bezier(.34,1.56,.64,1),filter .25s" id="star5">☆</span>
       </div>
-      <button id="ratingSubmitBtn" onclick="submitRating()" style="display:none;width:100%;background:linear-gradient(135deg,#FF6B6B,#FF9A3C);color:white;border:none;border-radius:16px;padding:16px;font-size:1rem;font-weight:700;cursor:pointer;font-family:DM Sans,sans-serif;box-shadow:0 8px 24px rgba(255,107,107,0.35);margin-bottom:12px;letter-spacing:0.3px">
+      <button id="ratingSubmitBtn" onclick="submitRating()" style="display:none;width:100%;background:linear-gradient(135deg,#FF6B6B,#FF9A3C,#FFD166);background-size:200% 100%;color:white;border:none;border-radius:16px;padding:17px;font-size:1.02rem;font-weight:700;cursor:pointer;font-family:DM Sans,sans-serif;box-shadow:0 10px 30px rgba(255,107,107,0.4);margin-bottom:12px;letter-spacing:0.3px">
         Laisser un avis 🙏
       </button>
       <button onclick="document.getElementById('ratingModal').style.display='none';showAppAfterOnboarding()" style="background:none;border:none;color:#ccc;font-size:0.82rem;cursor:pointer;font-family:DM Sans,sans-serif;padding:4px">
@@ -24974,7 +24977,8 @@ function setRating(n) {
   for (var i = 1; i <= 5; i++) {
     var star = document.getElementById('star' + i);
     star.textContent = i <= n ? '⭐' : '☆';
-    star.style.transform = i === n ? 'scale(1.3)' : 'scale(1)';
+    star.style.transform = i === n ? 'scale(1.35)' : 'scale(1)';
+    star.style.filter = i <= n ? 'drop-shadow(0 0 8px rgba(255,209,102,0.85))' : 'none';
   }
   document.getElementById('ratingSubmitBtn').style.display = 'block';
 }
