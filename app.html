@@ -7820,19 +7820,19 @@ function switchLang(lang) {
         <div style="display:flex;flex-direction:column;gap:10px">
           <div style="display:flex;gap:10px;align-items:flex-start">
             <span style="font-size:14px;flex-shrink:0">💓</span>
-            <div style="font-size:0.8rem;color:#666;line-height:1.5"><b style="color:#2D2D2D">Pourquoi suivre son rythme cardiaque.</b> Votre fréquence cardiaque au repos reflète votre condition cardiovasculaire et votre récupération : plus elle est stable et basse au repos, meilleure est généralement votre forme.</div>
+            <div id="cardioExplTipText1" style="font-size:0.8rem;color:#666;line-height:1.5"><b style="color:#2D2D2D">Pourquoi suivre son rythme cardiaque.</b> Votre fréquence cardiaque au repos reflète votre condition cardiovasculaire et votre récupération : plus elle est stable et basse au repos, meilleure est généralement votre forme.</div>
           </div>
           <div style="display:flex;gap:10px;align-items:flex-start">
             <span style="font-size:14px;flex-shrink:0">⚠️</span>
-            <div style="font-size:0.8rem;color:#666;line-height:1.5"><b style="color:#2D2D2D">Les risques d'un rythme déséquilibré.</b> Un rythme durablement élevé au repos peut traduire du stress, de la fatigue ou un manque de forme physique. Un rythme inhabituellement bas ou irrégulier mérite un avis médical.</div>
+            <div id="cardioExplTipText2" style="font-size:0.8rem;color:#666;line-height:1.5"><b style="color:#2D2D2D">Les risques d'un rythme déséquilibré.</b> Un rythme durablement élevé au repos peut traduire du stress, de la fatigue ou un manque de forme physique. Un rythme inhabituellement bas ou irrégulier mérite un avis médical.</div>
           </div>
           <div style="display:flex;gap:10px;align-items:flex-start">
             <span style="font-size:14px;flex-shrink:0">🏃</span>
-            <div style="font-size:0.8rem;color:#666;line-height:1.5"><b style="color:#2D2D2D">Préserver son cœur au quotidien.</b> Une activité physique régulière, un sommeil de qualité et une bonne gestion du stress sont les trois piliers d'un cœur en bonne santé sur le long terme.</div>
+            <div id="cardioExplTipText3" style="font-size:0.8rem;color:#666;line-height:1.5"><b style="color:#2D2D2D">Préserver son cœur au quotidien.</b> Une activité physique régulière, un sommeil de qualité et une bonne gestion du stress sont les trois piliers d'un cœur en bonne santé sur le long terme.</div>
           </div>
           <div style="display:flex;gap:10px;align-items:flex-start">
             <span style="font-size:14px;flex-shrink:0">🚭</span>
-            <div style="font-size:0.8rem;color:#666;line-height:1.5"><b style="color:#2D2D2D">Limiter les excès.</b> Le tabac, l'excès d'alcool et de caféine sollicitent inutilement votre cœur : les réduire est l'un des gestes les plus efficaces pour votre santé cardiovasculaire.</div>
+            <div id="cardioExplTipText4" style="font-size:0.8rem;color:#666;line-height:1.5"><b style="color:#2D2D2D">Limiter les excès.</b> Le tabac, l'excès d'alcool et de caféine sollicitent inutilement votre cœur : les réduire est l'un des gestes les plus efficaces pour votre santé cardiovasculaire.</div>
           </div>
         </div>
         <p style="font-size:0.65rem;color:#bbb;line-height:1.4;margin:14px 0 0">Ces informations sont générales et ne remplacent pas un avis médical.</p>
@@ -12078,7 +12078,43 @@ function switchLang(lang) {
       ]
     }
   ];
-  window._cardioGetTier = function(bpm) {
+  
+window._cardioExplTipVariants = {
+  t1: [
+    '<b style="color:#2D2D2D">Pourquoi suivre son rythme cardiaque.</b> Votre fréquence cardiaque au repos reflète votre condition cardiovasculaire et votre récupération : plus elle est stable et basse au repos, meilleure est généralement votre forme.',
+    '<b style="color:#2D2D2D">Pourquoi suivre son rythme cardiaque.</b> Mesurer sa fréquence cardiaque au repos régulièrement permet de repérer les tendances sur la durée, bien plus utile qu\'une mesure isolée.',
+    '<b style="color:#2D2D2D">Pourquoi suivre son rythme cardiaque.</b> Un cœur entraîné bat généralement plus lentement au repos car il pompe plus de sang à chaque battement.',
+    '<b style="color:#2D2D2D">Pourquoi suivre son rythme cardiaque.</b> La variation de votre rythme cardiaque au fil des jours en dit souvent plus long que la valeur d\'un seul jour.'
+  ],
+  t2: [
+    '<b style="color:#2D2D2D">Les risques d\'un rythme déséquilibré.</b> Un rythme durablement élevé au repos peut traduire du stress, de la fatigue ou un manque de forme physique. Un rythme inhabituellement bas ou irrégulier mérite un avis médical.',
+    '<b style="color:#2D2D2D">Les risques d\'un rythme déséquilibré.</b> Un rythme qui reste élevé plusieurs jours de suite, sans effort ni stress apparent, mérite d\'être signalé à un professionnel de santé.',
+    '<b style="color:#2D2D2D">Les risques d\'un rythme déséquilibré.</b> Le manque de sommeil et la déshydratation peuvent également faire grimper temporairement votre fréquence cardiaque au repos.',
+    '<b style="color:#2D2D2D">Les risques d\'un rythme déséquilibré.</b> Des palpitations ou un rythme très irrégulier, même ponctuels, justifient toujours d\'en parler à un médecin.'
+  ],
+  t3: [
+    '<b style="color:#2D2D2D">Préserver son cœur au quotidien.</b> Une activité physique régulière, un sommeil de qualité et une bonne gestion du stress sont les trois piliers d\'un cœur en bonne santé sur le long terme.',
+    '<b style="color:#2D2D2D">Préserver son cœur au quotidien.</b> Marcher 30 minutes par jour suffit déjà à renforcer durablement votre santé cardiovasculaire.',
+    '<b style="color:#2D2D2D">Préserver son cœur au quotidien.</b> Une alimentation riche en fibres et pauvre en graisses saturées aide à maintenir des artères souples.',
+    '<b style="color:#2D2D2D">Préserver son cœur au quotidien.</b> Gérer son stress au quotidien, par la respiration ou la méditation, a un effet mesurable sur le rythme cardiaque.'
+  ],
+  t4: [
+    '<b style="color:#2D2D2D">Limiter les excès.</b> Le tabac, l\'excès d\'alcool et de caféine sollicitent inutilement votre cœur : les réduire est l\'un des gestes les plus efficaces pour votre santé cardiovasculaire.',
+    '<b style="color:#2D2D2D">Limiter les excès.</b> Le tabac reste l\'un des facteurs de risque cardiovasculaire les plus évitables : chaque cigarette en moins compte.',
+    '<b style="color:#2D2D2D">Limiter les excès.</b> Trop de caféine en fin de journée peut élever votre rythme cardiaque et perturber votre sommeil, avec un effet en cascade sur votre cœur.',
+    '<b style="color:#2D2D2D">Limiter les excès.</b> Réduire sa consommation de sel aide aussi à maintenir une tension artérielle stable, en complément d\'un cœur bien entretenu.'
+  ]
+};
+window._cardioApplyExplDailyTips = function() {
+  var dayIdx = Math.floor(Date.now() / 86400000);
+  var map = { cardioExplTipText1: 't1', cardioExplTipText2: 't2', cardioExplTipText3: 't3', cardioExplTipText4: 't4' };
+  Object.keys(map).forEach(function(elId) {
+    var el = document.getElementById(elId);
+    var variants = window._cardioExplTipVariants[map[elId]];
+    if (el && variants) el.innerHTML = variants[dayIdx % variants.length];
+  });
+};
+window._cardioGetTier = function(bpm) {
     var _dayIdxCardio = Math.floor(Date.now() / 86400000);
     var tierFound = null;
     for (var i = 0; i < window._cardioAdviceTiers.length; i++) {
@@ -16620,7 +16656,7 @@ function switchSuiviTab(tab, btn) {
   }
   window._suiviActiveTab = tab;
   if (tab === 'sommeil' && typeof renderSommeilSection === 'function') { renderSommeilSection(_healthLogs); if (typeof window._sommeilApplyDailyTips === 'function') window._sommeilApplyDailyTips(); }
-  if (tab === 'cardio' && typeof renderCardioSection === 'function') { renderCardioSection(_healthLogs); }
+  if (tab === 'cardio' && typeof renderCardioSection === 'function') { renderCardioSection(_healthLogs); if (typeof window._cardioApplyExplDailyTips === 'function') window._cardioApplyExplDailyTips(); }
   if (tab === 'activite' && typeof renderActiviteTab === 'function') { renderActiviteTab(); }
 }
 
