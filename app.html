@@ -11600,7 +11600,45 @@ function switchLang(lang) {
             </div>
           </div>
           <button id="trialCta" onclick="document.getElementById('trialExpiredModal').remove();if(typeof selectPlan==='function')selectPlan('premium')" style="width:100%;background:linear-gradient(135deg,#FF6B6B,#FF9A3C);color:#fff;border:none;border-radius:16px;padding:16px;font-size:0.95rem;font-weight:800;cursor:pointer;font-family:DM Sans,sans-serif;box-shadow:0 10px 30px rgba(255,107,107,0.4);margin-bottom:12px">Profiter de -50% maintenant</button>
-          <div onclick="document.getElementById('trialExpiredModal').remove()" style="text-align:center;font-size:0.76rem;color:#bbb;cursor:pointer">Continuer en accès limité</div>
+          <div onclick="document.getElementById('trialExpiredModal').remove();if(typeof showDownsellStandardModal==='function')showDownsellStandardModal()" style="text-align:center;font-size:0.76rem;color:#bbb;cursor:pointer">Continuer en accès limité</div>
+        </div>
+      </div>
+    `;
+    document.body.appendChild(modal);
+  }
+  function showDownsellStandardModal() {
+    var todayKey = 'mirella_downsell_shown_' + new Date().toDateString();
+    if (localStorage.getItem(todayKey)) return;
+    localStorage.setItem(todayKey, '1');
+    var existing = document.getElementById('downsellStandardModal');
+    if (existing) return;
+    var modal = document.createElement('div');
+    modal.id = 'downsellStandardModal';
+    modal.style.cssText = 'position:fixed;inset:0;z-index:99999;background:rgba(20,10,8,0.72);display:flex;align-items:center;justify-content:center;padding:20px';
+    modal.innerHTML = `
+      <style>
+        @keyframes downsellPopIn{from{transform:scale(0.9);opacity:0}to{transform:scale(1);opacity:1}}
+        #downsellBox{animation:downsellPopIn .4s cubic-bezier(.34,1.56,.64,1)}
+        #downsellCta:hover{transform:translateY(-2px);box-shadow:0 12px 32px rgba(255,107,107,0.45)!important}
+      </style>
+      <div id="downsellBox" style="width:100%;max-width:340px;background:linear-gradient(165deg,#FFF6EC,#FFE8D1);border-radius:28px;overflow:hidden;box-shadow:0 24px 60px rgba(0,0,0,0.35)">
+        <div style="padding:30px 24px 26px;text-align:center">
+          <div style="width:60px;height:60px;border-radius:18px;background:linear-gradient(135deg,#FF6B6B,#FF9A3C,#FFD166);display:flex;align-items:center;justify-content:center;margin:0 auto 18px;box-shadow:0 8px 24px rgba(255,107,107,0.35)">
+            <i class="ti ti-heart-handshake" style="font-size:28px;color:#fff"></i>
+          </div>
+          <div style="font-family:Open Sans,serif;font-size:1.3rem;font-weight:800;color:#2D2D2D;margin:0 0 8px">Une dernière offre pour vous</div>
+          <div style="font-size:0.82rem;color:#8a7a6a;line-height:1.5;margin:0 0 18px">Pas besoin de tout, juste l'essentiel ? Voici notre offre la plus accessible.</div>
+          <div style="display:inline-flex;align-items:center;gap:5px;background:rgba(255,107,107,0.12);border:1px solid #FF6B6B;color:#E24B4A;font-size:0.62rem;font-weight:800;padding:5px 12px;border-radius:20px;letter-spacing:0.06em;text-transform:uppercase;margin-bottom:18px">
+            <i class="ti ti-clock" style="font-size:11px"></i>Offre limitée à maintenant
+          </div>
+          <div style="position:relative;background:#fff;border-radius:18px;padding:20px 18px;margin-bottom:18px;box-shadow:0 10px 30px rgba(230,110,70,0.14)">
+            <div style="position:absolute;top:-10px;left:50%;transform:translateX(-50%);background:linear-gradient(135deg,#FFD166,#FF9A3C);color:#fff;font-size:0.6rem;font-weight:800;padding:3px 12px;border-radius:10px;white-space:nowrap">-50% AUJOURD'HUI</div>
+            <div style="font-size:0.66rem;color:#993C1D;font-weight:700;letter-spacing:0.06em;margin-top:4px;margin-bottom:6px">STANDARD</div>
+            <div style="font-size:2rem;font-weight:800;color:#2D2D2D;line-height:1">2,99 &euro;<span style="font-size:0.85rem;font-weight:600;color:#999">/mois</span></div>
+            <div style="font-size:0.74rem;color:#999;margin-top:4px"><span style="text-decoration:line-through">5,99 &euro;</span> &middot; soit 0,09 &euro;/jour</div>
+          </div>
+          <button id="downsellCta" onclick="document.getElementById('downsellStandardModal').remove();if(typeof selectPlan==='function')selectPlan('standard')" style="width:100%;background:linear-gradient(135deg,#FF6B6B,#FF9A3C);color:#fff;border:none;border-radius:16px;padding:16px;font-size:0.94rem;font-weight:800;cursor:pointer;font-family:DM Sans,sans-serif;margin-bottom:10px;box-shadow:0 10px 28px rgba(255,107,107,0.4)">Profiter de l'offre Standard</button>
+          <div onclick="document.getElementById('downsellStandardModal').remove()" style="text-align:center;font-size:0.76rem;color:#b0a494;cursor:pointer">Continuer sans abonnement</div>
         </div>
       </div>
     `;
