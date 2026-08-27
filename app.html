@@ -3509,7 +3509,9 @@ window.initHome = async function() {
     var finishedMonde = profile.parcours_monde || 1;
     var finishedChemin = profile.parcours_chemin;
     var _finSequence;
-    if (finishedMonde === 1 && finishedChemin === 'B') {
+    if (finishedMonde === 1 && finishedChemin === 'A') {
+      _finSequence = [PC_VIDEO_BASE + 'passage_monde_foret_energie_compressed.mp4'];
+    } else if (finishedMonde === 1 && finishedChemin === 'B') {
       _finSequence = [PC_VIDEO_BASE + 'passage_monde_montagne_force_compressed.mp4', PC_VIDEO_BASE + 'passage_monde_montagne_def_compressed.mp4'];
     } else if (finishedMonde === 2 && finishedChemin === 'A') {
       _finSequence = [PC_VIDEO_BASE + 'pc_choice_a_monde2_partie2.mp4', PC_VIDEO_BASE + 'pc_choice_a_monde2_partie3.mp4'];
