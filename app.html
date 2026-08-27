@@ -3484,28 +3484,7 @@ window.initHome = async function() {
     var currentCase = profile.parcours_case || 0;
     var currentMonde = profile.parcours_monde || 1;
     currentCase += 1;
-    if (currentCase > 12) {
-      var finishedMonde = currentMonde;
-      var finishedChemin = profile.parcours_chemin;
-      currentCase = 0;
-      currentMonde += 1;
-      var _prevWorldKey = profile.parcours_world_key || 'foret_eveil';
-      profile.parcours_world_key = profile.parcours_chemin ? pcNextWorldKey(_prevWorldKey, profile.parcours_chemin) : _prevWorldKey;
-      profile.parcours_monde_theme = profile.parcours_chemin || null;
-      profile.parcours_chemin = null;
-      if (localStorage.getItem(pcSeenKey('fin', finishedMonde)) !== '1') {
-        localStorage.setItem(pcSeenKey('fin', finishedMonde), '1');
-        var _finSequence;
-        if (finishedMonde === 2 && finishedChemin === 'A') {
-          _finSequence = [PC_VIDEO_BASE + 'pc_choice_a_monde2_partie2.mp4', PC_VIDEO_BASE + 'pc_choice_a_monde2_partie3.mp4'];
-        } else if (finishedMonde === 2 && finishedChemin === 'B') {
-          _finSequence = [PC_VIDEO_BASE + 'pc_choice_b_monde2_partie2.mp4'];
-        } else {
-          _finSequence = _pcVideoMap.fin(finishedMonde);
-        }
-        setTimeout(function() { pcPlaySequence(Array.isArray(_finSequence) ? _finSequence : [_finSequence]); }, 300);
-      }
-    }
+    if (currentCase > 12) { currentCase = 12; }
     if (currentCase === _pcForkCase) { profile.parcours_chemin = null; }
     profile.parcours_case = currentCase;
     profile.parcours_monde = currentMonde;
@@ -3523,6 +3502,42 @@ window.initHome = async function() {
     } catch(e) {}
     return profile;
   }
+  window.pcCompleteWorld = function() {
+    var modal = document.getElementById('worldCompleteModal');
+    if (modal) modal.style.display = 'none';
+    var profile = JSON.parse(localStorage.getItem('nutricare_profile') || '{}');
+    var finishedMonde = profile.parcours_monde || 1;
+    var finishedChemin = profile.parcours_chemin;
+    var _finSequence;
+    if (finishedMonde === 2 && finishedChemin === 'A') {
+      _finSequence = [PC_VIDEO_BASE + 'pc_choice_a_monde2_partie2.mp4', PC_VIDEO_BASE + 'pc_choice_a_monde2_partie3.mp4'];
+    } else if (finishedMonde === 2 && finishedChemin === 'B') {
+      _finSequence = [PC_VIDEO_BASE + 'pc_choice_b_monde2_partie2.mp4'];
+    } else {
+      _finSequence = _pcVideoMap.fin(finishedMonde);
+    }
+    pcPlaySequence(Array.isArray(_finSequence) ? _finSequence : [_finSequence], function() {
+      var p = JSON.parse(localStorage.getItem('nutricare_profile') || '{}');
+      var _prevWorldKey = p.parcours_world_key || 'foret_eveil';
+      p.parcours_world_key = p.parcours_chemin ? pcNextWorldKey(_prevWorldKey, p.parcours_chemin) : _prevWorldKey;
+      p.parcours_monde_theme = p.parcours_chemin || null;
+      p.parcours_chemin = null;
+      p.parcours_case = 0;
+      p.parcours_monde = (p.parcours_monde || 1) + 1;
+      localStorage.setItem('nutricare_profile', JSON.stringify(p));
+      try {
+        var token = authToken || window._authToken || localStorage.getItem('nutricare_token');
+        if (token) {
+          fetch(BACKEND_URL + '/api/profile', {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
+            body: JSON.stringify({ parcours_case: p.parcours_case, parcours_monde: p.parcours_monde, parcours_world_key: p.parcours_world_key, parcours_monde_theme: p.parcours_monde_theme, parcours_chemin: p.parcours_chemin })
+          });
+        }
+      } catch(e) {}
+      renderParcours(p);
+    });
+  };
   function saveParcoursChoice(choice) {
     document.getElementById('parcoursForkModal').style.display = 'none';
     var profileForVideo = JSON.parse(localStorage.getItem('nutricare_profile') || '{}');
@@ -3596,6 +3611,13 @@ window.initHome = async function() {
     var startOverlayEl = document.getElementById('pcStartOverlay');
     if (startOverlayEl) {
       startOverlayEl.style.display = (mondeIdx === 0 && caseIdx === 0 && localStorage.getItem(pcSeenKey('intro', mondeNum)) !== '1') ? 'flex' : 'none';
+    }
+    if (caseIdx === 12 && window._currentView === 'home') {
+      var _wcModal = document.getElementById('worldCompleteModal');
+      if (_wcModal && _wcModal.style.display !== 'flex') {
+        _wcModal.style.display = 'flex';
+        setTimeout(function() { if (typeof pcLaunchConfetti === 'function') pcLaunchConfetti('worldCompleteConfetti', 4500); }, 150);
+      }
     }
     if (caseIdx >= _pcForkCase && !profile.parcours_chemin && window._currentView === 'home') {
       var _forkLabelAEl = document.getElementById('parcoursForkLabelA');
@@ -5535,6 +5557,32 @@ function switchLang(lang) {
 
         <!-- Popup Modifier mon profil -->
         <!-- Popup bifurcation du parcours -->
+        <div id="worldCompleteModal" style="display:none;position:fixed;inset:0;background:rgba(20,10,8,0.72);z-index:99999;align-items:center;justify-content:center;padding:20px">
+          <div style="width:100%;max-width:340px;background:#FFFCF8;border-radius:32px;overflow:hidden;box-shadow:0 30px 70px rgba(0,0,0,0.4);position:relative">
+            <div style="background:linear-gradient(150deg,#FF6B6B,#FF9A3C 50%,#FFD166);padding:30px 20px 38px;text-align:center;position:relative;overflow:hidden">
+              <canvas id="worldCompleteConfetti" style="position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:5"></canvas>
+              <div style="display:inline-flex;align-items:center;gap:5px;background:rgba(255,255,255,0.22);color:#fff;font-size:0.62rem;font-weight:800;padding:5px 14px;border-radius:20px;letter-spacing:0.08em;text-transform:uppercase;margin-bottom:22px;position:relative;z-index:2">
+                <i class="ti ti-trophy" style="font-size:13px"></i>Monde terminé
+              </div>
+              <div style="position:relative;width:104px;height:104px;margin:0 auto 20px;z-index:2">
+                <div style="position:absolute;inset:-6px;border-radius:32px;background:linear-gradient(135deg,#FFD166,#FFF7E0,#FFD166);opacity:0.9"></div>
+                <div style="position:relative;width:104px;height:104px;border-radius:28px;overflow:hidden;box-shadow:0 10px 28px rgba(0,0,0,0.2)">
+                  <video id="worldCompleteVideo" autoplay muted loop playsinline style="width:100%;height:100%;object-fit:cover;display:block">
+                    <source src="https://www.mirella-ai.fr/onboarding_success_final2.mp4" type="video/mp4">
+                  </video>
+                </div>
+              </div>
+              <div style="font-family:Open Sans,serif;font-size:1.42rem;font-weight:800;color:#fff;margin:0 0 8px;text-shadow:0 2px 12px rgba(0,0,0,0.15);position:relative;z-index:2">Bravo, vous avez terminé ce monde !</div>
+              <div style="font-size:0.85rem;color:rgba(255,255,255,0.94);line-height:1.55;margin:0;max-width:260px;margin:0 auto;position:relative;z-index:2">L'aventure continue, un nouveau monde n'attend que vous.</div>
+            </div>
+            <div style="padding:24px 24px 26px;text-align:center">
+              <div style="display:inline-flex;align-items:center;gap:7px;background:rgba(255,209,102,0.16);border:1px solid rgba(239,159,39,0.4);color:#993C1D;font-size:0.78rem;font-weight:700;padding:8px 18px;border-radius:20px;margin-bottom:22px">
+                <i class="ti ti-circle-check-filled" style="font-size:16px;color:#EF9F27"></i>12 étapes accomplies
+              </div>
+              <button onclick="pcCompleteWorld()" style="width:100%;background:linear-gradient(135deg,#FF6B6B,#FF9A3C,#FFD166);color:#fff;border:none;border-radius:18px;padding:17px;font-size:0.98rem;font-weight:800;cursor:pointer;font-family:DM Sans,sans-serif;box-shadow:0 14px 34px rgba(255,107,107,0.45);letter-spacing:0.2px">Continuer l'aventure</button>
+            </div>
+          </div>
+        </div>
         <div id="parcoursForkModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.65);z-index:99999;align-items:center;justify-content:center;padding:20px">
           <div style="background:linear-gradient(180deg,#fff,#FFFCFA);border-radius:24px;padding:24px 20px;width:100%;max-width:340px;text-align:center">
             <div style="font-size:1.05rem;font-weight:800;color:#1a1a1a;margin-bottom:6px">Le chemin se divise !</div>
