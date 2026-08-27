@@ -11363,9 +11363,10 @@ function switchLang(lang) {
         { id:'b_master',   icon:'<img src="https://www.mirella-ai.fr/badge_maitrise_niveau5-png.png" style="width:6rem;height:6rem;object-fit:contain;border-radius:50%">', nom:'Maîtrise',         desc:'Atteindre niveau 5',          check: () => lvlData.level >= 5 },
       ];
 
-      const obtained = ALL_BADGES.filter(b => b.check()).map(b => b.id);
+      const obtainedNow = ALL_BADGES.filter(b => b.check()).map(b => b.id);
       const prevObtained = JSON.parse(localStorage.getItem('gami_badges_obtained') || '[]');
-      const newBadges = ALL_BADGES.filter(b => obtained.includes(b.id) && !prevObtained.includes(b.id));
+      const obtained = Array.from(new Set([...prevObtained, ...obtainedNow]));
+      const newBadges = ALL_BADGES.filter(b => obtainedNow.includes(b.id) && !prevObtained.includes(b.id));
       localStorage.setItem('gami_badges_obtained', JSON.stringify(obtained));
 
       if (newBadges.length > 0) showBadgePopup(newBadges[0]);
