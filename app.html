@@ -3614,9 +3614,13 @@ window.initHome = async function() {
     }
     if (caseIdx === 12 && window._currentView === 'home') {
       var _wcModal = document.getElementById('worldCompleteModal');
-      if (_wcModal && _wcModal.style.display !== 'flex') {
-        _wcModal.style.display = 'flex';
-        setTimeout(function() { if (typeof pcLaunchConfetti === 'function') pcLaunchConfetti('worldCompleteConfetti', 4500); }, 150);
+      if (_wcModal && _wcModal.style.display !== 'flex' && !window._wcModalScheduled) {
+        window._wcModalScheduled = true;
+        setTimeout(function() {
+          window._wcModalScheduled = false;
+          _wcModal.style.display = 'flex';
+          setTimeout(function() { if (typeof pcLaunchConfetti === 'function') pcLaunchConfetti('worldCompleteConfetti', 4500); }, 150);
+        }, 1800);
       }
     }
     if (caseIdx >= _pcForkCase && !profile.parcours_chemin && window._currentView === 'home') {
