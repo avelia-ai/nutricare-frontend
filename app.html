@@ -11364,12 +11364,33 @@ function switchLang(lang) {
       ];
 
       const obtainedNow = ALL_BADGES.filter(b => b.check()).map(b => b.id);
-      const prevObtained = JSON.parse(localStorage.getItem('gami_badges_obtained') || '[]');
+      var prevObtained = [];
+      try {
+        const resBadges = await fetch(`${BACKEND_URL}/api/gamification/badges-seen`, {
+          headers: { 'Authorization': `Bearer ${authToken}` }
+        });
+        if (resBadges.ok) {
+          const dataBadges = await resBadges.json();
+          prevObtained = dataBadges.badges_seen || [];
+        }
+      } catch(e) {
+        // Fallback local si le backend est injoignable
+        prevObtained = JSON.parse(localStorage.getItem('gami_badges_obtained') || '[]');
+      }
       const obtained = Array.from(new Set([...prevObtained, ...obtainedNow]));
       const newBadges = ALL_BADGES.filter(b => obtainedNow.includes(b.id) && !prevObtained.includes(b.id));
       localStorage.setItem('gami_badges_obtained', JSON.stringify(obtained));
 
-      if (newBadges.length > 0) showBadgePopup(newBadges[0]);
+      if (newBadges.length > 0) {
+        showBadgePopup(newBadges[0]);
+        newBadges.forEach(function(b) {
+          fetch(`${BACKEND_URL}/api/gamification/badges-seen`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${authToken}` },
+            body: JSON.stringify({ badge_id: b.id })
+          }).catch(function(e) {});
+        });
+      }
     } catch(e) { console.warn('checkAndShowNewBadges error', e); }
   }
 
