@@ -3597,7 +3597,7 @@ window.initHome = async function() {
     if (startOverlayEl) {
       startOverlayEl.style.display = (mondeIdx === 0 && caseIdx === 0 && localStorage.getItem(pcSeenKey('intro', mondeNum)) !== '1') ? 'flex' : 'none';
     }
-    if (caseIdx >= _pcForkCase && !profile.parcours_chemin) {
+    if (caseIdx >= _pcForkCase && !profile.parcours_chemin && window._currentView === 'home') {
       var _forkLabelAEl = document.getElementById('parcoursForkLabelA');
       var _forkLabelBEl = document.getElementById('parcoursForkLabelB');
       if (_forkLabelAEl && _forkLabelBEl) {
