@@ -3708,6 +3708,10 @@ window.initHome = async function() {
         html += pcTreasure(branchPts[1], caseIdx >= 8);
         html += pcDoor(branchPts[5]);
       });
+    } else if (isLacCristallinWorld) {
+      _pcWaypointsLacCristallin.forEach(function(p, ci) {
+        html += pcDot(p, caseIdx >= ci);
+      });
     } else {
       // Tronc commun (cases 1-6, partage par les deux branches, decor foret)
       _pcWaypoints.forEach(function(p, ci) {
