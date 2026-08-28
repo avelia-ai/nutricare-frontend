@@ -3751,6 +3751,29 @@ window.initHome = async function() {
       });
     }
     checkpointsEl.innerHTML = html;
+    if (new URLSearchParams(window.location.search).get('pc_debug_coords') === '1' && !window._pcDebugCoordsInit) {
+      window._pcDebugCoordsInit = true;
+      var mapVideoContainer = document.getElementById('pcMapVideo').parentElement;
+      mapVideoContainer.style.position = 'relative';
+      var dbgLayer = document.createElement('div');
+      dbgLayer.style.cssText = 'position:absolute;inset:0;pointer-events:none;z-index:99999';
+      mapVideoContainer.appendChild(dbgLayer);
+      var dbgBox = document.createElement('textarea');
+      dbgBox.style.cssText = 'position:fixed;bottom:0;left:0;right:0;height:160px;z-index:999999;font-size:11px;font-family:monospace;background:#fff;border-top:3px solid red';
+      document.body.appendChild(dbgBox);
+      var dbgPts = [];
+      mapVideoContainer.addEventListener('click', function(e) {
+        var r = mapVideoContainer.getBoundingClientRect();
+        var x = Math.round((e.clientX - r.left) / r.width * 1000) / 10;
+        var y = Math.round((e.clientY - r.top) / r.height * 1000) / 10;
+        dbgPts.push({x: x, y: y});
+        var d = document.createElement('div');
+        d.style.cssText = 'position:absolute;left:' + x + '%;top:' + y + '%;width:24px;height:24px;border-radius:50%;background:red;color:white;display:flex;align-items:center;justify-content:center;font-size:11px;transform:translate(-50%,-50%)';
+        d.textContent = dbgPts.length - 1;
+        dbgLayer.appendChild(d);
+        dbgBox.value = JSON.stringify(dbgPts);
+      });
+    }
     var pct = Math.round((caseIdx / 12) * 100);
     document.getElementById('pcPercent').textContent = pct + '%';
     document.getElementById('pcProgressBar').style.width = pct + '%';
