@@ -3173,7 +3173,7 @@ window.initHome = async function() {
     return _pcWaypointsMountain.concat(branch);
   }
   var _pcWaypointsLacCristallin = [
-    {x:41,y:98},{x:43,y:94},{x:47,y:88},{x:49,y:82},{x:51,y:75},{x:49,y:68},{x:48,y:60},{x:56,y:55},{x:44,y:52},{x:66,y:53},{x:32,y:48},{x:78,y:44},{x:88,y:40}
+    {x:41,y:97},{x:44,y:91},{x:48,y:84},{x:50,y:76},{x:52,y:68},{x:49,y:60},{x:47,y:52},{x:57,y:48},{x:43,y:45},{x:66,y:44},{x:32,y:41},{x:78,y:37},{x:87,y:33}
   ];
   function getPcWaypointsLacCristallin(profile) {
     return _pcWaypointsLacCristallin;
@@ -3710,8 +3710,12 @@ window.initHome = async function() {
       });
     } else if (isLacCristallinWorld) {
       _pcWaypointsLacCristallin.forEach(function(p, ci) {
+        if (ci === 0 || ci === 4 || ci === 8 || ci === 12) return;
         html += pcDot(p, caseIdx >= ci);
       });
+      html += pcTreasure(_pcWaypointsLacCristallin[4], caseIdx >= 4);
+      html += pcTreasure(_pcWaypointsLacCristallin[8], caseIdx >= 8);
+      html += pcDoor(_pcWaypointsLacCristallin[12]);
     } else {
       // Tronc commun (cases 1-6, partage par les deux branches, decor foret)
       _pcWaypoints.forEach(function(p, ci) {
