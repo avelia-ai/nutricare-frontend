@@ -3185,6 +3185,19 @@ window.initHome = async function() {
     var branch = (profile && profile.parcours_chemin === "B") ? _pcBranchBLacCristallin : _pcBranchALacCristallin;
     return _pcWaypointsLacCristallin.concat(branch);
   }
+  var _pcWaypointsTerritoireZen = [
+    {x:42.5,y:97.1},{x:42.8,y:90.2},{x:44.2,y:83.9},{x:44.5,y:77},{x:46.3,y:70.7},{x:48.6,y:64.8},{x:48.8,y:58.4}
+  ];
+  var _pcBranchATerritoireZen = [
+    {x:56,y:54.6},{x:62.1,y:52.1},{x:70.1,y:49},{x:77.9,y:44.8},{x:84.7,y:42.1},{x:87,y:36}
+  ];
+  var _pcBranchBTerritoireZen = [
+    {x:39.6,y:55.3},{x:31.9,y:51.3},{x:26.4,y:48.1},{x:20.1,y:45.2},{x:15.2,y:41.9},{x:12.9,y:34.8}
+  ];
+  function getPcWaypointsTerritoireZen(profile) {
+    var branch = (profile && profile.parcours_chemin === "B") ? _pcBranchBTerritoireZen : _pcBranchATerritoireZen;
+    return _pcWaypointsTerritoireZen.concat(branch);
+  }
   function getPcWaypoints(profile, caseIdxForBg) {
     var onMountainBg = (profile && profile.parcours_chemin === "B" && caseIdxForBg > _pcForkCase);
     var branch = (profile && profile.parcours_chemin === "B") ? (onMountainBg ? _pcBranchBMountain : _pcBranchB) : _pcBranchA;
@@ -3611,6 +3624,7 @@ window.initHome = async function() {
     var isMountainWorld = (worldKey === 'montagne_force');
     var isForetEnergieWorld = (worldKey === 'foret_energie');
     var isLacCristallinWorld = (worldKey === 'lac_cristallin');
+    var isTerritoireZenWorld = (worldKey === 'territoire_zen');
     var _pcMapVideos = {
       default: PC_VIDEO_BASE + 'foret_eveil_hq_compressed.mp4',
       foret_energie: PC_VIDEO_BASE + 'foret_energie_hq_compressed.mp4',
@@ -3665,6 +3679,7 @@ window.initHome = async function() {
     var _pcWaypointsActive = isMountainWorld ? getPcWaypointsMountain(profile) : getPcWaypoints(profile, caseIdx);
     if (isForetEnergieWorld) { _pcWaypointsActive = getPcWaypointsForetEnergie(profile); }
     if (isLacCristallinWorld) { _pcWaypointsActive = getPcWaypointsLacCristallin(profile); }
+    if (isTerritoireZenWorld) { _pcWaypointsActive = getPcWaypointsTerritoireZen(profile); }
     var pt = _pcWaypointsActive[caseIdx];
     var foxEl = document.getElementById('pcFoxWrap');
     foxEl.style.left = pt.x + '%';
@@ -3724,6 +3739,22 @@ window.initHome = async function() {
       html += pcTreasure(_pcWaypointsLacCristallin[3], caseIdx >= 3);
       var branchesToShowLC = profile.parcours_chemin ? [(profile.parcours_chemin === "B" ? _pcBranchBLacCristallin : _pcBranchALacCristallin)] : [_pcBranchALacCristallin, _pcBranchBLacCristallin];
       branchesToShowLC.forEach(function(branchPts) {
+        branchPts.forEach(function(p, bi) {
+          var ci = bi + 7;
+          if (ci === 8 || ci === 12) return;
+          html += pcDot(p, caseIdx >= ci);
+        });
+        html += pcTreasure(branchPts[1], caseIdx >= 8);
+        html += pcDoor(branchPts[5]);
+      });
+    } else if (isTerritoireZenWorld) {
+      _pcWaypointsTerritoireZen.forEach(function(p, ci) {
+        if (ci === 0 || ci === 3) return;
+        html += pcDot(p, caseIdx >= ci);
+      });
+      html += pcTreasure(_pcWaypointsTerritoireZen[3], caseIdx >= 3);
+      var branchesToShowTZ = profile.parcours_chemin ? [(profile.parcours_chemin === "B" ? _pcBranchBTerritoireZen : _pcBranchATerritoireZen)] : [_pcBranchATerritoireZen, _pcBranchBTerritoireZen];
+      branchesToShowTZ.forEach(function(branchPts) {
         branchPts.forEach(function(p, bi) {
           var ci = bi + 7;
           if (ci === 8 || ci === 12) return;
