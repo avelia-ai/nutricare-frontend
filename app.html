@@ -3717,10 +3717,10 @@ window.initHome = async function() {
       });
     } else if (isLacCristallinWorld) {
       _pcWaypointsLacCristallin.forEach(function(p, ci) {
-        if (ci === 0 || ci === 4) return;
+        if (ci === 0 || ci === 3) return;
         html += pcDot(p, caseIdx >= ci);
       });
-      html += pcTreasure(_pcWaypointsLacCristallin[4], caseIdx >= 4);
+      html += pcTreasure(_pcWaypointsLacCristallin[3], caseIdx >= 3);
       var branchesToShowLC = profile.parcours_chemin ? [(profile.parcours_chemin === "B" ? _pcBranchBLacCristallin : _pcBranchALacCristallin)] : [_pcBranchALacCristallin, _pcBranchBLacCristallin];
       branchesToShowLC.forEach(function(branchPts) {
         branchPts.forEach(function(p, bi) {
