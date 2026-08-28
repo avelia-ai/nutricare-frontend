@@ -3173,10 +3173,17 @@ window.initHome = async function() {
     return _pcWaypointsMountain.concat(branch);
   }
   var _pcWaypointsLacCristallin = [
-    {x:41,y:97},{x:44,y:91},{x:48,y:84},{x:50,y:76},{x:52,y:68},{x:49,y:60},{x:47,y:52},{x:57,y:48},{x:43,y:45},{x:66,y:44},{x:32,y:41},{x:78,y:37},{x:87,y:33}
+    {x:39.1,y:96.3},{x:41.7,y:89.5},{x:43.3,y:83.4},{x:44.5,y:76.8},{x:45.9,y:71},{x:47.5,y:64.7},{x:48.3,y:58.6}
+  ];
+  var _pcBranchALacCristallin = [
+    {x:56.1,y:54.7},{x:63.3,y:51.5},{x:71.9,y:48.2},{x:79.3,y:44.6},{x:86.1,y:40.9},{x:87.1,y:35.3}
+  ];
+  var _pcBranchBLacCristallin = [
+    {x:41.9,y:55.3},{x:35.5,y:52.1},{x:29.9,y:48.6},{x:23.5,y:45.7},{x:17.7,y:42.5},{x:12.7,y:38.6}
   ];
   function getPcWaypointsLacCristallin(profile) {
-    return _pcWaypointsLacCristallin;
+    var branch = (profile && profile.parcours_chemin === "B") ? _pcBranchBLacCristallin : _pcBranchALacCristallin;
+    return _pcWaypointsLacCristallin.concat(branch);
   }
   function getPcWaypoints(profile, caseIdxForBg) {
     var onMountainBg = (profile && profile.parcours_chemin === "B" && caseIdxForBg > _pcForkCase);
@@ -3710,12 +3717,20 @@ window.initHome = async function() {
       });
     } else if (isLacCristallinWorld) {
       _pcWaypointsLacCristallin.forEach(function(p, ci) {
-        if (ci === 0 || ci === 4 || ci === 8 || ci === 12) return;
+        if (ci === 0 || ci === 4) return;
         html += pcDot(p, caseIdx >= ci);
       });
       html += pcTreasure(_pcWaypointsLacCristallin[4], caseIdx >= 4);
-      html += pcTreasure(_pcWaypointsLacCristallin[8], caseIdx >= 8);
-      html += pcDoor(_pcWaypointsLacCristallin[12]);
+      var branchesToShowLC = profile.parcours_chemin ? [(profile.parcours_chemin === "B" ? _pcBranchBLacCristallin : _pcBranchALacCristallin)] : [_pcBranchALacCristallin, _pcBranchBLacCristallin];
+      branchesToShowLC.forEach(function(branchPts) {
+        branchPts.forEach(function(p, bi) {
+          var ci = bi + 7;
+          if (ci === 8 || ci === 12) return;
+          html += pcDot(p, caseIdx >= ci);
+        });
+        html += pcTreasure(branchPts[1], caseIdx >= 8);
+        html += pcDoor(branchPts[5]);
+      });
     } else {
       // Tronc commun (cases 1-6, partage par les deux branches, decor foret)
       _pcWaypoints.forEach(function(p, ci) {
