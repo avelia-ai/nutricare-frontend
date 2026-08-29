@@ -3305,7 +3305,7 @@ window.initHome = async function() {
   var PC_VIDEO_BASE = 'https://www.mirella-ai.fr/';
   var _pcVideoMap = {
     intro: function(m) { return m === 1 ? [PC_VIDEO_BASE + 'pc_intro_monde1_lighter.mp4', PC_VIDEO_BASE + 'pc_intro_monde1_partie2.mp4', PC_VIDEO_BASE + 'pc_intro_monde1_partie3.mp4', PC_VIDEO_BASE + 'pc_intro_monde1_partie4.mp4', PC_VIDEO_BASE + 'pc_intro_monde1_partie5.mp4'] : (PC_VIDEO_BASE + 'pc_intro_monde' + m + '.mp4'); },
-    fork: function(m) { return PC_VIDEO_BASE + 'pc_fork_arrival_monde' + m + '.mp4'; },
+    fork: function(m) { return m === 3 ? (PC_VIDEO_BASE + 'bifurcation_monde3_compressed.mp4') : (PC_VIDEO_BASE + 'pc_fork_arrival_monde' + m + '.mp4'); },
     choiceA: function(m) { return m === 1 ? (PC_VIDEO_BASE + 'bifurcation_monde1_compressed.mp4') : (PC_VIDEO_BASE + 'pc_choice_a_monde' + m + '.mp4'); },
     choiceB: function(m) { return m === 1 ? (PC_VIDEO_BASE + 'bifurcation_monde1_compressed.mp4') : (PC_VIDEO_BASE + 'pc_choice_b_monde' + m + '.mp4'); },
     fin: function(m) { return PC_VIDEO_BASE + 'pc_fin_monde' + m + '.mp4'; }
@@ -3662,9 +3662,12 @@ window.initHome = async function() {
         if (mondeIdx === 0) {
           _forkLabelAEl.textContent = "Foret de l'Energie";
           _forkLabelBEl.textContent = 'Montagne de la Force';
-        } else {
+        } else if (mondeIdx === 1) {
           _forkLabelAEl.textContent = 'Lac Cristallin';
           _forkLabelBEl.textContent = 'Territoire Zen';
+        } else {
+          _forkLabelAEl.textContent = 'Plaine de Plenitude';
+          _forkLabelBEl.textContent = 'Royaume de la Vitalite';
         }
       }
       if (localStorage.getItem(pcSeenKey('fork', mondeNum)) === '1') {
