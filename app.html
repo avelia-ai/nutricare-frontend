@@ -3306,7 +3306,7 @@ window.initHome = async function() {
   var _pcVideoMap = {
     intro: function(m) { return m === 1 ? [PC_VIDEO_BASE + 'pc_intro_monde1_lighter.mp4', PC_VIDEO_BASE + 'pc_intro_monde1_partie2.mp4', PC_VIDEO_BASE + 'pc_intro_monde1_partie3.mp4', PC_VIDEO_BASE + 'pc_intro_monde1_partie4.mp4', PC_VIDEO_BASE + 'pc_intro_monde1_partie5.mp4'] : (PC_VIDEO_BASE + 'pc_intro_monde' + m + '.mp4'); },
     fork: function(m) { return m === 3 ? (PC_VIDEO_BASE + 'bifurcation_monde3_compressed.mp4') : (PC_VIDEO_BASE + 'pc_fork_arrival_monde' + m + '.mp4'); },
-    choiceA: function(m) { return m === 1 ? (PC_VIDEO_BASE + 'bifurcation_monde1_compressed.mp4') : (PC_VIDEO_BASE + 'pc_choice_a_monde' + m + '.mp4'); },
+    choiceA: function(m) { if (m === 1) return PC_VIDEO_BASE + 'bifurcation_monde1_compressed.mp4'; if (m === 3) return PC_VIDEO_BASE + 'bifurc_plaine_plenitude_compressed.mp4'; return PC_VIDEO_BASE + 'pc_choice_a_monde' + m + '.mp4'; },
     choiceB: function(m) { if (m === 1) return PC_VIDEO_BASE + 'bifurcation_monde1_compressed.mp4'; if (m === 3) return PC_VIDEO_BASE + 'bifurc_royaume_vitalite_compressed.mp4'; return PC_VIDEO_BASE + 'pc_choice_b_monde' + m + '.mp4'; },
     fin: function(m) { return PC_VIDEO_BASE + 'pc_fin_monde' + m + '.mp4'; }
   };
