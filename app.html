@@ -3535,7 +3535,9 @@ window.initHome = async function() {
     var finishedMonde = profile.parcours_monde || 1;
     var finishedChemin = profile.parcours_chemin;
     var _finSequence;
-    if (finishedMonde === 3 && finishedChemin === 'B') {
+    if (finishedMonde === 3 && finishedChemin === 'A') {
+      _finSequence = [PC_VIDEO_BASE + 'fin_monde3_plaine_plenitude_compressed.mp4'];
+    } else if (finishedMonde === 3 && finishedChemin === 'B') {
       _finSequence = [PC_VIDEO_BASE + 'fin_monde3_royaume_vitalite_compressed.mp4'];
     } else if (finishedMonde === 1 && finishedChemin === 'A') {
       _finSequence = [PC_VIDEO_BASE + 'passage_monde_foret_energie_compressed.mp4'];
