@@ -16830,9 +16830,16 @@ function renderPredictionTab() {
   fetch(BACKEND_URL + '/api/health/predict', {
     method: 'GET',
     headers: {'Content-Type':'application/json', 'Authorization': 'Bearer ' + token}
-  }).then(function(r){return r.json();}).then(function(d){
+  }).then(function(r){
+    return r.text().then(function(txt) {
+      var parsed;
+      try { parsed = JSON.parse(txt); } catch(e) { parsed = { error: 'Reponse non-JSON (status ' + r.status + '): ' + txt.slice(0,300) }; }
+      parsed._httpStatus = r.status;
+      return parsed;
+    });
+  }).then(function(d){
     if (d.error) {
-      contentEl.innerHTML = '<div style="color:rgba(255,255,255,0.7)">Impossible de charger la prediction pour le moment.</div>';
+      contentEl.innerHTML = '<div style="color:rgba(255,255,255,0.7)">Erreur (HTTP ' + d._httpStatus + '): ' + d.error + (d.code ? ' [' + d.code + ']' : '') + '</div>';
       return;
     }
     if (!d.suffisant) {
