@@ -5420,7 +5420,12 @@ function switchLang(lang) {
       @keyframes headerBlobFloat3 { 0%,100%{transform:translate(0,0) scale(1)} 50%{transform:translate(-10px,-14px) scale(0.92)} }
       @keyframes headerSparkle { 0%,100%{opacity:0.25;transform:scale(0.7)} 50%{opacity:1;transform:scale(1.3)} }
       </style>
-      <div style="position:relative;overflow:hidden;background:linear-gradient(135deg,var(--coral),var(--accent));padding:16px 20px 10px;margin:0 -0px;width:100%;box-sizing:border-box;display:block">
+      <style>
+      @keyframes headerGradientBreathe { 0%,100%{background-position:0% 0%} 50%{background-position:100% 100%} }
+      @keyframes headerShineSweep { 0%{left:-60%} 45%,100%{left:130%} }
+      @keyframes headerDotPulse { 0%,100%{opacity:0.5;transform:scale(0.8)} 50%{opacity:1;transform:scale(1.15)} }
+      </style>
+      <div style="position:relative;overflow:hidden;background:linear-gradient(150deg,#FF9A5A 0%,#FF7A63 45%,#FF6B6B 100%);background-size:220% 220%;animation:headerGradientBreathe 7s ease-in-out infinite;padding:16px 20px 10px;margin:0 -0px;width:100%;box-sizing:border-box;display:block">
         <div style="position:absolute;inset:0;pointer-events:none;overflow:hidden">
           <div style="position:absolute;top:-40px;right:-30px;width:180px;height:180px;border-radius:50%;background:radial-gradient(circle,rgba(255,255,255,0.55) 0%,transparent 70%);filter:blur(6px);animation:headerBlobFloat1 7s ease-in-out infinite"></div>
           <div style="position:absolute;bottom:-50px;left:-40px;width:220px;height:220px;border-radius:50%;background:radial-gradient(circle,rgba(255,205,150,0.6) 0%,transparent 70%);filter:blur(8px);animation:headerBlobFloat2 9s ease-in-out infinite"></div>
@@ -5442,11 +5447,10 @@ function switchLang(lang) {
             <div id="homeDate" style="font-size:0.76rem;color:rgba(255,255,255,0.75);margin-top:2px"></div>
           </div>
         </div>
-        <div id="homeScoreResume" style="position:relative;display:flex;align-items:center;gap:12px;background:rgba(255,255,255,0.16);border:1px solid rgba(255,255,255,0.22);border-radius:14px;padding:12px 14px">
-          <div style="width:34px;height:34px;border-radius:10px;background:rgba(255,255,255,0.22);display:flex;align-items:center;justify-content:center;flex-shrink:0">
-            <i class="ti ti-sparkles" id="homeScoreIcon" style="font-size:17px;color:#fff"></i>
-          </div>
-          <div style="font-size:0.82rem;color:white;line-height:1.5;flex:1" id="homeScoreText">Chargement...</div>
+        <div id="homeScoreResume" style="position:relative;display:flex;align-items:center;gap:10px;background:rgba(255,255,255,0.16);border:1px solid rgba(255,255,255,0.25);border-radius:14px;padding:10px 15px;overflow:hidden;backdrop-filter:blur(12px)">
+          <div style="position:absolute;top:0;left:-60%;width:50%;height:100%;background:linear-gradient(100deg,transparent,rgba(255,255,255,0.2),transparent);animation:headerShineSweep 6s ease-in-out infinite"></div>
+          <span style="width:5px;height:5px;border-radius:50%;background:white;box-shadow:0 0 7px 2px rgba(255,255,255,0.75);animation:headerDotPulse 2s ease-in-out infinite;flex-shrink:0;position:relative;z-index:1"></span>
+          <div style="font-size:0.84rem;color:white;line-height:1.5;flex:1;font-weight:600;position:relative;z-index:1" id="homeScoreText">Chargement...</div>
         </div>
       </div>
       <div style="padding:18px 16px 16px;width:100%;box-sizing:border-box">
