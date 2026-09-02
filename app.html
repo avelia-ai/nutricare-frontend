@@ -7717,6 +7717,10 @@ function switchLang(lang) {
       <i class="ti ti-layout-grid" style="font-size:15px"></i>
       <span style="font-size:0.56rem;font-weight:600;white-space:nowrap">Suivi</span>
     </button>
+    <button class="suivi-tab-btn" onclick="switchSuiviTab('prediction', this)" style="display:flex;flex-direction:column;align-items:center;gap:3px;flex:1;min-width:0;padding:8px 2px;border-radius:12px;border:none;background:#FFFCFA;color:#888;cursor:pointer;font-family:DM Sans,sans-serif;flex-shrink:0;box-shadow:0 0 0 1px rgba(0,0,0,0.06)">
+      <i class="ti ti-telescope" style="font-size:15px"></i>
+      <span style="font-size:0.56rem;font-weight:600;white-space:nowrap">Prédiction</span>
+    </button>
     <button class="suivi-tab-btn" onclick="switchSuiviTab('cardio', this)" style="display:flex;flex-direction:column;align-items:center;gap:3px;flex:1;min-width:0;padding:8px 2px;border-radius:12px;border:none;background:#FFFCFA;color:#888;cursor:pointer;font-family:DM Sans,sans-serif;flex-shrink:0;box-shadow:0 0 0 1px rgba(0,0,0,0.06)">
       <i class="ti ti-heartbeat" style="font-size:15px"></i>
       <span style="font-size:0.56rem;font-weight:600;white-space:nowrap">Cardio</span>
@@ -7902,6 +7906,23 @@ function switchLang(lang) {
   </div>
 
   <!-- CARDIO -->
+  <div id="predictionCard" data-suivi-tab="prediction" style="display:none;background:linear-gradient(135deg,#1B1B2F,#232946);border-radius:20px;margin-bottom:16px;overflow:hidden;padding:22px;position:relative;box-shadow:0 0 0 1.5px rgba(255,154,108,0.22),0 16px 40px rgba(0,0,0,0.18)">
+    <div style="position:absolute;top:-40px;right:-30px;width:140px;height:140px;background:radial-gradient(circle,rgba(108,92,231,0.22),transparent 70%);pointer-events:none"></div>
+    <div style="position:relative">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px">
+        <div style="width:38px;height:38px;border-radius:12px;background:rgba(255,255,255,0.1);display:flex;align-items:center;justify-content:center;flex-shrink:0">
+          <i class="ti ti-telescope" style="font-size:19px;color:#fff"></i>
+        </div>
+        <div>
+          <div style="font-size:1.02rem;font-weight:700;color:#fff">Prédiction Mirella</div>
+          <div style="font-size:0.72rem;color:rgba(255,255,255,0.6)">Basée sur votre suivi récent</div>
+        </div>
+      </div>
+      <div id="predictionContent" style="font-size:0.85rem;color:rgba(255,255,255,0.85);line-height:1.6">
+        Analyse en cours...
+      </div>
+    </div>
+  </div>
   <div id="cardioCard" data-suivi-tab="cardio" style="display:none;background:#FFFCFA;border-radius:16px;margin-bottom:16px;overflow:hidden;box-shadow:0 0 0 1.5px rgba(255,154,108,0.22),0 14px 32px rgba(230,110,70,0.14)">
     <div style="background:linear-gradient(135deg,var(--coral),var(--accent));padding:16px 20px 30px;position:relative;overflow:hidden">
       <div style="display:flex;align-items:center;justify-content:space-between;gap:12px">
@@ -16801,6 +16822,51 @@ function stopStepSensor(manual) {
   if (btn) { btn.textContent = 'Activer le suivi via capteur'; btn.onclick = startStepSensor; }
   if (manual) localStorage.setItem('mirella_podometre_desactive', 'true');
 }
+function renderPredictionTab() {
+  var contentEl = document.getElementById('predictionContent');
+  if (!contentEl) return;
+  contentEl.innerHTML = 'Analyse en cours...';
+  var token = localStorage.getItem('nutricare_token');
+  fetch(BACKEND_URL + '/api/health/predict', {
+    method: 'GET',
+    headers: {'Content-Type':'application/json', 'Authorization': 'Bearer ' + token}
+  }).then(function(r){return r.json();}).then(function(d){
+    if (d.error) {
+      contentEl.innerHTML = '<div style="color:rgba(255,255,255,0.7)">Impossible de charger la prediction pour le moment.</div>';
+      return;
+    }
+    if (!d.suffisant) {
+      var pct = Math.round((d.jours_disponibles / d.jours_requis) * 100);
+      contentEl.innerHTML =
+        '<div style="margin-bottom:10px">' + d.message + '</div>' +
+        '<div style="background:rgba(255,255,255,0.1);border-radius:8px;height:6px;overflow:hidden;margin-bottom:6px">' +
+          '<div style="background:linear-gradient(90deg,#FF9A3C,#FF6B6B);height:100%;width:' + Math.min(100,pct) + '%"></div>' +
+        '</div>' +
+        '<div style="font-size:0.72rem;color:rgba(255,255,255,0.5)">' + d.jours_disponibles + ' / ' + d.jours_requis + ' jours de suivi</div>';
+      return;
+    }
+    var couleurs = { faible: '#8FD9A8', moderee: '#FFC876', elevee: '#FF8F8F' };
+    var couleur = couleurs[d.niveau_vigilance] || '#FFC876';
+    var tendancesHtml = (d.tendances_observees || []).map(function(t) {
+      return '<li style="margin-bottom:4px">' + t + '</li>';
+    }).join('');
+    contentEl.innerHTML =
+      '<div style="display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,0.08);border-radius:20px;padding:4px 12px;margin-bottom:12px">' +
+        '<span style="width:7px;height:7px;border-radius:50%;background:' + couleur + '"></span>' +
+        '<span style="font-size:0.72rem;font-weight:600;color:' + couleur + ';text-transform:uppercase;letter-spacing:0.03em">Vigilance ' + d.niveau_vigilance + '</span>' +
+      '</div>' +
+      '<div style="font-size:1rem;font-weight:700;color:#fff;margin-bottom:10px">' + d.titre + '</div>' +
+      (tendancesHtml ? '<ul style="margin:0 0 12px;padding-left:18px;font-size:0.8rem;color:rgba(255,255,255,0.75)">' + tendancesHtml + '</ul>' : '') +
+      '<div style="font-size:0.85rem;color:rgba(255,255,255,0.85);margin-bottom:14px;line-height:1.6">' + d.prediction + '</div>' +
+      '<div style="background:rgba(255,255,255,0.08);border-radius:12px;padding:12px 14px;font-size:0.82rem;color:#fff;line-height:1.5">' +
+        '<i class="ti ti-bulb" style="margin-right:6px;color:#FFC876"></i>' + d.conseil_principal +
+      '</div>';
+  }).catch(function(e){
+    console.error(e);
+    contentEl.innerHTML = '<div style="color:rgba(255,255,255,0.7)">Erreur de connexion. Reessayez plus tard.</div>';
+  });
+}
+
 function renderActiviteTab() {
   var countEl = document.getElementById('activitePasCount');
   if (countEl) countEl.textContent = getTodaySteps();
@@ -16844,6 +16910,7 @@ function switchSuiviTab(tab, btn) {
   if (tab === 'sommeil' && typeof renderSommeilSection === 'function') { renderSommeilSection(_healthLogs); if (typeof window._sommeilApplyDailyTips === 'function') window._sommeilApplyDailyTips(); }
   if (tab === 'cardio' && typeof renderCardioSection === 'function') { renderCardioSection(_healthLogs); if (typeof window._cardioApplyExplDailyTips === 'function') window._cardioApplyExplDailyTips(); }
   if (tab === 'activite' && typeof renderActiviteTab === 'function') { renderActiviteTab(); }
+  if (tab === 'prediction' && typeof renderPredictionTab === 'function') { renderPredictionTab(); }
 }
 
 function renderHealthHistory(logs) {
