@@ -24956,45 +24956,116 @@ window.maybeShowReviewPrompt = function() {
       var memories = data.memories || [];
       if (!memories.length) { wrap.style.display = 'none'; return; }
       wrap.style.display = 'block';
-      list.innerHTML = memories.map(function(m) {
-        return '<div style="background:#fff;border-radius:18px;padding:16px 18px;box-shadow:0 4px 16px rgba(139,92,246,0.06),0 0 0 1px rgba(0,0,0,0.03);position:relative;overflow:hidden" data-memory-id="' + m.id + '">' +
-          '<div style="position:absolute;top:-20px;right:-20px;width:70px;height:70px;border-radius:50%;background:radial-gradient(circle,rgba(139,92,246,0.06),transparent 70%)"></div>' +
-          '<div style="display:flex;align-items:flex-start;gap:10px;margin-bottom:14px;position:relative">' +
-            '<i class="ti ti-sparkles" style="font-size:15px;color:#8B5CF6;margin-top:2px;flex-shrink:0"></i>' +
-            '<div style="font-size:0.87rem;color:#3a3a3a;line-height:1.55;font-weight:500">' + m.phrase + '</div>' +
-          '</div>' +
-          '<div style="display:flex;gap:7px;position:relative">' +
-            '<div onclick="mirellaMemoryConfirm(\'' + m.id + '\')" style="display:flex;align-items:center;gap:5px;padding:7px 14px;border-radius:100px;background:linear-gradient(135deg,#EFF8F0,#E4F5E7);font-size:0.72rem;font-weight:700;color:#2E7D42;cursor:pointer">' +
-              '<i class="ti ti-check" style="font-size:13px"></i>Confirmer</div>' +
-            '<div onclick="mirellaMemoryDelete(\'' + m.id + '\')" style="display:flex;align-items:center;gap:5px;padding:7px 14px;border-radius:100px;background:#FFF3F0;font-size:0.72rem;font-weight:700;color:#D4574A;cursor:pointer">' +
-              '<i class="ti ti-x" style="font-size:13px"></i>Ce n\'est pas exact</div>' +
-          '</div>' +
-        '</div>';
-      }).join('');
+      window._mirellaMemoriesData = {};
+      memories.forEach(function(m) { window._mirellaMemoriesData[m.id] = m; });
+      list.innerHTML = memories.map(function(m) { return mirellaMemoryCardHtml(m); }).join('');
     } catch(e) { console.error('loadMirellaMemories error:', e); }
   }
 
+  function mirellaMemoryCardHtml(m) {
+    return '<div style="background:#fff;border-radius:18px;padding:16px 18px;box-shadow:0 4px 16px rgba(139,92,246,0.06),0 0 0 1px rgba(0,0,0,0.03);position:relative;overflow:hidden" data-memory-id="' + m.id + '">' +
+      '<div style="position:absolute;top:-20px;right:-20px;width:70px;height:70px;border-radius:50%;background:radial-gradient(circle,rgba(139,92,246,0.06),transparent 70%)"></div>' +
+      '<div style="display:flex;align-items:flex-start;gap:10px;margin-bottom:12px;position:relative">' +
+        '<i class="ti ti-sparkles" style="font-size:15px;color:#8B5CF6;margin-top:2px;flex-shrink:0"></i>' +
+        '<div style="font-size:0.87rem;color:#3a3a3a;line-height:1.55;font-weight:500">' + m.phrase + '</div>' +
+      '</div>' +
+      '<div id="mirellaMemoryActions-' + m.id + '" style="display:flex;gap:6px;flex-wrap:wrap;position:relative">' +
+        '<div onclick="mirellaMemoryConfirm(\'' + m.id + '\')" style="display:flex;align-items:center;gap:4px;padding:7px 12px;border-radius:100px;background:linear-gradient(135deg,#EFF8F0,#E4F5E7);font-size:0.7rem;font-weight:700;color:#2E7D42;cursor:pointer">' +
+          '<i class="ti ti-check" style="font-size:12px"></i>Oui, c\'est vrai</div>' +
+        '<div onclick="mirellaMemoryReject(\'' + m.id + '\')" style="display:flex;align-items:center;gap:4px;padding:7px 12px;border-radius:100px;background:#FFF3F0;font-size:0.7rem;font-weight:700;color:#D4574A;cursor:pointer">' +
+          '<i class="ti ti-x" style="font-size:12px"></i>Non</div>' +
+        '<div onclick="mirellaMemoryEditMode(\'' + m.id + '\')" style="display:flex;align-items:center;gap:4px;padding:7px 12px;border-radius:100px;background:#FAF8F5;box-shadow:0 0 0 1px rgba(0,0,0,0.04);font-size:0.7rem;font-weight:700;color:#8a8a8a;cursor:pointer">' +
+          '<i class="ti ti-edit" style="font-size:12px"></i>Modifier</div>' +
+        '<div onclick="mirellaMemoryDelete(\'' + m.id + '\')" style="display:flex;align-items:center;justify-content:center;width:28px;height:28px;border-radius:100px;background:#F5F5F0;color:#aaa;cursor:pointer">' +
+          '<i class="ti ti-trash" style="font-size:13px"></i></div>' +
+      '</div>' +
+    '</div>';
+  }
+
   async function mirellaMemoryConfirm(id) {
+    var actionsEl = document.getElementById('mirellaMemoryActions-' + id);
     try {
-      await fetch(BACKEND_URL + '/api/user-memories/' + id + '/confirm', {
+      var res = await fetch(BACKEND_URL + '/api/user-memories/' + id + '/confirm', {
         method: 'POST',
         headers: { 'Authorization': 'Bearer ' + authToken }
       });
+      if (res.ok && actionsEl) {
+        actionsEl.innerHTML = '<div style="display:flex;align-items:center;gap:5px;font-size:0.72rem;font-weight:700;color:#2E7D42"><i class="ti ti-circle-check-filled" style="font-size:14px"></i>Confirme</div>';
+      }
     } catch(e) { console.error('memory confirm error:', e); }
+  }
+
+  async function mirellaMemoryReject(id) {
+    try {
+      var res = await fetch(BACKEND_URL + '/api/user-memories/' + id + '/reject', {
+        method: 'POST',
+        headers: { 'Authorization': 'Bearer ' + authToken }
+      });
+      if (res.ok) {
+        var card = document.querySelector('[data-memory-id="' + id + '"]');
+        if (card) card.remove();
+      }
+    } catch(e) { console.error('memory reject error:', e); }
   }
 
   async function mirellaMemoryDelete(id) {
     try {
-      await fetch(BACKEND_URL + '/api/user-memories/' + id, {
+      var res = await fetch(BACKEND_URL + '/api/user-memories/' + id, {
         method: 'DELETE',
         headers: { 'Authorization': 'Bearer ' + authToken }
       });
-      loadMirellaMemories();
+      if (res.ok) {
+        var card = document.querySelector('[data-memory-id="' + id + '"]');
+        if (card) card.remove();
+      }
     } catch(e) { console.error('memory delete error:', e); }
   }
 
+  function mirellaMemoryEditMode(id) {
+    var actionsEl = document.getElementById('mirellaMemoryActions-' + id);
+    if (!actionsEl) return;
+    var m = window._mirellaMemoriesData ? window._mirellaMemoriesData[id] : null;
+    var currentValue = (m && m.content && m.content.value) ? m.content.value : '';
+    actionsEl.outerHTML = '<div id="mirellaMemoryActions-' + id + '" style="position:relative">' +
+      '<input id="mirellaMemoryEditInput-' + id + '" value="' + currentValue + '" placeholder="Precise ce qui est different..." style="width:100%;box-sizing:border-box;font-size:0.82rem;padding:10px 12px;border-radius:10px;border:1px solid #eee;margin-bottom:10px;font-family:DM Sans,sans-serif">' +
+      '<div style="display:flex;gap:8px">' +
+        '<div onclick="mirellaMemorySaveEdit(\'' + id + '\')" style="background:linear-gradient(135deg,#FF6B6B,#FF9A3C);color:#fff;font-size:0.76rem;font-weight:700;padding:8px 16px;border-radius:100px;cursor:pointer">Enregistrer</div>' +
+        '<div onclick="mirellaMemoryCancelEdit(\'' + id + '\')" style="background:#F5F5F0;color:#888;font-size:0.76rem;font-weight:700;padding:8px 16px;border-radius:100px;cursor:pointer">Annuler</div>' +
+      '</div>' +
+    '</div>';
+  }
+
+  function mirellaMemoryCancelEdit(id) {
+    var m = window._mirellaMemoriesData ? window._mirellaMemoriesData[id] : null;
+    var actionsEl = document.getElementById('mirellaMemoryActions-' + id);
+    if (!actionsEl || !m) return;
+    var temp = document.createElement('div');
+    temp.innerHTML = mirellaMemoryCardHtml(m);
+    var newActions = temp.querySelector('[id^="mirellaMemoryActions-"]');
+    if (newActions) actionsEl.outerHTML = newActions.outerHTML;
+  }
+
+  async function mirellaMemorySaveEdit(id) {
+    var input = document.getElementById('mirellaMemoryEditInput-' + id);
+    if (!input || !input.value.trim()) return;
+    var m = window._mirellaMemoriesData ? window._mirellaMemoriesData[id] : null;
+    var newContent = Object.assign({}, (m && m.content) || {}, { value: input.value.trim() });
+    try {
+      var res = await fetch(BACKEND_URL + '/api/user-memories/' + id + '/correct', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + authToken },
+        body: JSON.stringify({ content: newContent })
+      });
+      if (res.ok) loadMirellaMemories();
+    } catch(e) { console.error('memory save edit error:', e); }
+  }
+
   window.mirellaMemoryConfirm = mirellaMemoryConfirm;
+  window.mirellaMemoryReject = mirellaMemoryReject;
   window.mirellaMemoryDelete = mirellaMemoryDelete;
+  window.mirellaMemoryEditMode = mirellaMemoryEditMode;
+  window.mirellaMemoryCancelEdit = mirellaMemoryCancelEdit;
+  window.mirellaMemorySaveEdit = mirellaMemorySaveEdit;
   window.loadMirellaMemories = loadMirellaMemories;
 
   var OB_REGIMES = [
