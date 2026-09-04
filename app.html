@@ -24966,10 +24966,8 @@ window.maybeShowReviewPrompt = function() {
           '<div style="display:flex;gap:7px;position:relative">' +
             '<div onclick="mirellaMemoryConfirm(\'' + m.id + '\')" style="display:flex;align-items:center;gap:5px;padding:7px 14px;border-radius:100px;background:linear-gradient(135deg,#EFF8F0,#E4F5E7);font-size:0.72rem;font-weight:700;color:#2E7D42;cursor:pointer">' +
               '<i class="ti ti-check" style="font-size:13px"></i>Confirmer</div>' +
-            '<div onclick="mirellaMemoryCorrect(\'' + m.id + '\')" style="display:flex;align-items:center;gap:5px;padding:7px 14px;border-radius:100px;background:#FAF8F5;box-shadow:0 0 0 1px rgba(0,0,0,0.04);font-size:0.72rem;font-weight:700;color:#8a8a8a;cursor:pointer">' +
-              '<i class="ti ti-edit" style="font-size:13px"></i>Corriger</div>' +
-            '<div onclick="mirellaMemoryDelete(\'' + m.id + '\')" style="display:flex;align-items:center;justify-content:center;width:30px;height:30px;border-radius:100px;background:#FFF3F0;color:#D4574A;margin-left:auto;cursor:pointer">' +
-              '<i class="ti ti-trash" style="font-size:14px"></i></div>' +
+            '<div onclick="mirellaMemoryDelete(\'' + m.id + '\')" style="display:flex;align-items:center;gap:5px;padding:7px 14px;border-radius:100px;background:#FFF3F0;font-size:0.72rem;font-weight:700;color:#D4574A;cursor:pointer">' +
+              '<i class="ti ti-x" style="font-size:13px"></i>Ce n\'est pas exact</div>' +
           '</div>' +
         '</div>';
       }).join('');
@@ -24985,18 +24983,6 @@ window.maybeShowReviewPrompt = function() {
     } catch(e) { console.error('memory confirm error:', e); }
   }
 
-  function mirellaMemoryCorrect(id) {
-    var card = document.querySelector('[data-memory-id="' + id + '"]');
-    if (!card) return;
-    var newText = prompt('Corrige cette observation :');
-    if (newText === null || !newText.trim()) return;
-    fetch(BACKEND_URL + '/api/user-memories/' + id + '/correct', {
-      method: 'PUT',
-      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + authToken },
-      body: JSON.stringify({ content: { value: newText.trim(), manual_note: true } })
-    }).then(function() { loadMirellaMemories(); }).catch(function(e) { console.error('memory correct error:', e); });
-  }
-
   async function mirellaMemoryDelete(id) {
     try {
       await fetch(BACKEND_URL + '/api/user-memories/' + id, {
@@ -25008,7 +24994,6 @@ window.maybeShowReviewPrompt = function() {
   }
 
   window.mirellaMemoryConfirm = mirellaMemoryConfirm;
-  window.mirellaMemoryCorrect = mirellaMemoryCorrect;
   window.mirellaMemoryDelete = mirellaMemoryDelete;
   window.loadMirellaMemories = loadMirellaMemories;
 
