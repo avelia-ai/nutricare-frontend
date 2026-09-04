@@ -24962,7 +24962,13 @@ window.maybeShowReviewPrompt = function() {
     } catch(e) { console.error('loadMirellaMemories error:', e); }
   }
 
+  var MIRELLA_STRUCTURED_MEMORY_TYPES = ['dietary_pattern', 'lifestyle', 'temporary_goal'];
+
   function mirellaMemoryCardHtml(m) {
+    var isStructured = MIRELLA_STRUCTURED_MEMORY_TYPES.indexOf(m.memory_type) > -1;
+    var modifyBtn = isStructured ? '' :
+      '<div onclick="mirellaMemoryEditMode(\'' + m.id + '\')" style="display:flex;align-items:center;gap:4px;padding:7px 12px;border-radius:100px;background:#FAF8F5;box-shadow:0 0 0 1px rgba(0,0,0,0.04);font-size:0.7rem;font-weight:700;color:#8a8a8a;cursor:pointer">' +
+        '<i class="ti ti-edit" style="font-size:12px"></i>Modifier</div>';
     return '<div style="background:#fff;border-radius:18px;padding:16px 18px;box-shadow:0 4px 16px rgba(139,92,246,0.06),0 0 0 1px rgba(0,0,0,0.03);position:relative;overflow:hidden" data-memory-id="' + m.id + '">' +
       '<div style="position:absolute;top:-20px;right:-20px;width:70px;height:70px;border-radius:50%;background:radial-gradient(circle,rgba(139,92,246,0.06),transparent 70%)"></div>' +
       '<div style="display:flex;align-items:flex-start;gap:10px;margin-bottom:12px;position:relative">' +
@@ -24974,8 +24980,7 @@ window.maybeShowReviewPrompt = function() {
           '<i class="ti ti-check" style="font-size:12px"></i>Oui, c\'est vrai</div>' +
         '<div onclick="mirellaMemoryReject(\'' + m.id + '\')" style="display:flex;align-items:center;gap:4px;padding:7px 12px;border-radius:100px;background:#FFF3F0;font-size:0.7rem;font-weight:700;color:#D4574A;cursor:pointer">' +
           '<i class="ti ti-x" style="font-size:12px"></i>Non</div>' +
-        '<div onclick="mirellaMemoryEditMode(\'' + m.id + '\')" style="display:flex;align-items:center;gap:4px;padding:7px 12px;border-radius:100px;background:#FAF8F5;box-shadow:0 0 0 1px rgba(0,0,0,0.04);font-size:0.7rem;font-weight:700;color:#8a8a8a;cursor:pointer">' +
-          '<i class="ti ti-edit" style="font-size:12px"></i>Modifier</div>' +
+        modifyBtn +
         '<div onclick="mirellaMemoryDelete(\'' + m.id + '\')" style="display:flex;align-items:center;justify-content:center;width:28px;height:28px;border-radius:100px;background:#F5F5F0;color:#aaa;cursor:pointer">' +
           '<i class="ti ti-trash" style="font-size:13px"></i></div>' +
       '</div>' +
