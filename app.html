@@ -13417,6 +13417,10 @@ Réponds UNIQUEMENT en JSON valide avec cette structure exacte:
         setTimeout(showSuiviTutorial, 600);
       }
     }
+    if (view === 'dashboard') {
+      var _todayDateStr = (typeof wcalSelected !== 'undefined' ? wcalSelected : new Date()).toISOString().split('T')[0];
+      loadDashboardForDate(_todayDateStr);
+    }
     if (view === 'profile') {
       setTimeout(function() {
         updateReferralBlock();
