@@ -24699,9 +24699,121 @@ window.maybeShowReviewPrompt = function() {
         }
       }
     } catch(e) {}
-    // Passer à l'écran 4 (vidéo programme) via obNext
+    // Afficher l'ecran de preferences alimentaires avant la video programme
+    document.getElementById('onboarding2b').style.display = 'none';
+    obFoodCatIndex = 0;
+    obFoodSelections = {};
+    document.getElementById('onboarding2c').style.display = 'flex';
+    obFoodRenderCategory();
+  }
+
+  var OB_FOOD_CATEGORIES = [
+    { key: 'viande', label: 'Viandes', icon: 'ti-meat', items: ['Bœuf','Poulet','Porc','Agneau','Dinde','Canard','Veau','Lapin','Charcuterie','Saucisse','Foie'] },
+    { key: 'poisson', label: 'Poissons & fruits de mer', icon: 'ti-fish', items: ['Saumon','Thon','Cabillaud','Dorade','Bar','Truite','Maquereau','Sardines','Crevettes','Moules','Huîtres','Calamar','Poulpe','Saint-Jacques'] },
+    { key: 'legume', label: 'Légumes', icon: 'ti-carrot', items: ['Brocoli','Épinards','Champignons','Aubergine','Courgette','Poivron','Chou','Chou-fleur','Carotte','Tomate','Concombre','Haricots verts','Petits pois','Poireau','Céleri','Betterave','Radis','Artichaut','Endive','Fenouil'] },
+    { key: 'feculent', label: 'Féculents & légumineuses', icon: 'ti-bread', items: ['Riz','Pâtes','Pomme de terre','Quinoa','Patate douce','Pain','Boulgour','Semoule','Lentilles','Pois chiches','Haricots rouges','Flageolets'] },
+    { key: 'produit_laitier', label: 'Produits laitiers & œufs', icon: 'ti-egg', items: ['Lait','Fromage','Yaourt','Beurre','Crème fraîche','Œufs','Fromage blanc'] },
+    { key: 'fruit', label: 'Fruits', icon: 'ti-apple', items: ['Pomme','Banane','Agrumes','Fruits rouges','Avocat','Poire','Raisin','Mangue','Ananas','Kiwi','Pêche','Abricot','Melon','Figue','Fruits secs'] },
+    { key: 'epice', label: 'Épices & condiments', icon: 'ti-pepper', items: ['Ail','Oignon','Gingembre','Curcuma','Piment','Cumin','Curry','Herbes fraîches','Moutarde'] }
+  ];
+  var obFoodCatIndex = 0;
+  var obFoodSelections = {};
+
+  function obFoodChipState(category, item) {
+    var key = category + '::' + item;
+    return obFoodSelections[key] || 'neutral';
+  }
+
+  function obFoodToggleChip(category, item) {
+    var key = category + '::' + item;
+    var current = obFoodSelections[key] || 'neutral';
+    var next = current === 'neutral' ? 'like' : current === 'like' ? 'dislike' : 'neutral';
+    obFoodSelections[key] = next;
+    obFoodRenderCategory();
+  }
+
+  function obFoodRenderCategory() {
+    var cat = OB_FOOD_CATEGORIES[obFoodCatIndex];
+    var iconEl = document.getElementById('obFoodCatIcon');
+    if (iconEl) iconEl.innerHTML = '<i class="ti ' + cat.icon + '" style="font-size:24px;color:#fff"></i>';
+
+    var container = document.getElementById('obFoodCatContainer');
+    var html = '<div style="display:flex;align-items:center;gap:8px;margin-bottom:14px">' +
+      '<div style="font-size:0.7rem;font-weight:800;text-transform:uppercase;letter-spacing:0.1em;color:#D4730A">' + cat.label + '</div>' +
+      '<div style="flex:1;height:1px;background:linear-gradient(90deg,rgba(255,154,60,0.3),transparent)"></div>' +
+    '</div>';
+    html += '<div style="display:flex;flex-wrap:wrap;gap:9px;margin-bottom:12px">';
+    cat.items.forEach(function(item) {
+      var state = obFoodChipState(cat.key, item);
+      var style, inner;
+      if (state === 'like') {
+        style = 'background:linear-gradient(135deg,#FF6B6B,#FF9A3C);box-shadow:0 6px 16px rgba(255,107,107,0.35),0 0 0 1px rgba(255,107,107,0.1);color:#fff';
+        inner = '<i class="ti ti-heart-filled" style="font-size:14px"></i>' + item;
+      } else if (state === 'dislike') {
+        style = 'background:#2A2320;box-shadow:0 4px 12px rgba(0,0,0,0.15);color:rgba(255,255,255,0.9)';
+        inner = '<i class="ti ti-x" style="font-size:14px;color:#FF8154"></i>' + item;
+      } else {
+        style = 'background:#fff;box-shadow:0 1px 3px rgba(0,0,0,0.04),0 0 0 1px rgba(0,0,0,0.03);color:#555';
+        inner = item;
+      }
+      html += '<div onclick="obFoodToggleChip(\'' + cat.key + '\',\'' + item + '\')" style="display:flex;align-items:center;gap:7px;padding:10px 17px;border-radius:100px;font-size:0.83rem;font-weight:700;cursor:pointer;' + style + '">' + inner + '</div>';
+    });
+    html += '</div>';
+    container.innerHTML = html;
+
+    var progressBar = document.getElementById('obFoodProgressBar');
+    var segs = '';
+    for (var i = 0; i < OB_FOOD_CATEGORIES.length; i++) {
+      segs += '<div style="height:4px;flex:1;border-radius:2px;background:' + (i <= obFoodCatIndex ? 'linear-gradient(135deg,#FF6B6B,#FF9A3C)' : '#F0E8E0') + '"></div>';
+    }
+    progressBar.innerHTML = segs;
+    document.getElementById('obFoodProgressLabel').textContent = (obFoodCatIndex + 1) + '/' + OB_FOOD_CATEGORIES.length;
+    document.getElementById('obFoodBackBtn').textContent = obFoodCatIndex === 0 ? 'Passer' : 'Retour';
+  }
+
+  function obFoodPrevOrSkip() {
+    if (obFoodCatIndex === 0) {
+      obFoodFinish();
+    } else {
+      obFoodCatIndex--;
+      obFoodRenderCategory();
+    }
+  }
+
+  async function obFoodNext() {
+    if (obFoodCatIndex < OB_FOOD_CATEGORIES.length - 1) {
+      obFoodCatIndex++;
+      obFoodRenderCategory();
+    } else {
+      await obFoodFinish();
+    }
+  }
+
+  async function obFoodFinish() {
+    var preferences = [];
+    Object.keys(obFoodSelections).forEach(function(key) {
+      var state = obFoodSelections[key];
+      if (state === 'neutral') return;
+      var parts = key.split('::');
+      preferences.push({ category: parts[0], item: parts[1], preference: state });
+    });
+    try {
+      var token = authToken || window._authToken || localStorage.getItem('nutricare_token');
+      if (token && preferences.length > 0) {
+        await fetch(BACKEND_URL + '/api/food-preferences', {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
+          body: JSON.stringify({ preferences: preferences })
+        });
+      }
+    } catch(e) { console.error('food-preferences save error:', e); }
+    document.getElementById('onboarding2c').style.display = 'none';
     obNext(4);
   }
+
+  window.obFoodToggleChip = obFoodToggleChip;
+  window.obFoodPrevOrSkip = obFoodPrevOrSkip;
+  window.obFoodNext = obFoodNext;
 
   function closeOnboarding() {
     document.getElementById('onboardingOverlay').style.display = 'none';
@@ -25171,6 +25283,32 @@ window.maybeShowReviewPrompt = function() {
     </div>
   </div>
 
+  <!-- ETAPE 2C : Preferences alimentaires -->
+  <div id="onboarding2c" style="display:none;position:fixed;inset:0;flex-direction:column;background:linear-gradient(180deg,#FFFCFA,#FFF8F3);overflow-y:auto;z-index:10000">
+    <div style="padding:28px 20px 100px;max-width:480px;margin:0 auto;width:100%;box-sizing:border-box">
+      <div style="text-align:center;margin-bottom:26px">
+        <div id="obFoodCatIcon" style="width:52px;height:52px;border-radius:16px;background:linear-gradient(135deg,#FF6B6B,#FF9A3C);display:flex;align-items:center;justify-content:center;margin:0 auto 14px;box-shadow:0 8px 20px rgba(255,107,107,0.28)">
+          <i class="ti ti-meat" style="font-size:24px;color:#fff"></i>
+        </div>
+        <div style="font-family:'Open Sans',serif;font-size:1.4rem;font-weight:700;color:#2D2D2D;margin-bottom:6px">Tes preferences</div>
+        <div style="font-size:0.84rem;color:#a8a8a8;line-height:1.5">Un tap pour aimer, un second pour ne pas aimer</div>
+      </div>
+
+      <div id="obFoodCatContainer"></div>
+
+      <div style="display:flex;align-items:center;gap:10px;margin:24px 0">
+        <div id="obFoodProgressBar" style="display:flex;gap:5px;flex:1"></div>
+        <div id="obFoodProgressLabel" style="font-size:0.72rem;color:#c4a58a;font-weight:600;flex-shrink:0">1/7</div>
+      </div>
+
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <div onclick="obFoodPrevOrSkip()" id="obFoodBackBtn" style="font-size:0.82rem;color:#c4a58a;font-weight:600;cursor:pointer">Passer</div>
+        <div onclick="obFoodNext()" style="background:linear-gradient(135deg,#FF6B6B,#FF9A3C);color:#fff;font-size:0.86rem;font-weight:700;padding:13px 28px;border-radius:100px;box-shadow:0 8px 20px rgba(255,107,107,0.3);display:flex;align-items:center;gap:6px;cursor:pointer">
+          Suivant<i class="ti ti-arrow-right" style="font-size:15px"></i>
+        </div>
+      </div>
+    </div>
+  </div>
   <!-- ETAPE 4 : Vidéo programme -->
   <div id="onboarding4" style="display:none;width:100%;height:100%;position:absolute;top:0;left:0;align-items:center;justify-content:center;background:#000">
     <div style="width:100%;height:100%;position:relative;overflow:hidden">
