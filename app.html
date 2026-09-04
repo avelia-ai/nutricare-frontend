@@ -2959,6 +2959,10 @@ window.CITATIONS = [
 
 window.initHome = async function() {
   var profile = JSON.parse(localStorage.getItem('nutricare_profile') || '{}');
+  if (typeof loadDashboardForDate === 'function') {
+    var _todayDateStrHome = (typeof wcalSelected !== 'undefined' ? wcalSelected : new Date()).toISOString().split('T')[0];
+    loadDashboardForDate(_todayDateStrHome);
+  }
   // Démarrer animation canvas home
   setTimeout(function(){
     var hc = document.getElementById('harmonyCanvasHome');
@@ -5454,6 +5458,31 @@ function switchLang(lang) {
         </div>
       </div>
       <div style="padding:18px 16px 16px;width:100%;box-sizing:border-box">
+        <div id="todayMirellaBanner" style="display:none;position:relative;border-radius:22px;padding:24px 22px 22px;overflow:hidden;background:linear-gradient(150deg,#FF6B6B 0%,#FF8154 45%,#FF9A3C 100%);box-shadow:0 12px 32px rgba(255,107,107,0.32);margin-bottom:16px">
+          <div style="position:absolute;top:-70px;right:-50px;width:200px;height:200px;border-radius:50%;background:radial-gradient(circle,rgba(255,255,255,0.22),transparent 70%)"></div>
+          <div style="position:absolute;bottom:-60px;left:-40px;width:160px;height:160px;border-radius:50%;background:radial-gradient(circle,rgba(255,229,102,0.18),transparent 70%)"></div>
+          <div style="position:absolute;top:20px;right:24px;width:60px;height:60px;border-radius:50%;background:radial-gradient(circle,rgba(255,255,255,0.15),transparent 65%)"></div>
+
+          <div style="position:relative;display:flex;align-items:center;gap:10px;margin-bottom:18px">
+            <div style="width:36px;height:36px;border-radius:11px;background:rgba(255,255,255,0.95);display:flex;align-items:center;justify-content:center;box-shadow:0 4px 12px rgba(0,0,0,0.15)">
+              <span style="font-size:16px;font-weight:900;color:#FF6B6B">M</span>
+            </div>
+            <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.14em;color:rgba(255,255,255,0.85)">Aujourd'hui avec Mirella</div>
+          </div>
+
+          <div id="todayMirellaTitle" style="position:relative;font-family:'Open Sans',serif;font-size:21px;line-height:1.35;color:#FFFFFF;margin-bottom:6px;font-weight:700;display:none"></div>
+          <div id="todayMirellaMessage" style="position:relative;font-size:15.5px;line-height:1.5;color:rgba(255,255,255,0.92);margin-bottom:18px"></div>
+
+          <div id="todayMirellaReason" style="position:relative;display:none;align-items:center;gap:6px;background:rgba(255,255,255,0.16);backdrop-filter:blur(8px);padding:6px 12px;border-radius:100px;margin-bottom:18px;width:fit-content">
+            <div style="width:5px;height:5px;border-radius:50%;background:#FFE566;flex-shrink:0"></div>
+            <div id="todayMirellaReasonText" style="font-size:11.5px;color:rgba(255,255,255,0.9);font-weight:500"></div>
+          </div>
+
+          <div id="todayMirellaActions" style="position:relative;display:none;gap:10px;flex-wrap:wrap">
+            <div id="todayMirellaPrimaryAction" style="background:#FFFFFF;color:#FF6B4A;font-size:14px;font-weight:700;padding:12px 22px;border-radius:100px;box-shadow:0 6px 18px rgba(0,0,0,0.18);cursor:pointer"></div>
+            <div id="todayMirellaSecondaryAction" style="display:none;background:rgba(255,255,255,0.18);border:1px solid rgba(255,255,255,0.35);color:rgba(255,255,255,0.95);font-size:14px;font-weight:600;padding:12px 20px;border-radius:100px;cursor:pointer"></div>
+          </div>
+        </div>
         <div id="healthScoreSummaryCardHome" onclick="showView('health')" style="background:linear-gradient(135deg,#1B1B2F,#232946);border-radius:20px;padding:22px;margin-bottom:16px;position:relative;overflow:hidden;box-shadow:0 0 0 1.5px rgba(255,154,108,0.22),0 16px 40px rgba(0,0,0,0.18);cursor:pointer">
           <div style="position:absolute;top:-40px;right:-30px;width:140px;height:140px;background:radial-gradient(circle,rgba(255,107,107,0.22),transparent 70%);pointer-events:none"></div>
           <div style="position:absolute;bottom:-50px;left:-20px;width:120px;height:120px;background:radial-gradient(circle,rgba(108,92,231,0.16),transparent 70%);pointer-events:none"></div>
@@ -6610,31 +6639,6 @@ function switchLang(lang) {
         </div>
       </div>
       <div class="alertes-container" id="alertesContainer"></div>
-      <div id="todayMirellaBanner" style="display:none;position:relative;border-radius:22px;padding:24px 22px 22px;overflow:hidden;background:linear-gradient(150deg,#FF6B6B 0%,#FF8154 45%,#FF9A3C 100%);box-shadow:0 12px 32px rgba(255,107,107,0.32);margin-bottom:16px">
-        <div style="position:absolute;top:-70px;right:-50px;width:200px;height:200px;border-radius:50%;background:radial-gradient(circle,rgba(255,255,255,0.22),transparent 70%)"></div>
-        <div style="position:absolute;bottom:-60px;left:-40px;width:160px;height:160px;border-radius:50%;background:radial-gradient(circle,rgba(255,229,102,0.18),transparent 70%)"></div>
-        <div style="position:absolute;top:20px;right:24px;width:60px;height:60px;border-radius:50%;background:radial-gradient(circle,rgba(255,255,255,0.15),transparent 65%)"></div>
-
-        <div style="position:relative;display:flex;align-items:center;gap:10px;margin-bottom:18px">
-          <div style="width:36px;height:36px;border-radius:11px;background:rgba(255,255,255,0.95);display:flex;align-items:center;justify-content:center;box-shadow:0 4px 12px rgba(0,0,0,0.15)">
-            <span style="font-size:16px;font-weight:900;color:#FF6B6B">M</span>
-          </div>
-          <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.14em;color:rgba(255,255,255,0.85)">Aujourd'hui avec Mirella</div>
-        </div>
-
-        <div id="todayMirellaTitle" style="position:relative;font-family:'Open Sans',serif;font-size:21px;line-height:1.35;color:#FFFFFF;margin-bottom:6px;font-weight:700;display:none"></div>
-        <div id="todayMirellaMessage" style="position:relative;font-size:15.5px;line-height:1.5;color:rgba(255,255,255,0.92);margin-bottom:18px"></div>
-
-        <div id="todayMirellaReason" style="position:relative;display:none;align-items:center;gap:6px;background:rgba(255,255,255,0.16);backdrop-filter:blur(8px);padding:6px 12px;border-radius:100px;margin-bottom:18px;width:fit-content">
-          <div style="width:5px;height:5px;border-radius:50%;background:#FFE566;flex-shrink:0"></div>
-          <div id="todayMirellaReasonText" style="font-size:11.5px;color:rgba(255,255,255,0.9);font-weight:500"></div>
-        </div>
-
-        <div id="todayMirellaActions" style="position:relative;display:none;gap:10px;flex-wrap:wrap">
-          <div id="todayMirellaPrimaryAction" style="background:#FFFFFF;color:#FF6B4A;font-size:14px;font-weight:700;padding:12px 22px;border-radius:100px;box-shadow:0 6px 18px rgba(0,0,0,0.18);cursor:pointer"></div>
-          <div id="todayMirellaSecondaryAction" style="display:none;background:rgba(255,255,255,0.18);border:1px solid rgba(255,255,255,0.35);color:rgba(255,255,255,0.95);font-size:14px;font-weight:600;padding:12px 20px;border-radius:100px;cursor:pointer"></div>
-        </div>
-      </div>
 
       <div class="stats-grid">
         <div class="stat-card" style="border-top:3px solid var(--coral)">
