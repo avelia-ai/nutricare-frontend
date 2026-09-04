@@ -24731,6 +24731,32 @@ window.maybeShowReviewPrompt = function() {
   var obFoodCatIndex = 0;
   var obFoodSelections = {};
 
+  function obFoodFilteredCategories() {
+    var regimes = obSelectedRegimes || ['none'];
+    var isVegan = regimes.indexOf('vegan') > -1;
+    var isVegetarian = regimes.indexOf('vegetarian') > -1;
+    var isHalal = regimes.indexOf('halal') > -1;
+    var isKosher = regimes.indexOf('kosher') > -1;
+
+    var result = [];
+    OB_FOOD_CATEGORIES.forEach(function(cat) {
+      if ((isVegan || isVegetarian) && cat.key === 'viande') return;
+      if ((isVegan || isVegetarian) && cat.key === 'poisson') return;
+
+      var items = cat.items.slice();
+      if ((isHalal || isKosher) && cat.key === 'viande') {
+        items = items.filter(function(i) { return i !== 'Porc' && i !== 'Charcuterie' && i !== 'Saucisse'; });
+      }
+      if (isVegan && cat.key === 'produit_laitier') {
+        items = items.filter(function(i) { return i === 'Fromage blanc'; });
+      }
+      if (!items.length) return;
+
+      result.push({ key: cat.key, label: cat.label, icon: cat.icon, items: items });
+    });
+    return result;
+  }
+
   function obFoodChipState(category, item) {
     var key = category + '::' + item;
     return obFoodSelections[key] || 'neutral';
@@ -24745,7 +24771,9 @@ window.maybeShowReviewPrompt = function() {
   }
 
   function obFoodRenderCategory() {
-    var cat = OB_FOOD_CATEGORIES[obFoodCatIndex];
+    var filtered = obFoodFilteredCategories();
+    var cat = filtered[obFoodCatIndex];
+    if (!cat) { obFoodFinish(); return; }
     var iconEl = document.getElementById('obFoodCatIcon');
     if (iconEl) iconEl.innerHTML = '<i class="ti ' + cat.icon + '" style="font-size:24px;color:#fff"></i>';
 
@@ -24775,11 +24803,11 @@ window.maybeShowReviewPrompt = function() {
 
     var progressBar = document.getElementById('obFoodProgressBar');
     var segs = '';
-    for (var i = 0; i < OB_FOOD_CATEGORIES.length; i++) {
+    for (var i = 0; i < filtered.length; i++) {
       segs += '<div style="height:4px;flex:1;border-radius:2px;background:' + (i <= obFoodCatIndex ? 'linear-gradient(135deg,#FF6B6B,#FF9A3C)' : '#F0E8E0') + '"></div>';
     }
     progressBar.innerHTML = segs;
-    document.getElementById('obFoodProgressLabel').textContent = (obFoodCatIndex + 1) + '/' + OB_FOOD_CATEGORIES.length;
+    document.getElementById('obFoodProgressLabel').textContent = (obFoodCatIndex + 1) + '/' + filtered.length;
     document.getElementById('obFoodBackBtn').textContent = obFoodCatIndex === 0 ? 'Passer' : 'Retour';
   }
 
@@ -24793,7 +24821,8 @@ window.maybeShowReviewPrompt = function() {
   }
 
   async function obFoodNext() {
-    if (obFoodCatIndex < OB_FOOD_CATEGORIES.length - 1) {
+    var filtered = obFoodFilteredCategories();
+    if (obFoodCatIndex < filtered.length - 1) {
       obFoodCatIndex++;
       obFoodRenderCategory();
     } else {
