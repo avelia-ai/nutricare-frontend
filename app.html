@@ -2963,6 +2963,7 @@ window.initHome = async function() {
     var _todayDateStrHome = (typeof wcalSelected !== 'undefined' ? wcalSelected : new Date()).toISOString().split('T')[0];
     loadDashboardForDate(_todayDateStrHome);
   }
+  if (typeof loadMirellaMemories === 'function') loadMirellaMemories();
   // Démarrer animation canvas home
   setTimeout(function(){
     var hc = document.getElementById('harmonyCanvasHome');
@@ -5608,6 +5609,19 @@ function switchLang(lang) {
               <div id="summaryAdviceText" style="font-size:0.84rem;color:#555;line-height:1.6"></div>
               <div style="margin-top:10px;font-size:0.7rem;color:#D4730A;font-weight:600;display:flex;align-items:center;gap:4px">Voir tous mes conseils <i class="ti ti-arrow-right" style="font-size:12px"></i></div>
 
+            </div>
+
+            <div id="mirellaMemoriesWrap" style="display:none;margin-top:16px">
+              <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px">
+                <div style="width:38px;height:38px;border-radius:12px;background:linear-gradient(135deg,#8B5CF6,#C4A5F5);display:flex;align-items:center;justify-content:center;box-shadow:0 6px 16px rgba(139,92,246,0.3);flex-shrink:0">
+                  <i class="ti ti-brain" style="font-size:18px;color:#fff"></i>
+                </div>
+                <div>
+                  <div style="font-family:'Open Sans',serif;font-size:1.05rem;font-weight:700;color:#2D2D2D;line-height:1.2">Mirella a appris</div>
+                  <div style="font-size:0.7rem;color:#b3a89e">Sur la base de vos echanges</div>
+                </div>
+              </div>
+              <div id="mirellaMemoriesList" style="display:flex;flex-direction:column;gap:10px"></div>
             </div>
           </div>
         </div>
@@ -24699,12 +24713,10 @@ window.maybeShowReviewPrompt = function() {
         }
       }
     } catch(e) {}
-    // Afficher l'ecran de preferences alimentaires avant la video programme
+    // Afficher l'ecran regime/rythme de vie avant les preferences alimentaires
     document.getElementById('onboarding2b').style.display = 'none';
-    obFoodCatIndex = 0;
-    obFoodSelections = {};
-    document.getElementById('onboarding2c').style.display = 'flex';
-    obFoodRenderCategory();
+    document.getElementById('onboarding2e').style.display = 'flex';
+    obRegimeRythmeRender();
   }
 
   var OB_FOOD_CATEGORIES = [
@@ -24901,6 +24913,176 @@ window.maybeShowReviewPrompt = function() {
   window.obMealTimeChange = obMealTimeChange;
   window.obMealTimesBack = obMealTimesBack;
   window.obMealTimesFinish = obMealTimesFinish;
+
+  async function loadMirellaMemories() {
+    var wrap = document.getElementById('mirellaMemoriesWrap');
+    var list = document.getElementById('mirellaMemoriesList');
+    if (!wrap || !list) return;
+    try {
+      var res = await fetch(BACKEND_URL + '/api/user-memories', {
+        headers: { 'Authorization': 'Bearer ' + authToken }
+      });
+      if (!res.ok) return;
+      var data = await res.json();
+      var memories = data.memories || [];
+      if (!memories.length) { wrap.style.display = 'none'; return; }
+      wrap.style.display = 'block';
+      list.innerHTML = memories.map(function(m) {
+        return '<div style="background:#fff;border-radius:18px;padding:16px 18px;box-shadow:0 4px 16px rgba(139,92,246,0.06),0 0 0 1px rgba(0,0,0,0.03);position:relative;overflow:hidden" data-memory-id="' + m.id + '">' +
+          '<div style="position:absolute;top:-20px;right:-20px;width:70px;height:70px;border-radius:50%;background:radial-gradient(circle,rgba(139,92,246,0.06),transparent 70%)"></div>' +
+          '<div style="display:flex;align-items:flex-start;gap:10px;margin-bottom:14px;position:relative">' +
+            '<i class="ti ti-sparkles" style="font-size:15px;color:#8B5CF6;margin-top:2px;flex-shrink:0"></i>' +
+            '<div style="font-size:0.87rem;color:#3a3a3a;line-height:1.55;font-weight:500">' + m.phrase + '</div>' +
+          '</div>' +
+          '<div style="display:flex;gap:7px;position:relative">' +
+            '<div onclick="mirellaMemoryConfirm(\'' + m.id + '\')" style="display:flex;align-items:center;gap:5px;padding:7px 14px;border-radius:100px;background:linear-gradient(135deg,#EFF8F0,#E4F5E7);font-size:0.72rem;font-weight:700;color:#2E7D42;cursor:pointer">' +
+              '<i class="ti ti-check" style="font-size:13px"></i>Confirmer</div>' +
+            '<div onclick="mirellaMemoryCorrect(\'' + m.id + '\')" style="display:flex;align-items:center;gap:5px;padding:7px 14px;border-radius:100px;background:#FAF8F5;box-shadow:0 0 0 1px rgba(0,0,0,0.04);font-size:0.72rem;font-weight:700;color:#8a8a8a;cursor:pointer">' +
+              '<i class="ti ti-edit" style="font-size:13px"></i>Corriger</div>' +
+            '<div onclick="mirellaMemoryDelete(\'' + m.id + '\')" style="display:flex;align-items:center;justify-content:center;width:30px;height:30px;border-radius:100px;background:#FFF3F0;color:#D4574A;margin-left:auto;cursor:pointer">' +
+              '<i class="ti ti-trash" style="font-size:14px"></i></div>' +
+          '</div>' +
+        '</div>';
+      }).join('');
+    } catch(e) { console.error('loadMirellaMemories error:', e); }
+  }
+
+  async function mirellaMemoryConfirm(id) {
+    try {
+      await fetch(BACKEND_URL + '/api/user-memories/' + id + '/confirm', {
+        method: 'POST',
+        headers: { 'Authorization': 'Bearer ' + authToken }
+      });
+    } catch(e) { console.error('memory confirm error:', e); }
+  }
+
+  function mirellaMemoryCorrect(id) {
+    var card = document.querySelector('[data-memory-id="' + id + '"]');
+    if (!card) return;
+    var newText = prompt('Corrige cette observation :');
+    if (newText === null || !newText.trim()) return;
+    fetch(BACKEND_URL + '/api/user-memories/' + id + '/correct', {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + authToken },
+      body: JSON.stringify({ content: { value: newText.trim(), manual_note: true } })
+    }).then(function() { loadMirellaMemories(); }).catch(function(e) { console.error('memory correct error:', e); });
+  }
+
+  async function mirellaMemoryDelete(id) {
+    try {
+      await fetch(BACKEND_URL + '/api/user-memories/' + id, {
+        method: 'DELETE',
+        headers: { 'Authorization': 'Bearer ' + authToken }
+      });
+      loadMirellaMemories();
+    } catch(e) { console.error('memory delete error:', e); }
+  }
+
+  window.mirellaMemoryConfirm = mirellaMemoryConfirm;
+  window.mirellaMemoryCorrect = mirellaMemoryCorrect;
+  window.mirellaMemoryDelete = mirellaMemoryDelete;
+  window.loadMirellaMemories = loadMirellaMemories;
+
+  var OB_REGIMES = [
+    { key: 'none', label: 'Aucun regime particulier' },
+    { key: 'vegetarian', label: 'Vegetarien' },
+    { key: 'vegan', label: 'Vegan' },
+    { key: 'halal', label: 'Halal' },
+    { key: 'kosher', label: 'Casher' },
+    { key: 'gluten_free', label: 'Sans gluten' }
+  ];
+  var OB_RYTHMES = [
+    { key: 'classic', label: 'Horaires de jour classiques', icon: 'ti-sun', color: '#FF9A3C' },
+    { key: 'night_worker', label: 'Je travaille de nuit', icon: 'ti-moon', color: '#8B5CF6' },
+    { key: 'shifted', label: 'Horaires decales / variables', icon: 'ti-clock-hour-4', color: '#5FA8D3' }
+  ];
+  var obSelectedRegime = 'none';
+  var obSelectedRythme = 'classic';
+
+  function obRegimeRythmeRender() {
+    var regimeContainer = document.getElementById('obRegimeContainer');
+    regimeContainer.innerHTML = OB_REGIMES.map(function(r) {
+      var active = obSelectedRegime === r.key;
+      return '<div onclick="obSelectRegime(\'' + r.key + '\')" style="display:flex;align-items:center;gap:12px;background:' + (active ? 'linear-gradient(135deg,#FF6B6B,#FF9A3C)' : '#fff') + ';border-radius:14px;padding:13px 16px;box-shadow:' + (active ? '0 6px 16px rgba(255,107,107,0.3)' : '0 1px 3px rgba(0,0,0,0.04),0 0 0 1px rgba(0,0,0,0.03)') + ';cursor:pointer">' +
+        '<i class="ti ' + (active ? 'ti-check' : 'ti-circle') + '" style="font-size:16px;color:' + (active ? '#fff' : '#ddd') + '"></i>' +
+        '<div style="font-size:0.86rem;font-weight:' + (active ? '700' : '600') + ';color:' + (active ? '#fff' : '#555') + '">' + r.label + '</div>' +
+      '</div>';
+    }).join('');
+
+    var rythmeContainer = document.getElementById('obRythmeContainer');
+    rythmeContainer.innerHTML = OB_RYTHMES.map(function(r) {
+      var active = obSelectedRythme === r.key;
+      return '<div onclick="obSelectRythme(\'' + r.key + '\')" style="display:flex;align-items:center;gap:12px;background:' + (active ? 'linear-gradient(135deg,#FF6B6B,#FF9A3C)' : '#fff') + ';border-radius:14px;padding:13px 16px;box-shadow:' + (active ? '0 6px 16px rgba(255,107,107,0.3)' : '0 1px 3px rgba(0,0,0,0.04),0 0 0 1px rgba(0,0,0,0.03)') + ';cursor:pointer">' +
+        '<i class="ti ' + r.icon + '" style="font-size:16px;color:' + (active ? '#fff' : r.color) + '"></i>' +
+        '<div style="font-size:0.86rem;font-weight:' + (active ? '700' : '600') + ';color:' + (active ? '#fff' : '#555') + '">' + r.label + '</div>' +
+      '</div>';
+    }).join('');
+
+    document.getElementById('obRythmeHoraires').style.display = (obSelectedRythme === 'shifted') ? 'flex' : 'none';
+  }
+
+  function obSelectRegime(key) {
+    obSelectedRegime = key;
+    obRegimeRythmeRender();
+  }
+
+  function obSelectRythme(key) {
+    obSelectedRythme = key;
+    obRegimeRythmeRender();
+  }
+
+  async function obRegimeRythmeNext() {
+    var newMemories = [];
+    if (obSelectedRegime === 'vegetarian') newMemories.push({ memory_type: 'dietary_pattern', content: { value: 'vegetarian' }, source: 'onboarding_explicit', confidence: 0.99 });
+    if (obSelectedRegime === 'vegan') newMemories.push({ memory_type: 'dietary_pattern', content: { value: 'vegan' }, source: 'onboarding_explicit', confidence: 0.99 });
+    if (obSelectedRegime === 'halal') newMemories.push({ memory_type: 'dietary_pattern', content: { value: 'halal' }, source: 'onboarding_explicit', confidence: 0.99 });
+    if (obSelectedRegime === 'kosher') newMemories.push({ memory_type: 'dietary_pattern', content: { value: 'kosher' }, source: 'onboarding_explicit', confidence: 0.99 });
+    if (obSelectedRegime === 'gluten_free') newMemories.push({ memory_type: 'dietary_pattern', content: { value: 'gluten_free' }, source: 'onboarding_explicit', confidence: 0.99 });
+
+    if (obSelectedRythme === 'night_worker') newMemories.push({ memory_type: 'lifestyle', content: { value: 'night_worker' }, source: 'onboarding_explicit', confidence: 0.99 });
+    if (obSelectedRythme === 'shifted') newMemories.push({ memory_type: 'lifestyle', content: { value: 'shifted_schedule' }, source: 'onboarding_explicit', confidence: 0.99 });
+
+    var profileUpdate = {};
+    if (obSelectedRythme === 'shifted') {
+      var wakeUp = document.getElementById('obRythmeWakeUp').value;
+      var sleepTime = document.getElementById('obRythmeSleepTime').value;
+      if (wakeUp) profileUpdate.wake_up = wakeUp;
+      if (sleepTime) profileUpdate.sleep_time = sleepTime;
+    }
+
+    try {
+      var token = authToken || window._authToken || localStorage.getItem('nutricare_token');
+      if (token) {
+        if (newMemories.length > 0) {
+          await fetch(BACKEND_URL + '/api/onboarding-memories', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
+            body: JSON.stringify({ memories: newMemories })
+          });
+        }
+        if (Object.keys(profileUpdate).length > 0) {
+          await fetch(BACKEND_URL + '/api/profile', {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
+            body: JSON.stringify(profileUpdate)
+          });
+        }
+      }
+      var profile = JSON.parse(localStorage.getItem('nutricare_profile') || '{}');
+      Object.assign(profile, profileUpdate);
+      localStorage.setItem('nutricare_profile', JSON.stringify(profile));
+    } catch(e) { console.error('regime/rythme save error:', e); }
+
+    document.getElementById('onboarding2e').style.display = 'none';
+    obFoodCatIndex = 0;
+    obFoodSelections = {};
+    document.getElementById('onboarding2c').style.display = 'flex';
+    obFoodRenderCategory();
+  }
+
+  window.obSelectRegime = obSelectRegime;
+  window.obSelectRythme = obSelectRythme;
+  window.obRegimeRythmeNext = obRegimeRythmeNext;
 
   function closeOnboarding() {
     document.getElementById('onboardingOverlay').style.display = 'none';
@@ -25370,6 +25552,61 @@ window.maybeShowReviewPrompt = function() {
     </div>
   </div>
 
+  <!-- ETAPE 2E : Regime alimentaire et rythme de vie -->
+  <div id="onboarding2e" style="display:none;position:fixed;inset:0;flex-direction:column;background:linear-gradient(180deg,#FFFCFA,#FFF8F3);overflow-y:auto;z-index:10000">
+    <div style="padding:28px 20px 100px;max-width:480px;margin:0 auto;width:100%;box-sizing:border-box">
+      <div style="text-align:center;margin-bottom:24px">
+        <div style="width:52px;height:52px;border-radius:16px;background:linear-gradient(135deg,#FF6B6B,#FF9A3C);display:flex;align-items:center;justify-content:center;margin:0 auto 14px;box-shadow:0 8px 20px rgba(255,107,107,0.28)">
+          <i class="ti ti-leaf" style="font-size:24px;color:#fff"></i>
+        </div>
+        <div style="font-family:'Open Sans',serif;font-size:1.4rem;font-weight:700;color:#2D2D2D;margin-bottom:6px">Ton profil alimentaire</div>
+        <div style="font-size:0.84rem;color:#a8a8a8;line-height:1.5">Pour que Mirella te comprenne des le depart</div>
+      </div>
+
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px">
+        <div style="font-size:0.7rem;font-weight:800;text-transform:uppercase;letter-spacing:0.1em;color:#D4730A">Ton regime alimentaire</div>
+        <div style="flex:1;height:1px;background:linear-gradient(90deg,rgba(255,154,60,0.3),transparent)"></div>
+      </div>
+      <div id="obRegimeContainer" style="display:flex;flex-direction:column;gap:9px;margin-bottom:26px"></div>
+
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px">
+        <div style="font-size:0.7rem;font-weight:800;text-transform:uppercase;letter-spacing:0.1em;color:#D4730A">Ton rythme de vie</div>
+        <div style="flex:1;height:1px;background:linear-gradient(90deg,rgba(255,154,60,0.3),transparent)"></div>
+      </div>
+      <div id="obRythmeContainer" style="display:flex;flex-direction:column;gap:9px;margin-bottom:12px"></div>
+
+      <div id="obRythmeHoraires" style="display:none;flex-direction:column;gap:10px;margin-bottom:26px">
+        <div style="display:flex;align-items:center;gap:12px;background:#fff;border-radius:14px;padding:12px 16px;box-shadow:0 1px 3px rgba(0,0,0,0.04),0 0 0 1px rgba(0,0,0,0.03)">
+          <div style="flex:1;font-size:0.82rem;color:#2D2D2D;font-weight:700">Heure de lever habituelle</div>
+          <input type="time" id="obRythmeWakeUp" value="07:00" style="font-size:0.95rem;font-weight:800;color:#2D2D2D;background:#FFF8F0;padding:6px 12px;border-radius:9px;border:none">
+        </div>
+        <div style="display:flex;align-items:center;gap:12px;background:#fff;border-radius:14px;padding:12px 16px;box-shadow:0 1px 3px rgba(0,0,0,0.04),0 0 0 1px rgba(0,0,0,0.03)">
+          <div style="flex:1;font-size:0.82rem;color:#2D2D2D;font-weight:700">Heure de coucher habituelle</div>
+          <input type="time" id="obRythmeSleepTime" value="23:00" style="font-size:0.95rem;font-weight:800;color:#2D2D2D;background:#FFF8F0;padding:6px 12px;border-radius:9px;border:none">
+        </div>
+      </div>
+
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:24px">
+        <div style="display:flex;gap:5px;flex:1">
+          <div style="height:4px;flex:1;border-radius:2px;background:linear-gradient(135deg,#FF6B6B,#FF9A3C)"></div>
+          <div style="height:4px;flex:1;border-radius:2px;background:#F0E8E0"></div>
+          <div style="height:4px;flex:1;border-radius:2px;background:#F0E8E0"></div>
+          <div style="height:4px;flex:1;border-radius:2px;background:#F0E8E0"></div>
+          <div style="height:4px;flex:1;border-radius:2px;background:#F0E8E0"></div>
+          <div style="height:4px;flex:1;border-radius:2px;background:#F0E8E0"></div>
+          <div style="height:4px;flex:1;border-radius:2px;background:#F0E8E0"></div>
+          <div style="height:4px;flex:1;border-radius:2px;background:#F0E8E0"></div>
+        </div>
+        <div style="font-size:0.72rem;color:#c4a58a;font-weight:600;flex-shrink:0">1/8</div>
+      </div>
+
+      <div style="display:flex;justify-content:flex-end;align-items:center">
+        <div onclick="obRegimeRythmeNext()" style="background:linear-gradient(135deg,#FF6B6B,#FF9A3C);color:#fff;font-size:0.86rem;font-weight:700;padding:13px 28px;border-radius:100px;box-shadow:0 8px 20px rgba(255,107,107,0.3);display:flex;align-items:center;gap:6px;cursor:pointer">
+          Suivant<i class="ti ti-arrow-right" style="font-size:15px"></i>
+        </div>
+      </div>
+    </div>
+  </div>
   <!-- ETAPE 2C : Preferences alimentaires -->
   <div id="onboarding2c" style="display:none;position:fixed;inset:0;flex-direction:column;background:linear-gradient(180deg,#FFFCFA,#FFF8F3);overflow-y:auto;z-index:10000">
     <div style="padding:28px 20px 100px;max-width:480px;margin:0 auto;width:100%;box-sizing:border-box">
