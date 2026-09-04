@@ -6610,6 +6610,32 @@ function switchLang(lang) {
         </div>
       </div>
       <div class="alertes-container" id="alertesContainer"></div>
+      <div id="todayMirellaBanner" style="display:none;position:relative;border-radius:22px;padding:24px 22px 22px;overflow:hidden;background:linear-gradient(150deg,#FF6B6B 0%,#FF8154 45%,#FF9A3C 100%);box-shadow:0 12px 32px rgba(255,107,107,0.32);margin-bottom:16px">
+        <div style="position:absolute;top:-70px;right:-50px;width:200px;height:200px;border-radius:50%;background:radial-gradient(circle,rgba(255,255,255,0.22),transparent 70%)"></div>
+        <div style="position:absolute;bottom:-60px;left:-40px;width:160px;height:160px;border-radius:50%;background:radial-gradient(circle,rgba(255,229,102,0.18),transparent 70%)"></div>
+        <div style="position:absolute;top:20px;right:24px;width:60px;height:60px;border-radius:50%;background:radial-gradient(circle,rgba(255,255,255,0.15),transparent 65%)"></div>
+
+        <div style="position:relative;display:flex;align-items:center;gap:10px;margin-bottom:18px">
+          <div style="width:36px;height:36px;border-radius:11px;background:rgba(255,255,255,0.95);display:flex;align-items:center;justify-content:center;box-shadow:0 4px 12px rgba(0,0,0,0.15)">
+            <span style="font-size:16px;font-weight:900;color:#FF6B6B">M</span>
+          </div>
+          <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.14em;color:rgba(255,255,255,0.85)">Aujourd'hui avec Mirella</div>
+        </div>
+
+        <div id="todayMirellaTitle" style="position:relative;font-family:'Open Sans',serif;font-size:21px;line-height:1.35;color:#FFFFFF;margin-bottom:6px;font-weight:700;display:none"></div>
+        <div id="todayMirellaMessage" style="position:relative;font-size:15.5px;line-height:1.5;color:rgba(255,255,255,0.92);margin-bottom:18px"></div>
+
+        <div id="todayMirellaReason" style="position:relative;display:none;align-items:center;gap:6px;background:rgba(255,255,255,0.16);backdrop-filter:blur(8px);padding:6px 12px;border-radius:100px;margin-bottom:18px;width:fit-content">
+          <div style="width:5px;height:5px;border-radius:50%;background:#FFE566;flex-shrink:0"></div>
+          <div id="todayMirellaReasonText" style="font-size:11.5px;color:rgba(255,255,255,0.9);font-weight:500"></div>
+        </div>
+
+        <div id="todayMirellaActions" style="position:relative;display:none;gap:10px;flex-wrap:wrap">
+          <div id="todayMirellaPrimaryAction" style="background:#FFFFFF;color:#FF6B4A;font-size:14px;font-weight:700;padding:12px 22px;border-radius:100px;box-shadow:0 6px 18px rgba(0,0,0,0.18);cursor:pointer"></div>
+          <div id="todayMirellaSecondaryAction" style="display:none;background:rgba(255,255,255,0.18);border:1px solid rgba(255,255,255,0.35);color:rgba(255,255,255,0.95);font-size:14px;font-weight:600;padding:12px 20px;border-radius:100px;cursor:pointer"></div>
+        </div>
+      </div>
+
       <div class="stats-grid">
         <div class="stat-card" style="border-top:3px solid var(--coral)">
           <div class="stat-card-label">Messages aujourd'hui</div>
@@ -14911,6 +14937,77 @@ async function loadMenusForDate(dateStr) {
 
 async function loadDashboardForDate(dateStr) {
   console.log('Chargement dashboard pour', dateStr);
+  try {
+    const res = await fetch(`${BACKEND_URL}/api/today/mirella`, {
+      headers: { 'Authorization': `Bearer ${authToken}` }
+    });
+    if (!res.ok) return;
+    const data = await res.json();
+
+    const banner = document.getElementById('todayMirellaBanner');
+    const titleEl = document.getElementById('todayMirellaTitle');
+    const messageEl = document.getElementById('todayMirellaMessage');
+    const reasonEl = document.getElementById('todayMirellaReason');
+    const reasonTextEl = document.getElementById('todayMirellaReasonText');
+    const actionsEl = document.getElementById('todayMirellaActions');
+    const primaryEl = document.getElementById('todayMirellaPrimaryAction');
+    const secondaryEl = document.getElementById('todayMirellaSecondaryAction');
+    if (!banner || !data || !data.show) { if (banner) banner.style.display = 'none'; return; }
+
+    if (data.neutral) {
+      banner.style.background = 'linear-gradient(150deg,#FFF5EE,#FFEDE3)';
+      banner.style.boxShadow = 'none';
+      banner.style.border = '1px solid rgba(255,154,60,0.18)';
+    } else {
+      banner.style.background = 'linear-gradient(150deg,#FF6B6B 0%,#FF8154 45%,#FF9A3C 100%)';
+      banner.style.boxShadow = '0 12px 32px rgba(255,107,107,0.32)';
+      banner.style.border = 'none';
+    }
+
+    if (data.title) {
+      titleEl.textContent = data.title;
+      titleEl.style.display = 'block';
+      titleEl.style.color = data.neutral ? '#C4783E' : '#FFFFFF';
+    } else {
+      titleEl.style.display = 'none';
+    }
+
+    messageEl.textContent = data.message || '';
+    messageEl.style.color = data.neutral ? '#7A5C42' : 'rgba(255,255,255,0.92)';
+
+    if (data.reason) {
+      reasonTextEl.textContent = data.reason;
+      reasonEl.style.display = 'inline-flex';
+    } else {
+      reasonEl.style.display = 'none';
+    }
+
+    if (data.primary_action) {
+      primaryEl.textContent = data.primary_action.label;
+      primaryEl.onclick = function() { if (data.primary_action.target) showView(data.primary_action.target); };
+      primaryEl.style.display = 'block';
+      actionsEl.style.display = 'flex';
+    } else {
+      primaryEl.style.display = 'none';
+    }
+
+    if (data.secondary_action) {
+      secondaryEl.textContent = data.secondary_action.label;
+      secondaryEl.onclick = function() { banner.style.display = 'none'; };
+      secondaryEl.style.display = 'block';
+      actionsEl.style.display = 'flex';
+    } else {
+      secondaryEl.style.display = 'none';
+    }
+
+    if (!data.primary_action && !data.secondary_action) {
+      actionsEl.style.display = 'none';
+    }
+
+    banner.style.display = 'block';
+  } catch(e) {
+    console.error('loadDashboardForDate mirella error:', e);
+  }
 }
 window.updateIMCDisplay = function() {
   var w = parseFloat(document.getElementById('hWeight')?.value);
