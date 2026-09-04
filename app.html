@@ -24996,15 +24996,15 @@ window.maybeShowReviewPrompt = function() {
     { key: 'night_worker', label: 'Je travaille de nuit', icon: 'ti-moon', color: '#8B5CF6' },
     { key: 'shifted', label: 'Horaires decales / variables', icon: 'ti-clock-hour-4', color: '#5FA8D3' }
   ];
-  var obSelectedRegime = 'none';
+  var obSelectedRegimes = ['none'];
   var obSelectedRythme = 'classic';
 
   function obRegimeRythmeRender() {
     var regimeContainer = document.getElementById('obRegimeContainer');
     regimeContainer.innerHTML = OB_REGIMES.map(function(r) {
-      var active = obSelectedRegime === r.key;
+      var active = obSelectedRegimes.indexOf(r.key) > -1;
       return '<div onclick="obSelectRegime(\'' + r.key + '\')" style="display:flex;align-items:center;gap:12px;background:' + (active ? 'linear-gradient(135deg,#FF6B6B,#FF9A3C)' : '#fff') + ';border-radius:14px;padding:13px 16px;box-shadow:' + (active ? '0 6px 16px rgba(255,107,107,0.3)' : '0 1px 3px rgba(0,0,0,0.04),0 0 0 1px rgba(0,0,0,0.03)') + ';cursor:pointer">' +
-        '<i class="ti ' + (active ? 'ti-check' : 'ti-circle') + '" style="font-size:16px;color:' + (active ? '#fff' : '#ddd') + '"></i>' +
+        '<i class="ti ' + (active ? 'ti-square-rounded-check-filled' : 'ti-square-rounded') + '" style="font-size:16px;color:' + (active ? '#fff' : '#ddd') + '"></i>' +
         '<div style="font-size:0.86rem;font-weight:' + (active ? '700' : '600') + ';color:' + (active ? '#fff' : '#555') + '">' + r.label + '</div>' +
       '</div>';
     }).join('');
@@ -25022,7 +25022,16 @@ window.maybeShowReviewPrompt = function() {
   }
 
   function obSelectRegime(key) {
-    obSelectedRegime = key;
+    if (key === 'none') {
+      obSelectedRegimes = ['none'];
+    } else {
+      var noneIdx = obSelectedRegimes.indexOf('none');
+      if (noneIdx > -1) obSelectedRegimes.splice(noneIdx, 1);
+      var idx = obSelectedRegimes.indexOf(key);
+      if (idx > -1) obSelectedRegimes.splice(idx, 1);
+      else obSelectedRegimes.push(key);
+      if (!obSelectedRegimes.length) obSelectedRegimes = ['none'];
+    }
     obRegimeRythmeRender();
   }
 
@@ -25033,11 +25042,10 @@ window.maybeShowReviewPrompt = function() {
 
   async function obRegimeRythmeNext() {
     var newMemories = [];
-    if (obSelectedRegime === 'vegetarian') newMemories.push({ memory_type: 'dietary_pattern', content: { value: 'vegetarian' }, source: 'onboarding_explicit', confidence: 0.99 });
-    if (obSelectedRegime === 'vegan') newMemories.push({ memory_type: 'dietary_pattern', content: { value: 'vegan' }, source: 'onboarding_explicit', confidence: 0.99 });
-    if (obSelectedRegime === 'halal') newMemories.push({ memory_type: 'dietary_pattern', content: { value: 'halal' }, source: 'onboarding_explicit', confidence: 0.99 });
-    if (obSelectedRegime === 'kosher') newMemories.push({ memory_type: 'dietary_pattern', content: { value: 'kosher' }, source: 'onboarding_explicit', confidence: 0.99 });
-    if (obSelectedRegime === 'gluten_free') newMemories.push({ memory_type: 'dietary_pattern', content: { value: 'gluten_free' }, source: 'onboarding_explicit', confidence: 0.99 });
+    obSelectedRegimes.forEach(function(regime) {
+      if (regime === 'none') return;
+      newMemories.push({ memory_type: 'dietary_pattern', content: { value: regime }, source: 'onboarding_explicit', confidence: 0.99 });
+    });
 
     if (obSelectedRythme === 'night_worker') newMemories.push({ memory_type: 'lifestyle', content: { value: 'night_worker' }, source: 'onboarding_explicit', confidence: 0.99 });
     if (obSelectedRythme === 'shifted') newMemories.push({ memory_type: 'lifestyle', content: { value: 'shifted_schedule' }, source: 'onboarding_explicit', confidence: 0.99 });
