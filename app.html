@@ -24808,12 +24808,99 @@ window.maybeShowReviewPrompt = function() {
       }
     } catch(e) { console.error('food-preferences save error:', e); }
     document.getElementById('onboarding2c').style.display = 'none';
-    obNext(4);
+    document.getElementById('onboarding2d').style.display = 'flex';
+    obMealTimesInit();
   }
 
   window.obFoodToggleChip = obFoodToggleChip;
   window.obFoodPrevOrSkip = obFoodPrevOrSkip;
   window.obFoodNext = obFoodNext;
+
+  var OB_MEALS = [
+    { key: 'petit_dejeuner', label: 'Petit-dejeuner', icon: 'ti-coffee', color: ['#FFD166','#FFB347'], defaultTime: '07:30', defaultActive: true },
+    { key: 'collation_matin', label: 'Collation matin', icon: 'ti-apple', color: ['#8FD9A8','#5FCF7F'], defaultTime: '10:30', defaultActive: false },
+    { key: 'dejeuner', label: 'Dejeuner', icon: 'ti-salad', color: ['#FF9A3C','#FF6B6B'], defaultTime: '12:30', defaultActive: true },
+    { key: 'collation_apresmidi', label: 'Collation apres-midi', icon: 'ti-apple', color: ['#8FD9A8','#5FCF7F'], defaultTime: '16:30', defaultActive: false },
+    { key: 'diner', label: 'Diner', icon: 'ti-moon-stars', color: ['#8B5CF6','#C4A5F5'], defaultTime: '20:00', defaultActive: true },
+    { key: 'collation_soir', label: 'Collation soir', icon: 'ti-moon', color: ['#B0AEA8','#D0CEC8'], defaultTime: '22:00', defaultActive: false }
+  ];
+  var obMealState = {};
+
+  function obMealTimesInit() {
+    obMealState = {};
+    OB_MEALS.forEach(function(m) {
+      obMealState[m.key] = { active: m.defaultActive, time: m.defaultTime };
+    });
+    obMealTimesRender();
+  }
+
+  function obMealTimesRender() {
+    var container = document.getElementById('obMealTimesContainer');
+    var html = '';
+    OB_MEALS.forEach(function(m) {
+      var st = obMealState[m.key];
+      var active = st.active;
+      html += '<div style="display:flex;align-items:center;gap:12px;background:#fff;border-radius:16px;padding:12px 14px;box-shadow:0 1px 3px rgba(0,0,0,0.04),0 0 0 1px rgba(0,0,0,0.03);' + (active ? '' : 'opacity:0.5') + '">' +
+        '<div style="width:34px;height:34px;border-radius:10px;background:' + (active ? 'linear-gradient(135deg,' + m.color[0] + ',' + m.color[1] + ')' : '#E8E6E0') + ';display:flex;align-items:center;justify-content:center;flex-shrink:0">' +
+          '<i class="ti ' + m.icon + '" style="font-size:16px;color:' + (active ? '#fff' : '#aaa') + '"></i>' +
+        '</div>' +
+        '<div style="flex:1;font-size:0.82rem;color:' + (active ? '#2D2D2D' : '#999') + ';font-weight:700">' + m.label + '</div>' +
+        (active
+          ? '<input type="time" value="' + st.time + '" onchange="obMealTimeChange(\'' + m.key + '\', this.value)" style="font-size:0.95rem;font-weight:800;color:#2D2D2D;background:#FFF8F0;padding:5px 10px;border-radius:9px;border:none">'
+          : '<div style="font-size:0.85rem;color:#bbb;font-weight:600">--:--</div>') +
+        '<div onclick="obMealToggle(\'' + m.key + '\')" style="width:42px;height:24px;border-radius:100px;background:' + (active ? 'linear-gradient(135deg,#FF6B6B,#FF9A3C)' : '#E8E6E0') + ';position:relative;flex-shrink:0;cursor:pointer">' +
+          '<div style="width:18px;height:18px;border-radius:50%;background:#fff;position:absolute;top:3px;' + (active ? 'right:3px' : 'left:3px') + ';box-shadow:0 1px 3px rgba(0,0,0,0.2)"></div>' +
+        '</div>' +
+      '</div>';
+    });
+    container.innerHTML = html;
+
+    var activeCount = OB_MEALS.filter(function(m) { return obMealState[m.key].active; }).length;
+    document.getElementById('obMealCountLabel').textContent = activeCount + ' repas actif' + (activeCount > 1 ? 's' : '') + ' par jour';
+  }
+
+  function obMealToggle(key) {
+    obMealState[key].active = !obMealState[key].active;
+    obMealTimesRender();
+  }
+
+  function obMealTimeChange(key, value) {
+    obMealState[key].time = value;
+  }
+
+  function obMealTimesBack() {
+    document.getElementById('onboarding2d').style.display = 'none';
+    obFoodCatIndex = OB_FOOD_CATEGORIES.length - 1;
+    document.getElementById('onboarding2c').style.display = 'flex';
+    obFoodRenderCategory();
+  }
+
+  async function obMealTimesFinish() {
+    var schedule = {};
+    OB_MEALS.forEach(function(m) {
+      if (obMealState[m.key].active) schedule[m.key] = obMealState[m.key].time;
+    });
+    try {
+      var token = authToken || window._authToken || localStorage.getItem('nutricare_token');
+      if (token) {
+        await fetch(BACKEND_URL + '/api/profile', {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
+          body: JSON.stringify({ meal_schedule: schedule })
+        });
+      }
+      var profile = JSON.parse(localStorage.getItem('nutricare_profile') || '{}');
+      profile.meal_schedule = schedule;
+      localStorage.setItem('nutricare_profile', JSON.stringify(profile));
+    } catch(e) { console.error('meal_schedule save error:', e); }
+    document.getElementById('onboarding2d').style.display = 'none';
+    obNext(4);
+  }
+
+  window.obMealToggle = obMealToggle;
+  window.obMealTimeChange = obMealTimeChange;
+  window.obMealTimesBack = obMealTimesBack;
+  window.obMealTimesFinish = obMealTimesFinish;
 
   function closeOnboarding() {
     document.getElementById('onboardingOverlay').style.display = 'none';
@@ -25305,6 +25392,43 @@ window.maybeShowReviewPrompt = function() {
         <div onclick="obFoodPrevOrSkip()" id="obFoodBackBtn" style="font-size:0.82rem;color:#c4a58a;font-weight:600;cursor:pointer">Passer</div>
         <div onclick="obFoodNext()" style="background:linear-gradient(135deg,#FF6B6B,#FF9A3C);color:#fff;font-size:0.86rem;font-weight:700;padding:13px 28px;border-radius:100px;box-shadow:0 8px 20px rgba(255,107,107,0.3);display:flex;align-items:center;gap:6px;cursor:pointer">
           Suivant<i class="ti ti-arrow-right" style="font-size:15px"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- ETAPE 2D : Horaires de repas -->
+  <div id="onboarding2d" style="display:none;position:fixed;inset:0;flex-direction:column;background:linear-gradient(180deg,#FFFCFA,#FFF8F3);overflow-y:auto;z-index:10000">
+    <div style="padding:28px 20px 100px;max-width:480px;margin:0 auto;width:100%;box-sizing:border-box">
+      <div style="text-align:center;margin-bottom:22px">
+        <div style="width:52px;height:52px;border-radius:16px;background:linear-gradient(135deg,#FF6B6B,#FF9A3C);display:flex;align-items:center;justify-content:center;margin:0 auto 14px;box-shadow:0 8px 20px rgba(255,107,107,0.28)">
+          <i class="ti ti-clock" style="font-size:24px;color:#fff"></i>
+        </div>
+        <div style="font-family:'Open Sans',serif;font-size:1.4rem;font-weight:700;color:#2D2D2D;margin-bottom:6px">Ton rythme de repas</div>
+        <div style="font-size:0.84rem;color:#a8a8a8;line-height:1.5">Active les repas que tu prends, avec leur horaire</div>
+      </div>
+
+      <div id="obMealTimesContainer" style="display:flex;flex-direction:column;gap:10px;margin-bottom:16px"></div>
+
+      <div id="obMealCountLabel" style="text-align:center;font-size:0.78rem;color:#c4a58a;margin-bottom:20px"></div>
+
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:24px">
+        <div style="display:flex;gap:5px;flex:1">
+          <div style="height:4px;flex:1;border-radius:2px;background:linear-gradient(135deg,#FF6B6B,#FF9A3C)"></div>
+          <div style="height:4px;flex:1;border-radius:2px;background:linear-gradient(135deg,#FF6B6B,#FF9A3C)"></div>
+          <div style="height:4px;flex:1;border-radius:2px;background:linear-gradient(135deg,#FF6B6B,#FF9A3C)"></div>
+          <div style="height:4px;flex:1;border-radius:2px;background:linear-gradient(135deg,#FF6B6B,#FF9A3C)"></div>
+          <div style="height:4px;flex:1;border-radius:2px;background:linear-gradient(135deg,#FF6B6B,#FF9A3C)"></div>
+          <div style="height:4px;flex:1;border-radius:2px;background:linear-gradient(135deg,#FF6B6B,#FF9A3C)"></div>
+          <div style="height:4px;flex:1;border-radius:2px;background:linear-gradient(135deg,#FF6B6B,#FF9A3C)"></div>
+          <div style="height:4px;flex:1;border-radius:2px;background:linear-gradient(135deg,#FF6B6B,#FF9A3C)"></div>
+        </div>
+        <div style="font-size:0.72rem;color:#c4a58a;font-weight:600;flex-shrink:0">8/8</div>
+      </div>
+
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <div onclick="obMealTimesBack()" style="font-size:0.82rem;color:#c4a58a;font-weight:600;cursor:pointer">Retour</div>
+        <div onclick="obMealTimesFinish()" style="background:linear-gradient(135deg,#FF6B6B,#FF9A3C);color:#fff;font-size:0.86rem;font-weight:700;padding:13px 28px;border-radius:100px;box-shadow:0 8px 20px rgba(255,107,107,0.3);display:flex;align-items:center;gap:6px;cursor:pointer">
+          Continuer<i class="ti ti-arrow-right" style="font-size:15px"></i>
         </div>
       </div>
     </div>
