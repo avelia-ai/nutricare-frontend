@@ -2964,6 +2964,7 @@ window.initHome = async function() {
     loadDashboardForDate(_todayDateStrHome);
   }
   if (typeof loadMirellaMemories === 'function') loadMirellaMemories();
+  if (typeof loadMirellaRecommendations === 'function') loadMirellaRecommendations();
   // Démarrer animation canvas home
   setTimeout(function(){
     var hc = document.getElementById('harmonyCanvasHome');
@@ -5611,17 +5612,28 @@ function switchLang(lang) {
 
             </div>
 
-            <div id="mirellaMemoriesWrap" style="display:none;margin-top:16px">
+            <div id="mirellaRecoWrap" style="display:none;margin-top:16px">
               <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px">
+                <div style="width:38px;height:38px;border-radius:12px;background:linear-gradient(135deg,#FF6B6B,#FF9A3C);display:flex;align-items:center;justify-content:center;box-shadow:0 6px 16px rgba(255,107,107,0.3);flex-shrink:0">
+                  <i class="ti ti-bulb" style="font-size:18px;color:#fff"></i>
+                </div>
+                <div style="font-family:'Open Sans',serif;font-size:1.05rem;font-weight:700;color:#2D2D2D">Pour toi aujourd'hui</div>
+              </div>
+              <div id="mirellaRecoList" style="display:flex;flex-direction:column;gap:10px"></div>
+            </div>
+
+            <div id="mirellaMemoriesWrap" style="display:none;margin-top:16px">
+              <div onclick="mirellaMemoriesToggleCollapse()" style="display:flex;align-items:center;gap:10px;margin-bottom:14px;cursor:pointer">
                 <div style="width:38px;height:38px;border-radius:12px;background:linear-gradient(135deg,#8B5CF6,#C4A5F5);display:flex;align-items:center;justify-content:center;box-shadow:0 6px 16px rgba(139,92,246,0.3);flex-shrink:0">
                   <i class="ti ti-brain" style="font-size:18px;color:#fff"></i>
                 </div>
-                <div>
+                <div style="flex:1">
                   <div style="font-family:'Open Sans',serif;font-size:1.05rem;font-weight:700;color:#2D2D2D;line-height:1.2">Mirella a appris</div>
                   <div style="font-size:0.7rem;color:#b3a89e">Sur la base de vos echanges</div>
                 </div>
+                <i id="mirellaMemoriesChevron" class="ti ti-chevron-down" style="font-size:18px;color:#b3a89e;flex-shrink:0;transition:transform 0.2s"></i>
               </div>
-              <div id="mirellaMemoriesList" style="display:flex;flex-direction:column;gap:10px"></div>
+              <div id="mirellaMemoriesList" style="display:none;flex-direction:column;gap:10px"></div>
             </div>
           </div>
         </div>
@@ -25071,6 +25083,87 @@ window.maybeShowReviewPrompt = function() {
   window.mirellaMemoryEditMode = mirellaMemoryEditMode;
   window.mirellaMemoryCancelEdit = mirellaMemoryCancelEdit;
   window.mirellaMemorySaveEdit = mirellaMemorySaveEdit;
+
+  function mirellaMemoriesToggleCollapse() {
+    var list = document.getElementById('mirellaMemoriesList');
+    var chevron = document.getElementById('mirellaMemoriesChevron');
+    if (!list || !chevron) return;
+    var isOpen = list.style.display === 'flex';
+    list.style.display = isOpen ? 'none' : 'flex';
+    chevron.style.transform = isOpen ? 'rotate(0deg)' : 'rotate(180deg)';
+  }
+  window.mirellaMemoriesToggleCollapse = mirellaMemoriesToggleCollapse;
+
+  var PRIORITY_COLORS = { high: '#D4574A', normal: '#D4730A', low: '#999' };
+
+  async function loadMirellaRecommendations() {
+    var wrap = document.getElementById('mirellaRecoWrap');
+    var list = document.getElementById('mirellaRecoList');
+    if (!wrap || !list) return;
+    try {
+      var res = await fetch(BACKEND_URL + '/api/recommendations', {
+        headers: { 'Authorization': 'Bearer ' + authToken }
+      });
+      if (!res.ok) return;
+      var data = await res.json();
+      var recos = data.recommendations || [];
+      if (!recos.length) { wrap.style.display = 'none'; return; }
+      wrap.style.display = 'block';
+      window._mirellaRecosData = {};
+      recos.forEach(function(r) { window._mirellaRecosData[r.id] = r; });
+      list.innerHTML = recos.map(function(r) { return mirellaRecoCardHtml(r); }).join('');
+    } catch(e) { console.error('loadMirellaRecommendations error:', e); }
+  }
+
+  function mirellaRecoCardHtml(r) {
+    return '<div style="background:#fff;border-radius:18px;padding:18px 20px;box-shadow:0 4px 16px rgba(255,107,107,0.06),0 0 0 1px rgba(0,0,0,0.03);position:relative;overflow:hidden" data-reco-id="' + r.id + '">' +
+      '<div style="position:absolute;top:-25px;right:-25px;width:80px;height:80px;border-radius:50%;background:radial-gradient(circle,rgba(255,107,107,0.06),transparent 70%)"></div>' +
+      '<div style="font-size:0.94rem;color:#2D2D2D;line-height:1.55;font-weight:600;margin-bottom:12px;position:relative">' + r.message + '</div>' +
+      (r.reason ? (
+        '<div onclick="mirellaRecoToggleReason(\'' + r.id + '\')" style="display:flex;align-items:center;gap:5px;font-size:0.76rem;color:' + (PRIORITY_COLORS[r.priority] || '#D4730A') + ';font-weight:700;margin-bottom:6px;cursor:pointer;position:relative">' +
+          '<i class="ti ti-help-circle" style="font-size:14px"></i>Pourquoi ?</div>' +
+        '<div id="mirellaRecoReason-' + r.id + '" style="display:none;font-size:0.82rem;color:#888;line-height:1.5;margin-bottom:14px;position:relative">' + r.reason + '</div>'
+      ) : '') +
+      '<div style="display:flex;gap:8px;position:relative;flex-wrap:wrap">' +
+        (r.action_label ? '<div onclick="mirellaRecoAccept(\'' + r.id + '\')" style="background:linear-gradient(135deg,#FF6B6B,#FF9A3C);color:#fff;font-size:0.82rem;font-weight:700;padding:11px 20px;border-radius:100px;box-shadow:0 6px 16px rgba(255,107,107,0.28);cursor:pointer">' + r.action_label + '</div>' : '') +
+        '<div onclick="mirellaRecoDismiss(\'' + r.id + '\')" style="background:#F5F5F0;color:#999;font-size:0.82rem;font-weight:600;padding:11px 16px;border-radius:100px;cursor:pointer">Plus tard</div>' +
+      '</div>' +
+    '</div>';
+  }
+
+  function mirellaRecoToggleReason(id) {
+    var el = document.getElementById('mirellaRecoReason-' + id);
+    if (!el) return;
+    el.style.display = el.style.display === 'none' ? 'block' : 'none';
+  }
+  window.mirellaRecoToggleReason = mirellaRecoToggleReason;
+
+  async function mirellaRecoAccept(id) {
+    try {
+      await fetch(BACKEND_URL + '/api/recommendations/' + id + '/accept', {
+        method: 'POST',
+        headers: { 'Authorization': 'Bearer ' + authToken }
+      });
+      var reco = window._mirellaRecosData ? window._mirellaRecosData[id] : null;
+      if (reco && reco.action_target && typeof showView === 'function') showView(reco.action_target);
+      var card = document.querySelector('[data-reco-id="' + id + '"]');
+      if (card) card.remove();
+    } catch(e) { console.error('reco accept error:', e); }
+  }
+  window.mirellaRecoAccept = mirellaRecoAccept;
+
+  async function mirellaRecoDismiss(id) {
+    try {
+      await fetch(BACKEND_URL + '/api/recommendations/' + id + '/dismiss', {
+        method: 'POST',
+        headers: { 'Authorization': 'Bearer ' + authToken }
+      });
+      var card = document.querySelector('[data-reco-id="' + id + '"]');
+      if (card) card.remove();
+    } catch(e) { console.error('reco dismiss error:', e); }
+  }
+  window.mirellaRecoDismiss = mirellaRecoDismiss;
+  window.loadMirellaRecommendations = loadMirellaRecommendations;
   window.loadMirellaMemories = loadMirellaMemories;
 
   var OB_REGIMES = [
