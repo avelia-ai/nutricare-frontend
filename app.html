@@ -24908,8 +24908,8 @@ window.maybeShowReviewPrompt = function() {
     obMealTimesRender();
   }
 
-  function obMealTimesRender() {
-    var container = document.getElementById('obMealTimesContainer');
+  function obMealTimesRender(containerId, countLabelId) {
+    var container = document.getElementById(containerId || 'obMealTimesContainer');
     var html = '';
     OB_MEALS.forEach(function(m) {
       var st = obMealState[m.key];
@@ -24928,9 +24928,8 @@ window.maybeShowReviewPrompt = function() {
       '</div>';
     });
     container.innerHTML = html;
-
     var activeCount = OB_MEALS.filter(function(m) { return obMealState[m.key].active; }).length;
-    document.getElementById('obMealCountLabel').textContent = activeCount + ' repas actif' + (activeCount > 1 ? 's' : '') + ' par jour';
+    document.getElementById(countLabelId || 'obMealCountLabel').textContent = activeCount + ' repas actif' + (activeCount > 1 ? 's' : '') + ' par jour';
   }
 
   function obMealToggle(key) {
