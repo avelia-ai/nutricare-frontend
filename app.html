@@ -4133,7 +4133,14 @@ window.initHome = async function() {
     var adviceWrap = document.getElementById('summaryAdviceWrap');
     var adviceCard = document.getElementById('adviceCard');
     var healthViewOpen = document.getElementById('healthView') && document.getElementById('healthView').style.display !== 'none';
-    function adviceToggleFactors(i) { var el = document.getElementById('adviceFactors-' + i); if (el) el.style.display = el.style.display === 'none' ? 'block' : 'none'; }
+    function adviceToggleFactors(i) {
+      var el = document.getElementById('adviceFactors-' + i);
+      var chevron = document.getElementById('adviceFactorsChevron-' + i);
+      if (!el) return;
+      var isOpen = el.style.display === 'block';
+      el.style.display = isOpen ? 'none' : 'block';
+      if (chevron) chevron.style.transform = isOpen ? 'rotate(0deg)' : 'rotate(180deg)';
+    }
     window.adviceToggleFactors = adviceToggleFactors;
     function renderAdviceParts(adviceParts) {
       if (adviceParts.length && !healthViewOpen) {
@@ -4149,9 +4156,10 @@ window.initHome = async function() {
             '<div style="width:22px;height:22px;border-radius:7px;background:linear-gradient(135deg,' + g[0] + ',' + g[1] + ');display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:0.62rem;font-weight:800;color:#fff">' + (i+1) + '</div>' +
             '<div style="flex:1"><span style="color:#444;line-height:1.5">' + t + '</span>' +
             (factors.length ? (
-              '<div onclick="event.stopPropagation(); adviceToggleFactors(' + i + ')" style="display:flex;align-items:center;gap:4px;font-size:0.68rem;color:#D4730A;font-weight:700;margin-top:6px;cursor:pointer;-webkit-tap-highlight-color:transparent;user-select:none">' +
-                '<i class="ti ti-help-circle" style="font-size:12px"></i>Pourquoi ?</div>' +
-              '<div id="adviceFactors-' + i + '" style="display:none;font-size:0.72rem;color:#888;line-height:1.5;margin-top:6px">' +
+              '<div onclick="event.stopPropagation(); adviceToggleFactors(' + i + ')" style="display:inline-flex;align-items:center;gap:5px;background:rgba(255,154,60,0.12);color:#D4730A;font-size:0.68rem;font-weight:700;padding:5px 10px;border-radius:20px;margin-top:8px;cursor:pointer;-webkit-tap-highlight-color:transparent;user-select:none">' +
+                '<i class="ti ti-sparkles" style="font-size:12px"></i>Pourquoi ce conseil ?' +
+                '<i id="adviceFactorsChevron-' + i + '" class="ti ti-chevron-down" style="font-size:12px;transition:transform 0.2s"></i></div>' +
+              '<div id="adviceFactors-' + i + '" style="display:none;font-size:0.72rem;color:#888;line-height:1.5;margin-top:8px">' +
                 factors.map(function(f) { return '<div style="display:flex;gap:6px;margin-bottom:2px"><span>•</span><span>' + f + '</span></div>'; }).join('') +
               '</div>'
             ) : '') +
@@ -25236,8 +25244,9 @@ window.maybeShowReviewPrompt = function() {
       '<div style="position:absolute;top:-25px;right:-25px;width:80px;height:80px;border-radius:50%;background:radial-gradient(circle,rgba(255,107,107,0.06),transparent 70%)"></div>' +
       '<div style="font-size:0.94rem;color:#2D2D2D;line-height:1.55;font-weight:600;margin-bottom:12px;position:relative">' + r.message + '</div>' +
       ((r.factors && r.factors.length) || r.reason ? (
-        '<div onclick="mirellaRecoToggleReason(\'' + r.id + '\')" style="display:flex;align-items:center;gap:5px;font-size:0.76rem;color:' + (PRIORITY_COLORS[r.priority] || '#D4730A') + ';font-weight:700;margin-bottom:6px;cursor:pointer;position:relative;-webkit-tap-highlight-color:transparent;user-select:none">' +
-          '<i class="ti ti-help-circle" style="font-size:14px"></i>Pourquoi ?</div>' +
+        '<div onclick="mirellaRecoToggleReason(\'' + r.id + '\')" style="display:inline-flex;align-items:center;gap:5px;background:rgba(255,154,60,0.12);color:' + (PRIORITY_COLORS[r.priority] || '#D4730A') + ';font-size:0.76rem;font-weight:700;padding:6px 12px;border-radius:20px;margin-bottom:8px;cursor:pointer;position:relative;-webkit-tap-highlight-color:transparent;user-select:none">' +
+          '<i class="ti ti-sparkles" style="font-size:14px"></i>Pourquoi ce conseil ?' +
+          '<i id="mirellaRecoReasonChevron-' + r.id + '" class="ti ti-chevron-down" style="font-size:14px;transition:transform 0.2s"></i></div>' +
         '<div id="mirellaRecoReason-' + r.id + '" style="display:none;font-size:0.82rem;color:#888;line-height:1.6;margin-bottom:14px;position:relative">' +
           (r.factors && r.factors.length
             ? r.factors.map(function(f) { return '<div style="display:flex;gap:7px;margin-bottom:4px"><span style="flex-shrink:0">•</span><span>' + f + '</span></div>'; }).join('')
@@ -25253,8 +25262,11 @@ window.maybeShowReviewPrompt = function() {
 
   function mirellaRecoToggleReason(id) {
     var el = document.getElementById('mirellaRecoReason-' + id);
+    var chevron = document.getElementById('mirellaRecoReasonChevron-' + id);
     if (!el) return;
-    el.style.display = el.style.display === 'none' ? 'block' : 'none';
+    var isOpen = el.style.display === 'block';
+    el.style.display = isOpen ? 'none' : 'block';
+    if (chevron) chevron.style.transform = isOpen ? 'rotate(0deg)' : 'rotate(180deg)';
   }
   window.mirellaRecoToggleReason = mirellaRecoToggleReason;
 
