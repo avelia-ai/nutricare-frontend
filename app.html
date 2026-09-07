@@ -25250,7 +25250,7 @@ async function loadMirellaRecommendations() {
 
     if (data.mission) {
       advice.push({
-        text: '🎯 ' + (data.mission.text || ''),
+        text: ((data.mission.text || '').charAt(0).toUpperCase() + (data.mission.text || '').slice(1)),
         factors: data.mission.factors || []
       });
     }
