@@ -25273,6 +25273,7 @@ async function loadMirellaRecommendations() {
         '<div style="font-size:2rem;margin-bottom:8px">🎉</div>' +
         '<div style="font-size:1rem;font-weight:700;color:#2D2D2D;margin-bottom:6px">Bravo !</div>' +
         '<div style="font-size:0.85rem;color:#666">Objectif atteint aujourd\'hui.</div>' +       '<div style="margin-top:12px;font-size:0.82rem;font-weight:700;color:#3BA65C">⭐ Score du jour : 1/1</div>' + '<div style="margin-top:8px;font-size:0.82rem;font-weight:700;color:#D4730A">🏆 Objectifs réussis : ' + (localStorage.getItem('mirella_total_completed') || '1') + '</div>' +
+'<div style="margin-top:8px;font-size:0.78rem;color:#8A4A1E;font-weight:600">🎁 Prochaine récompense dans ' + Math.max(0,15-parseInt(localStorage.getItem('mirella_total_completed')||'1',10)) + ' objectifs</div>' +
       '<div style="margin-top:10px;font-size:0.78rem;color:#888">Prochain badge : 15 objectifs</div>' +
       '<div style="margin-top:6px;height:8px;background:#ECECEC;border-radius:999px;overflow:hidden">' +
       '<div style="height:100%;width:' + Math.min(100, ((parseInt(localStorage.getItem('mirella_total_completed') || '1',10))/15)*100) + '%;background:linear-gradient(90deg,#FF9A3C,#FF6B6B)"></div>' +
@@ -25396,6 +25397,8 @@ function completeDailyMission() {
   );
 
   var completed = parseInt(localStorage.getItem('mirella_total_completed') || '0', 10);
+  var nextReward = Math.max(0, 15 - (completed + 1));
+
   localStorage.setItem('mirella_total_completed', String(completed + 1));
 
   var list = document.getElementById('mirellaRecoList');
@@ -25406,6 +25409,7 @@ function completeDailyMission() {
       '<div style="font-size:2rem;margin-bottom:8px">🎉</div>' +
       '<div style="font-size:1rem;font-weight:700;color:#2D2D2D;margin-bottom:6px">Bravo !</div>' +
       '<div style="font-size:0.85rem;color:#666">Objectif atteint aujourd\'hui.</div>' +       '<div style="margin-top:12px;font-size:0.82rem;font-weight:700;color:#3BA65C">⭐ Score du jour : 1/1</div>' + '<div style="margin-top:8px;font-size:0.82rem;font-weight:700;color:#D4730A">🏆 Objectifs réussis : ' + (localStorage.getItem('mirella_total_completed') || '1') + '</div>' +
+'<div style="margin-top:8px;font-size:0.78rem;color:#8A4A1E;font-weight:600">🎁 Prochaine récompense dans ' + Math.max(0,15-parseInt(localStorage.getItem('mirella_total_completed')||'1',10)) + ' objectifs</div>' +
       '<div style="margin-top:10px;font-size:0.78rem;color:#888">Prochain badge : 15 objectifs</div>' +
       '<div style="margin-top:6px;height:8px;background:#ECECEC;border-radius:999px;overflow:hidden">' +
       '<div style="height:100%;width:' + Math.min(100, ((parseInt(localStorage.getItem('mirella_total_completed') || '1',10))/15)*100) + '%;background:linear-gradient(90deg,#FF9A3C,#FF6B6B)"></div>' +
