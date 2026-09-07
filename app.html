@@ -25218,28 +25218,74 @@ window.maybeShowReviewPrompt = function() {
   window.mirellaRecoToggleCollapse = mirellaRecoToggleCollapse;
   var PRIORITY_COLORS = { high: '#D4574A', normal: '#D4730A', low: '#999' };
 
-  async function loadMirellaRecommendations() {
-    var wrap = document.getElementById('mirellaRecoWrap');
-    var list = document.getElementById('mirellaRecoList');
-    if (!wrap || !list) return;
-    try {
-      var res = await fetch(BACKEND_URL + '/api/recommendations', {
-        headers: { 'Authorization': 'Bearer ' + authToken }
-      });
-      if (!res.ok) return;
-      var data = await res.json();
-      var recos = data.recommendations || [];
-      var recoCard = document.getElementById('recoCard');
-      if (!recos.length) { wrap.style.display = 'none'; if (recoCard) recoCard.style.display = 'none'; return; }
-      wrap.style.display = 'block';
-      if (recoCard) recoCard.style.display = 'block';
-      window._mirellaRecosData = {};
-      recos.forEach(function(r) { window._mirellaRecosData[r.id] = r; });
-      list.innerHTML = recos.map(function(r) { return mirellaRecoCardHtml(r); }).join('');
-    } catch(e) { console.error('loadMirellaRecommendations error:', e); }
-  }
+  
+async function loadMirellaRecommendations() {
+  var wrap = document.getElementById('mirellaRecoWrap');
+  var list = document.getElementById('mirellaRecoList');
 
-  function mirellaRecoCardHtml(r) {
+  if (!wrap || !list) return;
+
+  try {
+    var res = await fetch(
+      BACKEND_URL + '/api/today/mirella',
+      {
+        headers: {
+          'Authorization': 'Bearer ' + authToken
+        }
+      }
+    );
+
+    if (!res.ok) return;
+
+    var data = await res.json();
+    var advice = data.advice || [];
+
+    var recoCard = document.getElementById('recoCard');
+
+    if (!advice.length) {
+      wrap.style.display = 'none';
+      if (recoCard) recoCard.style.display = 'none';
+      return;
+    }
+
+    wrap.style.display = 'block';
+
+    if (recoCard) {
+      recoCard.style.display = 'block';
+    }
+
+    list.innerHTML = advice.slice(0,1).map(function(a){
+
+      var text =
+        typeof a === 'string'
+          ? a
+          : (a.text || '');
+
+      var factors = a.factors || [];
+
+      return (
+        '<div style="background:var(--surface-1,#FAF8F5);border-radius:16px;padding:18px 20px;border:0.5px solid rgba(255,107,107,0.12)">' +
+          '<div style="font-size:1rem;color:#2D2D2D;line-height:1.55;font-weight:700;margin-bottom:12px">' +
+            text +
+          '</div>' +
+          (factors.length
+            ? '<div style="font-size:0.82rem;color:#888;line-height:1.6">' +
+                factors.map(function(f){
+                  return '<div>• ' + f + '</div>';
+                }).join('') +
+              '</div>'
+            : '') +
+        '</div>'
+      );
+
+    }).join('');
+
+  } catch(e) {
+    console.error('loadMirellaRecommendations error:', e);
+  }
+}
+
+function mirellaRecoCardHtml(r) {
     return '<div style="background:var(--surface-1,#FAF8F5);border-radius:16px;padding:18px 20px;border:0.5px solid rgba(255,107,107,0.12);position:relative;overflow:hidden" data-reco-id="' + r.id + '">' +
       '<div style="position:absolute;top:-25px;right:-25px;width:80px;height:80px;border-radius:50%;background:radial-gradient(circle,rgba(255,107,107,0.06),transparent 70%)"></div>' +
       '<div style="font-size:0.94rem;color:#2D2D2D;line-height:1.55;font-weight:600;margin-bottom:12px;position:relative">' + r.message + '</div>' +
