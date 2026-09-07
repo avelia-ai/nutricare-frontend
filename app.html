@@ -4133,17 +4133,28 @@ window.initHome = async function() {
     var adviceWrap = document.getElementById('summaryAdviceWrap');
     var adviceCard = document.getElementById('adviceCard');
     var healthViewOpen = document.getElementById('healthView') && document.getElementById('healthView').style.display !== 'none';
+    function adviceToggleFactors(i) { var el = document.getElementById('adviceFactors-' + i); if (el) el.style.display = el.style.display === 'none' ? 'block' : 'none'; }
     function renderAdviceParts(adviceParts) {
       if (adviceParts.length && !healthViewOpen) {
         adviceWrap.style.display = 'block';
         if (adviceCard) adviceCard.style.display = 'block';
         var _summaryGradients = [['#FF9A3C','#FF6B6B'],['#6BCBFF','#4A90E2'],['#8BE28B','#5FCF7F']];
         document.getElementById('summaryAdviceText').innerHTML = adviceParts.map(function(p, i) {
-          var t = p.charAt(0).toUpperCase() + p.slice(1) + (p.endsWith('.') ? '' : '.');
+          var raw = typeof p === 'string' ? p : (p.text || '');
+          var factors = (p && p.factors) || [];
+          var t = raw.charAt(0).toUpperCase() + raw.slice(1) + (raw.endsWith('.') ? '' : '.');
           var g = _summaryGradients[i % _summaryGradients.length];
           return '<div style="display:flex;gap:10px;align-items:flex-start;margin-bottom:8px;padding:10px 12px;background:rgba(255,255,255,0.55);border-radius:12px">' +
             '<div style="width:22px;height:22px;border-radius:7px;background:linear-gradient(135deg,' + g[0] + ',' + g[1] + ');display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:0.62rem;font-weight:800;color:#fff">' + (i+1) + '</div>' +
-            '<span style="color:#444;line-height:1.5">' + t + '</span></div>';
+            '<div style="flex:1"><span style="color:#444;line-height:1.5">' + t + '</span>' +
+            (factors.length ? (
+              '<div onclick="adviceToggleFactors(' + i + ')" style="display:flex;align-items:center;gap:4px;font-size:0.68rem;color:#D4730A;font-weight:700;margin-top:6px;cursor:pointer">' +
+                '<i class="ti ti-help-circle" style="font-size:12px"></i>Pourquoi ?</div>' +
+              '<div id="adviceFactors-' + i + '" style="display:none;font-size:0.72rem;color:#888;line-height:1.5;margin-top:6px">' +
+                factors.map(function(f) { return '<div style="display:flex;gap:6px;margin-bottom:2px"><span>•</span><span>' + f + '</span></div>'; }).join('') +
+              '</div>'
+            ) : '') +
+            '</div></div>';
         }).join('');
       } else {
         adviceWrap.style.display = 'none';
