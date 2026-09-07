@@ -24976,11 +24976,24 @@ window.maybeShowReviewPrompt = function() {
 
   var MIRELLA_STRUCTURED_MEMORY_TYPES = ['dietary_pattern', 'lifestyle', 'temporary_goal'];
 
-  function mirellaMemoryCardHtml(m) {
+  function mirellaMemoryActionsHtml(m) {
+    if (m.is_confirmed) {
+      return '<div style="display:flex;align-items:center;gap:5px;font-size:0.72rem;font-weight:700;color:#2E7D42"><i class="ti ti-circle-check-filled" style="font-size:14px"></i>Confirme</div>';
+    }
     var isStructured = MIRELLA_STRUCTURED_MEMORY_TYPES.indexOf(m.memory_type) > -1;
     var modifyBtn = isStructured ? '' :
       '<div onclick="mirellaMemoryEditMode(\'' + m.id + '\')" style="display:flex;align-items:center;gap:4px;padding:7px 12px;border-radius:100px;background:#FAF8F5;box-shadow:0 0 0 1px rgba(0,0,0,0.04);font-size:0.7rem;font-weight:700;color:#8a8a8a;cursor:pointer">' +
         '<i class="ti ti-edit" style="font-size:12px"></i>Modifier</div>';
+    return '<div onclick="mirellaMemoryConfirm(\'' + m.id + '\')" style="display:flex;align-items:center;gap:4px;padding:7px 12px;border-radius:100px;background:linear-gradient(135deg,#EFF8F0,#E4F5E7);font-size:0.7rem;font-weight:700;color:#2E7D42;cursor:pointer">' +
+        '<i class="ti ti-check" style="font-size:12px"></i>Oui, c\'est vrai</div>' +
+      '<div onclick="mirellaMemoryReject(\'' + m.id + '\')" style="display:flex;align-items:center;gap:4px;padding:7px 12px;border-radius:100px;background:#FFF3F0;font-size:0.7rem;font-weight:700;color:#D4574A;cursor:pointer">' +
+        '<i class="ti ti-x" style="font-size:12px"></i>Non</div>' +
+      modifyBtn +
+      '<div onclick="mirellaMemoryDelete(\'' + m.id + '\')" style="display:flex;align-items:center;justify-content:center;width:28px;height:28px;border-radius:100px;background:#F5F5F0;color:#aaa;cursor:pointer">' +
+        '<i class="ti ti-trash" style="font-size:13px"></i></div>';
+  }
+
+  function mirellaMemoryCardHtml(m) {
     return '<div style="background:#fff;border-radius:18px;padding:16px 18px;box-shadow:0 4px 16px rgba(139,92,246,0.06),0 0 0 1px rgba(0,0,0,0.03);position:relative;overflow:hidden" data-memory-id="' + m.id + '">' +
       '<div style="position:absolute;top:-20px;right:-20px;width:70px;height:70px;border-radius:50%;background:radial-gradient(circle,rgba(139,92,246,0.06),transparent 70%)"></div>' +
       '<div style="display:flex;align-items:flex-start;gap:10px;margin-bottom:12px;position:relative">' +
@@ -24988,13 +25001,7 @@ window.maybeShowReviewPrompt = function() {
         '<div style="font-size:0.87rem;color:#3a3a3a;line-height:1.55;font-weight:500">' + m.phrase + '</div>' +
       '</div>' +
       '<div id="mirellaMemoryActions-' + m.id + '" style="display:flex;gap:6px;flex-wrap:wrap;position:relative">' +
-        '<div onclick="mirellaMemoryConfirm(\'' + m.id + '\')" style="display:flex;align-items:center;gap:4px;padding:7px 12px;border-radius:100px;background:linear-gradient(135deg,#EFF8F0,#E4F5E7);font-size:0.7rem;font-weight:700;color:#2E7D42;cursor:pointer">' +
-          '<i class="ti ti-check" style="font-size:12px"></i>Oui, c\'est vrai</div>' +
-        '<div onclick="mirellaMemoryReject(\'' + m.id + '\')" style="display:flex;align-items:center;gap:4px;padding:7px 12px;border-radius:100px;background:#FFF3F0;font-size:0.7rem;font-weight:700;color:#D4574A;cursor:pointer">' +
-          '<i class="ti ti-x" style="font-size:12px"></i>Non</div>' +
-        modifyBtn +
-        '<div onclick="mirellaMemoryDelete(\'' + m.id + '\')" style="display:flex;align-items:center;justify-content:center;width:28px;height:28px;border-radius:100px;background:#F5F5F0;color:#aaa;cursor:pointer">' +
-          '<i class="ti ti-trash" style="font-size:13px"></i></div>' +
+        mirellaMemoryActionsHtml(m) +
       '</div>' +
     '</div>';
   }
