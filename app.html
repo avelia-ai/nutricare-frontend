@@ -5651,7 +5651,7 @@ function switchLang(lang) {
                   <i id="mirellaRecoChevron" class="ti ti-chevron-down" style="font-size:16px;color:rgba(255,255,255,0.75);transition:transform 0.2s"></i>
                 </div>
               </div>
-              <div style="font-size:1.05rem;color:white;font-weight:700;margin-top:4px;position:relative">Mission actuelle</div>
+              <div style="font-size:1.05rem;color:white;font-weight:700;margin-top:4px;position:relative">Objectif du jour</div>
             </div>
             <div id="mirellaRecoWrap" style="margin-top:0">
               <div id="mirellaRecoList" style="display:flex;flex-direction:column;gap:10px;padding:18px"></div>
@@ -15006,7 +15006,7 @@ async function loadDashboardForDate(dateStr) {
     const secondaryEl = document.getElementById('todayMirellaSecondaryAction');
     if (!banner || !data || !data.mission) { if (banner) banner.style.display = 'none'; return; }
 
-    data.title = data.mission.title || 'Mission actuelle';
+    data.title = data.mission.title || 'Objectif du jour';
     data.message = data.mission.text || '';
 
     if (data.mission.factors && data.mission.factors.length) {
