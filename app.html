@@ -4134,6 +4134,7 @@ window.initHome = async function() {
     var adviceCard = document.getElementById('adviceCard');
     var healthViewOpen = document.getElementById('healthView') && document.getElementById('healthView').style.display !== 'none';
     function adviceToggleFactors(i) { var el = document.getElementById('adviceFactors-' + i); if (el) el.style.display = el.style.display === 'none' ? 'block' : 'none'; }
+    window.adviceToggleFactors = adviceToggleFactors;
     function renderAdviceParts(adviceParts) {
       if (adviceParts.length && !healthViewOpen) {
         adviceWrap.style.display = 'block';
