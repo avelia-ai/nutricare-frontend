@@ -25390,7 +25390,19 @@ function mirellaRecoCardHtml(r) {
   }
   window.mirellaRecoDismiss = mirellaRecoDismiss;
   
-function completeDailyMission() {
+async function completeDailyMission() {
+
+  try {
+    await fetch(`${BACKEND_URL}/api/today/mirella/complete`, {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${authToken}`
+      }
+    });
+  } catch(e) {
+    console.error(e);
+  }
+
   localStorage.setItem(
     'mirella_mission_done_' + new Date().toISOString().slice(0,10),
     'true'
