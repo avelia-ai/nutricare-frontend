@@ -5617,32 +5617,40 @@ function switchLang(lang) {
           </div>
         </div>
 
-        <div id="recoCard" style="display:none;background:#FFFFFF;border-radius:20px;padding:16px;border:1px solid #F0E4DC;box-shadow:0 6px 18px rgba(230,110,70,0.08);margin-bottom:20px">
-            <div id="mirellaRecoWrap" style="margin-top:0">
-              <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px">
-                <div style="width:38px;height:38px;border-radius:12px;background:linear-gradient(135deg,#FF6B6B,#FF9A3C);display:flex;align-items:center;justify-content:center;box-shadow:0 6px 16px rgba(255,107,107,0.3);flex-shrink:0">
-                  <i class="ti ti-bulb" style="font-size:18px;color:#fff"></i>
+        <div id="recoCard" style="display:none;background:#FFFFFF;border-radius:22px;overflow:hidden;box-shadow:0 10px 30px rgba(20,20,30,0.10);margin-bottom:20px">
+            <div style="background:linear-gradient(135deg,#1B1B2F,#2C2C4A);padding:20px 22px 22px;position:relative;overflow:hidden">
+              <div style="position:absolute;top:-40px;right:-30px;width:140px;height:140px;background:radial-gradient(circle,rgba(255,154,60,0.25),transparent 70%)"></div>
+              <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;position:relative">
+                <div style="width:30px;height:30px;border-radius:9px;background:linear-gradient(135deg,#FF9A3C,#FF6B6B);display:flex;align-items:center;justify-content:center;flex-shrink:0">
+                  <i class="ti ti-bulb" style="font-size:16px;color:#fff"></i>
                 </div>
-                <div style="font-family:'Open Sans',serif;font-size:1.05rem;font-weight:700;color:#2D2D2D">Pour toi aujourd'hui</div>
+                <div style="font-size:0.68rem;color:rgba(255,255,255,0.55);font-weight:600;letter-spacing:0.08em;text-transform:uppercase">Pour toi aujourd'hui</div>
               </div>
+              <div style="font-size:1.15rem;color:#fff;font-weight:500;font-family:var(--font-voice, 'Open Sans', serif);position:relative">Tes recommandations du jour</div>
+            </div>
+            <div id="mirellaRecoWrap" style="margin-top:0;padding:18px">
               <div id="mirellaRecoList" style="display:flex;flex-direction:column;gap:10px"></div>
             </div>
-
         </div>
 
-        <div id="memoriesCard" style="display:none;background:#FFFFFF;border-radius:20px;padding:16px;border:1px solid #F0E4DC;box-shadow:0 6px 18px rgba(230,110,70,0.08);margin-bottom:20px">
-            <div id="mirellaMemoriesWrap" style="margin-top:0">
-              <div onclick="mirellaMemoriesToggleCollapse()" style="display:flex;align-items:center;gap:10px;margin-bottom:14px;cursor:pointer">
-                <div style="width:38px;height:38px;border-radius:12px;background:linear-gradient(135deg,#8B5CF6,#C4A5F5);display:flex;align-items:center;justify-content:center;box-shadow:0 6px 16px rgba(139,92,246,0.3);flex-shrink:0">
-                  <i class="ti ti-brain" style="font-size:18px;color:#fff"></i>
+        <div id="memoriesCard" style="display:none;background:#FFFFFF;border-radius:22px;overflow:hidden;box-shadow:0 10px 30px rgba(20,20,30,0.10);margin-bottom:20px">
+            <div onclick="mirellaMemoriesToggleCollapse()" style="background:linear-gradient(135deg,#241A38,#3A2860);padding:20px 22px 22px;position:relative;overflow:hidden;cursor:pointer">
+              <div style="position:absolute;top:-40px;right:-30px;width:140px;height:140px;background:radial-gradient(circle,rgba(196,165,245,0.25),transparent 70%)"></div>
+              <div style="display:flex;align-items:center;justify-content:space-between;position:relative">
+                <div style="display:flex;align-items:center;gap:10px">
+                  <div style="width:30px;height:30px;border-radius:9px;background:linear-gradient(135deg,#8B5CF6,#C4A5F5);display:flex;align-items:center;justify-content:center;flex-shrink:0">
+                    <i class="ti ti-brain" style="font-size:16px;color:#fff"></i>
+                  </div>
+                  <div style="font-size:0.68rem;color:rgba(255,255,255,0.55);font-weight:600;letter-spacing:0.08em;text-transform:uppercase">Mirella a appris</div>
                 </div>
-                <div style="flex:1">
-                  <div style="font-family:'Open Sans',serif;font-size:1.05rem;font-weight:700;color:#2D2D2D;line-height:1.2">Mirella a appris</div>
-                  <div style="font-size:0.7rem;color:#b3a89e">Sur la base de vos echanges</div>
+                <div style="width:28px;height:28px;border-radius:50%;background:rgba(255,255,255,0.1);display:flex;align-items:center;justify-content:center;flex-shrink:0">
+                  <i id="mirellaMemoriesChevron" class="ti ti-chevron-down" style="font-size:16px;color:rgba(255,255,255,0.75);transition:transform 0.2s"></i>
                 </div>
-                <i id="mirellaMemoriesChevron" class="ti ti-chevron-down" style="font-size:18px;color:#b3a89e;flex-shrink:0;transition:transform 0.2s"></i>
               </div>
-              <div id="mirellaMemoriesList" style="display:none;flex-direction:column;gap:10px"></div>
+              <div style="font-size:1.15rem;color:#fff;font-weight:500;font-family:var(--font-voice, 'Open Sans', serif);margin-top:10px;position:relative">Sur la base de vos échanges</div>
+            </div>
+            <div id="mirellaMemoriesWrap" style="margin-top:0">
+              <div id="mirellaMemoriesList" style="display:none;flex-direction:column;gap:10px;padding:18px"></div>
             </div>
         </div>
 
@@ -25004,7 +25012,7 @@ window.maybeShowReviewPrompt = function() {
   }
 
   function mirellaMemoryCardHtml(m) {
-    return '<div style="background:#fff;border-radius:18px;padding:16px 18px;box-shadow:0 4px 16px rgba(139,92,246,0.06),0 0 0 1px rgba(0,0,0,0.03);position:relative;overflow:hidden" data-memory-id="' + m.id + '">' +
+    return '<div style="background:var(--surface-1,#FAF8F5);border-radius:16px;padding:16px 18px;border:0.5px solid rgba(139,92,246,0.12);position:relative;overflow:hidden" data-memory-id="' + m.id + '">' +
       '<div style="position:absolute;top:-20px;right:-20px;width:70px;height:70px;border-radius:50%;background:radial-gradient(circle,rgba(139,92,246,0.06),transparent 70%)"></div>' +
       '<div style="display:flex;align-items:flex-start;gap:10px;margin-bottom:12px;position:relative">' +
         '<i class="ti ti-sparkles" style="font-size:15px;color:#8B5CF6;margin-top:2px;flex-shrink:0"></i>' +
@@ -25135,7 +25143,7 @@ window.maybeShowReviewPrompt = function() {
   }
 
   function mirellaRecoCardHtml(r) {
-    return '<div style="background:#fff;border-radius:18px;padding:18px 20px;box-shadow:0 4px 16px rgba(255,107,107,0.06),0 0 0 1px rgba(0,0,0,0.03);position:relative;overflow:hidden" data-reco-id="' + r.id + '">' +
+    return '<div style="background:var(--surface-1,#FAF8F5);border-radius:16px;padding:18px 20px;border:0.5px solid rgba(255,107,107,0.12);position:relative;overflow:hidden" data-reco-id="' + r.id + '">' +
       '<div style="position:absolute;top:-25px;right:-25px;width:80px;height:80px;border-radius:50%;background:radial-gradient(circle,rgba(255,107,107,0.06),transparent 70%)"></div>' +
       '<div style="font-size:0.94rem;color:#2D2D2D;line-height:1.55;font-weight:600;margin-bottom:12px;position:relative">' + r.message + '</div>' +
       (r.reason ? (
