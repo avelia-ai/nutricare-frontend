@@ -4149,7 +4149,7 @@ window.initHome = async function() {
             '<div style="width:22px;height:22px;border-radius:7px;background:linear-gradient(135deg,' + g[0] + ',' + g[1] + ');display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:0.62rem;font-weight:800;color:#fff">' + (i+1) + '</div>' +
             '<div style="flex:1"><span style="color:#444;line-height:1.5">' + t + '</span>' +
             (factors.length ? (
-              '<div onclick="adviceToggleFactors(' + i + ')" style="display:flex;align-items:center;gap:4px;font-size:0.68rem;color:#D4730A;font-weight:700;margin-top:6px;cursor:pointer">' +
+              '<div onclick="event.stopPropagation(); adviceToggleFactors(' + i + ')" style="display:flex;align-items:center;gap:4px;font-size:0.68rem;color:#D4730A;font-weight:700;margin-top:6px;cursor:pointer">' +
                 '<i class="ti ti-help-circle" style="font-size:12px"></i>Pourquoi ?</div>' +
               '<div id="adviceFactors-' + i + '" style="display:none;font-size:0.72rem;color:#888;line-height:1.5;margin-top:6px">' +
                 factors.map(function(f) { return '<div style="display:flex;gap:6px;margin-bottom:2px"><span>•</span><span>' + f + '</span></div>'; }).join('') +
