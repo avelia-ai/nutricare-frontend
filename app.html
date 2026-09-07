@@ -24973,6 +24973,69 @@ window.maybeShowReviewPrompt = function() {
   window.obMealToggle = obMealToggle;
   window.obMealTimeChange = obMealTimeChange;
   window.obMealTimesBack = obMealTimesBack;
+
+  async function openMealScheduleModal() {
+    obMealState = {};
+    var profile = {};
+    try { profile = JSON.parse(localStorage.getItem('nutricare_profile') || '{}'); } catch(e) {}
+    var savedSchedule = profile.meal_schedule || {};
+    OB_MEALS.forEach(function(m) {
+      var hasSaved = Object.prototype.hasOwnProperty.call(savedSchedule, m.key);
+      obMealState[m.key] = {
+        active: hasSaved ? true : m.defaultActive,
+        time: hasSaved ? savedSchedule[m.key] : m.defaultTime
+      };
+    });
+    obMealTimesRender('mealScheduleModalContainer', 'mealScheduleModalCountLabel');
+    document.getElementById('mealScheduleModal').style.display = 'flex';
+  }
+  window.openMealScheduleModal = openMealScheduleModal;
+
+  function closeMealScheduleModal() {
+    document.getElementById('mealScheduleModal').style.display = 'none';
+  }
+  window.closeMealScheduleModal = closeMealScheduleModal;
+
+  async function saveMealScheduleModal() {
+    var schedule = {};
+    OB_MEALS.forEach(function(m) {
+      if (obMealState[m.key].active) schedule[m.key] = obMealState[m.key].time;
+    });
+    try {
+      var token = authToken || window._authToken || localStorage.getItem('nutricare_token');
+      if (token) {
+        await fetch(BACKEND_URL + '/api/profile', {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
+          body: JSON.stringify({ meal_schedule: schedule })
+        });
+      }
+      var profile = JSON.parse(localStorage.getItem('nutricare_profile') || '{}');
+      profile.meal_schedule = schedule;
+      localStorage.setItem('nutricare_profile', JSON.stringify(profile));
+    } catch(e) { console.error('meal_schedule save error:', e); }
+    closeMealScheduleModal();
+    if (window._mealScheduleModalRecoId && typeof mirellaRecoAccept === 'function') {
+      var recoId = window._mealScheduleModalRecoId;
+      window._mealScheduleModalRecoId = null;
+      try {
+        await fetch(BACKEND_URL + '/api/recommendations/' + recoId + '/accept', {
+          method: 'POST',
+          headers: { 'Authorization': 'Bearer ' + authToken }
+        });
+        var card = document.querySelector('[data-reco-id="' + recoId + '"]');
+        if (card) card.remove();
+      } catch(e) { console.error('reco accept error:', e); }
+    }
+  }
+  window.saveMealScheduleModal = saveMealScheduleModal;
+
+  function mirellaRecoOpenMealModal(id) {
+    window._mealScheduleModalRecoId = id;
+    openMealScheduleModal();
+  }
+  window.mirellaRecoOpenMealModal = mirellaRecoOpenMealModal;
+
   window.obMealTimesFinish = obMealTimesFinish;
 
   async function loadMirellaMemories() {
@@ -25166,7 +25229,7 @@ window.maybeShowReviewPrompt = function() {
         '<div id="mirellaRecoReason-' + r.id + '" style="display:none;font-size:0.82rem;color:#888;line-height:1.5;margin-bottom:14px;position:relative">' + r.reason + '</div>'
       ) : '') +
       '<div style="display:flex;gap:8px;position:relative;flex-wrap:wrap">' +
-        (r.action_label ? '<div onclick="mirellaRecoAccept(\'' + r.id + '\')" style="background:linear-gradient(135deg,#FF6B6B,#FF9A3C);color:#fff;font-size:0.82rem;font-weight:700;padding:11px 20px;border-radius:100px;box-shadow:0 6px 16px rgba(255,107,107,0.28);cursor:pointer">' + r.action_label + '</div>' : '') +
+        (r.action_label ? '<div onclick="' + (r.action_target === 'meal_schedule_modal' ? 'mirellaRecoOpenMealModal' : 'mirellaRecoAccept') + '(\'' + r.id + '\')" style="background:linear-gradient(135deg,#FF6B6B,#FF9A3C);color:#fff;font-size:0.82rem;font-weight:700;padding:11px 20px;border-radius:100px;box-shadow:0 6px 16px rgba(255,107,107,0.28);cursor:pointer">' + r.action_label + '</div>' : '') +
         '<div onclick="mirellaRecoDismiss(\'' + r.id + '\')" style="background:#F5F5F0;color:#999;font-size:0.82rem;font-weight:600;padding:11px 16px;border-radius:100px;cursor:pointer">Plus tard</div>' +
       '</div>' +
     '</div>';
@@ -26845,6 +26908,30 @@ window.toggleDarkMode = function() {
   }
 })();
 </script>
+  <!-- Modale : Ajuster mes horaires de repas -->
+  <div id="mealScheduleModal" style="display:none;position:fixed;inset:0;background:rgba(20,15,10,0.55);z-index:20000;align-items:center;justify-content:center;padding:20px;box-sizing:border-box">
+    <div style="background:linear-gradient(180deg,#FFFCFA,#FFF8F3);border-radius:24px;max-width:420px;width:100%;max-height:88vh;overflow-y:auto;padding:26px 22px;box-sizing:border-box;position:relative">
+      <div onclick="closeMealScheduleModal()" style="position:absolute;top:16px;right:16px;width:32px;height:32px;border-radius:50%;background:#F0EDE8;display:flex;align-items:center;justify-content:center;cursor:pointer">
+        <i class="ti ti-x" style="font-size:16px;color:#999"></i>
+      </div>
+      <div style="text-align:center;margin-bottom:20px">
+        <div style="width:52px;height:52px;border-radius:16px;background:linear-gradient(135deg,#FF6B6B,#FF9A3C);display:flex;align-items:center;justify-content:center;margin:0 auto 14px;box-shadow:0 8px 20px rgba(255,107,107,0.28)">
+          <i class="ti ti-clock" style="font-size:24px;color:#fff"></i>
+        </div>
+        <div style="font-family:'Open Sans',serif;font-size:1.3rem;font-weight:700;color:#2D2D2D;margin-bottom:6px">Ton rythme de repas</div>
+        <div style="font-size:0.84rem;color:#a8a8a8;line-height:1.5">Active les repas que tu prends, avec leur horaire</div>
+      </div>
+
+      <div id="mealScheduleModalContainer" style="display:flex;flex-direction:column;gap:10px;margin-bottom:12px"></div>
+
+      <div id="mealScheduleModalCountLabel" style="text-align:center;font-size:0.78rem;color:#c4a58a;margin-bottom:22px"></div>
+
+      <div onclick="saveMealScheduleModal()" style="background:linear-gradient(135deg,#FF6B6B,#FF9A3C);color:#fff;font-size:0.9rem;font-weight:700;padding:14px 28px;border-radius:100px;box-shadow:0 8px 20px rgba(255,107,107,0.3);display:flex;align-items:center;justify-content:center;gap:6px;cursor:pointer">
+        Enregistrer
+      </div>
+    </div>
+  </div>
+
 </body>
 </html>
 <div style="display:none">build-trigger</div>
