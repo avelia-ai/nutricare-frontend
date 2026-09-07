@@ -24978,7 +24978,7 @@ window.maybeShowReviewPrompt = function() {
 
   function mirellaMemoryActionsHtml(m) {
     if (m.is_confirmed) {
-      return '<div style="display:flex;align-items:center;gap:5px;font-size:0.72rem;font-weight:700;color:#2E7D42"><i class="ti ti-circle-check-filled" style="font-size:14px"></i>Confirme</div>';
+      return '<div style="display:flex;align-items:center;gap:5px;font-size:0.72rem;font-weight:700;color:#2E7D42"><i class="ti ti-circle-check-filled" style="font-size:14px"></i>Confirmé</div>';
     }
     var isStructured = MIRELLA_STRUCTURED_MEMORY_TYPES.indexOf(m.memory_type) > -1;
     var modifyBtn = isStructured ? '' :
@@ -25014,7 +25014,7 @@ window.maybeShowReviewPrompt = function() {
         headers: { 'Authorization': 'Bearer ' + authToken }
       });
       if (res.ok && actionsEl) {
-        actionsEl.innerHTML = '<div style="display:flex;align-items:center;gap:5px;font-size:0.72rem;font-weight:700;color:#2E7D42"><i class="ti ti-circle-check-filled" style="font-size:14px"></i>Confirme</div>';
+        actionsEl.innerHTML = '<div style="display:flex;align-items:center;gap:5px;font-size:0.72rem;font-weight:700;color:#2E7D42"><i class="ti ti-circle-check-filled" style="font-size:14px"></i>Confirmé</div>';
       }
     } catch(e) { console.error('memory confirm error:', e); }
   }
