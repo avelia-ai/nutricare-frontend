@@ -4131,10 +4131,12 @@ window.initHome = async function() {
     if (!advicePool.length) pushAdvice(pickVariant(['continue comme ça, tes indicateurs sont dans de bonnes tendances', 'tout est dans le vert aujourd\'hui : profites-en pour prendre un moment pour toi', 'tes indicateurs sont stables : c\'est le bon moment pour te fixer un petit défi bonus cette semaine', 'rien à signaler d\'alarmant aujourd\'hui : garde le cap sur tes bonnes habitudes']), 1);
 
     var adviceWrap = document.getElementById('summaryAdviceWrap');
+    var adviceCard = document.getElementById('adviceCard');
     var healthViewOpen = document.getElementById('healthView') && document.getElementById('healthView').style.display !== 'none';
     function renderAdviceParts(adviceParts) {
       if (adviceParts.length && !healthViewOpen) {
         adviceWrap.style.display = 'block';
+        if (adviceCard) adviceCard.style.display = 'block';
         var _summaryGradients = [['#FF9A3C','#FF6B6B'],['#6BCBFF','#4A90E2'],['#8BE28B','#5FCF7F']];
         document.getElementById('summaryAdviceText').innerHTML = adviceParts.map(function(p, i) {
           var t = p.charAt(0).toUpperCase() + p.slice(1) + (p.endsWith('.') ? '' : '.');
@@ -4145,6 +4147,7 @@ window.initHome = async function() {
         }).join('');
       } else {
         adviceWrap.style.display = 'none';
+        if (adviceCard) adviceCard.style.display = 'none';
       }
     }
     fetch(BACKEND_URL + '/api/today/mirella', { headers: { 'Authorization': 'Bearer ' + authToken } })
@@ -5589,7 +5592,10 @@ function switchLang(lang) {
               </div>
               <i class="ti ti-chevron-right" style="font-size:16px;color:#ccc;flex-shrink:0"></i>
             </div>
+          </div>
+        </div>
 
+        <div id="adviceCard" style="display:none;background:#FFFFFF;border-radius:20px;padding:16px;border:1px solid #F0E4DC;box-shadow:0 6px 18px rgba(230,110,70,0.08);margin-bottom:20px">
             <div id="summaryCountdownWrap" style="display:none;background:linear-gradient(135deg,#FF6B6B,#FF9A3C);border-radius:16px;padding:18px;margin-bottom:14px;text-align:center;position:relative;overflow:hidden">
               <div style="position:absolute;top:-30px;right:-20px;width:110px;height:110px;background:radial-gradient(circle,rgba(255,255,255,0.18),transparent 70%);pointer-events:none"></div>
               <div id="summaryCountdownDays" style="font-size:2.4rem;font-weight:800;color:#fff;line-height:1;position:relative;z-index:1">--</div>
@@ -5612,7 +5618,10 @@ function switchLang(lang) {
 
             </div>
 
-            <div id="mirellaRecoWrap" style="display:none;margin-top:16px">
+        </div>
+
+        <div id="recoCard" style="display:none;background:#FFFFFF;border-radius:20px;padding:16px;border:1px solid #F0E4DC;box-shadow:0 6px 18px rgba(230,110,70,0.08);margin-bottom:20px">
+            <div id="mirellaRecoWrap" style="margin-top:0">
               <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px">
                 <div style="width:38px;height:38px;border-radius:12px;background:linear-gradient(135deg,#FF6B6B,#FF9A3C);display:flex;align-items:center;justify-content:center;box-shadow:0 6px 16px rgba(255,107,107,0.3);flex-shrink:0">
                   <i class="ti ti-bulb" style="font-size:18px;color:#fff"></i>
@@ -5622,7 +5631,10 @@ function switchLang(lang) {
               <div id="mirellaRecoList" style="display:flex;flex-direction:column;gap:10px"></div>
             </div>
 
-            <div id="mirellaMemoriesWrap" style="display:none;margin-top:16px">
+        </div>
+
+        <div id="memoriesCard" style="display:none;background:#FFFFFF;border-radius:20px;padding:16px;border:1px solid #F0E4DC;box-shadow:0 6px 18px rgba(230,110,70,0.08);margin-bottom:20px">
+            <div id="mirellaMemoriesWrap" style="margin-top:0">
               <div onclick="mirellaMemoriesToggleCollapse()" style="display:flex;align-items:center;gap:10px;margin-bottom:14px;cursor:pointer">
                 <div style="width:38px;height:38px;border-radius:12px;background:linear-gradient(135deg,#8B5CF6,#C4A5F5);display:flex;align-items:center;justify-content:center;box-shadow:0 6px 16px rgba(139,92,246,0.3);flex-shrink:0">
                   <i class="ti ti-brain" style="font-size:18px;color:#fff"></i>
@@ -5635,7 +5647,6 @@ function switchLang(lang) {
               </div>
               <div id="mirellaMemoriesList" style="display:none;flex-direction:column;gap:10px"></div>
             </div>
-          </div>
         </div>
 
         <!-- Parcours de progression -->
@@ -24966,8 +24977,10 @@ window.maybeShowReviewPrompt = function() {
       if (!res.ok) return;
       var data = await res.json();
       var memories = data.memories || [];
-      if (!memories.length) { wrap.style.display = 'none'; return; }
+      var memoriesCard = document.getElementById('memoriesCard');
+      if (!memories.length) { wrap.style.display = 'none'; if (memoriesCard) memoriesCard.style.display = 'none'; return; }
       wrap.style.display = 'block';
+      if (memoriesCard) memoriesCard.style.display = 'block';
       window._mirellaMemoriesData = {};
       memories.forEach(function(m) { window._mirellaMemoriesData[m.id] = m; });
       list.innerHTML = memories.map(function(m) { return mirellaMemoryCardHtml(m); }).join('');
@@ -25114,8 +25127,10 @@ window.maybeShowReviewPrompt = function() {
       if (!res.ok) return;
       var data = await res.json();
       var recos = data.recommendations || [];
-      if (!recos.length) { wrap.style.display = 'none'; return; }
+      var recoCard = document.getElementById('recoCard');
+      if (!recos.length) { wrap.style.display = 'none'; if (recoCard) recoCard.style.display = 'none'; return; }
       wrap.style.display = 'block';
+      if (recoCard) recoCard.style.display = 'block';
       window._mirellaRecosData = {};
       recos.forEach(function(r) { window._mirellaRecosData[r.id] = r; });
       list.innerHTML = recos.map(function(r) { return mirellaRecoCardHtml(r); }).join('');
