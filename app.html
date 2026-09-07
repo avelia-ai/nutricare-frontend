@@ -15004,7 +15004,14 @@ async function loadDashboardForDate(dateStr) {
     const actionsEl = document.getElementById('todayMirellaActions');
     const primaryEl = document.getElementById('todayMirellaPrimaryAction');
     const secondaryEl = document.getElementById('todayMirellaSecondaryAction');
-    if (!banner || !data || !data.show) { if (banner) banner.style.display = 'none'; return; }
+    if (!banner || !data || !data.mission) { if (banner) banner.style.display = 'none'; return; }
+
+    data.title = data.mission.title || 'Mission actuelle';
+    data.message = data.mission.text || '';
+
+    if (data.mission.factors && data.mission.factors.length) {
+      data.reason = data.mission.factors.join(' • ');
+    }
 
     if (data.neutral) {
       banner.style.background = 'linear-gradient(150deg,#FFF5EE,#FFEDE3)';
