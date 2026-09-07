@@ -5618,18 +5618,23 @@ function switchLang(lang) {
         </div>
 
         <div id="recoCard" style="display:none;background:#FFFFFF;border-radius:22px;overflow:hidden;box-shadow:0 10px 30px rgba(20,20,30,0.10);margin-bottom:20px">
-            <div style="background:linear-gradient(135deg,#1B1B2F,#2C2C4A);padding:20px 22px 22px;position:relative;overflow:hidden">
+            <div onclick="mirellaRecoToggleCollapse()" style="background:linear-gradient(135deg,#1B1B2F,#2C2C4A);padding:20px 22px 22px;position:relative;overflow:hidden;cursor:pointer">
               <div style="position:absolute;top:-40px;right:-30px;width:140px;height:140px;background:radial-gradient(circle,rgba(255,154,60,0.25),transparent 70%)"></div>
-              <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;position:relative">
-                <div style="width:30px;height:30px;border-radius:9px;background:linear-gradient(135deg,#FF9A3C,#FF6B6B);display:flex;align-items:center;justify-content:center;flex-shrink:0">
-                  <i class="ti ti-bulb" style="font-size:16px;color:#fff"></i>
+              <div style="display:flex;align-items:center;justify-content:space-between;position:relative">
+                <div style="display:flex;align-items:center;gap:10px">
+                  <div style="width:30px;height:30px;border-radius:9px;background:linear-gradient(135deg,#FF9A3C,#FF6B6B);display:flex;align-items:center;justify-content:center;flex-shrink:0">
+                    <i class="ti ti-bulb" style="font-size:16px;color:#fff"></i>
+                  </div>
+                  <div style="font-size:0.68rem;color:rgba(255,255,255,0.85);font-weight:700;letter-spacing:0.04em">POUR TOI AUJOURD'HUI</div>
                 </div>
-                <div style="font-size:0.68rem;color:rgba(255,255,255,0.85);font-weight:700;letter-spacing:0.04em">POUR TOI AUJOURD'HUI</div>
+                <div style="width:28px;height:28px;border-radius:50%;background:rgba(255,255,255,0.1);display:flex;align-items:center;justify-content:center;flex-shrink:0">
+                  <i id="mirellaRecoChevron" class="ti ti-chevron-down" style="font-size:16px;color:rgba(255,255,255,0.75);transition:transform 0.2s"></i>
+                </div>
               </div>
-              <div style="font-size:1.05rem;color:white;font-weight:700;position:relative">Tes recommandations du jour</div>
+              <div style="font-size:1.05rem;color:white;font-weight:700;margin-top:4px;position:relative">Tes recommandations du jour</div>
             </div>
-            <div id="mirellaRecoWrap" style="margin-top:0;padding:18px">
-              <div id="mirellaRecoList" style="display:flex;flex-direction:column;gap:10px"></div>
+            <div id="mirellaRecoWrap" style="margin-top:0">
+              <div id="mirellaRecoList" style="display:flex;flex-direction:column;gap:10px;padding:18px"></div>
             </div>
         </div>
 
@@ -25119,6 +25124,16 @@ window.maybeShowReviewPrompt = function() {
   }
   window.mirellaMemoriesToggleCollapse = mirellaMemoriesToggleCollapse;
 
+
+  function mirellaRecoToggleCollapse() {
+    var list = document.getElementById('mirellaRecoList');
+    var chevron = document.getElementById('mirellaRecoChevron');
+    if (!list || !chevron) return;
+    var isOpen = list.style.display === 'flex';
+    list.style.display = isOpen ? 'none' : 'flex';
+    chevron.style.transform = isOpen ? 'rotate(180deg)' : 'rotate(0deg)';
+  }
+  window.mirellaRecoToggleCollapse = mirellaRecoToggleCollapse;
   var PRIORITY_COLORS = { high: '#D4574A', normal: '#D4730A', low: '#999' };
 
   async function loadMirellaRecommendations() {
