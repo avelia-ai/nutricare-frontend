@@ -25272,7 +25272,7 @@ async function loadMirellaRecommendations() {
         '<div style="background:#F0FFF4;border-radius:16px;padding:24px;text-align:center;border:1px solid rgba(59,166,92,0.2)">' +
         '<div style="font-size:2rem;margin-bottom:8px">🎉</div>' +
         '<div style="font-size:1rem;font-weight:700;color:#2D2D2D;margin-bottom:6px">Bravo !</div>' +
-        '<div style="font-size:0.85rem;color:#666">Objectif atteint aujourd\'hui.</div>' +       '<div style="margin-top:12px;font-size:0.82rem;font-weight:700;color:#3BA65C">⭐ Score du jour : 1/1</div>' +
+        '<div style="font-size:0.85rem;color:#666">Objectif atteint aujourd\'hui.</div>' +       '<div style="margin-top:12px;font-size:0.82rem;font-weight:700;color:#3BA65C">⭐ Score du jour : 1/1</div>' + '<div style="margin-top:8px;font-size:0.82rem;font-weight:700;color:#D4730A">🏆 Objectifs réussis : ' + (localStorage.getItem('mirella_total_completed') || '1') + '</div>' +
         '</div>';
 
       wrap.style.display = 'block';
@@ -25391,6 +25391,9 @@ function completeDailyMission() {
     'true'
   );
 
+  var completed = parseInt(localStorage.getItem('mirella_total_completed') || '0', 10);
+  localStorage.setItem('mirella_total_completed', String(completed + 1));
+
   var list = document.getElementById('mirellaRecoList');
 
   if (list) {
@@ -25398,7 +25401,7 @@ function completeDailyMission() {
       '<div style="background:#F0FFF4;border-radius:16px;padding:24px;text-align:center;border:1px solid rgba(59,166,92,0.2)">' +
       '<div style="font-size:2rem;margin-bottom:8px">🎉</div>' +
       '<div style="font-size:1rem;font-weight:700;color:#2D2D2D;margin-bottom:6px">Bravo !</div>' +
-      '<div style="font-size:0.85rem;color:#666">Objectif atteint aujourd\'hui.</div>' +       '<div style="margin-top:12px;font-size:0.82rem;font-weight:700;color:#3BA65C">⭐ Score du jour : 1/1</div>' +
+      '<div style="font-size:0.85rem;color:#666">Objectif atteint aujourd\'hui.</div>' +       '<div style="margin-top:12px;font-size:0.82rem;font-weight:700;color:#3BA65C">⭐ Score du jour : 1/1</div>' + '<div style="margin-top:8px;font-size:0.82rem;font-weight:700;color:#D4730A">🏆 Objectifs réussis : ' + (localStorage.getItem('mirella_total_completed') || '1') + '</div>' +
       '</div>';
   }
 }
