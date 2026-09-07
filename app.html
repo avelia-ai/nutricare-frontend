@@ -25223,10 +25223,14 @@ window.maybeShowReviewPrompt = function() {
     return '<div style="background:var(--surface-1,#FAF8F5);border-radius:16px;padding:18px 20px;border:0.5px solid rgba(255,107,107,0.12);position:relative;overflow:hidden" data-reco-id="' + r.id + '">' +
       '<div style="position:absolute;top:-25px;right:-25px;width:80px;height:80px;border-radius:50%;background:radial-gradient(circle,rgba(255,107,107,0.06),transparent 70%)"></div>' +
       '<div style="font-size:0.94rem;color:#2D2D2D;line-height:1.55;font-weight:600;margin-bottom:12px;position:relative">' + r.message + '</div>' +
-      (r.reason ? (
+      ((r.factors && r.factors.length) || r.reason ? (
         '<div onclick="mirellaRecoToggleReason(\'' + r.id + '\')" style="display:flex;align-items:center;gap:5px;font-size:0.76rem;color:' + (PRIORITY_COLORS[r.priority] || '#D4730A') + ';font-weight:700;margin-bottom:6px;cursor:pointer;position:relative">' +
           '<i class="ti ti-help-circle" style="font-size:14px"></i>Pourquoi ?</div>' +
-        '<div id="mirellaRecoReason-' + r.id + '" style="display:none;font-size:0.82rem;color:#888;line-height:1.5;margin-bottom:14px;position:relative">' + r.reason + '</div>'
+        '<div id="mirellaRecoReason-' + r.id + '" style="display:none;font-size:0.82rem;color:#888;line-height:1.6;margin-bottom:14px;position:relative">' +
+          (r.factors && r.factors.length
+            ? r.factors.map(function(f) { return '<div style="display:flex;gap:7px;margin-bottom:4px"><span style="flex-shrink:0">•</span><span>' + f + '</span></div>'; }).join('')
+            : r.reason) +
+        '</div>'
       ) : '') +
       '<div style="display:flex;gap:8px;position:relative;flex-wrap:wrap">' +
         (r.action_label ? '<div onclick="' + (r.action_target === 'meal_schedule_modal' ? 'mirellaRecoOpenMealModal' : 'mirellaRecoAccept') + '(\'' + r.id + '\')" style="background:linear-gradient(135deg,#FF6B6B,#FF9A3C);color:#fff;font-size:0.82rem;font-weight:700;padding:11px 20px;border-radius:100px;box-shadow:0 6px 16px rgba(255,107,107,0.28);cursor:pointer">' + r.action_label + '</div>' : '') +
