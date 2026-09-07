@@ -25262,6 +25262,24 @@ async function loadMirellaRecommendations() {
 
     var recoCard = document.getElementById('recoCard');
 
+    var missionDone =
+      localStorage.getItem(
+        'mirella_mission_done_' + new Date().toISOString().slice(0,10)
+      ) === 'true';
+
+    if (missionDone) {
+      list.innerHTML =
+        '<div style="background:#F0FFF4;border-radius:16px;padding:24px;text-align:center;border:1px solid rgba(59,166,92,0.2)">' +
+        '<div style="font-size:2rem;margin-bottom:8px">🎉</div>' +
+        '<div style="font-size:1rem;font-weight:700;color:#2D2D2D;margin-bottom:6px">Bravo !</div>' +
+        '<div style="font-size:0.85rem;color:#666">Objectif atteint aujourd\'hui.</div>' +
+        '</div>';
+
+      wrap.style.display = 'block';
+      if (recoCard) recoCard.style.display = 'block';
+      return;
+    }
+
     if (!advice.length) {
       wrap.style.display = 'none';
       if (recoCard) recoCard.style.display = 'none';
