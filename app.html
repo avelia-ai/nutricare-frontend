@@ -4063,6 +4063,7 @@ window.initHome = async function() {
     var _tlHydra = (_todayLogAdvice && _todayLogAdvice.hydration_liters != null) ? _todayLogAdvice.hydration_liters : null;
     var _tlActivity = (_todayLogAdvice && _todayLogAdvice.activity_minutes != null) ? _todayLogAdvice.activity_minutes : null;
     var _tlHydraTarget = Math.round(poids * 0.033 * 10) / 10;
+    var _hasAnyDataAdvice = (_tlEnergy !== null || _tlSleep !== null || _tlStress !== null || _tlHydra !== null || _tlActivity !== null || (window._pcRecentAverages && Object.keys(window._pcRecentAverages).some(function(k){ return window._pcRecentAverages[k] !== null; })) || (profile && (profile.poids || profile.taille || (profile.objectifs && profile.objectifs.length))));
 
     } catch (e) { console.error('renderPersonalSummary DOM error:', e); }
 
@@ -4128,7 +4129,13 @@ window.initHome = async function() {
       pushAdvice(pickVariant(['continue comme ça, tes indicateurs sont dans de bonnes tendances', 'tout est dans le vert aujourd\'hui : profites-en pour prendre un moment pour toi', 'tes indicateurs sont stables : c\'est le bon moment pour te fixer un petit défi bonus cette semaine', 'rien à signaler d\'alarmant aujourd\'hui : garde le cap sur tes bonnes habitudes']), 1);
     }
 
-    if (!advicePool.length) pushAdvice(pickVariant(['continue comme ça, tes indicateurs sont dans de bonnes tendances', 'tout est dans le vert aujourd\'hui : profites-en pour prendre un moment pour toi', 'tes indicateurs sont stables : c\'est le bon moment pour te fixer un petit défi bonus cette semaine', 'rien à signaler d\'alarmant aujourd\'hui : garde le cap sur tes bonnes habitudes']), 1);
+    if (!advicePool.length) {
+      if (_hasAnyDataAdvice) {
+        pushAdvice(pickVariant(['continue comme ça, tes indicateurs sont dans de bonnes tendances', 'tout est dans le vert aujourd\'hui : profites-en pour prendre un moment pour toi', 'tes indicateurs sont stables : c\'est le bon moment pour te fixer un petit défi bonus cette semaine', 'rien à signaler d\'alarmant aujourd\'hui : garde le cap sur tes bonnes habitudes']), 1);
+      } else {
+        pushAdvice('renseigne ton suivi du jour (sommeil, hydratation, activité) pour recevoir ton premier conseil personnalisé', 1);
+      }
+    }
 
     var adviceWrap = document.getElementById('summaryAdviceWrap');
     var adviceCard = document.getElementById('adviceCard');
