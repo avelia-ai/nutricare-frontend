@@ -7824,13 +7824,19 @@ function switchLang(lang) {
     </div>
   </div>
   <div id="mirellaInsightsCard" data-suivi-tab="principal"
-       style="display:none;background:#FFFCFA;border-radius:16px;padding:22px;margin-bottom:16px;border:1px solid rgba(255,154,108,0.3);box-shadow:0 0 0 1.5px rgba(255,154,108,0.22),0 14px 32px rgba(230,110,70,0.14)">
+       style="display:none;background:#FFFCFA;border-radius:16px;padding:20px;margin-bottom:16px;border:1px solid rgba(255,154,108,0.3);box-shadow:0 0 0 1.5px rgba(255,154,108,0.22),0 14px 32px rgba(230,110,70,0.14)">
 
-    <div style="font-family:Open Sans,serif;font-size:1.05rem;font-weight:700;color:var(--charcoal);margin-bottom:4px">
-      Ce que Mirella observe
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px">
+      <div style="display:flex;align-items:center;gap:8px">
+        <span style="display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;background:linear-gradient(135deg,var(--coral),var(--accent));border-radius:50%;box-shadow:0 2px 4px rgba(0,0,0,0.15)">
+          <i class="ti ti-bulb" style="font-size:12px;color:#fff"></i>
+        </span>
+        <span style="font-size:0.75rem;font-weight:700;text-transform:uppercase;letter-spacing:1.2px;color:var(--accent)">Ce que Mirella observe</span>
+      </div>
+      <span id="mirellaInsightDaysChip" style="font-size:0.68rem;color:rgba(0,0,0,0.4);background:rgba(0,0,0,0.04);padding:3px 10px;border-radius:100px"></span>
     </div>
     <div style="font-size:0.78rem;color:rgba(0,0,0,0.45);margin-bottom:18px" id="mirellaInsightSubtitle">
-      Basé sur vos recommandations récentes
+      Base sur votre suivi des 7 derniers jours
     </div>
 
     <div id="mirellaInsightBody"></div>
@@ -11356,11 +11362,11 @@ function switchLang(lang) {
   
 
 const FACTOR_META = {
-  sommeil:   { label: 'Sommeil',      icon: 'ti-moon' },
-  stress:    { label: 'Stress',       icon: 'ti-brain' },
-  hydration: { label: 'Hydratation',  icon: 'ti-droplet' },
-  activite:  { label: 'Activite',     icon: 'ti-run' },
-  energie:   { label: 'Energie',      icon: 'ti-bolt' }
+  sommeil:   { label: 'Sommeil',      icon: 'ti-moon',    tip: 'Visez une routine de coucher reguliere, meme le week-end.' },
+  stress:    { label: 'Stress',       icon: 'ti-brain',   tip: 'Quelques minutes de respiration guidee peuvent faire la difference.' },
+  hydration: { label: 'Hydratation',  icon: 'ti-droplet', tip: 'Gardez une bouteille a portee de main tout au long de la journee.' },
+  activite:  { label: 'Activite',     icon: 'ti-run',     tip: 'Meme 15 minutes de marche par jour comptent.' },
+  energie:   { label: 'Energie',      icon: 'ti-bolt',    tip: 'Un sommeil et une hydratation stables aident a stabiliser votre energie.' }
 };
 
 async function loadMirellaInsights() {
@@ -11373,8 +11379,14 @@ async function loadMirellaInsights() {
 
     const card = document.getElementById('mirellaInsightsCard');
     const body = document.getElementById('mirellaInsightBody');
+    const daysChip = document.getElementById('mirellaInsightDaysChip');
     if (!card || !body) return;
     card.style.display = 'block';
+
+    if (daysChip) {
+      daysChip.textContent = (data.days_tracked != null) ? `${data.days_tracked}/7 jours` : '';
+      daysChip.style.display = (data.days_tracked != null) ? '' : 'none';
+    }
 
     const counts = data.counts || {};
     const available = Object.entries(counts).filter(([, v]) => v !== null && v !== undefined);
@@ -11391,18 +11403,21 @@ async function loadMirellaInsights() {
       .map(([key, val]) => ({ key, val, ...FACTOR_META[key] }))
       .sort((a, b) => a.val - b.val);
 
+    const weakest = ranked[0];
+
     body.innerHTML = `
-      <div style="display:flex;align-items:center;gap:14px;margin-bottom:18px">
+      <div style="display:flex;align-items:center;gap:14px;margin-bottom:20px;background:#FFF5EE;border-radius:14px;padding:14px">
         <div style="width:44px;height:44px;border-radius:14px;background:linear-gradient(135deg,var(--coral),var(--accent));display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:0 4px 10px rgba(255,107,107,0.3)">
-          <i class="ti ${ranked[0].icon}" style="font-size:20px;color:#fff"></i>
+          <i class="ti ${weakest.icon}" style="font-size:20px;color:#fff"></i>
         </div>
-        <div>
+        <div style="flex:1">
           <div style="font-size:0.68rem;color:rgba(0,0,0,0.4);margin-bottom:2px">Principal levier identifie</div>
-          <div style="font-family:Open Sans,serif;font-size:1.15rem;font-weight:700;color:var(--charcoal)">${ranked[0].label}</div>
+          <div style="font-family:Open Sans,serif;font-size:1.15rem;font-weight:700;color:var(--charcoal)">${weakest.label}</div>
         </div>
+        <div style="font-size:1.4rem;font-weight:700;color:var(--accent)">${weakest.val}%</div>
       </div>
 
-      <div style="display:flex;flex-direction:column;gap:12px">
+      <div style="display:flex;flex-direction:column;gap:14px">
         ${ranked.map(f => `
           <div>
             <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:5px">
@@ -11412,14 +11427,15 @@ async function loadMirellaInsights() {
               </div>
               <span style="font-size:0.75rem;color:rgba(0,0,0,0.4)">${f.val}%</span>
             </div>
-            <div style="background:rgba(0,0,0,0.06);border-radius:100px;height:6px;overflow:hidden">
+            <div style="background:rgba(0,0,0,0.06);border-radius:100px;height:6px;overflow:hidden;margin-bottom:6px">
               <div style="width:${f.val}%;height:100%;border-radius:100px;background:linear-gradient(90deg,var(--coral),var(--accent))"></div>
             </div>
+            <div style="font-size:0.72rem;color:rgba(0,0,0,0.4);line-height:1.4">${f.tip}</div>
           </div>
         `).join('')}
       </div>
 
-      <div style="margin-top:16px;font-size:0.78rem;color:rgba(0,0,0,0.5);line-height:1.55">
+      <div style="margin-top:18px;padding-top:16px;border-top:0.5px solid rgba(0,0,0,0.08);font-size:0.78rem;color:rgba(0,0,0,0.5);line-height:1.55">
         ${data.message || ''}
       </div>
     `;
