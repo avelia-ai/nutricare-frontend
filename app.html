@@ -9840,6 +9840,19 @@ function switchLang(lang) {
 
   <div id="gamiContent" style="display:none">
 
+<div id="mirellaInsightsCard"
+     style="display:none;background:#FFFCFA;border-radius:16px;padding:20px;margin-bottom:16px;border:1px solid rgba(255,154,108,0.3);box-shadow:0 0 0 1.5px rgba(255,154,108,0.22),0 14px 32px rgba(230,110,70,0.14)">
+  <div style="font-size:0.75rem;font-weight:700;color:var(--accent);margin-bottom:12px">
+    🧠 CE QUE MIRELLA OBSERVE
+  </div>
+
+  <div id="mirellaInsightText">
+    Analyse en cours...
+  </div>
+</div>
+
+
+
 
     <!-- BLOC MIRELS PROGRESSION -->
     <div id="gamiMirels" style="background:#FFFCFA;border-radius:16px;padding:20px;margin-bottom:16px;border:1px solid rgba(255,154,108,0.3);box-shadow:0 0 0 1.5px rgba(255,154,108,0.22),0 14px 32px rgba(230,110,70,0.14)">
@@ -11337,7 +11350,54 @@ function switchLang(lang) {
     } catch(e) { console.error('Erreur prediction:', e); }
   }
 
-  async function loadGamification() {
+  
+
+async function loadMirellaInsights() {
+  try {
+
+    const res = await fetch(
+      `${BACKEND_URL}/api/today/mirella/insights`,
+      {
+        headers: {
+          Authorization: `Bearer ${authToken}`
+        }
+      }
+    );
+
+    if (!res.ok) return;
+
+    const data = await res.json();
+
+    const card = document.getElementById('mirellaInsightsCard');
+    const txtEl = document.getElementById('mirellaInsightText');
+
+    if (!card || !txtEl) return;
+
+    card.style.display = 'block';
+
+    txtEl.innerHTML = `
+      <div style="margin-bottom:10px">
+        <strong>Principal levier :</strong>
+        ${data.top_focus || 'Analyse en cours'}
+      </div>
+
+      😴 Sommeil : ${data.counts?.sommeil || 0}<br>
+      😮‍💨 Stress : ${data.counts?.stress || 0}<br>
+      💧 Hydratation : ${data.counts?.hydration || 0}<br>
+      🏃 Activité : ${data.counts?.activite || 0}<br>
+      ⚡ Énergie : ${data.counts?.energie || 0}
+    `;
+
+  } catch (e) {
+    console.error('loadMirellaInsights', e);
+  }
+}
+
+
+
+async function loadGamification() {
+  loadMirellaInsights();
+
     // 100% frontend — calculé depuis les logs santé et le localStorage
     const profile = JSON.parse(localStorage.getItem('nutricare_profile') || '{}');
     const userPlan = profile?.plan || JSON.parse(localStorage.getItem('nutricare_user') || '{}')?.plan || 'free';
