@@ -25462,6 +25462,14 @@ async function loadMirellaRecommendations() {
           : (a.text || '');
 
       var factors = a.factors || [];
+      var isOnboardingPrompt = text.indexOf('renseigne ton suivi du jour') === 0;
+      var actionButton = isOnboardingPrompt
+        ? '<button onclick="document.querySelector(\'[onclick*=saveHealthLog]\')?.scrollIntoView({behavior:\'smooth\',block:\'center\'})" style="width:100%;border:none;background:var(--charcoal);color:white;padding:13px 18px;border-radius:14px;font-weight:700;font-size:0.85rem;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px">' +
+            '<i class="ti ti-arrow-right" style="font-size:17px"></i>Renseigner mon suivi' +
+          '</button>'
+        : '<button onclick="completeDailyMission()" style="width:100%;border:none;background:linear-gradient(135deg,var(--coral),var(--accent));color:white;padding:13px 18px;border-radius:14px;font-weight:700;font-size:0.85rem;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;box-shadow:0 8px 20px rgba(255,107,107,0.3)">' +
+            '<i class="ti ti-check" style="font-size:17px"></i>J\'ai réussi' +
+          '</button>';
 
       return (
         '<div style="background:var(--surface-1,#FAF8F5);border-radius:16px;padding:18px 20px;border:0.5px solid rgba(255,107,107,0.12)">' +
@@ -25476,9 +25484,7 @@ async function loadMirellaRecommendations() {
               '</div>'
             : '') +
 
-          '<button onclick="completeDailyMission()" style="width:100%;border:none;background:linear-gradient(135deg,var(--coral),var(--accent));color:white;padding:13px 18px;border-radius:14px;font-weight:700;font-size:0.85rem;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;box-shadow:0 8px 20px rgba(255,107,107,0.3)">' +
-          '<i class="ti ti-check" style="font-size:17px"></i>J\'ai réussi' +
-          '</button>' +
+          actionButton +
 
         '</div>'
       );
