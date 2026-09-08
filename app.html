@@ -11335,11 +11335,11 @@ function switchLang(lang) {
   
 
 const FACTOR_META = {
-  sommeil:   { label: 'Sommeil',      icon: 'ti-moon',    tip: 'Visez une routine de coucher reguliere, meme le week-end.' },
-  stress:    { label: 'Stress',       icon: 'ti-brain',   tip: 'Quelques minutes de respiration guidee peuvent faire la difference.' },
-  hydration: { label: 'Hydratation',  icon: 'ti-droplet', tip: 'Gardez une bouteille a portee de main tout au long de la journee.' },
-  activite:  { label: 'Activite',     icon: 'ti-run',     tip: 'Meme 15 minutes de marche par jour comptent.' },
-  energie:   { label: 'Energie',      icon: 'ti-bolt',    tip: 'Un sommeil et une hydratation stables aident a stabiliser votre energie.' }
+  sommeil:   { label: 'Sommeil',      icon: 'ti-moon',    tip: 'Visez une routine de coucher régulière, même le week-end.' },
+  stress:    { label: 'Stress',       icon: 'ti-brain',   tip: 'Quelques minutes de respiration guidée peuvent faire la différence.' },
+  hydration: { label: 'Hydratation',  icon: 'ti-droplet', tip: 'Gardez une bouteille à portée de main tout au long de la journée.' },
+  activite:  { label: 'Activité',     icon: 'ti-run',     tip: 'Même 15 minutes de marche par jour comptent.' },
+  energie:   { label: 'Énergie',      icon: 'ti-bolt',    tip: 'Un sommeil et une hydratation stables aident à stabiliser votre énergie.' }
 };
 
 async function loadMirellaInsights() {
@@ -11367,13 +11367,13 @@ async function loadMirellaInsights() {
     if (!available.length) {
       body.innerHTML = `
         <div style="font-size:0.85rem;color:rgba(0,0,0,0.5);line-height:1.6">
-          Pas encore assez de donnees sur les 7 derniers jours pour degager une tendance. Renseignez votre suivi quotidien, Mirella affinera son analyse.
+          Pas encore assez de données sur les 7 derniers jours pour dégager une tendance. Renseignez votre suivi quotidien, Mirella affinera son analyse.
         </div>`;
       return;
     }
 
     function statusFor(val) {
-      if (val < 40) return { label: 'A travailler', color: '#D85A30', bg: 'rgba(216,90,48,0.1)' };
+      if (val < 40) return { label: 'À travailler', color: '#D85A30', bg: 'rgba(216,90,48,0.1)' };
       if (val < 70) return { label: 'Correct', color: '#B8860B', bg: 'rgba(201,168,76,0.13)' };
       return { label: 'Bien', color: '#3BA65C', bg: 'rgba(59,166,92,0.12)' };
     }
@@ -11387,7 +11387,7 @@ async function loadMirellaInsights() {
     const offset = circumference - (weakest.val / 100) * circumference;
 
     body.innerHTML = `
-      <div style="display:flex;align-items:center;gap:18px;background:linear-gradient(135deg,#2D2D2D,#1B1B2F);border-radius:16px;padding:18px;margin-bottom:22px;position:relative;overflow:hidden">
+      <div style="display:flex;align-items:center;gap:18px;background:linear-gradient(135deg,#1B1B2F,#232946);border-radius:16px;padding:18px;margin-bottom:22px;position:relative;overflow:hidden">
         <div style="position:absolute;top:-30px;right:-30px;width:110px;height:110px;background:radial-gradient(circle,rgba(255,107,107,0.18),transparent 70%);pointer-events:none"></div>
         <div style="position:relative;width:66px;height:66px;flex-shrink:0">
           <svg width="66" height="66" viewBox="0 0 66 66" style="transform:rotate(-90deg)">
@@ -11402,7 +11402,7 @@ async function loadMirellaInsights() {
         <div style="flex:1;position:relative">
           <div style="font-size:0.65rem;color:rgba(255,255,255,0.45);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:3px">Principal levier</div>
           <div style="font-family:Open Sans,serif;font-size:1.3rem;font-weight:700;color:#fff;margin-bottom:2px">${weakest.label}</div>
-          <div style="font-size:0.72rem;color:rgba(255,255,255,0.5)">${weakest.val}% de regularite</div>
+          <div style="font-size:0.72rem;color:rgba(255,255,255,0.5)">${weakest.val}% de régularité</div>
         </div>
       </div>
 
