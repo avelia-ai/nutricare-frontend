@@ -25462,7 +25462,7 @@ async function loadMirellaRecommendations() {
           : (a.text || '');
 
       var factors = a.factors || [];
-      var isOnboardingPrompt = text.indexOf('renseigne ton suivi du jour') === 0;
+      var isOnboardingPrompt = text.toLowerCase().indexOf('renseigne ton suivi du jour') === 0;
       var actionButton = isOnboardingPrompt
         ? '<button onclick="document.querySelector(\'[onclick*=saveHealthLog]\')?.scrollIntoView({behavior:\'smooth\',block:\'center\'})" style="width:100%;border:none;background:var(--charcoal);color:white;padding:13px 18px;border-radius:14px;font-weight:700;font-size:0.85rem;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px">' +
             '<i class="ti ti-arrow-right" style="font-size:17px"></i>Renseigner mon suivi' +
