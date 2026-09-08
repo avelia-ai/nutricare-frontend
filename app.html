@@ -5570,14 +5570,19 @@ function switchLang(lang) {
         <!-- FIN COEUR D'HARMONIE -->
 
         <div id="personalSummaryCard" style="display:none;background:#FFFFFF;border-radius:20px;padding:0;overflow:hidden;box-shadow:0 0 0 1.5px rgba(255,154,108,0.22),0 14px 32px rgba(230,110,70,0.14);margin-bottom:24px">
-          <div style="background:linear-gradient(135deg,#1B1B2F,#232946);padding:16px 20px 26px;display:flex;align-items:center;justify-content:space-between">
+          <div onclick="personalSummaryToggleCollapse()" style="background:linear-gradient(135deg,#1B1B2F,#232946);padding:16px 20px 26px;display:flex;align-items:center;justify-content:space-between;cursor:pointer">
             <div>
               <div style="font-size:0.68rem;color:rgba(255,255,255,0.85);font-weight:700;letter-spacing:0.04em;margin-bottom:4px">MON PROFIL</div>
               <div style="font-size:1.05rem;color:white;font-weight:700">Résumé personnalisé</div>
             </div>
-            <button onclick="openEditGoalsModal()" style="background:rgba(255,255,255,0.15);border:none;color:white;font-size:0.68rem;font-weight:700;padding:7px 12px;border-radius:20px;cursor:pointer;white-space:nowrap">Modifier</button>
+            <div style="display:flex;align-items:center;gap:8px">
+              <button onclick="event.stopPropagation();openEditGoalsModal()" style="background:rgba(255,255,255,0.15);border:none;color:white;font-size:0.68rem;font-weight:700;padding:7px 12px;border-radius:20px;cursor:pointer;white-space:nowrap">Modifier</button>
+              <div style="width:28px;height:28px;border-radius:50%;background:rgba(255,255,255,0.1);display:flex;align-items:center;justify-content:center;flex-shrink:0">
+                <i id="personalSummaryChevron" class="ti ti-chevron-down" style="font-size:16px;color:rgba(255,255,255,0.75);transition:transform 0.2s"></i>
+              </div>
+            </div>
           </div>
-          <div style="margin:-14px 14px 16px;position:relative;background:#fff;border-radius:14px;padding:18px;box-shadow:0 2px 10px rgba(0,0,0,0.06)">
+          <div id="personalSummaryContent" style="margin:-14px 14px 16px;position:relative;background:#fff;border-radius:14px;padding:18px;box-shadow:0 2px 10px rgba(0,0,0,0.06)">
 
             <div style="display:flex;align-items:center;gap:18px;margin-bottom:16px;padding-bottom:16px;border-bottom:1px solid #F5F5F5">
               <svg width="78" height="78" viewBox="0 0 78 78" style="flex-shrink:0">
@@ -25342,6 +25347,15 @@ window.maybeShowReviewPrompt = function() {
   window.mirellaMemoriesToggleCollapse = mirellaMemoriesToggleCollapse;
 
 
+  function personalSummaryToggleCollapse() {
+    var content = document.getElementById('personalSummaryContent');
+    var chevron = document.getElementById('personalSummaryChevron');
+    if (!content || !chevron) return;
+    var isOpen = content.style.display !== 'none';
+    content.style.display = isOpen ? 'none' : 'block';
+    chevron.style.transform = isOpen ? 'rotate(180deg)' : 'rotate(0deg)';
+  }
+  window.personalSummaryToggleCollapse = personalSummaryToggleCollapse;
   function mirellaRecoToggleCollapse() {
     var list = document.getElementById('mirellaRecoList');
     var chevron = document.getElementById('mirellaRecoChevron');
