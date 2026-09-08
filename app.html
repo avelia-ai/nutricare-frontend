@@ -11399,13 +11399,24 @@ async function loadMirellaInsights() {
       return;
     }
 
+    function statusFor(val) {
+      if (val < 40) return { label: 'A travailler', color: '#D85A30' };
+      if (val < 70) return { label: 'Correct', color: '#C9A84C' };
+      return { label: 'Bien', color: '#3BA65C' };
+    }
+
     const ranked = available
       .map(([key, val]) => ({ key, val, ...FACTOR_META[key] }))
       .sort((a, b) => a.val - b.val);
 
     const weakest = ranked[0];
+    const weakestStatus = statusFor(weakest.val);
 
     body.innerHTML = `
+      <div style="font-size:0.72rem;color:rgba(0,0,0,0.4);line-height:1.5;margin-bottom:16px">
+        Chaque score reflete votre regularite sur les 7 derniers jours (100 = objectif atteint chaque jour).
+      </div>
+
       <div style="display:flex;align-items:center;gap:14px;margin-bottom:20px;background:#FFF5EE;border-radius:14px;padding:14px">
         <div style="width:44px;height:44px;border-radius:14px;background:linear-gradient(135deg,var(--coral),var(--accent));display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:0 4px 10px rgba(255,107,107,0.3)">
           <i class="ti ${weakest.icon}" style="font-size:20px;color:#fff"></i>
@@ -11414,25 +11425,34 @@ async function loadMirellaInsights() {
           <div style="font-size:0.68rem;color:rgba(0,0,0,0.4);margin-bottom:2px">Principal levier identifie</div>
           <div style="font-family:Open Sans,serif;font-size:1.15rem;font-weight:700;color:var(--charcoal)">${weakest.label}</div>
         </div>
-        <div style="font-size:1.4rem;font-weight:700;color:var(--accent)">${weakest.val}%</div>
+        <div style="text-align:right">
+          <div style="font-size:1.4rem;font-weight:700;color:var(--accent)">${weakest.val}%</div>
+          <div style="font-size:0.68rem;font-weight:600;color:${weakestStatus.color}">${weakestStatus.label}</div>
+        </div>
       </div>
 
       <div style="display:flex;flex-direction:column;gap:14px">
-        ${ranked.map(f => `
+        ${ranked.map(f => {
+          const s = statusFor(f.val);
+          return `
           <div>
             <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:5px">
               <div style="display:flex;align-items:center;gap:8px">
                 <i class="ti ${f.icon}" style="font-size:14px;color:rgba(0,0,0,0.4)"></i>
                 <span style="font-size:0.8rem;color:var(--charcoal);font-weight:500">${f.label}</span>
               </div>
-              <span style="font-size:0.75rem;color:rgba(0,0,0,0.4)">${f.val}%</span>
+              <div style="display:flex;align-items:center;gap:8px">
+                <span style="font-size:0.68rem;font-weight:600;color:${s.color}">${s.label}</span>
+                <span style="font-size:0.75rem;color:rgba(0,0,0,0.4)">${f.val}%</span>
+              </div>
             </div>
             <div style="background:rgba(0,0,0,0.06);border-radius:100px;height:6px;overflow:hidden;margin-bottom:6px">
               <div style="width:${f.val}%;height:100%;border-radius:100px;background:linear-gradient(90deg,var(--coral),var(--accent))"></div>
             </div>
             <div style="font-size:0.72rem;color:rgba(0,0,0,0.4);line-height:1.4">${f.tip}</div>
           </div>
-        `).join('')}
+          `;
+        }).join('')}
       </div>
 
       <div style="margin-top:18px;padding-top:16px;border-top:0.5px solid rgba(0,0,0,0.08);font-size:0.78rem;color:rgba(0,0,0,0.5);line-height:1.55">
@@ -11443,6 +11463,7 @@ async function loadMirellaInsights() {
     console.error('loadMirellaInsights', e);
   }
 }
+
 
 
 
