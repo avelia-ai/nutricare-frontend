@@ -7823,6 +7823,20 @@ function switchLang(lang) {
       </div>
     </div>
   </div>
+  <div id="mirellaInsightsCard" data-suivi-tab="principal"
+       style="display:none;background:#FFFCFA;border-radius:16px;padding:22px;margin-bottom:16px;border:1px solid rgba(255,154,108,0.3);box-shadow:0 0 0 1.5px rgba(255,154,108,0.22),0 14px 32px rgba(230,110,70,0.14)">
+
+    <div style="font-family:Open Sans,serif;font-size:1.05rem;font-weight:700;color:var(--charcoal);margin-bottom:4px">
+      Ce que Mirella observe
+    </div>
+    <div style="font-size:0.78rem;color:rgba(0,0,0,0.45);margin-bottom:18px" id="mirellaInsightSubtitle">
+      Basé sur vos recommandations récentes
+    </div>
+
+    <div id="mirellaInsightBody"></div>
+
+  </div>
+
   <div id="healthScoreSummaryCard" style="background:linear-gradient(135deg,#1B1B2F,#232946);border-radius:20px;padding:22px;margin-bottom:16px;position:relative;overflow:hidden;box-shadow:0 0 0 1.5px rgba(255,154,108,0.22),0 16px 40px rgba(0,0,0,0.18)">
     <div style="position:absolute;top:-40px;right:-30px;width:140px;height:140px;background:radial-gradient(circle,rgba(255,107,107,0.22),transparent 70%);pointer-events:none"></div>
     <div style="position:absolute;bottom:-50px;left:-20px;width:120px;height:120px;background:radial-gradient(circle,rgba(108,92,231,0.16),transparent 70%);pointer-events:none"></div>
@@ -11352,51 +11366,86 @@ function switchLang(lang) {
 
   
 
+const FACTOR_META = {
+  sommeil:   { label: 'Sommeil',      icon: 'ti-moon' },
+  stress:    { label: 'Stress',       icon: 'ti-brain' },
+  hydration: { label: 'Hydratation',  icon: 'ti-droplet' },
+  activite:  { label: 'Activite',     icon: 'ti-run' },
+  energie:   { label: 'Energie',      icon: 'ti-bolt' }
+};
+
 async function loadMirellaInsights() {
   try {
-
-    const res = await fetch(
-      `${BACKEND_URL}/api/today/mirella/insights`,
-      {
-        headers: {
-          Authorization: `Bearer ${authToken}`
-        }
-      }
-    );
-
+    const res = await fetch(`${BACKEND_URL}/api/today/mirella/insights`, {
+      headers: { Authorization: `Bearer ${authToken}` }
+    });
     if (!res.ok) return;
-
     const data = await res.json();
 
     const card = document.getElementById('mirellaInsightsCard');
-    const txtEl = document.getElementById('mirellaInsightText');
-
-    if (!card || !txtEl) return;
-
+    const body = document.getElementById('mirellaInsightBody');
+    if (!card || !body) return;
     card.style.display = 'block';
 
-    txtEl.innerHTML = `
-      <div style="margin-bottom:10px">
-        <strong>Principal levier :</strong>
-        ${data.top_focus || 'Analyse en cours'}
+    const counts = data.counts || {};
+    const total = Object.values(counts).reduce((a,b) => a + b, 0);
+
+    if (!total) {
+      body.innerHTML = `
+        <div style="font-size:0.85rem;color:rgba(0,0,0,0.5);line-height:1.6">
+          Pas encore assez de recommandations pour degager une tendance. Continuez a suivre vos donnees quotidiennes, Mirella affinera son analyse au fil des jours.
+        </div>`;
+      return;
+    }
+
+    const ranked = Object.entries(counts)
+      .map(([key, val]) => ({ key, val, ...FACTOR_META[key] }))
+      .sort((a, b) => b.val - a.val);
+
+    const max = ranked[0].val;
+
+    body.innerHTML = `
+      <div style="display:flex;align-items:center;gap:14px;margin-bottom:18px">
+        <div style="width:44px;height:44px;border-radius:14px;background:linear-gradient(135deg,var(--coral),var(--accent));display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:0 4px 10px rgba(255,107,107,0.3)">
+          <i class="ti ${ranked[0].icon}" style="font-size:20px;color:#fff"></i>
+        </div>
+        <div>
+          <div style="font-size:0.68rem;color:rgba(0,0,0,0.4);margin-bottom:2px">Principal levier identifie</div>
+          <div style="font-family:Open Sans,serif;font-size:1.15rem;font-weight:700;color:var(--charcoal)">${ranked[0].label}</div>
+        </div>
       </div>
 
-      😴 Sommeil : ${data.counts?.sommeil || 0}<br>
-      😮‍💨 Stress : ${data.counts?.stress || 0}<br>
-      💧 Hydratation : ${data.counts?.hydration || 0}<br>
-      🏃 Activité : ${data.counts?.activite || 0}<br>
-      ⚡ Énergie : ${data.counts?.energie || 0}
-    `;
+      <div style="display:flex;flex-direction:column;gap:12px">
+        ${ranked.map(f => `
+          <div>
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:5px">
+              <div style="display:flex;align-items:center;gap:8px">
+                <i class="ti ${f.icon}" style="font-size:14px;color:rgba(0,0,0,0.4)"></i>
+                <span style="font-size:0.8rem;color:var(--charcoal);font-weight:500">${f.label}</span>
+              </div>
+              <span style="font-size:0.75rem;color:rgba(0,0,0,0.4)">${f.val}</span>
+            </div>
+            <div style="background:rgba(0,0,0,0.06);border-radius:100px;height:6px;overflow:hidden">
+              <div style="width:${max ? (f.val / max * 100) : 0}%;height:100%;border-radius:100px;background:linear-gradient(90deg,var(--coral),var(--accent))"></div>
+            </div>
+          </div>
+        `).join('')}
+      </div>
 
+      <div style="margin-top:16px;font-size:0.78rem;color:rgba(0,0,0,0.5);line-height:1.55">
+        ${data.message || ''}
+      </div>
+    `;
   } catch (e) {
     console.error('loadMirellaInsights', e);
   }
 }
 
+}
+
 
 
 async function loadGamification() {
-  loadMirellaInsights();
 
     // 100% frontend — calculé depuis les logs santé et le localStorage
     const profile = JSON.parse(localStorage.getItem('nutricare_profile') || '{}');
@@ -13520,7 +13569,7 @@ Réponds UNIQUEMENT en JSON valide avec cette structure exacte:
 
     if (view === 'menus') setTimeout(buildWeekSelector, 50);
     if (view === 'health') {
-      loadInfoDuJour(); loadHydrationFromStorage(); setTimeout(renderEvolutionGallery, 100);
+      loadInfoDuJour(); loadHydrationFromStorage(); loadMirellaInsights(); setTimeout(renderEvolutionGallery, 100);
       setTimeout(function() { switchSuiviTab(window._suiviActiveTab || 'principal'); }, 60);
       setTimeout(renderWeeklyReport, 80);
       if (localStorage.getItem('mirella_suivi_tuto_seen') !== 'true') {
