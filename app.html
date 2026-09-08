@@ -6926,6 +6926,31 @@ function switchLang(lang) {
 
       <p style="font-size:11px;color:#ccc;text-align:center;line-height:1.5;padding:8px 0">Vos donnees sont chiffrees et ne sont jamais partagees sans votre consentement.</p>
 
+      <!-- Zone de danger -->
+      <div style="background:#FFF5F5;border-radius:22px;border:1px solid rgba(220,53,50,0.15);padding:20px;margin-top:12px;margin-bottom:8px">
+        <div style="font-size:13px;font-weight:700;color:#B02A2A;margin-bottom:4px">Zone de danger</div>
+        <p style="font-size:11.5px;color:#A05050;line-height:1.5;margin-bottom:14px">Supprimer votre compte efface definitivement toutes vos donnees (profil, suivi sante, historique, preferences). Cette action est irreversible.</p>
+        <button onclick="openDeleteAccountModal()" style="width:100%;background:transparent;border:1.5px solid #D85A30;color:#D85A30;border-radius:18px;padding:13px;font-size:13.5px;font-weight:700;cursor:pointer">Supprimer mon compte</button>
+      </div>
+
+      </div>
+    </div>
+
+    <div id="deleteAccountModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:100;align-items:center;justify-content:center;padding:20px">
+      <div style="background:#FFFCFA;border-radius:20px;padding:24px;max-width:360px;width:100%">
+        <div style="width:44px;height:44px;border-radius:14px;background:rgba(216,90,48,0.1);display:flex;align-items:center;justify-content:center;margin-bottom:14px">
+          <i class="ti ti-alert-triangle" style="font-size:22px;color:#D85A30"></i>
+        </div>
+        <div style="font-family:Open Sans,serif;font-size:1.1rem;font-weight:700;color:var(--charcoal);margin-bottom:8px">Supprimer definitivement votre compte ?</div>
+        <div style="font-size:0.85rem;color:rgba(0,0,0,0.55);line-height:1.55;margin-bottom:18px">
+          Toutes vos donnees (suivi sante, historique, preferences, badges) seront supprimees. Cette action est irreversible et ne peut pas etre annulee.
+        </div>
+        <div style="font-size:0.78rem;font-weight:600;color:var(--charcoal);margin-bottom:8px">Tapez SUPPRIMER pour confirmer</div>
+        <input id="deleteAccountConfirmInput" type="text" placeholder="SUPPRIMER" style="width:100%;box-sizing:border-box;border:1px solid rgba(0,0,0,0.15);border-radius:12px;padding:11px 14px;font-size:0.9rem;margin-bottom:18px;font-family:DM Sans,sans-serif">
+        <div style="display:flex;gap:10px">
+          <button onclick="closeDeleteAccountModal()" style="flex:1;background:rgba(0,0,0,0.05);border:none;color:var(--charcoal);border-radius:14px;padding:12px;font-size:0.85rem;font-weight:700;cursor:pointer">Annuler</button>
+          <button id="deleteAccountConfirmBtn" onclick="confirmDeleteAccount()" style="flex:1;background:#D85A30;border:none;color:white;border-radius:14px;padding:12px;font-size:0.85rem;font-weight:700;cursor:pointer;opacity:0.5" disabled>Supprimer</button>
+        </div>
       </div>
     </div>
 
@@ -17785,6 +17810,60 @@ async function deleteProfessional(id) {
   }
 
   // ── PROFILE ──
+  function openDeleteAccountModal() {
+    var modal = document.getElementById('deleteAccountModal');
+    var input = document.getElementById('deleteAccountConfirmInput');
+    var btn = document.getElementById('deleteAccountConfirmBtn');
+    if (!modal) return;
+    modal.style.display = 'flex';
+    if (input) input.value = '';
+    if (btn) { btn.disabled = true; btn.style.opacity = '0.5'; }
+  }
+  window.openDeleteAccountModal = openDeleteAccountModal;
+
+  function closeDeleteAccountModal() {
+    var modal = document.getElementById('deleteAccountModal');
+    if (modal) modal.style.display = 'none';
+  }
+  window.closeDeleteAccountModal = closeDeleteAccountModal;
+
+  document.addEventListener('input', function(e) {
+    if (e.target && e.target.id === 'deleteAccountConfirmInput') {
+      var btn = document.getElementById('deleteAccountConfirmBtn');
+      if (!btn) return;
+      var isValid = e.target.value.trim() === 'SUPPRIMER';
+      btn.disabled = !isValid;
+      btn.style.opacity = isValid ? '1' : '0.5';
+    }
+  });
+
+  async function confirmDeleteAccount() {
+    var input = document.getElementById('deleteAccountConfirmInput');
+    var btn = document.getElementById('deleteAccountConfirmBtn');
+    if (!input || input.value.trim() !== 'SUPPRIMER') return;
+    if (btn) { btn.disabled = true; btn.textContent = 'Suppression...'; }
+    try {
+      var res = await fetch(BACKEND_URL + '/api/profile/account', {
+        method: 'DELETE',
+        headers: { 'Authorization': 'Bearer ' + authToken }
+      });
+      var data = await res.json();
+      if (res.ok && data.success) {
+        closeDeleteAccountModal();
+        alert('Votre compte a ete supprime.');
+        logout();
+      } else {
+        alert('Une erreur est survenue lors de la suppression. Contactez le support si le probleme persiste.');
+        if (btn) { btn.disabled = false; btn.textContent = 'Supprimer'; }
+      }
+    } catch (e) {
+      console.error('confirmDeleteAccount error:', e);
+      alert('Une erreur est survenue lors de la suppression. Contactez le support si le probleme persiste.');
+      if (btn) { btn.disabled = false; btn.textContent = 'Supprimer'; }
+    }
+  }
+  window.confirmDeleteAccount = confirmDeleteAccount;
+
   async function saveProfile() {
     const updates = {
       full_name: document.getElementById('profileName').value.trim(),
