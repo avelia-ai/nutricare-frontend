@@ -11377,21 +11377,19 @@ async function loadMirellaInsights() {
     card.style.display = 'block';
 
     const counts = data.counts || {};
-    const total = Object.values(counts).reduce((a,b) => a + b, 0);
+    const available = Object.entries(counts).filter(([, v]) => v !== null && v !== undefined);
 
-    if (!total) {
+    if (!available.length) {
       body.innerHTML = `
         <div style="font-size:0.85rem;color:rgba(0,0,0,0.5);line-height:1.6">
-          Pas encore assez de recommandations pour degager une tendance. Continuez a suivre vos donnees quotidiennes, Mirella affinera son analyse au fil des jours.
+          Pas encore assez de donnees sur les 7 derniers jours pour degager une tendance. Renseignez votre suivi quotidien, Mirella affinera son analyse.
         </div>`;
       return;
     }
 
-    const ranked = Object.entries(counts)
+    const ranked = available
       .map(([key, val]) => ({ key, val, ...FACTOR_META[key] }))
-      .sort((a, b) => b.val - a.val);
-
-    const max = ranked[0].val;
+      .sort((a, b) => a.val - b.val);
 
     body.innerHTML = `
       <div style="display:flex;align-items:center;gap:14px;margin-bottom:18px">
@@ -11412,10 +11410,10 @@ async function loadMirellaInsights() {
                 <i class="ti ${f.icon}" style="font-size:14px;color:rgba(0,0,0,0.4)"></i>
                 <span style="font-size:0.8rem;color:var(--charcoal);font-weight:500">${f.label}</span>
               </div>
-              <span style="font-size:0.75rem;color:rgba(0,0,0,0.4)">${f.val}</span>
+              <span style="font-size:0.75rem;color:rgba(0,0,0,0.4)">${f.val}%</span>
             </div>
             <div style="background:rgba(0,0,0,0.06);border-radius:100px;height:6px;overflow:hidden">
-              <div style="width:${max ? (f.val / max * 100) : 0}%;height:100%;border-radius:100px;background:linear-gradient(90deg,var(--coral),var(--accent))"></div>
+              <div style="width:${f.val}%;height:100%;border-radius:100px;background:linear-gradient(90deg,var(--coral),var(--accent))"></div>
             </div>
           </div>
         `).join('')}
