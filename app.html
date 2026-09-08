@@ -25350,8 +25350,20 @@ window.maybeShowReviewPrompt = function() {
 async function loadMirellaRecommendations() {
   var wrap = document.getElementById('mirellaRecoWrap');
   var list = document.getElementById('mirellaRecoList');
+  var recoCardEarly = document.getElementById('recoCard');
 
   if (!wrap || !list) return;
+  if (recoCardEarly) recoCardEarly.style.display = 'block';
+  list.innerHTML =
+    '<div style="display:flex;flex-direction:column;gap:10px">' +
+    [1,2,3].map(function(){
+      return '<div style="background:var(--surface-1,#FAF8F5);border-radius:16px;padding:18px 20px;border:0.5px solid rgba(255,107,107,0.08)">' +
+        '<div style="height:14px;width:70%;background:rgba(0,0,0,0.06);border-radius:6px;margin-bottom:8px;animation:mirellaSkeletonPulse 1.4s ease-in-out infinite"></div>' +
+        '<div style="height:14px;width:45%;background:rgba(0,0,0,0.06);border-radius:6px;animation:mirellaSkeletonPulse 1.4s ease-in-out infinite"></div>' +
+        '</div>';
+    }).join('') +
+    '</div>' +
+    '<style>@keyframes mirellaSkeletonPulse{0%,100%{opacity:0.5}50%{opacity:1}}</style>';
 
   try {
     var res = await fetch(
