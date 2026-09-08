@@ -11366,8 +11366,17 @@ async function loadMirellaInsights() {
 
     if (!available.length) {
       body.innerHTML = `
-        <div style="font-size:0.85rem;color:rgba(0,0,0,0.5);line-height:1.6">
-          Pas encore assez de données sur les 7 derniers jours pour dégager une tendance. Renseignez votre suivi quotidien, Mirella affinera son analyse.
+        <div style="text-align:center;padding:8px 4px 4px">
+          <div style="width:52px;height:52px;border-radius:16px;background:linear-gradient(135deg,var(--coral),var(--accent));display:flex;align-items:center;justify-content:center;margin:0 auto 16px;box-shadow:0 8px 20px rgba(255,107,107,0.3)">
+            <i class="ti ti-chart-line" style="font-size:24px;color:#fff"></i>
+          </div>
+          <div style="font-family:Open Sans,serif;font-size:1rem;font-weight:700;color:var(--charcoal);margin-bottom:8px">Votre analyse arrive bientôt</div>
+          <div style="font-size:0.82rem;color:rgba(0,0,0,0.5);line-height:1.6;margin-bottom:18px;max-width:280px;margin-left:auto;margin-right:auto">
+            Renseignez votre suivi quotidien pendant quelques jours et Mirella identifiera vos leviers de progression.
+          </div>
+          <button onclick="document.querySelector('[onclick=\\'saveHealthLog()\\']')?.scrollIntoView({behavior:'smooth',block:'center'})" style="border:none;background:var(--charcoal);color:#fff;padding:11px 22px;border-radius:999px;font-weight:700;font-size:0.8rem;cursor:pointer">
+            Renseigner mon suivi
+          </button>
         </div>`;
       return;
     }
