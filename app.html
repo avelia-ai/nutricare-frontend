@@ -6948,6 +6948,30 @@ function switchLang(lang) {
           </label>
         </div>
         <div id="pushStatusMsg" style="font-size:11px;color:#aaa;margin-top:10px;text-align:center"></div>
+      <!-- Personnalisation et memoire -->
+      <div style="background:white;border-radius:24px;border:1px solid rgba(255,154,108,0.10);padding:22px;margin-bottom:14px;box-shadow:0 4px 20px rgba(230,110,70,0.06),0 1px 3px rgba(0,0,0,0.02)">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px">
+          <div style="width:38px;height:38px;border-radius:13px;background:linear-gradient(135deg,#FF6B6B,#FF9A3C);display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:0 4px 10px rgba(255,107,107,0.28)">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M12 2a4 4 0 0 0-4 4v1a4 4 0 0 0-2 3.5V13a3 3 0 0 0 1.5 2.6L7 20h10l-.5-4.4A3 3 0 0 0 18 13v-2.5A4 4 0 0 0 16 7V6a4 4 0 0 0-4-4z"/></svg>
+          </div>
+          <div><div style="font-size:13px;font-weight:700;color:#1a1a1a">Personnalisation et memoire</div><div style="font-size:10px;color:#aaa;margin-top:1px">Controle ce que Mirella retient et t'envoie</div></div>
+        </div>
+        <p style="font-size:11.5px;color:#888;line-height:1.5;margin-bottom:14px">Les preferences alimentaires et habitudes que Mirella observe sont separees de tes donnees medicales (pathologies, medicaments), qui restent modifiables uniquement par toi dans la section Sante ci-dessus.</p>
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:12px 14px;background:#FFF8F5;border-radius:14px;margin-bottom:14px">
+          <span style="font-size:13px;font-weight:600;color:#2D2D2D">Notifications importantes uniquement</span>
+          <label style="position:relative;display:inline-block;width:44px;height:26px;flex-shrink:0">
+            <input type="checkbox" id="importantOnlyToggle" onchange="window.toggleImportantOnly(this)" style="opacity:0;width:0;height:0">
+            <span id="importantOnlySlider" style="position:absolute;cursor:pointer;inset:0;background-color:#e0e0e0;border-radius:26px;transition:.3s"></span>
+            <span id="importantOnlyKnob" style="position:absolute;height:20px;width:20px;left:3px;bottom:3px;background-color:white;border-radius:50%;transition:.3s;box-shadow:0 1px 3px rgba(0,0,0,0.2)"></span>
+          </label>
+        </div>
+        <div id="profileMemoriesWrap" style="display:none">
+          <div style="font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#aaa;margin-bottom:10px">Ce que Mirella a retenu</div>
+          <div id="profileMemoriesList" style="display:flex;flex-direction:column;gap:10px"></div>
+        </div>
+        <div id="profileMemoriesEmpty" style="display:none;text-align:center;padding:16px;font-size:11.5px;color:#bbb">Mirella n'a encore rien retenu a ton sujet.</div>
+      </div>
+
       </div>
 
       <!-- Boutons action -->
@@ -13661,6 +13685,8 @@ Réponds UNIQUEMENT en JSON valide avec cette structure exacte:
     }
     if (view === 'profile') {
       setTimeout(function() { if (typeof window.loadPushPreferenceState === 'function') window.loadPushPreferenceState(); }, 100);
+      setTimeout(function() { if (typeof window.loadProfilePersonalizationPrefs === 'function') window.loadProfilePersonalizationPrefs(); }, 100);
+      setTimeout(function() { if (typeof window.loadProfileMemories === 'function') window.loadProfileMemories(); }, 100);
       setTimeout(function() {
         updateReferralBlock();
         // Fallback : si toujours vide, re-fetch
@@ -14918,6 +14944,70 @@ window.togglePushPreference = async function(checkbox) {
     if (statusMsg) statusMsg.textContent = 'Erreur, reessaie plus tard.';
   }
   checkbox.disabled = false;
+
+window.toggleImportantOnly = async function(checkbox) {
+  var wantEnabled = checkbox.checked;
+  try {
+    await fetch(BACKEND_URL + '/api/push/preferences', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + authToken },
+      body: JSON.stringify({ important_only: wantEnabled })
+    });
+    window.updateImportantOnlyToggleUI(wantEnabled);
+  } catch (e) {
+    console.error('toggleImportantOnly error:', e);
+  }
+};
+
+window.updateImportantOnlyToggleUI = function(enabled) {
+  var slider = document.getElementById('importantOnlySlider');
+  var knob = document.getElementById('importantOnlyKnob');
+  var checkbox = document.getElementById('importantOnlyToggle');
+  if (checkbox) checkbox.checked = enabled;
+  if (slider) slider.style.backgroundColor = enabled ? '#FF6B6B' : '#e0e0e0';
+  if (knob) knob.style.left = enabled ? '21px' : '3px';
+};
+
+window.loadProfilePersonalizationPrefs = async function() {
+  try {
+    var res = await fetch(BACKEND_URL + '/api/push/preferences', {
+      headers: { Authorization: 'Bearer ' + authToken }
+    });
+    if (!res.ok) return;
+    var prefs = await res.json();
+    window.updateImportantOnlyToggleUI(!!prefs.important_only);
+  } catch (e) {
+    console.error('loadProfilePersonalizationPrefs error:', e);
+  }
+};
+
+window.loadProfileMemories = async function() {
+  var wrap = document.getElementById('profileMemoriesWrap');
+  var list = document.getElementById('profileMemoriesList');
+  var emptyMsg = document.getElementById('profileMemoriesEmpty');
+  if (!wrap || !list) return;
+  try {
+    var res = await fetch(BACKEND_URL + '/api/user-memories', {
+      headers: { Authorization: 'Bearer ' + authToken }
+    });
+    if (!res.ok) return;
+    var data = await res.json();
+    var memories = data.memories || [];
+    if (!memories.length) {
+      wrap.style.display = 'none';
+      if (emptyMsg) emptyMsg.style.display = 'block';
+      return;
+    }
+    if (emptyMsg) emptyMsg.style.display = 'none';
+    wrap.style.display = 'block';
+    window._mirellaMemoriesData = window._mirellaMemoriesData || {};
+    memories.forEach(function(m) { window._mirellaMemoriesData[m.id] = m; });
+    list.innerHTML = memories.map(function(m) { return mirellaMemoryCardHtml(m); }).join('');
+  } catch (e) {
+    console.error('loadProfileMemories error:', e);
+  }
+};
+
   setTimeout(function() { if (statusMsg) statusMsg.textContent = ''; }, 3000);
 };
 
