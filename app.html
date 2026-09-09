@@ -20983,7 +20983,7 @@ window.renderServerNotifList = function() {
     var isUnread = !n.read_at;
     var icon = typeIcons[n.type] || 'ti-bell';
     var color = typeColors[n.type] || '#D4730A';
-    return '<div data-notif-id="' + n.id + '" style="padding:12px 20px;border-bottom:1px solid #f5f5f5;background:' + (isUnread ? '#FFF8F5' : 'white') + ';display:flex;gap:12px;align-items:flex-start;cursor:pointer' + (isUnread ? ';border-left:3px solid #FF6B6B' : '') + '">' +
+    return '<div data-notif-id="' + n.id + '" style="padding:12px 20px;border-bottom:1px solid #f5f5f5;background:' + (isUnread ? '#FFF8F5' : 'white') + ';display:flex;gap:12px;align-items:flex-start;cursor:pointer;-webkit-user-select:none;user-select:none' + (isUnread ? ';border-left:3px solid #FF6B6B' : '') + '">' +
       '<div style="width:34px;height:34px;border-radius:10px;background:' + color + '1F;display:flex;align-items:center;justify-content:center;flex-shrink:0">' +
         '<i class="ti ' + icon + '" style="font-size:16px;color:' + color + '"></i>' +
       '</div>' +
@@ -21000,6 +21000,7 @@ if (!window._notifListDelegated) {
   document.addEventListener('click', function(e) {
     var el = e.target.closest('[data-notif-id]');
     if (!el) return;
+    e.preventDefault();
     var id = el.getAttribute('data-notif-id');
     var notif = _serverNotifs.find(function(n) { return String(n.id) === String(id); });
     if (notif) window.handleServerNotifClick(notif);
