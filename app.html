@@ -20891,10 +20891,14 @@ var _serverNotifs = [];
 
 window.loadServerNotifications = async function() {
   try {
-    await fetch(BACKEND_URL + '/api/events/detect', {
-      method: 'POST',
-      headers: { Authorization: 'Bearer ' + authToken }
-    });
+    var _lastDetect = parseInt(localStorage.getItem('mirella_last_events_detect') || '0');
+    if (Date.now() - _lastDetect > 15 * 60 * 1000) {
+      localStorage.setItem('mirella_last_events_detect', String(Date.now()));
+      await fetch(BACKEND_URL + '/api/events/detect', {
+        method: 'POST',
+        headers: { Authorization: 'Bearer ' + authToken }
+      });
+    }
     await fetch(BACKEND_URL + '/api/notifications/generate', {
       method: 'POST',
       headers: { Authorization: 'Bearer ' + authToken }
