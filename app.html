@@ -2965,6 +2965,7 @@ window.initHome = async function() {
   }
   if (typeof loadMirellaMemories === 'function') loadMirellaMemories();
   if (typeof loadServerNotifications === 'function') loadServerNotifications();
+  if (typeof window.autoInitPushIfEnabled === 'function') window.autoInitPushIfEnabled();
   if (typeof loadMirellaRecommendations === 'function') loadMirellaRecommendations();
   // Démarrer animation canvas home
   setTimeout(function(){
@@ -14849,6 +14850,22 @@ window.updatePushToggleUI = function(enabled) {
   if (checkbox) checkbox.checked = enabled;
   if (slider) slider.style.backgroundColor = enabled ? '#FF6B6B' : '#e0e0e0';
   if (knob) knob.style.left = enabled ? '21px' : '3px';
+};
+
+window.autoInitPushIfEnabled = async function() {
+  if (!window.Capacitor || !window.Capacitor.isNativePlatform || !window.Capacitor.isNativePlatform()) return;
+  try {
+    var res = await fetch(BACKEND_URL + '/api/push/preferences', {
+      headers: { Authorization: 'Bearer ' + authToken }
+    });
+    if (!res.ok) return;
+    var prefs = await res.json();
+    if (prefs && prefs.push_enabled) {
+      await window.initPushNotifications();
+    }
+  } catch (e) {
+    console.error('autoInitPushIfEnabled error:', e);
+  }
 };
 
 window.loadPushPreferenceState = async function() {
