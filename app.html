@@ -13610,12 +13610,12 @@ Réponds UNIQUEMENT en JSON valide avec cette structure exacte:
     }
     return plan;
   }
-  async function showView(view, btn) {
+  async function showView(view, btn, target) {
     if (view === 'ordonnance') { view = 'home'; }
     window._currentView = view;
     var waveCanvas = document.getElementById('wavesBg');
 
-    if (view === 'menus') setTimeout(buildWeekSelector, 50);
+    if (view === 'menus') { setTimeout(buildWeekSelector, 50); if (target) window.focusMenuTarget(target); }
     if (view === 'health') {
       loadInfoDuJour(); loadHydrationFromStorage(); loadMirellaInsights(); setTimeout(renderEvolutionGallery, 100);
       setTimeout(function() { switchSuiviTab(window._suiviActiveTab || 'principal'); }, 60);
@@ -14730,6 +14730,36 @@ function updateNutritionPanel(dayIndex) {
   window.updateCaloriesFromMeals();
 }
 
+window.focusMenuTarget = function(target) {
+  if (!target || !target.jour) return;
+  setTimeout(function() {
+    var dayDiv = document.querySelector('#menusDays [data-jour="' + target.jour + '"]');
+    if (!dayDiv || dayDiv.tagName !== 'DIV' || !dayDiv.parentElement || dayDiv.parentElement.id !== 'menusDays') {
+      dayDiv = document.querySelector('#menusDays > div[data-jour="' + target.jour + '"]');
+    }
+    if (!dayDiv) return;
+    var body = dayDiv.children[1];
+    var toggleBtn = dayDiv.querySelector('div[style*="border-radius:50%"]');
+    if (body && body.style.display === 'none') {
+      body.style.display = 'block';
+      if (toggleBtn) toggleBtn.textContent = '−';
+    }
+    dayDiv.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    if (target.slot) {
+      setTimeout(function() {
+        var row = dayDiv.querySelector('[data-slot="' + target.slot + '"]');
+        if (row) {
+          row.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          var originalBg = row.style.background;
+          row.style.transition = 'background 0.4s ease';
+          row.style.background = '#FFE8DC';
+          setTimeout(function() { row.style.background = originalBg || ''; }, 2200);
+        }
+      }, 350);
+    }
+  }, 300);
+};
+
 function renderMenu(menu) {
   const repasIcons = {
     petit_dejeuner: '<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/></svg>',
@@ -14780,6 +14810,7 @@ function renderMenu(menu) {
     const isToday = idx === (new Date().getDay() === 0 ? 6 : new Date().getDay() - 1);
     const dayDiv = document.createElement('div');
     dayDiv.style.cssText = 'background:white;border-radius:16px;overflow:hidden;margin-bottom:10px;box-shadow:0 2px 8px rgba(0,0,0,0.06)';
+    dayDiv.setAttribute('data-jour', jour.jour);
     const header = document.createElement('div');
     header.style.cssText = 'display:flex;align-items:center;justify-content:space-between;padding:16px 20px;cursor:pointer';
     const titleDiv = document.createElement('div');
@@ -14803,6 +14834,7 @@ function renderMenu(menu) {
       const rJson = JSON.stringify(r).replace(/"/g, '&quot;');
       const row = document.createElement('div');
       row.style.cssText = 'display:flex;align-items:center;gap:14px;padding:14px 16px;border-top:1px solid #f5f5f5';
+      row.setAttribute('data-jour', jour.jour); row.setAttribute('data-slot', repas);
       const imgWrap = document.createElement('div');
       imgWrap.style.cssText = 'width:70px;height:70px;border-radius:12px;overflow:hidden;flex-shrink:0;background:#F8F4F0';
       const img = document.createElement('img');
@@ -20859,6 +20891,10 @@ var _serverNotifs = [];
 
 window.loadServerNotifications = async function() {
   try {
+    await fetch(BACKEND_URL + '/api/events/detect', {
+      method: 'POST',
+      headers: { Authorization: 'Bearer ' + authToken }
+    });
     await fetch(BACKEND_URL + '/api/notifications/generate', {
       method: 'POST',
       headers: { Authorization: 'Bearer ' + authToken }
@@ -20924,7 +20960,7 @@ window.handleServerNotifClick = async function(notif) {
   if (idx > -1) _serverNotifs[idx].read_at = new Date().toISOString();
   window.updateServerNotifBadge();
   if (notif.deep_link && typeof showView === 'function') {
-    showView(notif.deep_link);
+    var _target = (notif.action && notif.action.jour) ? { jour: notif.action.jour, slot: notif.action.slot } : null; showView(notif.deep_link, null, _target);
   }
 };
 
