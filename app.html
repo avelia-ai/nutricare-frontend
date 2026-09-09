@@ -6729,48 +6729,57 @@ function switchLang(lang) {
 
     <!-- PROFILE VIEW -->
     <div id="profileView" style="padding:0 !important;position:fixed;top:56px;left:0;right:0;bottom:0;overflow-y:auto;z-index:10;background:#FFFCFA">
-      <!-- Hero header sombre -->
-      <div style="background:linear-gradient(135deg,#1a1a1a,#2d2d2d);padding:24px 20px;position:relative;overflow:hidden">
-        <div style="position:absolute;top:-40px;right:-40px;width:150px;height:150px;border-radius:50%;background:rgba(255,107,107,0.07)"></div>
-        <div style="position:absolute;bottom:-30px;left:40px;width:100px;height:100px;border-radius:50%;background:rgba(255,154,60,0.05)"></div>
-        <div style="display:flex;align-items:center;gap:16px;position:relative">
+      <!-- Hero header sombre premium -->
+      <div style="background:radial-gradient(circle at 15% 0%,#2a2320 0%,#1a1a1a 45%,#141414 100%);padding:28px 20px 26px;position:relative;overflow:hidden">
+        <div style="position:absolute;top:-50px;right:-50px;width:200px;height:200px;border-radius:50%;background:radial-gradient(circle,rgba(255,107,107,0.16) 0%,transparent 70%);filter:blur(4px)"></div>
+        <div style="position:absolute;bottom:-40px;left:30px;width:140px;height:140px;border-radius:50%;background:radial-gradient(circle,rgba(255,154,60,0.12) 0%,transparent 70%);filter:blur(6px)"></div>
+        <div style="position:absolute;top:20%;left:60%;width:80px;height:80px;border-radius:50%;background:radial-gradient(circle,rgba(255,255,255,0.05) 0%,transparent 70%);filter:blur(8px)"></div>
+        <div style="display:flex;align-items:center;gap:18px;position:relative">
           <div style="position:relative;flex-shrink:0;cursor:pointer" onclick="document.getElementById('profilePhotoInput').click()">
-            <div id="profileAvatarDisplay" style="width:76px;height:76px;border-radius:50%;background:linear-gradient(135deg,#FF6B6B,#FF9A3C);display:flex;align-items:center;justify-content:center;overflow:hidden;border:3px solid rgba(255,255,255,0.15)">
-              <span id="profileAvatarEmoji" style="font-size:2rem">👤</span>
+            <div style="position:absolute;inset:-3px;border-radius:50%;background:linear-gradient(135deg,#FF6B6B,#FF9A3C);opacity:0.5;filter:blur(6px)"></div>
+            <div id="profileAvatarDisplay" style="position:relative;width:80px;height:80px;border-radius:50%;background:linear-gradient(135deg,#FF6B6B,#FF9A3C);display:flex;align-items:center;justify-content:center;overflow:hidden;border:3px solid rgba(255,255,255,0.2);box-shadow:0 8px 24px rgba(0,0,0,0.3)">
+              <span id="profileAvatarEmoji" style="font-size:2.1rem">👤</span>
               <img id="profileAvatarImg" src="" style="display:none;width:100%;height:100%;object-fit:cover"/>
             </div>
-            <div style="position:absolute;bottom:0;right:0;width:24px;height:24px;background:#FF6B6B;border-radius:50%;display:flex;align-items:center;justify-content:center;border:2px solid #1a1a1a">
-              <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+            <div style="position:absolute;bottom:0;right:0;width:26px;height:26px;background:linear-gradient(135deg,#FF6B6B,#FF9A3C);border-radius:50%;display:flex;align-items:center;justify-content:center;border:2.5px solid #1a1a1a;box-shadow:0 2px 8px rgba(255,107,107,0.4)">
+              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
             </div>
           </div>
           <input type="file" id="profilePhotoInput" accept="image/*" style="display:none" onchange="handleProfilePhoto(this)">
           <div style="flex:1;min-width:0">
-            <div style="display:flex;align-items:center;gap:8px;margin-bottom:5px">
-              <div id="profileNameDisplay" style="font-size:17px;font-weight:800;color:white">Mon profil</div>
-              <div style="display:flex;align-items:center;gap:4px;background:rgba(255,107,107,0.2);border-radius:20px;padding:3px 9px">
-                <svg width="8" height="8" viewBox="0 0 24 24" fill="#FF9A3C"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-                <span id="profilePlanBadge" style="font-size:9px;font-weight:700;color:#FF9A3C;letter-spacing:.5px">PREMIUM</span>
+            <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;flex-wrap:wrap">
+              <div id="profileNameDisplay" style="font-size:18px;font-weight:800;color:white;letter-spacing:-0.01em">Mon profil</div>
+              <div style="display:flex;align-items:center;gap:4px;background:linear-gradient(135deg,rgba(255,107,107,0.25),rgba(255,154,60,0.25));border:1px solid rgba(255,154,60,0.35);border-radius:20px;padding:4px 10px;box-shadow:0 2px 8px rgba(255,107,107,0.15)">
+                <svg width="9" height="9" viewBox="0 0 24 24" fill="#FF9A3C"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                <span id="profilePlanBadge" style="font-size:9.5px;font-weight:800;color:#FFB870;letter-spacing:.6px">PREMIUM</span>
               </div>
             </div>
-            <div style="display:flex;gap:16px">
-              <div><div id="profileAgeDisplay" style="font-size:15px;font-weight:700;color:white">—</div><div style="font-size:9px;color:rgba(255,255,255,0.3);letter-spacing:.5px;margin-top:1px">ANS</div></div>
-              <div style="width:1px;background:rgba(255,255,255,0.08)"></div>
-              <div><div id="profilePathoCount" style="font-size:15px;font-weight:700;color:white">0</div><div style="font-size:9px;color:rgba(255,255,255,0.3);letter-spacing:.5px;margin-top:1px">PATHOS</div></div>
-              <div style="width:1px;background:rgba(255,255,255,0.08)"></div>
-              <div><div id="profileMedCount" style="font-size:15px;font-weight:700;color:white">0</div><div style="font-size:9px;color:rgba(255,255,255,0.3);letter-spacing:.5px;margin-top:1px">MÉDICS</div></div>
+            <div style="display:flex;gap:8px">
+              <div style="background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.08);border-radius:14px;padding:8px 12px;flex:1;text-align:center;backdrop-filter:blur(8px)">
+                <div id="profileAgeDisplay" style="font-size:16px;font-weight:800;color:white">—</div>
+                <div style="font-size:8.5px;color:rgba(255,255,255,0.4);letter-spacing:.6px;margin-top:1px">ANS</div>
+              </div>
+              <div style="background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.08);border-radius:14px;padding:8px 12px;flex:1;text-align:center;backdrop-filter:blur(8px)">
+                <div id="profilePathoCount" style="font-size:16px;font-weight:800;color:white">0</div>
+                <div style="font-size:8.5px;color:rgba(255,255,255,0.4);letter-spacing:.6px;margin-top:1px">PATHOS</div>
+              </div>
+              <div style="background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.08);border-radius:14px;padding:8px 12px;flex:1;text-align:center;backdrop-filter:blur(8px)">
+                <div id="profileMedCount" style="font-size:16px;font-weight:800;color:white">0</div>
+                <div style="font-size:8.5px;color:rgba(255,255,255,0.4);letter-spacing:.6px;margin-top:1px">MÉDICS</div>
+              </div>
             </div>
           </div>
         </div>
-        <button id="removePhotoBtn" onclick="removeProfilePhoto()" style="display:none;margin-top:10px;background:rgba(255,255,255,0.1);border:none;border-radius:8px;padding:5px 12px;color:rgba(255,255,255,0.5);font-size:11px;cursor:pointer;position:relative;z-index:1">Supprimer la photo</button>
+        <button id="removePhotoBtn" onclick="removeProfilePhoto()" style="display:none;margin-top:12px;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.1);border-radius:10px;padding:6px 14px;color:rgba(255,255,255,0.6);font-size:11px;cursor:pointer;position:relative;z-index:1">Supprimer la photo</button>
       </div>
 
       <div style="padding:14px 16px 32px">
 
       <!-- Carte infos perso -->
-      <div style="background:white;border-radius:22px;border:1px solid rgba(255,154,108,0.15);padding:20px;margin-bottom:12px">
+      <div style="background:white;border-radius:24px;border:1px solid rgba(255,154,108,0.10);padding:22px;margin-bottom:14px;box-shadow:0 4px 20px rgba(230,110,70,0.06),0 1px 3px rgba(0,0,0,0.02)">
         <div style="display:flex;align-items:center;gap:10px;margin-bottom:18px">
-          <div style="width:32px;height:32px;border-radius:10px;background:linear-gradient(135deg,#FF6B6B,#FF9A3C);display:flex;align-items:center;justify-content:center;flex-shrink:0">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.2" stroke-linecap="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          <div style="width:38px;height:38px;border-radius:13px;background:linear-gradient(135deg,#FF6B6B,#FF9A3C);display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:0 4px 10px rgba(255,107,107,0.28)">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
           </div>
           <div><div style="font-size:13px;font-weight:700;color:#1a1a1a">Informations personnelles</div><div style="font-size:10px;color:#aaa;margin-top:1px">Identité et données physiques</div></div>
         </div>
@@ -6826,10 +6835,10 @@ function switchLang(lang) {
       </div>
 
       <!-- Carte santé -->
-      <div style="background:white;border-radius:22px;border:1px solid rgba(255,154,108,0.15);padding:20px;margin-bottom:12px">
+      <div style="background:white;border-radius:24px;border:1px solid rgba(255,154,108,0.10);padding:22px;margin-bottom:14px;box-shadow:0 4px 20px rgba(230,110,70,0.06),0 1px 3px rgba(0,0,0,0.02)">
         <div style="display:flex;align-items:center;gap:10px;margin-bottom:18px">
-          <div style="width:32px;height:32px;border-radius:10px;background:linear-gradient(135deg,#FF6B6B,#FF9A3C);display:flex;align-items:center;justify-content:center;flex-shrink:0">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.2" stroke-linecap="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+          <div style="width:38px;height:38px;border-radius:13px;background:linear-gradient(135deg,#FF6B6B,#FF9A3C);display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:0 4px 10px rgba(255,107,107,0.28)">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
           </div>
           <div><div style="font-size:13px;font-weight:700;color:#1a1a1a">Sante et pathologies</div><div style="font-size:10px;color:#aaa;margin-top:1px">Conditions medicales suivies par Mirella</div></div>
         </div>
@@ -6844,10 +6853,10 @@ function switchLang(lang) {
       </div>
 
       <!-- Carte traitement -->
-      <div style="background:white;border-radius:22px;border:1px solid rgba(255,154,108,0.15);padding:20px;margin-bottom:12px">
+      <div style="background:white;border-radius:24px;border:1px solid rgba(255,154,108,0.10);padding:22px;margin-bottom:14px;box-shadow:0 4px 20px rgba(230,110,70,0.06),0 1px 3px rgba(0,0,0,0.02)">
         <div style="display:flex;align-items:center;gap:10px;margin-bottom:18px">
-          <div style="width:32px;height:32px;border-radius:10px;background:linear-gradient(135deg,#FF6B6B,#FF9A3C);display:flex;align-items:center;justify-content:center;flex-shrink:0">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.2" stroke-linecap="round"><path d="m10.5 20.5 10-10a4.95 4.95 0 1 0-7-7l-10 10a4.95 4.95 0 1 0 7 7Z"/><path d="m8.5 8.5 7 7"/></svg>
+          <div style="width:38px;height:38px;border-radius:13px;background:linear-gradient(135deg,#FF6B6B,#FF9A3C);display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:0 4px 10px rgba(255,107,107,0.28)">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round"><path d="m10.5 20.5 10-10a4.95 4.95 0 1 0-7-7l-10 10a4.95 4.95 0 1 0 7 7Z"/><path d="m8.5 8.5 7 7"/></svg>
           </div>
           <div><div style="font-size:13px;font-weight:700;color:#1a1a1a">Traitement medical</div><div style="font-size:10px;color:#aaa;margin-top:1px">Medicaments et interactions alimentaires</div></div>
         </div>
@@ -6862,10 +6871,10 @@ function switchLang(lang) {
       </div>
 
       <!-- Carte budget et prefs -->
-      <div style="background:white;border-radius:22px;border:1px solid rgba(255,154,108,0.15);padding:20px;margin-bottom:12px">
+      <div style="background:white;border-radius:24px;border:1px solid rgba(255,154,108,0.10);padding:22px;margin-bottom:14px;box-shadow:0 4px 20px rgba(230,110,70,0.06),0 1px 3px rgba(0,0,0,0.02)">
         <div style="display:flex;align-items:center;gap:10px;margin-bottom:18px">
-          <div style="width:32px;height:32px;border-radius:10px;background:linear-gradient(135deg,#FF6B6B,#FF9A3C);display:flex;align-items:center;justify-content:center;flex-shrink:0">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.2" stroke-linecap="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+          <div style="width:38px;height:38px;border-radius:13px;background:linear-gradient(135deg,#FF6B6B,#FF9A3C);display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:0 4px 10px rgba(255,107,107,0.28)">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
           </div>
           <div><div style="font-size:13px;font-weight:700;color:#1a1a1a">Budget et preferences</div><div style="font-size:10px;color:#aaa;margin-top:1px">Personnalisation des menus et conseils</div></div>
         </div>
@@ -6882,10 +6891,10 @@ function switchLang(lang) {
       </div>
 
       <!-- Parrainage -->
-      <div style="background:white;border-radius:22px;border:1px solid rgba(255,154,108,0.15);padding:20px;margin-bottom:12px">
+      <div style="background:white;border-radius:24px;border:1px solid rgba(255,154,108,0.10);padding:22px;margin-bottom:14px;box-shadow:0 4px 20px rgba(230,110,70,0.06),0 1px 3px rgba(0,0,0,0.02)">
         <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px">
-          <div style="width:32px;height:32px;border-radius:10px;background:linear-gradient(135deg,#FF6B6B,#FF9A3C);display:flex;align-items:center;justify-content:center;flex-shrink:0">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.2" stroke-linecap="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+          <div style="width:38px;height:38px;border-radius:13px;background:linear-gradient(135deg,#FF6B6B,#FF9A3C);display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:0 4px 10px rgba(255,107,107,0.28)">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
           </div>
           <div><div style="font-size:13px;font-weight:700;color:#1a1a1a">Parrainage</div><div style="font-size:10px;color:#aaa;margin-top:1px">Premium gratuit a vie des 50 filleuls</div></div>
         </div>
@@ -6904,10 +6913,10 @@ function switchLang(lang) {
       </div>
 
       <!-- Theme -->
-      <div style="background:white;border-radius:22px;border:1px solid rgba(255,154,108,0.15);padding:20px;margin-bottom:12px">
+      <div style="background:white;border-radius:24px;border:1px solid rgba(255,154,108,0.10);padding:22px;margin-bottom:14px;box-shadow:0 4px 20px rgba(230,110,70,0.06),0 1px 3px rgba(0,0,0,0.02)">
         <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px">
-          <div style="width:32px;height:32px;border-radius:10px;background:linear-gradient(135deg,#FF6B6B,#FF9A3C);display:flex;align-items:center;justify-content:center;flex-shrink:0">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><path d="m4.9 4.9 14.2 14.2"/></svg>
+          <div style="width:38px;height:38px;border-radius:13px;background:linear-gradient(135deg,#FF6B6B,#FF9A3C);display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:0 4px 10px rgba(255,107,107,0.28)">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><path d="m4.9 4.9 14.2 14.2"/></svg>
           </div>
           <div><div style="font-size:13px;font-weight:700;color:#1a1a1a">Theme de couleur</div></div>
         </div>
@@ -6922,10 +6931,10 @@ function switchLang(lang) {
       </div>
 
       <!-- Notifications push -->
-      <div style="background:white;border-radius:22px;border:1px solid rgba(255,154,108,0.15);padding:20px;margin-bottom:12px">
+      <div style="background:white;border-radius:24px;border:1px solid rgba(255,154,108,0.10);padding:22px;margin-bottom:14px;box-shadow:0 4px 20px rgba(230,110,70,0.06),0 1px 3px rgba(0,0,0,0.02)">
         <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px">
-          <div style="width:32px;height:32px;border-radius:10px;background:linear-gradient(135deg,#FF6B6B,#FF9A3C);display:flex;align-items:center;justify-content:center;flex-shrink:0">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.2" stroke-linecap="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+          <div style="width:38px;height:38px;border-radius:13px;background:linear-gradient(135deg,#FF6B6B,#FF9A3C);display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:0 4px 10px rgba(255,107,107,0.28)">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
           </div>
           <div><div style="font-size:13px;font-weight:700;color:#1a1a1a">Notifications push</div></div>
         </div>
