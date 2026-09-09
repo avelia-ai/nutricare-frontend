@@ -14851,6 +14851,8 @@ window.disablePushNotifications = async function() {
   } catch (e) {
     console.error('disablePushNotifications error:', e);
     return false;
+  }
+};
 
 window.updatePushToggleUI = function(enabled) {
   var slider = document.getElementById('pushToggleSlider');
@@ -14917,8 +14919,6 @@ window.togglePushPreference = async function(checkbox) {
   }
   checkbox.disabled = false;
   setTimeout(function() { if (statusMsg) statusMsg.textContent = ''; }, 3000);
-};
-  }
 };
 
 function renderMenu(menu) {
