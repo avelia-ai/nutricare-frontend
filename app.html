@@ -14148,6 +14148,7 @@ Réponds UNIQUEMENT en JSON valide avec cette structure exacte:
       localStorage.setItem('mirella_frigo_historique', JSON.stringify(clean));
     } catch(e) {}
     if(typeof window.renderFrigoHistorique==='function') window.renderFrigoHistorique();
+    renderUsageGauge('mon_frigo', 'usageGaugeFrigo', false, 'card');
   },100); } }
     var hv = document.getElementById('homeView'); if(hv) { hv.style.display = view === 'home' ? 'block' : 'none'; if(view === 'home') { setTimeout(function(){ if(typeof window.initHome==='function') window.initHome(); }, 100); var mc2=document.querySelector('.main-content'); if(mc2){mc2.style.overflow='auto';mc2.style.height='100%';} } }
     var mc = document.querySelector('.main-content');
@@ -19430,6 +19431,7 @@ function openNavCategory(cat) {
       <div style="font-size:0.82rem;color:#888">Mirella analyse le contenu de votre frigo</div>
     </div>
     <div id="frigoResult" style="display:none"></div>
+    <div id="usageGaugeFrigo"></div>
     <div style="background:#FFFCFA;border-radius:18px;border:1px solid rgba(255,154,108,0.15);padding:16px 18px;margin-top:14px">
       <div style="font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#FF6B6B;margin-bottom:12px">Historique des analyses</div>
       <div id="frigoHistoriqueList"><p style="font-size:0.82rem;color:#bbb;text-align:center;padding:8px">Aucune analyse effectuee.</p></div><div style="height:150px;width:100%;background:transparent"></div><div style="height:150px;width:100%;background:transparent"></div>
