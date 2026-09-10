@@ -9652,6 +9652,7 @@ function switchLang(lang) {
       <!-- Erreur -->
       <div id="bioError" style="display:none;background:#FEE;border:1px solid #FCC;border-radius:4px;padding:16px;font-size:0.85rem;color:#C55;margin-bottom:20px"></div>
     </div>
+    <div id="usageGaugeBiologie"></div>
     <!-- Historique bilans sanguins -->
     <div style="background:#FFFCFA;border-radius:18px;border:1px solid rgba(255,154,108,0.15);padding:16px 18px;margin-top:14px">
       <div style="font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#FF6B6B;margin-bottom:12px">Historique des bilans</div>
@@ -14160,7 +14161,7 @@ Réponds UNIQUEMENT en JSON valide avec cette structure exacte:
     if (view === 'history') loadHistory();
     if (view === 'chat') loadChatHistory();
     document.getElementById('passeportView').style.display = view === 'passeport' ? 'block' : 'none';
-    document.getElementById('biologieView').style.display = view === 'biologie' ? 'block' : 'none'; if (view === 'biologie') applyBiologiePlanGates();
+    document.getElementById('biologieView').style.display = view === 'biologie' ? 'block' : 'none'; if (view === 'biologie') { applyBiologiePlanGates(); renderUsageGauge('bilan_sanguin', 'usageGaugeBiologie', false, 'card'); }
     document.getElementById('entrepriseView').style.display = view === 'entreprise' ? 'block' : 'none';
     if (view === 'entreprise') initEntreprise();
     if (view === 'biologie') initBiologie();
