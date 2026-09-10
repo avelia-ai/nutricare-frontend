@@ -9889,6 +9889,7 @@ function switchLang(lang) {
   </div>
   <div id="produitError" style="display:none;background:#FFF0F0;border-radius:12px;padding:16px;color:#C62828;border:1px solid #FFCDD2;margin-bottom:20px"></div>
   <div id="produitResult" style="display:none"></div>
+  <div id="usageGaugeScanproduit"></div>
   <div style="background:#FFFCFA;border-radius:18px;border:1px solid rgba(255,154,108,0.15);padding:16px 18px;margin-top:14px">
     <div style="font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#FF6B6B;margin-bottom:12px">Historique des scans</div>
     <div id="scanproduitHistoriqueList"><p style="font-size:0.82rem;color:#bbb;text-align:center;padding:8px">Aucun scan enregistre.</p></div>
@@ -14128,7 +14129,7 @@ Réponds UNIQUEMENT en JSON valide avec cette structure exacte:
       }
     })();
     document.getElementById('ordonnanceView').style.display = view === 'ordonnance' ? 'block' : 'none';
-    document.getElementById('scanproduitView').style.display = view === 'scanproduit' ? 'block' : 'none'; if (view === 'scanproduit') applyScanproduitPlanGates();
+    document.getElementById('scanproduitView').style.display = view === 'scanproduit' ? 'block' : 'none'; if (view === 'scanproduit') { applyScanproduitPlanGates(); renderUsageGauge('scan_produit', 'usageGaugeScanproduit', false, 'card'); }
     document.getElementById('insightsView').style.display = view === 'insights' ? 'block' : 'none';
     var vv = document.getElementById('visageView'); if(vv) { vv.style.display = view === 'visage' ? 'block' : 'none'; if(view==='visage') { setTimeout(function(){
   // Nettoyer les entrees frigo (sans score) qui auraient ete sauvees dans visage_historique
