@@ -6190,6 +6190,7 @@ function switchLang(lang) {
         </div>
       </div>
       
+      <div id="usageGaugeChat"></div>
       <div class="chat-input-area">
         <textarea class="chat-input" id="chatInput" placeholder="Posez votre question à Mirella..." rows="1" onkeypress="handleChatKey(event)" oninput="autoResize(this)"></textarea>
         <button class="btn-send" id="sendBtn" onclick="sendMessage()">↑</button>
@@ -7180,6 +7181,16 @@ function switchLang(lang) {
         .pv-cmp-table td:first-child{text-align:left;color:#8a8a8a;font-weight:500}
         .pv-cmp-yes{color:#3E9E6B;font-weight:800}
         .pv-cmp-no{color:#c9c0b6}
+
+        .usage-gauge{padding:10px 16px;font-family:'DM Sans',sans-serif}
+        .usage-gauge-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px}
+        .usage-gauge-label{font-size:11.5px;font-weight:600;color:#8a8a8a}
+        .usage-gauge-count{font-size:11.5px;font-weight:800}
+        .usage-gauge-track{width:100%;height:6px;border-radius:6px;background:#F0EAE4;overflow:hidden}
+        .usage-gauge-fill{height:100%;border-radius:6px;transition:width .3s ease}
+        .usage-gauge-fill.ok{background:linear-gradient(90deg,#4ade80,#22c55e)}
+        .usage-gauge-fill.warn{background:linear-gradient(90deg,#FF9A3C,#FF7A1C)}
+        .usage-gauge-fill.danger{background:linear-gradient(90deg,#FF6B6B,#E63946)}
       </style>
 
       <div class="pv-promo">
@@ -14068,6 +14079,7 @@ Réponds UNIQUEMENT en JSON valide avec cette structure exacte:
   document.getElementById('mobileOverlay').style.display = 'none';
 }
     document.getElementById('chatView').style.display = view === 'chat' ? 'flex' : 'none';
+    if (view === 'chat') renderUsageGauge('chat', 'usageGaugeChat');
     if (view === 'chat') {
       ['menusView','healthView','analysisView','biologieView'].forEach(function(id) {
         var el = document.getElementById(id);
@@ -18298,6 +18310,7 @@ async function deleteProfessional(id) {
 
       conversationId = data.conversationId;
       addMessage('ai', data.reply);
+      renderUsageGauge('chat', 'usageGaugeChat', true);
     } catch (err) {
       hideTyping();
       addMessage('ai', "Erreur de connexion. Vérifiez votre connexion internet et réessayez.");
@@ -26663,6 +26676,45 @@ window.loadMirellaRecommendations = loadMirellaRecommendations;
   }
 
   // Vérifier si l'onboarding doit s'afficher
+  var _usageSummaryCache = null;
+  var _usageSummaryPromise = null;
+  function fetchUsageSummary(forceRefresh) {
+    if (!forceRefresh && _usageSummaryCache) return Promise.resolve(_usageSummaryCache);
+    if (!forceRefresh && _usageSummaryPromise) return _usageSummaryPromise;
+    _usageSummaryPromise = fetchWithAuth(BACKEND_URL + '/api/usage/summary')
+      .then(function(res) { return res.ok ? res.json() : null; })
+      .then(function(data) {
+        _usageSummaryCache = data;
+        _usageSummaryPromise = null;
+        return data;
+      })
+      .catch(function() { _usageSummaryPromise = null; return null; });
+    return _usageSummaryPromise;
+  }
+  function renderUsageGauge(feature, containerId, forceRefresh) {
+    var el = document.getElementById(containerId);
+    if (!el) return;
+    fetchUsageSummary(forceRefresh).then(function(data) {
+      if (!data || !Array.isArray(data.usage)) { el.innerHTML = ''; return; }
+      var item = data.usage.find(function(u) { return u.feature === feature; });
+      if (!item || item.unlimited || item.limit === null || item.limit === 0) { el.innerHTML = ''; return; }
+      var used = item.used || 0;
+      var limit = item.limit;
+      var remaining = item.remaining != null ? item.remaining : Math.max(0, limit - used);
+      var pct = limit > 0 ? Math.min(100, Math.round((used / limit) * 100)) : 0;
+      var stateClass = pct >= 90 ? 'danger' : (pct >= 60 ? 'warn' : 'ok');
+      var periodLabel = item.period === 'day' ? "aujourd'hui" : 'ce mois-ci';
+      var countLabelColor = stateClass === 'danger' ? '#E63946' : (stateClass === 'warn' ? '#FF7A1C' : '#2f9e63');
+      el.innerHTML =
+        '<div class="usage-gauge">' +
+          '<div class="usage-gauge-top">' +
+            '<span class="usage-gauge-label">' + (item.label || feature) + '</span>' +
+            '<span class="usage-gauge-count" style="color:' + countLabelColor + '">' + remaining + ' restant' + (remaining > 1 ? 's' : '') + ' ' + periodLabel + '</span>' +
+          '</div>' +
+          '<div class="usage-gauge-track"><div class="usage-gauge-fill ' + stateClass + '" style="width:' + pct + '%"></div></div>' +
+        '</div>';
+    });
+  }
   function checkOnboarding() {
     return new Promise(function(resolve) {
       function attempt() {
