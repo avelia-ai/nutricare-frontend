@@ -6866,14 +6866,11 @@ function switchLang(lang) {
           <input type="hidden" id="profileTaille">
           <div class="profile-field">
             <label class="profile-label">Niveau d'activité</label>
-            <select class="profile-input" id="profileActivite">
-              <option value="">Non renseigné</option>
-              <option value="sedentaire">🛋️ Sédentaire (peu/pas de sport)</option>
-              <option value="leger">🚶 Légèrement actif (1-3x/semaine)</option>
-              <option value="modere">🏃 Modérément actif (3-5x/semaine)</option>
-              <option value="actif">💪 Très actif (6-7x/semaine)</option>
-              <option value="tres_actif">🏋️ Extrêmement actif (sport intensif)</option>
-            </select>
+            <input type="hidden" id="profileActivite" value="">
+            <div id="profileActiviteTrigger" class="profile-input" onclick="toggleProfileActiviteDropdown()" style="display:flex;align-items:center;gap:10px;cursor:pointer">
+              <span id="profileActiviteLabel" style="color:#b0a49c">Non renseigné</span>
+            </div>
+            <div id="profileActiviteOptions" style="display:none;position:fixed;background:white;border-radius:14px;box-shadow:0 12px 32px rgba(0,0,0,0.18);z-index:99999;max-height:280px;overflow-y:auto;border:1px solid #F0E8E0"></div>
           </div>
           <div class="profile-field" style="grid-column:span 2">
             <label class="profile-label">Origine ethnique <span style="font-size:0.7rem;color:var(--soft);font-weight:400;">(facultatif - aide a personnaliser les conseils nutritionnels)</span></label>
@@ -10338,6 +10335,65 @@ function switchLang(lang) {
     document.getElementById('obActiviteOptions').style.display = 'none';
   }
 
+  function renderProfileActiviteOptions() {
+    var panel = document.getElementById('profileActiviteOptions');
+    if (!panel) return;
+    panel.innerHTML = ACTIVITE_OPTIONS.map(function(o) {
+      return '<div onclick="selectProfileActivite(\'' + o.value + '\',\'' + o.label + '\')" style="display:flex;align-items:center;gap:10px;padding:12px 15px;cursor:pointer;font-size:0.9rem;color:#2D2D2D;border-bottom:1px solid #F5F0EC" onmouseover="this.style.background=\'#FFF8F3\'" onmouseout="this.style.background=\'white\'">' + o.icon + '<span>' + o.label + '</span></div>';
+    }).join('');
+  }
+  function positionProfileActiviteDropdown() {
+    var trigger = document.getElementById('profileActiviteTrigger');
+    var panel = document.getElementById('profileActiviteOptions');
+    if (!trigger || !panel) return;
+    var rect = trigger.getBoundingClientRect();
+    panel.style.top = (rect.bottom + 6) + 'px';
+    panel.style.left = rect.left + 'px';
+    panel.style.width = rect.width + 'px';
+  }
+  function toggleProfileActiviteDropdown() {
+    var panel = document.getElementById('profileActiviteOptions');
+    if (!panel) return;
+    if (panel.style.display === 'none' || !panel.style.display) {
+      renderProfileActiviteOptions();
+      positionProfileActiviteDropdown();
+      panel.style.display = 'block';
+    } else {
+      panel.style.display = 'none';
+    }
+  }
+  function selectProfileActivite(value, label) {
+    document.getElementById('profileActivite').value = value;
+    syncProfileActiviteDisplay(value);
+    document.getElementById('profileActiviteOptions').style.display = 'none';
+  }
+  function syncProfileActiviteDisplay(value) {
+    var lbl = document.getElementById('profileActiviteLabel');
+    if (!lbl) return;
+    var opt = ACTIVITE_OPTIONS.find(function(o) { return o.value === value; });
+    if (opt) {
+      lbl.innerHTML = opt.icon + '<span style="color:#2D2D2D">' + opt.label + '</span>';
+    } else {
+      lbl.innerHTML = '<span style="color:#b0a49c">Non renseigné</span>';
+    }
+  }
+  window.addEventListener('resize', function() {
+    var panel = document.getElementById('profileActiviteOptions');
+    if (panel && panel.style.display === 'block') positionProfileActiviteDropdown();
+  });
+  window.addEventListener('scroll', function() {
+    var panel = document.getElementById('profileActiviteOptions');
+    if (panel && panel.style.display === 'block') positionProfileActiviteDropdown();
+  }, true);
+  document.addEventListener('click', function(e) {
+    var wrap = document.getElementById('profileActiviteTrigger');
+    var panel = document.getElementById('profileActiviteOptions');
+    if (!wrap || !panel) return;
+    if (!wrap.contains(e.target) && !panel.contains(e.target)) {
+      panel.style.display = 'none';
+    }
+  });
+
   window.addEventListener('resize', function() {
     var panel = document.getElementById('obActiviteOptions');
     if (panel && panel.style.display === 'block') positionActiviteDropdown();
@@ -11066,7 +11122,7 @@ function switchLang(lang) {
       if (document.getElementById('profileAge')) document.getElementById('profileAge').value = profile.age || '';
       if (document.getElementById('profilePoids')) document.getElementById('profilePoids').value = profile.poids || '';
       if (document.getElementById('profileTaille')) document.getElementById('profileTaille').value = profile.taille || '';
-      if (document.getElementById('profileActivite')) document.getElementById('profileActivite').value = profile.niveau_activite || '';
+      if (document.getElementById('profileActivite')) document.getElementById('profileActivite').value = profile.niveau_activite || ''; syncProfileActiviteDisplay(profile.niveau_activite || '');
       var btnCycle = document.getElementById('btnCycleFeminin'); if(btnCycle) btnCycle.style.display = profile.sexe === 'femme' ? 'flex' : 'none';
       if (document.getElementById('profileWakeUp')) document.getElementById('profileWakeUp').value = profile.wake_up || '07:00';
       if (document.getElementById('profileSleep')) document.getElementById('profileSleep').value = profile.sleep_time || '23:00';
@@ -25438,7 +25494,7 @@ window.maybeShowReviewPrompt = function() {
     if (document.getElementById('profileName')) document.getElementById('profileName').value = name || '';
     if (document.getElementById('profileAge')) document.getElementById('profileAge').value = age || '';
     if (document.getElementById('profileSexe')) document.getElementById('profileSexe').value = sexe || '';
-    if (document.getElementById('profileActivite')) document.getElementById('profileActivite').value = activite || '';
+    if (document.getElementById('profileActivite')) document.getElementById('profileActivite').value = activite || ''; syncProfileActiviteDisplay(activite || '');
 
     // Sauvegarder via API
     try {
