@@ -874,8 +874,8 @@ body {
 
 /* Top bar mobile */
 .mobile-topbar {
-  background: white !important;
-  border-bottom: 1px solid rgba(255,107,107,0.1) !important;
+  background: linear-gradient(180deg,#FFB347 0%,#FF6B6B 100%) !important;
+  border-bottom: none !important;
 }
 
 /* Boutons principaux */
@@ -5394,7 +5394,7 @@ function switchLang(lang) {
 <!-- ── APP PAGE ── -->
 <div class="page" id="appPage">
 <!-- Top bar mobile -->
-<div id="mobileTopbar" style="display:none;position:fixed;top:0;left:0;right:0;z-index:500;background:linear-gradient(180deg,#FFB347 0%,#FF6B6B 100%);border-bottom:none;padding:12px 16px;align-items:center;justify-content:space-between;box-shadow:none;transition:background 0.3s ease">
+<div id="mobileTopbar" style="display:none;position:fixed;top:0;left:0;right:0;z-index:500;background:linear-gradient(180deg,#FFB347 0%,#FF6B6B 100%);border-bottom:none;padding:calc(env(safe-area-inset-top) + 12px) 16px 12px;align-items:center;justify-content:space-between;box-shadow:none;transition:background 0.3s ease">
   <a href="#" onclick="showView('home');return false;" style="text-decoration:none;display:flex;align-items:center;gap:8px">
     <div id="topbarLogoDot" style="width:8px;height:8px;border-radius:50%;background:linear-gradient(135deg,var(--coral),var(--accent))"></div>
     <span id="topbarLogoText" style="font-family:Open Sans,serif;font-size:1.2rem;font-weight:600;color:white;transition:color 0.3s ease">Mirella</span>
@@ -27706,7 +27706,7 @@ body.dark-mode {
 }
 body.dark-mode #appPage { background: #121110 !important; }
 body.dark-mode .main-content { background: #121110 !important; }
-body.dark-mode #mobileTopbar { background: #1E1B18 !important; border-bottom-color: rgba(255,255,255,0.08) !important; }
+body.dark-mode #mobileTopbar { background: linear-gradient(180deg,#FFB347 0%,#FF6B6B 100%) !important; border-bottom: none !important; }
 body.dark-mode .bottom-nav { background: #1E1B18 !important; border-top-color: rgba(255,255,255,0.08) !important; }
 body.dark-mode .bottom-nav-item { color: rgba(255,255,255,0.5) !important; }
 body.dark-mode .bottom-nav-item.active { color: var(--coral) !important; }
