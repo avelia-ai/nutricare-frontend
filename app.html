@@ -7191,6 +7191,18 @@ function switchLang(lang) {
         .usage-gauge-fill.ok{background:linear-gradient(90deg,#4ade80,#22c55e)}
         .usage-gauge-fill.warn{background:linear-gradient(90deg,#FF9A3C,#FF7A1C)}
         .usage-gauge-fill.danger{background:linear-gradient(90deg,#FF6B6B,#E63946)}
+
+        .usage-gauge-card{background:#FFFCFA;border-radius:16px;padding:14px 16px;margin-bottom:16px;border:1px solid rgba(255,154,108,0.18);box-shadow:0 3px 10px rgba(0,0,0,0.03),0 12px 26px -10px rgba(230,110,70,0.16)}
+        .usage-gauge-card .usage-gauge-top{margin-bottom:10px}
+        .usage-gauge-card .usage-gauge-label{display:flex;align-items:center;gap:6px;font-size:0.72rem;font-weight:700;letter-spacing:0.04em;text-transform:uppercase;color:#C2604A}
+        .usage-gauge-card .usage-gauge-count{font-size:0.72rem;font-weight:800;padding:3px 10px;border-radius:999px;background:rgba(255,154,108,0.13);border:1px solid rgba(255,154,108,0.3)}
+        .usage-gauge-card .usage-gauge-count.ok{color:#2f9e63;background:rgba(76,222,128,0.12);border-color:rgba(76,222,128,0.3)}
+        .usage-gauge-card .usage-gauge-count.warn{color:#C2604A;background:rgba(255,154,108,0.13);border-color:rgba(255,154,108,0.3)}
+        .usage-gauge-card .usage-gauge-count.danger{color:#E63946;background:rgba(230,57,70,0.1);border-color:rgba(230,57,70,0.3)}
+        .usage-gauge-card .usage-gauge-track{height:8px;background:#F5EBE2}
+        .usage-gauge-card .usage-gauge-fill.ok{background:linear-gradient(90deg,#4ade80,#22c55e)}
+        .usage-gauge-card .usage-gauge-fill.warn{background:linear-gradient(135deg,var(--coral),var(--accent))}
+        .usage-gauge-card .usage-gauge-fill.danger{background:linear-gradient(90deg,#FF6B6B,#E63946)}
       </style>
 
       <div class="pv-promo">
@@ -14125,6 +14137,7 @@ Réponds UNIQUEMENT en JSON valide avec cette structure exacte:
     localStorage.setItem('mirella_visage_historique', JSON.stringify(vh));
   } catch(e) {}
   window.renderVisageHistorique();
+  renderUsageGauge('scan_visage', 'usageGaugeVisage', false, 'card');
 }, 200); applyVisagePlanGates(); } }
     var fv = document.getElementById('frigoView'); if(fv) { fv.style.display = view === 'frigo' ? 'block' : 'none'; if(view==='frigo') { applyFrigoPlanGates();
   setTimeout(function(){
@@ -19200,6 +19213,7 @@ function openNavCategory(cat) {
       </div>
     </div>
   </div>
+  <div id="usageGaugeVisage" style="position:relative;z-index:1"></div>
   <div id="visageUploadZone" style="margin-bottom:16px;position:relative;z-index:1">
     <div class="visUpload">
       <div class="visUploadInner">
@@ -26691,9 +26705,10 @@ window.loadMirellaRecommendations = loadMirellaRecommendations;
       .catch(function() { _usageSummaryPromise = null; return null; });
     return _usageSummaryPromise;
   }
-  function renderUsageGauge(feature, containerId, forceRefresh) {
+  function renderUsageGauge(feature, containerId, forceRefresh, variant) {
     var el = document.getElementById(containerId);
     if (!el) return;
+    var isCard = variant === 'card';
     fetchUsageSummary(forceRefresh).then(function(data) {
       if (!data || !Array.isArray(data.usage)) { el.innerHTML = ''; return; }
       var item = data.usage.find(function(u) { return u.feature === feature; });
@@ -26704,12 +26719,15 @@ window.loadMirellaRecommendations = loadMirellaRecommendations;
       var pct = limit > 0 ? Math.min(100, Math.round((used / limit) * 100)) : 0;
       var stateClass = pct >= 90 ? 'danger' : (pct >= 60 ? 'warn' : 'ok');
       var periodLabel = item.period === 'day' ? "aujourd'hui" : 'ce mois-ci';
-      var countLabelColor = stateClass === 'danger' ? '#E63946' : (stateClass === 'warn' ? '#FF7A1C' : '#2f9e63');
+      var wrapClass = isCard ? 'usage-gauge usage-gauge-card' : 'usage-gauge';
+      var countClass = isCard ? ('usage-gauge-count ' + stateClass) : 'usage-gauge-count';
+      var countStyle = isCard ? '' : ' style="color:' + (stateClass === 'danger' ? '#E63946' : (stateClass === 'warn' ? '#FF7A1C' : '#2f9e63')) + '"';
+      var sparkIcon = isCard ? '<svg viewBox="0 0 24 24" fill="none" stroke="#C2604A" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" width="10" height="10"><path d="M12 2l1.5 4.5L18 8l-4.5 1.5L12 14l-1.5-4.5L6 8l4.5-1.5z"/></svg>' : '';
       el.innerHTML =
-        '<div class="usage-gauge">' +
+        '<div class="' + wrapClass + '">' +
           '<div class="usage-gauge-top">' +
-            '<span class="usage-gauge-label">' + (item.label || feature) + '</span>' +
-            '<span class="usage-gauge-count" style="color:' + countLabelColor + '">' + remaining + ' restant' + (remaining > 1 ? 's' : '') + ' ' + periodLabel + '</span>' +
+            '<span class="usage-gauge-label">' + sparkIcon + (item.label || feature) + '</span>' +
+            '<span class="' + countClass + '"' + countStyle + '>' + remaining + ' restant' + (remaining > 1 ? 's' : '') + ' ' + periodLabel + '</span>' +
           '</div>' +
           '<div class="usage-gauge-track"><div class="usage-gauge-fill ' + stateClass + '" style="width:' + pct + '%"></div></div>' +
         '</div>';
