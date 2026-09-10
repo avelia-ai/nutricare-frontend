@@ -7616,6 +7616,7 @@ function switchLang(lang) {
       <div style="font-size:0.85rem;color:var(--accent)">Mirella analyse votre repas selon votre profil</div>
     </div>
 
+    <div id="usageGaugeAnalysis"></div>
     <!-- Historique -->
     <div style="background:#FFFFFF;border-radius:20px;overflow:hidden;box-shadow:0 0 0 1.5px rgba(255,154,108,0.22),0 14px 32px rgba(230,110,70,0.14);margin-top:14px">
       <div style="background:linear-gradient(135deg,#27AE60,#82E0AA);padding:16px 20px 26px;position:relative;overflow:hidden">
@@ -14191,6 +14192,7 @@ if (view === 'menus') {
   setTimeout(function(){ mv.scrollTop = 0; if(typeof initBottomNav==='function') initBottomNav(); }, 300);
 }
 document.getElementById('analysisView').style.display = view === 'analysis' ? 'block' : 'none';
+    if (view === 'analysis') renderUsageGauge('analyse_repas', 'usageGaugeAnalysis', false, 'card');
 if (view === 'analysis') loadAnalysis();
   }
   async function loadAnalysis() {
