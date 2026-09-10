@@ -13683,6 +13683,10 @@ Réponds UNIQUEMENT en JSON valide avec cette structure exacte:
   async function showView(view, btn, target) {
     if (view === 'ordonnance') { view = 'home'; }
     window._currentView = view;
+    var _mtb = document.getElementById('mobileTopbar');
+    if (_mtb) {
+      _mtb.style.background = (view === 'home') ? 'transparent' : '#FDFAF6';
+    }
     var waveCanvas = document.getElementById('wavesBg');
 
     if (view === 'menus') { setTimeout(buildWeekSelector, 50); if (target) window.focusMenuTarget(target); }
