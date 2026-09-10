@@ -530,7 +530,32 @@ window.addEventListener("error", function(e) {
   .fw-confetti{position:fixed;top:-10px;border-radius:2px;animation:confettiFall linear forwards;pointer-events:none;z-index:10000}
   @keyframes confettiFall{0%{transform:translateY(0) rotate(0deg);opacity:1}80%{opacity:1}100%{transform:translateY(110vh) rotate(720deg);opacity:0}}
 
-  </style>
+  
+.header-gradient-zone {
+  background: linear-gradient(180deg, #E2794A 0%, #EC9B72 35%, #F5C7AC 65%, #FBEAE0 85%, #FDFAF6 100%);
+  padding-top: env(safe-area-inset-top);
+}
+.top-header {
+  background: transparent !important;
+  box-shadow: none !important;
+  border-bottom: none !important;
+}
+.top-header-inner {
+  margin: 8px 10px 0;
+  background: rgba(255, 255, 255, 0.16);
+  border-radius: 20px;
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+}
+@supports not (backdrop-filter: blur(6px)) {
+  .top-header-inner { background: rgba(255, 255, 255, 0.28); }
+}
+.home-hero { background: transparent !important; }
+.home-hero h2, .home-hero .greeting-title { color: #5A3420 !important; }
+.home-hero .date, .home-hero .greeting-date { color: #8A5B3F !important; }
+.home-hero .pill, .home-hero .greeting-pill { background: rgba(255,255,255,0.55) !important; color: #5A3420 !important; }
+.home-hero .avatar-circle { background: rgba(255,255,255,0.55) !important; color: #C1592A !important; }
+</style>
 <style>
 /* ═══════════════════════════════════════
    MIRELLA DESIGN SYSTEM v2.0
@@ -5369,20 +5394,20 @@ function switchLang(lang) {
 <!-- ── APP PAGE ── -->
 <div class="page" id="appPage">
 <!-- Top bar mobile -->
-<div id="mobileTopbar" style="display:none;position:fixed;top:0;left:0;right:0;z-index:500;background:white;border-bottom:1px solid rgba(255,107,107,0.1);padding:12px 16px;align-items:center;justify-content:space-between;box-shadow:0 2px 8px rgba(0,0,0,0.06)">
+<div id="mobileTopbar" style="display:none;position:fixed;top:0;left:0;right:0;z-index:500;background:#FF6B6B;border-bottom:none;padding:12px 16px;align-items:center;justify-content:space-between;box-shadow:none;transition:background 0.3s ease">
   <a href="#" onclick="showView('home');return false;" style="text-decoration:none;display:flex;align-items:center;gap:8px">
-    <div style="width:8px;height:8px;border-radius:50%;background:linear-gradient(135deg,var(--coral),var(--accent))"></div>
-    <span style="font-family:Open Sans,serif;font-size:1.2rem;font-weight:600;color:var(--coral)">Mirella</span>
+    <div id="topbarLogoDot" style="width:8px;height:8px;border-radius:50%;background:linear-gradient(135deg,var(--coral),var(--accent))"></div>
+    <span id="topbarLogoText" style="font-family:Open Sans,serif;font-size:1.2rem;font-weight:600;color:white;transition:color 0.3s ease">Mirella</span>
   </a>
   <div style="display:flex;align-items:center;gap:10px">
-    <div id="darkModeToggleBtn" onclick="toggleDarkMode()" style="cursor:pointer;width:36px;height:36px;border-radius:50%;background:#FFF0EC;display:flex;align-items:center;justify-content:center">
+    <div id="darkModeToggleBtn" onclick="toggleDarkMode()" style="cursor:pointer;width:36px;height:36px;border-radius:50%;background:#FFF0EC;display:flex;align-items:center;justify-content:center;transition:background 0.3s ease">
       <span id="darkModeToggleIcon" style="font-size:1.05rem">🌙</span>
     </div>
-    <div onclick="toggleNotifications()" style="position:relative;cursor:pointer;width:36px;height:36px;border-radius:50%;background:#FFF0EC;display:flex;align-items:center;justify-content:center">
+    <div id="topbarNotifBtn" onclick="toggleNotifications()" style="position:relative;cursor:pointer;width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,0.22);display:flex;align-items:center;justify-content:center;transition:background 0.3s ease">
       <span style="font-size:1.1rem">🔔</span>
-      <div id="notifBadge" style="display:none;position:absolute;top:-2px;right:-2px;width:16px;height:16px;background:var(--coral);border-radius:50%;font-size:0.6rem;color:white;font-weight:700;display:flex;align-items:center;justify-content:center" id="notifBadge">0</div>
+      <div id="notifBadge" style="display:none;position:absolute;top:-2px;right:-2px;width:16px;height:16px;background:var(--coral);border-radius:50%;font-size:0.6rem;color:white;font-weight:700;display:flex;align-items:center;justify-content:center;border:1.5px solid white">0</div>
     </div>
-    <button onclick="logout()" style="background:none;border:1px solid rgba(255,107,107,0.3);border-radius:8px;padding:6px 10px;font-size:0.72rem;font-weight:600;color:var(--coral);cursor:pointer;font-family:DM Sans,sans-serif">Déconnexion</button>
+    <button id="topbarLogoutBtn" onclick="logout()" style="background:rgba(255,255,255,0.16);border:1px solid rgba(255,255,255,0.4);border-radius:8px;padding:6px 10px;font-size:0.72rem;font-weight:600;color:white;cursor:pointer;font-family:DM Sans,sans-serif;transition:color 0.3s ease,border-color 0.3s ease">Déconnexion</button>
     <div id="mobileUserAvatar" style="width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,var(--coral),var(--accent));display:flex;align-items:center;justify-content:center;color:white;font-weight:700;font-size:0.8rem;cursor:pointer" onclick="showView('profile')"></div>
   </div>
 </div>
