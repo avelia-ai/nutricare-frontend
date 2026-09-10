@@ -2068,7 +2068,7 @@ window.calcScore = function() {
   var score = Math.round(s);
   document.getElementById('scoreValue').textContent = score;
   document.getElementById('scoreBar').style.width = score + '%';
-  var lbl = score >= 80 ? 'Excellente journee !' : score >= 60 ? 'Bonne journee' : score >= 40 ? 'Journee correcte' : 'Journee difficile';
+  var lbl = score >= 80 ? 'Excellente journée !' : score >= 60 ? 'Bonne journée' : score >= 40 ? 'Journée correcte' : 'Journée difficile';
   document.getElementById('scoreLabel').textContent = lbl;
   var c = score >= 80 ? '#22c55e' : score >= 60 ? 'var(--accent)' : 'var(--coral)';
   document.getElementById('scoreValue').style.color = c;
@@ -2098,7 +2098,7 @@ window.analyseHealthLog = function() {
     headers: {'Content-Type':'application/json', 'Authorization': 'Bearer ' + token},
     body: JSON.stringify(payload)
   }).then(function(r){return r.json();}).then(function(d){
-    var comment = d.analyse || 'Bonne journee ! Continuez vos efforts.';
+    var comment = d.analyse || 'Bonne journée ! Continuez vos efforts.';
     var el = document.getElementById('healthAnalyseComment');
     el.style.whiteSpace = 'pre-wrap';
     el.textContent = comment;
@@ -2185,7 +2185,7 @@ window.analyseHealthLog = function() {
     headers: {'Content-Type':'application/json', 'Authorization': 'Bearer ' + token},
     body: JSON.stringify(payload)
   }).then(function(r){return r.json();}).then(function(d){
-    var comment = d.analyse || 'Bonne journee ! Continuez vos efforts.';
+    var comment = d.analyse || 'Bonne journée ! Continuez vos efforts.';
     var el = document.getElementById('healthAnalyseComment');
     el.innerHTML = window.renderMirellaAnalysis(comment);
     el.style.display = 'block';
@@ -2221,7 +2221,7 @@ window.analyseScore = function() {
     headers: {'Content-Type':'application/json', 'Authorization': 'Bearer ' + token},
     body: JSON.stringify({forme:forme, aliment:aliment, sport:sport, sommeil:sommeil, hydra:hydra, ressenti:ressenti, score:score})
   }).then(function(r){return r.json();}).then(function(d){
-    var comment = d.analyse || 'Bonne journee ! Continuez vos efforts.';
+    var comment = d.analyse || 'Bonne journée ! Continuez vos efforts.';
     var el = document.getElementById('scoreComment');
     el.style.whiteSpace = 'pre-wrap';
     el.textContent = comment;
@@ -2342,7 +2342,7 @@ window.initScoreSante = function() {
       if (todayScore) {
         document.getElementById('scoreValue').textContent = todayScore.score;
         document.getElementById('scoreBar').style.width = todayScore.score + '%';
-        var lbl = todayScore.score >= 80 ? 'Excellente journee !' : todayScore.score >= 60 ? 'Bonne journee' : todayScore.score >= 40 ? 'Journee correcte' : 'Journee difficile';
+        var lbl = todayScore.score >= 80 ? 'Excellente journée !' : todayScore.score >= 60 ? 'Bonne journée' : todayScore.score >= 40 ? 'Journée correcte' : 'Journée difficile';
         document.getElementById('scoreLabel').textContent = lbl;
         var c = todayScore.score >= 80 ? '#22c55e' : todayScore.score >= 60 ? 'var(--accent)' : 'var(--coral)';
         document.getElementById('scoreValue').style.color = c;
@@ -16664,7 +16664,7 @@ function updateHealthScoreSummaryHome(log, scoreDelta) {
   var norm = normalizeHealthLog(log);
   var avg = (energyNorm + norm.sleep + norm.hydra + norm.activ + norm.calm) / 5;
   var score = Math.round(avg * 100);
-  var lbl = score >= 80 ? 'Excellente journee !' : score >= 60 ? 'Bonne journee' : score >= 40 ? 'Journee correcte' : 'Journee difficile';
+  var lbl = score >= 80 ? 'Excellente journée !' : score >= 60 ? 'Bonne journée' : score >= 40 ? 'Journée correcte' : 'Journée difficile';
   valEl.textContent = score;
   lblEl.textContent = lbl;
   ringEl.style.strokeDashoffset = circ * (1 - score/100);
@@ -16887,7 +16887,7 @@ function updateHealthScoreSummary(log, scoreDelta) {
   var norm = normalizeHealthLog(log);
   var avg = (energyNorm + norm.sleep + norm.hydra + norm.activ + norm.calm) / 5;
   var score = Math.round(avg * 100);
-  var lbl = score >= 80 ? 'Excellente journee !' : score >= 60 ? 'Bonne journee' : score >= 40 ? 'Journee correcte' : 'Journee difficile';
+  var lbl = score >= 80 ? 'Excellente journée !' : score >= 60 ? 'Bonne journée' : score >= 40 ? 'Journée correcte' : 'Journée difficile';
   valEl.textContent = score;
   lblEl.textContent = lbl;
   ringEl.style.strokeDashoffset = circ * (1 - score/100);
