@@ -14152,7 +14152,7 @@ Réponds UNIQUEMENT en JSON valide avec cette structure exacte:
     if (view === 'pro') loadProfessionals();
     document.getElementById('protocolsView').style.display = view === 'protocols' ? 'block' : 'none';
     document.getElementById('chronoView').style.display = view === 'chrono' ? 'block' : 'none'; if(view==='chrono' && window.initScoreSante) window.initScoreSante();
-    document.getElementById('leaderboardView').style.display = view === 'leaderboard' ? 'block' : 'none';
+    document.getElementById('leaderboardView').style.display = view === 'leaderboard' ? 'block' : 'none'; if (view === 'leaderboard') loadLeaderboard();
     if (document.getElementById('visualView')) { document.getElementById('visualView').style.display = view === 'visual' ? 'block' : 'none'; if (view === 'visual') { applyVisualPlanGates(); renderUsageGauge('detection_visuelle', 'usageGaugeVisual', false, 'card'); } }
     document.getElementById('gamificationView').style.display = view === 'gamification' ? 'block' : 'none';
     if (document.getElementById('shopView')) document.getElementById('shopView').style.display = view === 'shop' ? 'block' : 'none';
