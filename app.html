@@ -8537,6 +8537,12 @@ function switchLang(lang) {
     </div>
   </div>
 
+  <div id="activiteTipsCard" data-suivi-tab="activite" style="display:none;background:#FFFCFA;border-radius:16px;padding:20px;margin-bottom:16px;box-shadow:0 0 0 1.5px rgba(255,154,108,0.22),0 14px 32px rgba(230,110,70,0.14)">
+    <div style="font-size:0.75rem;font-weight:700;color:#2D2D2D;margin-bottom:12px;text-transform:uppercase;letter-spacing:0.04em">Conseils de Mirella</div>
+    <div id="activiteTipText1" style="background:#F0FAF3;border-radius:12px;padding:12px 14px;margin-bottom:10px;font-size:0.85rem;color:#2D2D2D;line-height:1.5"></div>
+    <div id="activiteTipText2" style="background:#F0FAF3;border-radius:12px;padding:12px 14px;font-size:0.85rem;color:#2D2D2D;line-height:1.5"></div>
+  </div>
+
   <div id="sportHistoryCard" data-suivi-tab="activite" style="display:none;background:#FFFCFA;border-radius:16px;padding:20px;margin-bottom:16px;box-shadow:0 0 0 1.5px rgba(255,154,108,0.22),0 14px 32px rgba(230,110,70,0.14)">
     <div style="font-size:0.75rem;font-weight:700;color:#2D2D2D;margin-bottom:12px;text-transform:uppercase;letter-spacing:0.04em">Historique des seances</div>
     <div id="sportHistoryStats" style="display:none;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:16px">
@@ -17883,6 +17889,39 @@ function renderPredictionTab() {
     contentEl.innerHTML = '<div style="text-align:center;padding:20px 0;color:#888;font-size:0.85rem">Erreur de connexion. Reessayez plus tard.</div>';
   });
 }
+window._activiteApplyTips = function() {
+  var profile = JSON.parse(localStorage.getItem('nutricare_profile') || '{}');
+  var objectifs = profile.objectifs || [];
+  var niveauActivite = (profile.niveau_activite || '').toLowerCase();
+  var activiteFaible = niveauActivite === 'sedentaire' || niveauActivite === 'faible';
+  var steps = getTodaySteps();
+  var seances = window._sportSeances || [];
+
+  var tip1 = '';
+  if (steps < 3000) {
+    tip1 = '<b style=\"color:#2D2D2D\">Bouge un peu plus aujourd\'hui.</b> Tu es a ' + steps + ' pas pour le moment : une marche de 15 minutes suffit souvent a relancer la dynamique de la journee.';
+  } else if (objectifs.indexOf('perte_poids') > -1) {
+    tip1 = '<b style=\"color:#2D2D2D\">Pour ta perte de poids.</b> Vise regulierement 30 a 45 minutes de marche rapide ou de cardio : c\'est l\'un des leviers les plus efficaces pour creer un deficit calorique sain.';
+  } else if (objectifs.indexOf('masse') > -1) {
+    tip1 = '<b style=\"color:#2D2D2D\">Pour ta prise de masse.</b> Le renforcement musculaire (2 a 4 seances par semaine) est essentiel en complement de ton alimentation hypercalorique.';
+  } else {
+    tip1 = '<b style=\"color:#2D2D2D\">Belle regularite.</b> Continue a bouger chaque jour, meme un peu : c\'est la constance qui fait la difference sur le long terme.';
+  }
+
+  var tip2 = '';
+  if (!seances.length && activiteFaible) {
+    tip2 = '<b style=\"color:#2D2D2D\">Demarre en douceur.</b> Commence par de courtes sessions de marche ou d\'etirements : mieux vaut la regularite qu\'une intensite trop forte des le depart.';
+  } else if (objectifs.indexOf('performance') > -1) {
+    tip2 = '<b style=\"color:#2D2D2D\">Pour ta performance.</b> Alterne les intensites et respecte au moins un jour de recuperation entre deux seances exigeantes pour progresser sans te blesser.';
+  } else {
+    tip2 = '<b style=\"color:#2D2D2D\">Pense a l\'apres-effort.</b> Hydrate-toi bien et prends quelques minutes d\'etirements apres l\'exercice pour optimiser ta recuperation.';
+  }
+
+  var el1 = document.getElementById('activiteTipText1');
+  var el2 = document.getElementById('activiteTipText2');
+  if (el1) el1.innerHTML = tip1;
+  if (el2) el2.innerHTML = tip2;
+};
 function renderActiviteTab() {
   var countEl = document.getElementById('activitePasCount');
   if (countEl) countEl.textContent = getTodaySteps();
@@ -17891,6 +17930,7 @@ function renderActiviteTab() {
   if (typeof window.renderSportSeances === 'function') window.renderSportSeances();
   if (typeof renderSportHistory === 'function') renderSportHistory();
   updateActiviteCalories();
+  window._activiteApplyTips();
   // Demarre automatiquement le suivi par capteur, sauf si l'utilisateur l'a explicitement desactive
   if (localStorage.getItem('mirella_podometre_desactive') !== 'true' && !window._stepsSensorActive) {
     if (typeof DeviceMotionEvent !== 'undefined' && typeof DeviceMotionEvent.requestPermission !== 'function') {
