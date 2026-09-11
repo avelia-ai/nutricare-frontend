@@ -12854,11 +12854,44 @@ window._cardioExplTipVariants = {
 };
 window._cardioApplyExplDailyTips = function() {
   var dayIdx = Math.floor(Date.now() / 86400000);
+  var profile = JSON.parse(localStorage.getItem('nutricare_profile') || '{}');
+  var logs = window._healthLogs || [];
+  var pathologies = (profile.pathologies || []).map(function(p) { return (p || '').toLowerCase(); });
+  var cardioRisk = pathologies.some(function(p) {
+    return ['hypertension', 'cholesterol', 'cholestérol', 'cardiovasculaire', 'cardiaque'].some(function(kw) { return p.indexOf(kw) > -1; });
+  });
+
+  var recentBpm = logs.filter(function(l) { return l.heart_rate || l.bpm; }).slice(-5).map(function(l) { return l.heart_rate || l.bpm; });
+  var avgBpm = recentBpm.length ? (recentBpm.reduce(function(a,b){return a+b;},0) / recentBpm.length) : null;
+  var bpmEleve = avgBpm !== null && avgBpm > 90;
+
+  var recentSleep = logs.filter(function(l) { return l.sleep_hours; }).slice(-7).map(function(l) { return l.sleep_hours; });
+  var avgSleep = recentSleep.length ? (recentSleep.reduce(function(a,b){return a+b;},0) / recentSleep.length) : (profile.sommeil_heures_actuel || null);
+  var sommeilFaible = avgSleep !== null && avgSleep < 6;
+
+  var recentStress = logs.filter(function(l) { return l.stress_level != null; }).slice(-7).map(function(l) { return l.stress_level; });
+  var avgStress = recentStress.length ? (recentStress.reduce(function(a,b){return a+b;},0) / recentStress.length) : (profile.stress_actuel || null);
+  var stressEleve = avgStress !== null && avgStress >= 7;
+
+  var niveauActivite = (profile.niveau_activite || '').toLowerCase();
+  var activiteFaible = niveauActivite === 'sedentaire' || niveauActivite === 'faible';
+
+  var variantIndex = {
+    t1: dayIdx % 4,
+    t2: bpmEleve ? 1 : (sommeilFaible ? 2 : (dayIdx % 4)),
+    t3: activiteFaible ? 1 : (stressEleve ? 3 : (dayIdx % 4)),
+    t4: cardioRisk ? 3 : (dayIdx % 4)
+  };
+
   var map = { cardioExplTipText1: 't1', cardioExplTipText2: 't2', cardioExplTipText3: 't3', cardioExplTipText4: 't4' };
   Object.keys(map).forEach(function(elId) {
     var el = document.getElementById(elId);
-    var variants = window._cardioExplTipVariants[map[elId]];
-    if (el && variants) el.innerHTML = variants[dayIdx % variants.length];
+    var key = map[elId];
+    var variants = window._cardioExplTipVariants[key];
+    if (el && variants) {
+      var idx = Math.min(variantIndex[key], variants.length - 1);
+      el.innerHTML = variants[idx];
+    }
   });
 };
 window._cardioGetTier = function(bpm) {
