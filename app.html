@@ -8941,6 +8941,7 @@ function switchLang(lang) {
             </button>
             <div id="corpoAnalyseResult" style="margin-top:16px;display:none"></div>
           </div>
+          <div id="usageGaugeCorpo" style="margin-top:16px"></div>
 
           <!-- Galerie timeline -->
           <div style="background:#FFFFFF;border-radius:20px;overflow:hidden;margin-top:16px;box-shadow:0 0 0 1.5px rgba(255,154,108,0.18),0 16px 40px rgba(230,110,70,0.1)">
@@ -14106,7 +14107,7 @@ Réponds UNIQUEMENT en JSON valide avec cette structure exacte:
     document.getElementById('profileView').style.display = view === 'profile' ? 'block' : 'none'; if (view === 'profile') loadProfile();
     document.getElementById('pricingView').style.display = view === 'pricing' ? 'block' : 'none';
     if (view === 'pricing' && window.pvSelectTier) { window.pvSelectTier(window.currentPlan === 'premium' ? 'premium' : (window.currentPlan === 'standard' ? 'standard' : 'free')); }
-    document.getElementById('corpoView').style.display = view === 'corpo' ? 'block' : 'none'; if (view === 'corpo') applyCorpoPlanGates();
+    document.getElementById('corpoView').style.display = view === 'corpo' ? 'block' : 'none'; if (view === 'corpo') { applyCorpoPlanGates(); renderUsageGauge('evolution_corpo', 'usageGaugeCorpo', false, 'card'); }
     document.getElementById('proView').style.display = view === 'pro' ? 'block' : 'none';
     if (view === 'pro') loadProfessionals();
     document.getElementById('protocolsView').style.display = view === 'protocols' ? 'block' : 'none';
