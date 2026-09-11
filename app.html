@@ -7784,6 +7784,7 @@ function switchLang(lang) {
             <option value="boost_cognitif">🧠 Boost cognitif</option>
             <option value="sommeil">💤 Sommeil</option>
             <option value="cardio">❤️ Santé cardiaque</option>
+            <option value="diabete">🩸 Diabète</option>
           </select>
         </div>
         <div id="filterCycleWrap">
@@ -14598,12 +14599,23 @@ function preremplirFiltresMenu() {
     // Select "Objectif sante" (filterSante) -> sommeil ou cardio selon profil
     var selSante = document.getElementById('filterSante');
     if (selSante && !selSante.value) {
-      var cardioKeywords = ['hypertension', 'cholesterol', 'cholestérol', 'cardiovasculaire', 'cardiaque'];
-      var hasCardioRisk = pathologies.some(function(p) {
-        return cardioKeywords.some(function(kw) { return p.indexOf(kw) > -1; });
-      });
-      if (hasCardioRisk) {
-        selSante.value = 'cardio';
+      var pathologyKeywordMap = [
+        { filter: 'diabete', keywords: ['diabete', 'diabète', 'glycemie', 'glycémie', 'insulino'] },
+        { filter: 'cardio', keywords: ['hypertension', 'cholesterol', 'cholestérol', 'cardiovasculaire', 'cardiaque', 'coeur', 'arteriel', 'artériel', 'atherosclerose', 'athérosclérose'] },
+        { filter: 'sommeil', keywords: ['apnee du sommeil', 'apnée du sommeil', 'insomnie', 'trouble du sommeil', 'troubles du sommeil'] },
+        { filter: 'skincare', keywords: ['eczema', 'eczéma', 'psoriasis', 'acne', 'acné', 'rosacee', 'rosacée', 'dermatite'] },
+        { filter: 'boost_cognitif', keywords: ['alzheimer', 'parkinson', 'trouble cognitif', 'troubles cognitifs', 'tda', 'concentration'] }
+      ];
+      var matchedFilter = null;
+      for (var pk = 0; pk < pathologyKeywordMap.length; pk++) {
+        var entry = pathologyKeywordMap[pk];
+        var found = pathologies.some(function(p) {
+          return entry.keywords.some(function(kw) { return p.indexOf(kw) > -1; });
+        });
+        if (found) { matchedFilter = entry.filter; break; }
+      }
+      if (matchedFilter) {
+        selSante.value = matchedFilter;
         selSante.style.boxShadow = '0 0 0 2px #FF9A3C, 0 2px 8px rgba(0,0,0,0.04)';
       } else if (objectifs.indexOf('sommeil') > -1) {
         selSante.value = 'sommeil';
