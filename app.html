@@ -17643,11 +17643,41 @@ window._sommeilTipVariants = {
 };
 window._sommeilApplyDailyTips = function() {
   var dayIdx = Math.floor(Date.now() / 86400000);
+  var profile = JSON.parse(localStorage.getItem('nutricare_profile') || '{}');
+  var logs = window._healthLogs || [];
+  var recentSleep = logs.filter(function(l) { return l.sleep_hours; }).slice(-7).map(function(l) { return l.sleep_hours; });
+  var avgSleep = recentSleep.length ? (recentSleep.reduce(function(a,b){return a+b;},0) / recentSleep.length) : (profile.sommeil_heures_actuel || null);
+  var qualite = profile.sommeil_qualite_endormissement || '';
+  var reveils = profile.sommeil_reveils_nocturnes || '';
+  var niveauActivite = (profile.niveau_activite || '').toLowerCase();
+  var activiteFaible = niveauActivite === 'sedentaire' || niveauActivite === 'faible';
+
+  var dinerTard = false;
+  if (profile.meal_schedule && profile.meal_schedule.diner && profile.sleep_time) {
+    var dinerH = parseInt(String(profile.meal_schedule.diner).split(':')[0], 10);
+    var coucherH = parseInt(String(profile.sleep_time).split(':')[0], 10);
+    if (!isNaN(dinerH) && !isNaN(coucherH)) {
+      var ecart = coucherH >= dinerH ? coucherH - dinerH : (24 - dinerH) + coucherH;
+      dinerTard = ecart < 3;
+    }
+  }
+
+  var variantIndex = {
+    t1: (avgSleep !== null && avgSleep < 6) ? 0 : (qualite === 'difficile' ? 1 : (dayIdx % 3)),
+    t2: (reveils === 'souvent') ? 0 : (activiteFaible ? 1 : (dayIdx % 3)),
+    t3: (reveils === 'souvent') ? 0 : (dayIdx % 3),
+    t4: dinerTard ? 0 : (dayIdx % 3)
+  };
+
   var map = { sommeilTipText1: 't1', sommeilTipText2: 't2', sommeilTipText3: 't3', sommeilTipText4: 't4' };
   Object.keys(map).forEach(function(elId) {
     var el = document.getElementById(elId);
-    var variants = window._sommeilTipVariants[map[elId]];
-    if (el && variants) el.innerHTML = variants[dayIdx % variants.length];
+    var key = map[elId];
+    var variants = window._sommeilTipVariants[key];
+    if (el && variants) {
+      var idx = Math.min(variantIndex[key], variants.length - 1);
+      el.innerHTML = variants[idx];
+    }
   });
 };
 
