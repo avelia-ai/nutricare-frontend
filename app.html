@@ -14190,6 +14190,7 @@ if (view === 'menus') {
   var mv = document.getElementById('menusView');
   var menusTop = window._trialBannerActive ? '96px' : '56px';
   mv.style.cssText = 'display:block;position:fixed;top:' + menusTop + ';left:0;right:0;bottom:60px;overflow-y:auto;overflow-x:hidden;background:var(--cream);z-index:10;padding:0 0 120px 0;box-sizing:border-box;width:100%';
+  preremplirFiltresMenu();
   loadMenus();
   setTimeout(function(){ mv.scrollTop = 0; if(typeof initBottomNav==='function') initBottomNav(); }, 300);
 }
@@ -14569,6 +14570,52 @@ async function loadAnalysisHistory() {
   } catch(e) { console.error(e); }
 }
 
+function preremplirFiltresMenu() {
+  try {
+    var profile = JSON.parse(localStorage.getItem('nutricare_profile') || '{}');
+    var objectifs = profile.objectifs || [];
+    var pathologies = (profile.pathologies || []).map(function(p) { return (p || '').toLowerCase(); });
+
+    // Select "Objectif nutritionnel" (menuObjectif)
+    var selObjectif = document.getElementById('menuObjectif');
+    if (selObjectif && !selObjectif.value) {
+      var mapObjectif = {
+        'perte_poids': 'perte_de_poids',
+        'masse': 'prise_de_masse',
+        'performance': 'performance',
+        'maintien': 'maintenance',
+        'reequilibrage': 'sante'
+      };
+      for (var i = 0; i < objectifs.length; i++) {
+        if (mapObjectif[objectifs[i]]) {
+          selObjectif.value = mapObjectif[objectifs[i]];
+          selObjectif.style.boxShadow = '0 0 0 2px #FF9A3C, 0 2px 8px rgba(0,0,0,0.04)';
+          break;
+        }
+      }
+    }
+
+    // Select "Objectif sante" (filterSante) -> sommeil ou cardio selon profil
+    var selSante = document.getElementById('filterSante');
+    if (selSante && !selSante.value) {
+      var cardioKeywords = ['hypertension', 'cholesterol', 'cholestérol', 'cardiovasculaire', 'cardiaque'];
+      var hasCardioRisk = pathologies.some(function(p) {
+        return cardioKeywords.some(function(kw) { return p.indexOf(kw) > -1; });
+      });
+      if (hasCardioRisk) {
+        selSante.value = 'cardio';
+        selSante.style.boxShadow = '0 0 0 2px #FF9A3C, 0 2px 8px rgba(0,0,0,0.04)';
+      } else if (objectifs.indexOf('sommeil') > -1) {
+        selSante.value = 'sommeil';
+        selSante.style.boxShadow = '0 0 0 2px #FF9A3C, 0 2px 8px rgba(0,0,0,0.04)';
+      }
+      if (selSante.value) window.applySelectFilter('filterSante');
+    }
+    if (selObjectif && selObjectif.value) {
+      // rien a synchroniser ici, menuObjectif est lu directement a la generation
+    }
+  } catch(e) { console.error('preremplirFiltresMenu error:', e); }
+}
 var activeMenuFilters = new Set();
   window.applySelectFilter = function() {
     activeMenuFilters.clear();
