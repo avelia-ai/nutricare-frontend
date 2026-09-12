@@ -16942,12 +16942,18 @@ function loadLeaderboard(page) {
       pag.style.display = 'flex';
       var prevDisabled = leaderboardCurrentPage <= 1;
       var nextDisabled = leaderboardCurrentPage >= leaderboardTotalPages;
+      var iconBtnStyle = function(disabled) {
+        return 'width:38px;height:38px;flex-shrink:0;border-radius:10px;border:none;background:' + (disabled ? '#F2EFE9' : 'white') + ';box-shadow:' + (disabled ? 'none' : '0 2px 6px rgba(0,0,0,0.06)') + ';font-size:0.9rem;font-weight:700;color:' + (disabled ? '#ccc' : '#555') + ';cursor:' + (disabled ? 'default' : 'pointer') + ';display:flex;align-items:center;justify-content:center';
+      };
+      var mainBtnStyle = function(disabled) {
+        return 'flex:1;min-width:0;padding:10px 8px;border-radius:12px;border:none;background:' + (disabled ? '#F2EFE9' : 'linear-gradient(135deg,var(--coral),var(--accent))') + ';font-size:0.78rem;font-weight:700;color:' + (disabled ? '#ccc' : 'white') + ';cursor:' + (disabled ? 'default' : 'pointer') + ';white-space:nowrap;overflow:hidden;text-overflow:ellipsis';
+      };
       pag.innerHTML =
-        '<button onclick="loadLeaderboard(1)" ' + (prevDisabled ? 'disabled' : '') + ' style="flex:0;padding:10px 14px;border-radius:12px;border:1px solid #eee;background:white;font-size:0.8rem;font-weight:600;color:' + (prevDisabled ? '#ccc' : '#1a1a1a') + ';cursor:' + (prevDisabled ? 'default' : 'pointer') + '">«</button>' +
-        '<button onclick="loadLeaderboard(' + (leaderboardCurrentPage - 1) + ')" ' + (prevDisabled ? 'disabled' : '') + ' style="flex:1;padding:10px 14px;border-radius:12px;border:1px solid #eee;background:white;font-size:0.8rem;font-weight:600;color:' + (prevDisabled ? '#ccc' : '#1a1a1a') + ';cursor:' + (prevDisabled ? 'default' : 'pointer') + '">‹ Précédent</button>' +
-        '<div style="padding:0 8px;font-size:0.8rem;font-weight:600;color:#888;white-space:nowrap">' + leaderboardCurrentPage + ' / ' + leaderboardTotalPages + '</div>' +
-        '<button onclick="loadLeaderboard(' + (leaderboardCurrentPage + 1) + ')" ' + (nextDisabled ? 'disabled' : '') + ' style="flex:1;padding:10px 14px;border-radius:12px;border:1px solid #eee;background:white;font-size:0.8rem;font-weight:600;color:' + (nextDisabled ? '#ccc' : '#1a1a1a') + ';cursor:' + (nextDisabled ? 'default' : 'pointer') + '">Suivant ›</button>' +
-        '<button onclick="loadLeaderboard(' + leaderboardTotalPages + ')" ' + (nextDisabled ? 'disabled' : '') + ' style="flex:0;padding:10px 14px;border-radius:12px;border:1px solid #eee;background:white;font-size:0.8rem;font-weight:600;color:' + (nextDisabled ? '#ccc' : '#1a1a1a') + ';cursor:' + (nextDisabled ? 'default' : 'pointer') + '">»</button>';
+        '<button onclick="loadLeaderboard(1)" ' + (prevDisabled ? 'disabled' : '') + ' style="' + iconBtnStyle(prevDisabled) + '">«</button>' +
+        '<button onclick="loadLeaderboard(' + (leaderboardCurrentPage - 1) + ')" ' + (prevDisabled ? 'disabled' : '') + ' style="' + mainBtnStyle(prevDisabled) + '">‹ Précédent</button>' +
+        '<div style="flex-shrink:0;padding:8px 12px;border-radius:10px;background:#F8F5F0;font-size:0.78rem;font-weight:700;color:#888;white-space:nowrap">' + leaderboardCurrentPage + ' / ' + leaderboardTotalPages + '</div>' +
+        '<button onclick="loadLeaderboard(' + (leaderboardCurrentPage + 1) + ')" ' + (nextDisabled ? 'disabled' : '') + ' style="' + mainBtnStyle(nextDisabled) + '">Suivant ›</button>' +
+        '<button onclick="loadLeaderboard(' + leaderboardTotalPages + ')" ' + (nextDisabled ? 'disabled' : '') + ' style="' + iconBtnStyle(nextDisabled) + '">»</button>';
     }
   }).catch(function(e){
     console.error(e);
