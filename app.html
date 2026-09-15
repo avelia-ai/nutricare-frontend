@@ -18065,6 +18065,16 @@ function switchSuiviTab(tab, btn) {
   if (tab === 'prediction' && typeof renderPredictionTab === 'function') { renderPredictionTab(); }
 }
 
+function escapeHtml(str) {
+  if (str === null || str === undefined) return '';
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+window.escapeHtml = escapeHtml;
 function renderHealthHistory(logs) {
   const el = document.getElementById('healthHistory');
   if (!logs.length) { el.innerHTML = '<p style="font-size:0.82rem;color:var(--accent)">Aucune donnée enregistrée.</p>'; return; }
@@ -18080,7 +18090,7 @@ function renderHealthHistory(logs) {
         ${l.sleep_hours ? ` · ${l.sleep_hours}h` : ''}
         ${l.hydration_liters ? ` · ${l.hydration_liters}L` : ''}
       </div>
-      ${l.notes ? `<div style="color:#666;margin-top:4px;font-style:italic;font-size:0.78rem">"${l.notes}"</div>` : ''}
+      ${l.notes ? `<div style="color:#666;margin-top:4px;font-style:italic;font-size:0.78rem">"${escapeHtml(l.notes)}"</div>` : ''}
       </div>
     </div>`).join('');
 }
