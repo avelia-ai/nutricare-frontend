@@ -10296,22 +10296,6 @@ function switchLang(lang) {
   })();
 
   // ── STATE ──
-  // Restaurer session après retour Stripe
-  (function() {
-    var params = new URLSearchParams(window.location.search);
-    var paid = params.get('paid');
-    if (paid) {
-      window.history.replaceState({}, '', window.location.pathname);
-      fetch('https://nutricare-backend-production.up.railway.app/api/billing/get-token?uid=' + paid)
-        .then(function(r){ return r.json(); })
-        .then(function(d){
-          if (d.token) {
-            localStorage.setItem('nutricare_token', d.token);
-            window.location.reload();
-          }
-        }).catch(function(){});
-    }
-  })();
   let authToken = localStorage.getItem('nutricare_token') || null;
   window._authToken = authToken;
   window.currentPlan = 'free';
