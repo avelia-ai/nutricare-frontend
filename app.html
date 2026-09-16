@@ -5424,7 +5424,7 @@ function switchLang(lang) {
     <span id="topbarLogoText" style="font-family:Open Sans,serif;font-size:1.2rem;font-weight:600;color:#3A2214;transition:color 0.3s ease">Mirella</span>
   </a>
   <div style="display:flex;align-items:center;gap:10px">
-    <div id="darkModeToggleBtn" onclick="toggleDarkMode()" style="cursor:pointer;width:36px;height:36px;border-radius:50%;background:#FFF0EC;display:flex;align-items:center;justify-content:center;transition:background 0.3s ease">
+    <div id="darkModeToggleBtn" onclick="toggleDarkMode()" style="display:none;cursor:pointer;width:36px;height:36px;border-radius:50%;background:#FFF0EC;align-items:center;justify-content:center;transition:background 0.3s ease">
       <span id="darkModeToggleIcon" style="font-size:1.05rem">🌙</span>
     </div>
     <div id="topbarNotifBtn" onclick="toggleNotifications()" style="position:relative;cursor:pointer;width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,0.35);display:flex;align-items:center;justify-content:center;transition:background 0.3s ease">
@@ -28317,13 +28317,9 @@ window.toggleDarkMode = function() {
   if (icon) icon.textContent = isDark ? '☀️' : '🌙';
 };
 (function() {
-  if (localStorage.getItem('mirella_dark_mode') === 'true') {
-    document.addEventListener('DOMContentLoaded', function() {
-      document.body.classList.add('dark-mode');
-      var icon = document.getElementById('darkModeToggleIcon');
-      if (icon) icon.textContent = '☀️';
-    });
-  }
+  // Mode sombre temporairement desactive - on retire aussi la preference sauvegardee
+  localStorage.removeItem('mirella_dark_mode');
+  document.body.classList.remove('dark-mode');
 })();
 </script>
   <!-- Modale : Ajuster mes horaires de repas -->
