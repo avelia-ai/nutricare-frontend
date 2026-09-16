@@ -8274,8 +8274,8 @@ function switchLang(lang) {
       <div style="position:absolute;bottom:-60px;left:-20px;width:140px;height:140px;background:radial-gradient(circle,rgba(255,107,107,0.15),transparent 70%);pointer-events:none"></div>
       <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;position:relative">
         <div>
-          <div style="font-size:0.7rem;color:rgba(255,255,255,0.6);font-weight:700;letter-spacing:0.04em;margin-bottom:4px">PREDICTION</div>
-          <div style="font-size:1.05rem;color:white;font-weight:700">Votre etat a venir</div>
+          <div style="font-size:0.7rem;color:rgba(255,255,255,0.6);font-weight:700;letter-spacing:0.04em;margin-bottom:4px">PRÉDICTION</div>
+          <div style="font-size:1.05rem;color:white;font-weight:700">Votre état à venir</div>
         </div>
         <div style="width:56px;height:56px;border-radius:14px;overflow:hidden;flex-shrink:0;box-shadow:0 4px 10px rgba(0,0,0,0.2)">
           <video autoplay muted loop playsinline style="width:100%;height:100%;object-fit:cover;display:block">
@@ -17947,7 +17947,7 @@ function renderPredictionTab() {
     }
 
     if (d.tendances_observees && d.tendances_observees.length) {
-      html += '<div style="font-size:0.72rem;font-weight:700;color:#999;text-transform:uppercase;letter-spacing:0.04em;margin-bottom:8px">Tendances observees</div>';
+      html += '<div style="font-size:0.72rem;font-weight:700;color:#999;text-transform:uppercase;letter-spacing:0.04em;margin-bottom:8px">Tendances observées</div>';
       html += '<div style="margin-bottom:18px">';
       d.tendances_observees.forEach(function(t) {
         html += '<div style="display:flex;align-items:flex-start;gap:8px;margin-bottom:6px">' +
@@ -17958,7 +17958,7 @@ function renderPredictionTab() {
     }
 
     if (d.risques && d.risques.length) {
-      html += '<div style="font-size:0.72rem;font-weight:700;color:#999;text-transform:uppercase;letter-spacing:0.04em;margin-bottom:8px">Risques identifies</div>';
+      html += '<div style="font-size:0.72rem;font-weight:700;color:#999;text-transform:uppercase;letter-spacing:0.04em;margin-bottom:8px">Risques identifiés</div>';
       html += '<div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:18px">';
       d.risques.forEach(function(r) {
         var rc = couleurs[r.niveau === 'eleve' ? 'elevee' : r.niveau === 'modere' ? 'moderee' : 'faible'];
