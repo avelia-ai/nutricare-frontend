@@ -3932,6 +3932,10 @@ window.initHome = async function() {
     if (objectifs.indexOf('sommeil') > -1 && profile.sommeil_reveils_nocturnes === 'souvent') pushAdvice('tes r\u00e9veils nocturnes fr\u00e9quents peuvent impacter ta r\u00e9cup\u00e9ration : \u00e9vite les \u00e9crans et les repas lourds avant le coucher, et limite la caf\u00e9ine apr\u00e8s 14h', 2);
     if (profile.sport_pratique) pushAdvice('continue ta pratique de ' + profile.sport_pratique + ', la r\u00e9gularit\u00e9 est la cl\u00e9 des r\u00e9sultats : vise 2 \u00e0 3 s\u00e9ances par semaine et laisse au moins un jour de repos entre deux efforts intenses', 1);
 
+    var _pcNoRecentData = _tlStress === null && _tlEnergy === null && _tlSleep === null &&
+      (!window._pcRecentAverages || (window._pcRecentAverages.stress === null && window._pcRecentAverages.energy === null && window._pcRecentAverages.sleep === null));
+    if (_pcNoRecentData) pushAdvice('tu n\'as pas renseign\u00e9 ton suivi depuis un moment, compl\u00e8te-le pour que je puisse continuer \u00e0 t\'accompagner vers tes objectifs avec des conseils vraiment adapt\u00e9s \u00e0 toi', 6);
+
     if (objectifs.indexOf('perte_poids') > -1) {
       if (hasData && profile.poids_objectif) {
         var _ecartObj = Math.round((poids - profile.poids_objectif) * 10) / 10;
