@@ -16870,8 +16870,9 @@ var _shopCurrentCat = 'all';
 
 function loadShop() {
   // Données statiques en attendant le backend
-  var coins = parseInt(localStorage.getItem('shop_coins') || '150');
+  var coins = getMirels();
   document.getElementById('shopCoinsDisplay').textContent = coins;
+  fetchMirelsBalance();
   var owned = JSON.parse(localStorage.getItem('shop_owned') || '[]');
   var equipped = localStorage.getItem('shop_equipped') || '';
   _shopData = [
@@ -16935,7 +16936,7 @@ function renderShopGrid(items) {
 }
 
 function shopAction(itemId, action) {
-  var coins = parseInt(localStorage.getItem('shop_coins') || '150');
+  var coins = getMirels();
   var owned = JSON.parse(localStorage.getItem('shop_owned') || '[]');
   var item = _shopData.find(function(i) { return i.id === itemId; });
   if (!item) return;
@@ -16943,7 +16944,7 @@ function shopAction(itemId, action) {
     if (coins < item.price) { alert('Pas assez de <span style="display:inline-flex;align-items:center;justify-content:center;width:1.4em;height:1.4em;background:radial-gradient(circle at 35% 35%,#FFE566,#FFB300);border-radius:50%;box-shadow:0 2px 4px rgba(0,0,0,0.2);vertical-align:middle;font-size:0.75em;font-weight:900;color:#B8730A;font-family:DM Sans,sans-serif">M</span> coins !'); return; }
     coins -= item.price;
     owned.push(itemId);
-    localStorage.setItem('shop_coins', coins);
+    setMirelsCache(coins);
     localStorage.setItem('shop_owned', JSON.stringify(owned));
     document.getElementById('shopCoinsDisplay').textContent = coins;
   } else if (action === 'equip') {
