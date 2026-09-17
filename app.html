@@ -6909,6 +6909,26 @@ function switchLang(lang) {
           <div style="font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#aaa;margin-bottom:6px">Pathologies</div>
           <input type="text" class="profile-input" id="profilePathologies" placeholder="ex: diabete type 2, hypertension" style="border-radius:12px;border:1px solid rgba(255,154,108,0.2);background:#FFFCFA;padding:12px 14px;font-size:13px">
         </div>
+        <div style="margin-bottom:14px">
+          <div style="font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#aaa;margin-bottom:6px">Tour de taille (cm) <span style="font-weight:400;color:#ccc;text-transform:none;letter-spacing:0">- optionnel, améliore la fiabilité de l'évaluation de risque</span></div>
+          <input type="number" class="profile-input" id="profileWaistCircumference" placeholder="ex: 85" style="border-radius:12px;border:1px solid rgba(255,154,108,0.2);background:#FFFCFA;padding:12px 14px;font-size:13px">
+        </div>
+        <div style="margin-bottom:14px">
+          <div style="font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#aaa;margin-bottom:6px">Antécédents familiaux de diabète</div>
+          <select class="profile-input" id="profileFamilyDiabetes" style="border-radius:12px;border:1px solid rgba(255,154,108,0.2);background:#FFFCFA;padding:12px 14px;font-size:13px">
+            <option value="aucun">Aucun antécédent connu</option>
+            <option value="second_degre">Un parent éloigné (grand-parent, oncle/tante, cousin)</option>
+            <option value="premier_degre">Un parent proche (parent, frère/sœur, enfant)</option>
+          </select>
+        </div>
+        <div style="margin-bottom:14px">
+          <div style="font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#aaa;margin-bottom:6px">Glycémie élevée déjà détectée ?</div>
+          <select class="profile-input" id="profileHighGlucoseHistory" style="border-radius:12px;border:1px solid rgba(255,154,108,0.2);background:#FFFCFA;padding:12px 14px;font-size:13px">
+            <option value="non">Non, jamais</option>
+            <option value="oui">Oui, déjà signalé lors d'une prise de sang</option>
+            <option value="ne_sait_pas">Je ne sais pas</option>
+          </select>
+        </div>
         <div>
           <div style="font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#aaa;margin-bottom:6px">Allergies alimentaires</div>
           <input type="text" class="profile-input" id="profileAllergies" placeholder="ex: gluten, lactose, noix" style="border-radius:12px;border:1px solid rgba(255,154,108,0.2);background:#FFFCFA;padding:12px 14px;font-size:13px">
@@ -11133,6 +11153,9 @@ function switchLang(lang) {
       // Fill profile form
       document.getElementById('profileName').value = profile.full_name || '';
       document.getElementById('profilePathologies').value = profile.pathologies?.join(', ') || '';
+      if (document.getElementById('profileWaistCircumference')) document.getElementById('profileWaistCircumference').value = profile.waist_circumference || '';
+      if (document.getElementById('profileFamilyDiabetes')) document.getElementById('profileFamilyDiabetes').value = profile.family_diabetes_history || 'aucun';
+      if (document.getElementById('profileHighGlucoseHistory')) document.getElementById('profileHighGlucoseHistory').value = profile.high_glucose_history || 'non';
       document.getElementById('profileAllergies').value = profile.allergies?.join(', ') || '';
       document.getElementById('profileMedications').value = profile.medications?.join(', ') || '';
       document.getElementById('profileCultural').value = profile.cultural_constraints || '';
@@ -18684,6 +18707,9 @@ async function deleteProfessional(id) {
     const updates = {
       full_name: document.getElementById('profileName').value.trim(),
       pathologies: document.getElementById('profilePathologies').value.split(',').map(s => s.trim()).filter(Boolean),
+      waist_circumference: parseInt(document.getElementById('profileWaistCircumference')?.value) || null,
+      family_diabetes_history: document.getElementById('profileFamilyDiabetes')?.value || 'aucun',
+      high_glucose_history: document.getElementById('profileHighGlucoseHistory')?.value || 'non',
       allergies: document.getElementById('profileAllergies').value.split(',').map(s => s.trim()).filter(Boolean),
       medications: document.getElementById('profileMedications').value.split(',').map(s => s.trim()).filter(Boolean),
       cultural_constraints: document.getElementById('profileCultural').value.trim(),
