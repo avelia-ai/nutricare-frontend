@@ -17935,9 +17935,6 @@ function stopStepSensor(manual) {
 }
 function renderEvaluationRisques(evalRisques) {
   if (!evalRisques || (!evalRisques.diabete_type_2 && !evalRisques.hypertension && !evalRisques.cardiovasculaire && !evalRisques.syndrome_metabolique)) return '';
-  var html = '<div style="margin-top:22px;padding-top:20px;border-top:1px solid rgba(0,0,0,0.06)">';
-  html += '<div style="font-size:0.72rem;font-weight:700;color:#999;text-transform:uppercase;letter-spacing:0.04em;margin-bottom:4px">\u00c9valuation des facteurs de risque</div>';
-  html += '<div style="font-size:0.74rem;color:#aaa;line-height:1.5;margin-bottom:14px">Ces indicateurs sont des outils d\'orientation, pas un diagnostic m\u00e9dical.</div>';
   var niveauLabels = {
     faible: 'Risque faible',
     legerement_eleve: 'Risque l\u00e9g\u00e8rement \u00e9lev\u00e9',
@@ -17986,33 +17983,45 @@ function renderEvaluationRisques(evalRisques) {
     return h;
   }
 
+  var body = '';
+
   if (evalRisques.diabete_type_2) {
     var f = evalRisques.diabete_type_2;
     var desc = 'Score FINDRISC : ' + f.score + '/' + f.score_max + ' \u2014 cet outil valid\u00e9 estime un risque de d\u00e9velopper un diab\u00e8te de type 2 dans les 10 prochaines ann\u00e9es \u00e0 environ ' + f.risque_estime + '.';
-    html += carteSimple('Diab\u00e8te de type 2', f.niveau, desc, !f.complet ? 'Compl\u00e8te ton profil (tour de taille, sexe) pour une estimation plus pr\u00e9cise.' : null);
+    body += carteSimple('Diab\u00e8te de type 2', f.niveau, desc, !f.complet ? 'Compl\u00e8te ton profil (tour de taille, sexe) pour une estimation plus pr\u00e9cise.' : null);
   }
 
   if (evalRisques.hypertension) {
     var hh = evalRisques.hypertension;
     var listeFacteurs = (hh.facteurs || []).map(function(fl) { return factLabels[fl] || fl; }).join(', ');
-    html += carteSimple('Hypertension', hh.niveau, 'Facteurs de risque observ\u00e9s dans ton profil (' + (listeFacteurs || 'aucun facteur notable') + ') associ\u00e9s \u00e0 un risque accru d\'hypertension.');
+    body += carteSimple('Hypertension', hh.niveau, 'Facteurs de risque observ\u00e9s dans ton profil (' + (listeFacteurs || 'aucun facteur notable') + ') associ\u00e9s \u00e0 un risque accru d\'hypertension.');
   }
 
   if (evalRisques.cardiovasculaire) {
     var cv = evalRisques.cardiovasculaire;
     var listeCv = (cv.facteurs || []).map(function(fl) { return factLabels[fl] || fl; }).join(', ');
-    html += carteSimple('Risque cardiovasculaire', cv.niveau, 'Facteurs combin\u00e9s observ\u00e9s (' + (listeCv || 'aucun facteur notable') + ') pouvant influencer ta sant\u00e9 cardiovasculaire sur le long terme.');
+    body += carteSimple('Risque cardiovasculaire', cv.niveau, 'Facteurs combin\u00e9s observ\u00e9s (' + (listeCv || 'aucun facteur notable') + ') pouvant influencer ta sant\u00e9 cardiovasculaire sur le long terme.');
   }
 
   if (evalRisques.syndrome_metabolique) {
     var sm = evalRisques.syndrome_metabolique;
     var listeSm = (sm.facteurs || []).map(function(fl) { return factLabels[fl] || fl; }).join(', ');
-    html += carteSimple('Signaux m\u00e9taboliques', sm.niveau, 'Plusieurs signaux combin\u00e9s (' + (listeSm || 'aucun facteur notable') + ') parfois associ\u00e9s au syndrome m\u00e9tabolique. Estimation non valid\u00e9e cliniquement, \u00e0 titre indicatif uniquement.');
+    body += carteSimple('Signaux m\u00e9taboliques', sm.niveau, 'Plusieurs signaux combin\u00e9s (' + (listeSm || 'aucun facteur notable') + ') parfois associ\u00e9s au syndrome m\u00e9tabolique. Estimation non valid\u00e9e cliniquement, \u00e0 titre indicatif uniquement.');
   }
 
-  html += '<div style="display:flex;align-items:flex-start;gap:8px;background:#F5F5F0;border-radius:12px;padding:11px 13px;margin-top:4px">';
-  html += '<i class="ti ti-stethoscope" style="font-size:15px;color:#888;flex-shrink:0;margin-top:1px"></i>';
-  html += '<span style="font-size:0.74rem;color:#777;line-height:1.5">Ces estimations ne remplacent pas un avis m\u00e9dical. Parles-en \u00e0 ton m\u00e9decin lors d\'un prochain rendez-vous, notamment pour un bilan sanguin si besoin.</span>';
+  body += '<div style="display:flex;align-items:flex-start;gap:8px;background:#F5F5F0;border-radius:12px;padding:11px 13px;margin-top:4px">';
+  body += '<i class="ti ti-stethoscope" style="font-size:15px;color:#888;flex-shrink:0;margin-top:1px"></i>';
+  body += '<span style="font-size:0.74rem;color:#777;line-height:1.5">Ces estimations ne remplacent pas un avis m\u00e9dical. Parles-en \u00e0 ton m\u00e9decin lors d\'un prochain rendez-vous, notamment pour un bilan sanguin si besoin.</span>';
+  body += '</div>';
+
+  var html = '<div style="background:#FFFFFF;border-radius:20px;overflow:hidden;box-shadow:0 0 0 1.5px rgba(108,92,231,0.20),0 14px 32px rgba(108,92,231,0.14);margin-top:22px;margin-bottom:12px">';
+  html += '<div style="background:linear-gradient(135deg,#6C5CE7,#A29BFE);padding:16px 20px 26px">';
+  html += '<div style="font-size:0.68rem;color:rgba(255,255,255,0.85);font-weight:700;letter-spacing:0.04em;margin-bottom:4px">SANT\u00c9 PR\u00c9VENTIVE</div>';
+  html += '<div style="font-size:1.02rem;color:white;font-weight:700">\u00c9valuation des facteurs de risque</div>';
+  html += '<div style="font-size:0.75rem;color:rgba(255,255,255,0.8);margin-top:2px">Outils d\'orientation, pas un diagnostic m\u00e9dical</div>';
+  html += '</div>';
+  html += '<div style="margin:-14px 14px 16px;position:relative;background:#fff;border-radius:14px;padding:18px;box-shadow:0 2px 10px rgba(0,0,0,0.06)">';
+  html += body;
   html += '</div>';
   html += '</div>';
   return html;
@@ -18020,9 +18029,6 @@ function renderEvaluationRisques(evalRisques) {
 
 function renderSurveillancePathologies(surveillance) {
   if (!surveillance || !surveillance.pathologies_suivies || !surveillance.pathologies_suivies.length) return '';
-  var html = '<div style="margin-top:22px;padding-top:20px;border-top:1px solid rgba(0,0,0,0.06)">';
-  html += '<div style="font-size:0.72rem;font-weight:700;color:#999;text-transform:uppercase;letter-spacing:0.04em;margin-bottom:4px">Suivi de tes pathologies d\u00e9clar\u00e9es</div>';
-  html += '<div style="font-size:0.74rem;color:#aaa;line-height:1.5;margin-bottom:14px">\u00c9volution de tes indicateurs sur les 14 derniers jours.</div>';
 
   function carteTendance(titre, data, unite) {
     if (!data.suffisant) {
@@ -18032,7 +18038,6 @@ function renderSurveillancePathologies(surveillance) {
       '</div>';
     }
     var t = data.tendance;
-    var alerteColor = data.alerte ? '#E8703C' : '#3BA65C';
     var alerteBg = data.alerte ? '#FCE9E0' : '#E8F5EC';
     var fleche = t.delta > 0 ? '\u2197' : t.delta < 0 ? '\u2198' : '\u2192';
     return '<div style="background:' + alerteBg + ';border-radius:14px;padding:14px 16px;margin-bottom:10px">' +
@@ -18041,13 +18046,23 @@ function renderSurveillancePathologies(surveillance) {
     '</div>';
   }
 
+  var body = '';
   if (surveillance.diabete) {
-    html += carteTendance('Glyc\u00e9mie', surveillance.diabete, ' mmol/L');
+    body += carteTendance('Glyc\u00e9mie', surveillance.diabete, ' mmol/L');
   }
   if (surveillance.hypertension) {
-    html += carteTendance('Tension art\u00e9rielle (systolique)', surveillance.hypertension, ' mmHg');
+    body += carteTendance('Tension art\u00e9rielle (systolique)', surveillance.hypertension, ' mmHg');
   }
 
+  var html = '<div style="background:#FFFFFF;border-radius:20px;overflow:hidden;box-shadow:0 0 0 1.5px rgba(9,132,227,0.20),0 14px 32px rgba(9,132,227,0.14);margin-top:12px;margin-bottom:12px">';
+  html += '<div style="background:linear-gradient(135deg,#0984E3,#74b9ff);padding:16px 20px 26px">';
+  html += '<div style="font-size:0.68rem;color:rgba(255,255,255,0.85);font-weight:700;letter-spacing:0.04em;margin-bottom:4px">SUIVI PERSONNALIS\u00c9</div>';
+  html += '<div style="font-size:1.02rem;color:white;font-weight:700">Tes pathologies d\u00e9clar\u00e9es</div>';
+  html += '<div style="font-size:0.75rem;color:rgba(255,255,255,0.8);margin-top:2px">\u00c9volution sur les 14 derniers jours</div>';
+  html += '</div>';
+  html += '<div style="margin:-14px 14px 16px;position:relative;background:#fff;border-radius:14px;padding:18px;box-shadow:0 2px 10px rgba(0,0,0,0.06)">';
+  html += body;
+  html += '</div>';
   html += '</div>';
   return html;
 }
