@@ -6915,19 +6915,21 @@ function switchLang(lang) {
         </div>
         <div style="margin-bottom:14px">
           <div style="font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#aaa;margin-bottom:6px">Antécédents familiaux de diabète</div>
-          <select class="profile-input" id="profileFamilyDiabetes" style="border-radius:12px;border:1px solid rgba(255,154,108,0.2);background:#FFFCFA;padding:12px 14px;font-size:13px">
-            <option value="aucun">Aucun antécédent connu</option>
-            <option value="second_degre">Un parent éloigné (grand-parent, oncle/tante, cousin)</option>
-            <option value="premier_degre">Un parent proche (parent, frère/sœur, enfant)</option>
-          </select>
+          <input type="hidden" id="profileFamilyDiabetes" value="aucun">
+          <div id="profileFamilyDiabetesTrigger" class="profile-input" onclick="toggleCustomDropdown('profileFamilyDiabetes', FAMILY_DIABETES_OPTIONS)" style="display:flex;align-items:center;justify-content:space-between;cursor:pointer;min-height:22px;border-radius:12px;border:1px solid rgba(255,154,108,0.2);background:#FFFCFA;padding:12px 14px;font-size:13px">
+            <span id="profileFamilyDiabetesLabel" style="color:#2D2D2D">Aucun antécédent connu</span>
+            <i class="ti ti-chevron-down" style="font-size:15px;color:#bbb"></i>
+          </div>
+          <div id="profileFamilyDiabetesOptions" style="display:none;position:fixed;background:white;border-radius:14px;box-shadow:0 12px 32px rgba(0,0,0,0.18);z-index:99999;max-height:320px;overflow-y:auto;border:1px solid #F0E8E0"></div>
         </div>
         <div style="margin-bottom:14px">
           <div style="font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#aaa;margin-bottom:6px">Glycémie élevée déjà détectée ?</div>
-          <select class="profile-input" id="profileHighGlucoseHistory" style="border-radius:12px;border:1px solid rgba(255,154,108,0.2);background:#FFFCFA;padding:12px 14px;font-size:13px">
-            <option value="non">Non, jamais</option>
-            <option value="oui">Oui, déjà signalé lors d'une prise de sang</option>
-            <option value="ne_sait_pas">Je ne sais pas</option>
-          </select>
+          <input type="hidden" id="profileHighGlucoseHistory" value="non">
+          <div id="profileHighGlucoseHistoryTrigger" class="profile-input" onclick="toggleCustomDropdown('profileHighGlucoseHistory', HIGH_GLUCOSE_OPTIONS)" style="display:flex;align-items:center;justify-content:space-between;cursor:pointer;min-height:22px;border-radius:12px;border:1px solid rgba(255,154,108,0.2);background:#FFFCFA;padding:12px 14px;font-size:13px">
+            <span id="profileHighGlucoseHistoryLabel" style="color:#2D2D2D">Non, jamais</span>
+            <i class="ti ti-chevron-down" style="font-size:15px;color:#bbb"></i>
+          </div>
+          <div id="profileHighGlucoseHistoryOptions" style="display:none;position:fixed;background:white;border-radius:14px;box-shadow:0 12px 32px rgba(0,0,0,0.18);z-index:99999;max-height:320px;overflow-y:auto;border:1px solid #F0E8E0"></div>
         </div>
         <div>
           <div style="font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#aaa;margin-bottom:6px">Allergies alimentaires</div>
@@ -10346,6 +10348,59 @@ function switchLang(lang) {
     const lv = localStorage.getItem('nutricare_last_view');
     if (lv === 'oracle' || lv === 'pro') localStorage.setItem('nutricare_last_view', 'home');
   })();
+  var FAMILY_DIABETES_OPTIONS = [
+    { value: 'aucun', label: 'Aucun antécédent connu', icon: '<i class="ti ti-circle-check" style="font-size:18px;color:#3BA65C"></i>' },
+    { value: 'second_degre', label: 'Un parent éloigné (grand-parent, oncle/tante, cousin)', icon: '<i class="ti ti-users" style="font-size:18px;color:#E8983C"></i>' },
+    { value: 'premier_degre', label: 'Un parent proche (parent, frère/sœur, enfant)', icon: '<i class="ti ti-user" style="font-size:18px;color:#E8703C"></i>' }
+  ];
+  var HIGH_GLUCOSE_OPTIONS = [
+    { value: 'non', label: 'Non, jamais', icon: '<i class="ti ti-circle-check" style="font-size:18px;color:#3BA65C"></i>' },
+    { value: 'oui', label: 'Oui, déjà signalé lors d\'une prise de sang', icon: '<i class="ti ti-alert-circle" style="font-size:18px;color:#E8703C"></i>' },
+    { value: 'ne_sait_pas', label: 'Je ne sais pas', icon: '<i class="ti ti-help-circle" style="font-size:18px;color:#999"></i>' }
+  ];
+  function renderCustomDropdown(fieldId, options) {
+    var panel = document.getElementById(fieldId + 'Options');
+    if (!panel) return;
+    panel.innerHTML = options.map(function(o) {
+      return '<div onclick="selectCustomDropdown(\'' + fieldId + '\',\'' + o.value + '\')" style="display:flex;align-items:center;gap:10px;padding:12px 15px;cursor:pointer;font-size:0.85rem;color:#2D2D2D;border-bottom:1px solid #F5F0EC;line-height:1.4" onmouseover="this.style.background=\'#FFF8F3\'" onmouseout="this.style.background=\'white\'"><span style="flex-shrink:0;display:flex">' + o.icon + '</span><span>' + o.label + '</span></div>';
+    }).join('');
+  }
+  function positionCustomDropdown(fieldId) {
+    var trigger = document.getElementById(fieldId + 'Trigger');
+    var panel = document.getElementById(fieldId + 'Options');
+    if (!trigger || !panel) return;
+    var rect = trigger.getBoundingClientRect();
+    panel.style.top = (rect.bottom + 6) + 'px';
+    panel.style.left = rect.left + 'px';
+    panel.style.width = rect.width + 'px';
+  }
+  function toggleCustomDropdown(fieldId, options) {
+    var panel = document.getElementById(fieldId + 'Options');
+    if (!panel) return;
+    if (panel.style.display === 'none' || !panel.style.display) {
+      renderCustomDropdown(fieldId, options);
+      positionCustomDropdown(fieldId);
+      panel.style.display = 'block';
+    } else {
+      panel.style.display = 'none';
+    }
+  }
+  var CUSTOM_DROPDOWN_OPTIONS_MAP = {
+    profileFamilyDiabetes: null,
+    profileHighGlucoseHistory: null
+  };
+  function selectCustomDropdown(fieldId, value) {
+    var options = fieldId === 'profileFamilyDiabetes' ? FAMILY_DIABETES_OPTIONS : HIGH_GLUCOSE_OPTIONS;
+    document.getElementById(fieldId).value = value;
+    syncCustomDropdownDisplay(fieldId, options, value);
+    document.getElementById(fieldId + 'Options').style.display = 'none';
+  }
+  function syncCustomDropdownDisplay(fieldId, options, value) {
+    var lbl = document.getElementById(fieldId + 'Label');
+    if (!lbl) return;
+    var opt = options.find(function(o) { return o.value === value; });
+    if (opt) lbl.textContent = opt.label;
+  }
   var ACTIVITE_OPTIONS = [
     { value: 'sedentaire', label: 'Sédentaire', icon: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#FF7A3C" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 9V7a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v2"/><path d="M2 9h20v6a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V9Z"/><path d="M4 17v3M20 17v3"/></svg>' },
     { value: 'leger', label: 'Légèrement actif', icon: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#FF7A3C" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="13" cy="4" r="2"/><path d="m7 21 2-6 3-2-1-5-4 1"/><path d="m10 13 3 2 3 6"/><path d="M9 9l4-1 2 3"/></svg>' },
@@ -11154,8 +11209,8 @@ function switchLang(lang) {
       document.getElementById('profileName').value = profile.full_name || '';
       document.getElementById('profilePathologies').value = profile.pathologies?.join(', ') || '';
       if (document.getElementById('profileWaistCircumference')) document.getElementById('profileWaistCircumference').value = profile.waist_circumference || '';
-      if (document.getElementById('profileFamilyDiabetes')) document.getElementById('profileFamilyDiabetes').value = profile.family_diabetes_history || 'aucun';
-      if (document.getElementById('profileHighGlucoseHistory')) document.getElementById('profileHighGlucoseHistory').value = profile.high_glucose_history || 'non';
+      if (document.getElementById('profileFamilyDiabetes')) { document.getElementById('profileFamilyDiabetes').value = profile.family_diabetes_history || 'aucun'; syncCustomDropdownDisplay('profileFamilyDiabetes', FAMILY_DIABETES_OPTIONS, profile.family_diabetes_history || 'aucun'); }
+      if (document.getElementById('profileHighGlucoseHistory')) { document.getElementById('profileHighGlucoseHistory').value = profile.high_glucose_history || 'non'; syncCustomDropdownDisplay('profileHighGlucoseHistory', HIGH_GLUCOSE_OPTIONS, profile.high_glucose_history || 'non'); }
       document.getElementById('profileAllergies').value = profile.allergies?.join(', ') || '';
       document.getElementById('profileMedications').value = profile.medications?.join(', ') || '';
       document.getElementById('profileCultural').value = profile.cultural_constraints || '';
