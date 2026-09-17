@@ -17933,6 +17933,73 @@ function stopStepSensor(manual) {
   if (btn) { btn.textContent = 'Activer le suivi via capteur'; btn.onclick = startStepSensor; }
   if (manual) localStorage.setItem('mirella_podometre_desactive', 'true');
 }
+function renderEvaluationRisques(evalRisques) {
+  if (!evalRisques || (!evalRisques.diabete_type_2 && !evalRisques.hypertension)) return '';
+
+  var html = '<div style="margin-top:22px;padding-top:20px;border-top:1px solid rgba(0,0,0,0.06)">';
+  html += '<div style="font-size:0.72rem;font-weight:700;color:#999;text-transform:uppercase;letter-spacing:0.04em;margin-bottom:4px">Évaluation des facteurs de risque</div>';
+  html += '<div style="font-size:0.74rem;color:#aaa;line-height:1.5;margin-bottom:14px">Ces indicateurs sont des outils d\'orientation basés sur des scores validés, pas un diagnostic médical.</div>';
+
+  var niveauLabels = {
+    faible: 'Risque faible',
+    legerement_eleve: 'Risque légèrement élevé',
+    modere: 'Risque modéré',
+    eleve: 'Risque élevé',
+    tres_eleve: 'Risque très élevé'
+  };
+  var niveauCouleurs = {
+    faible: '#3BA65C',
+    legerement_eleve: '#8FBF4C',
+    modere: '#E8983C',
+    eleve: '#E8703C',
+    tres_eleve: '#E85C5C'
+  };
+  var niveauBg = {
+    faible: '#E8F5EC',
+    legerement_eleve: '#F1F7E4',
+    modere: '#FDF1E4',
+    eleve: '#FCE9E0',
+    tres_eleve: '#FCEAEA'
+  };
+
+  if (evalRisques.diabete_type_2) {
+    var f = evalRisques.diabete_type_2;
+    var c = niveauCouleurs[f.niveau] || '#E8983C';
+    var bg = niveauBg[f.niveau] || '#FDF1E4';
+    html += '<div style="background:' + bg + ';border-radius:14px;padding:14px 16px;margin-bottom:10px">';
+    html += '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">';
+    html += '<div style="font-size:0.85rem;font-weight:700;color:#2D2D2D">Diabète de type 2</div>';
+    html += '<div style="font-size:0.72rem;font-weight:700;color:' + c + '">' + (niveauLabels[f.niveau] || f.niveau) + '</div>';
+    html += '</div>';
+    html += '<div style="font-size:0.78rem;color:#666;line-height:1.5;margin-bottom:6px">Score FINDRISC : ' + f.score + '/' + f.score_max + ' — cet outil validé estime un risque de développer un diabète de type 2 dans les 10 prochaines années à environ ' + f.risque_estime + '.</div>';
+    if (!f.complet) {
+      html += '<div style="font-size:0.72rem;color:#999;font-style:italic">Complète ton profil (tour de taille, sexe) pour une estimation plus précise.</div>';
+    }
+    html += '</div>';
+  }
+
+  if (evalRisques.hypertension) {
+    var h = evalRisques.hypertension;
+    var c2 = niveauCouleurs[h.niveau] || '#E8983C';
+    var bg2 = niveauBg[h.niveau] || '#FDF1E4';
+    html += '<div style="background:' + bg2 + ';border-radius:14px;padding:14px 16px;margin-bottom:10px">';
+    html += '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">';
+    html += '<div style="font-size:0.85rem;font-weight:700;color:#2D2D2D">Hypertension</div>';
+    html += '<div style="font-size:0.72rem;font-weight:700;color:' + c2 + '">' + (niveauLabels[h.niveau] || h.niveau) + '</div>';
+    html += '</div>';
+    html += '<div style="font-size:0.78rem;color:#666;line-height:1.5">Facteurs de risque observés dans ton profil (âge, IMC, sédentarité, stress) associés à un risque accru d\'hypertension.</div>';
+    html += '</div>';
+  }
+
+  html += '<div style="display:flex;align-items:flex-start;gap:8px;background:#F5F5F0;border-radius:12px;padding:11px 13px;margin-top:4px">';
+  html += '<i class="ti ti-stethoscope" style="font-size:15px;color:#888;flex-shrink:0;margin-top:1px"></i>';
+  html += '<span style="font-size:0.74rem;color:#777;line-height:1.5">Ces estimations ne remplacent pas un avis médical. Parles-en à ton médecin lors d\'un prochain rendez-vous, notamment pour un bilan sanguin si besoin.</span>';
+  html += '</div>';
+
+  html += '</div>';
+  return html;
+}
+
 function renderPredictionTab() {
   var contentEl = document.getElementById('predictionContent');
   if (!contentEl) return;
@@ -17956,7 +18023,8 @@ function renderPredictionTab() {
             '<div style="background:linear-gradient(90deg,#FF9A3C,#FF6B6B);height:100%;width:' + Math.min(100,pct) + '%"></div>' +
           '</div>' +
           '<div style="font-size:0.72rem;color:#aaa">' + d.jours_disponibles + ' / ' + d.jours_requis + ' jours de suivi</div>' +
-        '</div>';
+        '</div>' +
+        renderEvaluationRisques(d.evaluation_risques);
       return;
     }
     var couleurs = { faible: '#3BA65C', moderee: '#E8983C', elevee: '#E85C5C' };
@@ -18006,6 +18074,8 @@ function renderPredictionTab() {
         '</div>';
       });
     }
+
+    html += renderEvaluationRisques(d.evaluation_risques);
 
     contentEl.innerHTML = html;
   }).catch(function(e){
