@@ -18271,7 +18271,10 @@ function stopStepSensor(manual) {
   if (manual) localStorage.setItem('mirella_podometre_desactive', 'true');
 }
 function renderEvaluationRisques(evalRisques) {
-  if (!evalRisques || (!evalRisques.diabete_type_2 && !evalRisques.hypertension && !evalRisques.cardiovasculaire && !evalRisques.syndrome_metabolique)) return '';
+  if (!evalRisques || (!evalRisques.diabete_type_2 && !evalRisques.hypertension && !evalRisques.cardiovasculaire && !evalRisques.syndrome_metabolique &&
+      !evalRisques.cardiovasculaire_framingham && !evalRisques.risque_renal && !evalRisques.risque_hepatique &&
+      !evalRisques.apnee_sommeil && !evalRisques.consommation_alcool && !evalRisques.osteoporose &&
+      !evalRisques.carence_vitamine_d && !evalRisques.dependance_nicotine && !evalRisques.anemie)) return '';
   var niveauLabels = {
     faible: 'Risque faible',
     legerement_eleve: 'Risque l\u00e9g\u00e8rement \u00e9lev\u00e9',
@@ -18296,15 +18299,46 @@ function renderEvaluationRisques(evalRisques) {
   var factLabels = {
     age_45_plus: '\u00e2ge 45 ans ou plus',
     age_50_plus: '\u00e2ge 50 ans ou plus',
+    age_60_plus: '\u00e2ge 60 ans ou plus',
+    age_65_plus: '\u00e2ge 65 ans ou plus',
+    age_avance: '\u00e2ge avanc\u00e9',
     imc_eleve: 'IMC \u00e9lev\u00e9',
+    imc_bas: 'IMC bas',
     sedentarite: 's\u00e9dentarit\u00e9',
+    sedentarite_interieur: 'sedentarite / temps passe a l\'interieur',
     stress_eleve_persistant: 'stress \u00e9lev\u00e9 persistant',
     stress_chronique: 'stress chronique',
     hypertension_connue: 'hypertension connue',
+    hypertension: 'hypertension',
     cholesterol_connu: 'cholest\u00e9rol connu',
+    cholesterol_eleve: 'cholest\u00e9rol \u00e9lev\u00e9',
     tabagisme: 'tabagisme',
+    ancien_tabagisme: 'ancien tabagisme',
+    tension_elevee: 'tension art\u00e9rielle \u00e9lev\u00e9e',
     tour_de_taille_eleve: 'tour de taille \u00e9lev\u00e9',
-    sommeil_degrade: 'sommeil d\u00e9grad\u00e9'
+    tour_de_cou_eleve: 'tour de cou \u00e9lev\u00e9',
+    sommeil_degrade: 'sommeil d\u00e9grad\u00e9',
+    consommation_alcool_elevee: 'consommation d\'alcool \u00e9lev\u00e9e',
+    diabete: 'diab\u00e8te',
+    thrombophilie_connue: 'thrombophilie / mutation facteur de coagulation connue',
+    thrombophilie_connue_non_incluse_au_calcul: 'thrombophilie connue (facteur aggravant non inclus dans le calcul officiel)',
+    interaction_thrombophilie_tabac: 'combinaison thrombophilie + tabagisme (risque accru)',
+    ronflement: 'ronflement frequent',
+    fatigue_diurne: 'fatigue diurne',
+    apnee_observee: 'apnees du sommeil observees',
+    sexe_masculin: 'sexe masculin',
+    frequence_elevee: 'frequence de consommation elevee',
+    quantite_elevee: 'quantite par occasion elevee',
+    consommation_excessive_occasionnelle: 'episodes de consommation excessive',
+    menopause: 'menopause',
+    antecedents_familiaux_fracture: 'antecedents familiaux de fracture',
+    faible_exposition_solaire: 'faible exposition au soleil',
+    premiere_cigarette_tres_rapide: 'premiere cigarette tres rapide apres le reveil',
+    consommation_quotidienne_elevee: 'consommation quotidienne elevee',
+    fume_meme_malade: 'fume meme en etant malade',
+    sexe_feminin: 'sexe feminin',
+    regime_vegan: 'regime vegan',
+    regime_vegetarien: 'regime vegetarien'
   };
   function carteSimple(titre, niveau, description, extra) {
     var c = niveauCouleurs[niveau] || '#E8983C';
@@ -18334,7 +18368,13 @@ function renderEvaluationRisques(evalRisques) {
     body += carteSimple('Hypertension', hh.niveau, 'Facteurs de risque observ\u00e9s dans ton profil (' + (listeFacteurs || 'aucun facteur notable') + ') associ\u00e9s \u00e0 un risque accru d\'hypertension.');
   }
 
-  if (evalRisques.cardiovasculaire) {
+  if (evalRisques.cardiovasculaire_framingham) {
+    var fr = evalRisques.cardiovasculaire_framingham;
+    var listeFr = (fr.facteurs || []).map(function(fl) { return factLabels[fl] || fl; }).join(', ');
+    var descFr = 'Score Framingham (outil clinique valid\u00e9) : risque cardiovasculaire estim\u00e9 \u00e0 10 ans ' + fr.risque_estime_10_ans + '. Facteurs retenus (' + (listeFr || 'aucun facteur notable') + ').';
+    var extraFr = fr.alerte_thrombophilie ? 'Une mutation/thrombophilie d\u00e9clar\u00e9e augmente significativement le risque thrombo-embolique, en particulier combin\u00e9e au tabagisme. Ce facteur n\'est pas inclus dans le calcul Framingham lui-m\u00eame : parles-en \u00e0 ton m\u00e9decin.' : null;
+    body += carteSimple('Risque cardiovasculaire (Framingham)', fr.niveau, descFr, extraFr);
+  } else if (evalRisques.cardiovasculaire) {
     var cv = evalRisques.cardiovasculaire;
     var listeCv = (cv.facteurs || []).map(function(fl) { return factLabels[fl] || fl; }).join(', ');
     body += carteSimple('Risque cardiovasculaire', cv.niveau, 'Facteurs combin\u00e9s observ\u00e9s (' + (listeCv || 'aucun facteur notable') + ') pouvant influencer ta sant\u00e9 cardiovasculaire sur le long terme.');
@@ -18344,6 +18384,54 @@ function renderEvaluationRisques(evalRisques) {
     var sm = evalRisques.syndrome_metabolique;
     var listeSm = (sm.facteurs || []).map(function(fl) { return factLabels[fl] || fl; }).join(', ');
     body += carteSimple('Signaux m\u00e9taboliques', sm.niveau, 'Plusieurs signaux combin\u00e9s (' + (listeSm || 'aucun facteur notable') + ') parfois associ\u00e9s au syndrome m\u00e9tabolique. Estimation non valid\u00e9e cliniquement, \u00e0 titre indicatif uniquement.');
+  }
+
+  if (evalRisques.risque_renal) {
+    var rr = evalRisques.risque_renal;
+    var listeRr = (rr.facteurs || []).map(function(fl) { return factLabels[fl] || fl; }).join(', ');
+    body += carteSimple('Risque r\u00e9nal', rr.niveau, 'Facteurs combin\u00e9s observ\u00e9s (' + (listeRr || 'aucun facteur notable') + ') pouvant affecter la fonction r\u00e9nale sur le long terme. Estimation non valid\u00e9e cliniquement, \u00e0 titre indicatif uniquement.');
+  }
+
+  if (evalRisques.risque_hepatique) {
+    var rh = evalRisques.risque_hepatique;
+    var listeRh = (rh.facteurs || []).map(function(fl) { return factLabels[fl] || fl; }).join(', ');
+    body += carteSimple('Risque h\u00e9patique (st\u00e9atose)', rh.niveau, 'Facteurs combin\u00e9s observ\u00e9s (' + (listeRh || 'aucun facteur notable') + ') parfois associ\u00e9s \u00e0 une st\u00e9atose h\u00e9patique (foie gras). Estimation non valid\u00e9e cliniquement, \u00e0 titre indicatif uniquement.');
+  }
+
+  if (evalRisques.apnee_sommeil) {
+    var ap = evalRisques.apnee_sommeil;
+    var listeAp = (ap.facteurs || []).map(function(fl) { return factLabels[fl] || fl; }).join(', ');
+    body += carteSimple('Apn\u00e9e du sommeil (STOP-Bang)', ap.niveau, 'Score STOP-Bang (outil clinique valid\u00e9) : ' + ap.score_points + '/' + ap.score_max + '. Facteurs retenus (' + (listeAp || 'aucun facteur notable') + ').');
+  }
+
+  if (evalRisques.consommation_alcool) {
+    var al = evalRisques.consommation_alcool;
+    var listeAl = (al.facteurs || []).map(function(fl) { return factLabels[fl] || fl; }).join(', ');
+    body += carteSimple('Consommation d\'alcool (AUDIT-C)', al.niveau, 'Score AUDIT-C (outil clinique valid\u00e9) : ' + al.score_points + '/' + al.score_max + '. Facteurs retenus (' + (listeAl || 'aucun facteur notable') + ').');
+  }
+
+  if (evalRisques.osteoporose) {
+    var os = evalRisques.osteoporose;
+    var listeOs = (os.facteurs || []).map(function(fl) { return factLabels[fl] || fl; }).join(', ');
+    body += carteSimple('Risque d\'ost\u00e9oporose', os.niveau, 'Facteurs combin\u00e9s observ\u00e9s (' + (listeOs || 'aucun facteur notable') + ') pouvant affecter la sant\u00e9 osseuse. Estimation non valid\u00e9e cliniquement, \u00e0 titre indicatif uniquement.');
+  }
+
+  if (evalRisques.carence_vitamine_d) {
+    var vd = evalRisques.carence_vitamine_d;
+    var listeVd = (vd.facteurs || []).map(function(fl) { return factLabels[fl] || fl; }).join(', ');
+    body += carteSimple('Risque de carence en vitamine D', vd.niveau, 'Facteurs combin\u00e9s observ\u00e9s (' + (listeVd || 'aucun facteur notable') + '). Estimation non valid\u00e9e cliniquement, \u00e0 titre indicatif uniquement.');
+  }
+
+  if (evalRisques.dependance_nicotine) {
+    var fg = evalRisques.dependance_nicotine;
+    var listeFg = (fg.facteurs || []).map(function(fl) { return factLabels[fl] || fl; }).join(', ');
+    body += carteSimple('D\u00e9pendance \u00e0 la nicotine (Fagerstr\u00f6m)', fg.niveau, 'Score de Fagerstr\u00f6m (outil clinique valid\u00e9) : ' + fg.score_points + '/' + fg.score_max + '. Facteurs retenus (' + (listeFg || 'aucun facteur notable') + ').');
+  }
+
+  if (evalRisques.anemie) {
+    var an = evalRisques.anemie;
+    var listeAn = (an.facteurs || []).map(function(fl) { return factLabels[fl] || fl; }).join(', ');
+    body += carteSimple('Risque de caren\u00e7ce en fer / an\u00e9mie', an.niveau, 'Facteurs combin\u00e9s observ\u00e9s (' + (listeAn || 'aucun facteur notable') + '). Estimation non valid\u00e9e cliniquement, \u00e0 titre indicatif uniquement.');
   }
 
   body += '<div style="display:flex;align-items:flex-start;gap:8px;background:#F5F5F0;border-radius:12px;padding:11px 13px;margin-top:4px">';
