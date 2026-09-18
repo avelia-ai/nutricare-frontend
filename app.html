@@ -6914,6 +6914,14 @@ function switchLang(lang) {
           <input type="number" class="profile-input" id="profileWaistCircumference" placeholder="ex: 85" style="border-radius:12px;border:1px solid rgba(255,154,108,0.2);background:#FFFCFA;padding:12px 14px;font-size:13px">
         </div>
         <div style="margin-bottom:14px">
+          <div style="font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#aaa;margin-bottom:6px">Cholesterol total (mg/dL) <span style="font-weight:400;color:#ccc;text-transform:none;letter-spacing:0">- optionnel, derniere valeur connue</span></div>
+          <input type="number" class="profile-input" id="profileCholesterolTotal" placeholder="ex: 190" style="border-radius:12px;border:1px solid rgba(255,154,108,0.2);background:#FFFCFA;padding:12px 14px;font-size:13px">
+        </div>
+        <div style="margin-bottom:14px">
+          <div style="font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#aaa;margin-bottom:6px">Tension arterielle systolique (mmHg) <span style="font-weight:400;color:#ccc;text-transform:none;letter-spacing:0">- optionnel, derniere valeur connue</span></div>
+          <input type="number" class="profile-input" id="profileBloodPressureSysDeclared" placeholder="ex: 125" style="border-radius:12px;border:1px solid rgba(255,154,108,0.2);background:#FFFCFA;padding:12px 14px;font-size:13px">
+        </div>
+        <div style="margin-bottom:14px">
           <div style="font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#aaa;margin-bottom:6px">Antécédents familiaux de diabète</div>
           <input type="hidden" id="profileFamilyDiabetes" value="aucun">
           <div id="profileFamilyDiabetesTrigger" class="profile-input" onclick="toggleCustomDropdown('profileFamilyDiabetes', FAMILY_DIABETES_OPTIONS)" style="display:flex;align-items:center;justify-content:space-between;cursor:pointer;min-height:22px;border-radius:12px;border:1px solid rgba(255,154,108,0.2);background:#FFFCFA;padding:12px 14px;font-size:13px">
@@ -11239,6 +11247,8 @@ function switchLang(lang) {
       document.getElementById('profileName').value = profile.full_name || '';
       document.getElementById('profilePathologies').value = profile.pathologies?.join(', ') || '';
       if (document.getElementById('profileWaistCircumference')) document.getElementById('profileWaistCircumference').value = profile.waist_circumference || '';
+      if (document.getElementById('profileCholesterolTotal')) document.getElementById('profileCholesterolTotal').value = profile.cholesterol_total || '';
+      if (document.getElementById('profileBloodPressureSysDeclared')) document.getElementById('profileBloodPressureSysDeclared').value = profile.blood_pressure_sys_declared || '';
       if (document.getElementById('profileFamilyDiabetes')) { document.getElementById('profileFamilyDiabetes').value = profile.family_diabetes_history || 'aucun'; syncCustomDropdownDisplay('profileFamilyDiabetes', FAMILY_DIABETES_OPTIONS, profile.family_diabetes_history || 'aucun'); }
       if (document.getElementById('profileHighGlucoseHistory')) { document.getElementById('profileHighGlucoseHistory').value = profile.high_glucose_history || 'non'; syncCustomDropdownDisplay('profileHighGlucoseHistory', HIGH_GLUCOSE_OPTIONS, profile.high_glucose_history || 'non'); }
       if (document.getElementById('profileSmokingStatus')) { document.getElementById('profileSmokingStatus').value = profile.smoking_status || 'non_fumeur'; syncCustomDropdownDisplay('profileSmokingStatus', SMOKING_STATUS_OPTIONS, profile.smoking_status || 'non_fumeur'); }
@@ -18934,6 +18944,8 @@ async function deleteProfessional(id) {
       full_name: document.getElementById('profileName').value.trim(),
       pathologies: document.getElementById('profilePathologies').value.split(',').map(s => s.trim()).filter(Boolean),
       waist_circumference: parseInt(document.getElementById('profileWaistCircumference')?.value) || null,
+      cholesterol_total: parseFloat(document.getElementById('profileCholesterolTotal')?.value) || null,
+      blood_pressure_sys_declared: parseFloat(document.getElementById('profileBloodPressureSysDeclared')?.value) || null,
       family_diabetes_history: document.getElementById('profileFamilyDiabetes')?.value || 'aucun',
       high_glucose_history: document.getElementById('profileHighGlucoseHistory')?.value || 'non',
       smoking_status: document.getElementById('profileSmokingStatus')?.value || 'non_fumeur',
