@@ -6931,6 +6931,24 @@ function switchLang(lang) {
           </div>
           <div id="profileHighGlucoseHistoryOptions" style="display:none;position:fixed;background:white;border-radius:14px;box-shadow:0 12px 32px rgba(0,0,0,0.18);z-index:99999;max-height:320px;overflow-y:auto;border:1px solid #F0E8E0"></div>
         </div>
+        <div style="margin-bottom:14px">
+          <div style="font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#aaa;margin-bottom:6px">Statut tabagique</div>
+          <input type="hidden" id="profileSmokingStatus" value="non_fumeur">
+          <div id="profileSmokingStatusTrigger" class="profile-input" onclick="toggleCustomDropdown('profileSmokingStatus', SMOKING_STATUS_OPTIONS)" style="display:flex;align-items:center;justify-content:space-between;cursor:pointer;min-height:22px;border-radius:12px;border:1px solid rgba(255,154,108,0.2);background:#FFFCFA;padding:12px 14px;font-size:13px">
+            <span id="profileSmokingStatusLabel" style="color:#2D2D2D">Non-fumeur</span>
+            <i class="ti ti-chevron-down" style="font-size:15px;color:#bbb"></i>
+          </div>
+          <div id="profileSmokingStatusOptions" style="display:none;position:fixed;background:white;border-radius:14px;box-shadow:0 12px 32px rgba(0,0,0,0.18);z-index:99999;max-height:320px;overflow-y:auto;border:1px solid #F0E8E0"></div>
+        </div>
+        <div style="margin-bottom:14px">
+          <div style="font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#aaa;margin-bottom:6px">Consommation d'alcool</div>
+          <input type="hidden" id="profileAlcoholConsumption" value="jamais">
+          <div id="profileAlcoholConsumptionTrigger" class="profile-input" onclick="toggleCustomDropdown('profileAlcoholConsumption', ALCOHOL_OPTIONS)" style="display:flex;align-items:center;justify-content:space-between;cursor:pointer;min-height:22px;border-radius:12px;border:1px solid rgba(255,154,108,0.2);background:#FFFCFA;padding:12px 14px;font-size:13px">
+            <span id="profileAlcoholConsumptionLabel" style="color:#2D2D2D">Jamais</span>
+            <i class="ti ti-chevron-down" style="font-size:15px;color:#bbb"></i>
+          </div>
+          <div id="profileAlcoholConsumptionOptions" style="display:none;position:fixed;background:white;border-radius:14px;box-shadow:0 12px 32px rgba(0,0,0,0.18);z-index:99999;max-height:320px;overflow-y:auto;border:1px solid #F0E8E0"></div>
+        </div>
         <div>
           <div style="font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#aaa;margin-bottom:6px">Allergies alimentaires</div>
           <input type="text" class="profile-input" id="profileAllergies" placeholder="ex: gluten, lactose, noix" style="border-radius:12px;border:1px solid rgba(255,154,108,0.2);background:#FFFCFA;padding:12px 14px;font-size:13px">
@@ -10358,7 +10376,17 @@ function switchLang(lang) {
     { value: 'oui', label: 'Oui, déjà signalé lors d\'une prise de sang', icon: '<i class="ti ti-alert-circle" style="font-size:18px;color:#E8703C"></i>' },
     { value: 'ne_sait_pas', label: 'Je ne sais pas', icon: '<i class="ti ti-help-circle" style="font-size:18px;color:#999"></i>' }
   ];
-  function renderCustomDropdown(fieldId, options) {
+  var SMOKING_STATUS_OPTIONS = [
+    { value: 'non_fumeur', label: 'Non-fumeur', icon: '<i class="ti ti-circle-check" style="font-size:18px;color:#3BA65C"></i>' },
+    { value: 'fumeur', label: 'Fumeur', icon: '<i class="ti ti-alert-circle" style="font-size:18px;color:#E8703C"></i>' },
+    { value: 'ancien_fumeur', label: 'Ancien fumeur', icon: '<i class="ti ti-users" style="font-size:18px;color:#E8983C"></i>' }
+  ];
+  var ALCOHOL_OPTIONS = [
+    { value: 'jamais', label: 'Jamais', icon: '<i class="ti ti-circle-check" style="font-size:18px;color:#3BA65C"></i>' },
+    { value: 'occasionnelle', label: 'Occasionnelle', icon: '<i class="ti ti-users" style="font-size:18px;color:#E8983C"></i>' },
+    { value: 'reguliere', label: 'Reguliere (plus de 2 verres/jour ou quotidienne)', icon: '<i class="ti ti-alert-circle" style="font-size:18px;color:#E8703C"></i>' }
+  ];
+(fieldId, options) {
     var panel = document.getElementById(fieldId + 'Options');
     if (!panel) return;
     panel.innerHTML = options.map(function(o) {
@@ -10386,11 +10414,13 @@ function switchLang(lang) {
     }
   }
   var CUSTOM_DROPDOWN_OPTIONS_MAP = {
-    profileFamilyDiabetes: null,
-    profileHighGlucoseHistory: null
+    profileFamilyDiabetes: FAMILY_DIABETES_OPTIONS,
+    profileHighGlucoseHistory: HIGH_GLUCOSE_OPTIONS,
+    profileSmokingStatus: SMOKING_STATUS_OPTIONS,
+    profileAlcoholConsumption: ALCOHOL_OPTIONS
   };
   function selectCustomDropdown(fieldId, value) {
-    var options = fieldId === 'profileFamilyDiabetes' ? FAMILY_DIABETES_OPTIONS : HIGH_GLUCOSE_OPTIONS;
+    var options = CUSTOM_DROPDOWN_OPTIONS_MAP[fieldId];
     document.getElementById(fieldId).value = value;
     syncCustomDropdownDisplay(fieldId, options, value);
     document.getElementById(fieldId + 'Options').style.display = 'none';
@@ -11211,6 +11241,8 @@ function switchLang(lang) {
       if (document.getElementById('profileWaistCircumference')) document.getElementById('profileWaistCircumference').value = profile.waist_circumference || '';
       if (document.getElementById('profileFamilyDiabetes')) { document.getElementById('profileFamilyDiabetes').value = profile.family_diabetes_history || 'aucun'; syncCustomDropdownDisplay('profileFamilyDiabetes', FAMILY_DIABETES_OPTIONS, profile.family_diabetes_history || 'aucun'); }
       if (document.getElementById('profileHighGlucoseHistory')) { document.getElementById('profileHighGlucoseHistory').value = profile.high_glucose_history || 'non'; syncCustomDropdownDisplay('profileHighGlucoseHistory', HIGH_GLUCOSE_OPTIONS, profile.high_glucose_history || 'non'); }
+      if (document.getElementById('profileSmokingStatus')) { document.getElementById('profileSmokingStatus').value = profile.smoking_status || 'non_fumeur'; syncCustomDropdownDisplay('profileSmokingStatus', SMOKING_STATUS_OPTIONS, profile.smoking_status || 'non_fumeur'); }
+      if (document.getElementById('profileAlcoholConsumption')) { document.getElementById('profileAlcoholConsumption').value = profile.alcohol_consumption || 'jamais'; syncCustomDropdownDisplay('profileAlcoholConsumption', ALCOHOL_OPTIONS, profile.alcohol_consumption || 'jamais'); }
       document.getElementById('profileAllergies').value = profile.allergies?.join(', ') || '';
       document.getElementById('profileMedications').value = profile.medications?.join(', ') || '';
       document.getElementById('profileCultural').value = profile.cultural_constraints || '';
@@ -18904,6 +18936,8 @@ async function deleteProfessional(id) {
       waist_circumference: parseInt(document.getElementById('profileWaistCircumference')?.value) || null,
       family_diabetes_history: document.getElementById('profileFamilyDiabetes')?.value || 'aucun',
       high_glucose_history: document.getElementById('profileHighGlucoseHistory')?.value || 'non',
+      smoking_status: document.getElementById('profileSmokingStatus')?.value || 'non_fumeur',
+      alcohol_consumption: document.getElementById('profileAlcoholConsumption')?.value || 'jamais',
       allergies: document.getElementById('profileAllergies').value.split(',').map(s => s.trim()).filter(Boolean),
       medications: document.getElementById('profileMedications').value.split(',').map(s => s.trim()).filter(Boolean),
       cultural_constraints: document.getElementById('profileCultural').value.trim(),
