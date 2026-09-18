@@ -6922,6 +6922,37 @@ function switchLang(lang) {
           <input type="number" class="profile-input" id="profileBloodPressureSysDeclared" placeholder="ex: 125" style="border-radius:12px;border:1px solid rgba(255,154,108,0.2);background:#FFFCFA;padding:12px 14px;font-size:13px">
         </div>
         <div style="margin-bottom:14px">
+          <div style="font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#aaa;margin-bottom:6px">Ronflement frequent ?</div>
+          <input type="hidden" id="profileSnoring" value="ne_sait_pas">
+          <div id="profileSnoringTrigger" class="profile-input" onclick="toggleCustomDropdown('profileSnoring', SNORING_OPTIONS)" style="display:flex;align-items:center;justify-content:space-between;cursor:pointer;min-height:22px;border-radius:12px;border:1px solid rgba(255,154,108,0.2);background:#FFFCFA;padding:12px 14px;font-size:13px">
+            <span id="profileSnoringLabel" style="color:#2D2D2D">Je ne sais pas</span>
+            <i class="ti ti-chevron-down" style="font-size:15px;color:#bbb"></i>
+          </div>
+          <div id="profileSnoringOptions" style="display:none;position:fixed;background:white;border-radius:14px;box-shadow:0 12px 32px rgba(0,0,0,0.18);z-index:99999;max-height:320px;overflow-y:auto;border:1px solid #F0E8E0"></div>
+        </div>
+        <div style="margin-bottom:14px">
+          <div style="font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#aaa;margin-bottom:6px">Fatigue importante en journee ?</div>
+          <input type="hidden" id="profileDaytimeTiredness" value="ne_sait_pas">
+          <div id="profileDaytimeTirednessTrigger" class="profile-input" onclick="toggleCustomDropdown('profileDaytimeTiredness', TIREDNESS_OPTIONS)" style="display:flex;align-items:center;justify-content:space-between;cursor:pointer;min-height:22px;border-radius:12px;border:1px solid rgba(255,154,108,0.2);background:#FFFCFA;padding:12px 14px;font-size:13px">
+            <span id="profileDaytimeTirednessLabel" style="color:#2D2D2D">Je ne sais pas</span>
+            <i class="ti ti-chevron-down" style="font-size:15px;color:#bbb"></i>
+          </div>
+          <div id="profileDaytimeTirednessOptions" style="display:none;position:fixed;background:white;border-radius:14px;box-shadow:0 12px 32px rgba(0,0,0,0.18);z-index:99999;max-height:320px;overflow-y:auto;border:1px solid #F0E8E0"></div>
+        </div>
+        <div style="margin-bottom:14px">
+          <div style="font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#aaa;margin-bottom:6px">Arrets respiratoires observes pendant le sommeil ?</div>
+          <input type="hidden" id="profileObservedApnea" value="ne_sait_pas">
+          <div id="profileObservedApneaTrigger" class="profile-input" onclick="toggleCustomDropdown('profileObservedApnea', APNEA_OPTIONS)" style="display:flex;align-items:center;justify-content:space-between;cursor:pointer;min-height:22px;border-radius:12px;border:1px solid rgba(255,154,108,0.2);background:#FFFCFA;padding:12px 14px;font-size:13px">
+            <span id="profileObservedApneaLabel" style="color:#2D2D2D">Je ne sais pas</span>
+            <i class="ti ti-chevron-down" style="font-size:15px;color:#bbb"></i>
+          </div>
+          <div id="profileObservedApneaOptions" style="display:none;position:fixed;background:white;border-radius:14px;box-shadow:0 12px 32px rgba(0,0,0,0.18);z-index:99999;max-height:320px;overflow-y:auto;border:1px solid #F0E8E0"></div>
+        </div>
+        <div style="margin-bottom:14px">
+          <div style="font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#aaa;margin-bottom:6px">Tour de cou (cm) <span style="font-weight:400;color:#ccc;text-transform:none;letter-spacing:0">- optionnel</span></div>
+          <input type="number" class="profile-input" id="profileNeckCircumference" placeholder="ex: 38" style="border-radius:12px;border:1px solid rgba(255,154,108,0.2);background:#FFFCFA;padding:12px 14px;font-size:13px">
+        </div>
+        <div style="margin-bottom:14px">
           <div style="font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#aaa;margin-bottom:6px">Antécédents familiaux de diabète</div>
           <input type="hidden" id="profileFamilyDiabetes" value="aucun">
           <div id="profileFamilyDiabetesTrigger" class="profile-input" onclick="toggleCustomDropdown('profileFamilyDiabetes', FAMILY_DIABETES_OPTIONS)" style="display:flex;align-items:center;justify-content:space-between;cursor:pointer;min-height:22px;border-radius:12px;border:1px solid rgba(255,154,108,0.2);background:#FFFCFA;padding:12px 14px;font-size:13px">
@@ -10394,6 +10425,21 @@ function switchLang(lang) {
     { value: 'occasionnelle', label: 'Occasionnelle', icon: '<i class="ti ti-users" style="font-size:18px;color:#E8983C"></i>' },
     { value: 'reguliere', label: 'Reguliere (plus de 2 verres/jour ou quotidienne)', icon: '<i class="ti ti-alert-circle" style="font-size:18px;color:#E8703C"></i>' }
   ];
+  var SNORING_OPTIONS = [
+    { value: 'non', label: 'Non', icon: '<i class="ti ti-circle-check" style="font-size:18px;color:#3BA65C"></i>' },
+    { value: 'oui', label: 'Oui', icon: '<i class="ti ti-alert-circle" style="font-size:18px;color:#E8703C"></i>' },
+    { value: 'ne_sait_pas', label: 'Je ne sais pas', icon: '<i class="ti ti-help-circle" style="font-size:18px;color:#999"></i>' }
+  ];
+  var TIREDNESS_OPTIONS = [
+    { value: 'non', label: 'Non', icon: '<i class="ti ti-circle-check" style="font-size:18px;color:#3BA65C"></i>' },
+    { value: 'oui', label: 'Oui', icon: '<i class="ti ti-alert-circle" style="font-size:18px;color:#E8703C"></i>' },
+    { value: 'ne_sait_pas', label: 'Je ne sais pas', icon: '<i class="ti ti-help-circle" style="font-size:18px;color:#999"></i>' }
+  ];
+  var APNEA_OPTIONS = [
+    { value: 'non', label: 'Non', icon: '<i class="ti ti-circle-check" style="font-size:18px;color:#3BA65C"></i>' },
+    { value: 'oui', label: 'Oui', icon: '<i class="ti ti-alert-circle" style="font-size:18px;color:#E8703C"></i>' },
+    { value: 'ne_sait_pas', label: 'Je ne sais pas', icon: '<i class="ti ti-help-circle" style="font-size:18px;color:#999"></i>' }
+  ];
   function renderCustomDropdown(fieldId, options) {
     var panel = document.getElementById(fieldId + 'Options');
     if (!panel) return;
@@ -10425,7 +10471,10 @@ function switchLang(lang) {
     profileFamilyDiabetes: FAMILY_DIABETES_OPTIONS,
     profileHighGlucoseHistory: HIGH_GLUCOSE_OPTIONS,
     profileSmokingStatus: SMOKING_STATUS_OPTIONS,
-    profileAlcoholConsumption: ALCOHOL_OPTIONS
+    profileAlcoholConsumption: ALCOHOL_OPTIONS,
+    profileSnoring: SNORING_OPTIONS,
+    profileDaytimeTiredness: TIREDNESS_OPTIONS,
+    profileObservedApnea: APNEA_OPTIONS
   };
   function selectCustomDropdown(fieldId, value) {
     var options = CUSTOM_DROPDOWN_OPTIONS_MAP[fieldId];
@@ -11249,6 +11298,10 @@ function switchLang(lang) {
       if (document.getElementById('profileWaistCircumference')) document.getElementById('profileWaistCircumference').value = profile.waist_circumference || '';
       if (document.getElementById('profileCholesterolTotal')) document.getElementById('profileCholesterolTotal').value = profile.cholesterol_total || '';
       if (document.getElementById('profileBloodPressureSysDeclared')) document.getElementById('profileBloodPressureSysDeclared').value = profile.blood_pressure_sys_declared || '';
+      if (document.getElementById('profileSnoring')) { document.getElementById('profileSnoring').value = profile.snoring === true ? 'oui' : profile.snoring === false ? 'non' : 'ne_sait_pas'; syncCustomDropdownDisplay('profileSnoring', SNORING_OPTIONS, document.getElementById('profileSnoring').value); }
+      if (document.getElementById('profileDaytimeTiredness')) { document.getElementById('profileDaytimeTiredness').value = profile.daytime_tiredness === true ? 'oui' : profile.daytime_tiredness === false ? 'non' : 'ne_sait_pas'; syncCustomDropdownDisplay('profileDaytimeTiredness', TIREDNESS_OPTIONS, document.getElementById('profileDaytimeTiredness').value); }
+      if (document.getElementById('profileObservedApnea')) { document.getElementById('profileObservedApnea').value = profile.observed_apnea === true ? 'oui' : profile.observed_apnea === false ? 'non' : 'ne_sait_pas'; syncCustomDropdownDisplay('profileObservedApnea', APNEA_OPTIONS, document.getElementById('profileObservedApnea').value); }
+      if (document.getElementById('profileNeckCircumference')) document.getElementById('profileNeckCircumference').value = profile.neck_circumference || '';
       if (document.getElementById('profileFamilyDiabetes')) { document.getElementById('profileFamilyDiabetes').value = profile.family_diabetes_history || 'aucun'; syncCustomDropdownDisplay('profileFamilyDiabetes', FAMILY_DIABETES_OPTIONS, profile.family_diabetes_history || 'aucun'); }
       if (document.getElementById('profileHighGlucoseHistory')) { document.getElementById('profileHighGlucoseHistory').value = profile.high_glucose_history || 'non'; syncCustomDropdownDisplay('profileHighGlucoseHistory', HIGH_GLUCOSE_OPTIONS, profile.high_glucose_history || 'non'); }
       if (document.getElementById('profileSmokingStatus')) { document.getElementById('profileSmokingStatus').value = profile.smoking_status || 'non_fumeur'; syncCustomDropdownDisplay('profileSmokingStatus', SMOKING_STATUS_OPTIONS, profile.smoking_status || 'non_fumeur'); }
@@ -18946,6 +18999,10 @@ async function deleteProfessional(id) {
       waist_circumference: parseInt(document.getElementById('profileWaistCircumference')?.value) || null,
       cholesterol_total: parseFloat(document.getElementById('profileCholesterolTotal')?.value) || null,
       blood_pressure_sys_declared: parseFloat(document.getElementById('profileBloodPressureSysDeclared')?.value) || null,
+      snoring: document.getElementById('profileSnoring')?.value === 'oui' ? true : document.getElementById('profileSnoring')?.value === 'non' ? false : null,
+      daytime_tiredness: document.getElementById('profileDaytimeTiredness')?.value === 'oui' ? true : document.getElementById('profileDaytimeTiredness')?.value === 'non' ? false : null,
+      observed_apnea: document.getElementById('profileObservedApnea')?.value === 'oui' ? true : document.getElementById('profileObservedApnea')?.value === 'non' ? false : null,
+      neck_circumference: parseFloat(document.getElementById('profileNeckCircumference')?.value) || null,
       family_diabetes_history: document.getElementById('profileFamilyDiabetes')?.value || 'aucun',
       high_glucose_history: document.getElementById('profileHighGlucoseHistory')?.value || 'non',
       smoking_status: document.getElementById('profileSmokingStatus')?.value || 'non_fumeur',
