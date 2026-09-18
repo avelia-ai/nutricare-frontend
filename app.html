@@ -23747,6 +23747,11 @@ function drawRituelSquare(canvas, stepIdx, stepT, globalCalm, progress) {
   var half = 82;
   var radius = 26;
 
+  // Couleur : corail chaud -> violet doux au fil du temps (identique a drawRituelHeart)
+  var rc = Math.round(255 - 55*globalCalm);
+  var gc = Math.round(110 + 20*globalCalm);
+  var bc = Math.round(90 + 150*globalCalm);
+
   // Champ d'etoiles scintillantes en fond (ambiance fixe)
   if (_rituelSquareStars.length === 0) initRituelSquareStars();
   _rituelSquareStars.forEach(function(s){
@@ -23782,11 +23787,6 @@ function drawRituelSquare(canvas, stepIdx, stepT, globalCalm, progress) {
 
   // ease in-out pour un mouvement fluide de l'orbe (pas de vitesse lineaire brute)
   var te = stepT < 0.5 ? 2*stepT*stepT : 1-Math.pow(-2*stepT+2,2)/2;
-
-  // Couleur : corail chaud -> violet doux au fil du temps (identique a drawRituelHeart)
-  var rc = Math.round(255 - 55*globalCalm);
-  var gc = Math.round(110 + 20*globalCalm);
-  var bc = Math.round(90 + 150*globalCalm);
 
   // Facteur "respiration" du halo central : gonfle sur inspire (step0), plein sur hold (step1), se vide sur expire (step2), vide sur hold (step3)
   var breathSize;
