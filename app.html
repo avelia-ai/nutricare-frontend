@@ -6953,6 +6953,33 @@ function switchLang(lang) {
           <input type="number" class="profile-input" id="profileNeckCircumference" placeholder="ex: 38" style="border-radius:12px;border:1px solid rgba(255,154,108,0.2);background:#FFFCFA;padding:12px 14px;font-size:13px">
         </div>
         <div style="margin-bottom:14px">
+          <div style="font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#aaa;margin-bottom:6px">A quelle frequence consommez-vous de l'alcool ?</div>
+          <input type="hidden" id="profileAuditCFrequency" value="jamais">
+          <div id="profileAuditCFrequencyTrigger" class="profile-input" onclick="toggleCustomDropdown('profileAuditCFrequency', AUDITC_FREQUENCY_OPTIONS)" style="display:flex;align-items:center;justify-content:space-between;cursor:pointer;min-height:22px;border-radius:12px;border:1px solid rgba(255,154,108,0.2);background:#FFFCFA;padding:12px 14px;font-size:13px">
+            <span id="profileAuditCFrequencyLabel" style="color:#2D2D2D">Jamais</span>
+            <i class="ti ti-chevron-down" style="font-size:15px;color:#bbb"></i>
+          </div>
+          <div id="profileAuditCFrequencyOptions" style="display:none;position:fixed;background:white;border-radius:14px;box-shadow:0 12px 32px rgba(0,0,0,0.18);z-index:99999;max-height:320px;overflow-y:auto;border:1px solid #F0E8E0"></div>
+        </div>
+        <div style="margin-bottom:14px">
+          <div style="font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#aaa;margin-bottom:6px">Un jour typique ou vous buvez, combien de verres ?</div>
+          <input type="hidden" id="profileAuditCTypicalQuantity" value="1_2">
+          <div id="profileAuditCTypicalQuantityTrigger" class="profile-input" onclick="toggleCustomDropdown('profileAuditCTypicalQuantity', AUDITC_QUANTITY_OPTIONS)" style="display:flex;align-items:center;justify-content:space-between;cursor:pointer;min-height:22px;border-radius:12px;border:1px solid rgba(255,154,108,0.2);background:#FFFCFA;padding:12px 14px;font-size:13px">
+            <span id="profileAuditCTypicalQuantityLabel" style="color:#2D2D2D">1 a 2 verres</span>
+            <i class="ti ti-chevron-down" style="font-size:15px;color:#bbb"></i>
+          </div>
+          <div id="profileAuditCTypicalQuantityOptions" style="display:none;position:fixed;background:white;border-radius:14px;box-shadow:0 12px 32px rgba(0,0,0,0.18);z-index:99999;max-height:320px;overflow-y:auto;border:1px solid #F0E8E0"></div>
+        </div>
+        <div style="margin-bottom:14px">
+          <div style="font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#aaa;margin-bottom:6px">A quelle frequence buvez-vous 6 verres ou plus en une occasion ?</div>
+          <input type="hidden" id="profileAuditCBingeFrequency" value="jamais">
+          <div id="profileAuditCBingeFrequencyTrigger" class="profile-input" onclick="toggleCustomDropdown('profileAuditCBingeFrequency', AUDITC_BINGE_OPTIONS)" style="display:flex;align-items:center;justify-content:space-between;cursor:pointer;min-height:22px;border-radius:12px;border:1px solid rgba(255,154,108,0.2);background:#FFFCFA;padding:12px 14px;font-size:13px">
+            <span id="profileAuditCBingeFrequencyLabel" style="color:#2D2D2D">Jamais</span>
+            <i class="ti ti-chevron-down" style="font-size:15px;color:#bbb"></i>
+          </div>
+          <div id="profileAuditCBingeFrequencyOptions" style="display:none;position:fixed;background:white;border-radius:14px;box-shadow:0 12px 32px rgba(0,0,0,0.18);z-index:99999;max-height:320px;overflow-y:auto;border:1px solid #F0E8E0"></div>
+        </div>
+        <div style="margin-bottom:14px">
           <div style="font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#aaa;margin-bottom:6px">Antécédents familiaux de diabète</div>
           <input type="hidden" id="profileFamilyDiabetes" value="aucun">
           <div id="profileFamilyDiabetesTrigger" class="profile-input" onclick="toggleCustomDropdown('profileFamilyDiabetes', FAMILY_DIABETES_OPTIONS)" style="display:flex;align-items:center;justify-content:space-between;cursor:pointer;min-height:22px;border-radius:12px;border:1px solid rgba(255,154,108,0.2);background:#FFFCFA;padding:12px 14px;font-size:13px">
@@ -10440,6 +10467,27 @@ function switchLang(lang) {
     { value: 'oui', label: 'Oui', icon: '<i class="ti ti-alert-circle" style="font-size:18px;color:#E8703C"></i>' },
     { value: 'ne_sait_pas', label: 'Je ne sais pas', icon: '<i class="ti ti-help-circle" style="font-size:18px;color:#999"></i>' }
   ];
+  var AUDITC_FREQUENCY_OPTIONS = [
+    { value: 'jamais', label: 'Jamais', icon: '<i class="ti ti-circle-check" style="font-size:18px;color:#3BA65C"></i>' },
+    { value: 'mensuel_ou_moins', label: '1 fois par mois ou moins', icon: '<i class="ti ti-circle-check" style="font-size:18px;color:#3BA65C"></i>' },
+    { value: '2_4_par_mois', label: '2 a 4 fois par mois', icon: '<i class="ti ti-users" style="font-size:18px;color:#E8983C"></i>' },
+    { value: '2_3_par_semaine', label: '2 a 3 fois par semaine', icon: '<i class="ti ti-alert-circle" style="font-size:18px;color:#E8703C"></i>' },
+    { value: '4_plus_par_semaine', label: '4 fois ou plus par semaine', icon: '<i class="ti ti-alert-circle" style="font-size:18px;color:#E8703C"></i>' }
+  ];
+  var AUDITC_QUANTITY_OPTIONS = [
+    { value: '1_2', label: '1 a 2 verres', icon: '<i class="ti ti-circle-check" style="font-size:18px;color:#3BA65C"></i>' },
+    { value: '3_4', label: '3 a 4 verres', icon: '<i class="ti ti-users" style="font-size:18px;color:#E8983C"></i>' },
+    { value: '5_6', label: '5 a 6 verres', icon: '<i class="ti ti-alert-circle" style="font-size:18px;color:#E8703C"></i>' },
+    { value: '7_9', label: '7 a 9 verres', icon: '<i class="ti ti-alert-circle" style="font-size:18px;color:#E8703C"></i>' },
+    { value: '10_plus', label: '10 verres ou plus', icon: '<i class="ti ti-alert-circle" style="font-size:18px;color:#E8703C"></i>' }
+  ];
+  var AUDITC_BINGE_OPTIONS = [
+    { value: 'jamais', label: 'Jamais', icon: '<i class="ti ti-circle-check" style="font-size:18px;color:#3BA65C"></i>' },
+    { value: 'moins_mensuel', label: 'Moins d\'une fois par mois', icon: '<i class="ti ti-users" style="font-size:18px;color:#E8983C"></i>' },
+    { value: 'mensuel', label: 'Une fois par mois', icon: '<i class="ti ti-alert-circle" style="font-size:18px;color:#E8703C"></i>' },
+    { value: 'hebdomadaire', label: 'Une fois par semaine', icon: '<i class="ti ti-alert-circle" style="font-size:18px;color:#E8703C"></i>' },
+    { value: 'quotidien_ou_presque', label: 'Quotidiennement ou presque', icon: '<i class="ti ti-alert-circle" style="font-size:18px;color:#E8703C"></i>' }
+  ];
   function renderCustomDropdown(fieldId, options) {
     var panel = document.getElementById(fieldId + 'Options');
     if (!panel) return;
@@ -10474,7 +10522,10 @@ function switchLang(lang) {
     profileAlcoholConsumption: ALCOHOL_OPTIONS,
     profileSnoring: SNORING_OPTIONS,
     profileDaytimeTiredness: TIREDNESS_OPTIONS,
-    profileObservedApnea: APNEA_OPTIONS
+    profileObservedApnea: APNEA_OPTIONS,
+    profileAuditCFrequency: AUDITC_FREQUENCY_OPTIONS,
+    profileAuditCTypicalQuantity: AUDITC_QUANTITY_OPTIONS,
+    profileAuditCBingeFrequency: AUDITC_BINGE_OPTIONS
   };
   function selectCustomDropdown(fieldId, value) {
     var options = CUSTOM_DROPDOWN_OPTIONS_MAP[fieldId];
@@ -11302,6 +11353,9 @@ function switchLang(lang) {
       if (document.getElementById('profileDaytimeTiredness')) { document.getElementById('profileDaytimeTiredness').value = profile.daytime_tiredness === true ? 'oui' : profile.daytime_tiredness === false ? 'non' : 'ne_sait_pas'; syncCustomDropdownDisplay('profileDaytimeTiredness', TIREDNESS_OPTIONS, document.getElementById('profileDaytimeTiredness').value); }
       if (document.getElementById('profileObservedApnea')) { document.getElementById('profileObservedApnea').value = profile.observed_apnea === true ? 'oui' : profile.observed_apnea === false ? 'non' : 'ne_sait_pas'; syncCustomDropdownDisplay('profileObservedApnea', APNEA_OPTIONS, document.getElementById('profileObservedApnea').value); }
       if (document.getElementById('profileNeckCircumference')) document.getElementById('profileNeckCircumference').value = profile.neck_circumference || '';
+      if (document.getElementById('profileAuditCFrequency')) { document.getElementById('profileAuditCFrequency').value = profile.audit_c_frequency || 'jamais'; syncCustomDropdownDisplay('profileAuditCFrequency', AUDITC_FREQUENCY_OPTIONS, profile.audit_c_frequency || 'jamais'); }
+      if (document.getElementById('profileAuditCTypicalQuantity')) { document.getElementById('profileAuditCTypicalQuantity').value = profile.audit_c_typical_quantity || '1_2'; syncCustomDropdownDisplay('profileAuditCTypicalQuantity', AUDITC_QUANTITY_OPTIONS, profile.audit_c_typical_quantity || '1_2'); }
+      if (document.getElementById('profileAuditCBingeFrequency')) { document.getElementById('profileAuditCBingeFrequency').value = profile.audit_c_binge_frequency || 'jamais'; syncCustomDropdownDisplay('profileAuditCBingeFrequency', AUDITC_BINGE_OPTIONS, profile.audit_c_binge_frequency || 'jamais'); }
       if (document.getElementById('profileFamilyDiabetes')) { document.getElementById('profileFamilyDiabetes').value = profile.family_diabetes_history || 'aucun'; syncCustomDropdownDisplay('profileFamilyDiabetes', FAMILY_DIABETES_OPTIONS, profile.family_diabetes_history || 'aucun'); }
       if (document.getElementById('profileHighGlucoseHistory')) { document.getElementById('profileHighGlucoseHistory').value = profile.high_glucose_history || 'non'; syncCustomDropdownDisplay('profileHighGlucoseHistory', HIGH_GLUCOSE_OPTIONS, profile.high_glucose_history || 'non'); }
       if (document.getElementById('profileSmokingStatus')) { document.getElementById('profileSmokingStatus').value = profile.smoking_status || 'non_fumeur'; syncCustomDropdownDisplay('profileSmokingStatus', SMOKING_STATUS_OPTIONS, profile.smoking_status || 'non_fumeur'); }
@@ -19003,6 +19057,9 @@ async function deleteProfessional(id) {
       daytime_tiredness: document.getElementById('profileDaytimeTiredness')?.value === 'oui' ? true : document.getElementById('profileDaytimeTiredness')?.value === 'non' ? false : null,
       observed_apnea: document.getElementById('profileObservedApnea')?.value === 'oui' ? true : document.getElementById('profileObservedApnea')?.value === 'non' ? false : null,
       neck_circumference: parseFloat(document.getElementById('profileNeckCircumference')?.value) || null,
+      audit_c_frequency: document.getElementById('profileAuditCFrequency')?.value || 'jamais',
+      audit_c_typical_quantity: document.getElementById('profileAuditCTypicalQuantity')?.value || '1_2',
+      audit_c_binge_frequency: document.getElementById('profileAuditCBingeFrequency')?.value || 'jamais',
       family_diabetes_history: document.getElementById('profileFamilyDiabetes')?.value || 'aucun',
       high_glucose_history: document.getElementById('profileHighGlucoseHistory')?.value || 'non',
       smoking_status: document.getElementById('profileSmokingStatus')?.value || 'non_fumeur',
