@@ -7006,6 +7006,52 @@ function switchLang(lang) {
           </div>
           <div id="profileSunExposureOptions" style="display:none;position:fixed;background:white;border-radius:14px;box-shadow:0 12px 32px rgba(0,0,0,0.18);z-index:99999;max-height:320px;overflow-y:auto;border:1px solid #F0E8E0"></div>
         </div>
+        <div id="fagerstromBlock" style="display:none">
+        <div style="margin-bottom:14px">
+          <div style="font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#aaa;margin-bottom:6px">Delai avant la premiere cigarette du matin (minutes)</div>
+          <input type="number" class="profile-input" id="profileFagerstromTimeToFirst" placeholder="ex: 20" style="border-radius:12px;border:1px solid rgba(255,154,108,0.2);background:#FFFCFA;padding:12px 14px;font-size:13px">
+        </div>
+        <div style="margin-bottom:14px">
+          <div style="font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#aaa;margin-bottom:6px">Difficile de ne pas fumer dans les lieux interdits ?</div>
+          <input type="hidden" id="profileFagerstromDifficultyRefrain" value="ne_sait_pas">
+          <div id="profileFagerstromDifficultyRefrainTrigger" class="profile-input" onclick="toggleCustomDropdown('profileFagerstromDifficultyRefrain', FAGERSTROM_BOOL_OPTIONS)" style="display:flex;align-items:center;justify-content:space-between;cursor:pointer;min-height:22px;border-radius:12px;border:1px solid rgba(255,154,108,0.2);background:#FFFCFA;padding:12px 14px;font-size:13px">
+            <span id="profileFagerstromDifficultyRefrainLabel" style="color:#2D2D2D">Je ne sais pas</span>
+            <i class="ti ti-chevron-down" style="font-size:15px;color:#bbb"></i>
+          </div>
+          <div id="profileFagerstromDifficultyRefrainOptions" style="display:none;position:fixed;background:white;border-radius:14px;box-shadow:0 12px 32px rgba(0,0,0,0.18);z-index:99999;max-height:320px;overflow-y:auto;border:1px solid #F0E8E0"></div>
+        </div>
+        <div style="margin-bottom:14px">
+          <div style="font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#aaa;margin-bottom:6px">Cigarette la plus difficile a laquelle renoncer ?</div>
+          <input type="hidden" id="profileFagerstromHardestCigarette" value="autre">
+          <div id="profileFagerstromHardestCigaretteTrigger" class="profile-input" onclick="toggleCustomDropdown('profileFagerstromHardestCigarette', FAGERSTROM_HARDEST_OPTIONS)" style="display:flex;align-items:center;justify-content:space-between;cursor:pointer;min-height:22px;border-radius:12px;border:1px solid rgba(255,154,108,0.2);background:#FFFCFA;padding:12px 14px;font-size:13px">
+            <span id="profileFagerstromHardestCigaretteLabel" style="color:#2D2D2D">Une autre</span>
+            <i class="ti ti-chevron-down" style="font-size:15px;color:#bbb"></i>
+          </div>
+          <div id="profileFagerstromHardestCigaretteOptions" style="display:none;position:fixed;background:white;border-radius:14px;box-shadow:0 12px 32px rgba(0,0,0,0.18);z-index:99999;max-height:320px;overflow-y:auto;border:1px solid #F0E8E0"></div>
+        </div>
+        <div style="margin-bottom:14px">
+          <div style="font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#aaa;margin-bottom:6px">Nombre de cigarettes par jour</div>
+          <input type="number" class="profile-input" id="profileFagerstromCigarettesPerDay" placeholder="ex: 12" style="border-radius:12px;border:1px solid rgba(255,154,108,0.2);background:#FFFCFA;padding:12px 14px;font-size:13px">
+        </div>
+        <div style="margin-bottom:14px">
+          <div style="font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#aaa;margin-bottom:6px">Fumez-vous davantage le matin que le reste de la journee ?</div>
+          <input type="hidden" id="profileFagerstromMoreMorning" value="ne_sait_pas">
+          <div id="profileFagerstromMoreMorningTrigger" class="profile-input" onclick="toggleCustomDropdown('profileFagerstromMoreMorning', FAGERSTROM_BOOL_OPTIONS)" style="display:flex;align-items:center;justify-content:space-between;cursor:pointer;min-height:22px;border-radius:12px;border:1px solid rgba(255,154,108,0.2);background:#FFFCFA;padding:12px 14px;font-size:13px">
+            <span id="profileFagerstromMoreMorningLabel" style="color:#2D2D2D">Je ne sais pas</span>
+            <i class="ti ti-chevron-down" style="font-size:15px;color:#bbb"></i>
+          </div>
+          <div id="profileFagerstromMoreMorningOptions" style="display:none;position:fixed;background:white;border-radius:14px;box-shadow:0 12px 32px rgba(0,0,0,0.18);z-index:99999;max-height:320px;overflow-y:auto;border:1px solid #F0E8E0"></div>
+        </div>
+        <div style="margin-bottom:14px">
+          <div style="font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#aaa;margin-bottom:6px">Fumez-vous meme malade/alite ?</div>
+          <input type="hidden" id="profileFagerstromSmokeWhenIll" value="ne_sait_pas">
+          <div id="profileFagerstromSmokeWhenIllTrigger" class="profile-input" onclick="toggleCustomDropdown('profileFagerstromSmokeWhenIll', FAGERSTROM_BOOL_OPTIONS)" style="display:flex;align-items:center;justify-content:space-between;cursor:pointer;min-height:22px;border-radius:12px;border:1px solid rgba(255,154,108,0.2);background:#FFFCFA;padding:12px 14px;font-size:13px">
+            <span id="profileFagerstromSmokeWhenIllLabel" style="color:#2D2D2D">Je ne sais pas</span>
+            <i class="ti ti-chevron-down" style="font-size:15px;color:#bbb"></i>
+          </div>
+          <div id="profileFagerstromSmokeWhenIllOptions" style="display:none;position:fixed;background:white;border-radius:14px;box-shadow:0 12px 32px rgba(0,0,0,0.18);z-index:99999;max-height:320px;overflow-y:auto;border:1px solid #F0E8E0"></div>
+        </div>
+        </div>
         <div style="margin-bottom:14px">
           <div style="font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#aaa;margin-bottom:6px">Antécédents familiaux de diabète</div>
           <input type="hidden" id="profileFamilyDiabetes" value="aucun">
@@ -10530,6 +10576,15 @@ function switchLang(lang) {
     { value: 'parfois', label: 'Parfois', icon: '<i class="ti ti-users" style="font-size:18px;color:#E8983C"></i>' },
     { value: 'souvent', label: 'Souvent', icon: '<i class="ti ti-circle-check" style="font-size:18px;color:#3BA65C"></i>' }
   ];
+  var FAGERSTROM_BOOL_OPTIONS = [
+    { value: 'non', label: 'Non', icon: '<i class="ti ti-circle-check" style="font-size:18px;color:#3BA65C"></i>' },
+    { value: 'oui', label: 'Oui', icon: '<i class="ti ti-alert-circle" style="font-size:18px;color:#E8703C"></i>' },
+    { value: 'ne_sait_pas', label: 'Je ne sais pas', icon: '<i class="ti ti-help-circle" style="font-size:18px;color:#999"></i>' }
+  ];
+  var FAGERSTROM_HARDEST_OPTIONS = [
+    { value: 'matin', label: 'La premiere du matin', icon: '<i class="ti ti-alert-circle" style="font-size:18px;color:#E8703C"></i>' },
+    { value: 'autre', label: 'Une autre', icon: '<i class="ti ti-circle-check" style="font-size:18px;color:#3BA65C"></i>' }
+  ];
   function renderCustomDropdown(fieldId, options) {
     var panel = document.getElementById(fieldId + 'Options');
     if (!panel) return;
@@ -10570,13 +10625,20 @@ function switchLang(lang) {
     profileAuditCBingeFrequency: AUDITC_BINGE_OPTIONS,
     profileMenopauseStatus: MENOPAUSE_OPTIONS,
     profileFamilyFractureHistory: FAMILY_FRACTURE_OPTIONS,
-    profileSunExposure: SUN_EXPOSURE_OPTIONS
+    profileSunExposure: SUN_EXPOSURE_OPTIONS,
+    profileFagerstromDifficultyRefrain: FAGERSTROM_BOOL_OPTIONS,
+    profileFagerstromHardestCigarette: FAGERSTROM_HARDEST_OPTIONS,
+    profileFagerstromMoreMorning: FAGERSTROM_BOOL_OPTIONS,
+    profileFagerstromSmokeWhenIll: FAGERSTROM_BOOL_OPTIONS
   };
   function selectCustomDropdown(fieldId, value) {
     var options = CUSTOM_DROPDOWN_OPTIONS_MAP[fieldId];
     document.getElementById(fieldId).value = value;
     syncCustomDropdownDisplay(fieldId, options, value);
     document.getElementById(fieldId + 'Options').style.display = 'none';
+    if (fieldId === 'profileSmokingStatus' && document.getElementById('fagerstromBlock')) {
+      document.getElementById('fagerstromBlock').style.display = (value === 'fumeur') ? 'block' : 'none';
+    }
   }
   function syncCustomDropdownDisplay(fieldId, options, value) {
     var lbl = document.getElementById(fieldId + 'Label');
@@ -11404,6 +11466,13 @@ function switchLang(lang) {
       if (document.getElementById('profileMenopauseStatus')) { document.getElementById('profileMenopauseStatus').value = profile.menopause_status || 'non_applicable'; syncCustomDropdownDisplay('profileMenopauseStatus', MENOPAUSE_OPTIONS, profile.menopause_status || 'non_applicable'); }
       if (document.getElementById('profileFamilyFractureHistory')) { document.getElementById('profileFamilyFractureHistory').value = profile.family_fracture_history === true ? 'oui' : profile.family_fracture_history === false ? 'non' : 'ne_sait_pas'; syncCustomDropdownDisplay('profileFamilyFractureHistory', FAMILY_FRACTURE_OPTIONS, document.getElementById('profileFamilyFractureHistory').value); }
       if (document.getElementById('profileSunExposure')) { document.getElementById('profileSunExposure').value = profile.sun_exposure || 'parfois'; syncCustomDropdownDisplay('profileSunExposure', SUN_EXPOSURE_OPTIONS, profile.sun_exposure || 'parfois'); }
+      if (document.getElementById('fagerstromBlock')) fagerstromBlock.style.display = (profile.smoking_status === 'fumeur') ? 'block' : 'none';
+      if (document.getElementById('profileFagerstromTimeToFirst')) document.getElementById('profileFagerstromTimeToFirst').value = profile.fagerstrom_time_to_first || '';
+      if (document.getElementById('profileFagerstromDifficultyRefrain')) { document.getElementById('profileFagerstromDifficultyRefrain').value = profile.fagerstrom_difficulty_refrain === true ? 'oui' : profile.fagerstrom_difficulty_refrain === false ? 'non' : 'ne_sait_pas'; syncCustomDropdownDisplay('profileFagerstromDifficultyRefrain', FAGERSTROM_BOOL_OPTIONS, document.getElementById('profileFagerstromDifficultyRefrain').value); }
+      if (document.getElementById('profileFagerstromHardestCigarette')) { document.getElementById('profileFagerstromHardestCigarette').value = profile.fagerstrom_hardest_cigarette || 'autre'; syncCustomDropdownDisplay('profileFagerstromHardestCigarette', FAGERSTROM_HARDEST_OPTIONS, profile.fagerstrom_hardest_cigarette || 'autre'); }
+      if (document.getElementById('profileFagerstromCigarettesPerDay')) document.getElementById('profileFagerstromCigarettesPerDay').value = profile.fagerstrom_cigarettes_per_day || '';
+      if (document.getElementById('profileFagerstromMoreMorning')) { document.getElementById('profileFagerstromMoreMorning').value = profile.fagerstrom_more_morning === true ? 'oui' : profile.fagerstrom_more_morning === false ? 'non' : 'ne_sait_pas'; syncCustomDropdownDisplay('profileFagerstromMoreMorning', FAGERSTROM_BOOL_OPTIONS, document.getElementById('profileFagerstromMoreMorning').value); }
+      if (document.getElementById('profileFagerstromSmokeWhenIll')) { document.getElementById('profileFagerstromSmokeWhenIll').value = profile.fagerstrom_smoke_when_ill === true ? 'oui' : profile.fagerstrom_smoke_when_ill === false ? 'non' : 'ne_sait_pas'; syncCustomDropdownDisplay('profileFagerstromSmokeWhenIll', FAGERSTROM_BOOL_OPTIONS, document.getElementById('profileFagerstromSmokeWhenIll').value); }
       if (document.getElementById('profileFamilyDiabetes')) { document.getElementById('profileFamilyDiabetes').value = profile.family_diabetes_history || 'aucun'; syncCustomDropdownDisplay('profileFamilyDiabetes', FAMILY_DIABETES_OPTIONS, profile.family_diabetes_history || 'aucun'); }
       if (document.getElementById('profileHighGlucoseHistory')) { document.getElementById('profileHighGlucoseHistory').value = profile.high_glucose_history || 'non'; syncCustomDropdownDisplay('profileHighGlucoseHistory', HIGH_GLUCOSE_OPTIONS, profile.high_glucose_history || 'non'); }
       if (document.getElementById('profileSmokingStatus')) { document.getElementById('profileSmokingStatus').value = profile.smoking_status || 'non_fumeur'; syncCustomDropdownDisplay('profileSmokingStatus', SMOKING_STATUS_OPTIONS, profile.smoking_status || 'non_fumeur'); }
@@ -19111,6 +19180,12 @@ async function deleteProfessional(id) {
       menopause_status: document.getElementById('profileMenopauseStatus')?.value || 'non_applicable',
       family_fracture_history: document.getElementById('profileFamilyFractureHistory')?.value === 'oui' ? true : document.getElementById('profileFamilyFractureHistory')?.value === 'non' ? false : null,
       sun_exposure: document.getElementById('profileSunExposure')?.value || 'parfois',
+      fagerstrom_time_to_first: parseFloat(document.getElementById('profileFagerstromTimeToFirst')?.value) || null,
+      fagerstrom_difficulty_refrain: document.getElementById('profileFagerstromDifficultyRefrain')?.value === 'oui' ? true : document.getElementById('profileFagerstromDifficultyRefrain')?.value === 'non' ? false : null,
+      fagerstrom_hardest_cigarette: document.getElementById('profileFagerstromHardestCigarette')?.value || 'autre',
+      fagerstrom_cigarettes_per_day: parseFloat(document.getElementById('profileFagerstromCigarettesPerDay')?.value) || null,
+      fagerstrom_more_morning: document.getElementById('profileFagerstromMoreMorning')?.value === 'oui' ? true : document.getElementById('profileFagerstromMoreMorning')?.value === 'non' ? false : null,
+      fagerstrom_smoke_when_ill: document.getElementById('profileFagerstromSmokeWhenIll')?.value === 'oui' ? true : document.getElementById('profileFagerstromSmokeWhenIll')?.value === 'non' ? false : null,
       family_diabetes_history: document.getElementById('profileFamilyDiabetes')?.value || 'aucun',
       high_glucose_history: document.getElementById('profileHighGlucoseHistory')?.value || 'non',
       smoking_status: document.getElementById('profileSmokingStatus')?.value || 'non_fumeur',
