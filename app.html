@@ -7021,6 +7021,15 @@ function switchLang(lang) {
           <div id="profileFagerstromDifficultyRefrainOptions" style="display:none;position:fixed;background:white;border-radius:14px;box-shadow:0 12px 32px rgba(0,0,0,0.18);z-index:99999;max-height:320px;overflow-y:auto;border:1px solid #F0E8E0"></div>
         </div>
         <div style="margin-bottom:14px">
+          <div style="font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#aaa;margin-bottom:6px">Regime alimentaire</div>
+          <input type="hidden" id="profileRegimeAlimentaire" value="omnivore">
+          <div id="profileRegimeAlimentaireTrigger" class="profile-input" onclick="toggleCustomDropdown('profileRegimeAlimentaire', REGIME_ALIMENTAIRE_OPTIONS)" style="display:flex;align-items:center;justify-content:space-between;cursor:pointer;min-height:22px;border-radius:12px;border:1px solid rgba(255,154,108,0.2);background:#FFFCFA;padding:12px 14px;font-size:13px">
+            <span id="profileRegimeAlimentaireLabel" style="color:#2D2D2D">Omnivore</span>
+            <i class="ti ti-chevron-down" style="font-size:15px;color:#bbb"></i>
+          </div>
+          <div id="profileRegimeAlimentaireOptions" style="display:none;position:fixed;background:white;border-radius:14px;box-shadow:0 12px 32px rgba(0,0,0,0.18);z-index:99999;max-height:320px;overflow-y:auto;border:1px solid #F0E8E0"></div>
+        </div>
+        <div style="margin-bottom:14px">
           <div style="font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#aaa;margin-bottom:6px">Cigarette la plus difficile a laquelle renoncer ?</div>
           <input type="hidden" id="profileFagerstromHardestCigarette" value="autre">
           <div id="profileFagerstromHardestCigaretteTrigger" class="profile-input" onclick="toggleCustomDropdown('profileFagerstromHardestCigarette', FAGERSTROM_HARDEST_OPTIONS)" style="display:flex;align-items:center;justify-content:space-between;cursor:pointer;min-height:22px;border-radius:12px;border:1px solid rgba(255,154,108,0.2);background:#FFFCFA;padding:12px 14px;font-size:13px">
@@ -10585,6 +10594,11 @@ function switchLang(lang) {
     { value: 'matin', label: 'La premiere du matin', icon: '<i class="ti ti-alert-circle" style="font-size:18px;color:#E8703C"></i>' },
     { value: 'autre', label: 'Une autre', icon: '<i class="ti ti-circle-check" style="font-size:18px;color:#3BA65C"></i>' }
   ];
+  var REGIME_ALIMENTAIRE_OPTIONS = [
+    { value: 'omnivore', label: 'Omnivore', icon: '<i class="ti ti-circle-check" style="font-size:18px;color:#3BA65C"></i>' },
+    { value: 'vegetarien', label: 'Vegetarien', icon: '<i class="ti ti-users" style="font-size:18px;color:#E8983C"></i>' },
+    { value: 'vegan', label: 'Vegan', icon: '<i class="ti ti-alert-circle" style="font-size:18px;color:#E8703C"></i>' }
+  ];
   function renderCustomDropdown(fieldId, options) {
     var panel = document.getElementById(fieldId + 'Options');
     if (!panel) return;
@@ -10629,7 +10643,8 @@ function switchLang(lang) {
     profileFagerstromDifficultyRefrain: FAGERSTROM_BOOL_OPTIONS,
     profileFagerstromHardestCigarette: FAGERSTROM_HARDEST_OPTIONS,
     profileFagerstromMoreMorning: FAGERSTROM_BOOL_OPTIONS,
-    profileFagerstromSmokeWhenIll: FAGERSTROM_BOOL_OPTIONS
+    profileFagerstromSmokeWhenIll: FAGERSTROM_BOOL_OPTIONS,
+    profileRegimeAlimentaire: REGIME_ALIMENTAIRE_OPTIONS
   };
   function selectCustomDropdown(fieldId, value) {
     var options = CUSTOM_DROPDOWN_OPTIONS_MAP[fieldId];
@@ -11473,6 +11488,7 @@ function switchLang(lang) {
       if (document.getElementById('profileFagerstromCigarettesPerDay')) document.getElementById('profileFagerstromCigarettesPerDay').value = profile.fagerstrom_cigarettes_per_day || '';
       if (document.getElementById('profileFagerstromMoreMorning')) { document.getElementById('profileFagerstromMoreMorning').value = profile.fagerstrom_more_morning === true ? 'oui' : profile.fagerstrom_more_morning === false ? 'non' : 'ne_sait_pas'; syncCustomDropdownDisplay('profileFagerstromMoreMorning', FAGERSTROM_BOOL_OPTIONS, document.getElementById('profileFagerstromMoreMorning').value); }
       if (document.getElementById('profileFagerstromSmokeWhenIll')) { document.getElementById('profileFagerstromSmokeWhenIll').value = profile.fagerstrom_smoke_when_ill === true ? 'oui' : profile.fagerstrom_smoke_when_ill === false ? 'non' : 'ne_sait_pas'; syncCustomDropdownDisplay('profileFagerstromSmokeWhenIll', FAGERSTROM_BOOL_OPTIONS, document.getElementById('profileFagerstromSmokeWhenIll').value); }
+      if (document.getElementById('profileRegimeAlimentaire')) { document.getElementById('profileRegimeAlimentaire').value = profile.regime_alimentaire || 'omnivore'; syncCustomDropdownDisplay('profileRegimeAlimentaire', REGIME_ALIMENTAIRE_OPTIONS, profile.regime_alimentaire || 'omnivore'); }
       if (document.getElementById('profileFamilyDiabetes')) { document.getElementById('profileFamilyDiabetes').value = profile.family_diabetes_history || 'aucun'; syncCustomDropdownDisplay('profileFamilyDiabetes', FAMILY_DIABETES_OPTIONS, profile.family_diabetes_history || 'aucun'); }
       if (document.getElementById('profileHighGlucoseHistory')) { document.getElementById('profileHighGlucoseHistory').value = profile.high_glucose_history || 'non'; syncCustomDropdownDisplay('profileHighGlucoseHistory', HIGH_GLUCOSE_OPTIONS, profile.high_glucose_history || 'non'); }
       if (document.getElementById('profileSmokingStatus')) { document.getElementById('profileSmokingStatus').value = profile.smoking_status || 'non_fumeur'; syncCustomDropdownDisplay('profileSmokingStatus', SMOKING_STATUS_OPTIONS, profile.smoking_status || 'non_fumeur'); }
@@ -19186,6 +19202,7 @@ async function deleteProfessional(id) {
       fagerstrom_cigarettes_per_day: parseFloat(document.getElementById('profileFagerstromCigarettesPerDay')?.value) || null,
       fagerstrom_more_morning: document.getElementById('profileFagerstromMoreMorning')?.value === 'oui' ? true : document.getElementById('profileFagerstromMoreMorning')?.value === 'non' ? false : null,
       fagerstrom_smoke_when_ill: document.getElementById('profileFagerstromSmokeWhenIll')?.value === 'oui' ? true : document.getElementById('profileFagerstromSmokeWhenIll')?.value === 'non' ? false : null,
+      regime_alimentaire: document.getElementById('profileRegimeAlimentaire')?.value || 'omnivore',
       family_diabetes_history: document.getElementById('profileFamilyDiabetes')?.value || 'aucun',
       high_glucose_history: document.getElementById('profileHighGlucoseHistory')?.value || 'non',
       smoking_status: document.getElementById('profileSmokingStatus')?.value || 'non_fumeur',
