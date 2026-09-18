@@ -6998,6 +6998,15 @@ function switchLang(lang) {
           <div id="profileFamilyFractureHistoryOptions" style="display:none;position:fixed;background:white;border-radius:14px;box-shadow:0 12px 32px rgba(0,0,0,0.18);z-index:99999;max-height:320px;overflow-y:auto;border:1px solid #F0E8E0"></div>
         </div>
         <div style="margin-bottom:14px">
+          <div style="font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#aaa;margin-bottom:6px">Exposition au soleil</div>
+          <input type="hidden" id="profileSunExposure" value="parfois">
+          <div id="profileSunExposureTrigger" class="profile-input" onclick="toggleCustomDropdown('profileSunExposure', SUN_EXPOSURE_OPTIONS)" style="display:flex;align-items:center;justify-content:space-between;cursor:pointer;min-height:22px;border-radius:12px;border:1px solid rgba(255,154,108,0.2);background:#FFFCFA;padding:12px 14px;font-size:13px">
+            <span id="profileSunExposureLabel" style="color:#2D2D2D">Parfois</span>
+            <i class="ti ti-chevron-down" style="font-size:15px;color:#bbb"></i>
+          </div>
+          <div id="profileSunExposureOptions" style="display:none;position:fixed;background:white;border-radius:14px;box-shadow:0 12px 32px rgba(0,0,0,0.18);z-index:99999;max-height:320px;overflow-y:auto;border:1px solid #F0E8E0"></div>
+        </div>
+        <div style="margin-bottom:14px">
           <div style="font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#aaa;margin-bottom:6px">Antécédents familiaux de diabète</div>
           <input type="hidden" id="profileFamilyDiabetes" value="aucun">
           <div id="profileFamilyDiabetesTrigger" class="profile-input" onclick="toggleCustomDropdown('profileFamilyDiabetes', FAMILY_DIABETES_OPTIONS)" style="display:flex;align-items:center;justify-content:space-between;cursor:pointer;min-height:22px;border-radius:12px;border:1px solid rgba(255,154,108,0.2);background:#FFFCFA;padding:12px 14px;font-size:13px">
@@ -10516,6 +10525,11 @@ function switchLang(lang) {
     { value: 'oui', label: 'Oui', icon: '<i class="ti ti-alert-circle" style="font-size:18px;color:#E8703C"></i>' },
     { value: 'ne_sait_pas', label: 'Je ne sais pas', icon: '<i class="ti ti-help-circle" style="font-size:18px;color:#999"></i>' }
   ];
+  var SUN_EXPOSURE_OPTIONS = [
+    { value: 'rarement', label: 'Rarement', icon: '<i class="ti ti-alert-circle" style="font-size:18px;color:#E8703C"></i>' },
+    { value: 'parfois', label: 'Parfois', icon: '<i class="ti ti-users" style="font-size:18px;color:#E8983C"></i>' },
+    { value: 'souvent', label: 'Souvent', icon: '<i class="ti ti-circle-check" style="font-size:18px;color:#3BA65C"></i>' }
+  ];
   function renderCustomDropdown(fieldId, options) {
     var panel = document.getElementById(fieldId + 'Options');
     if (!panel) return;
@@ -10555,7 +10569,8 @@ function switchLang(lang) {
     profileAuditCTypicalQuantity: AUDITC_QUANTITY_OPTIONS,
     profileAuditCBingeFrequency: AUDITC_BINGE_OPTIONS,
     profileMenopauseStatus: MENOPAUSE_OPTIONS,
-    profileFamilyFractureHistory: FAMILY_FRACTURE_OPTIONS
+    profileFamilyFractureHistory: FAMILY_FRACTURE_OPTIONS,
+    profileSunExposure: SUN_EXPOSURE_OPTIONS
   };
   function selectCustomDropdown(fieldId, value) {
     var options = CUSTOM_DROPDOWN_OPTIONS_MAP[fieldId];
@@ -11388,6 +11403,7 @@ function switchLang(lang) {
       if (document.getElementById('profileAuditCBingeFrequency')) { document.getElementById('profileAuditCBingeFrequency').value = profile.audit_c_binge_frequency || 'jamais'; syncCustomDropdownDisplay('profileAuditCBingeFrequency', AUDITC_BINGE_OPTIONS, profile.audit_c_binge_frequency || 'jamais'); }
       if (document.getElementById('profileMenopauseStatus')) { document.getElementById('profileMenopauseStatus').value = profile.menopause_status || 'non_applicable'; syncCustomDropdownDisplay('profileMenopauseStatus', MENOPAUSE_OPTIONS, profile.menopause_status || 'non_applicable'); }
       if (document.getElementById('profileFamilyFractureHistory')) { document.getElementById('profileFamilyFractureHistory').value = profile.family_fracture_history === true ? 'oui' : profile.family_fracture_history === false ? 'non' : 'ne_sait_pas'; syncCustomDropdownDisplay('profileFamilyFractureHistory', FAMILY_FRACTURE_OPTIONS, document.getElementById('profileFamilyFractureHistory').value); }
+      if (document.getElementById('profileSunExposure')) { document.getElementById('profileSunExposure').value = profile.sun_exposure || 'parfois'; syncCustomDropdownDisplay('profileSunExposure', SUN_EXPOSURE_OPTIONS, profile.sun_exposure || 'parfois'); }
       if (document.getElementById('profileFamilyDiabetes')) { document.getElementById('profileFamilyDiabetes').value = profile.family_diabetes_history || 'aucun'; syncCustomDropdownDisplay('profileFamilyDiabetes', FAMILY_DIABETES_OPTIONS, profile.family_diabetes_history || 'aucun'); }
       if (document.getElementById('profileHighGlucoseHistory')) { document.getElementById('profileHighGlucoseHistory').value = profile.high_glucose_history || 'non'; syncCustomDropdownDisplay('profileHighGlucoseHistory', HIGH_GLUCOSE_OPTIONS, profile.high_glucose_history || 'non'); }
       if (document.getElementById('profileSmokingStatus')) { document.getElementById('profileSmokingStatus').value = profile.smoking_status || 'non_fumeur'; syncCustomDropdownDisplay('profileSmokingStatus', SMOKING_STATUS_OPTIONS, profile.smoking_status || 'non_fumeur'); }
@@ -19094,6 +19110,7 @@ async function deleteProfessional(id) {
       audit_c_binge_frequency: document.getElementById('profileAuditCBingeFrequency')?.value || 'jamais',
       menopause_status: document.getElementById('profileMenopauseStatus')?.value || 'non_applicable',
       family_fracture_history: document.getElementById('profileFamilyFractureHistory')?.value === 'oui' ? true : document.getElementById('profileFamilyFractureHistory')?.value === 'non' ? false : null,
+      sun_exposure: document.getElementById('profileSunExposure')?.value || 'parfois',
       family_diabetes_history: document.getElementById('profileFamilyDiabetes')?.value || 'aucun',
       high_glucose_history: document.getElementById('profileHighGlucoseHistory')?.value || 'non',
       smoking_status: document.getElementById('profileSmokingStatus')?.value || 'non_fumeur',
