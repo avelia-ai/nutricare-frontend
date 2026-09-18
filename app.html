@@ -10386,7 +10386,7 @@ function switchLang(lang) {
     { value: 'occasionnelle', label: 'Occasionnelle', icon: '<i class="ti ti-users" style="font-size:18px;color:#E8983C"></i>' },
     { value: 'reguliere', label: 'Reguliere (plus de 2 verres/jour ou quotidienne)', icon: '<i class="ti ti-alert-circle" style="font-size:18px;color:#E8703C"></i>' }
   ];
-(fieldId, options) {
+  function renderCustomDropdown(fieldId, options) {
     var panel = document.getElementById(fieldId + 'Options');
     if (!panel) return;
     panel.innerHTML = options.map(function(o) {
