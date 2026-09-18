@@ -22279,6 +22279,17 @@ window.showMirellaVideoPopup = function(videoUrl, message) {
 window.closeMirellaVideoPopup = function() {
   var popup = document.getElementById('mirellaVideoPopup');
   if(popup) popup.style.display = 'none';
+  var notif = window._currentToastNotif;
+  if (notif && !notif.read_at) {
+    fetch(BACKEND_URL + '/api/notifications/' + notif.id + '/read', {
+      method: 'POST',
+      headers: { Authorization: 'Bearer ' + authToken }
+    }).catch(function(){});
+    var idx = _serverNotifs.findIndex(function(n) { return n.id === notif.id; });
+    if (idx > -1) _serverNotifs[idx].read_at = new Date().toISOString();
+    if (typeof window.updateServerNotifBadge === 'function') window.updateServerNotifBadge();
+  }
+  window._currentToastNotif = null;
 };
 
 var FOX_VIDEO_NOTIF = 'https://www.mirella-ai.fr/renard_chat_avatar.mp4';
@@ -22340,6 +22351,7 @@ window.showServerNotifToast = function(notif) {
   }
   video.currentTime = 0;
   video.play().catch(function(){});
+  window._currentToastNotif = notif;
   popup.onclick = function() { window.handleServerNotifClick(notif); };
   popup.style.display = 'block';
   popup.style.animation = 'slideUp 0.3s ease';
