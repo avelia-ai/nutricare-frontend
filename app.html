@@ -27969,7 +27969,7 @@ window.loadMirellaRecommendations = loadMirellaRecommendations;
   function fetchUsageSummary(forceRefresh) {
     if (!forceRefresh && _usageSummaryCache) return Promise.resolve(_usageSummaryCache);
     if (!forceRefresh && _usageSummaryPromise) return _usageSummaryPromise;
-    _usageSummaryPromise = fetchWithAuth(BACKEND_URL + '/api/usage/summary')
+    _usageSummaryPromise = fetchWithAuth(BACKEND_URL + '/api/usage/summary', { cache: 'no-store' })
       .then(function(res) { return res.ok ? res.json() : null; })
       .then(function(data) {
         _usageSummaryCache = data;
