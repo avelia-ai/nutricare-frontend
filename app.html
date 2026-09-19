@@ -17333,9 +17333,17 @@ function shopAction(itemId, action) {
     applyFoxAccessoryOverride();
   } else if (action === 'unequip') {
     localStorage.setItem('shop_equipped', '');
-    loadShop();
-    setTimeout(function() { window.location.reload(); }, 150);
-    return;
+    _lastHarmonyFoxLevel = null;
+    var authToken = localStorage.getItem('nutricare_token');
+    if (authToken) {
+      fetch('https://nutricare-backend-production.up.railway.app/api/health/logs?days=30', {
+        headers: { 'Authorization': 'Bearer ' + authToken },
+        cache: 'no-store'
+      })
+      .then(function(r){ return r.json(); })
+      .then(function(logs){ if (Array.isArray(logs)) refreshHarmonyAvatar(logs); })
+      .catch(function(){});
+    }
   }
   loadShop();
 }
