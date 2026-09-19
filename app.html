@@ -17311,7 +17311,7 @@ function renderShopGrid(items) {
       '<div style="font-size:2.5rem;margin-bottom:10px;display:flex;align-items:center;justify-content:center;height:76px;background:#fff;border-radius:14px;box-shadow:0 0 0 1px rgba(0,0,0,0.06),inset 0 0 0 1px rgba(0,0,0,0.02)">' + (item.image ? '<img src="' + item.image + '" style="width:64px;height:64px;object-fit:contain">' : item.icon) + '</div>' +
       '<div style="font-size:0.85rem;font-weight:700;color:#1a1a1a;margin-bottom:3px;line-height:1.3">' + item.name + '</div>' +
       '<div style="font-size:0.65rem;color:#aaa;margin-bottom:14px;text-transform:uppercase;letter-spacing:0.08em">' + ({hat:'Chapeau',glasses:'Lunettes',necklace:'Collier',bandana:'Bandana'}[item.category] || item.category) + '</div>' +
-      '<button onclick="shopAction(\'' + item.id + '\',' + (owned ? '\'equip\'': '\'buy\'') + ')" style="width:100%;padding:9px;border-radius:11px;border:none;font-size:0.78rem;font-weight:700;cursor:pointer;font-family:DM Sans,sans-serif;' + btnStyle + '">' + btnLabel + '</button>' +
+      '<button onclick="shopAction(\'' + item.id + '\',' + (equipped ? '\'unequip\'' : owned ? '\'equip\'': '\'buy\'') + ')" style="width:100%;padding:9px;border-radius:11px;border:none;font-size:0.78rem;font-weight:700;cursor:pointer;font-family:DM Sans,sans-serif;' + btnStyle + '">' + btnLabel + '</button>' +
       '</div>';
   }).join('');
 }
@@ -17331,6 +17331,11 @@ function shopAction(itemId, action) {
   } else if (action === 'equip') {
     localStorage.setItem('shop_equipped', itemId);
     applyFoxAccessoryOverride();
+  } else if (action === 'unequip') {
+    localStorage.setItem('shop_equipped', '');
+    loadShop();
+    setTimeout(function() { window.location.reload(); }, 150);
+    return;
   }
   loadShop();
 }
