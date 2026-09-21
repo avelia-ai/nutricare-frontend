@@ -11552,12 +11552,19 @@ function switchLang(lang) {
       // Update pricing buttons
       updatePricingButtons(plan);
 
-      // Charger les alertes interactions
+      // Charger les alertes interactions et la prediction de decrochage,
+      // au maximum une fois par jour (ce sont des appels IA couteux,
+      // inutile de les refaire a chaque fois que l'utilisateur revisite l'onglet Profil)
+      const todayStr = new Date().toDateString();
       const meds = profile.medications || [];
-      if (meds.length > 0) loadAlertes(meds);
-
-      // Charger la prediction de decrochage
-      loadPrediction();
+      if (meds.length > 0 && localStorage.getItem('mirella_alertes_last_fetch') !== todayStr) {
+        localStorage.setItem('mirella_alertes_last_fetch', todayStr);
+        loadAlertes(meds);
+      }
+      if (localStorage.getItem('mirella_prediction_last_fetch') !== todayStr) {
+        localStorage.setItem('mirella_prediction_last_fetch', todayStr);
+        loadPrediction();
+      }
 
     } catch (err) {
       console.error('Erreur chargement profil:', err);
