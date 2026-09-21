@@ -4776,50 +4776,50 @@ window.analyseVisage = async function(file) {
       html += '</div></div></div>';
     }
 
-    // Signes détectés — cartes premium avec icon-badge degrade (coherent avec la DA de l'app)
+    // Signes détectés — cartes premium avec bandeau degrade en en-tete + icones Tabler
     var sections = [
-      {key:'carences', label:'Signes de carences', icon:'&#x1F9EA;', c1:'#8B5CF6', c2:'#A78BFA'},
-      {key:'fatigue', label:'Niveau de fatigue', icon:'&#x1F634;', c1:'#3B82F6', c2:'#60A5FA'},
-      {key:'inflammation', label:'Inflammation', icon:'&#x1F525;', c1:'#ef4444', c2:'#FF6B6B'},
-      {key:'peau', label:'État de la peau', icon:'&#x2728;', c1:'#10B981', c2:'#34D399'},
-      {key:'bien_etre', label:'Bien-être général', icon:'&#x1F9E0;', c1:'#FF9A3C', c2:'#FFB347'},
+      {key:'carences', label:'Signes de carences', icon:'ti-flask', c1:'#8B5CF6', c2:'#A78BFA'},
+      {key:'fatigue', label:'Niveau de fatigue', icon:'ti-moon-stars', c1:'#3B82F6', c2:'#60A5FA'},
+      {key:'inflammation', label:'Inflammation', icon:'ti-flame', c1:'#ef4444', c2:'#FF6B6B'},
+      {key:'peau', label:'État de la peau', icon:'ti-sparkles', c1:'#10B981', c2:'#34D399'},
+      {key:'bien_etre', label:'Bien-être général', icon:'ti-brain', c1:'#FF9A3C', c2:'#FFB347'},
     ];
     sections.forEach(function(s) {
       if (data[s.key]) {
-        html += '<div style="background:#FFFCFA;border-radius:16px;padding:18px;margin-bottom:12px;box-shadow:0 0 0 1.5px rgba(255,154,108,0.22),0 14px 32px rgba(230,110,70,0.14)">';
-        html += '<div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">';
-        html += '<div style="width:36px;height:36px;border-radius:11px;background:linear-gradient(135deg,' + s.c1 + ',' + s.c2 + ');display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:1.05rem;box-shadow:0 4px 10px ' + s.c1 + '4D">' + s.icon + '</div>';
-        html += '<div style="font-size:0.74rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:' + s.c1 + '">' + s.label + '</div>';
+        html += '<div style="border-radius:16px;overflow:hidden;margin-bottom:14px;box-shadow:0 0 0 1.5px rgba(255,154,108,0.22),0 14px 32px rgba(230,110,70,0.14)">';
+        html += '<div style="background:linear-gradient(135deg,' + s.c1 + ',' + s.c2 + ');padding:13px 16px;display:flex;align-items:center;gap:9px">';
+        html += '<i class="ti ' + s.icon + '" style="font-size:17px;color:#fff"></i>';
+        html += '<div style="font-size:0.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:#fff">' + s.label + '</div>';
         html += '</div>';
-        html += '<div style="font-size:0.85rem;color:#333;line-height:1.7">' + data[s.key] + '</div>';
+        html += '<div style="background:#FFFCFA;padding:16px;font-size:0.85rem;color:#333;line-height:1.7">' + data[s.key] + '</div>';
         html += '</div>';
       }
     });
 
-    // Conseils alimentaires — icon-badge coral degrade
+    // Conseils alimentaires — bandeau degrade coral + icones Tabler
     if (data.conseils_alimentaires && data.conseils_alimentaires.length) {
-      html += '<div style="background:#FFFCFA;border-radius:16px;padding:18px;margin-bottom:12px;box-shadow:0 0 0 1.5px rgba(255,154,108,0.22),0 14px 32px rgba(230,110,70,0.14)">';
-      html += '<div style="display:flex;align-items:center;gap:10px;margin-bottom:14px">';
-      html += '<div style="width:36px;height:36px;border-radius:11px;background:linear-gradient(135deg,var(--coral),var(--accent));display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:1.05rem;box-shadow:0 4px 10px rgba(255,107,107,0.3)">&#x1F957;</div>';
-      html += '<div style="font-size:0.74rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--coral)">Conseils alimentaires</div>';
-      html += '</div>';
+      html += '<div style="border-radius:16px;overflow:hidden;margin-bottom:14px;box-shadow:0 0 0 1.5px rgba(255,154,108,0.22),0 14px 32px rgba(230,110,70,0.14)">';
+      html += '<div style="background:linear-gradient(135deg,var(--coral),var(--accent));padding:13px 16px;display:flex;align-items:center;gap:9px">';
+      html += '<i class="ti ti-salad" style="font-size:17px;color:#fff"></i>';
+      html += '<div style="font-size:0.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:#fff">Conseils alimentaires</div>';
+      html += '</div><div style="background:#FFFCFA;padding:16px">';
       data.conseils_alimentaires.forEach(function(c) {
-        html += '<div style="display:flex;gap:10px;margin-bottom:10px;align-items:flex-start"><span style="width:18px;height:18px;border-radius:50%;background:rgba(255,107,107,0.12);color:var(--coral);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:0.68rem;margin-top:1px">&#x2714;</span><span style="font-size:0.85rem;color:#333;line-height:1.55">' + c + '</span></div>';
+        html += '<div style="display:flex;gap:10px;margin-bottom:10px;align-items:flex-start"><i class="ti ti-circle-check" style="font-size:16px;color:var(--coral);flex-shrink:0;margin-top:2px"></i><span style="font-size:0.85rem;color:#333;line-height:1.55">' + c + '</span></div>';
       });
-      html += '</div>';
+      html += '</div></div>';
     }
 
-    // Habitudes & hygiène de vie — icon-badge vert degrade
+    // Habitudes & hygiène de vie — bandeau degrade vert + icones Tabler
     if (data.hygiene_vie && data.hygiene_vie.length) {
-      html += '<div style="background:#FFFCFA;border-radius:16px;padding:18px;margin-bottom:12px;box-shadow:0 0 0 1.5px rgba(255,154,108,0.22),0 14px 32px rgba(230,110,70,0.14)">';
-      html += '<div style="display:flex;align-items:center;gap:10px;margin-bottom:14px">';
-      html += '<div style="width:36px;height:36px;border-radius:11px;background:linear-gradient(135deg,#10B981,#34D399);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:1.05rem;box-shadow:0 4px 10px rgba(16,185,129,0.3)">&#x1F33F;</div>';
-      html += '<div style="font-size:0.74rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:#10B981">Hygi&#xE8;ne de vie</div>';
-      html += '</div>';
+      html += '<div style="border-radius:16px;overflow:hidden;margin-bottom:14px;box-shadow:0 0 0 1.5px rgba(255,154,108,0.22),0 14px 32px rgba(230,110,70,0.14)">';
+      html += '<div style="background:linear-gradient(135deg,#10B981,#34D399);padding:13px 16px;display:flex;align-items:center;gap:9px">';
+      html += '<i class="ti ti-leaf" style="font-size:17px;color:#fff"></i>';
+      html += '<div style="font-size:0.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:#fff">Hygi&#xE8;ne de vie</div>';
+      html += '</div><div style="background:#FFFCFA;padding:16px">';
       data.hygiene_vie.forEach(function(h) {
-        html += '<div style="display:flex;gap:10px;margin-bottom:10px;align-items:flex-start"><span style="width:18px;height:18px;border-radius:50%;background:rgba(16,185,129,0.12);color:#10B981;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:0.68rem;margin-top:1px">&#x2714;</span><span style="font-size:0.85rem;color:#333;line-height:1.55">' + h + '</span></div>';
+        html += '<div style="display:flex;gap:10px;margin-bottom:10px;align-items:flex-start"><i class="ti ti-circle-check" style="font-size:16px;color:#10B981;flex-shrink:0;margin-top:2px"></i><span style="font-size:0.85rem;color:#333;line-height:1.55">' + h + '</span></div>';
       });
-      html += '</div>';
+      html += '</div></div>';
     }
 
     // Disclaimer
@@ -4827,8 +4827,8 @@ window.analyseVisage = async function(file) {
 
     // Bouton refaire
     var resetBtn = document.createElement('button');
-    resetBtn.textContent = '🤳 Analyser une autre photo';
-    resetBtn.style.cssText = 'width:100%;background:var(--cream);color:var(--coral);border:none;border-radius:12px;padding:14px;font-size:0.88rem;font-weight:700;cursor:pointer;margin-top:4px';
+    resetBtn.innerHTML = '<i class="ti ti-camera-plus" style="font-size:17px;vertical-align:-3px;margin-right:8px"></i>Analyser une autre photo';
+    resetBtn.style.cssText = 'width:100%;background:linear-gradient(135deg,var(--coral),var(--accent));color:#fff;border:none;border-radius:14px;padding:15px;font-size:0.9rem;font-weight:700;cursor:pointer;margin-top:6px;margin-bottom:22px;box-shadow:0 10px 24px rgba(255,107,107,0.3)';
     resetBtn.onclick = function() {
       uploadZone.style.display = 'block';
       preview.style.display = 'none';
