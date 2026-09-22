@@ -19109,25 +19109,79 @@ async function analyzeVisualImage() {
 }
 
 function displayVisualResult(data) {
-  const urgenceColors = { routine: '#7A9E7E', consulter_bientot: '#C9A84C', urgent: '#E05C00' };
-  const urgenceLabels = { routine: 'Surveillance conseillee', consulter_bientot: 'Consultez bientot', urgent: 'Consultation urgente' };
-  const niveauColors = { faible: '#7A9E7E', modere: '#C9A84C', eleve: '#E05C00' };
-  let html = '<div style="background:#FFFCFA;border-radius:8px;border:1px solid rgba(255,154,108,0.3);padding:24px;margin-bottom:16px;box-shadow:0 0 0 1.5px rgba(255,154,108,0.22),0 14px 32px rgba(230,110,70,0.14)">';
-  html += '<div style="display:flex;align-items:center;gap:12px;margin-bottom:20px;"><div style="background:' + (urgenceColors[data.urgence]||'#7A9E7E') + ';color:white;padding:6px 14px;border-radius:100px;font-size:0.75rem;font-weight:600;">' + (urgenceLabels[data.urgence]||'') + '</div></div>';
-  html += '<div style="font-size:0.75rem;font-weight:600;text-transform:uppercase;letter-spacing:1px;color:var(--accent);margin-bottom:8px;">Apparence generale</div>';
-  html += '<div style="font-size:0.88rem;color:rgba(2,26,53,.7);margin-bottom:20px;line-height:1.6;">' + (data.apparence_generale||'') + '</div>';
-  if (data.signes_detectes?.length) {
-    html += '<div style="font-size:0.75rem;font-weight:600;text-transform:uppercase;letter-spacing:1px;color:var(--accent);margin-bottom:10px;">Signes detectes</div>';
-    html += '<div style="display:flex;flex-direction:column;gap:8px;margin-bottom:20px;">' + data.signes_detectes.map(s => '<div style="display:flex;align-items:flex-start;gap:10px;padding:10px;background:#F8F5F0;border-radius:6px;border-left:3px solid ' + (niveauColors[s.niveau_alerte]||'#85B7EB') + '"><div style="flex:1"><div style="font-size:0.85rem;font-weight:600;color:#2D2D2D;">' + s.signe + '</div><div style="font-size:0.78rem;color:rgba(2,26,53,.6);margin-top:2px;">' + s.description + '</div></div><span style="background:' + (niveauColors[s.niveau_alerte]||'#85B7EB') + ';color:white;font-size:0.65rem;padding:2px 8px;border-radius:100px;">' + s.niveau_alerte + '</span></div>').join('') + '</div>';
+  const urgenceMeta = {
+    routine: { c1:'#10B981', c2:'#34D399', label:'Surveillance conseillée', icon:'ti-circle-check' },
+    consulter_bientot: { c1:'#F59E0B', c2:'#FBBF24', label:'Consultez bientôt', icon:'ti-alert-triangle' },
+    urgent: { c1:'#ef4444', c2:'#FF6B6B', label:'Consultation urgente', icon:'ti-alert-octagon' }
+  };
+  const niveauMeta = {
+    faible: { c1:'#10B981', c2:'#34D399', label:'Faible' },
+    modere: { c1:'#F59E0B', c2:'#FBBF24', label:'Modéré' },
+    eleve: { c1:'#ef4444', c2:'#FF6B6B', label:'Élevé' }
+  };
+  const um = urgenceMeta[data.urgence] || urgenceMeta.routine;
+  let html = '';
+
+  html += `<div style="background:linear-gradient(135deg,#1B1B2F,#232946);border-radius:20px;padding:24px 22px;margin-bottom:14px;position:relative;overflow:hidden;box-shadow:0 0 0 1.5px rgba(255,154,108,0.22),0 16px 40px rgba(0,0,0,0.18)">
+    <div style="position:absolute;top:-40px;right:-30px;width:150px;height:150px;background:radial-gradient(circle,${um.c1}33,transparent 70%);pointer-events:none"></div>
+    <div style="display:inline-flex;align-items:center;gap:7px;background:linear-gradient(135deg,${um.c1},${um.c2});padding:7px 16px;border-radius:100px;margin-bottom:16px;position:relative;z-index:1">
+      <i class="ti ${um.icon}" style="font-size:15px;color:#fff"></i>
+      <span style="font-size:0.76rem;font-weight:700;color:#fff">${um.label}</span>
+    </div>
+    <div style="font-size:0.66rem;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:rgba(255,255,255,0.45);margin-bottom:8px;position:relative;z-index:1">Apparence générale</div>
+    <div style="font-size:0.85rem;color:rgba(255,255,255,0.8);line-height:1.65;position:relative;z-index:1">${data.apparence_generale||''}</div>
+  </div>`;
+
+  if (data.signes_detectes && data.signes_detectes.length) {
+    html += `<div style="font-family:Open Sans,serif;font-size:1.05rem;font-weight:700;color:#2D2D2D;margin-bottom:12px">Signes détectés</div>`;
+    data.signes_detectes.forEach(s => {
+      const nm = niveauMeta[s.niveau_alerte] || niveauMeta.modere;
+      html += `<div style="border-radius:16px;overflow:hidden;margin-bottom:12px;box-shadow:0 0 0 1.5px rgba(255,154,108,0.22),0 14px 32px rgba(230,110,70,0.14)">
+        <div style="background:linear-gradient(135deg,${nm.c1},${nm.c2});padding:12px 16px;display:flex;align-items:center;justify-content:space-between;gap:9px">
+          <div style="font-size:0.85rem;font-weight:700;color:#fff">${s.signe||''}</div>
+          <span style="background:rgba(255,255,255,0.25);color:#fff;font-size:0.7rem;padding:3px 10px;border-radius:20px;font-weight:700;flex-shrink:0">${nm.label}</span>
+        </div>
+        <div style="background:#FFFCFA;padding:14px 16px;font-size:0.82rem;color:#333;line-height:1.6">${s.description||''}</div>
+      </div>`;
+    });
   }
-  if (data.pathologies_possibles?.length) {
-    html += '<div style="font-size:0.75rem;font-weight:600;text-transform:uppercase;letter-spacing:1px;color:var(--accent);margin-bottom:10px;">Pathologies possibles</div>';
-    html += '<div style="display:flex;flex-direction:column;gap:8px;margin-bottom:20px;">' + data.pathologies_possibles.map(p => '<div style="padding:12px;background:#F8F5F0;border-radius:6px;"><div style="display:flex;justify-content:space-between;margin-bottom:4px;"><div style="font-size:0.88rem;font-weight:600;color:#2D2D2D;">' + p.nom + '</div><span style="font-size:0.7rem;color:rgba(2,26,53,.5);">' + p.probabilite + '</span></div><div style="font-size:0.78rem;color:rgba(2,26,53,.6);">' + p.description + '</div></div>').join('') + '</div>';
+
+  if (data.pathologies_possibles && data.pathologies_possibles.length) {
+    html += `<div style="font-family:Open Sans,serif;font-size:1.05rem;font-weight:700;color:#2D2D2D;margin:20px 0 12px">Pathologies possibles</div>`;
+    data.pathologies_possibles.forEach(p => {
+      const nm = niveauMeta[(p.probabilite||'').toLowerCase()] || { c1:'#8B5CF6', c2:'#A78BFA', label:p.probabilite||'' };
+      html += `<div style="border-radius:16px;overflow:hidden;margin-bottom:12px;box-shadow:0 0 0 1.5px rgba(255,154,108,0.22),0 14px 32px rgba(230,110,70,0.14)">
+        <div style="background:linear-gradient(135deg,${nm.c1},${nm.c2});padding:12px 16px;display:flex;align-items:center;justify-content:space-between;gap:9px">
+          <div style="font-size:0.85rem;font-weight:700;color:#fff">${p.nom||''}</div>
+          <span style="background:rgba(255,255,255,0.25);color:#fff;font-size:0.7rem;padding:3px 10px;border-radius:20px;font-weight:700;flex-shrink:0">${nm.label}</span>
+        </div>
+        <div style="background:#FFFCFA;padding:14px 16px;font-size:0.82rem;color:#333;line-height:1.6">${p.description||''}</div>
+      </div>`;
+    });
   }
-  html += '<div style="font-size:0.75rem;font-weight:600;text-transform:uppercase;letter-spacing:1px;color:var(--accent);margin-bottom:10px;">Recommandations</div>';
-  html += '<div style="display:flex;flex-direction:column;gap:6px;margin-bottom:20px;">' + (data.recommandations||[]).map((r,i) => '<div style="display:flex;gap:10px;font-size:0.85rem;color:rgba(2,26,53,.7);"><span style="color:var(--coral);font-weight:700;">' + (i+1) + '.</span>' + r + '</div>').join('') + '</div>';
-  html += '<div style="background:#2D2D2D;border-radius:6px;padding:12px 16px;display:flex;align-items:center;gap:10px;"><span>👨‍⚕️</span><div><div style="font-size:0.75rem;color:rgba(255,255,255,.5);margin-bottom:2px;">Specialiste recommande</div><div style="font-size:0.88rem;color:white;font-weight:500;">' + (data.specialiste_recommande||'Medecin generaliste') + '</div></div></div>';
-  html += '<div style="margin-top:16px;padding:10px 14px;background:#FDF6E8;border-radius:6px;font-size:0.72rem;color:#8B6914;">' + (data.disclaimer||'') + '</div></div>';
+
+  if (data.recommandations && data.recommandations.length) {
+    html += `<div style="border-radius:16px;overflow:hidden;margin-bottom:14px;box-shadow:0 0 0 1.5px rgba(255,154,108,0.22),0 14px 32px rgba(230,110,70,0.14)">
+      <div style="background:linear-gradient(135deg,var(--coral),var(--accent));padding:13px 16px;display:flex;align-items:center;gap:9px">
+        <i class="ti ti-clipboard-check" style="font-size:17px;color:#fff"></i>
+        <div style="font-size:0.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:#fff">Recommandations</div>
+      </div>
+      <div style="background:#FFFCFA;padding:16px">
+        ${data.recommandations.map((r,i) => `<div style="display:flex;gap:10px;margin-bottom:10px;align-items:flex-start"><span style="color:var(--coral);font-weight:700;font-size:0.85rem;flex-shrink:0">${i+1}.</span><span style="font-size:0.85rem;color:#333;line-height:1.55">${r}</span></div>`).join('')}
+      </div>
+    </div>`;
+  }
+
+  html += `<div style="border-radius:16px;overflow:hidden;margin-bottom:14px;box-shadow:0 0 0 1.5px rgba(255,154,108,0.22),0 14px 32px rgba(230,110,70,0.14)">
+    <div style="background:linear-gradient(135deg,#8B5CF6,#A78BFA);padding:13px 16px;display:flex;align-items:center;gap:9px">
+      <i class="ti ti-stethoscope" style="font-size:17px;color:#fff"></i>
+      <div style="font-size:0.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:#fff">Spécialiste recommandé</div>
+    </div>
+    <div style="background:#FFFCFA;padding:16px;font-size:0.88rem;color:#2D2D2D;font-weight:600">${data.specialiste_recommande||'Médecin généraliste'}</div>
+  </div>`;
+
+  html += `<div style="font-size:0.72rem;color:rgba(2,26,53,0.35);text-align:center;line-height:1.5;margin-bottom:16px">${data.disclaimer||"Ces résultats sont analysés par intelligence artificielle à titre indicatif. Consultez votre médecin pour une interprétation définitive."}</div>`;
+
   document.getElementById('visualResult').innerHTML = html;
   document.getElementById('visualResult').style.display = 'block';
 }
