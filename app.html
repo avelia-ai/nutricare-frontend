@@ -9509,18 +9509,53 @@ function switchLang(lang) {
       })();
       </script>
     </div>
-    <div id="visualPreview" style="display:none;background:#FFFCFA;border-radius:8px;border:1px solid rgba(255,154,108,0.3);padding:20px;margin-bottom:24px;box-shadow:0 0 0 1.5px rgba(255,154,108,0.22),0 14px 32px rgba(230,110,70,0.14)">
-      <div style="display:flex;gap:20px;align-items:flex-start;flex-wrap:wrap;">
-        <img id="visualImg" style="max-width:200px;max-height:200px;border-radius:6px;border:1px solid rgba(255,107,107,0.15);object-fit:cover;" src="">
-        <div style="flex:1;min-width:200px;">
-          <div style="font-size:0.85rem;font-weight:500;color:#2D2D2D;margin-bottom:12px;" id="visualFileName"></div>
-          <button onclick="analyzeVisualImage()" id="visualBtn" style="background:#2D2D2D;color:white;padding:12px 24px;border:none;border-radius:4px;font-size:0.88rem;cursor:pointer;font-family:DM Sans,sans-serif;width:100%;">Analyser avec Mirella IA</button>
+    <div id="visualPreview" style="display:none;border-radius:20px;overflow:hidden;margin-bottom:24px;box-shadow:0 0 0 1.5px rgba(255,154,108,0.22),0 16px 40px rgba(230,110,70,0.16);background:#FFFCFA">
+      <div style="position:relative">
+        <img id="visualImg" style="width:100%;max-height:320px;object-fit:cover;display:block" src="">
+        <div style="position:absolute;top:14px;left:14px;background:rgba(16,24,39,0.55);backdrop-filter:blur(6px);color:#fff;font-size:0.7rem;font-weight:700;padding:6px 12px;border-radius:20px;display:flex;align-items:center;gap:6px">
+          <i class="ti ti-circle-check" style="font-size:14px"></i>Photo prête
         </div>
       </div>
+      <div style="padding:20px">
+        <div style="font-size:0.78rem;color:#888;margin-bottom:16px;display:flex;align-items:center;gap:6px">
+          <i class="ti ti-photo" style="font-size:15px;color:#bbb;flex-shrink:0"></i>
+          <span id="visualFileName"></span>
+        </div>
+        <button onclick="analyzeVisualImage()" id="visualBtn" style="background:linear-gradient(135deg,var(--coral),var(--accent));color:#fff;padding:15px;border:none;border-radius:14px;font-size:0.9rem;font-weight:700;cursor:pointer;font-family:DM Sans,sans-serif;width:100%;box-shadow:0 10px 24px rgba(255,107,107,0.3);display:flex;align-items:center;justify-content:center;gap:8px">
+          <i class="ti ti-sparkles" style="font-size:17px"></i>Analyser avec Mirella IA
+        </button>
+      </div>
     </div>
-    <div id="visualLoader" style="display:none;text-align:center;padding:40px;">
-      <div style="font-size:2rem;margin-bottom:12px;">🔬</div>
-      <div style="font-size:0.9rem;color:#2D2D2D;font-weight:500;">Mirella analyse votre image...</div>
+    <div id="visualLoader" style="display:none;text-align:center;padding:40px 20px;background:linear-gradient(160deg,#0C2D4A,#062038);border-radius:20px;overflow:hidden;position:relative;margin-bottom:24px">
+      <style>
+        @keyframes visualRingSpin { to { transform: rotate(360deg); } }
+        @keyframes visualStepCycle {
+          0%, 4% { opacity: 0; }
+          8%, 20% { opacity: 1; }
+          25%, 100% { opacity: 0; }
+        }
+        .visualStepText { opacity: 0; }
+        .visualStepText:nth-child(1) { animation: visualStepCycle 8s ease infinite 0s; }
+        .visualStepText:nth-child(2) { animation: visualStepCycle 8s ease infinite 2s; }
+        .visualStepText:nth-child(3) { animation: visualStepCycle 8s ease infinite 4s; }
+        .visualStepText:nth-child(4) { animation: visualStepCycle 8s ease infinite 6s; }
+      </style>
+      <div style="width:100px;height:100px;margin:0 auto 22px;position:relative">
+        <svg width="100" height="100" style="position:absolute;top:0;left:0;animation:visualRingSpin 2.4s linear infinite">
+          <circle cx="50" cy="50" r="42" fill="none" stroke="rgba(255,255,255,0.12)" stroke-width="2.5"></circle>
+          <circle cx="50" cy="50" r="42" fill="none" stroke="#FFB347" stroke-width="2.5" stroke-linecap="round" stroke-dasharray="264" stroke-dashoffset="190"></circle>
+        </svg>
+        <div style="position:absolute;inset:10px;border-radius:50%;background:rgba(255,255,255,0.06);display:flex;align-items:center;justify-content:center">
+          <i class="ti ti-zoom-scan" style="font-size:28px;color:#FFB347"></i>
+        </div>
+      </div>
+      <div style="font-weight:600;color:#fff;margin-bottom:10px;font-size:0.95rem">Analyse en cours</div>
+      <div style="position:relative;height:18px">
+        <div class="visualStepText" style="position:absolute;inset:0;font-size:0.8rem;color:rgba(255,235,215,0.75)">Détection de la zone analysée</div>
+        <div class="visualStepText" style="position:absolute;inset:0;font-size:0.8rem;color:rgba(255,235,215,0.75)">Analyse des textures et contours</div>
+        <div class="visualStepText" style="position:absolute;inset:0;font-size:0.8rem;color:rgba(255,235,215,0.75)">Comparaison aux signes visuels connus</div>
+        <div class="visualStepText" style="position:absolute;inset:0;font-size:0.8rem;color:rgba(255,235,215,0.75)">Génération des recommandations</div>
+      </div>
     </div>
     <div id="visualResult" style="display:none;"></div>
     <div id="usageGaugeVisual" style="margin-top:24px"></div>
