@@ -4979,7 +4979,12 @@ window.analyseFrigo = async function(file) {
     if (data.analyse) {
       html += '<div style="border-radius:16px;overflow:hidden;margin-bottom:14px;box-shadow:0 0 0 1.5px rgba(255,154,108,0.22),0 14px 32px rgba(230,110,70,0.14)">';
       html += '<div style="background:linear-gradient(135deg,#8B5CF6,#A78BFA);padding:13px 16px;display:flex;align-items:center;gap:9px"><i class="ti ti-bulb" style="font-size:17px;color:#fff"></i><div style="font-size:0.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:#fff">Analyse de Mirella</div></div>';
-      html += '<div style="background:#FFFCFA;padding:16px;font-size:0.85rem;color:#333;line-height:1.7">' + data.analyse + '</div>';
+      html += '<div style="background:#FFFCFA;padding:16px;display:flex;flex-direction:column;gap:12px">';
+      var analyseItems = Array.isArray(data.analyse) ? data.analyse : [data.analyse];
+      analyseItems.forEach(function(pt) {
+        html += '<div style="display:flex;gap:10px;align-items:flex-start"><i class="ti ti-alert-triangle" style="font-size:15px;color:#8B5CF6;flex-shrink:0;margin-top:2px"></i><span style="font-size:0.85rem;color:#333;line-height:1.6">' + pt + '</span></div>';
+      });
+      html += '</div>';
       html += '</div>';
     }
     var resetBtn = document.createElement('button');
