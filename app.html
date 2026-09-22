@@ -4838,16 +4838,18 @@ window.analyseVisage = async function(file) {
     result.innerHTML = html;
     result.appendChild(resetBtn);
 
-    // Sauvegarder dans l'historique frigo
-    var historique = [];
-    try { historique = JSON.parse(localStorage.getItem('mirella_frigo_historique') || '[]'); } catch(x){}
-    historique.unshift({
+    // Sauvegarder dans l'historique visage
+    var historiqueV = [];
+    try { historiqueV = JSON.parse(localStorage.getItem('mirella_visage_historique') || '[]'); } catch(x){}
+    historiqueV.unshift({
       date: new Date().toISOString(),
-      aliments: (data.aliments||[]).slice(0,3).join(', '),
+      score: data.score_global || null,
+      resume: data.bien_etre || data.peau || '',
       photo: compressed
     });
-    if(historique.length > 5) historique = historique.slice(0,5);
-    localStorage.setItem('mirella_frigo_historique', JSON.stringify(historique));
+    if(historiqueV.length > 5) historiqueV = historiqueV.slice(0,5);
+    localStorage.setItem('mirella_visage_historique', JSON.stringify(historiqueV));
+    if (typeof window.renderVisageHistorique === 'function') window.renderVisageHistorique();
 
   } catch(e) {
     loading.style.display = 'none';
@@ -12078,6 +12080,17 @@ function switchLang(lang) {
         document.getElementById('bioResult').innerHTML = bioHtml;
         renderUsageGauge('bilan_sanguin', 'usageGaugeBiologie', true, 'card');
         if (window.innerWidth <= 768) { document.getElementById('biologieView').style.paddingBottom = '300px'; }
+
+        var historiqueB = [];
+        try { historiqueB = JSON.parse(localStorage.getItem('mirella_bio_historique') || '[]'); } catch(x){}
+        historiqueB.unshift({
+          date: new Date().toISOString(),
+          score: bioScore,
+          resume: data.resume_global || ''
+        });
+        if(historiqueB.length > 5) historiqueB = historiqueB.slice(0,5);
+        localStorage.setItem('mirella_bio_historique', JSON.stringify(historiqueB));
+        if (typeof window.renderBiologieHistorique === 'function') window.renderBiologieHistorique();
       } catch(e) {
         document.getElementById('bioLoading').style.display = 'none';
         document.getElementById('bioError').style.display = 'block';
@@ -14715,7 +14728,7 @@ Réponds UNIQUEMENT en JSON valide avec cette structure exacte:
     if (view === 'history') loadHistory();
     if (view === 'chat') loadChatHistory();
     document.getElementById('passeportView').style.display = view === 'passeport' ? 'block' : 'none';
-    document.getElementById('biologieView').style.display = view === 'biologie' ? 'block' : 'none'; if (view === 'biologie') { applyBiologiePlanGates(); renderUsageGauge('bilan_sanguin', 'usageGaugeBiologie', false, 'card'); }
+    document.getElementById('biologieView').style.display = view === 'biologie' ? 'block' : 'none'; if (view === 'biologie') { applyBiologiePlanGates(); renderUsageGauge('bilan_sanguin', 'usageGaugeBiologie', false, 'card'); if (typeof window.renderBiologieHistorique === 'function') window.renderBiologieHistorique(); }
     document.getElementById('entrepriseView').style.display = view === 'entreprise' ? 'block' : 'none';
     if (view === 'entreprise') initEntreprise();
     if (view === 'biologie') initBiologie();
@@ -22933,6 +22946,43 @@ window.deleteVisageHistorique = function(idx) {
   historique.splice(idx, 1);
   localStorage.setItem('mirella_visage_historique', JSON.stringify(historique));
   window.renderVisageHistorique();
+};
+
+window.renderBiologieHistorique = function() {
+  var el = document.getElementById('biologieHistoriqueList');
+  if (!el) return;
+  var historique = [];
+  try { historique = JSON.parse(localStorage.getItem('mirella_bio_historique') || '[]'); } catch(e) {}
+  if (historique.length === 0) {
+    el.innerHTML = '<p style="font-size:0.82rem;color:#bbb;text-align:center;padding:8px">Aucun bilan enregistré.</p>';
+    return;
+  }
+  var mois = ['jan','fév','mar','avr','mai','jun','jul','aoû','sep','oct','nov','déc'];
+  el.innerHTML = historique.map(function(h, i) {
+    var d = new Date(h.date);
+    var dateStr = d.getDate() + ' ' + mois[d.getMonth()] + ' ' + d.getFullYear();
+    var score = h.score || 0;
+    var scoreColor = score >= 70 ? '#10B981' : score >= 40 ? '#F59E0B' : '#ef4444';
+    return '<div style="background:#FFFCFA;border-radius:14px;overflow:hidden;box-shadow:0 0 0 1.5px rgba(255,154,108,0.22),0 14px 32px rgba(230,110,70,0.14);display:flex;align-items:center;gap:12px;padding:12px">' +
+      '<div style="width:44px;height:44px;border-radius:10px;flex-shrink:0;background:linear-gradient(135deg,#185FA5,#E6F1FB);display:flex;align-items:center;justify-content:center">' +
+      '<i class="ti ti-droplet" style="font-size:20px;color:#fff"></i>' +
+      '</div>' +
+      '<div style="flex:1;min-width:0">' +
+      '<div style="font-size:0.78rem;color:#888;margin-bottom:2px">' + dateStr + '</div>' +
+      '<div style="font-size:0.82rem;font-weight:700;color:' + scoreColor + ';margin-bottom:4px">Score : ' + score + '/100</div>' +
+      '<div style="font-size:0.75rem;color:#555;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">' + (h.resume||'') + '</div>' +
+      '</div>' +
+      '<button onclick="window.deleteBiologieHistorique('+i+')" style="background:none;border:none;color:#ddd;font-size:1rem;cursor:pointer;flex-shrink:0">🗑️</button>' +
+      '</div>';
+  }).join('');
+};
+
+window.deleteBiologieHistorique = function(idx) {
+  var historique = [];
+  try { historique = JSON.parse(localStorage.getItem('mirella_bio_historique') || '[]'); } catch(e) {}
+  historique.splice(idx, 1);
+  localStorage.setItem('mirella_bio_historique', JSON.stringify(historique));
+  window.renderBiologieHistorique();
 };
 
 // ===== GOOGLE OAUTH (Supabase) =====
