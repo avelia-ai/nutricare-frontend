@@ -9880,7 +9880,7 @@ function switchLang(lang) {
     <!-- Historique bilans sanguins -->
     <div style="background:#FFFCFA;border-radius:18px;border:1px solid rgba(255,154,108,0.15);padding:16px 18px;margin-top:14px">
       <div style="font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#FF6B6B;margin-bottom:12px">Historique des bilans</div>
-      <div id="biologieHistoriqueList"><p style="font-size:0.82rem;color:#bbb;text-align:center;padding:8px">Aucun bilan enregistre.</p></div>
+      <div id="biologieHistoriqueList"><p style="font-size:0.82rem;color:#bbb;text-align:center;padding:8px">Aucun bilan enregistré.</p></div>
     </div>
     <div style="height:150px;width:100%"></div>
   </div>
@@ -11984,7 +11984,7 @@ function switchLang(lang) {
         const marqueurs = data.marqueurs || [];
         const normalCount = marqueurs.filter(m => m.statut === 'normal').length;
         const bioScore = marqueurs.length ? Math.round((normalCount / marqueurs.length) * 100) : 100;
-        const bioScoreLbl = bioScore >= 80 ? 'Excellent bilan' : bioScore >= 60 ? 'Bon bilan' : bioScore >= 40 ? 'Bilan a surveiller' : 'Attention requise';
+        const bioScoreLbl = bioScore >= 80 ? 'Excellent bilan' : bioScore >= 60 ? 'Bon bilan' : bioScore >= 40 ? 'Bilan à surveiller' : 'Attention requise';
         const circB = 226.2;
         const offsetB = circB - (Math.min(100, Math.max(0, bioScore)) / 100) * circB;
         const uidB = 'bg' + Math.random().toString(36).slice(2, 8);
@@ -12029,7 +12029,7 @@ function switchLang(lang) {
           </div>
         </div>`;
 
-        bioHtml += `<div style="font-family:Open Sans,serif;font-size:1.05rem;font-weight:700;color:#2D2D2D;margin-bottom:12px">Vos marqueurs expliques</div>`;
+        bioHtml += `<div style="font-family:Open Sans,serif;font-size:1.05rem;font-weight:700;color:#2D2D2D;margin-bottom:12px">Vos marqueurs expliqués</div>`;
         marqueurs.forEach(m => {
           const isNormal = m.statut === 'normal';
           const isUrgent = m.urgence === 'urgent';
@@ -12067,13 +12067,13 @@ function switchLang(lang) {
           bioHtml += `<div style="border-radius:16px;overflow:hidden;margin-bottom:14px;box-shadow:0 0 0 1.5px rgba(255,154,108,0.22),0 14px 32px rgba(230,110,70,0.14)">
             <div style="background:linear-gradient(135deg,#8B5CF6,#A78BFA);padding:13px 16px;display:flex;align-items:center;gap:9px">
               <i class="ti ti-calendar-stats" style="font-size:17px;color:#fff"></i>
-              <div style="font-size:0.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:#fff">Suivi recommande</div>
+              <div style="font-size:0.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:#fff">Suivi recommandé</div>
             </div>
             <div style="background:#FFFCFA;padding:16px;font-size:0.85rem;color:#333;line-height:1.65">${data.suivi_recommande}</div>
           </div>`;
         }
 
-        bioHtml += `<div style="font-size:0.72rem;color:rgba(2,26,53,0.35);text-align:center;line-height:1.5;margin-bottom:16px">Ces resultats sont analyses par intelligence artificielle a titre indicatif. Consultez votre medecin pour une interpretation definitive.</div>`;
+        bioHtml += `<div style="font-size:0.72rem;color:rgba(2,26,53,0.35);text-align:center;line-height:1.5;margin-bottom:16px">Ces résultats sont analysés par intelligence artificielle à titre indicatif. Consultez votre médecin pour une interprétation définitive.</div>`;
 
         document.getElementById('bioResult').innerHTML = bioHtml;
         renderUsageGauge('bilan_sanguin', 'usageGaugeBiologie', true, 'card');
