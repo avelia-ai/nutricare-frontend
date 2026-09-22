@@ -4999,6 +4999,16 @@ window.analyseFrigo = async function(file) {
     result.innerHTML = html;
     result.appendChild(resetBtn);
 
+    var historiqueF = [];
+    try { historiqueF = JSON.parse(localStorage.getItem('mirella_frigo_historique') || '[]'); } catch(x){}
+    historiqueF.unshift({
+      date: new Date().toISOString(),
+      aliments: (data.aliments||[]).slice(0,3).join(', '),
+      photo: compressed
+    });
+    if(historiqueF.length > 5) historiqueF = historiqueF.slice(0,5);
+    localStorage.setItem('mirella_frigo_historique', JSON.stringify(historiqueF));
+
     if (typeof window.renderFrigoHistorique === 'function') window.renderFrigoHistorique();
 
   } catch(e) {
