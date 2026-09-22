@@ -11966,6 +11966,64 @@ function switchLang(lang) {
     }
   }
 
+  async function analyzeBiologie(input) {
+    const file = input.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = async (e) => {
+      const base64 = e.target.result.split(',')[1];
+      const mediaType = file.type;
+      document.getElementById('bioPreview').style.display = 'block';
+      document.getElementById('bioImg').src = e.target.result;
+      document.getElementById('bioLoading').style.display = 'block';
+      document.getElementById('bioResult').style.display = 'none';
+      document.getElementById('bioError').style.display = 'none';
+      try {
+        const res = await fetch(`${BACKEND_URL}/api/biologie/analyze`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${authToken}` },
+          body: JSON.stringify({ image_base64: base64, media_type: mediaType })
+        });
+        const data = await res.json();
+        document.getElementById('bioLoading').style.display = 'none';
+        if (!res.ok || data.valide === false) {
+          document.getElementById('bioError').style.display = 'block';
+          document.getElementById('bioError').textContent = data.message || data.error || 'Document non reconnu comme bilan sanguin.';
+          return;
+        }
+        document.getElementById('bioResult').style.display = 'block';
+        document.getElementById('bioResume').textContent = data.resume_global || '';
+        document.getElementById('bioPositifs').innerHTML = (data.points_positifs || []).map(p => `
+          <div style="font-size:0.82rem;color:#3B6D11;display:flex;gap:6px;align-items:flex-start"><span>✓</span><span>${p}</span></div>`).join('') || '<div style="font-size:0.8rem;color:#999">Aucun point positif notable</div>';
+        document.getElementById('bioAttention').innerHTML = (data.points_attention || []).map(p => `
+          <div style="font-size:0.82rem;color:#854F0B;display:flex;gap:6px;align-items:flex-start"><span>!</span><span>${p}</span></div>`).join('') || '<div style="font-size:0.8rem;color:#999">Aucun point d\'attention</div>';
+        document.getElementById('bioMarqueurs').innerHTML = (data.marqueurs || []).map(m => {
+          const statutColor = m.statut === 'normal' ? '#3B6D11' : (m.urgence === 'urgent' ? '#C55' : '#854F0B');
+          const statutBg = m.statut === 'normal' ? '#EAF3DE' : (m.urgence === 'urgent' ? '#FEE' : '#FDF6E8');
+          return `<div style="background:#FFFCFA;border-radius:10px;padding:16px;border:1px solid rgba(255,154,108,0.2)">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
+              <div style="font-weight:700;font-size:0.88rem;color:#2D2D2D">${m.nom}</div>
+              <span style="background:${statutBg};color:${statutColor};font-size:0.7rem;padding:3px 10px;border-radius:20px;font-weight:600">${m.valeur} ${m.unite || ''}</span>
+            </div>
+            <div style="font-size:0.74rem;color:#aaa;margin-bottom:8px">Norme : ${m.norme_min || '?'} - ${m.norme_max || '?'} ${m.unite || ''}</div>
+            <div style="font-size:0.8rem;color:#555;line-height:1.5;margin-bottom:6px">${m.explication_simple || ''}</div>
+            ${m.conseil_nutritionnel ? `<div style="background:#F0F6FF;border-radius:6px;padding:8px 12px;font-size:0.78rem;color:#2D2D2D"><span style="font-weight:600">Conseil :</span> ${m.conseil_nutritionnel}</div>` : ''}
+          </div>`;
+        }).join('');
+        document.getElementById('bioReco').innerHTML = (data.recommandations_nutritionnelles || []).map(r => `
+          <div style="font-size:0.82rem;color:#2D2D2D;display:flex;gap:6px;align-items:flex-start"><span>•</span><span>${r}</span></div>`).join('');
+        document.getElementById('bioSuivi').textContent = data.suivi_recommande || '';
+        renderUsageGauge('bilan_sanguin', 'usageGaugeBiologie', true, 'card');
+        if (window.innerWidth <= 768) { document.getElementById('biologieView').style.paddingBottom = '300px'; }
+      } catch(e) {
+        document.getElementById('bioLoading').style.display = 'none';
+        document.getElementById('bioError').style.display = 'block';
+        document.getElementById('bioError').textContent = 'Erreur de connexion au serveur.';
+      }
+    };
+    reader.readAsDataURL(file);
+  }
+
   function initOrdonnance() {
     const isPremium = window.currentPlan === 'premium';
     console.log('Plan detecte (resolu):', window.currentPlan);
