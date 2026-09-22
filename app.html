@@ -9871,44 +9871,7 @@ function switchLang(lang) {
       </div>
 
       <!-- Résultats -->
-      <div id="bioResult" style="display:none">
-        <!-- Résumé global -->
-        <div style="background:#2D2D2D;border-radius:4px;padding:24px;margin-bottom:20px">
-          <div style="font-size:0.68rem;text-transform:uppercase;letter-spacing:.1em;color:var(--coral);font-weight:600;margin-bottom:10px"> Résumé de votre bilan</div>
-          <div style="font-size:0.9rem;color:rgba(255,255,255,0.8);line-height:1.7" id="bioResume"></div>
-        </div>
-
-        <!-- Points positifs & attention -->
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px">
-          <div style="background:#EAF3DE;border-radius:4px;padding:20px;border:1px solid #C0DD97">
-            <div style="font-size:0.72rem;text-transform:uppercase;letter-spacing:.08em;color:#3B6D11;font-weight:600;margin-bottom:12px"> Points positifs</div>
-            <div id="bioPositifs" style="display:flex;flex-direction:column;gap:6px"></div>
-          </div>
-          <div style="background:#FDF6E8;border-radius:4px;padding:20px;border:1px solid #FAC775">
-            <div style="font-size:0.72rem;text-transform:uppercase;letter-spacing:.08em;color:#854F0B;font-weight:600;margin-bottom:12px"> Points d'attention</div>
-            <div id="bioAttention" style="display:flex;flex-direction:column;gap:6px"></div>
-          </div>
-        </div>
-
-        <!-- Marqueurs détaillés -->
-        <div style="font-family:Open Sans,serif;font-size:1.2rem;font-weight:600;color:#2D2D2D;margin-bottom:16px">Vos marqueurs biologiques expliqués</div>
-        <div id="bioMarqueurs" style="display:flex;flex-direction:column;gap:12px;margin-bottom:20px"></div>
-
-        <!-- Recommandations nutritionnelles -->
-        <div style="background:#F0F6FF;border-radius:4px;padding:24px;border:1px solid rgba(255,107,107,0.15);margin-bottom:20px">
-          <div style="font-size:0.72rem;text-transform:uppercase;letter-spacing:.08em;color:var(--accent);font-weight:600;margin-bottom:12px"> Recommandations nutritionnelles personnalisées</div>
-          <div id="bioReco" style="display:flex;flex-direction:column;gap:8px"></div>
-        </div>
-
-        <!-- Suivi recommandé -->
-        <div style="background:#FDF6E8;border-radius:4px;padding:16px 20px;border:1px solid #FAC775;margin-bottom:16px">
-          <div style="font-size:0.72rem;text-transform:uppercase;letter-spacing:.08em;color:#854F0B;font-weight:600;margin-bottom:6px"> Suivi recommandé</div>
-          <div style="font-size:0.85rem;color:rgba(2,26,53,0.7);line-height:1.5" id="bioSuivi"></div>
-        </div>
-
-        <!-- Disclaimer -->
-        <div style="font-size:0.72rem;color:rgba(2,26,53,0.35);text-align:center;line-height:1.5">️ Ces résultats sont analysés par intelligence artificielle à titre indicatif. Consultez votre médecin pour une interprétation définitive.</div>
-      </div>
+      <div id="bioResult" style="display:none"></div>
 
       <!-- Erreur -->
       <div id="bioError" style="display:none;background:#FEE;border:1px solid #FCC;border-radius:4px;padding:16px;font-size:0.85rem;color:#C55;margin-bottom:20px"></div>
@@ -12018,27 +11981,101 @@ function switchLang(lang) {
           return;
         }
         document.getElementById('bioResult').style.display = 'block';
-        document.getElementById('bioResume').textContent = data.resume_global || '';
-        document.getElementById('bioPositifs').innerHTML = (data.points_positifs || []).map(p => `
-          <div style="font-size:0.82rem;color:#3B6D11;display:flex;gap:6px;align-items:flex-start"><span>✓</span><span>${p}</span></div>`).join('') || '<div style="font-size:0.8rem;color:#999">Aucun point positif notable</div>';
-        document.getElementById('bioAttention').innerHTML = (data.points_attention || []).map(p => `
-          <div style="font-size:0.82rem;color:#854F0B;display:flex;gap:6px;align-items:flex-start"><span>!</span><span>${p}</span></div>`).join('') || '<div style="font-size:0.8rem;color:#999">Aucun point d\'attention</div>';
-        document.getElementById('bioMarqueurs').innerHTML = (data.marqueurs || []).map(m => {
-          const statutColor = m.statut === 'normal' ? '#3B6D11' : (m.urgence === 'urgent' ? '#C55' : '#854F0B');
-          const statutBg = m.statut === 'normal' ? '#EAF3DE' : (m.urgence === 'urgent' ? '#FEE' : '#FDF6E8');
-          return `<div style="background:#FFFCFA;border-radius:10px;padding:16px;border:1px solid rgba(255,154,108,0.2)">
-            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
-              <div style="font-weight:700;font-size:0.88rem;color:#2D2D2D">${m.nom}</div>
-              <span style="background:${statutBg};color:${statutColor};font-size:0.7rem;padding:3px 10px;border-radius:20px;font-weight:600">${m.valeur} ${m.unite || ''}</span>
+        const marqueurs = data.marqueurs || [];
+        const normalCount = marqueurs.filter(m => m.statut === 'normal').length;
+        const bioScore = marqueurs.length ? Math.round((normalCount / marqueurs.length) * 100) : 100;
+        const bioScoreLbl = bioScore >= 80 ? 'Excellent bilan' : bioScore >= 60 ? 'Bon bilan' : bioScore >= 40 ? 'Bilan a surveiller' : 'Attention requise';
+        const circB = 226.2;
+        const offsetB = circB - (Math.min(100, Math.max(0, bioScore)) / 100) * circB;
+        const uidB = 'bg' + Math.random().toString(36).slice(2, 8);
+        let bioHtml = '';
+
+        bioHtml += `<div style="background:linear-gradient(135deg,#1B1B2F,#232946);border-radius:20px;padding:24px 22px;margin-bottom:14px;position:relative;overflow:hidden;box-shadow:0 0 0 1.5px rgba(255,154,108,0.22),0 16px 40px rgba(0,0,0,0.18)">
+          <div style="position:absolute;top:-40px;right:-30px;width:150px;height:150px;background:radial-gradient(circle,rgba(24,95,165,0.28),transparent 70%);pointer-events:none"></div>
+          <div style="position:absolute;bottom:-50px;left:-20px;width:130px;height:130px;background:radial-gradient(circle,rgba(108,92,231,0.16),transparent 70%);pointer-events:none"></div>
+          <div style="display:flex;align-items:center;gap:20px;position:relative;z-index:1;margin-bottom:16px">
+            <svg width="92" height="92" viewBox="0 0 86 86" style="flex-shrink:0">
+              <circle cx="43" cy="43" r="36" fill="none" stroke="rgba(255,255,255,0.08)" stroke-width="7"/>
+              <circle cx="43" cy="43" r="36" fill="none" stroke="url(#${uidB})" stroke-width="7" stroke-linecap="round" stroke-dasharray="${circB}" stroke-dashoffset="${offsetB}" transform="rotate(-90 43 43)"/>
+              <defs><linearGradient id="${uidB}" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#E6F1FB"/><stop offset="100%" stop-color="#185FA5"/></linearGradient></defs>
+              <text x="43" y="49" text-anchor="middle" font-size="24" font-weight="800" fill="#fff" font-family="DM Sans, sans-serif">${bioScore}</text>
+            </svg>
+            <div style="flex:1;min-width:0">
+              <div style="font-size:0.66rem;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:rgba(255,255,255,0.45);margin-bottom:5px">Score du bilan sanguin</div>
+              <div style="font-size:1.15rem;font-weight:700;color:#fff">${bioScoreLbl}</div>
             </div>
-            <div style="font-size:0.74rem;color:#aaa;margin-bottom:8px">Norme : ${m.norme_min || '?'} - ${m.norme_max || '?'} ${m.unite || ''}</div>
-            <div style="font-size:0.8rem;color:#555;line-height:1.5;margin-bottom:6px">${m.explication_simple || ''}</div>
-            ${m.conseil_nutritionnel ? `<div style="background:#F0F6FF;border-radius:6px;padding:8px 12px;font-size:0.78rem;color:#2D2D2D"><span style="font-weight:600">Conseil :</span> ${m.conseil_nutritionnel}</div>` : ''}
+          </div>
+          <div style="font-size:0.85rem;color:rgba(255,255,255,0.75);line-height:1.65;position:relative;z-index:1">${data.resume_global || ''}</div>
+        </div>`;
+
+        bioHtml += `<div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px">
+          <div style="border-radius:16px;overflow:hidden;box-shadow:0 0 0 1.5px rgba(255,154,108,0.22),0 14px 32px rgba(230,110,70,0.14)">
+            <div style="background:linear-gradient(135deg,#10B981,#34D399);padding:12px 14px;display:flex;align-items:center;gap:7px">
+              <i class="ti ti-circle-check" style="font-size:15px;color:#fff"></i>
+              <div style="font-size:0.64rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:#fff">Points positifs</div>
+            </div>
+            <div style="background:#FFFCFA;padding:14px;display:flex;flex-direction:column;gap:9px">
+              ${(data.points_positifs || []).map(p => `<div style="font-size:0.78rem;color:#333;line-height:1.5;display:flex;gap:6px;align-items:flex-start"><i class="ti ti-point-filled" style="font-size:8px;color:#10B981;margin-top:6px;flex-shrink:0"></i><span>${p}</span></div>`).join('') || '<div style="font-size:0.78rem;color:#999">Rien a signaler</div>'}
+            </div>
+          </div>
+          <div style="border-radius:16px;overflow:hidden;box-shadow:0 0 0 1.5px rgba(255,154,108,0.22),0 14px 32px rgba(230,110,70,0.14)">
+            <div style="background:linear-gradient(135deg,#F59E0B,#FBBF24);padding:12px 14px;display:flex;align-items:center;gap:7px">
+              <i class="ti ti-alert-triangle" style="font-size:15px;color:#fff"></i>
+              <div style="font-size:0.64rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:#fff">Points d'attention</div>
+            </div>
+            <div style="background:#FFFCFA;padding:14px;display:flex;flex-direction:column;gap:9px">
+              ${(data.points_attention || []).map(p => `<div style="font-size:0.78rem;color:#333;line-height:1.5;display:flex;gap:6px;align-items:flex-start"><i class="ti ti-point-filled" style="font-size:8px;color:#F59E0B;margin-top:6px;flex-shrink:0"></i><span>${p}</span></div>`).join('') || '<div style="font-size:0.78rem;color:#999">Rien a signaler</div>'}
+            </div>
+          </div>
+        </div>`;
+
+        bioHtml += `<div style="font-family:Open Sans,serif;font-size:1.05rem;font-weight:700;color:#2D2D2D;margin-bottom:12px">Vos marqueurs expliques</div>`;
+        marqueurs.forEach(m => {
+          const isNormal = m.statut === 'normal';
+          const isUrgent = m.urgence === 'urgent';
+          const c1 = isNormal ? '#10B981' : (isUrgent ? '#ef4444' : '#F59E0B');
+          const c2 = isNormal ? '#34D399' : (isUrgent ? '#FF6B6B' : '#FBBF24');
+          bioHtml += `<div style="border-radius:16px;overflow:hidden;margin-bottom:12px;box-shadow:0 0 0 1.5px rgba(255,154,108,0.22),0 14px 32px rgba(230,110,70,0.14)">
+            <div style="background:linear-gradient(135deg,${c1},${c2});padding:12px 16px;display:flex;align-items:center;justify-content:space-between;gap:9px">
+              <div style="display:flex;align-items:center;gap:8px">
+                <i class="ti ti-droplet" style="font-size:15px;color:#fff"></i>
+                <div style="font-size:0.82rem;font-weight:700;color:#fff">${m.nom || ''}</div>
+              </div>
+              <span style="background:rgba(255,255,255,0.25);color:#fff;font-size:0.72rem;padding:3px 10px;border-radius:20px;font-weight:700">${m.valeur || ''} ${m.unite || ''}</span>
+            </div>
+            <div style="background:#FFFCFA;padding:14px 16px">
+              <div style="font-size:0.72rem;color:#aaa;margin-bottom:8px">Norme : ${m.norme_min || '?'} - ${m.norme_max || '?'} ${m.unite || ''}</div>
+              <div style="font-size:0.82rem;color:#333;line-height:1.55;margin-bottom:${m.conseil_nutritionnel ? '8px' : '0'}">${m.explication_simple || ''}</div>
+              ${m.conseil_nutritionnel ? `<div style="background:#F0F6FF;border-radius:8px;padding:9px 12px;font-size:0.76rem;color:#2D2D2D"><span style="font-weight:700">Conseil :</span> ${m.conseil_nutritionnel}</div>` : ''}
+            </div>
           </div>`;
-        }).join('');
-        document.getElementById('bioReco').innerHTML = (data.recommandations_nutritionnelles || []).map(r => `
-          <div style="font-size:0.82rem;color:#2D2D2D;display:flex;gap:6px;align-items:flex-start"><span>•</span><span>${r}</span></div>`).join('');
-        document.getElementById('bioSuivi').textContent = data.suivi_recommande || '';
+        });
+
+        if (data.recommandations_nutritionnelles && data.recommandations_nutritionnelles.length) {
+          bioHtml += `<div style="border-radius:16px;overflow:hidden;margin-bottom:14px;box-shadow:0 0 0 1.5px rgba(255,154,108,0.22),0 14px 32px rgba(230,110,70,0.14)">
+            <div style="background:linear-gradient(135deg,var(--coral),var(--accent));padding:13px 16px;display:flex;align-items:center;gap:9px">
+              <i class="ti ti-salad" style="font-size:17px;color:#fff"></i>
+              <div style="font-size:0.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:#fff">Recommandations nutritionnelles</div>
+            </div>
+            <div style="background:#FFFCFA;padding:16px">
+              ${data.recommandations_nutritionnelles.map(r => `<div style="display:flex;gap:10px;margin-bottom:10px;align-items:flex-start"><i class="ti ti-circle-check" style="font-size:16px;color:var(--coral);flex-shrink:0;margin-top:2px"></i><span style="font-size:0.85rem;color:#333;line-height:1.55">${r}</span></div>`).join('')}
+            </div>
+          </div>`;
+        }
+
+        if (data.suivi_recommande) {
+          bioHtml += `<div style="border-radius:16px;overflow:hidden;margin-bottom:14px;box-shadow:0 0 0 1.5px rgba(255,154,108,0.22),0 14px 32px rgba(230,110,70,0.14)">
+            <div style="background:linear-gradient(135deg,#8B5CF6,#A78BFA);padding:13px 16px;display:flex;align-items:center;gap:9px">
+              <i class="ti ti-calendar-stats" style="font-size:17px;color:#fff"></i>
+              <div style="font-size:0.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:#fff">Suivi recommande</div>
+            </div>
+            <div style="background:#FFFCFA;padding:16px;font-size:0.85rem;color:#333;line-height:1.65">${data.suivi_recommande}</div>
+          </div>`;
+        }
+
+        bioHtml += `<div style="font-size:0.72rem;color:rgba(2,26,53,0.35);text-align:center;line-height:1.5;margin-bottom:16px">Ces resultats sont analyses par intelligence artificielle a titre indicatif. Consultez votre medecin pour une interpretation definitive.</div>`;
+
+        document.getElementById('bioResult').innerHTML = bioHtml;
         renderUsageGauge('bilan_sanguin', 'usageGaugeBiologie', true, 'card');
         if (window.innerWidth <= 768) { document.getElementById('biologieView').style.paddingBottom = '300px'; }
       } catch(e) {
