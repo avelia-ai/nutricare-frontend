@@ -9559,6 +9559,10 @@ function switchLang(lang) {
     </div>
     <div id="visualResult" style="display:none;"></div>
     <div id="usageGaugeVisual" style="margin-top:24px"></div>
+    <div style="background:#FFFCFA;border-radius:18px;border:1px solid rgba(255,154,108,0.15);padding:16px 18px;margin-top:14px">
+      <div style="font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#FF6B6B;margin-bottom:12px">Historique des analyses</div>
+      <div id="visualHistoriqueList"><p style="font-size:0.82rem;color:#bbb;text-align:center;padding:8px">Aucune analyse enregistrée.</p></div>
+    </div>
     <div style="border-radius:20px;overflow:hidden;margin-top:14px;box-shadow:0 0 0 1.5px rgba(255,154,108,0.22),0 14px 32px rgba(230,110,70,0.14)">
       <div style="background:linear-gradient(135deg,var(--coral),var(--accent));padding:14px 20px;display:flex;align-items:center;gap:9px">
         <i class="ti ti-scan-eye" style="font-size:18px;color:#fff"></i>
@@ -14713,7 +14717,7 @@ Réponds UNIQUEMENT en JSON valide avec cette structure exacte:
     document.getElementById('protocolsView').style.display = view === 'protocols' ? 'block' : 'none';
     document.getElementById('chronoView').style.display = view === 'chrono' ? 'block' : 'none'; if(view==='chrono' && window.initScoreSante) window.initScoreSante();
     document.getElementById('leaderboardView').style.display = view === 'leaderboard' ? 'block' : 'none'; if (view === 'leaderboard') loadLeaderboard();
-    if (document.getElementById('visualView')) { document.getElementById('visualView').style.display = view === 'visual' ? 'block' : 'none'; if (view === 'visual') { applyVisualPlanGates(); renderUsageGauge('detection_visuelle', 'usageGaugeVisual', false, 'card'); } }
+    if (document.getElementById('visualView')) { document.getElementById('visualView').style.display = view === 'visual' ? 'block' : 'none'; if (view === 'visual') { applyVisualPlanGates(); renderUsageGauge('detection_visuelle', 'usageGaugeVisual', false, 'card'); if (typeof window.renderVisualHistorique === 'function') window.renderVisualHistorique(); } }
     document.getElementById('gamificationView').style.display = view === 'gamification' ? 'block' : 'none';
     if (document.getElementById('shopView')) document.getElementById('shopView').style.display = view === 'shop' ? 'block' : 'none';
     if (document.getElementById('mirelsBoutiqueView')) { document.getElementById('mirelsBoutiqueView').style.display = view === 'mirelsBoutique' ? 'block' : 'none'; if (view === 'mirelsBoutique') loadMirelsBoutique(); }
@@ -19187,6 +19191,19 @@ function displayVisualResult(data) {
 
   document.getElementById('visualResult').innerHTML = html;
   document.getElementById('visualResult').style.display = 'block';
+
+  var historiqueVi = [];
+  try { historiqueVi = JSON.parse(localStorage.getItem('mirella_visual_historique') || '[]'); } catch(x){}
+  historiqueVi.unshift({
+    date: new Date().toISOString(),
+    urgence: data.urgence || 'routine',
+    categorie: visualCategoryLabel || '',
+    resume: data.apparence_generale || '',
+    photo: visualFileData
+  });
+  if(historiqueVi.length > 5) historiqueVi = historiqueVi.slice(0,5);
+  localStorage.setItem('mirella_visual_historique', JSON.stringify(historiqueVi));
+  if (typeof window.renderVisualHistorique === 'function') window.renderVisualHistorique();
 }
 
 function showUpgradeModal(requiredPlan) {
@@ -23075,6 +23092,47 @@ window.deleteBiologieHistorique = function(idx) {
   historique.splice(idx, 1);
   localStorage.setItem('mirella_bio_historique', JSON.stringify(historique));
   window.renderBiologieHistorique();
+};
+
+window.renderVisualHistorique = function() {
+  var el = document.getElementById('visualHistoriqueList');
+  if (!el) return;
+  var historique = [];
+  try { historique = JSON.parse(localStorage.getItem('mirella_visual_historique') || '[]'); } catch(e) {}
+  if (historique.length === 0) {
+    el.innerHTML = '<p style="font-size:0.82rem;color:#bbb;text-align:center;padding:8px">Aucune analyse enregistrée.</p>';
+    return;
+  }
+  var mois = ['jan','fév','mar','avr','mai','jun','jul','aoû','sep','oct','nov','déc'];
+  var urgenceMeta2 = {
+    routine: { color:'#10B981', label:'Surveillance' },
+    consulter_bientot: { color:'#F59E0B', label:'À consulter' },
+    urgent: { color:'#ef4444', label:'Urgent' }
+  };
+  el.innerHTML = historique.map(function(h, i) {
+    var d = new Date(h.date);
+    var dateStr = d.getDate() + ' ' + mois[d.getMonth()] + ' ' + d.getFullYear();
+    var um = urgenceMeta2[h.urgence] || urgenceMeta2.routine;
+    return '<div style="background:#FFFCFA;border-radius:14px;overflow:hidden;box-shadow:0 0 0 1.5px rgba(255,154,108,0.22),0 14px 32px rgba(230,110,70,0.14);display:flex;align-items:center;gap:12px;padding:12px">' +
+      '<div style="width:56px;height:56px;border-radius:10px;overflow:hidden;flex-shrink:0;background:#f5f5f5">' +
+      (h.photo ? '<img src="'+h.photo+'" style="width:100%;height:100%;object-fit:cover">' : '<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center"><i class="ti ti-scan-eye" style="font-size:20px;color:#bbb"></i></div>') +
+      '</div>' +
+      '<div style="flex:1;min-width:0">' +
+      '<div style="font-size:0.78rem;color:#888;margin-bottom:2px">' + dateStr + (h.categorie ? ' · ' + h.categorie : '') + '</div>' +
+      '<div style="font-size:0.82rem;font-weight:700;color:' + um.color + ';margin-bottom:4px">' + um.label + '</div>' +
+      '<div style="font-size:0.75rem;color:#555;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">' + (h.resume||'') + '</div>' +
+      '</div>' +
+      '<button onclick="window.deleteVisualHistorique('+i+')" style="background:none;border:none;color:#ddd;font-size:1rem;cursor:pointer;flex-shrink:0">🗑️</button>' +
+      '</div>';
+  }).join('');
+};
+
+window.deleteVisualHistorique = function(idx) {
+  var historique = [];
+  try { historique = JSON.parse(localStorage.getItem('mirella_visual_historique') || '[]'); } catch(e) {}
+  historique.splice(idx, 1);
+  localStorage.setItem('mirella_visual_historique', JSON.stringify(historique));
+  window.renderVisualHistorique();
 };
 
 // ===== GOOGLE OAUTH (Supabase) =====
