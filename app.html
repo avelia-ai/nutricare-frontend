@@ -18832,7 +18832,7 @@ function renderPredictionTab() {
   // Cache local : si déjà chargé aujourd'hui, ne pas rappeler le backend
   var today = new Date().toISOString().split('T')[0];
   var cached = null;
-  try { cached = JSON.parse(localStorage.getItem('prediction_cache_' + today)); } catch(e) {}
+  try { cached = JSON.parse(localStorage.getItem('mirella_prediction_' + today)); } catch(e) {}
   if (cached) {
     renderPredictionResult(cached, contentEl);
     return;
