@@ -5089,10 +5089,22 @@ window.analyseFrigo = async function(file) {
 
     var historiqueF = [];
     try { historiqueF = JSON.parse(localStorage.getItem('mirella_frigo_historique') || '[]'); } catch(x){}
+    // Miniature 200px pour ne pas saturer le localStorage
+    var thumbCanvas = document.createElement('canvas');
+    var thumbImg = new Image();
+    thumbImg.src = compressed;
+    var thumbW = 200, thumbH = 200;
+    if (thumbImg.naturalWidth && thumbImg.naturalHeight) {
+      var ratio = thumbImg.naturalWidth / thumbImg.naturalHeight;
+      if (ratio > 1) { thumbH = Math.round(200/ratio); } else { thumbW = Math.round(200*ratio); }
+    }
+    thumbCanvas.width = thumbW; thumbCanvas.height = thumbH;
+    thumbCanvas.getContext('2d').drawImage(thumbImg, 0, 0, thumbW, thumbH);
+    var thumb = thumbCanvas.toDataURL('image/jpeg', 0.5);
     historiqueF.unshift({
       date: new Date().toISOString(),
       aliments: (data.aliments||[]).slice(0,3).join(', '),
-      photo: compressed
+      photo: thumb
     });
     if(historiqueF.length > 5) historiqueF = historiqueF.slice(0,5);
     localStorage.setItem('mirella_frigo_historique', JSON.stringify(historiqueF));
