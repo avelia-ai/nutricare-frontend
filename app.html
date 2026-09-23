@@ -2120,8 +2120,11 @@ function renderPredictionResult(d, contentEl) {
   if (cacheEl) cacheEl.remove();
   var badge = document.createElement('div');
   badge.id = 'predictionCacheBadge';
-  badge.style.cssText = 'text-align:center;font-size:0.72rem;color:#aaa;padding:4px 0 8px;';
-  badge.innerHTML = '⏰ Prédiction du jour — se renouvelle automatiquement demain';
+  badge.style.cssText = 'display:flex;align-items:center;justify-content:center;gap:6px;margin:0 0 14px;';
+  badge.innerHTML = '<div style="display:inline-flex;align-items:center;gap:7px;background:#F5F0EB;border-radius:20px;padding:6px 14px;">' +
+    '<i class="ti ti-calendar-check" style="font-size:13px;color:#FF9A3C"></i>' +
+    '<span style="font-size:0.73rem;font-weight:600;color:#999;letter-spacing:0.02em">Analyse du jour · se renouvelle demain</span>' +
+    '</div>';
   contentEl.parentNode.insertBefore(badge, contentEl);
 
   if (d.error) {
