@@ -15799,9 +15799,7 @@ async function showRecipeModal(btn) {
     var cleanedV = vh.filter(function(h){ return h.score !== undefined && h.score >= 0; });
     if (cleanedV.length !== vh.length) localStorage.setItem('mirella_visage_historique', JSON.stringify(cleanedV));
   } catch(e) {}
-  try {
-    localStorage.removeItem('mirella_frigo_historique');
-  } catch(e) {}
+
 })();
 window._currentMenu = null;
 let _donutChart = null;
