@@ -5095,7 +5095,13 @@ window.analyseFrigo = async function(file) {
       recettes: (data.recettes||[]).map(function(r){ return r.nom; }).join(', ')
     });
     if(historiqueF.length > 5) historiqueF = historiqueF.slice(0,5);
-    localStorage.setItem('mirella_frigo_historique', JSON.stringify(historiqueF));
+    try {
+      localStorage.setItem('mirella_frigo_historique', JSON.stringify(historiqueF));
+      console.log('FRIGO SAVE OK', historiqueF.length, 'entrees');
+    } catch(storageErr) {
+      console.error('FRIGO SAVE ERREUR', storageErr);
+      alert('Historique non sauvegardé: ' + storageErr.message);
+    }
 
     if (typeof window.renderFrigoHistorique === 'function') window.renderFrigoHistorique();
 
