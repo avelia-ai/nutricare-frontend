@@ -5096,11 +5096,12 @@ window.analyseFrigo = async function(file) {
     });
     if(historiqueF.length > 5) historiqueF = historiqueF.slice(0,5);
     try {
-      localStorage.setItem('mirella_frigo_historique', JSON.stringify(historiqueF));
-      console.log('FRIGO SAVE OK', historiqueF.length, 'entrees');
+      var dataToSave = JSON.stringify(historiqueF);
+      localStorage.setItem('mirella_frigo_historique', dataToSave);
+      var verify = localStorage.getItem('mirella_frigo_historique');
+      alert('SAVE: ' + historiqueF.length + ' entrees / VERIFY: ' + (verify ? JSON.parse(verify).length : 'NULL'));
     } catch(storageErr) {
-      console.error('FRIGO SAVE ERREUR', storageErr);
-      alert('Historique non sauvegardé: ' + storageErr.message);
+      alert('ERREUR SAVE: ' + storageErr.message);
     }
 
     if (typeof window.renderFrigoHistorique === 'function') window.renderFrigoHistorique();
