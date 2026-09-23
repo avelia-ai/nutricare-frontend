@@ -2098,6 +2098,9 @@ window.analyseHealthLog = function() {
     headers: {'Content-Type':'application/json', 'Authorization': 'Bearer ' + token},
     body: JSON.stringify(payload)
   }).then(function(r){return r.json();}).then(function(d){
+    // Bandeau cache
+    var cacheEl = document.getElementById('predictionCacheBadge');
+    if (cacheEl) cacheEl.remove();
     var comment = d.analyse || 'Bonne journée ! Continuez vos efforts.';
     var el = document.getElementById('healthAnalyseComment');
     el.style.whiteSpace = 'pre-wrap';
@@ -18749,6 +18752,13 @@ function renderPredictionTab() {
     method: 'GET',
     headers: {'Content-Type':'application/json', 'Authorization': 'Bearer ' + token}
   }).then(function(r){return r.json();}).then(function(d){
+    if (d.from_cache) {
+      var badge = document.createElement('div');
+      badge.id = 'predictionCacheBadge';
+      badge.style.cssText = 'text-align:center;font-size:0.72rem;color:#aaa;padding:6px 0 2px;';
+      badge.innerHTML = '⏰ Prédiction du jour — actualisée automatiquement demain';
+      contentEl.parentNode.insertBefore(badge, contentEl);
+    }
     if (d.error) {
       var isQuota = d.error.toLowerCase().indexOf('limit') > -1 || d.error.toLowerCase().indexOf('quota') > -1 || d.error.toLowerCase().indexOf('maximum') > -1;
       var msg = isQuota
