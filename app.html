@@ -14858,8 +14858,7 @@ Réponds UNIQUEMENT en JSON valide avec cette structure exacte:
   setTimeout(function(){
     try {
       var fh = JSON.parse(localStorage.getItem('mirella_frigo_historique') || '[]');
-      var clean = fh.filter(function(h){ return typeof h.aliments === 'string' || Array.isArray(h.aliments); });
-      localStorage.setItem('mirella_frigo_historique', JSON.stringify(clean));
+      // Pas de filtre destructif
     } catch(e) {}
     if(typeof window.renderFrigoHistorique==='function') window.renderFrigoHistorique();
     renderUsageGauge('mon_frigo', 'usageGaugeFrigo', false, 'card');
