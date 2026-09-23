@@ -18750,7 +18750,11 @@ function renderPredictionTab() {
     headers: {'Content-Type':'application/json', 'Authorization': 'Bearer ' + token}
   }).then(function(r){return r.json();}).then(function(d){
     if (d.error) {
-      contentEl.innerHTML = '<div style="text-align:center;padding:20px 0;color:#888;font-size:0.85rem">Impossible de charger la prediction pour le moment.</div>';
+      var isQuota = d.error.toLowerCase().indexOf('limit') > -1 || d.error.toLowerCase().indexOf('quota') > -1 || d.error.toLowerCase().indexOf('maximum') > -1;
+      var msg = isQuota
+        ? '<i class="ti ti-clock" style="font-size:28px;color:#FF9A3C;display:block;margin-bottom:8px"></i>Limite journalière atteinte<br><span style="font-size:0.78rem;color:#aaa">Revenez demain pour une nouvelle prédiction</span>'
+        : 'Impossible de charger la prédiction pour le moment.';
+      contentEl.innerHTML = '<div style="text-align:center;padding:20px 0;color:#888;font-size:0.85rem">' + msg + '</div>';
       return;
     }
     if (!d.suffisant) {
