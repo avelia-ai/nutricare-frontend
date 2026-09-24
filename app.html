@@ -15774,6 +15774,46 @@ function changePortions(delta) {
   }, 300);
 }
 
+function _buildInterHtml(data) {
+  var hasInter = data.interactions_medicaments && data.interactions_medicaments.length > 0;
+  var interBg = hasInter ? 'linear-gradient(135deg,#fffaf0,#fff3dc)' : 'linear-gradient(135deg,#f0fff4,#e8f5e9)';
+  var interHeaderBg = hasInter ? 'linear-gradient(135deg,#F57F17,#FFA000)' : 'linear-gradient(135deg,#2E7D32,#43A047)';
+  var interBody = '';
+  if(hasInter && data.interactions_detail) {
+    var parts = data.interactions_detail.split(/(?=⚠️)/).filter(function(p){return p.trim();});
+    if(parts.length > 1) {
+      interBody = parts.map(function(p) {
+        var cleaned = p.replace(/^[⚠️\s]+/,'').trim();
+        var colonIdx = cleaned.indexOf(':');
+        if(colonIdx > 0 && colonIdx < 50) {
+          var med = cleaned.substring(0, colonIdx).trim();
+          var desc = cleaned.substring(colonIdx+1).trim();
+          return '<div data-r="prInterItem" style="display:flex;align-items:flex-start;gap:10px;padding:9px 12px;border-radius:11px;margin-bottom:7px;background:rgba(245,127,23,0.07)">'
+            + '<div style="width:26px;height:26px;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:0.7rem;font-weight:800;background:rgba(245,127,23,0.15);color:#c05a00">!</div>'
+            + '<div><div style="font-weight:700;font-size:0.78rem;margin-bottom:2px;color:#c05a00">'+med+'</div>'
+            + '<div style="font-size:0.78rem;line-height:1.55;color:#7a4a00">'+desc+'</div></div></div>';
+        }
+        return '<div style="display:flex;align-items:flex-start;gap:10px;padding:9px 12px;border-radius:11px;margin-bottom:7px;background:rgba(245,127,23,0.07)">'
+          + '<div style="width:26px;height:26px;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:0.7rem;font-weight:800;background:rgba(245,127,23,0.15);color:#c05a00">!</div>'
+          + '<div style="font-size:0.78rem;line-height:1.55;color:#7a4a00">'+cleaned+'</div></div>';
+      }).join('');
+    } else {
+      interBody = '<div style="font-size:0.8rem;line-height:1.6;color:#c05a00">'+data.interactions_detail+'</div>';
+    }
+  } else if(!hasInter) {
+    interBody = '<div style="display:flex;align-items:center;gap:8px">'
+      + '<svg viewBox="0 0 24 24" fill="none" stroke="#2E7D32" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><polyline points="20 6 9 17 4 12"/></svg>'
+      + '<div style="font-size:0.8rem;line-height:1.6;color:#1a5e2a">Aucune interaction détectée avec vos traitements.</div></div>';
+  }
+  var headerIconSvg = '<svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" width="17" height="17"><path d="M19 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2z"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>';
+  return '<div style="border-radius:18px;overflow:hidden;box-shadow:0 4px 20px rgba(0,0,0,0.06);margin-bottom:14px">'
+    + '<div style="background:'+interHeaderBg+';padding:13px 16px;display:flex;align-items:center;gap:10px">'
+    + '<div style="width:34px;height:34px;border-radius:10px;background:rgba(255,255,255,0.2);display:flex;align-items:center;justify-content:center;flex-shrink:0">'+headerIconSvg+'</div>'
+    + '<div style="font-size:0.72rem;font-weight:800;text-transform:uppercase;letter-spacing:0.08em;color:white">Interactions médicamenteuses</div></div>'
+    + '<div style="background:'+interBg+';padding:14px 16px">'+interBody+'</div></div>';
+}
+window._buildInterHtml = _buildInterHtml;
+
 async function scanProduit(input) {
   const file = input.files[0];
   if (!file) return;
@@ -15950,33 +15990,7 @@ async function scanProduit(input) {
           </div>` : ''}
 
           <!-- INTERACTIONS -->
-          \${(function(){
-            const hasInter = data.interactions_medicaments && data.interactions_medicaments.length > 0;
-            const interColor = hasInter ? '#c05a00' : '#1a5e2a';
-            const interBg = hasInter ? 'linear-gradient(135deg,#fffaf0,#fff3dc)' : 'linear-gradient(135deg,#f0fff4,#e8f5e9)';
-            const interHeaderBg = hasInter ? 'linear-gradient(135deg,#F57F17,#FFA000)' : 'linear-gradient(135deg,#2E7D32,#43A047)';
-            let interBody = '';
-            if(hasInter && data.interactions_detail) {
-              const parts = data.interactions_detail.split(/(?=⚠️)|(?=\.\s*⚠️)/).filter(p=>p.trim());
-              if(parts.length > 1) {
-                interBody = parts.map(function(p) {
-                  const cleaned = p.replace(/^[⚠️\s]+/,'').trim();
-                  const colonIdx = cleaned.indexOf(':');
-                  if(colonIdx > 0 && colonIdx < 40) {
-                    const med = cleaned.substring(0, colonIdx).trim();
-                    const desc = cleaned.substring(colonIdx+1).trim();
-                    return '<div class="prInterItem" style="background:rgba(245,127,23,0.07)"><div class="prInterBullet" style="background:rgba(245,127,23,0.15);color:#c05a00">!</div><div><div class="prInterMed" style="color:#c05a00">'+med+'</div><div class="prInterText" style="color:#7a4a00">'+desc+'</div></div></div>';
-                  }
-                  return '<div class="prInterItem" style="background:rgba(245,127,23,0.07)"><div class="prInterBullet" style="background:rgba(245,127,23,0.15);color:#c05a00">!</div><div class="prInterText" style="color:#7a4a00">'+cleaned+'</div></div>';
-                }).join('');
-              } else {
-                interBody = '<div class="prAlerteTexte" style="color:'+interColor+'">'+data.interactions_detail+'</div>';
-              }
-            } else if(!hasInter) {
-              interBody = '<div style="display:flex;align-items:center;gap:8px"><svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"#2E7D32\" stroke-width=\"2.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\" width=\"16\" height=\"16\"><polyline points=\"20 6 9 17 4 12\"/></svg><div class="prAlerteTexte" style="color:#1a5e2a">Aucune interaction détectée avec vos traitements.</div></div>';
-            }
-            return '<div class="prAlerte" style="background:'+interBg+'"><div class="prAlerteHeader" style="background:'+interHeaderBg+'"><div class="prAlerteIcon" style="background:rgba(255,255,255,0.2)"><svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"white\" stroke-width=\"2.2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M19 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2z\"/><line x1=\"12\" y1=\"8\" x2=\"12\" y2=\"16\"/><line x1=\"8\" y1=\"12\" x2=\"16\" y2=\"12\"/></svg></div><div class="prAlerteTitre" style="color:white">Interactions médicamenteuses</div></div><div class="prAlerteBody">'+interBody+'</div></div>';
-          })()}
+          \${window._buildInterHtml(data)}
 
           <!-- POINTS POSITIFS -->
           ${data.points_positifs?.length ? `
