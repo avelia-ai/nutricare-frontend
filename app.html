@@ -14986,7 +14986,7 @@ Réponds UNIQUEMENT en JSON valide avec cette structure exacte:
       }
     })();
     document.getElementById('ordonnanceView').style.display = view === 'ordonnance' ? 'block' : 'none';
-    document.getElementById('scanproduitView').style.display = view === 'scanproduit' ? 'block' : 'none'; if (view === 'scanproduit') { applyScanproduitPlanGates(); renderUsageGauge('scan_produit', 'usageGaugeScanproduit', false, 'card'); }
+    document.getElementById('scanproduitView').style.display = view === 'scanproduit' ? 'block' : 'none'; if (view === 'scanproduit') { applyScanproduitPlanGates(); renderUsageGauge('scan_produit', 'usageGaugeScanproduit', false, 'card'); if(window.renderScanproduitHistorique) renderScanproduitHistorique(); }
     document.getElementById('insightsView').style.display = view === 'insights' ? 'block' : 'none';
     var vv = document.getElementById('visageView'); if(vv) { vv.style.display = view === 'visage' ? 'block' : 'none'; if(view==='visage') { setTimeout(function(){
   // Nettoyer les entrees frigo (sans score) qui auraient ete sauvees dans visage_historique
@@ -15912,6 +15912,41 @@ function _buildProduitBlocks(data) {
 }
 window._buildProduitBlocks = _buildProduitBlocks;
 
+function renderScanproduitHistorique() {
+  var el = document.getElementById('scanproduitHistoriqueList');
+  if(!el) return;
+  var hist = [];
+  try { hist = JSON.parse(localStorage.getItem('mirella_scanproduit_historique') || '[]'); } catch(x){}
+  if(!hist.length) {
+    el.innerHTML = '<p style="font-size:0.82rem;color:#bbb;text-align:center;padding:8px">Aucun scan enregistré.</p>';
+    return;
+  }
+  var nutriColors = {'A':'#1B5E20','B':'#388E3C','C':'#c89400','D':'#E65100','E':'#B71C1C'};
+  var scoreGrad = function(s) {
+    if(s >= 7) return 'linear-gradient(135deg,#2E7D32,#43A047)';
+    if(s >= 4) return 'linear-gradient(135deg,#F57F17,#FFA000)';
+    return 'linear-gradient(135deg,#C62828,#E53935)';
+  };
+  el.innerHTML = hist.map(function(h) {
+    var d = new Date(h.date);
+    var dateStr = d.toLocaleDateString('fr-FR', {day:'numeric', month:'short'}) + ' · ' + d.toLocaleTimeString('fr-FR', {hour:'2-digit', minute:'2-digit'});
+    return '<div style="display:flex;align-items:center;gap:12px;padding:11px 0;border-bottom:1px solid rgba(255,154,108,0.12)">'
+      + '<div style="width:38px;height:38px;border-radius:12px;flex-shrink:0;display:flex;align-items:center;justify-content:center;background:' + scoreGrad(h.score) + ';box-shadow:0 4px 10px rgba(0,0,0,0.15)">'
+      + '<div style="color:white;font-size:0.9rem;font-weight:800;line-height:1">' + h.score + '</div>'
+      + '</div>'
+      + '<div style="flex:1;min-width:0">'
+      + '<div style="font-size:0.83rem;font-weight:700;color:#2b2320;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">' + h.produit + '</div>'
+      + '<div style="display:flex;align-items:center;gap:6px;margin-top:2px">'
+      + (h.marque ? '<div style="font-size:0.7rem;color:#9a8b82">' + h.marque + '</div>' : '')
+      + (h.nutriscore && h.nutriscore !== 'inconnu' ? '<div style="font-size:0.65rem;font-weight:700;color:' + (nutriColors[h.nutriscore]||'#999') + ';background:rgba(0,0,0,0.05);padding:1px 6px;border-radius:4px">NS ' + h.nutriscore + '</div>' : '')
+      + '</div>'
+      + '<div style="font-size:0.68rem;color:#bbb;margin-top:2px">' + dateStr + (h.calories ? ' · ' + h.calories + ' kcal' : '') + '</div>'
+      + '</div>'
+      + '</div>';
+  }).join('');
+}
+window.renderScanproduitHistorique = renderScanproduitHistorique;
+
 async function scanProduit(input) {
   const file = input.files[0];
   if (!file) return;
@@ -16076,6 +16111,23 @@ async function scanProduit(input) {
           ${window._buildProduitBlocks(data)}
 
         </div>`;
+      // SAUVEGARDE HISTORIQUE
+      try {
+        var scanHist = [];
+        try { scanHist = JSON.parse(localStorage.getItem('mirella_scanproduit_historique') || '[]'); } catch(x){}
+        scanHist.unshift({
+          produit: data.produit || 'Produit inconnu',
+          marque: data.marque || '',
+          score: data.score_objectif || 0,
+          label: data.score_objectif_label || '',
+          nutriscore: data.nutriscore || '',
+          calories: data.calories_portion || 0,
+          date: new Date().toISOString()
+        });
+        if(scanHist.length > 10) scanHist = scanHist.slice(0, 10);
+        localStorage.setItem('mirella_scanproduit_historique', JSON.stringify(scanHist));
+        renderScanproduitHistorique();
+      } catch(he){}
       showMirellaNotif('🔍 Produit analysé ! ' + (data.alerte_allergie ? '⚠️ Attention allergie détectée !' : data.score_objectif >= 7 ? 'Ce produit correspond bien à votre objectif !' : 'Consultez mes recommandations.'));
     } catch(e) {
       document.getElementById('produitLoading').style.display = 'none';
