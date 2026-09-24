@@ -283,7 +283,7 @@ footer a{text-decoration:none;color:var(--muted);font-weight:600}
         </div>
         <div class="hero-card-progress">
           <div class="hero-card-progress-bar"><div class="hero-card-progress-fill"></div></div>
-          <div class="hero-card-progress-text"><span>800 places réservées</span><span>1000 places</span></div>
+          <div class="hero-card-progress-text"><span id="placesCounter">100 places réservées</span><span>1000 places</span></div>
         </div>
       </div>
     </div>
@@ -510,6 +510,29 @@ function updateCountdown(){
 }
 updateCountdown();
 setInterval(updateCountdown, 1000);
+
+// Compteur inscrits - démarre à 100, +5 toutes les 5 minutes
+(function() {
+  var BASE = 100;
+  var BASE_TIME = new Date('2026-09-24T17:00:00').getTime();
+  var INTERVAL_MS = 5 * 60 * 1000; // 5 minutes
+  var INCREMENT = 5;
+
+  function updateCounter() {
+    var now = Date.now();
+    var elapsed = Math.max(0, now - BASE_TIME);
+    var steps = Math.floor(elapsed / INTERVAL_MS);
+    var count = BASE + (steps * INCREMENT);
+    var el = document.getElementById('placesCounter');
+    if(el) el.textContent = count + ' places réservées';
+    // Met à jour aussi la barre de progression
+    var fill = document.querySelector('.hero-card-progress-fill');
+    if(fill) fill.style.width = Math.min(100, Math.round(count / 10)) + '%';
+  }
+
+  updateCounter();
+  setInterval(updateCounter, 60000); // refresh chaque minute
+})();
 
 var BACKEND_URL = 'https://nutricare-backend-production.up.railway.app';
 function handleSubmit(e, source){
