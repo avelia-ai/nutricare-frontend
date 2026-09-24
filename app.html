@@ -30499,12 +30499,12 @@ function showRecalibrerPopup() {
     + '<div style="font-size:0.78rem;color:#C2604A;line-height:1.5">Mirella va recalculer tes menus et conseils en fonction de ce nouveau délai.</div>'
     + '</div>'
     + '<button id="rcConfirmBtn" onclick="confirmRecalibrer()" style="width:100%;padding:16px;border-radius:16px;border:none;background:linear-gradient(135deg,#FF9A6C,#FF6B6B);color:white;font-size:0.95rem;font-weight:700;cursor:pointer;box-shadow:0 8px 24px rgba(255,107,107,0.35);opacity:0.5">Recalibrer mon objectif</button>'
-    + '<button onclick="_closePopup('recalibrerPopup')" style="width:100%;padding:12px;border-radius:16px;border:none;background:transparent;color:#9a8b82;font-size:0.85rem;cursor:pointer;margin-top:8px">Annuler</button>'
+    + '<button onclick="_closePopup(&quot;recalibrerPopup&quot;)" style="width:100%;padding:12px;border-radius:16px;border:none;background:transparent;color:#9a8b82;font-size:0.85rem;cursor:pointer;margin-top:8px">Annuler</button>'
     + '</div>'
     + '</div>';
 
   document.body.appendChild(overlay);
-  overlay.addEventListener('click', function(e){ if(e.target===overlay) _closePopup('recalibrerPopup'); });
+  overlay.addEventListener('click', function(e){ if(e.target===overlay) _closePopup(&quot;recalibrerPopup&quot;); });
 }
 
 window._rcDelaiSelected = null;
@@ -30525,7 +30525,7 @@ function confirmRecalibrer() {
   var today = new Date().toISOString().split('T')[0];
   _saveProfil({ objectif_delai_semaines: n, objectif_date_debut: today }, function(err) {
     if(err) { if(btn) btn.textContent = 'Erreur, réessaie'; return; }
-    _closePopup('recalibrerPopup');
+    _closePopup(&quot;recalibrerPopup&quot;);
     if(window._pcProfile) { window._pcProfile.objectif_delai_semaines = n; window._pcProfile.objectif_date_debut = today; }
     if(typeof window.renderPersonalSummary === 'function') window.renderPersonalSummary(window._pcProfile);
     if(typeof showMirellaNotif === 'function') showMirellaNotif('Objectif recalibré sur ' + n + ' semaines — Mirella repart avec toi !');
@@ -30559,12 +30559,12 @@ function showMaintienPopup() {
     + '</div>'
     + '</div>'
     + '<button onclick="confirmMaintien()" style="width:100%;padding:16px;border-radius:16px;border:none;background:linear-gradient(135deg,#4A90D9,#357ABD);color:white;font-size:0.95rem;font-weight:700;cursor:pointer;box-shadow:0 8px 24px rgba(74,144,217,0.35)">Activer le mode maintien</button>'
-    + '<button onclick="_closePopup('maintienPopup')" style="width:100%;padding:12px;border-radius:16px;border:none;background:transparent;color:#9a8b82;font-size:0.85rem;cursor:pointer;margin-top:8px">Annuler</button>'
+    + '<button onclick="_closePopup(&quot;maintienPopup&quot;)" style="width:100%;padding:12px;border-radius:16px;border:none;background:transparent;color:#9a8b82;font-size:0.85rem;cursor:pointer;margin-top:8px">Annuler</button>'
     + '</div>'
     + '</div>';
 
   document.body.appendChild(overlay);
-  overlay.addEventListener('click', function(e){ if(e.target===overlay) _closePopup('maintienPopup'); });
+  overlay.addEventListener('click', function(e){ if(e.target===overlay) _closePopup(&quot;maintienPopup&quot;); });
 }
 
 function _maintienItem(txt, color) {
@@ -30583,7 +30583,7 @@ function confirmMaintien() {
   };
   _saveProfil(payload, function(err) {
     if(err) { if(typeof showMirellaNotif==='function') showMirellaNotif('Erreur, réessaie'); return; }
-    _closePopup('maintienPopup');
+    _closePopup(&quot;maintienPopup&quot;);
     if(window._pcProfile) { window._pcProfile.objectifs = ['maintien']; window._pcProfile.objectif_date_debut = today; window._pcProfile.objectif_delai_semaines = 2; }
     if(typeof window.renderPersonalSummary === 'function') window.renderPersonalSummary(window._pcProfile);
     if(typeof showMirellaNotif === 'function') showMirellaNotif('Mode maintien activé — Mirella adapte tes conseils pour consolider tes acquis');
@@ -30652,12 +30652,12 @@ function showNouvelObjectifPopup() {
     + '<button onclick="document.getElementById('noStep2').style.display='none';document.getElementById('noStep1').style.display='block'" style="width:100%;padding:12px;border-radius:16px;border:none;background:transparent;color:#9a8b82;font-size:0.85rem;cursor:pointer">Retour</button>'
     + '</div>'
 
-    + '<button onclick="_closePopup('nouvelObjectifPopup')" style="width:100%;padding:12px;border-radius:16px;border:none;background:transparent;color:#9a8b82;font-size:0.85rem;cursor:pointer;margin-top:4px;margin-bottom:24px">Annuler</button>'
+    + '<button onclick="_closePopup(&quot;nouvelObjectifPopup&quot;)" style="width:100%;padding:12px;border-radius:16px;border:none;background:transparent;color:#9a8b82;font-size:0.85rem;cursor:pointer;margin-top:4px;margin-bottom:24px">Annuler</button>'
     + '</div>'
     + '</div>';
 
   document.body.appendChild(overlay);
-  overlay.addEventListener('click', function(e){ if(e.target===overlay) _closePopup('nouvelObjectifPopup'); });
+  overlay.addEventListener('click', function(e){ if(e.target===overlay) _closePopup(&quot;nouvelObjectifPopup&quot;); });
 }
 
 window._noObjSelected = null;
@@ -30723,7 +30723,7 @@ function confirmNouvelObjectif() {
 
   _saveProfil(payload, function(err) {
     if(err) { if(btn) btn.textContent='Erreur, réessaie'; return; }
-    _closePopup('nouvelObjectifPopup');
+    _closePopup(&quot;nouvelObjectifPopup&quot;);
     if(window._pcProfile) Object.assign(window._pcProfile, payload);
     if(typeof window.renderPersonalSummary === 'function') window.renderPersonalSummary(window._pcProfile);
     if(typeof showMirellaNotif === 'function') showMirellaNotif('Nouveau plan activé — Mirella repart avec toi !');
