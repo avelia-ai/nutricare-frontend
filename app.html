@@ -30649,7 +30649,7 @@ function showNouvelObjectifPopup() {
     + '<button class="rcDelaiBtn" data-val="24" onclick="selectNoDelai(parseInt(this.dataset.val))" id="noD24">6 mois</button>'
     + '</div>'
     + '<button id="noConfirmBtn" onclick="confirmNouvelObjectif()" style="width:100%;padding:15px;border-radius:16px;border:none;background:linear-gradient(135deg,#2E7D32,#43A047);color:white;font-size:0.92rem;font-weight:700;cursor:pointer;opacity:0.5;margin-bottom:8px">Lancer mon nouveau plan</button>'
-    + '<button onclick="document.getElementById('noStep2').style.display='none';document.getElementById('noStep1').style.display='block'" style="width:100%;padding:12px;border-radius:16px;border:none;background:transparent;color:#9a8b82;font-size:0.85rem;cursor:pointer">Retour</button>'
+    + '<button onclick="noGoBack()" style="width:100%;padding:12px;border-radius:16px;border:none;background:transparent;color:#9a8b82;font-size:0.85rem;cursor:pointer">Retour</button>'
     + '</div>'
 
     + '<button data-pid="nouvelObjectifPopup" onclick="_closePopup(this.dataset.pid)" style="width:100%;padding:12px;border-radius:16px;border:none;background:transparent;color:#9a8b82;font-size:0.85rem;cursor:pointer;margin-top:4px;margin-bottom:24px">Annuler</button>'
@@ -30734,6 +30734,13 @@ function startNewObjectif(mode) { selectBilanMode(mode); }
 window.showObjectifBilanPopup = showObjectifBilanPopup;
 window.closeObjectifBilanPopup = closeObjectifBilanPopup;
 window.startNewObjectif = startNewObjectif;
+function noGoBack() {
+  var s2 = document.getElementById('noStep2');
+  var s1 = document.getElementById('noStep1');
+  if(s2) s2.style.display = 'none';
+  if(s1) s1.style.display = 'block';
+}
+window.noGoBack = noGoBack;
 window.selectBilanMode = selectBilanMode;
 window.executeBilanMode = executeBilanMode;
 window.showRecalibrerPopup = showRecalibrerPopup;
