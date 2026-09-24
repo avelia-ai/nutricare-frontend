@@ -30414,11 +30414,11 @@ function executeBilanMode() {
   var mode = window._bilanSelectedMode;
   if(!mode) return;
   closeObjectifBilanPopup();
-  if(mode === 'recalibrer' || mode === 'nouveau') {
-    setTimeout(function(){ showView('profile'); }, 400);
-  } else if(mode === 'maintien') {
-    if(typeof showMirellaNotif === 'function') showMirellaNotif('Mode maintien activé — Mirella adapte tes conseils pour consolider tes acquis');
-  }
+  setTimeout(function(){
+    if(mode === 'recalibrer') showRecalibrerPopup();
+    else if(mode === 'maintien') showMaintienPopup();
+    else if(mode === 'nouveau') showNouvelObjectifPopup();
+  }, 350);
 }
 
 function closeObjectifBilanPopup() {
@@ -30427,12 +30427,319 @@ function closeObjectifBilanPopup() {
   if(p) { p.style.opacity='0'; p.style.transition='opacity 0.25s'; setTimeout(function(){if(p.parentNode)p.parentNode.removeChild(p);},280); }
 }
 
+function _saveProfil(payload, cb) {
+  var tok = (window.authToken) || localStorage.getItem('mirella_token') || localStorage.getItem('sb_token') || '';
+  var bu = (typeof BACKEND_URL !== 'undefined') ? BACKEND_URL : 'https://nutricare-backend-production.up.railway.app';
+  fetch(bu + '/api/profile', {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + tok },
+    body: JSON.stringify(payload)
+  }).then(function(r){ return r.json(); }).then(function(d){
+    // Met à jour le profil local
+    if(window._pcProfile) Object.assign(window._pcProfile, payload);
+    if(cb) cb(null, d);
+  }).catch(function(e){ if(cb) cb(e); });
+}
+
+function _closePopup(id) {
+  var p = document.getElementById(id);
+  if(p) { p.style.opacity='0'; p.style.transition='opacity 0.25s'; setTimeout(function(){if(p.parentNode)p.parentNode.removeChild(p);},280); }
+}
+
+function _makeOverlay(id) {
+  var o = document.createElement('div');
+  o.id = id;
+  o.style.cssText = 'position:fixed;inset:0;z-index:99999;background:rgba(20,10,5,0.75);display:flex;align-items:flex-end;justify-content:center';
+  return o;
+}
+
+function _sheetStart() {
+  return '<div style="background:#FFFCFA;border-radius:28px 28px 0 0;width:100%;max-width:480px;animation:bsUp 0.45s cubic-bezier(0.34,1.56,0.64,1);max-height:92vh;overflow-y:auto">'
+    + '<div style="display:flex;justify-content:center;padding:14px 0 6px"><div style="width:40px;height:4px;border-radius:2px;background:rgba(0,0,0,0.12)"></div></div>';
+}
+
+// ── POPUP RECALIBRER ──
+function showRecalibrerPopup() {
+  if(document.getElementById('recalibrerPopup')) return;
+  var profile = window._pcProfile || {};
+  var deltaActuel = parseFloat(profile.poids_delta_souhaite) || 0;
+  var objectifLabel = '';
+  var objectifs = profile.objectifs || [];
+  if(objectifs.indexOf('perte_poids') > -1) objectifLabel = 'perdre ' + deltaActuel + ' kg';
+  else if(objectifs.indexOf('masse') > -1) objectifLabel = 'prendre ' + deltaActuel + ' kg';
+  else objectifLabel = 'atteindre ton objectif';
+
+  var overlay = _makeOverlay('recalibrerPopup');
+  overlay.innerHTML = '<style>@keyframes bsUp{from{transform:translateY(80px);opacity:0}to{transform:translateY(0);opacity:1}}'
+    + '.rcDelaiBtn{padding:10px 18px;border-radius:12px;border:2px solid rgba(255,154,108,0.2);background:white;font-size:0.85rem;font-weight:600;color:#2b2320;cursor:pointer;transition:all 0.2s}'
+    + '.rcDelaiBtn.selected{border-color:#FF9A6C;background:rgba(255,154,108,0.1);color:#C2604A}'
+    + '</style>'
+    + _sheetStart()
+    + '<div style="padding:24px 24px 0;text-align:center">'
+    + '<div style="width:56px;height:56px;border-radius:16px;background:linear-gradient(135deg,#FF9A6C,#FF6B6B);display:flex;align-items:center;justify-content:center;margin:0 auto 16px;box-shadow:0 8px 20px rgba(255,107,107,0.3)">'
+    + '<svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" width="26" height="26"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-3.5"/></svg>'
+    + '</div>'
+    + '<div style="font-size:0.68rem;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:#C2604A;margin-bottom:8px">Recalibrer</div>'
+    + '<div style="font-size:1.2rem;font-weight:800;color:#2b2320;margin-bottom:8px">Nouveau délai pour ' + objectifLabel + '</div>'
+    + '<div style="font-size:0.83rem;color:#9a8b82;line-height:1.55;margin-bottom:24px">Garde le même objectif et choisis un nouveau délai. Mirella repart de zéro avec toi.</div>'
+    + '</div>'
+    + '<div style="padding:0 24px 24px">'
+    + '<div style="font-size:0.68rem;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:#9a8b82;margin-bottom:12px">Nouveau délai</div>'
+    + '<div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:24px">'
+    + '<button class="rcDelaiBtn" onclick="selectRcDelai(2)" id="rcD2">2 semaines</button>'
+    + '<button class="rcDelaiBtn" onclick="selectRcDelai(4)" id="rcD4">4 semaines</button>'
+    + '<button class="rcDelaiBtn" onclick="selectRcDelai(8)" id="rcD8">8 semaines</button>'
+    + '<button class="rcDelaiBtn" onclick="selectRcDelai(12)" id="rcD12">3 mois</button>'
+    + '<button class="rcDelaiBtn" onclick="selectRcDelai(24)" id="rcD24">6 mois</button>'
+    + '</div>'
+    + '<div style="background:rgba(255,154,108,0.08);border-radius:14px;padding:14px;margin-bottom:20px;display:flex;align-items:center;gap:10px">'
+    + '<svg viewBox="0 0 24 24" fill="none" stroke="#C2604A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>'
+    + '<div style="font-size:0.78rem;color:#C2604A;line-height:1.5">Mirella va recalculer tes menus et conseils en fonction de ce nouveau délai.</div>'
+    + '</div>'
+    + '<button id="rcConfirmBtn" onclick="confirmRecalibrer()" style="width:100%;padding:16px;border-radius:16px;border:none;background:linear-gradient(135deg,#FF9A6C,#FF6B6B);color:white;font-size:0.95rem;font-weight:700;cursor:pointer;box-shadow:0 8px 24px rgba(255,107,107,0.35);opacity:0.5">Recalibrer mon objectif</button>'
+    + '<button onclick="_closePopup('recalibrerPopup')" style="width:100%;padding:12px;border-radius:16px;border:none;background:transparent;color:#9a8b82;font-size:0.85rem;cursor:pointer;margin-top:8px">Annuler</button>'
+    + '</div>'
+    + '</div>';
+
+  document.body.appendChild(overlay);
+  overlay.addEventListener('click', function(e){ if(e.target===overlay) _closePopup('recalibrerPopup'); });
+}
+
+window._rcDelaiSelected = null;
+function selectRcDelai(n) {
+  window._rcDelaiSelected = n;
+  [2,4,8,12,24].forEach(function(v){ var el=document.getElementById('rcD'+v); if(el) el.classList.remove('selected'); });
+  var el = document.getElementById('rcD'+n);
+  if(el) el.classList.add('selected');
+  var btn = document.getElementById('rcConfirmBtn');
+  if(btn) btn.style.opacity = '1';
+}
+
+function confirmRecalibrer() {
+  var n = window._rcDelaiSelected;
+  if(!n) return;
+  var btn = document.getElementById('rcConfirmBtn');
+  if(btn) { btn.textContent = 'Enregistrement...'; btn.style.opacity='0.7'; }
+  var today = new Date().toISOString().split('T')[0];
+  _saveProfil({ objectif_delai_semaines: n, objectif_date_debut: today }, function(err) {
+    if(err) { if(btn) btn.textContent = 'Erreur, réessaie'; return; }
+    _closePopup('recalibrerPopup');
+    if(window._pcProfile) { window._pcProfile.objectif_delai_semaines = n; window._pcProfile.objectif_date_debut = today; }
+    if(typeof window.renderPersonalSummary === 'function') window.renderPersonalSummary(window._pcProfile);
+    if(typeof showMirellaNotif === 'function') showMirellaNotif('Objectif recalibré sur ' + n + ' semaines — Mirella repart avec toi !');
+  });
+}
+
+// ── POPUP MODE MAINTIEN ──
+function showMaintienPopup() {
+  if(document.getElementById('maintienPopup')) return;
+  var overlay = _makeOverlay('maintienPopup');
+  overlay.innerHTML = '<style>@keyframes bsUp{from{transform:translateY(80px);opacity:0}to{transform:translateY(0);opacity:1}}</style>'
+    + _sheetStart()
+    + '<div style="padding:24px 24px 0;text-align:center">'
+    + '<div style="width:56px;height:56px;border-radius:16px;background:linear-gradient(135deg,#4A90D9,#357ABD);display:flex;align-items:center;justify-content:center;margin:0 auto 16px;box-shadow:0 8px 20px rgba(74,144,217,0.3)">'
+    + '<svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" width="26" height="26"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>'
+    + '</div>'
+    + '<div style="font-size:0.68rem;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:#4A90D9;margin-bottom:8px">Mode Maintien</div>'
+    + '<div style="font-size:1.2rem;font-weight:800;color:#2b2320;margin-bottom:8px">Consolide avant de repartir</div>'
+    + '<div style="font-size:0.83rem;color:#9a8b82;line-height:1.55;margin-bottom:24px">Mirella va adapter tes conseils pour stabiliser tes acquis. Pas de pression, juste de la constance.</div>'
+    + '</div>'
+    + '<div style="padding:0 24px 24px">'
+    + '<div style="background:linear-gradient(135deg,rgba(74,144,217,0.08),rgba(53,122,189,0.04));border-radius:16px;padding:16px;margin-bottom:20px">'
+    + '<div style="font-size:0.68rem;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:#4A90D9;margin-bottom:12px">Ce que Mirella va faire</div>'
+    + '<div style="display:flex;flex-direction:column;gap:10px">'
+    + _maintienItem('Menus équilibrés sans déficit calorique', '#2E7D32')
+    + _maintienItem('Conseils axés stabilisation et bien-être', '#4A90D9')
+    + _maintienItem('Bilan de maintien proposé dans 2 semaines', '#C2604A')
+    + _maintienItem('Compteur "Mode maintien — semaine X" activé', '#9b59b6')
+    + '</div>'
+    + '</div>'
+    + '<button onclick="confirmMaintien()" style="width:100%;padding:16px;border-radius:16px;border:none;background:linear-gradient(135deg,#4A90D9,#357ABD);color:white;font-size:0.95rem;font-weight:700;cursor:pointer;box-shadow:0 8px 24px rgba(74,144,217,0.35)">Activer le mode maintien</button>'
+    + '<button onclick="_closePopup('maintienPopup')" style="width:100%;padding:12px;border-radius:16px;border:none;background:transparent;color:#9a8b82;font-size:0.85rem;cursor:pointer;margin-top:8px">Annuler</button>'
+    + '</div>'
+    + '</div>';
+
+  document.body.appendChild(overlay);
+  overlay.addEventListener('click', function(e){ if(e.target===overlay) _closePopup('maintienPopup'); });
+}
+
+function _maintienItem(txt, color) {
+  return '<div style="display:flex;align-items:center;gap:10px">'
+    + '<div style="width:24px;height:24px;border-radius:7px;background:' + color + ';display:flex;align-items:center;justify-content:center;flex-shrink:0">'
+    + '<svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" width="13" height="13"><polyline points="20 6 9 17 4 12"/></svg>'
+    + '</div><div style="font-size:0.82rem;color:#2b2320">' + txt + '</div></div>';
+}
+
+function confirmMaintien() {
+  var today = new Date().toISOString().split('T')[0];
+  var payload = {
+    objectifs: ['maintien'],
+    objectif_date_debut: today,
+    objectif_delai_semaines: 2
+  };
+  _saveProfil(payload, function(err) {
+    if(err) { if(typeof showMirellaNotif==='function') showMirellaNotif('Erreur, réessaie'); return; }
+    _closePopup('maintienPopup');
+    if(window._pcProfile) { window._pcProfile.objectifs = ['maintien']; window._pcProfile.objectif_date_debut = today; window._pcProfile.objectif_delai_semaines = 2; }
+    if(typeof window.renderPersonalSummary === 'function') window.renderPersonalSummary(window._pcProfile);
+    if(typeof showMirellaNotif === 'function') showMirellaNotif('Mode maintien activé — Mirella adapte tes conseils pour consolider tes acquis');
+  });
+}
+
+// ── POPUP NOUVEL OBJECTIF ──
+function showNouvelObjectifPopup() {
+  if(document.getElementById('nouvelObjectifPopup')) return;
+  var overlay = _makeOverlay('nouvelObjectifPopup');
+
+  var objectifChoices = [
+    { id:'perte_poids', label:'Perdre du poids', icon:'M12 5v14M5 12l7-7 7 7', color:'#FF9A6C' },
+    { id:'masse', label:'Prendre de la masse', icon:'M12 19V5M5 12l7 7 7-7', color:'#2E7D32' },
+    { id:'sante', label:'Améliorer ma santé', icon:'M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z', color:'#E53935' },
+    { id:'energie', label:'Booster mon énergie', icon:'M13 2L3 14h9l-1 8 10-12h-9l1-8z', color:'#F57F17' },
+    { id:'sommeil', label:'Améliorer mon sommeil', icon:'M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z', color:'#7C3AED' },
+    { id:'cardio', label:'Cardio & endurance', icon:'M22 12h-4l-3 9L9 3l-3 9H2', color:'#0891B2' },
+  ];
+
+  var choicesHtml = objectifChoices.map(function(o) {
+    return '<div id="no_'+o.id+'" onclick="selectNouvelObj(''+o.id+'')" style="display:flex;align-items:center;gap:12px;padding:12px;background:white;border:2px solid rgba(0,0,0,0.06);border-radius:13px;cursor:pointer;transition:all 0.2s">'
+      + '<div style="width:36px;height:36px;border-radius:10px;background:'+o.color+';display:flex;align-items:center;justify-content:center;flex-shrink:0">'
+      + '<svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" width="17" height="17"><path d="'+o.icon+'"/></svg>'
+      + '</div>'
+      + '<div style="font-size:0.86rem;font-weight:600;color:#2b2320">'+o.label+'</div>'
+      + '</div>';
+  }).join('');
+
+  overlay.innerHTML = '<style>@keyframes bsUp{from{transform:translateY(80px);opacity:0}to{transform:translateY(0);opacity:1}}</style>'
+    + _sheetStart()
+    + '<div style="padding:24px 24px 0;text-align:center">'
+    + '<div style="width:56px;height:56px;border-radius:16px;background:linear-gradient(135deg,#2E7D32,#43A047);display:flex;align-items:center;justify-content:center;margin:0 auto 16px;box-shadow:0 8px 20px rgba(46,125,50,0.3)">'
+    + '<svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" width="26" height="26"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>'
+    + '</div>'
+    + '<div style="font-size:0.68rem;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:#2E7D32;margin-bottom:8px">Nouvel objectif</div>'
+    + '<div style="font-size:1.2rem;font-weight:800;color:#2b2320;margin-bottom:8px">Nouveau départ avec Mirella</div>'
+    + '<div style="font-size:0.83rem;color:#9a8b82;line-height:1.55;margin-bottom:20px">Choisis ton objectif et Mirella construit un plan personnalisé.</div>'
+    + '</div>'
+    + '<div style="padding:0 24px">'
+    + '<div id="noStep1">'
+    + '<div style="font-size:0.68rem;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:#9a8b82;margin-bottom:10px">Ton objectif</div>'
+    + '<div style="display:flex;flex-direction:column;gap:8px;margin-bottom:20px">' + choicesHtml + '</div>'
+    + '<button id="noNextBtn1" onclick="noGoStep2()" style="width:100%;padding:15px;border-radius:16px;border:none;background:linear-gradient(135deg,#2E7D32,#43A047);color:white;font-size:0.92rem;font-weight:700;cursor:pointer;opacity:0.5">Suivant →</button>'
+    + '</div>'
+
+    + '<div id="noStep2" style="display:none">'
+    + '<div style="font-size:0.68rem;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:#9a8b82;margin-bottom:10px">Objectif poids (optionnel)</div>'
+    + '<div style="background:white;border:1.5px solid rgba(255,154,108,0.25);border-radius:14px;padding:16px;margin-bottom:16px">'
+    + '<div style="font-size:0.82rem;color:#2b2320;margin-bottom:10px">Combien de kg veux-tu <span id="noVerbeSpan">perdre</span> ?</div>'
+    + '<div style="display:flex;align-items:center;gap:12px">'
+    + '<input id="noDeltaInput" type="number" min="0.5" max="50" step="0.5" placeholder="ex: 5" style="flex:1;padding:12px;border:1.5px solid rgba(255,154,108,0.3);border-radius:10px;font-size:1rem;font-weight:700;text-align:center;outline:none">'
+    + '<div style="font-size:1rem;font-weight:600;color:#9a8b82">kg</div>'
+    + '</div>'
+    + '</div>'
+    + '<div style="font-size:0.68rem;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:#9a8b82;margin-bottom:10px">Délai</div>'
+    + '<div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:20px">'
+    + '<button class="rcDelaiBtn" onclick="selectNoDelai(4)" id="noD4">4 semaines</button>'
+    + '<button class="rcDelaiBtn" onclick="selectNoDelai(8)" id="noD8">8 semaines</button>'
+    + '<button class="rcDelaiBtn" onclick="selectNoDelai(12)" id="noD12">3 mois</button>'
+    + '<button class="rcDelaiBtn" onclick="selectNoDelai(24)" id="noD24">6 mois</button>'
+    + '</div>'
+    + '<button id="noConfirmBtn" onclick="confirmNouvelObjectif()" style="width:100%;padding:15px;border-radius:16px;border:none;background:linear-gradient(135deg,#2E7D32,#43A047);color:white;font-size:0.92rem;font-weight:700;cursor:pointer;opacity:0.5;margin-bottom:8px">Lancer mon nouveau plan</button>'
+    + '<button onclick="document.getElementById('noStep2').style.display='none';document.getElementById('noStep1').style.display='block'" style="width:100%;padding:12px;border-radius:16px;border:none;background:transparent;color:#9a8b82;font-size:0.85rem;cursor:pointer">Retour</button>'
+    + '</div>'
+
+    + '<button onclick="_closePopup('nouvelObjectifPopup')" style="width:100%;padding:12px;border-radius:16px;border:none;background:transparent;color:#9a8b82;font-size:0.85rem;cursor:pointer;margin-top:4px;margin-bottom:24px">Annuler</button>'
+    + '</div>'
+    + '</div>';
+
+  document.body.appendChild(overlay);
+  overlay.addEventListener('click', function(e){ if(e.target===overlay) _closePopup('nouvelObjectifPopup'); });
+}
+
+window._noObjSelected = null;
+window._noDelaiSelected = null;
+
+function selectNouvelObj(id) {
+  window._noObjSelected = id;
+  ['perte_poids','masse','sante','energie','sommeil','cardio'].forEach(function(o){
+    var el = document.getElementById('no_'+o);
+    if(el) { el.style.borderColor='rgba(0,0,0,0.06)'; el.style.background='white'; }
+  });
+  var sel = document.getElementById('no_'+id);
+  if(sel) { sel.style.borderColor='#2E7D32'; sel.style.background='rgba(46,125,50,0.06)'; }
+  var btn = document.getElementById('noNextBtn1');
+  if(btn) btn.style.opacity='1';
+  var verbe = document.getElementById('noVerbeSpan');
+  if(verbe) verbe.textContent = id==='masse' ? 'prendre' : 'perdre';
+}
+
+function noGoStep2() {
+  if(!window._noObjSelected) return;
+  document.getElementById('noStep1').style.display='none';
+  document.getElementById('noStep2').style.display='block';
+  var hasPoids = ['perte_poids','masse'].indexOf(window._noObjSelected) > -1;
+  var poidsSection = document.querySelector('#noStep2 > div:first-child');
+  // Garde visible seulement pour poids
+}
+
+function selectNoDelai(n) {
+  window._noDelaiSelected = n;
+  [4,8,12,24].forEach(function(v){ var el=document.getElementById('noD'+v); if(el) el.classList.remove('selected'); });
+  var el = document.getElementById('noD'+n);
+  if(el) el.classList.add('selected');
+  updateNoConfirmBtn();
+}
+
+function updateNoConfirmBtn() {
+  var btn = document.getElementById('noConfirmBtn');
+  if(btn) btn.style.opacity = window._noDelaiSelected ? '1' : '0.5';
+}
+
+function confirmNouvelObjectif() {
+  if(!window._noObjSelected || !window._noDelaiSelected) return;
+  var btn = document.getElementById('noConfirmBtn');
+  if(btn) { btn.textContent = 'Enregistrement...'; btn.style.opacity='0.7'; }
+  var today = new Date().toISOString().split('T')[0];
+  var delta = parseFloat(document.getElementById('noDeltaInput').value) || 0;
+  var profile = window._pcProfile || {};
+  var poidsActuel = parseFloat(profile.poids) || 0;
+  var poidsObj = null;
+  if(delta > 0 && poidsActuel > 0) {
+    poidsObj = window._noObjSelected === 'masse'
+      ? Math.round((poidsActuel + delta) * 10) / 10
+      : Math.round((poidsActuel - delta) * 10) / 10;
+  }
+  var payload = {
+    objectifs: [window._noObjSelected],
+    objectif_date_debut: today,
+    objectif_delai_semaines: window._noDelaiSelected
+  };
+  if(delta > 0) payload.poids_delta_souhaite = delta;
+  if(poidsObj) payload.poids_objectif = poidsObj;
+
+  _saveProfil(payload, function(err) {
+    if(err) { if(btn) btn.textContent='Erreur, réessaie'; return; }
+    _closePopup('nouvelObjectifPopup');
+    if(window._pcProfile) Object.assign(window._pcProfile, payload);
+    if(typeof window.renderPersonalSummary === 'function') window.renderPersonalSummary(window._pcProfile);
+    if(typeof showMirellaNotif === 'function') showMirellaNotif('Nouveau plan activé — Mirella repart avec toi !');
+  });
+}
+
 function startNewObjectif(mode) { selectBilanMode(mode); }
 window.showObjectifBilanPopup = showObjectifBilanPopup;
 window.closeObjectifBilanPopup = closeObjectifBilanPopup;
 window.startNewObjectif = startNewObjectif;
 window.selectBilanMode = selectBilanMode;
 window.executeBilanMode = executeBilanMode;
+window.showRecalibrerPopup = showRecalibrerPopup;
+window.showMaintienPopup = showMaintienPopup;
+window.showNouvelObjectifPopup = showNouvelObjectifPopup;
+window.selectRcDelai = selectRcDelai;
+window.confirmRecalibrer = confirmRecalibrer;
+window.confirmMaintien = confirmMaintien;
+window.selectNouvelObj = selectNouvelObj;
+window.noGoStep2 = noGoStep2;
+window.selectNoDelai = selectNoDelai;
+window.confirmNouvelObjectif = confirmNouvelObjectif;
 </script>
 </body>
 </html>
