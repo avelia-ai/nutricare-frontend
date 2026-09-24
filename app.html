@@ -4192,8 +4192,21 @@ window.initHome = async function() {
       } else {
         document.getElementById('summaryCountdownDays').textContent = '0';
         msgEl.textContent = "l'echeance est passee, fais le point avec Mirella sur la suite";
-        // TEST - forcer affichage popup
-        setTimeout(function(){ if(window.showObjectifBilanPopup) showObjectifBilanPopup(profile); }, 800);
+        // Charge les logs depuis le début de l'objectif pour la popup bilan
+        var bilanKey = 'mirella_bilan_popup_' + (profile.objectif_date_debut || 'x');
+        if(!localStorage.getItem(bilanKey)) {
+          localStorage.setItem(bilanKey, '1');
+          var _tok = localStorage.getItem('mirella_token') || localStorage.getItem('sb_token') || (window.authToken) || '';
+          var _daysObj = (profile.objectif_delai_semaines || 4) * 7 + 2;
+          fetch(BACKEND_URL + '/api/health/logs?days=' + _daysObj, {
+            headers: { 'Authorization': 'Bearer ' + _tok }
+          }).then(function(r){ return r.json(); }).then(function(d){
+            var logs = d.logs || d || [];
+            if(window.showObjectifBilanPopup) showObjectifBilanPopup(profile, logs);
+          }).catch(function(){
+            if(window.showObjectifBilanPopup) showObjectifBilanPopup(profile, []);
+          });
+        }
       }
     } else {
       countdownWrap.style.display = 'none';
@@ -30250,69 +30263,87 @@ window.toggleDarkMode = function() {
 
 
 <script>
-function showObjectifBilanPopup(profile) {
+function showObjectifBilanPopup(profile, logs) {
   if(document.getElementById('objectifBilanPopup')) return;
   var duree = (profile.objectif_delai_semaines || 4) + ' semaines';
   var objectifs = profile.objectifs || [];
-  var selectedMode = null;
+  logs = logs || [];
+  logs.sort(function(a,b){ return new Date(a.date)-new Date(b.date); });
+  var firstLog = logs[0] || {};
+  var lastLog = logs[logs.length-1] || {};
+  var nbJoursSuivi = logs.length;
 
-  // ── Calcul progression réelle ──
-  var statsHtml = '';
+  function avgField(field) {
+    var vals = logs.filter(function(l){ return l[field]!=null && l[field]!==''; }).map(function(l){ return parseFloat(l[field]); });
+    if(!vals.length) return null;
+    return Math.round((vals.reduce(function(a,b){return a+b;},0)/vals.length)*10)/10;
+  }
+  var avgSleep = avgField('sleep_hours');
+  var avgEnergy = avgField('energy_level');
+  var avgStress = avgField('stress_level');
+  var avgActivity = avgField('activity_minutes');
+
   var poidsActuel = parseFloat(profile.poids) || 0;
   var poidsObjectif = parseFloat(profile.poids_objectif) || 0;
   var poidsDelta = parseFloat(profile.poids_delta_souhaite) || 0;
   var isPertePoids = objectifs.indexOf('perte_poids') > -1;
   var isMasse = objectifs.indexOf('masse') > -1;
-  var avg = window._pcRecentAverages || {};
+  var isEnergie = objectifs.indexOf('energie') > -1;
+  var isSommeil = objectifs.indexOf('sommeil') > -1;
+  var isCardio = objectifs.indexOf('cardio') > -1;
 
-  var stat1Val = duree; var stat1Lbl = 'de suivi';
-  var stat2Val = '100%'; var stat2Lbl = 'de persévérance';
-  var stat3Val = null; var stat3Lbl = '';
-  var stat4Val = null; var stat4Lbl = '';
+  var stat1Val, stat1Lbl, stat2Val, stat2Lbl, stat3Val, stat3Lbl, stat4Val, stat4Lbl;
+  stat3Val = null; stat4Val = null;
 
-  if((isPertePoids || isMasse) && poidsActuel && poidsDelta) {
-    var poidsDepart = isPertePoids ? poidsActuel + poidsDelta : poidsActuel - poidsDelta;
-    var variation = Math.round((poidsActuel - poidsDepart) * 10) / 10;
-    var variationAbs = Math.abs(variation);
-    var objectifAbs = poidsDelta;
-    var progPct = Math.min(100, Math.round((variationAbs / objectifAbs) * 100));
-    if(isPertePoids) {
-      stat1Val = (variation < 0 ? '-' : '+') + variationAbs + ' kg';
-      stat1Lbl = variation <= 0 ? 'perdus' : 'pris (rebond)';
-      stat2Val = progPct + '%';
-      stat2Lbl = 'de l\'objectif atteint';
-      stat3Val = poidsActuel + ' kg';
-      stat3Lbl = 'poids actuel';
-      stat4Val = poidsObjectif + ' kg';
-      stat4Lbl = 'objectif visé';
-    } else {
-      stat1Val = (variation > 0 ? '+' : '') + variation + ' kg';
-      stat1Lbl = 'pris';
-      stat2Val = progPct + '%';
-      stat2Lbl = 'de l\'objectif atteint';
-      stat3Val = poidsActuel + ' kg';
-      stat3Lbl = 'poids actuel';
-      stat4Val = poidsObjectif + ' kg';
-      stat4Lbl = 'objectif visé';
-    }
-  } else if(avg.sleep !== null && avg.sleep !== undefined) {
-    stat1Val = Math.round(avg.sleep * 10) / 10 + 'h';
-    stat1Lbl = 'sommeil moyen';
-    if(avg.energy !== null && avg.energy !== undefined) {
-      stat2Val = Math.round(avg.energy * 10) / 10 + '/10';
-      stat2Lbl = 'énergie moyenne';
-    }
+  if(isPertePoids || isMasse) {
+    var firstW = parseFloat(firstLog.weight) || (isPertePoids ? poidsActuel+poidsDelta : poidsActuel-poidsDelta);
+    var lastW = parseFloat(lastLog.weight) || poidsActuel;
+    var variation = Math.round((lastW - firstW)*10)/10;
+    var progPct = poidsDelta > 0 ? Math.min(100, Math.round((Math.abs(variation)/poidsDelta)*100)) : 0;
+    stat1Val = (variation<=0?'':'+') + variation + ' kg';
+    stat1Lbl = isPertePoids ? (variation<=0 ? 'perdus' : 'pris') : (variation>=0 ? 'pris' : 'perdus');
+    stat2Val = progPct + '%';
+    stat2Lbl = "de l'objectif atteint";
+    stat3Val = lastW ? lastW + ' kg' : null; stat3Lbl = 'poids actuel';
+    stat4Val = poidsObjectif ? poidsObjectif + ' kg' : null; stat4Lbl = 'objectif';
+  } else if(isEnergie) {
+    var fe = parseFloat(firstLog.energy_level)||null;
+    var le = parseFloat(lastLog.energy_level)||null;
+    stat1Val = avgEnergy !== null ? avgEnergy+'/10' : '--'; stat1Lbl = 'énergie moyenne';
+    stat2Val = (fe&&le) ? ((le-fe>=0?'+':'')+(Math.round((le-fe)*10)/10)) : nbJoursSuivi+'j';
+    stat2Lbl = (fe&&le) ? 'évolution énergie' : 'jours suivis';
+    stat3Val = avgSleep !== null ? avgSleep+'h' : null; stat3Lbl = 'sommeil moyen';
+    stat4Val = avgStress !== null ? avgStress+'/10' : null; stat4Lbl = 'stress moyen';
+  } else if(isSommeil) {
+    var fs = parseFloat(firstLog.sleep_hours)||null;
+    var ls = parseFloat(lastLog.sleep_hours)||null;
+    stat1Val = avgSleep !== null ? avgSleep+'h' : '--'; stat1Lbl = 'sommeil moyen';
+    stat2Val = (fs&&ls) ? ((ls-fs>=0?'+':'')+(Math.round((ls-fs)*10)/10)+'h') : nbJoursSuivi+'j';
+    stat2Lbl = (fs&&ls) ? 'évolution sommeil' : 'jours suivis';
+    stat3Val = avgEnergy !== null ? avgEnergy+'/10' : null; stat3Lbl = 'énergie moyenne';
+    stat4Val = avgStress !== null ? avgStress+'/10' : null; stat4Lbl = 'stress moyen';
+  } else if(isCardio) {
+    stat1Val = avgActivity !== null ? Math.round(avgActivity)+' min' : '--'; stat1Lbl = 'activité/jour';
+    stat2Val = nbJoursSuivi+'j'; stat2Lbl = 'jours suivis';
+    stat3Val = avgSleep !== null ? avgSleep+'h' : null; stat3Lbl = 'sommeil moyen';
+    stat4Val = avgEnergy !== null ? avgEnergy+'/10' : null; stat4Lbl = 'énergie moyenne';
+  } else {
+    stat1Val = nbJoursSuivi+'j'; stat1Lbl = 'jours de suivi';
+    stat2Val = avgEnergy !== null ? avgEnergy+'/10' : duree; stat2Lbl = avgEnergy !== null ? 'énergie moyenne' : 'de persévérance';
+    stat3Val = avgSleep !== null ? avgSleep+'h' : null; stat3Lbl = 'sommeil moyen';
+    stat4Val = avgStress !== null ? avgStress+'/10' : null; stat4Lbl = 'stress moyen';
   }
 
-  var gridCols = (stat3Val && stat4Val) ? 'grid-template-columns:1fr 1fr' : 'grid-template-columns:1fr 1fr';
-  statsHtml = '<div style="margin:0 20px 16px;background:linear-gradient(135deg,rgba(255,154,108,0.1),rgba(255,107,107,0.06));border:1px solid rgba(255,154,108,0.2);border-radius:18px;padding:16px">'
-    + '<div style="font-size:0.65rem;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:#C2604A;margin-bottom:12px">Ta progression sur ' + duree + '</div>'
-    + '<div style="display:grid;' + gridCols + ';gap:10px">'
-    + '<div style="background:white;border-radius:12px;padding:12px;text-align:center"><div style="font-size:1.25rem;font-weight:800;color:#FF9A6C">' + stat1Val + '</div><div style="font-size:0.65rem;color:#9a8b82;margin-top:2px">' + stat1Lbl + '</div></div>'
-    + '<div style="background:white;border-radius:12px;padding:12px;text-align:center"><div style="font-size:1.25rem;font-weight:800;color:#4A90D9">' + stat2Val + '</div><div style="font-size:0.65rem;color:#9a8b82;margin-top:2px">' + stat2Lbl + '</div></div>'
-    + (stat3Val ? '<div style="background:white;border-radius:12px;padding:12px;text-align:center"><div style="font-size:1.25rem;font-weight:800;color:#2E7D32">' + stat3Val + '</div><div style="font-size:0.65rem;color:#9a8b82;margin-top:2px">' + stat3Lbl + '</div></div>' : '')
-    + (stat4Val ? '<div style="background:white;border-radius:12px;padding:12px;text-align:center"><div style="font-size:1.25rem;font-weight:800;color:#C62828">' + stat4Val + '</div><div style="font-size:0.65rem;color:#9a8b82;margin-top:2px">' + stat4Lbl + '</div></div>' : '')
-    + '</div></div>';
+  var statsGrid = '<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">'
+    + '<div style="background:white;border-radius:12px;padding:12px;text-align:center"><div style="font-size:1.2rem;font-weight:800;color:#FF9A6C">'+stat1Val+'</div><div style="font-size:0.63rem;color:#9a8b82;margin-top:2px">'+stat1Lbl+'</div></div>'
+    + '<div style="background:white;border-radius:12px;padding:12px;text-align:center"><div style="font-size:1.2rem;font-weight:800;color:#4A90D9">'+stat2Val+'</div><div style="font-size:0.63rem;color:#9a8b82;margin-top:2px">'+stat2Lbl+'</div></div>'
+    + (stat3Val ? '<div style="background:white;border-radius:12px;padding:12px;text-align:center"><div style="font-size:1.2rem;font-weight:800;color:#2E7D32">'+stat3Val+'</div><div style="font-size:0.63rem;color:#9a8b82;margin-top:2px">'+stat3Lbl+'</div></div>' : '')
+    + (stat4Val ? '<div style="background:white;border-radius:12px;padding:12px;text-align:center"><div style="font-size:1.2rem;font-weight:800;color:#9b59b6">'+stat4Val+'</div><div style="font-size:0.63rem;color:#9a8b82;margin-top:2px">'+stat4Lbl+'</div></div>' : '')
+    + '</div>';
+
+  var statsHtml = '<div style="margin:0 20px 16px;background:linear-gradient(135deg,rgba(255,154,108,0.1),rgba(255,107,107,0.06));border:1px solid rgba(255,154,108,0.2);border-radius:18px;padding:16px">'
+    + '<div style="font-size:0.65rem;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:#C2604A;margin-bottom:12px">Ta progression sur '+duree+'</div>'
+    + statsGrid + '</div>';
 
   var overlay = document.createElement('div');
   overlay.id = 'objectifBilanPopup';
@@ -30323,15 +30354,14 @@ function showObjectifBilanPopup(profile) {
     + '@keyframes bsSheen{0%{left:-60%}60%{left:120%}100%{left:120%}}'
     + '.bsOption{display:flex;align-items:center;gap:12px;padding:13px;background:white;border-radius:14px;margin-bottom:8px;cursor:pointer;transition:all 0.2s;border:2px solid transparent}'
     + '.bsOption.selected{border-color:#FF9A6C;background:rgba(255,154,108,0.06)}'
-    + '.bsOption:last-child{margin-bottom:0}'
     + '</style>'
     + '<div style="background:#FFFCFA;border-radius:28px 28px 0 0;width:100%;max-width:480px;animation:bsUp 0.45s cubic-bezier(0.34,1.56,0.64,1);max-height:92vh;overflow-y:auto">'
     + '<div style="display:flex;justify-content:center;padding:14px 0 6px"><div style="width:40px;height:4px;border-radius:2px;background:rgba(0,0,0,0.12)"></div></div>'
     + '<div style="overflow:hidden;background:#000;max-height:220px"><video autoplay muted playsinline loop style="width:100%;max-height:220px;object-fit:cover;display:block"><source src="https://raw.githubusercontent.com/avelia-ai/nutricare-frontend/main/bilan_objectif.mp4" type="video/mp4"></video></div>'
     + '<div style="text-align:center;padding:20px 24px 0">'
     + '<div style="font-size:0.68rem;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:#C2604A;margin-bottom:8px">Bilan Mirella</div>'
-    + '<div style="font-size:1.25rem;font-weight:800;color:#2b2320;line-height:1.3;margin-bottom:8px">Ton délai de ' + duree + ' est terminé</div>'
-    + '<div style="font-size:0.83rem;color:#9a8b82;line-height:1.55;margin-bottom:16px">L'échec n'existe pas — seulement des ajustements. Continue, tu es sur la bonne voie.</div>'
+    + '<div style="font-size:1.25rem;font-weight:800;color:#2b2320;line-height:1.3;margin-bottom:8px">Ton délai de '+duree+' est terminé</div>'
+    + '<div style="font-size:0.83rem;color:#9a8b82;line-height:1.55;margin-bottom:16px">Continue, tu es sur la bonne voie. Chaque jour de suivi compte.</div>'
     + '</div>'
     + statsHtml
     + '<div style="padding:0 20px;margin-bottom:16px">'
@@ -30350,8 +30380,7 @@ function showObjectifBilanPopup(profile) {
     + '</div>'
     + '</div>'
     + '<div style="padding:0 20px 32px">'
-    + '<button id="bsContinueBtn" onclick="executeBilanMode()" style="position:relative;overflow:hidden;width:100%;padding:16px;border-radius:16px;border:none;background:linear-gradient(135deg,#FF9A6C,#FF6B6B);color:white;font-size:0.95rem;font-weight:700;cursor:pointer;box-shadow:0 8px 24px rgba(255,107,107,0.35);opacity:0.5">'
-    + 'Continuer avec Mirella →'
+    + '<button id="bsContinueBtn" onclick="executeBilanMode()" style="position:relative;overflow:hidden;width:100%;padding:16px;border-radius:16px;border:none;background:linear-gradient(135deg,#FF9A6C,#FF6B6B);color:white;font-size:0.95rem;font-weight:700;cursor:pointer;box-shadow:0 8px 24px rgba(255,107,107,0.35);opacity:0.5">Continuer avec Mirella →'
     + '<div style="position:absolute;top:0;left:-60%;width:40%;height:100%;background:linear-gradient(120deg,transparent,rgba(255,255,255,0.3),transparent);transform:skewX(-20deg);animation:bsSheen 3s ease-in-out infinite"></div>'
     + '</button>'
     + '</div>'
@@ -30363,8 +30392,7 @@ function showObjectifBilanPopup(profile) {
 
 function selectBilanMode(mode) {
   window._bilanSelectedMode = mode;
-  var opts = ['bsOpt1','bsOpt2','bsOpt3'];
-  opts.forEach(function(id){ var el=document.getElementById(id); if(el) el.classList.remove('selected'); });
+  ['bsOpt1','bsOpt2','bsOpt3'].forEach(function(id){ var el=document.getElementById(id); if(el) el.classList.remove('selected'); });
   var map = {recalibrer:'bsOpt1', maintien:'bsOpt2', nouveau:'bsOpt3'};
   var sel = document.getElementById(map[mode]);
   if(sel) sel.classList.add('selected');
