@@ -10280,11 +10280,131 @@ function switchLang(lang) {
     }
   })();
   </script>
-  <div id="produitLoading" style="display:none;text-align:center;padding:32px;background:#FFFCFA;border-radius:12px;border:1px solid rgba(255,154,108,0.3);margin-bottom:20px;box-shadow:0 0 0 1.5px rgba(255,154,108,0.22),0 14px 32px rgba(230,110,70,0.14)">
-    <div style="font-size:2rem;margin-bottom:12px">🔍</div>
-    <div style="font-size:1rem;color:#2D2D2D;font-weight:500">Mirella analyse votre produit...</div>
-    <div style="font-size:0.85rem;color:var(--accent);margin-top:4px">Vérification des allergènes, macros et compatibilité</div>
+  <style>
+  .plBorderWrap{position:relative;border-radius:22px;padding:2px;background:linear-gradient(135deg,rgba(255,180,130,0.9),rgba(255,255,255,0.5) 35%,rgba(255,110,90,0.85) 70%,rgba(255,255,255,0.5));background-size:300% 300%;animation:plBorderFlow 5s ease infinite;box-shadow:0 16px 48px rgba(230,110,70,0.18),0 2px 8px rgba(0,0,0,0.04);margin-bottom:20px}
+  @keyframes plBorderFlow{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
+  .plInner{background:#FFFCFA;border-radius:20px;padding:32px 24px 28px;text-align:center;position:relative;overflow:hidden}
+  .plSparkles{position:absolute;inset:0;pointer-events:none;overflow:hidden}
+  .plSparkle{position:absolute;border-radius:50%;background:#FF9A6C;box-shadow:0 0 6px rgba(255,154,108,0.7);animation:plTwinkle ease-in-out infinite}
+  @keyframes plTwinkle{0%,100%{opacity:0;transform:scale(0.3)}50%{opacity:1;transform:scale(1)}}
+  .plBadge{display:inline-flex;align-items:center;gap:6px;background:rgba(255,154,108,0.13);border:1px solid rgba(255,154,108,0.35);color:#C2604A;font-size:0.63rem;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;padding:5px 13px;border-radius:999px;margin-bottom:22px}
+  .plScanWrap{position:relative;width:104px;height:104px;margin:0 auto 22px}
+  .plRing1{position:absolute;inset:0;border-radius:50%;background:conic-gradient(from 0deg,transparent,#FF9A6C,transparent 40%);animation:plSpin 2.8s linear infinite}
+  .plRing1::before{content:'';position:absolute;inset:6px;border-radius:50%;background:#FFFCFA}
+  .plRing2{position:absolute;inset:10px;border-radius:50%;background:conic-gradient(from 180deg,transparent,rgba(255,154,108,0.45),transparent 35%);animation:plSpin 4.2s linear infinite reverse}
+  .plRing2::before{content:'';position:absolute;inset:5px;border-radius:50%;background:#FFFCFA}
+  @keyframes plSpin{to{transform:rotate(360deg)}}
+  .plIconCore{position:absolute;inset:19px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#FFC9A0,#FF7A5C 60%,#E85A45);display:flex;align-items:center;justify-content:center;box-shadow:0 0 0 1px rgba(255,255,255,0.15) inset,0 10px 28px rgba(255,100,70,0.5);animation:plPulse 2.2s ease-in-out infinite}
+  @keyframes plPulse{0%,100%{box-shadow:0 0 0 1px rgba(255,255,255,0.15) inset,0 10px 28px rgba(255,100,70,0.5)}50%{box-shadow:0 0 0 1px rgba(255,255,255,0.15) inset,0 10px 28px rgba(255,100,70,0.5),0 0 0 8px rgba(255,154,108,0.12)}}
+  .plIconCore svg{width:28px;height:28px}
+  .plScanLine{position:absolute;left:20%;right:20%;height:2px;background:linear-gradient(90deg,transparent,rgba(255,255,255,0.95),transparent);box-shadow:0 0 12px rgba(255,255,255,0.9),0 0 4px rgba(255,200,160,0.8);animation:plScanMove 2.2s ease-in-out infinite;border-radius:2px}
+  @keyframes plScanMove{0%,100%{top:22%}50%{top:72%}}
+  .plTitle{font-size:1.05rem;font-weight:700;color:#2b2320;margin-bottom:6px;letter-spacing:-0.01em}
+  .plSub{font-size:0.82rem;color:#9a8b82;margin-bottom:24px;line-height:1.5}
+  .plSteps{display:flex;flex-direction:column;gap:10px;text-align:left}
+  .plStep{display:flex;align-items:center;gap:12px;padding:10px 14px;border-radius:12px;background:rgba(255,154,108,0.06);border:1px solid rgba(255,154,108,0.12);transition:all 0.4s ease;opacity:0.4}
+  .plStep.active{opacity:1;background:rgba(255,154,108,0.12);border-color:rgba(255,154,108,0.3)}
+  .plStep.done{opacity:0.7}
+  .plStepDot{width:28px;height:28px;border-radius:50%;background:rgba(255,154,108,0.15);border:1.5px solid rgba(255,154,108,0.3);display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all 0.4s ease}
+  .plStep.active .plStepDot{background:linear-gradient(135deg,#FF9A6C,#FF6B6B);border-color:transparent;box-shadow:0 4px 12px rgba(255,107,107,0.35)}
+  .plStep.done .plStepDot{background:linear-gradient(135deg,#52c782,#38a169);border-color:transparent}
+  .plStepDot svg{width:13px;height:13px}
+  .plStepTxt{font-size:0.82rem;font-weight:600;color:#2b2320}
+  .plStepSub{font-size:0.71rem;color:#9a8b82;margin-top:1px}
+  .plStepSpinner{width:12px;height:12px;border:2px solid rgba(255,255,255,0.35);border-top-color:white;border-radius:50%;animation:plSpin 0.7s linear infinite}
+  .plCheckIcon{display:none}
+  .plStep.done .plStepSpinner{display:none}
+  .plStep.done .plCheckIcon{display:block}
+  .plStep.active .plStepSpinner{display:block}
+  .plStep:not(.active):not(.done) .plStepSpinner{display:none}
+  </style>
+  <div id="produitLoading" style="display:none">
+    <div class="plBorderWrap">
+      <div class="plInner">
+        <div class="plSparkles" id="plSparkles"></div>
+        <div class="plBadge">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#C2604A" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" width="10" height="10"><path d="M12 2l1.5 4.5L18 8l-4.5 1.5L12 14l-1.5-4.5L6 8l4.5-1.5z"/></svg>
+          Analyse en cours
+        </div>
+        <div class="plScanWrap">
+          <div class="plRing1"></div>
+          <div class="plRing2"></div>
+          <div class="plIconCore">
+            <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+          </div>
+          <div class="plScanLine"></div>
+        </div>
+        <div class="plTitle">Mirella analyse votre produit</div>
+        <div class="plSub">Intelligence nutritionnelle en temps réel</div>
+        <div class="plSteps" id="plStepsList">
+          <div class="plStep" id="plStep0">
+            <div class="plStepDot">
+              <div class="plStepSpinner"></div>
+              <svg class="plCheckIcon" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+            </div>
+            <div><div class="plStepTxt">Identification du produit</div><div class="plStepSub">Reconnaissance de la marque et du contenu</div></div>
+          </div>
+          <div class="plStep" id="plStep1">
+            <div class="plStepDot">
+              <div class="plStepSpinner"></div>
+              <svg class="plCheckIcon" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+            </div>
+            <div><div class="plStepTxt">Vérification des allergènes</div><div class="plStepSub">Croisement avec votre profil santé</div></div>
+          </div>
+          <div class="plStep" id="plStep2">
+            <div class="plStepDot">
+              <div class="plStepSpinner"></div>
+              <svg class="plCheckIcon" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+            </div>
+            <div><div class="plStepTxt">Analyse des macronutriments</div><div class="plStepSub">Calories, protéines, glucides, lipides</div></div>
+          </div>
+          <div class="plStep" id="plStep3">
+            <div class="plStepDot">
+              <div class="plStepSpinner"></div>
+              <svg class="plCheckIcon" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+            </div>
+            <div><div class="plStepTxt">Compatibilité personnalisée</div><div class="plStepSub">Avis Mirella selon vos objectifs</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
+  <script>
+  (function(){
+    var sp = document.getElementById('plSparkles');
+    if (sp && !sp.children.length) {
+      for(var i=0;i<10;i++){
+        var s=document.createElement('div');
+        s.className='plSparkle';
+        var sz=2+Math.random()*2.5;
+        s.style.width=sz+'px';s.style.height=sz+'px';
+        s.style.left=(Math.random()*100)+'%';
+        s.style.top=(Math.random()*100)+'%';
+        s.style.animationDuration=(2+Math.random()*3)+'s';
+        s.style.animationDelay=(Math.random()*3.5)+'s';
+        sp.appendChild(s);
+      }
+    }
+  })();
+  window.startProduitLoadingAnim = function() {
+    var steps = [0,1,2,3];
+    steps.forEach(function(i){ var el=document.getElementById('plStep'+i); if(el){el.classList.remove('active','done');} });
+    var current = 0;
+    function activateNext() {
+      if(current > 0) {
+        var prev = document.getElementById('plStep'+(current-1));
+        if(prev){ prev.classList.remove('active'); prev.classList.add('done'); }
+      }
+      if(current < 4) {
+        var el = document.getElementById('plStep'+current);
+        if(el){ el.classList.add('active'); }
+        current++;
+        if(current < 4) setTimeout(activateNext, 1800);
+      }
+    }
+    activateNext();
+  };
+  </script>
   <div id="produitError" style="display:none;background:#FFF0F0;border-radius:12px;padding:16px;color:#C62828;border:1px solid #FFCDD2;margin-bottom:20px"></div>
   <div id="produitResult" style="display:none"></div>
   <div id="usageGaugeScanproduit"></div>
@@ -15676,6 +15796,7 @@ async function scanProduit(input) {
     document.getElementById('produitPreview').style.display = 'block';
     document.getElementById('produitImg').src = e.target.result;
     document.getElementById('produitLoading').style.display = 'block';
+    if(window.startProduitLoadingAnim) window.startProduitLoadingAnim();
     document.getElementById('produitResult').style.display = 'none';
     document.getElementById('produitError').style.display = 'none';
     try {
