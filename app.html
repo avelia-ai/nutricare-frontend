@@ -15812,57 +15812,205 @@ async function scanProduit(input) {
         document.getElementById('produitError').textContent = data.error || 'Produit non reconnu.';
         return;
       }
-      const scoreColor = data.score_objectif >= 7 ? '#2E7D32' : data.score_objectif >= 4 ? '#F57F17' : '#C62828';
-      const scoreBg = data.score_objectif >= 7 ? '#E8F5E9' : data.score_objectif >= 4 ? '#FFF8E1' : '#FFEBEE';
-      const nutriColors = {'A':'#1B5E20','B':'#388E3C','C':'#F9A825','D':'#E65100','E':'#B71C1C'};
+      const scoreColor = data.score_objectif >= 7 ? '#1a7a3e' : data.score_objectif >= 4 ? '#c07800' : '#b52a2a';
+      const scoreBg   = data.score_objectif >= 7 ? 'linear-gradient(135deg,#2E7D32,#43A047)' : data.score_objectif >= 4 ? 'linear-gradient(135deg,#F57F17,#FFA000)' : 'linear-gradient(135deg,#C62828,#E53935)';
+      const scoreEmoji = data.score_objectif >= 7 ? '✅' : data.score_objectif >= 4 ? '⚠️' : '❌';
+      const nutriColors = {'A':'#1B5E20','B':'#388E3C','C':'#c89400','D':'#E65100','E':'#B71C1C'};
+      const nutriBgs   = {'A':'#E8F5E9','B':'#F1F8E9','C':'#FFFDE7','D':'#FFF3E0','E':'#FFEBEE'};
+
       document.getElementById('produitResult').style.display = 'block';
       document.getElementById('produitResult').innerHTML = `
-        <div style="background:#FFFCFA;border-radius:12px;padding:24px;border:1px solid rgba(255,154,108,0.3);margin-bottom:16px;box-shadow:0 0 0 1.5px rgba(255,154,108,0.22),0 14px 32px rgba(230,110,70,0.14)">
-          <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:12px;margin-bottom:20px">
+        <style>
+        .prWrap{margin-bottom:20px}
+        /* ── HERO HEADER ── */
+        .prHero{position:relative;border-radius:22px;padding:2px;background:linear-gradient(135deg,rgba(255,180,130,0.9),rgba(255,255,255,0.5) 35%,rgba(255,110,90,0.85) 70%,rgba(255,255,255,0.5));background-size:300% 300%;animation:prBorderFlow 5s ease infinite;box-shadow:0 16px 48px rgba(230,110,70,0.18),0 2px 8px rgba(0,0,0,0.04);margin-bottom:14px}
+        @keyframes prBorderFlow{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
+        .prHeroInner{background:#FFFCFA;border-radius:20px;padding:22px 20px 18px;display:flex;align-items:center;gap:16px}
+        .prScoreCircle{flex-shrink:0;width:72px;height:72px;border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;color:white;font-family:DM Sans,sans-serif;box-shadow:0 8px 24px rgba(0,0,0,0.2)}
+        .prScoreNum{font-size:1.55rem;font-weight:800;line-height:1}
+        .prScoreDen{font-size:0.6rem;font-weight:600;opacity:0.85;margin-top:1px}
+        .prHeroInfo{flex:1;min-width:0}
+        .prProdName{font-size:1rem;font-weight:700;color:#2b2320;line-height:1.3;margin-bottom:3px}
+        .prMarque{font-size:0.75rem;color:#C2604A;font-weight:600;margin-bottom:5px}
+        .prPortion{font-size:0.72rem;color:#9a8b82}
+        .prBadgeRow{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px;align-items:center}
+        .prNutri{display:inline-flex;align-items:center;gap:5px;padding:4px 10px;border-radius:8px;font-size:0.72rem;font-weight:700}
+        .prScoreLabel{display:inline-flex;align-items:center;gap:5px;padding:4px 10px;border-radius:8px;font-size:0.72rem;font-weight:700;background:rgba(255,154,108,0.12);color:#C2604A;border:1px solid rgba(255,154,108,0.25)}
+        /* ── MACROS ── */
+        .prSection{background:#FFFCFA;border-radius:18px;padding:16px 16px 14px;margin-bottom:12px;border:1px solid rgba(255,154,108,0.15);box-shadow:0 4px 16px rgba(230,110,70,0.07)}
+        .prSectionHead{display:flex;align-items:center;gap:8px;margin-bottom:14px}
+        .prSectionIcon{width:30px;height:30px;border-radius:9px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+        .prSectionTitle{font-size:0.7rem;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:#9a8b82}
+        .prMacroGrid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+        .prMacroCard{border-radius:13px;padding:12px 8px;text-align:center}
+        .prMacroVal{font-size:1.25rem;font-weight:800;line-height:1;margin-bottom:3px}
+        .prMacroLbl{font-size:0.65rem;font-weight:600;opacity:0.75;text-transform:uppercase;letter-spacing:0.04em}
+        .prMacroSub{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:8px}
+        .prMacroSubCard{background:rgba(255,154,108,0.06);border:1px solid rgba(255,154,108,0.12);border-radius:10px;padding:9px 6px;text-align:center}
+        .prMacroSubVal{font-size:1rem;font-weight:700;color:#2b2320}
+        .prMacroSubLbl{font-size:0.62rem;color:#9a8b82;margin-top:1px}
+        /* ── ALERTE ── */
+        .prAlerte{border-radius:14px;padding:14px 16px;margin-bottom:12px;display:flex;gap:12px;align-items:flex-start}
+        .prAlerteIcon{width:34px;height:34px;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+        .prAlerteIcon svg{width:17px;height:17px}
+        .prAlerteTitre{font-size:0.78rem;font-weight:700;margin-bottom:4px}
+        .prAlerteTexte{font-size:0.78rem;line-height:1.55}
+        /* ── POINTS ── */
+        .prPointItem{display:flex;align-items:flex-start;gap:10px;padding:9px 0;border-bottom:1px solid rgba(0,0,0,0.04)}
+        .prPointItem:last-child{border-bottom:none;padding-bottom:0}
+        .prPointDot{width:20px;height:20px;border-radius:6px;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px}
+        .prPointDot svg{width:11px;height:11px}
+        .prPointTxt{font-size:0.8rem;color:#2b2320;line-height:1.45;flex:1}
+        /* ── CONSEIL ── */
+        .prConseil{position:relative;border-radius:18px;padding:2px;background:linear-gradient(135deg,rgba(100,160,255,0.6),rgba(120,200,180,0.4) 50%,rgba(100,160,255,0.6));background-size:200% 200%;animation:prBorderFlow 4s ease infinite;margin-bottom:12px}
+        .prConseilInner{background:#F6FAFF;border-radius:16px;padding:16px}
+        .prConseilHead{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+        .prConseilIconWrap{width:28px;height:28px;border-radius:8px;background:linear-gradient(135deg,#4A90D9,#357ABD);display:flex;align-items:center;justify-content:center}
+        .prConseilIconWrap svg{width:14px;height:14px}
+        .prConseilTitle{font-size:0.7rem;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:#4A90D9}
+        .prConseilText{font-size:0.82rem;color:#2b4a6f;line-height:1.6}
+        /* ── ALTERNATIVE ── */
+        .prAlt{background:linear-gradient(135deg,rgba(46,125,50,0.06),rgba(67,160,71,0.04));border:1px solid rgba(46,125,50,0.15);border-radius:16px;padding:16px;display:flex;gap:12px;align-items:flex-start}
+        .prAltIcon{width:32px;height:32px;border-radius:9px;background:linear-gradient(135deg,#2E7D32,#43A047);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+        .prAltIcon svg{width:16px;height:16px}
+        .prAltTitle{font-size:0.7rem;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:#2E7D32;margin-bottom:5px}
+        .prAltText{font-size:0.8rem;color:#2b2320;line-height:1.5}
+        </style>
+
+        <div class="prWrap">
+
+          <!-- HERO -->
+          <div class="prHero">
+            <div class="prHeroInner">
+              <div class="prScoreCircle" style="background:${scoreBg}">
+                <div class="prScoreNum">${data.score_objectif}</div>
+                <div class="prScoreDen">/10</div>
+              </div>
+              <div class="prHeroInfo">
+                <div class="prProdName">${data.produit}</div>
+                ${data.marque ? `<div class="prMarque">${data.marque}</div>` : ''}
+                <div class="prPortion">Par portion · ${data.portion}</div>
+                <div class="prBadgeRow">
+                  ${data.nutriscore && data.nutriscore !== 'inconnu' ? `<span class="prNutri" style="background:${nutriBgs[data.nutriscore]||'#f5f5f5'};color:${nutriColors[data.nutriscore]||'#555'};border:1.5px solid ${nutriColors[data.nutriscore]||'#ccc'}">Nutri-Score <strong>${data.nutriscore}</strong></span>` : ''}
+                  <span class="prScoreLabel">${scoreEmoji} ${data.score_objectif_label}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- MACROS -->
+          <div class="prSection">
+            <div class="prSectionHead">
+              <div class="prSectionIcon" style="background:linear-gradient(135deg,#FF9A6C,#FF6B6B)">
+                <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8h1a4 4 0 0 1 0 8h-1"/><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/></svg>
+              </div>
+              <div class="prSectionTitle">Valeurs nutritionnelles</div>
+            </div>
+            <div class="prMacroGrid">
+              <div class="prMacroCard" style="background:linear-gradient(135deg,#FFF3DC,#FFE9B8)">
+                <div class="prMacroVal" style="color:#B8860B">${data.calories_portion}</div>
+                <div class="prMacroLbl" style="color:#B8860B">kcal/portion</div>
+              </div>
+              <div class="prMacroCard" style="background:linear-gradient(135deg,#EBF4FF,#D6EAFF)">
+                <div class="prMacroVal" style="color:#2B6CB0">${data.calories_100g}</div>
+                <div class="prMacroLbl" style="color:#2B6CB0">kcal/100g</div>
+              </div>
+              <div class="prMacroCard" style="background:linear-gradient(135deg,#E8F5E9,#C8E6C9)">
+                <div class="prMacroVal" style="color:#2E7D32">${data.macros_portion?.proteines_g}g</div>
+                <div class="prMacroLbl" style="color:#2E7D32">protéines</div>
+              </div>
+            </div>
+            <div class="prMacroSub">
+              <div class="prMacroSubCard"><div class="prMacroSubVal">${data.macros_portion?.glucides_g}g</div><div class="prMacroSubLbl">glucides</div></div>
+              <div class="prMacroSubCard"><div class="prMacroSubVal">${data.macros_portion?.lipides_g}g</div><div class="prMacroSubLbl">lipides</div></div>
+              <div class="prMacroSubCard"><div class="prMacroSubVal">${data.macros_portion?.fibres_g}g</div><div class="prMacroSubLbl">fibres</div></div>
+            </div>
+          </div>
+
+          <!-- ALERTE ALLERGIE -->
+          ${data.alerte_allergie ? `
+          <div class="prAlerte" style="background:linear-gradient(135deg,#FFEBEE,#FFCDD2);border:1px solid rgba(198,40,40,0.2)">
+            <div class="prAlerteIcon" style="background:linear-gradient(135deg,#C62828,#E53935)">
+              <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+            </div>
             <div>
-              <div style="font-size:1.2rem;font-weight:700;color:#2D2D2D">${data.produit}</div>
-              ${data.marque ? `<div style="font-size:0.82rem;color:var(--accent)">${data.marque}</div>` : ''}
-              <div style="font-size:0.78rem;color:var(--accent);margin-top:4px">Par portion : ${data.portion}</div>
+              <div class="prAlerteTitre" style="color:#C62828">Alerte allergie !</div>
+              <div class="prAlerteTexte" style="color:#b52020">${data.alerte_allergie_message}</div>
             </div>
-            <div style="display:flex;gap:8px;align-items:center">
-              ${data.nutriscore && data.nutriscore !== 'inconnu' ? `<div style="background:${nutriColors[data.nutriscore]||'#999'};color:white;padding:6px 14px;border-radius:20px;font-weight:700;font-size:0.9rem">Nutri-Score ${data.nutriscore}</div>` : ''}
-              <div style="background:${scoreBg};color:${scoreColor};padding:6px 14px;border-radius:20px;font-weight:700;font-size:0.85rem">${data.score_objectif}/10 · ${data.score_objectif_label}</div>
+          </div>` : ''}
+
+          <!-- INTERACTIONS -->
+          <div class="prAlerte" style="background:${data.interactions_medicaments?.length ? 'linear-gradient(135deg,#FFF8E1,#FFF0C2)' : 'linear-gradient(135deg,#E8F5E9,#C8E6C9)'};border:1px solid ${data.interactions_medicaments?.length ? 'rgba(245,127,23,0.25)' : 'rgba(46,125,50,0.2)'}">
+            <div class="prAlerteIcon" style="background:${data.interactions_medicaments?.length ? 'linear-gradient(135deg,#F57F17,#FFA000)' : 'linear-gradient(135deg,#2E7D32,#43A047)'}">
+              <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2z"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
             </div>
-          </div>
-          <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:20px">
-            <div style="background:#FDF6E8;border-radius:10px;padding:14px;text-align:center">
-              <div style="font-size:1.4rem;font-weight:700;color:#B8860B">${data.calories_portion}</div>
-              <div style="font-size:0.72rem;color:var(--accent)">kcal/portion</div>
-            </div>
-            <div style="background:#F0F7FF;border-radius:10px;padding:14px;text-align:center">
-              <div style="font-size:1.4rem;font-weight:700;color:#378ADD">${data.calories_100g}</div>
-              <div style="font-size:0.72rem;color:var(--accent)">kcal/100g</div>
-            </div>
-            <div style="background:#F0FFF4;border-radius:10px;padding:14px;text-align:center">
-              <div style="font-size:1.4rem;font-weight:700;color:#2E7D32">${data.macros_portion?.proteines_g}g</div>
-              <div style="font-size:0.72rem;color:var(--accent)">protéines</div>
+            <div style="flex:1">
+              <div class="prAlerteTitre" style="color:${data.interactions_medicaments?.length ? '#E65100' : '#2E7D32'}">Interactions médicamenteuses</div>
+              <div class="prAlerteTexte" style="color:${data.interactions_medicaments?.length ? '#bf4400' : '#1a5e2a'}">${data.interactions_medicaments?.length ? data.interactions_detail : 'Aucune interaction détectée avec vos traitements.'}</div>
             </div>
           </div>
-          <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:20px">
-            <div style="background:#F8F8F8;border-radius:8px;padding:10px;text-align:center">
-              <div style="font-size:1rem;font-weight:700;color:#2D2D2D">${data.macros_portion?.glucides_g}g</div>
-              <div style="font-size:0.7rem;color:var(--accent)">glucides</div>
+
+          <!-- POINTS POSITIFS -->
+          ${data.points_positifs?.length ? `
+          <div class="prSection">
+            <div class="prSectionHead">
+              <div class="prSectionIcon" style="background:linear-gradient(135deg,#2E7D32,#43A047)">
+                <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+              </div>
+              <div class="prSectionTitle" style="color:#2E7D32">Points positifs</div>
             </div>
-            <div style="background:#F8F8F8;border-radius:8px;padding:10px;text-align:center">
-              <div style="font-size:1rem;font-weight:700;color:#2D2D2D">${data.macros_portion?.lipides_g}g</div>
-              <div style="font-size:0.7rem;color:var(--accent)">lipides</div>
+            ${data.points_positifs.map(p => `
+            <div class="prPointItem">
+              <div class="prPointDot" style="background:rgba(46,125,50,0.12)">
+                <svg viewBox="0 0 24 24" fill="none" stroke="#2E7D32" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+              </div>
+              <div class="prPointTxt">${p}</div>
+            </div>`).join('')}
+          </div>` : ''}
+
+          <!-- POINTS D'ATTENTION -->
+          ${data.points_negatifs?.length ? `
+          <div class="prSection">
+            <div class="prSectionHead">
+              <div class="prSectionIcon" style="background:linear-gradient(135deg,#C62828,#E53935)">
+                <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+              </div>
+              <div class="prSectionTitle" style="color:#C62828">Points d'attention</div>
             </div>
-            <div style="background:#F8F8F8;border-radius:8px;padding:10px;text-align:center">
-              <div style="font-size:1rem;font-weight:700;color:#2D2D2D">${data.macros_portion?.fibres_g}g</div>
-              <div style="font-size:0.7rem;color:var(--accent)">fibres</div>
+            ${data.points_negatifs.map(p => `
+            <div class="prPointItem">
+              <div class="prPointDot" style="background:rgba(198,40,40,0.1)">
+                <svg viewBox="0 0 24 24" fill="none" stroke="#C62828" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+              </div>
+              <div class="prPointTxt">${p}</div>
+            </div>`).join('')}
+          </div>` : ''}
+
+          <!-- CONSEIL MIRELLA -->
+          <div class="prConseil">
+            <div class="prConseilInner">
+              <div class="prConseilHead">
+                <div class="prConseilIconWrap">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                </div>
+                <div class="prConseilTitle">Conseil Mirella</div>
+              </div>
+              <div class="prConseilText">${data.conseil_personnalise}</div>
             </div>
           </div>
-          ${data.alerte_allergie ? `<div style="background:#FFEBEE;border-radius:10px;padding:14px;margin-bottom:12px;border-left:4px solid #C62828"><div style="font-weight:700;color:#C62828;margin-bottom:4px">⚠️ Alerte allergie !</div><div style="font-size:0.85rem;color:#C62828">${data.alerte_allergie_message}</div></div>` : ''}
-          <div style="background:${data.interactions_medicaments?.length ? '#FFF8E1' : '#F0FFF4'};border-radius:10px;padding:14px;margin-bottom:12px;border-left:4px solid ${data.interactions_medicaments?.length ? '#F57F17' : '#2E7D32'}"><div style="font-weight:700;color:${data.interactions_medicaments?.length ? '#E65100' : '#2E7D32'};margin-bottom:4px">💊 Interactions médicamenteuses</div><div style="font-size:0.85rem;color:${data.interactions_medicaments?.length ? '#E65100' : '#2E7D32'}">${data.interactions_medicaments?.length ? data.interactions_detail : 'Aucune interaction médicamenteuse détectée avec vos traitements actuels.'}</div></div>
-          ${data.points_positifs?.length ? `<div style="margin-bottom:12px"><div style="font-size:0.78rem;font-weight:700;color:#2E7D32;margin-bottom:6px">✅ Points positifs</div>${data.points_positifs.map(p=>`<div style="font-size:0.82rem;color:#2D2D2D;padding:3px 0">• ${p}</div>`).join('')}</div>` : ''}
-          ${data.points_negatifs?.length ? `<div style="margin-bottom:12px"><div style="font-size:0.78rem;font-weight:700;color:#C62828;margin-bottom:6px">⚠️ Points d'attention</div>${data.points_negatifs.map(p=>`<div style="font-size:0.82rem;color:#2D2D2D;padding:3px 0">• ${p}</div>`).join('')}</div>` : ''}
-          <div style="background:#F0F7FF;border-radius:10px;padding:14px;margin-bottom:12px"><div style="font-size:0.78rem;font-weight:700;color:#2D2D2D;margin-bottom:6px">💡 Conseil Mirella</div><div style="font-size:0.85rem;color:#378ADD">${data.conseil_personnalise}</div></div>
-          ${data.alternative_suggeree ? `<div style="background:#F0FFF4;border-radius:10px;padding:14px"><div style="font-size:0.78rem;font-weight:700;color:#2E7D32;margin-bottom:4px">🔄 Alternative suggérée</div><div style="font-size:0.85rem;color:#2D2D2D">${data.alternative_suggeree}</div></div>` : ''}
+
+          <!-- ALTERNATIVE -->
+          ${data.alternative_suggeree ? `
+          <div class="prAlt">
+            <div class="prAltIcon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg>
+            </div>
+            <div>
+              <div class="prAltTitle">Alternative suggérée</div>
+              <div class="prAltText">${data.alternative_suggeree}</div>
+            </div>
+          </div>` : ''}
+
         </div>`;
       showMirellaNotif('🔍 Produit analysé ! ' + (data.alerte_allergie ? '⚠️ Attention allergie détectée !' : data.score_objectif >= 7 ? 'Ce produit correspond bien à votre objectif !' : 'Consultez mes recommandations.'));
     } catch(e) {
