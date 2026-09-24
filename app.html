@@ -30252,85 +30252,105 @@ window.toggleDarkMode = function() {
 <script>
 function showObjectifBilanPopup(profile) {
   if(document.getElementById('objectifBilanPopup')) return;
-  var objectifs = profile.objectifs || [];
   var duree = (profile.objectif_delai_semaines || 4) + ' semaines';
+  var objectifs = profile.objectifs || [];
+  var selectedMode = null;
+
+  // ── Calcul progression réelle ──
+  var statsHtml = '';
+  var poidsActuel = parseFloat(profile.poids) || 0;
+  var poidsObjectif = parseFloat(profile.poids_objectif) || 0;
+  var poidsDelta = parseFloat(profile.poids_delta_souhaite) || 0;
+  var isPertePoids = objectifs.indexOf('perte_poids') > -1;
+  var isMasse = objectifs.indexOf('masse') > -1;
+  var avg = window._pcRecentAverages || {};
+
+  var stat1Val = duree; var stat1Lbl = 'de suivi';
+  var stat2Val = '100%'; var stat2Lbl = 'de persévérance';
+  var stat3Val = null; var stat3Lbl = '';
+  var stat4Val = null; var stat4Lbl = '';
+
+  if((isPertePoids || isMasse) && poidsActuel && poidsDelta) {
+    var poidsDepart = isPertePoids ? poidsActuel + poidsDelta : poidsActuel - poidsDelta;
+    var variation = Math.round((poidsActuel - poidsDepart) * 10) / 10;
+    var variationAbs = Math.abs(variation);
+    var objectifAbs = poidsDelta;
+    var progPct = Math.min(100, Math.round((variationAbs / objectifAbs) * 100));
+    if(isPertePoids) {
+      stat1Val = (variation < 0 ? '-' : '+') + variationAbs + ' kg';
+      stat1Lbl = variation <= 0 ? 'perdus' : 'pris (rebond)';
+      stat2Val = progPct + '%';
+      stat2Lbl = 'de l'objectif atteint';
+      stat3Val = poidsActuel + ' kg';
+      stat3Lbl = 'poids actuel';
+      stat4Val = poidsObjectif + ' kg';
+      stat4Lbl = 'objectif visé';
+    } else {
+      stat1Val = (variation > 0 ? '+' : '') + variation + ' kg';
+      stat1Lbl = 'pris';
+      stat2Val = progPct + '%';
+      stat2Lbl = 'de l'objectif atteint';
+      stat3Val = poidsActuel + ' kg';
+      stat3Lbl = 'poids actuel';
+      stat4Val = poidsObjectif + ' kg';
+      stat4Lbl = 'objectif visé';
+    }
+  } else if(avg.sleep !== null && avg.sleep !== undefined) {
+    stat1Val = Math.round(avg.sleep * 10) / 10 + 'h';
+    stat1Lbl = 'sommeil moyen';
+    if(avg.energy !== null && avg.energy !== undefined) {
+      stat2Val = Math.round(avg.energy * 10) / 10 + '/10';
+      stat2Lbl = 'énergie moyenne';
+    }
+  }
+
+  var gridCols = (stat3Val && stat4Val) ? 'grid-template-columns:1fr 1fr' : 'grid-template-columns:1fr 1fr';
+  statsHtml = '<div style="margin:0 20px 16px;background:linear-gradient(135deg,rgba(255,154,108,0.1),rgba(255,107,107,0.06));border:1px solid rgba(255,154,108,0.2);border-radius:18px;padding:16px">'
+    + '<div style="font-size:0.65rem;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:#C2604A;margin-bottom:12px">Ta progression sur ' + duree + '</div>'
+    + '<div style="display:grid;' + gridCols + ';gap:10px">'
+    + '<div style="background:white;border-radius:12px;padding:12px;text-align:center"><div style="font-size:1.25rem;font-weight:800;color:#FF9A6C">' + stat1Val + '</div><div style="font-size:0.65rem;color:#9a8b82;margin-top:2px">' + stat1Lbl + '</div></div>'
+    + '<div style="background:white;border-radius:12px;padding:12px;text-align:center"><div style="font-size:1.25rem;font-weight:800;color:#4A90D9">' + stat2Val + '</div><div style="font-size:0.65rem;color:#9a8b82;margin-top:2px">' + stat2Lbl + '</div></div>'
+    + (stat3Val ? '<div style="background:white;border-radius:12px;padding:12px;text-align:center"><div style="font-size:1.25rem;font-weight:800;color:#2E7D32">' + stat3Val + '</div><div style="font-size:0.65rem;color:#9a8b82;margin-top:2px">' + stat3Lbl + '</div></div>' : '')
+    + (stat4Val ? '<div style="background:white;border-radius:12px;padding:12px;text-align:center"><div style="font-size:1.25rem;font-weight:800;color:#C62828">' + stat4Val + '</div><div style="font-size:0.65rem;color:#9a8b82;margin-top:2px">' + stat4Lbl + '</div></div>' : '')
+    + '</div></div>';
+
   var overlay = document.createElement('div');
   overlay.id = 'objectifBilanPopup';
   overlay.style.cssText = 'position:fixed;inset:0;z-index:99999;background:rgba(20,10,5,0.75);display:flex;align-items:flex-end;justify-content:center';
-  overlay.style.animation = 'none';
 
   var html = '<style>'
     + '@keyframes bsUp{from{transform:translateY(80px);opacity:0}to{transform:translateY(0);opacity:1}}'
     + '@keyframes bsSheen{0%{left:-60%}60%{left:120%}100%{left:120%}}'
+    + '.bsOption{display:flex;align-items:center;gap:12px;padding:13px;background:white;border-radius:14px;margin-bottom:8px;cursor:pointer;transition:all 0.2s;border:2px solid transparent}'
+    + '.bsOption.selected{border-color:#FF9A6C;background:rgba(255,154,108,0.06)}'
+    + '.bsOption:last-child{margin-bottom:0}'
     + '</style>'
     + '<div style="background:#FFFCFA;border-radius:28px 28px 0 0;width:100%;max-width:480px;animation:bsUp 0.45s cubic-bezier(0.34,1.56,0.64,1);max-height:92vh;overflow-y:auto">'
-
-    // Handle
-    + '<div style="display:flex;justify-content:center;padding:14px 0 6px">'
-    + '<div style="width:40px;height:4px;border-radius:2px;background:rgba(0,0,0,0.12)"></div>'
-    + '</div>'
-
-    // VIDEO
-    + '<div style="overflow:hidden;background:#000;max-height:260px">'
-    + '<video autoplay muted playsinline loop style="width:100%;max-height:260px;object-fit:cover;display:block">'
-    + '<source src="https://raw.githubusercontent.com/avelia-ai/nutricare-frontend/main/bilan_objectif.mp4" type="video/mp4">'
-    + '</video>'
-    + '</div>'
-
-    // TITRE
-    + '<div style="text-align:center;padding:22px 24px 0">'
+    + '<div style="display:flex;justify-content:center;padding:14px 0 6px"><div style="width:40px;height:4px;border-radius:2px;background:rgba(0,0,0,0.12)"></div></div>'
+    + '<div style="overflow:hidden;background:#000;max-height:220px"><video autoplay muted playsinline loop style="width:100%;max-height:220px;object-fit:cover;display:block"><source src="https://raw.githubusercontent.com/avelia-ai/nutricare-frontend/main/bilan_objectif.mp4" type="video/mp4"></video></div>'
+    + '<div style="text-align:center;padding:20px 24px 0">'
     + '<div style="font-size:0.68rem;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:#C2604A;margin-bottom:8px">Bilan Mirella</div>'
-    + '<div style="font-size:1.3rem;font-weight:800;color:#2b2320;line-height:1.3;margin-bottom:10px">Ton délai de ' + duree + ' est terminé</div>'
-    + '<div style="font-size:0.85rem;color:#9a8b82;line-height:1.6;margin-bottom:20px">L\'échec n\'existe pas — seulement des ajustements. Tu as tenu ' + duree + ' de suivi, c\'est déjà une vraie victoire.</div>'
+    + '<div style="font-size:1.25rem;font-weight:800;color:#2b2320;line-height:1.3;margin-bottom:8px">Ton délai de ' + duree + ' est terminé</div>'
+    + '<div style="font-size:0.83rem;color:#9a8b82;line-height:1.55;margin-bottom:16px">L'échec n'existe pas — seulement des ajustements. Continue, tu es sur la bonne voie.</div>'
     + '</div>'
-
-    // STATS
-    + '<div style="margin:0 20px 16px;background:linear-gradient(135deg,rgba(255,154,108,0.1),rgba(255,107,107,0.06));border:1px solid rgba(255,154,108,0.2);border-radius:18px;padding:16px">'
-    + '<div style="font-size:0.65rem;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:#C2604A;margin-bottom:12px">Ce que tu as accompli</div>'
-    + '<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">'
-    + '<div style="background:white;border-radius:12px;padding:12px;text-align:center">'
-    + '<div style="font-size:1.3rem;font-weight:800;color:#FF9A6C">' + duree + '</div>'
-    + '<div style="font-size:0.65rem;color:#9a8b82;margin-top:2px">de suivi continu</div>'
-    + '</div>'
-    + '<div style="background:white;border-radius:12px;padding:12px;text-align:center">'
-    + '<div style="font-size:1.3rem;font-weight:800;color:#4A90D9">100%</div>'
-    + '<div style="font-size:0.65rem;color:#9a8b82;margin-top:2px">de persévérance</div>'
-    + '</div>'
-    + '</div>'
-    + '</div>'
-
-    // OPTIONS
+    + statsHtml
     + '<div style="padding:0 20px;margin-bottom:16px">'
     + '<div style="font-size:0.65rem;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:#9a8b82;margin-bottom:10px">Que veux-tu faire maintenant ?</div>'
-
-    + '<div onclick="startNewObjectif(&quot;recalibrer&quot;)" style="display:flex;align-items:center;gap:12px;padding:13px;background:white;border:1.5px solid rgba(255,154,108,0.25);border-radius:14px;margin-bottom:8px;cursor:pointer">'
-    + '<div style="width:38px;height:38px;border-radius:10px;background:linear-gradient(135deg,#FF9A6C,#FF6B6B);display:flex;align-items:center;justify-content:center;flex-shrink:0">'
-    + '<svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" width="17" height="17"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-3.5"/></svg>'
+    + '<div id="bsOpt1" class="bsOption" onclick="selectBilanMode('recalibrer')">'
+    + '<div style="width:38px;height:38px;border-radius:10px;background:linear-gradient(135deg,#FF9A6C,#FF6B6B);display:flex;align-items:center;justify-content:center;flex-shrink:0"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" width="17" height="17"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-3.5"/></svg></div>'
+    + '<div><div style="font-size:0.86rem;font-weight:700;color:#2b2320">Recalibrer mon objectif</div><div style="font-size:0.72rem;color:#9a8b82;margin-top:1px">Nouveau délai, même objectif</div></div>'
     + '</div>'
-    + '<div><div style="font-size:0.86rem;font-weight:700;color:#2b2320">Recalibrer mon objectif</div>'
-    + '<div style="font-size:0.72rem;color:#9a8b82;margin-top:1px">Nouveau délai, même objectif</div></div>'
+    + '<div id="bsOpt2" class="bsOption" onclick="selectBilanMode('maintien')">'
+    + '<div style="width:38px;height:38px;border-radius:10px;background:linear-gradient(135deg,#4A90D9,#357ABD);display:flex;align-items:center;justify-content:center;flex-shrink:0"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" width="17" height="17"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div>'
+    + '<div><div style="font-size:0.86rem;font-weight:700;color:#2b2320">Mode maintien</div><div style="font-size:0.72rem;color:#9a8b82;margin-top:1px">Consolide tes acquis avant de repartir</div></div>'
     + '</div>'
-
-    + '<div onclick="startNewObjectif(&quot;maintien&quot;)" style="display:flex;align-items:center;gap:12px;padding:13px;background:white;border:1.5px solid rgba(74,144,217,0.2);border-radius:14px;margin-bottom:8px;cursor:pointer">'
-    + '<div style="width:38px;height:38px;border-radius:10px;background:linear-gradient(135deg,#4A90D9,#357ABD);display:flex;align-items:center;justify-content:center;flex-shrink:0">'
-    + '<svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" width="17" height="17"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>'
-    + '</div>'
-    + '<div><div style="font-size:0.86rem;font-weight:700;color:#2b2320">Mode maintien</div>'
-    + '<div style="font-size:0.72rem;color:#9a8b82;margin-top:1px">Consolide tes acquis avant de repartir</div></div>'
-    + '</div>'
-
-    + '<div onclick="startNewObjectif(&quot;nouveau&quot;)" style="display:flex;align-items:center;gap:12px;padding:13px;background:white;border:1.5px solid rgba(46,125,50,0.2);border-radius:14px;cursor:pointer">'
-    + '<div style="width:38px;height:38px;border-radius:10px;background:linear-gradient(135deg,#2E7D32,#43A047);display:flex;align-items:center;justify-content:center;flex-shrink:0">'
-    + '<svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" width="17" height="17"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>'
-    + '</div>'
-    + '<div><div style="font-size:0.86rem;font-weight:700;color:#2b2320">Définir un nouvel objectif</div>'
-    + '<div style="font-size:0.72rem;color:#9a8b82;margin-top:1px">Nouveau départ, nouvelle cible</div></div>'
+    + '<div id="bsOpt3" class="bsOption" onclick="selectBilanMode('nouveau')">'
+    + '<div style="width:38px;height:38px;border-radius:10px;background:linear-gradient(135deg,#2E7D32,#43A047);display:flex;align-items:center;justify-content:center;flex-shrink:0"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" width="17" height="17"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></div>'
+    + '<div><div style="font-size:0.86rem;font-weight:700;color:#2b2320">Définir un nouvel objectif</div><div style="font-size:0.72rem;color:#9a8b82;margin-top:1px">Nouveau départ, nouvelle cible</div></div>'
     + '</div>'
     + '</div>'
-
-    // CTA
-    + '<div style="padding:0 20px 8px">'
-    + '<button onclick="closeObjectifBilanPopup()" style="position:relative;overflow:hidden;width:100%;padding:16px;border-radius:16px;border:none;background:linear-gradient(135deg,#FF9A6C,#FF6B6B);color:white;font-size:0.95rem;font-weight:700;cursor:pointer;box-shadow:0 8px 24px rgba(255,107,107,0.35)">'
+    + '<div style="padding:0 20px 32px">'
+    + '<button id="bsContinueBtn" onclick="executeBilanMode()" style="position:relative;overflow:hidden;width:100%;padding:16px;border-radius:16px;border:none;background:linear-gradient(135deg,#FF9A6C,#FF6B6B);color:white;font-size:0.95rem;font-weight:700;cursor:pointer;box-shadow:0 8px 24px rgba(255,107,107,0.35);opacity:0.5">'
     + 'Continuer avec Mirella →'
     + '<div style="position:absolute;top:0;left:-60%;width:40%;height:100%;background:linear-gradient(120deg,transparent,rgba(255,255,255,0.3),transparent);transform:skewX(-20deg);animation:bsSheen 3s ease-in-out infinite"></div>'
     + '</button>'
@@ -30339,15 +30359,22 @@ function showObjectifBilanPopup(profile) {
 
   overlay.innerHTML = html;
   document.body.appendChild(overlay);
-  overlay.addEventListener('click', function(e){ if(e.target === overlay) closeObjectifBilanPopup(); });
 }
 
-function closeObjectifBilanPopup() {
-  var p = document.getElementById('objectifBilanPopup');
-  if(p) { p.style.opacity='0'; p.style.transition='opacity 0.25s'; setTimeout(function(){if(p.parentNode)p.parentNode.removeChild(p);},280); }
+function selectBilanMode(mode) {
+  window._bilanSelectedMode = mode;
+  var opts = ['bsOpt1','bsOpt2','bsOpt3'];
+  opts.forEach(function(id){ var el=document.getElementById(id); if(el) el.classList.remove('selected'); });
+  var map = {recalibrer:'bsOpt1', maintien:'bsOpt2', nouveau:'bsOpt3'};
+  var sel = document.getElementById(map[mode]);
+  if(sel) sel.classList.add('selected');
+  var btn = document.getElementById('bsContinueBtn');
+  if(btn) btn.style.opacity = '1';
 }
 
-function startNewObjectif(mode) {
+function executeBilanMode() {
+  var mode = window._bilanSelectedMode;
+  if(!mode) return;
   closeObjectifBilanPopup();
   if(mode === 'recalibrer' || mode === 'nouveau') {
     setTimeout(function(){ showView('profile'); }, 400);
@@ -30355,9 +30382,19 @@ function startNewObjectif(mode) {
     if(typeof showMirellaNotif === 'function') showMirellaNotif('Mode maintien activé — Mirella adapte tes conseils pour consolider tes acquis');
   }
 }
+
+function closeObjectifBilanPopup() {
+  window._bilanSelectedMode = null;
+  var p = document.getElementById('objectifBilanPopup');
+  if(p) { p.style.opacity='0'; p.style.transition='opacity 0.25s'; setTimeout(function(){if(p.parentNode)p.parentNode.removeChild(p);},280); }
+}
+
+function startNewObjectif(mode) { selectBilanMode(mode); }
 window.showObjectifBilanPopup = showObjectifBilanPopup;
 window.closeObjectifBilanPopup = closeObjectifBilanPopup;
 window.startNewObjectif = startNewObjectif;
+window.selectBilanMode = selectBilanMode;
+window.executeBilanMode = executeBilanMode;
 </script>
 </body>
 </html>
