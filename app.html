@@ -30294,10 +30294,22 @@ function showObjectifBilanPopup(profile, logs) {
   stat3Val = null; stat4Val = null;
 
   if(isPertePoids || isMasse) {
-    var firstW = parseFloat(firstLog.weight) || (isPertePoids ? poidsActuel+poidsDelta : poidsActuel-poidsDelta);
+    // Poids de départ = premier log poids dispo, sinon reconstitué depuis objectif
+    var poidsDepart = 0;
+    var firstLogWeight = parseFloat(firstLog.weight) || 0;
+    if(firstLogWeight > 0) {
+      poidsDepart = firstLogWeight;
+    } else if(poidsDelta > 0) {
+      poidsDepart = isPertePoids ? (poidsObjectif + poidsDelta) : (poidsObjectif - poidsDelta);
+    } else {
+      poidsDepart = poidsActuel;
+    }
     var lastW = parseFloat(lastLog.weight) || poidsActuel;
-    var variation = Math.round((lastW - firstW)*10)/10;
-    var progPct = poidsDelta > 0 ? Math.min(100, Math.round((Math.abs(variation)/poidsDelta)*100)) : 0;
+    var variation = Math.round((lastW - poidsDepart)*10)/10;
+    // % = écart parcouru / écart total à parcourir
+    var ecartTotal = Math.abs(poidsDepart - poidsObjectif);
+    var ecartFait = Math.abs(lastW - poidsDepart);
+    var progPct = ecartTotal > 0 ? Math.min(100, Math.round((ecartFait/ecartTotal)*100)) : 0;
     stat1Val = (variation<=0?'':'+') + variation + ' kg';
     stat1Lbl = isPertePoids ? (variation<=0 ? 'perdus' : 'pris') : (variation>=0 ? 'pris' : 'perdus');
     stat2Val = progPct + '%';
