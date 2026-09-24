@@ -4193,20 +4193,16 @@ window.initHome = async function() {
         document.getElementById('summaryCountdownDays').textContent = '0';
         msgEl.textContent = "l'echeance est passee, fais le point avec Mirella sur la suite";
         // Charge les logs depuis le début de l'objectif pour la popup bilan
-        var bilanKey = 'mirella_bilan_popup_' + (profile.objectif_date_debut || 'x');
-        if(!localStorage.getItem(bilanKey)) {
-          localStorage.setItem(bilanKey, '1');
-          var _tok = localStorage.getItem('mirella_token') || localStorage.getItem('sb_token') || (window.authToken) || '';
-          var _daysObj = (profile.objectif_delai_semaines || 4) * 7 + 2;
-          fetch(BACKEND_URL + '/api/health/logs?days=' + _daysObj, {
-            headers: { 'Authorization': 'Bearer ' + _tok }
-          }).then(function(r){ return r.json(); }).then(function(d){
-            var logs = d.logs || d || [];
-            if(window.showObjectifBilanPopup) showObjectifBilanPopup(profile, logs);
-          }).catch(function(){
-            if(window.showObjectifBilanPopup) showObjectifBilanPopup(profile, []);
-          });
-        }
+        var _tok = localStorage.getItem('mirella_token') || localStorage.getItem('sb_token') || (window.authToken) || '';
+        var _daysObj = (profile.objectif_delai_semaines || 4) * 7 + 2;
+        fetch(BACKEND_URL + '/api/health/logs?days=' + _daysObj, {
+          headers: { 'Authorization': 'Bearer ' + _tok }
+        }).then(function(r){ return r.json(); }).then(function(d){
+          var logs = d.logs || d || [];
+          if(window.showObjectifBilanPopup) showObjectifBilanPopup(profile, logs);
+        }).catch(function(){
+          if(window.showObjectifBilanPopup) showObjectifBilanPopup(profile, []);
+        });
       }
     } else {
       countdownWrap.style.display = 'none';
