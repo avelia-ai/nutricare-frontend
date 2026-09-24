@@ -4192,11 +4192,8 @@ window.initHome = async function() {
       } else {
         document.getElementById('summaryCountdownDays').textContent = '0';
         msgEl.textContent = "l'echeance est passee, fais le point avec Mirella sur la suite";
-        var bilanKey = 'mirella_bilan_popup_' + (profile.objectif_date_debut || 'x');
-        if(!localStorage.getItem(bilanKey)) {
-          localStorage.setItem(bilanKey, '1');
-          setTimeout(function(){ if(window.showObjectifBilanPopup) showObjectifBilanPopup(profile); }, 800);
-        }
+        // TEST - forcer affichage popup
+        setTimeout(function(){ if(window.showObjectifBilanPopup) showObjectifBilanPopup(profile); }, 800);
       }
     } else {
       countdownWrap.style.display = 'none';
