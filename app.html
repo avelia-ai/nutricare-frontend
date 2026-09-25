@@ -30439,8 +30439,8 @@ function _saveProfil(payload, cb) {
       headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + tok },
       body: JSON.stringify(payload)
     }).then(function(r){ return r.json(); }).then(function(d){
-      if(window._pcProfile) Object.assign(window._pcProfile, payload);
-      if(cb) cb(null, d);
+      if(d && window._pcProfile) Object.assign(window._pcProfile, payload);
+      if(cb) cb(null, d || {});
     }).catch(function(e){ if(cb) cb(e); });
   };
   // Refresh token si disponible avant d'envoyer
