@@ -30826,6 +30826,12 @@ function noGoStep2() {
   window._noDelaiSelected = null;
   var btn = document.getElementById('noConfirmBtn');
   if(btn) btn.style.opacity = '0.5';
+  // Attache les listeners après injection innerHTML
+  document.querySelectorAll('.noDelaiChip').forEach(function(b) {
+    b.addEventListener('click', function() {
+      selectNoDelai(parseInt(this.dataset.val));
+    });
+  });
 }
 
 function selectNoDelai(n) {
