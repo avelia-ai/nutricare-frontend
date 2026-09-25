@@ -522,9 +522,17 @@ setInterval(updateCountdown, 1000);
     var now = Date.now();
     var elapsed = Math.max(0, now - BASE_TIME);
     var steps = Math.floor(elapsed / INTERVAL_MS);
-    var count = BASE + (steps * INCREMENT);
+    var count = Math.min(1000, BASE + (steps * INCREMENT));
     var el = document.getElementById('placesCounter');
-    if(el) el.textContent = count + ' places réservées';
+    if(el) {
+      if(count >= 1000) {
+        el.textContent = '🔴 Complet — 1000 / 1000 places réservées';
+        el.style.color = '#c0392b';
+        el.style.fontWeight = '700';
+      } else {
+        el.textContent = count + ' / 1000 places réservées';
+      }
+    }
     // Met à jour aussi la barre de progression
     var fill = document.querySelector('.hero-card-progress-fill');
     if(fill) fill.style.width = Math.min(100, Math.round(count / 10)) + '%';
