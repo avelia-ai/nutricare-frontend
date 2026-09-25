@@ -30948,31 +30948,7 @@ function confirmNouvelObjectif() {
     if(data && data.error) return;
     _closePopup("nouvelObjectifPopup");
     if(typeof showMirellaNotif === 'function') showMirellaNotif('Nouveau plan activé — Mirella repart avec toi !');
-    // Mise à jour locale immédiate sans attendre le serveur
-    if(window._pcProfile) {
-      Object.assign(window._pcProfile, payload);
-      if(typeof window.renderPersonalSummary === 'function') window.renderPersonalSummary(window._pcProfile);
-    }
-    // Puis recharge depuis serveur en arrière-plan
-    var doReload = function() {
-      if(typeof window.loadProfile === 'function') {
-        window.loadProfile().then(function() {
-          if(typeof window.renderPersonalSummary === 'function') window.renderPersonalSummary(window._pcProfile);
-        }).catch(function(){});
-      }
-    };
-    try {
-      if(typeof refreshAuthToken === 'function') {
-        var rp = refreshAuthToken();
-        if(rp && typeof rp.then === 'function') {
-          rp.then(doReload).catch(doReload);
-        } else {
-          setTimeout(doReload, 500);
-        }
-      } else {
-        setTimeout(doReload, 500);
-      }
-    } catch(e) { setTimeout(doReload, 500); }
+    setTimeout(function() { window.location.reload(); }, 1500);
   });
 }
 
