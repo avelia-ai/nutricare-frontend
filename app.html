@@ -30444,11 +30444,18 @@ function _saveProfil(payload, cb) {
     }).catch(function(e){ if(cb) cb(e); });
   };
   // Refresh token si disponible avant d'envoyer
-  if(typeof refreshAuthToken === 'function') {
-    refreshAuthToken().then(function(){ doSave(); }).catch(function(){ doSave(); });
-  } else {
-    doSave();
-  }
+  try {
+    if(typeof refreshAuthToken === 'function') {
+      var p = refreshAuthToken();
+      if(p && typeof p.then === 'function') {
+        p.then(function(){ doSave(); }).catch(function(){ doSave(); });
+      } else {
+        doSave();
+      }
+    } else {
+      doSave();
+    }
+  } catch(e) { doSave(); }
 }
 
 function _closePopup(id) {
