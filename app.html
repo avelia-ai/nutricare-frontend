@@ -30943,14 +30943,21 @@ function confirmNouvelObjectif() {
     if(data && data.error) { alert('ERREUR API: ' + data.error); return; }
     _closePopup("nouvelObjectifPopup");
     if(typeof showMirellaNotif === 'function') showMirellaNotif('Nouveau plan activé — Mirella repart avec toi !');
-    // Mise à jour locale immédiate
+    // Mise à jour locale immédiate sans attendre le serveur
     if(window._pcProfile) Object.assign(window._pcProfile, payload);
-    // Recharge depuis le serveur
-    if(typeof window.loadProfile === 'function') {
-      window.loadProfile().then(function() {
-        if(typeof window.renderPersonalSummary === 'function') window.renderPersonalSummary(window._pcProfile);
-        if(typeof window.refreshHarmonyAvatar === 'function') window.refreshHarmonyAvatar([]);
-      });
+    if(typeof window.renderPersonalSummary === 'function') window.renderPersonalSummary(window._pcProfile);
+    // Puis recharge depuis serveur en arrière-plan
+    var doReload = function() {
+      if(typeof window.loadProfile === 'function') {
+        window.loadProfile().then(function() {
+          if(typeof window.renderPersonalSummary === 'function') window.renderPersonalSummary(window._pcProfile);
+        }).catch(function(){});
+      }
+    };
+    if(typeof refreshAuthToken === 'function') {
+      refreshAuthToken().then(doReload).catch(doReload);
+    } else {
+      setTimeout(doReload, 500);
     }
   });
 }
