@@ -30630,21 +30630,7 @@ function showNouvelObjectifPopup() {
     + '</div>'
 
     + '<div id="noStep2" style="display:none">'
-    + '<div style="font-size:0.68rem;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:#9a8b82;margin-bottom:10px">Objectif poids (optionnel)</div>'
-    + '<div style="background:white;border:1.5px solid rgba(255,154,108,0.25);border-radius:14px;padding:16px;margin-bottom:16px">'
-    + '<div style="font-size:0.82rem;color:#2b2320;margin-bottom:10px">Combien de kg veux-tu <span id="noVerbeSpan">perdre</span> ?</div>'
-    + '<div style="display:flex;align-items:center;gap:12px">'
-    + '<input id="noDeltaInput" type="number" min="0.5" max="50" step="0.5" placeholder="ex: 5" style="flex:1;padding:12px;border:1.5px solid rgba(255,154,108,0.3);border-radius:10px;font-size:1rem;font-weight:700;text-align:center;outline:none">'
-    + '<div style="font-size:1rem;font-weight:600;color:#9a8b82">kg</div>'
-    + '</div>'
-    + '</div>'
-    + '<div style="font-size:0.68rem;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:#9a8b82;margin-bottom:10px">Délai</div>'
-    + '<div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:20px">'
-    + '<button class="rcDelaiBtn" data-val="4" onclick="selectNoDelai(parseInt(this.dataset.val))" id="noD4">4 semaines</button>'
-    + '<button class="rcDelaiBtn" data-val="8" onclick="selectNoDelai(parseInt(this.dataset.val))" id="noD8">8 semaines</button>'
-    + '<button class="rcDelaiBtn" data-val="12" onclick="selectNoDelai(parseInt(this.dataset.val))" id="noD12">3 mois</button>'
-    + '<button class="rcDelaiBtn" data-val="24" onclick="selectNoDelai(parseInt(this.dataset.val))" id="noD24">6 mois</button>'
-    + '</div>'
+    + '<div id="noStep2Content"></div>'
     + '<button id="noConfirmBtn" onclick="confirmNouvelObjectif()" style="width:100%;padding:15px;border-radius:16px;border:none;background:linear-gradient(135deg,#2E7D32,#43A047);color:white;font-size:0.92rem;font-weight:700;cursor:pointer;opacity:0.5;margin-bottom:8px">Lancer mon nouveau plan</button>'
     + '<button onclick="noGoBack()" style="width:100%;padding:12px;border-radius:16px;border:none;background:transparent;color:#9a8b82;font-size:0.85rem;cursor:pointer">Retour</button>'
     + '</div>'
@@ -30674,20 +30660,188 @@ function selectNouvelObj(id) {
   if(verbe) verbe.textContent = id==='masse' ? 'prendre' : 'perdre';
 }
 
+function noInputRow(label, id, type, placeholder, unit, min, max, step) {
+  var s = '<div style="margin-bottom:14px">';
+  s += '<div style="font-size:0.75rem;font-weight:600;color:#9a8b82;margin-bottom:6px">' + label + '</div>';
+  s += '<div style="display:flex;align-items:center;gap:8px">';
+  s += '<input id="' + id + '" type="' + type + '"';
+  if(placeholder) s += ' placeholder="' + placeholder + '"';
+  if(min) s += ' min="' + min + '"';
+  if(max) s += ' max="' + max + '"';
+  if(step) s += ' step="' + step + '"';
+  s += ' style="flex:1;padding:11px 14px;border:1.5px solid rgba(255,154,108,0.3);border-radius:11px;font-size:0.9rem;font-weight:600;outline:none;background:white">';
+  if(unit) s += '<div style="font-size:0.85rem;font-weight:600;color:#9a8b82;flex-shrink:0">' + unit + '</div>';
+  s += '</div></div>';
+  return s;
+}
+
+function noMultiSelect(label, id, options) {
+  var s = '<div style="margin-bottom:14px">';
+  s += '<div style="font-size:0.75rem;font-weight:600;color:#9a8b82;margin-bottom:8px">' + label + '</div>';
+  s += '<div style="display:flex;flex-wrap:wrap;gap:7px">';
+  options.forEach(function(o) {
+    s += '<button data-group="' + id + '" data-val="' + o.v + '" onclick="noToggleMulti(this)"';
+    s += ' style="padding:8px 14px;border-radius:10px;border:1.5px solid rgba(0,0,0,0.1);background:white;font-size:0.78rem;font-weight:600;color:#2b2320;cursor:pointer;transition:all 0.2s">';
+    s += o.l + '</button>';
+  });
+  s += '</div></div>';
+  return s;
+}
+
+function noSingleSelect(label, id, options) {
+  var s = '<div style="margin-bottom:14px">';
+  s += '<div style="font-size:0.75rem;font-weight:600;color:#9a8b82;margin-bottom:8px">' + label + '</div>';
+  s += '<div style="display:flex;flex-wrap:wrap;gap:7px">';
+  options.forEach(function(o) {
+    s += '<button data-group="' + id + '" data-val="' + o.v + '" onclick="noToggleSingle(this)"';
+    s += ' style="padding:8px 14px;border-radius:10px;border:1.5px solid rgba(0,0,0,0.1);background:white;font-size:0.78rem;font-weight:600;color:#2b2320;cursor:pointer;transition:all 0.2s">';
+    s += o.l + '</button>';
+  });
+  s += '</div></div>';
+  return s;
+}
+
+function noDelaiSection() {
+  return '<div style="margin-bottom:18px">'
+    + '<div style="font-size:0.75rem;font-weight:600;color:#9a8b82;margin-bottom:8px">Délai</div>'
+    + '<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">'
+    + '<button class="noDelaiChip" data-val="4" onclick="selectNoDelai(parseInt(this.dataset.val))" id="noD4" style="padding:12px;border-radius:13px;border:1.5px solid rgba(0,0,0,0.1);background:white;font-size:0.82rem;font-weight:700;color:#2b2320;cursor:pointer;text-align:center;transition:all 0.2s"><div style=\"font-size:1.1rem;font-weight:800;color:#2E7D32\">4</div>semaines</button>'
+    + '<button class="noDelaiChip" data-val="8" onclick="selectNoDelai(parseInt(this.dataset.val))" id="noD8" style="padding:12px;border-radius:13px;border:1.5px solid rgba(0,0,0,0.1);background:white;font-size:0.82rem;font-weight:700;color:#2b2320;cursor:pointer;text-align:center;transition:all 0.2s"><div style=\"font-size:1.1rem;font-weight:800;color:#2E7D32\">8</div>semaines</button>'
+    + '<button class="noDelaiChip" data-val="12" onclick="selectNoDelai(parseInt(this.dataset.val))" id="noD12" style="padding:12px;border-radius:13px;border:1.5px solid rgba(0,0,0,0.1);background:white;font-size:0.82rem;font-weight:700;color:#2b2320;cursor:pointer;text-align:center;transition:all 0.2s"><div style=\"font-size:1.1rem;font-weight:800;color:#2E7D32\">3</div>mois</button>'
+    + '<button class="noDelaiChip" data-val="24" onclick="selectNoDelai(parseInt(this.dataset.val))" id="noD24" style="padding:12px;border-radius:13px;border:1.5px solid rgba(0,0,0,0.1);background:white;font-size:0.82rem;font-weight:700;color:#2b2320;cursor:pointer;text-align:center;transition:all 0.2s"><div style=\"font-size:1.1rem;font-weight:800;color:#2E7D32\">6</div>mois</button>'
+    + '</div></div>';
+}
+
+function noToggleMulti(btn) {
+  btn.style.borderColor = btn.style.borderColor === 'rgb(46, 125, 50)' ? 'rgba(0,0,0,0.1)' : '#2E7D32';
+  btn.style.background = btn.style.background === 'rgb(240, 255, 244)' ? 'white' : '#f0fff4';
+  btn.style.color = btn.style.color === 'rgb(46, 125, 50)' ? '#2b2320' : '#2E7D32';
+}
+
+function noToggleSingle(btn) {
+  var group = btn.dataset.group;
+  document.querySelectorAll('[data-group="' + group + '"]').forEach(function(b) {
+    b.style.borderColor = 'rgba(0,0,0,0.1)';
+    b.style.background = 'white';
+    b.style.color = '#2b2320';
+  });
+  btn.style.borderColor = '#2E7D32';
+  btn.style.background = '#f0fff4';
+  btn.style.color = '#2E7D32';
+}
+
+function buildNoStep2Content(obj) {
+  var html = '';
+  var card = function(inner) {
+    return '<div style="background:white;border:1.5px solid rgba(255,154,108,0.2);border-radius:14px;padding:16px;margin-bottom:14px">' + inner + '</div>';
+  };
+
+  if(obj === 'perte_poids') {
+    html += card(
+      noInputRow('Combien de kg veux-tu perdre ?', 'noDeltaInput', 'number', 'ex: 5', 'kg', '0.5', '50', '0.5')
+      + noInputRow('Ton poids actuel', 'noPoidsActuel', 'number', 'ex: 75', 'kg', '30', '200', '0.1')
+      + noSingleSelect('Ton rythme alimentaire actuel', 'no_rythme', [
+        {v:'3repas', l:'3 repas/jour'}, {v:'grignotage', l:'Je grignote'}, {v:'saut_repas', l:'Je saute des repas'}, {v:'variable', l:'Très variable'}
+      ])
+    );
+  } else if(obj === 'masse') {
+    html += card(
+      noInputRow('Combien de kg veux-tu prendre ?', 'noDeltaInput', 'number', 'ex: 5', 'kg', '0.5', '30', '0.5')
+      + noInputRow('Ton poids actuel', 'noPoidsActuel', 'number', 'ex: 70', 'kg', '30', '200', '0.1')
+      + noSingleSelect('Ton niveau d'activité physique', 'no_activite', [
+        {v:'sedentaire', l:'Sédentaire'}, {v:'leger', l:'Léger (1-2x/sem)'}, {v:'modere', l:'Modéré (3-4x/sem)'}, {v:'intense', l:'Intense (5+/sem)'}
+      ])
+    );
+  } else if(obj === 'sommeil') {
+    html += card(
+      noInputRow('Heures de sommeil actuelles par nuit', 'noSommeilActuel', 'number', 'ex: 6', 'h', '1', '12', '0.5')
+      + noInputRow('Objectif : heures de sommeil visées', 'noSommeilObjectif', 'number', 'ex: 8', 'h', '4', '12', '0.5')
+      + noInputRow('Heure de coucher habituelle', 'noCoucher', 'time', '', '', '', '', '')
+      + noMultiSelect('Tes problèmes principaux', 'no_pb_sommeil', [
+        {v:'endormissement', l:'Endormissement difficile'},
+        {v:'reveils', l:'Réveils nocturnes'},
+        {v:'fatigue_matin', l:'Fatigue au réveil'},
+        {v:'pensees', l:'Pensées envahissantes'},
+        {v:'ecrans', l:'Écrans le soir'},
+        {v:'stress', l:'Stress / anxiété'}
+      ])
+    );
+  } else if(obj === 'energie') {
+    html += card(
+      noSingleSelect('Ton niveau d'énergie actuel', 'no_energie_actuelle', [
+        {v:'1-3', l:'1-3 Très faible'}, {v:'4-5', l:'4-5 Faible'}, {v:'6-7', l:'6-7 Moyen'}, {v:'8-10', l:'8-10 Bon'}
+      ])
+      + noSingleSelect('Ton objectif d'énergie', 'no_energie_objectif', [
+        {v:'6-7', l:'6-7 Correct'}, {v:'8-9', l:'8-9 Élevé'}, {v:'10', l:'10 Optimal'}
+      ])
+      + noMultiSelect('Causes suspectées', 'no_cause_energie', [
+        {v:'stress', l:'Stress chronique'}, {v:'sommeil', l:'Manque de sommeil'},
+        {v:'alimentation', l:'Alimentation déséquilibrée'}, {v:'sedentarite', l:'Sédentarité'},
+        {v:'hydratation', l:'Déshydratation'}, {v:'sante', l:'Problème de santé'}
+      ])
+    );
+  } else if(obj === 'sante') {
+    html += card(
+      noMultiSelect('Tes préoccupations principales', 'no_sante_focus', [
+        {v:'digestion', l:'Digestion'}, {v:'inflammation', l:'Inflammation'},
+        {v:'immunite', l:'Immunité'}, {v:'cardio', l:'Cardiovasculaire'},
+        {v:'hormones', l:'Hormones / cycle'}, {v:'peau', l:'Peau / cheveux'},
+        {v:'stress', l:'Stress / anxiété'}, {v:'glycemie', l:'Glycémie'}
+      ])
+      + noMultiSelect('Ce que tu veux changer en priorité', 'no_sante_action', [
+        {v:'alimentation', l:'Mon alimentation'}, {v:'activite', l:'Mon activité physique'},
+        {v:'stress', l:'Ma gestion du stress'}, {v:'sommeil', l:'Mon sommeil'},
+        {v:'hydratation', l:'Mon hydratation'}, {v:'supplements', l:'Compléments alimentaires'}
+      ])
+    );
+  } else if(obj === 'cardio') {
+    html += card(
+      noSingleSelect('Ton niveau actuel', 'no_cardio_niveau', [
+        {v:'debutant', l:'Débutant'}, {v:'intermediaire', l:'Intermédiaire'}, {v:'confirme', l:'Confirmé'}
+      ])
+      + noMultiSelect('Ton objectif cardio', 'no_cardio_objectif', [
+        {v:'endurance', l:'Courir sans pause'}, {v:'seances', l:'X séances/semaine'},
+        {v:'souffle', l:'Améliorer mon souffle'}, {v:'perte_graisse', l:'Perdre de la graisse'},
+        {v:'performance', l:'Performance sportive'}
+      ])
+      + noInputRow('Sport(s) pratiqué(s)', 'no_sport', 'text', 'ex: course, vélo, natation', '', '', '', '')
+      + noSingleSelect('Séances par semaine actuellement', 'no_seances_sem', [
+        {v:'0', l:'0'}, {v:'1-2', l:'1-2'}, {v:'3-4', l:'3-4'}, {v:'5+', l:'5+'}
+      ])
+    );
+  }
+
+  html += noDelaiSection();
+  return html;
+}
+
 function noGoStep2() {
   if(!window._noObjSelected) return;
   document.getElementById('noStep1').style.display='none';
   document.getElementById('noStep2').style.display='block';
-  var hasPoids = ['perte_poids','masse'].indexOf(window._noObjSelected) > -1;
-  var poidsSection = document.querySelector('#noStep2 > div:first-child');
-  // Garde visible seulement pour poids
+  var container = document.getElementById('noStep2Content');
+  if(container) container.innerHTML = buildNoStep2Content(window._noObjSelected);
+  window._noDelaiSelected = null;
+  var btn = document.getElementById('noConfirmBtn');
+  if(btn) btn.style.opacity = '0.5';
 }
 
 function selectNoDelai(n) {
   window._noDelaiSelected = n;
+  document.querySelectorAll('.noDelaiChip').forEach(function(b) {
+    b.style.borderColor = 'rgba(0,0,0,0.1)';
+    b.style.background = 'white';
+    b.style.color = '#2b2320';
+    b.querySelectorAll('div').forEach(function(d){ d.style.color = '#2E7D32'; });
+  });
+  // Aussi les anciens boutons recalibrer
   [4,8,12,24].forEach(function(v){ var el=document.getElementById('noD'+v); if(el) el.classList.remove('selected'); });
   var el = document.getElementById('noD'+n);
-  if(el) el.classList.add('selected');
+  if(el) {
+    el.style.borderColor = '#2E7D32';
+    el.style.background = '#f0fff4';
+    el.classList.add('selected');
+  }
   updateNoConfirmBtn();
 }
 
@@ -30696,20 +30850,62 @@ function updateNoConfirmBtn() {
   if(btn) btn.style.opacity = window._noDelaiSelected ? '1' : '0.5';
 }
 
+function noGetMultiVal(group) {
+  var vals = [];
+  document.querySelectorAll('[data-group="' + group + '"]').forEach(function(b) {
+    if(b.style.borderColor === 'rgb(46, 125, 50)' || b.style.color === 'rgb(46, 125, 50)') vals.push(b.dataset.val);
+  });
+  return vals.join(',');
+}
+function noGetSingleVal(group) {
+  var found = '';
+  document.querySelectorAll('[data-group="' + group + '"]').forEach(function(b) {
+    if(b.style.borderColor === 'rgb(46, 125, 50)' || b.style.color === 'rgb(46, 125, 50)') found = b.dataset.val;
+  });
+  return found;
+}
+
 function confirmNouvelObjectif() {
   if(!window._noObjSelected || !window._noDelaiSelected) return;
   var btn = document.getElementById('noConfirmBtn');
   if(btn) { btn.textContent = 'Enregistrement...'; btn.style.opacity='0.7'; }
   var today = new Date().toISOString().split('T')[0];
-  var delta = parseFloat(document.getElementById('noDeltaInput').value) || 0;
+  var obj = window._noObjSelected;
   var profile = window._pcProfile || {};
-  var poidsActuel = parseFloat(profile.poids) || 0;
+
+  var delta = parseFloat((document.getElementById('noDeltaInput') || {}).value) || 0;
+  var poidsActuelInput = parseFloat((document.getElementById('noPoidsActuel') || {}).value) || 0;
+  var poidsActuel = poidsActuelInput || parseFloat(profile.poids) || 0;
   var poidsObj = null;
   if(delta > 0 && poidsActuel > 0) {
-    poidsObj = window._noObjSelected === 'masse'
+    poidsObj = obj === 'masse'
       ? Math.round((poidsActuel + delta) * 10) / 10
       : Math.round((poidsActuel - delta) * 10) / 10;
   }
+
+  // Données spécifiques par objectif
+  var extra = {};
+  if(obj === 'sommeil') {
+    extra.sommeil_heures_actuel = parseFloat((document.getElementById('noSommeilActuel')||{}).value) || null;
+    extra.sommeil_objectif_heures = parseFloat((document.getElementById('noSommeilObjectif')||{}).value) || null;
+    extra.heure_coucher = (document.getElementById('noCoucher')||{}).value || null;
+    extra.problemes_sommeil = noGetMultiVal('no_pb_sommeil') || null;
+  } else if(obj === 'energie') {
+    extra.energie_actuelle = noGetSingleVal('no_energie_actuelle') || null;
+    extra.energie_objectif = noGetSingleVal('no_energie_objectif') || null;
+    extra.causes_fatigue = noGetMultiVal('no_cause_energie') || null;
+  } else if(obj === 'sante') {
+    extra.sante_focus = noGetMultiVal('no_sante_focus') || null;
+    extra.sante_action = noGetMultiVal('no_sante_action') || null;
+  } else if(obj === 'cardio') {
+    extra.cardio_niveau = noGetSingleVal('no_cardio_niveau') || null;
+    extra.cardio_objectif = noGetMultiVal('no_cardio_objectif') || null;
+    extra.sport_pratique = (document.getElementById('no_sport')||{}).value || null;
+    extra.seances_semaine = noGetSingleVal('no_seances_sem') || null;
+  } else if(obj === 'masse' && noGetSingleVal('no_activite')) {
+    extra.niveau_activite = noGetSingleVal('no_activite') || null;
+  }
+
   var payload = {
     objectifs: [window._noObjSelected],
     objectif_date_debut: today,
