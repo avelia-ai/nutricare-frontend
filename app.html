@@ -30431,17 +30431,24 @@ function closeObjectifBilanPopup() {
 }
 
 function _saveProfil(payload, cb) {
-  var tok = window._authToken || window.authToken || localStorage.getItem('nutricare_token') || localStorage.getItem('mirella_token') || localStorage.getItem('sb_token') || '';
   var bu = (typeof BACKEND_URL !== 'undefined') ? BACKEND_URL : 'https://nutricare-backend-production.up.railway.app';
-  fetch(bu + '/api/profile', {
-    method: 'PUT',
-    headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + tok },
-    body: JSON.stringify(payload)
-  }).then(function(r){ return r.json(); }).then(function(d){
-    // Met à jour le profil local
-    if(window._pcProfile) Object.assign(window._pcProfile, payload);
-    if(cb) cb(null, d);
-  }).catch(function(e){ if(cb) cb(e); });
+  var doSave = function() {
+    var tok = window._authToken || window.authToken || localStorage.getItem('nutricare_token') || localStorage.getItem('mirella_token') || localStorage.getItem('sb_token') || '';
+    fetch(bu + '/api/profile', {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + tok },
+      body: JSON.stringify(payload)
+    }).then(function(r){ return r.json(); }).then(function(d){
+      if(window._pcProfile) Object.assign(window._pcProfile, payload);
+      if(cb) cb(null, d);
+    }).catch(function(e){ if(cb) cb(e); });
+  };
+  // Refresh token si disponible avant d'envoyer
+  if(typeof refreshAuthToken === 'function') {
+    refreshAuthToken().then(function(){ doSave(); }).catch(function(){ doSave(); });
+  } else {
+    doSave();
+  }
 }
 
 function _closePopup(id) {
