@@ -30431,7 +30431,7 @@ function closeObjectifBilanPopup() {
 }
 
 function _saveProfil(payload, cb) {
-  var tok = (window.authToken) || localStorage.getItem('mirella_token') || localStorage.getItem('sb_token') || '';
+  var tok = window._authToken || window.authToken || localStorage.getItem('nutricare_token') || localStorage.getItem('mirella_token') || localStorage.getItem('sb_token') || '';
   var bu = (typeof BACKEND_URL !== 'undefined') ? BACKEND_URL : 'https://nutricare-backend-production.up.railway.app';
   fetch(bu + '/api/profile', {
     method: 'PUT',
