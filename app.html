@@ -30951,8 +30951,10 @@ function confirmNouvelObjectif() {
     _closePopup("nouvelObjectifPopup");
     if(typeof showMirellaNotif === 'function') showMirellaNotif('Nouveau plan activé — Mirella repart avec toi !');
     // Mise à jour locale immédiate sans attendre le serveur
-    if(window._pcProfile) Object.assign(window._pcProfile, payload);
-    if(typeof window.renderPersonalSummary === 'function') window.renderPersonalSummary(window._pcProfile);
+    if(window._pcProfile) {
+      Object.assign(window._pcProfile, payload);
+      if(typeof window.renderPersonalSummary === 'function') window.renderPersonalSummary(window._pcProfile);
+    }
     // Puis recharge depuis serveur en arrière-plan
     var doReload = function() {
       if(typeof window.loadProfile === 'function') {
