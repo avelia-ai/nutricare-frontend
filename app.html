@@ -30879,7 +30879,9 @@ function noGetSingleVal(group) {
 }
 
 function confirmNouvelObjectif() {
-  if(!window._noObjSelected || !window._noDelaiSelected) return;
+  console.log('confirmNouvelObjectif appelé - obj:', window._noObjSelected, 'delai:', window._noDelaiSelected);
+  if(!window._noObjSelected) { alert('Objectif non sélectionné'); return; }
+  if(!window._noDelaiSelected) { alert('Délai non sélectionné'); return; }
   var btn = document.getElementById('noConfirmBtn');
   if(btn) { btn.textContent = 'Enregistrement...'; btn.style.opacity='0.7'; }
   var today = new Date().toISOString().split('T')[0];
