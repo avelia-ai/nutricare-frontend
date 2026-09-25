@@ -4195,6 +4195,9 @@ window.initHome = async function() {
         // Popup bilan objectif echu
         setTimeout(function(){
           if(typeof showObjectifBilanPopup === 'function') {
+            // Ne pas afficher si l'objectif vient d'être défini aujourd'hui
+            var _todayStr = new Date().toISOString().split('T')[0];
+            if(profile.objectif_date_debut && profile.objectif_date_debut.split('T')[0] === _todayStr) return;
             var _tok = (window.authToken) || localStorage.getItem('mirella_token') || localStorage.getItem('sb_token') || '';
             var _bu = (typeof BACKEND_URL !== 'undefined') ? BACKEND_URL : 'https://nutricare-backend-production.up.railway.app';
             var _daysObj = (profile.objectif_delai_semaines || 4) * 7 + 2;
@@ -30926,11 +30929,13 @@ function confirmNouvelObjectif() {
     if(err) { if(btn) btn.textContent='Erreur, réessaie'; return; }
     _closePopup("nouvelObjectifPopup");
     if(typeof showMirellaNotif === 'function') showMirellaNotif('Nouveau plan activé — Mirella repart avec toi !');
-    // Recharge tout le profil depuis le serveur
+    // Recharge tout le profil depuis le serveur avec délai
     if(typeof window.loadProfile === 'function') {
-      window.loadProfile().then(function() {
-        if(typeof window.renderPersonalSummary === 'function') window.renderPersonalSummary(window._pcProfile);
-      });
+      setTimeout(function() {
+        window.loadProfile().then(function() {
+          if(typeof window.renderPersonalSummary === 'function') window.renderPersonalSummary(window._pcProfile);
+        });
+      }, 800);
     }
   });
 }
