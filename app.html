@@ -30929,8 +30929,11 @@ function confirmNouvelObjectif() {
   if(delta > 0) payload.poids_delta_souhaite = delta;
   if(poidsObj) payload.poids_objectif = poidsObj;
 
-  _saveProfil(payload, function(err) {
-    if(err) { if(btn) btn.textContent='Erreur, réessaie'; return; }
+  console.log('_saveProfil payload:', JSON.stringify(payload));
+  _saveProfil(payload, function(err, data) {
+    console.log('_saveProfil retour - err:', err, 'data:', JSON.stringify(data));
+    if(err) { alert('ERREUR SAVE: ' + err.message); if(btn) btn.textContent='Erreur, réessaie'; return; }
+    if(data && data.error) { alert('ERREUR API: ' + data.error); return; }
     _closePopup("nouvelObjectifPopup");
     if(typeof showMirellaNotif === 'function') showMirellaNotif('Nouveau plan activé — Mirella repart avec toi !');
     // Recharge tout le profil depuis le serveur avec délai
