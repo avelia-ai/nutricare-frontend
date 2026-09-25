@@ -228,6 +228,9 @@ footer a{text-decoration:none;color:var(--muted);font-weight:600}
   .hero-banner-mobile{display:block !important}
   .hero{padding-top:0}
 }
+.features-img-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-top:8px}
+@media(max-width:860px){.features-img-grid{grid-template-columns:repeat(2,1fr);gap:16px}}
+@media(max-width:560px){.features-img-grid{grid-template-columns:1fr;gap:16px}}
 </style>
 </head>
 <body>
@@ -320,7 +323,7 @@ footer a{text-decoration:none;color:var(--muted);font-weight:600}
       <h2>Tout ce dont vous avez besoin, dans une seule app</h2>
       <p>Chat IA · Bilan sanguin · Détection visuelle · Ordonnance · Frigo · Repas</p>
     </div>
-    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-top:8px">
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-top:8px" class="features-img-grid">
       <img src="https://raw.githubusercontent.com/avelia-ai/nutricare-frontend/main/chat_page_preinscription.png" alt="Chat IA 24h/24" style="width:100%;border-radius:20px;box-shadow:0 8px 30px rgba(0,0,0,0.12);display:block">
       <img src="https://raw.githubusercontent.com/avelia-ai/nutricare-frontend/main/bilan_sanguin_page_preinscription.png" alt="Bilan sanguin IA" style="width:100%;border-radius:20px;box-shadow:0 8px 30px rgba(0,0,0,0.12);display:block">
       <img src="https://raw.githubusercontent.com/avelia-ai/nutricare-frontend/main/detection_visuelle_page_preinscription.png" alt="Détection visuelle" style="width:100%;border-radius:20px;box-shadow:0 8px 30px rgba(0,0,0,0.12);display:block">
