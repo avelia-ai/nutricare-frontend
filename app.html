@@ -30947,22 +30947,9 @@ function confirmNouvelObjectif() {
     if(data && data.error) { if(btn) { btn.textContent='Lancer mon nouveau plan'; btn.style.opacity='1'; } return; }
     _closePopup("nouvelObjectifPopup");
     if(typeof showMirellaNotif === 'function') showMirellaNotif('Nouveau plan activé — Mirella repart avec toi !');
-    // Recharge le profil depuis le serveur puis met à jour l'affichage
-    if(typeof window.loadProfile === 'function') {
-      window.loadProfile().then(function() {
-        var p = window._pcProfile;
-        if(p && typeof window.renderPersonalSummary === 'function') {
-          try { window.renderPersonalSummary(p); } catch(e) {}
-        }
-      }).catch(function() {
-        // Fallback : reload page
-        window.location.href = window.location.href.split('?')[0];
-      });
-    } else {
-      setTimeout(function() {
-        window.location.href = window.location.href.split('?')[0];
-      }, 1500);
-    }
+    setTimeout(function() {
+      window.location.replace(window.location.pathname);
+    }, 1500);
   });
 }
 
