@@ -30925,9 +30925,13 @@ function confirmNouvelObjectif() {
   _saveProfil(payload, function(err) {
     if(err) { if(btn) btn.textContent='Erreur, réessaie'; return; }
     _closePopup("nouvelObjectifPopup");
-    if(window._pcProfile) Object.assign(window._pcProfile, payload);
-    if(typeof window.renderPersonalSummary === 'function') window.renderPersonalSummary(window._pcProfile);
     if(typeof showMirellaNotif === 'function') showMirellaNotif('Nouveau plan activé — Mirella repart avec toi !');
+    // Recharge tout le profil depuis le serveur
+    if(typeof window.loadProfile === 'function') {
+      window.loadProfile().then(function() {
+        if(typeof window.renderPersonalSummary === 'function') window.renderPersonalSummary(window._pcProfile);
+      });
+    }
   });
 }
 
