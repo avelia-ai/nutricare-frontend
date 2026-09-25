@@ -30755,10 +30755,11 @@ function buildNoStep2Content(obj) {
     return '<div style="background:white;border:1.5px solid rgba(255,154,108,0.2);border-radius:14px;padding:16px;margin-bottom:14px">' + inner + '</div>';
   };
 
+  var poidsProfile = (window._pcProfile && window._pcProfile.poids) ? window._pcProfile.poids : '';
   if(obj === 'perte_poids') {
     html += card(
       noInputRow('Combien de kg veux-tu perdre ?', 'noDeltaInput', 'number', 'ex: 5', 'kg', '0.5', '50', '0.5')
-      + noInputRow('Ton poids actuel', 'noPoidsActuel', 'number', 'ex: 75', 'kg', '30', '200', '0.1')
+      + noInputRow('Ton poids actuel', 'noPoidsActuel', 'number', poidsProfile ? String(poidsProfile) : 'ex: 75', 'kg', '30', '200', '0.1')
       + noSingleSelect('Ton rythme alimentaire actuel', 'no_rythme', [
         {v:'3repas', l:'3 repas/jour'}, {v:'grignotage', l:'Je grignote'}, {v:'saut_repas', l:'Je saute des repas'}, {v:'variable', l:'Très variable'}
       ])
@@ -30766,7 +30767,7 @@ function buildNoStep2Content(obj) {
   } else if(obj === 'masse') {
     html += card(
       noInputRow('Combien de kg veux-tu prendre ?', 'noDeltaInput', 'number', 'ex: 5', 'kg', '0.5', '30', '0.5')
-      + noInputRow('Ton poids actuel', 'noPoidsActuel', 'number', 'ex: 70', 'kg', '30', '200', '0.1')
+      + noInputRow('Ton poids actuel', 'noPoidsActuel', 'number', poidsProfile ? String(poidsProfile) : 'ex: 70', 'kg', '30', '200', '0.1')
       + noSingleSelect('Ton niveau d\'activité physique', 'no_activite', [
         {v:'sedentaire', l:'Sédentaire'}, {v:'leger', l:'Léger (1-2x/sem)'}, {v:'modere', l:'Modéré (3-4x/sem)'}, {v:'intense', l:'Intense (5+/sem)'}
       ])
