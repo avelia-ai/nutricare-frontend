@@ -30825,16 +30825,18 @@ function noGoStep2() {
   document.getElementById('noStep1').style.display='none';
   document.getElementById('noStep2').style.display='block';
   var container = document.getElementById('noStep2Content');
-  if(container) container.innerHTML = buildNoStep2Content(window._noObjSelected);
+  if(container) {
+    container.innerHTML = buildNoStep2Content(window._noObjSelected);
+    // Attache les listeners sur les chips maintenant dans le DOM
+    container.querySelectorAll('.noDelaiChip').forEach(function(b) {
+      b.addEventListener('click', function() {
+        selectNoDelai(parseInt(this.dataset.val));
+      });
+    });
+  }
   window._noDelaiSelected = null;
   var btn = document.getElementById('noConfirmBtn');
   if(btn) btn.style.opacity = '0.5';
-  // Attache les listeners après injection innerHTML
-  document.querySelectorAll('.noDelaiChip').forEach(function(b) {
-    b.addEventListener('click', function() {
-      selectNoDelai(parseInt(this.dataset.val));
-    });
-  });
 }
 
 function selectNoDelai(n) {
