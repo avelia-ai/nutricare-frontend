@@ -30943,14 +30943,7 @@ function confirmNouvelObjectif() {
     if(data && data.error) { alert('ERREUR API: ' + data.error); return; }
     _closePopup("nouvelObjectifPopup");
     if(typeof showMirellaNotif === 'function') showMirellaNotif('Nouveau plan activé — Mirella repart avec toi !');
-    // Recharge tout le profil depuis le serveur avec délai
-    if(typeof window.loadProfile === 'function') {
-      setTimeout(function() {
-        window.loadProfile().then(function() {
-          if(typeof window.renderPersonalSummary === 'function') window.renderPersonalSummary(window._pcProfile);
-        });
-      }, 800);
-    }
+    setTimeout(function() { window.location.reload(); }, 1200);
   });
 }
 
