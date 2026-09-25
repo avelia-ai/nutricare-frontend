@@ -30961,11 +30961,18 @@ function confirmNouvelObjectif() {
         }).catch(function(){});
       }
     };
-    if(typeof refreshAuthToken === 'function') {
-      refreshAuthToken().then(doReload).catch(doReload);
-    } else {
-      setTimeout(doReload, 500);
-    }
+    try {
+      if(typeof refreshAuthToken === 'function') {
+        var rp = refreshAuthToken();
+        if(rp && typeof rp.then === 'function') {
+          rp.then(doReload).catch(doReload);
+        } else {
+          setTimeout(doReload, 500);
+        }
+      } else {
+        setTimeout(doReload, 500);
+      }
+    } catch(e) { setTimeout(doReload, 500); }
   });
 }
 
