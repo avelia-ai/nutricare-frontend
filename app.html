@@ -30677,12 +30677,13 @@ function selectNouvelObj(id) {
   if(verbe) verbe.textContent = id==='masse' ? 'prendre' : 'perdre';
 }
 
-function noInputRow(label, id, type, placeholder, unit, min, max, step) {
+function noInputRow(label, id, type, placeholder, unit, min, max, step, defaultVal) {
   var s = '<div style="margin-bottom:14px">';
   s += '<div style="font-size:0.75rem;font-weight:600;color:#9a8b82;margin-bottom:6px">' + label + '</div>';
   s += '<div style="display:flex;align-items:center;gap:8px">';
   s += '<input id="' + id + '" type="' + type + '"';
   if(placeholder) s += ' placeholder="' + placeholder + '"';
+  if(defaultVal) s += ' value="' + defaultVal + '"';
   if(min) s += ' min="' + min + '"';
   if(max) s += ' max="' + max + '"';
   if(step) s += ' step="' + step + '"';
@@ -30759,7 +30760,7 @@ function buildNoStep2Content(obj) {
   if(obj === 'perte_poids') {
     html += card(
       noInputRow('Combien de kg veux-tu perdre ?', 'noDeltaInput', 'number', 'ex: 5', 'kg', '0.5', '50', '0.5')
-      + noInputRow('Ton poids actuel', 'noPoidsActuel', 'number', poidsProfile ? String(poidsProfile) : 'ex: 75', 'kg', '30', '200', '0.1')
+      + noInputRow('Ton poids actuel', 'noPoidsActuel', 'number', 'ex: 75', 'kg', '30', '200', '0.1', poidsProfile)
       + noSingleSelect('Ton rythme alimentaire actuel', 'no_rythme', [
         {v:'3repas', l:'3 repas/jour'}, {v:'grignotage', l:'Je grignote'}, {v:'saut_repas', l:'Je saute des repas'}, {v:'variable', l:'Très variable'}
       ])
@@ -30767,7 +30768,7 @@ function buildNoStep2Content(obj) {
   } else if(obj === 'masse') {
     html += card(
       noInputRow('Combien de kg veux-tu prendre ?', 'noDeltaInput', 'number', 'ex: 5', 'kg', '0.5', '30', '0.5')
-      + noInputRow('Ton poids actuel', 'noPoidsActuel', 'number', poidsProfile ? String(poidsProfile) : 'ex: 70', 'kg', '30', '200', '0.1')
+      + noInputRow('Ton poids actuel', 'noPoidsActuel', 'number', 'ex: 70', 'kg', '30', '200', '0.1', poidsProfile)
       + noSingleSelect('Ton niveau d\'activité physique', 'no_activite', [
         {v:'sedentaire', l:'Sédentaire'}, {v:'leger', l:'Léger (1-2x/sem)'}, {v:'modere', l:'Modéré (3-4x/sem)'}, {v:'intense', l:'Intense (5+/sem)'}
       ])
