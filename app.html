@@ -4111,7 +4111,7 @@ window.initHome = async function() {
       verbe = objectifs.indexOf('masse') > -1 && objectifs.indexOf('perte_poids') === -1 ? 'prendre' : 'perdre';
       objLine = 'Objectif : ' + verbe + ' ' + profile.poids_delta_souhaite + ' kg en ' + profile.objectif_delai_semaines + ' semaines';
       progressWrap.style.display = 'block';
-      var startW = verbe === 'perdre' ? poids + profile.poids_delta_souhaite : poids - profile.poids_delta_souhaite;
+      var startW = verbe === 'perdre' ? profile.poids_objectif + profile.poids_delta_souhaite : profile.poids_objectif - profile.poids_delta_souhaite;
       document.getElementById('summaryProgressStart').textContent = startW + ' kg';
       document.getElementById('summaryProgressEnd').textContent = profile.poids_objectif + ' kg';
       document.getElementById('summaryProgressLabel').textContent = poids + ' kg';
