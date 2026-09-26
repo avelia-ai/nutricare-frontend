@@ -30947,7 +30947,7 @@ function confirmNouvelObjectif() {
   Object.keys(extra).forEach(function(k) { if(extra[k] !== null && extra[k] !== undefined) payload[k] = extra[k]; });
 
   _saveProfil(payload, function(err, data) {
-    if(data && data.error) { if(btn) { btn.textContent='Lancer mon nouveau plan'; btn.style.opacity='1'; } return; }
+    if(data && data.error) { console.error('_saveProfil error:', JSON.stringify(data)); if(btn) { btn.textContent='Lancer mon nouveau plan'; btn.style.opacity='1'; } return; }
     _closePopup("nouvelObjectifPopup");
     if(typeof showMirellaNotif === 'function') showMirellaNotif('Nouveau plan activé — Mirella repart avec toi !');
     setTimeout(function() {
