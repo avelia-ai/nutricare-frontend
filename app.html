@@ -30815,22 +30815,6 @@ function buildNoStep2Content(obj) {
         {v:'hydratation', l:'Mon hydratation'}, {v:'supplements', l:'Compléments alimentaires'}
       ])
     );
-  } else if(obj === 'stress') {
-    html += card(
-      noSingleSelect('Ton niveau de stress actuel', 'no_stress_niveau', [
-        {v:'1-3', l:'1-3 Gérable'}, {v:'4-6', l:'4-6 Modéré'}, {v:'7-8', l:'7-8 Élevé'}, {v:'9-10', l:'9-10 Très élevé'}
-      ])
-      + noMultiSelect('Sources principales de stress', 'no_stress_source', [
-        {v:'travail', l:'Travail'}, {v:'famille', l:'Famille'},
-        {v:'finances', l:'Finances'}, {v:'sante', l:'Santé'},
-        {v:'relations', l:'Relations'}, {v:'avenir', l:'Incertitude / avenir'}
-      ])
-      + noMultiSelect('Ce que tu veux améliorer', 'no_stress_action', [
-        {v:'respiration', l:'Techniques de respiration'}, {v:'sommeil', l:'Mieux dormir'},
-        {v:'alimentation', l:'Alimentation anti-stress'}, {v:'sport', l:'Activité physique'},
-        {v:'mindfulness', l:'Méditation / pleine conscience'}
-      ])
-    );
   } else if(obj === 'cardio') {
     html += card(
       noSingleSelect('Ton niveau actuel', 'no_cardio_niveau', [
@@ -30939,22 +30923,6 @@ function confirmNouvelObjectif() {
   } else if(obj === 'sante') {
     extra.sante_focus = noGetMultiVal('no_sante_focus') || null;
     extra.sante_action = noGetMultiVal('no_sante_action') || null;
-  } else if(obj === 'stress') {
-    html += card(
-      noSingleSelect('Ton niveau de stress actuel', 'no_stress_niveau', [
-        {v:'1-3', l:'1-3 Gérable'}, {v:'4-6', l:'4-6 Modéré'}, {v:'7-8', l:'7-8 Élevé'}, {v:'9-10', l:'9-10 Très élevé'}
-      ])
-      + noMultiSelect('Sources principales de stress', 'no_stress_source', [
-        {v:'travail', l:'Travail'}, {v:'famille', l:'Famille'},
-        {v:'finances', l:'Finances'}, {v:'sante', l:'Santé'},
-        {v:'relations', l:'Relations'}, {v:'avenir', l:'Incertitude / avenir'}
-      ])
-      + noMultiSelect('Ce que tu veux améliorer', 'no_stress_action', [
-        {v:'respiration', l:'Techniques de respiration'}, {v:'sommeil', l:'Mieux dormir'},
-        {v:'alimentation', l:'Alimentation anti-stress'}, {v:'sport', l:'Activité physique'},
-        {v:'mindfulness', l:'Méditation / pleine conscience'}
-      ])
-    );
   } else if(obj === 'cardio') {
     extra.cardio_niveau = noGetSingleVal('no_cardio_niveau') || null;
     extra.cardio_objectif = noGetMultiVal('no_cardio_objectif') || null;
