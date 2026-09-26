@@ -30904,11 +30904,8 @@ function confirmNouvelObjectif() {
   var obj = window._noObjSelected;
   var profile = window._pcProfile || {};
 
-  var _rawDelta = (document.getElementById('noDeltaInput') || {}).value;
-  var _rawPoids = (document.getElementById('noPoidsActuel') || {}).value;
-  alert('noDeltaInput=' + _rawDelta + ' | noPoidsActuel=' + _rawPoids);
-  var delta = parseFloat(_rawDelta) || 0;
-  var poidsActuelInput = parseFloat(_rawPoids) || 0;
+  var delta = parseFloat((document.getElementById('noDeltaInput') || {}).value) || 0;
+  var poidsActuelInput = parseFloat((document.getElementById('noPoidsActuel') || {}).value) || 0;
   var poidsActuel = poidsActuelInput || parseFloat(profile.poids) || 0;
   var poidsObj = null;
   if(delta > 0 && poidsActuel > 0) {
@@ -30947,6 +30944,7 @@ function confirmNouvelObjectif() {
   };
   if(delta > 0) payload.poids_delta_souhaite = delta;
   if(poidsObj) payload.poids_objectif = poidsObj;
+  if(poidsActuelInput > 0) payload.poids = poidsActuelInput;
 
   _saveProfil(payload, function(err, data) {
     if(data && data.error) { if(btn) { btn.textContent='Lancer mon nouveau plan'; btn.style.opacity='1'; } return; }
