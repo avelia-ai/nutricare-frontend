@@ -30440,6 +30440,11 @@ function _saveProfil(payload, cb) {
       body: JSON.stringify(payload)
     }).then(function(r){ return r.json(); }).then(function(d){
       if(d && window._pcProfile) Object.assign(window._pcProfile, payload);
+      try {
+        var _ls = JSON.parse(localStorage.getItem('nutricare_profile') || '{}');
+        Object.assign(_ls, payload);
+        localStorage.setItem('nutricare_profile', JSON.stringify(_ls));
+      } catch(e) {}
       if(cb) cb(null, d || {});
     }).catch(function(e){ if(cb) cb(e); });
   };
