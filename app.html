@@ -30904,8 +30904,11 @@ function confirmNouvelObjectif() {
   var obj = window._noObjSelected;
   var profile = window._pcProfile || {};
 
-  var delta = parseFloat((document.getElementById('noPoidsActuel') || {}).value) || 0;
-  var poidsActuelInput = parseFloat((document.getElementById('noDeltaInput') || {}).value) || 0;
+  var _rawDelta = (document.getElementById('noDeltaInput') || {}).value;
+  var _rawPoids = (document.getElementById('noPoidsActuel') || {}).value;
+  alert('noDeltaInput=' + _rawDelta + ' | noPoidsActuel=' + _rawPoids);
+  var delta = parseFloat(_rawDelta) || 0;
+  var poidsActuelInput = parseFloat(_rawPoids) || 0;
   var poidsActuel = poidsActuelInput || parseFloat(profile.poids) || 0;
   var poidsObj = null;
   if(delta > 0 && poidsActuel > 0) {
