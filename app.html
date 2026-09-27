@@ -4143,6 +4143,18 @@ window.initHome = async function() {
       document.getElementById('summaryProgressEnd').textContent = '0/10';
       document.getElementById('summaryProgressLabel').textContent = _stressVal + '/10';
       document.getElementById('summaryProgressBar').style.width = Math.max(0, Math.min(100, Math.round((10 - _stressVal) * 10))) + '%';
+    } else if (objectifs.indexOf('cardio') > -1) {
+      var _activiteVal = (_todayLogSummary && _todayLogSummary.activity_minutes != null) ? _todayLogSummary.activity_minutes : 0;
+      var _seancesObj = profile.seances_semaine || '3-4';
+      objLine = 'Objectif : améliorer ton cardio (' + _seancesObj + ' séances/semaine)';
+      progressWrap.style.display = 'block';
+      document.getElementById('summaryProgressStart').textContent = '0 min';
+      document.getElementById('summaryProgressEnd').textContent = '45 min';
+      document.getElementById('summaryProgressLabel').textContent = _activiteVal + ' min';
+      document.getElementById('summaryProgressBar').style.width = Math.max(0, Math.min(100, Math.round((_activiteVal / 45) * 100))) + '%';
+    } else if (objectifs.indexOf('sante') > -1) {
+      objLine = 'Objectif : améliorer ta santé générale';
+      progressWrap.style.display = 'none';
     } else {
       progressWrap.style.display = 'none';
     }
@@ -4274,6 +4286,9 @@ window.initHome = async function() {
     if (objectifs.indexOf('energie') > -1) {
       if (_tlEnergy !== null && _tlEnergy <= 6) pushAdvice(pickVariant(['pour booster ton énergie, bois 500ml d\'eau dès le réveil et opte pour une collation à index glycémique bas (amandes, flocons d\'avoine, fruit entier) plutôt qu\'un produit sucré qui provoque un coup de barre 1h après', 'pour booster ton énergie, expose-toi à la lumière naturelle dès le matin, ça aide à réveiller ton organisme', 'pour booster ton énergie, fractionne tes repas en évitant les portions trop copieuses qui donnent un coup de fatigue digestive', 'pour booster ton énergie, vérifie ton apport en fer et en vitamine B12, des carences fréquentes en cas de fatigue chronique']), 3);
       else pushAdvice(pickVariant(['ton énergie est bonne aujourd\'hui : profites-en pour caler ta séance de sport la plus exigeante de la semaine', 'ton énergie est au rendez-vous : c\'est le bon moment pour t\'attaquer à une tâche qui demande de la concentration', 'ton niveau d\'énergie est solide aujourd\'hui : garde ces bonnes habitudes qui te réussissent']), 1);
+    }
+    if (objectifs.indexOf('cardio') > -1) {
+      pushAdvice(pickVariant(['pour progresser en cardio, alterne une séance longue et modérée (45 min à 65% FC max) avec une courte et intense (20 min de HIIT) : cette combinaison améliore à la fois ton endurance et ta capacité cardiaque', 'pour ton cardio, hydrate-toi avec 500ml d'eau dans les 2h avant l'effort et ajoute une pincée de sel pour retenir l'hydratation pendant l'effort', 'pour améliorer ton cardio, cours ou pédale 3 fois par semaine minimum et laisse 48h de récupération entre deux séances intenses', 'pour ton cardio, commence chaque séance par 5 minutes d'échauffement progressif : ça prépare ton cœur et réduit le risque de blessure']), 3);
     }
     if (objectifs.indexOf('performance') > -1) {
       pushAdvice(pickVariant(['pour ta performance sportive, hydrate-toi avec 500ml d\'eau dans les 2h avant l\'effort et prends un repas riche en glucides complexes (riz, patate douce, pâtes) 2-3h avant pour maximiser tes réserves de glycogène', 'pour ta performance sportive, priorise 7 à 9h de sommeil : c\'est un des facteurs les plus sous-estimés de la performance', 'pour ta performance sportive, prévois une collation glucides+protéines dans les 30 minutes après l\'effort pour optimiser la récupération', 'pour ta performance sportive, n\'oublie pas les électrolytes (sodium, potassium) lors des efforts longs ou par forte chaleur']), 2);
