@@ -2097,7 +2097,7 @@ window.analyseHealthLog = function() {
     method: 'POST',
     headers: {'Content-Type':'application/json', 'Authorization': 'Bearer ' + token},
     body: JSON.stringify(payload)
-  }).then(function(r){return r.json();}).then(function(d){
+  }).then(function(r){return r.json();}).then(function(d){ console.log('_saveProfil response:', JSON.stringify(d));
     // Sauvegarder en cache local pour la journée
     if (!d.error) {
       var today = new Date().toISOString().split('T')[0];
@@ -2272,7 +2272,7 @@ window.analyseHealthLog = function() {
     method: 'POST',
     headers: {'Content-Type':'application/json', 'Authorization': 'Bearer ' + token},
     body: JSON.stringify(payload)
-  }).then(function(r){return r.json();}).then(function(d){
+  }).then(function(r){return r.json();}).then(function(d){ console.log('_saveProfil response:', JSON.stringify(d));
     var comment = d.analyse || 'Bonne journée ! Continuez vos efforts.';
     var el = document.getElementById('healthAnalyseComment');
     el.innerHTML = window.renderMirellaAnalysis(comment);
@@ -2308,7 +2308,7 @@ window.analyseScore = function() {
     method: 'POST',
     headers: {'Content-Type':'application/json', 'Authorization': 'Bearer ' + token},
     body: JSON.stringify({forme:forme, aliment:aliment, sport:sport, sommeil:sommeil, hydra:hydra, ressenti:ressenti, score:score})
-  }).then(function(r){return r.json();}).then(function(d){
+  }).then(function(r){return r.json();}).then(function(d){ console.log('_saveProfil response:', JSON.stringify(d));
     var comment = d.analyse || 'Bonne journée ! Continuez vos efforts.';
     var el = document.getElementById('scoreComment');
     el.style.whiteSpace = 'pre-wrap';
@@ -4224,7 +4224,7 @@ window.initHome = async function() {
             var _daysObj = (profile.objectif_delai_semaines || 4) * 7 + 2;
             fetch(_bu + '/api/health/logs?days=' + _daysObj, {
               headers: { 'Authorization': 'Bearer ' + _tok }
-            }).then(function(r){ return r.ok ? r.json() : {logs:[]}; }).then(function(d){
+            }).then(function(r){ return r.ok ? r.json() : {logs:[]}; }).then(function(d){ console.log('_saveProfil response:', JSON.stringify(d));
               showObjectifBilanPopup(profile, d.logs || d || []);
             }).catch(function(){ showObjectifBilanPopup(profile, []); });
           }
@@ -5172,7 +5172,7 @@ window.analyseCycle = function() {
     method: 'POST',
     headers: {'Content-Type':'application/json', 'Authorization': 'Bearer ' + token},
     body: JSON.stringify({message: prompt, context: 'cycle_feminin'})
-  }).then(function(r){return r.json();}).then(function(d){
+  }).then(function(r){return r.json();}).then(function(d){ console.log('_saveProfil response:', JSON.stringify(d));
     var comment = d.reply || d.response || d.message || 'Conseils non disponibles';
     var el = document.getElementById('cycleAIComment');
     var html = comment
@@ -15712,7 +15712,7 @@ var activeMenuFilters = new Set();
           method: 'POST',
           headers: {'Content-Type':'application/json','Authorization':'Bearer '+authToken},
           body: JSON.stringify({menu: menu, profile: profile})
-        }).then(function(r){return r.json();}).then(function(d){
+        }).then(function(r){return r.json();}).then(function(d){ console.log('_saveProfil response:', JSON.stringify(d));
           if (!d.impacts || !d.impacts.length) return;
           // Injecter les impacts dans le menu
           d.impacts.forEach(function(imp) {
@@ -17989,7 +17989,7 @@ function loadMyRank() {
   }).then(function(r){
     if (!r.ok) throw new Error('not available');
     return r.json();
-  }).then(function(d){
+  }).then(function(d){ console.log('_saveProfil response:', JSON.stringify(d));
     window.userRank = d.rank;
     elVal.textContent = '#' + d.rank;
     if (elTotal) elTotal.textContent = d.total ? ('/ ' + d.total) : '';
@@ -18157,7 +18157,7 @@ function loadLeaderboard(page) {
   list.innerHTML = '<div style="text-align:center;padding:40px;color:#ccc;font-size:0.85rem">Chargement du classement...</div>';
   fetch(BACKEND_URL + '/api/gamification/leaderboard?page=' + page, {
     headers: {'Authorization': 'Bearer ' + token}
-  }).then(function(r){return r.json();}).then(function(d){
+  }).then(function(r){return r.json();}).then(function(d){ console.log('_saveProfil response:', JSON.stringify(d));
     var lb = d.leaderboard || [];
     leaderboardCurrentPage = d.page || 1;
     leaderboardTotalPages = d.totalPages || 1;
@@ -19295,7 +19295,7 @@ function renderPredictionTab() {
   fetch(BACKEND_URL + '/api/health/predict', {
     method: 'GET',
     headers: {'Content-Type':'application/json', 'Authorization': 'Bearer ' + token}
-  }).then(function(r){return r.json();}).then(function(d){
+  }).then(function(r){return r.json();}).then(function(d){ console.log('_saveProfil response:', JSON.stringify(d));
     if (!d.error) {
       var today = new Date().toISOString().split('T')[0];
       try { localStorage.setItem('mirella_prediction_' + today, JSON.stringify(d)); } catch(e) {}
@@ -30465,7 +30465,7 @@ function _saveProfil(payload, cb) {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + tok },
       body: JSON.stringify(payload)
-    }).then(function(r){ return r.json(); }).then(function(d){
+    }).then(function(r){ return r.json(); }).then(function(d){ console.log('_saveProfil response:', JSON.stringify(d));
       if(d && window._pcProfile) Object.assign(window._pcProfile, payload);
       try {
         var _ls = JSON.parse(localStorage.getItem('nutricare_profile') || '{}');
@@ -30876,7 +30876,7 @@ function noGoStep2() {
   if(container) {
   window._noDelaiSelected = 4;
   var btn = document.getElementById('noConfirmBtn');
-  if(btn) btn.style.opacity = '0.5';
+  if(btn) btn.style.opacity = '1';
     container.innerHTML = buildNoStep2Content(window._noObjSelected);
   }
 }
