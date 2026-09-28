@@ -4124,9 +4124,9 @@ window.initHome = async function() {
       var _energieObj = profile.energie_objectif || 7; objLine = "Objectif : améliorer ton énergie (vise " + _energieObj + "/10 ou plus)";
       progressWrap.style.display = 'block';
       document.getElementById('summaryProgressStart').textContent = '0/10';
-      document.getElementById('summaryProgressEnd').textContent = '7/10';
+      document.getElementById('summaryProgressEnd').textContent = _energieObj + '/10';
       document.getElementById('summaryProgressLabel').textContent = _energieVal + '/10';
-      document.getElementById('summaryProgressBar').style.width = Math.max(0, Math.min(100, _energieVal * 10)) + '%';
+      document.getElementById('summaryProgressBar').style.width = Math.max(0, Math.min(100, Math.round((_energieVal / _energieObj) * 100))) + '%';
     } else if (objectifs.indexOf('sommeil') > -1) {
       var _sommeilVal = (_todayLogSummary && _todayLogSummary.sleep_hours != null) ? _todayLogSummary.sleep_hours : 0;
       objLine = "Objectif : mieux dormir (vise 8h ou plus)";
