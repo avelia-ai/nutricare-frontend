@@ -30970,7 +30970,7 @@ function noGetSingleVal(group) {
 
 
 function _noCauseBtn(v, label, svgPath, color, bg) {
-  var onclick = "if(!window._noCauses)window._noCauses=[];var el=this;el.classList.toggle('selected');if(el.classList.contains('selected')){el.style.borderColor='"+color+"';el.style.background='"+bg+"';if(!window._noCauses.includes('"+v+"'))window._noCauses.push('"+v+"');}else{el.style.borderColor='rgba(0,0,0,0.06)';el.style.background='white';window._noCauses=window._noCauses.filter(function(x){return x!=='"+v+"';});}";
+  var onclick = "if(!window._noCauses)window._noCauses=[];var el=this;el.classList.toggle(\'selected\');if(el.classList.contains(\'selected\')){el.style.borderColor=\'"+color+"\';el.style.background=\'"+bg+"\';if(!window._noCauses.includes(\'"+v+"\'))window._noCauses.push(\'"+v+"\');}else{el.style.borderColor=\'rgba(0,0,0,0.06)\';el.style.background=\'white\';window._noCauses=window._noCauses.filter(function(x){return x!==\'"+v+"\';});}";
   return '<div data-cause="'+v+'" onclick="'+onclick+'" style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;padding:14px 8px;background:white;border:2px solid rgba(0,0,0,0.06);border-radius:14px;cursor:pointer;transition:all 0.2s">'
   + '<div style="width:36px;height:36px;border-radius:10px;background:'+bg+';display:flex;align-items:center;justify-content:center"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="'+color+'" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="'+svgPath+'"/></svg></div>'
   + '<span style="font-size:0.7rem;font-weight:700;color:#444;text-align:center;line-height:1.2">'+label+'</span>'
