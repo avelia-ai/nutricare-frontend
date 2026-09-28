@@ -31040,6 +31040,17 @@ function confirmNouvelObjectif() {
 
   _saveProfil(payload, function(err, data) {
     if(data && data.error) { console.error('_saveProfil error:', JSON.stringify(data)); if(btn) { btn.textContent='Lancer mon nouveau plan'; btn.style.opacity='1'; } return; }
+    // Si objectif énergie, sauvegarder aussi dans le log du jour
+    if(obj === 'energie' && extra.energie_actuelle) {
+      var bu = (typeof BACKEND_URL !== 'undefined') ? BACKEND_URL : 'https://nutricare-backend-production.up.railway.app';
+      var tok = window._authToken || window.authToken || localStorage.getItem('nutricare_token') || '';
+      var today = new Date().toISOString().split('T')[0];
+      fetch(bu + '/api/health/logs', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + tok },
+        body: JSON.stringify({ date: today, energy_level: extra.energie_actuelle })
+      }).catch(function(e){ console.warn('log energie error:', e); });
+    }
     _closePopup("nouvelObjectifPopup");
     if(typeof showMirellaNotif === 'function') showMirellaNotif('Nouveau plan activé — Mirella repart avec toi !');
     setTimeout(function() {
