@@ -30949,8 +30949,10 @@ function confirmNouvelObjectif() {
     extra.heure_coucher = (document.getElementById('noCoucher')||{}).value || null;
     extra.problemes_sommeil = noGetMultiVal('no_pb_sommeil') || null;
   } else if(obj === 'energie') {
-    extra.energie_actuelle = noGetSingleVal('no_energie_actuelle') || null;
-    extra.energie_objectif = noGetSingleVal('no_energie_objectif') || null;
+    var _ea = noGetSingleVal('no_energie_actuelle');
+    var _eo = noGetSingleVal('no_energie_objectif');
+    extra.energie_actuelle = _ea ? parseInt(_ea.split('-')[0]) : null;
+    extra.energie_objectif = _eo ? parseInt(_eo.split('-')[0]) : null;
     extra.causes_fatigue = noGetMultiVal('no_cause_energie') || null;
   } else if(obj === 'sante') {
     extra.sante_focus = noGetMultiVal('no_sante_focus') || null;
