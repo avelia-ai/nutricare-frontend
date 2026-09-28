@@ -30821,12 +30821,24 @@ function buildNoStep2Content(obj) {
     );
   } else if(obj === 'energie') {
     html += card(
-      noSingleSelect('Ton niveau d\'énergie actuel', 'no_energie_actuelle', [
-        {v:'1-3', l:'1-3 Très faible'}, {v:'4-5', l:'4-5 Faible'}, {v:'6-7', l:'6-7 Moyen'}, {v:'8-10', l:'8-10 Bon'}
-      ])
-      + noSingleSelect('Ton objectif d\'énergie', 'no_energie_objectif', [
-        {v:'6-7', l:'6-7 Correct'}, {v:'8-9', l:'8-9 Élevé'}, {v:'10', l:'10 Optimal'}
-      ])
+      '<div style="margin-bottom:18px">'
+      + '<div style="font-size:0.78rem;font-weight:700;color:#888;letter-spacing:.5px;margin-bottom:10px">TON NIVEAU D\'ÉNERGIE ACTUEL</div>'
+      + '<div style="display:flex;align-items:center;gap:10px">'
+      + '<span style="font-size:0.85rem;color:#bbb">😴 0</span>'
+      + '<input type="range" id="no_energie_actuelle" min="1" max="10" value="3" step="1" style="flex:1;height:6px;accent-color:#2E7D32" oninput="document.getElementById(\'ea_val\').textContent=this.value;document.getElementById(\'ea_label\').textContent=this.value<=3?\'Très faible\':this.value<=5?\'Faible\':this.value<=7?\'Moyen\':this.value<=9?\'Bon\':this.value==10?\'Excellent\':\'\';">'
+      + '<span style="font-size:0.85rem;color:#bbb">10 ⚡</span>'
+      + '</div>'
+      + '<div style="text-align:center;margin-top:10px"><span id="ea_val" style="font-size:2rem;font-weight:900;color:#2E7D32">3</span><span style="font-size:0.9rem;color:#888">/10 — </span><span id="ea_label" style="font-size:0.9rem;color:#888">Très faible</span></div>'
+      + '</div>'
+      + '<div style="margin-bottom:18px">'
+      + '<div style="font-size:0.78rem;font-weight:700;color:#888;letter-spacing:.5px;margin-bottom:10px">TON OBJECTIF D\'ÉNERGIE</div>'
+      + '<div style="display:flex;align-items:center;gap:10px">'
+      + '<span style="font-size:0.85rem;color:#bbb">😴 0</span>'
+      + '<input type="range" id="no_energie_objectif" min="1" max="10" value="8" step="1" style="flex:1;height:6px;accent-color:#43A047" oninput="document.getElementById(\'eo_val\').textContent=this.value;document.getElementById(\'eo_label\').textContent=this.value<=3?\'Très faible\':this.value<=5?\'Faible\':this.value<=7?\'Moyen\':this.value<=9?\'Bon\':this.value==10?\'Excellent\':\'\';">'
+      + '<span style="font-size:0.85rem;color:#bbb">10 ⚡</span>'
+      + '</div>'
+      + '<div style="text-align:center;margin-top:10px"><span id="eo_val" style="font-size:2rem;font-weight:900;color:#43A047">8</span><span style="font-size:0.9rem;color:#888">/10 — </span><span id="eo_label" style="font-size:0.9rem;color:#888">Bon</span></div>'
+      + '</div>'
       + noMultiSelect('Causes suspectées', 'no_cause_energie', [
         {v:'stress', l:'Stress chronique'}, {v:'sommeil', l:'Manque de sommeil'},
         {v:'alimentation', l:'Alimentation déséquilibrée'}, {v:'sedentarite', l:'Sédentarité'},
