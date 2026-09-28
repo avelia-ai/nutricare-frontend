@@ -31045,7 +31045,7 @@ function confirmNouvelObjectif() {
       var bu = (typeof BACKEND_URL !== 'undefined') ? BACKEND_URL : 'https://nutricare-backend-production.up.railway.app';
       var tok = window._authToken || window.authToken || localStorage.getItem('nutricare_token') || '';
       var today = new Date().toISOString().split('T')[0];
-      fetch(bu + '/api/health/logs', {
+      fetch(bu + '/api/health/log', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + tok },
         body: JSON.stringify({ date: today, energy_level: extra.energie_actuelle })
