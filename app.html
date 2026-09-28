@@ -30693,7 +30693,7 @@ function showNouvelObjectifPopup() {
 }
 
 window._noObjSelected = null;
-window._noDelaiSelected = null;
+window._noDelaiSelected = 4;
 
 function selectNouvelObj(id) {
   window._noObjSelected = id;
@@ -30874,7 +30874,7 @@ function noGoStep2() {
   document.getElementById('noStep2').style.display='block';
   var container = document.getElementById('noStep2Content');
   if(container) {
-  window._noDelaiSelected = null;
+  window._noDelaiSelected = 4;
   var btn = document.getElementById('noConfirmBtn');
   if(btn) btn.style.opacity = '0.5';
     container.innerHTML = buildNoStep2Content(window._noObjSelected);
