@@ -4128,13 +4128,13 @@ window.initHome = async function() {
       document.getElementById('summaryProgressLabel').textContent = _energieVal + '/10';
       document.getElementById('summaryProgressBar').style.width = Math.max(0, Math.min(100, Math.round((_energieVal / _energieObj) * 100))) + '%';
     } else if (objectifs.indexOf('sommeil') > -1) {
-      var _sommeilVal = (_todayLogSummary && _todayLogSummary.sleep_hours != null) ? _todayLogSummary.sleep_hours : 0;
-      objLine = "Objectif : mieux dormir (vise 8h ou plus)";
+      var _sommeilVal = (_todayLogSummary && _todayLogSummary.sleep_hours != null) ? _todayLogSummary.sleep_hours : (profile.sommeil_heures_actuel || 0);
+      var _sommeilObj = profile.sommeil_objectif_heures || 8; objLine = "Objectif : mieux dormir (vise " + _sommeilObj + "h ou plus)";
       progressWrap.style.display = 'block';
       document.getElementById('summaryProgressStart').textContent = '0h';
       document.getElementById('summaryProgressEnd').textContent = '8h';
       document.getElementById('summaryProgressLabel').textContent = _sommeilVal + 'h';
-      document.getElementById('summaryProgressBar').style.width = Math.max(0, Math.min(100, Math.round((_sommeilVal / 8) * 100))) + '%';
+      document.getElementById('summaryProgressBar').style.width = Math.max(0, Math.min(100, Math.round((_sommeilVal / _sommeilObj) * 100))) + '%';
     } else if (objectifs.indexOf('stress') > -1) {
       var _stressVal = (_todayLogSummary && _todayLogSummary.stress_level != null) ? _todayLogSummary.stress_level : 10;
       objLine = "Objectif : reduire ton stress (vise 3/10 ou moins)";
