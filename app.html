@@ -4121,7 +4121,7 @@ window.initHome = async function() {
       document.getElementById('summaryProgressBar').style.width = pct + '%';
     } else if (objectifs.indexOf('energie') > -1) {
       var _energieVal = (_todayLogSummary && _todayLogSummary.energy_level != null) ? _todayLogSummary.energy_level : 0;
-      objLine = "Objectif : améliorer ton énergie (vise 7/10 ou plus)";
+      var _energieObj = profile.energie_objectif || 7; objLine = "Objectif : améliorer ton énergie (vise " + _energieObj + "/10 ou plus)";
       progressWrap.style.display = 'block';
       document.getElementById('summaryProgressStart').textContent = '0/10';
       document.getElementById('summaryProgressEnd').textContent = '7/10';
