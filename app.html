@@ -30464,7 +30464,7 @@ function showObjectifBilanPopup(profile, logs) {
     + '</div>'
     + '<div id="bsOpt2" class="bsOption" data-mode="maintien" onclick="selectBilanMode(this.dataset.mode)">'
     + '<div style="width:38px;height:38px;border-radius:10px;background:linear-gradient(135deg,#4A90D9,#357ABD);display:flex;align-items:center;justify-content:center;flex-shrink:0"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" width="17" height="17"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div>'
-    + '<div><div style="font-size:0.86rem;font-weight:700;color:#2b2320">Mode maintien</div><div style="font-size:0.72rem;color:#9a8b82;margin-top:1px">Consolide tes acquis avant de repartir</div></div>'
+    + '<div><div style="font-size:0.86rem;font-weight:700;color:#2b2320">Mode maintien du poids</div><div style="font-size:0.72rem;color:#9a8b82;margin-top:1px">Consolide tes acquis avant de repartir</div></div>'
     + '</div>'
     + '<div id="bsOpt3" class="bsOption" data-mode="nouveau" onclick="selectBilanMode(this.dataset.mode)">'
     + '<div style="width:38px;height:38px;border-radius:10px;background:linear-gradient(135deg,#2E7D32,#43A047);display:flex;align-items:center;justify-content:center;flex-shrink:0"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" width="17" height="17"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></div>'
@@ -30632,7 +30632,7 @@ function confirmRecalibrer() {
   });
 }
 
-// ── POPUP MODE MAINTIEN ──
+// ── POPUP MODE MAINTIEN DU POIDS ──
 function showMaintienPopup() {
   if(document.getElementById('maintienPopup')) return;
   var overlay = _makeOverlay('maintienPopup');
@@ -30654,7 +30654,7 @@ function showMaintienPopup() {
     + _maintienItem('Menus équilibrés sans déficit calorique', '#2E7D32')
     + _maintienItem('Conseils axés stabilisation et bien-être', '#4A90D9')
     + _maintienItem('Bilan de maintien proposé dans 2 semaines', '#C2604A')
-    + _maintienItem('Compteur "Mode maintien — semaine X" activé', '#9b59b6')
+    + _maintienItem('Compteur "Mode maintien du poids — semaine X" activé', '#9b59b6')
     + '</div>'
     + '</div>'
     + '<button onclick="confirmMaintien()" style="width:100%;padding:16px;border-radius:16px;border:none;background:linear-gradient(135deg,#4A90D9,#357ABD);color:white;font-size:0.95rem;font-weight:700;cursor:pointer;box-shadow:0 8px 24px rgba(74,144,217,0.35)">Activer le mode maintien</button>'
@@ -30681,11 +30681,10 @@ function confirmMaintien() {
     objectif_delai_semaines: 2
   };
   _saveProfil(payload, function(err) {
-    if(err) { if(typeof showMirellaNotif==='function') showMirellaNotif('Erreur, réessaie'); return; }
     _closePopup("maintienPopup");
     if(window._pcProfile) { window._pcProfile.objectifs = ['maintien']; window._pcProfile.objectif_date_debut = today; window._pcProfile.objectif_delai_semaines = 2; }
-    if(typeof window.renderPersonalSummary === 'function') window.renderPersonalSummary(window._pcProfile);
-    if(typeof showMirellaNotif === 'function') showMirellaNotif('Mode maintien activé — Mirella adapte tes conseils pour consolider tes acquis');
+    if(typeof showMirellaNotif === 'function') showMirellaNotif('Mode maintien du poids activé — Mirella adapte tes conseils !');
+    setTimeout(function() { window.location.replace(window.location.pathname); }, 1500);
   });
 }
 
