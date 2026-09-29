@@ -4121,11 +4121,34 @@ window.initHome = async function() {
       document.getElementById('summaryProgressBar').style.width = pct + '%';
     } else if (objectifs.indexOf('maintien') > -1) {
       objLine = 'Objectif : maintenir ton poids actuel';
+      var zoneMin = Math.round((poids - 2) * 10) / 10;
+      var zoneMax = Math.round((poids + 2) * 10) / 10;
       progressWrap.style.display = 'block';
-      document.getElementById('summaryProgressStart').textContent = (poids - 5) + ' kg';
-      document.getElementById('summaryProgressEnd').textContent = (poids + 5) + ' kg';
-      document.getElementById('summaryProgressLabel').textContent = poids + ' kg';
-      document.getElementById('summaryProgressBar').style.width = '50%';
+      progressWrap.innerHTML = ''
+        + '<div style="font-size:0.68rem;color:#999;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:12px;font-weight:700">Ton poids de forme</div>'
+        + '<div style="display:flex;align-items:center;justify-content:center;margin-bottom:16px">'
+        + '<svg width="140" height="140" viewBox="0 0 140 140">'
+        + '<circle cx="70" cy="70" r="56" fill="none" stroke="rgba(255,154,108,0.15)" stroke-width="9"/>'
+        + '<circle cx="70" cy="70" r="56" fill="none" stroke="url(#mg)" stroke-width="9" stroke-dasharray="352" stroke-dashoffset="88" stroke-linecap="round" transform="rotate(-90 70 70)"/>'
+        + '<defs><linearGradient id="mg" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="#FF6B6B"/><stop offset="100%" stop-color="#FF9A3C"/></linearGradient></defs>'
+        + '<circle cx="70" cy="70" r="42" fill="rgba(255,154,108,0.08)"/>'
+        + '<text x="70" y="62" text-anchor="middle" font-size="26" font-weight="800" fill="#FF6B6B" font-family="DM Sans,sans-serif">' + poids + '</text>'
+        + '<text x="70" y="78" text-anchor="middle" font-size="12" fill="#FF9A3C" font-weight="700">kg</text>'
+        + '<text x="70" y="94" text-anchor="middle" font-size="9" fill="#9a8b82" font-weight="600">Poids de forme</text>'
+        + '</svg>'
+        + '</div>'
+        + '<div style="background:linear-gradient(135deg,rgba(255,107,107,0.06),rgba(255,154,108,0.1));border:1.5px solid rgba(255,154,108,0.25);border-radius:14px;padding:14px 16px">'
+        + '<div style="font-size:0.62rem;font-weight:700;color:#FF6B6B;margin-bottom:10px;text-transform:uppercase;letter-spacing:0.08em">Zone de stabilité</div>'
+        + '<div style="display:flex;align-items:center;gap:8px">'
+        + '<span style="font-size:0.78rem;color:#9a8b82;font-weight:600;min-width:38px">' + zoneMin + ' kg</span>'
+        + '<div style="flex:1;position:relative;height:10px;background:rgba(255,154,108,0.15);border-radius:99px;overflow:visible">'
+        + '<div style="position:absolute;left:0;right:0;top:0;bottom:0;background:linear-gradient(90deg,rgba(255,107,107,0.3),rgba(255,107,107,0.7),rgba(255,154,108,0.7),rgba(255,154,108,0.3));border-radius:99px"></div>'
+        + '<div style="position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:16px;height:16px;background:white;border:2.5px solid #FF6B6B;border-radius:50%;box-shadow:0 2px 6px rgba(255,107,107,0.35)"></div>'
+        + '</div>'
+        + '<span style="font-size:0.78rem;color:#9a8b82;font-weight:600;min-width:38px;text-align:right">' + zoneMax + ' kg</span>'
+        + '</div>'
+        + '<div style="text-align:center;margin-top:10px;font-size:0.78rem;color:#FF6B6B;font-weight:700">Tu es dans ta zone idéale ✓</div>'
+        + '</div>';
     } else if (objectifs.indexOf('energie') > -1) {
       var _energieVal = (_todayLogSummary && _todayLogSummary.energy_level != null) ? _todayLogSummary.energy_level : 0;
       var _energieObj = profile.energie_objectif || 7; objLine = "Objectif : améliorer ton énergie (vise " + _energieObj + "/10 ou plus)";
