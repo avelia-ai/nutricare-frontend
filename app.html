@@ -11311,6 +11311,8 @@ function switchLang(lang) {
       currentUser = data.user;
       localStorage.setItem('nutricare_token', authToken);
       localStorage.setItem('nutricare_user', JSON.stringify(currentUser));
+      if (data.refresh_token) localStorage.setItem('nutricare_refresh_token', data.refresh_token);
+      if (data.expires_at) localStorage.setItem('nutricare_expires_at', data.expires_at);
       if (data.profile) localStorage.setItem('nutricare_profile', JSON.stringify(data.profile));
       try {
         var _profRes = await fetch(BACKEND_URL + '/api/profile', { headers: { 'Authorization': 'Bearer ' + authToken } });
