@@ -30709,6 +30709,21 @@ function selectNouvelObj(id) {
   if(verbe) verbe.textContent = id==='masse' ? 'prendre' : 'perdre';
 }
 
+function noSelectTime(label, id) {
+  var s = '<div style="margin-bottom:14px">';
+  s += '<div style="font-size:0.75rem;font-weight:600;color:#9a8b82;margin-bottom:6px">' + label + '</div>';
+  s += '<div style="display:flex;align-items:center;gap:8px">';
+  s += '<select id="' + id + '_h" style="flex:1;padding:11px 14px;border:1.5px solid rgba(255,154,108,0.3);border-radius:11px;font-size:0.9rem;font-weight:600;outline:none;background:white">';
+  for(var h=0;h<24;h++){var hh=h<10?'0'+h:String(h); s+='<option value="'+hh+'">'+hh+'h</option>';}
+  s += '</select>';
+  s += '<div style="font-size:1rem;font-weight:700;color:#9a8b82">:</div>';
+  s += '<select id="' + id + '_m" style="flex:1;padding:11px 14px;border:1.5px solid rgba(255,154,108,0.3);border-radius:11px;font-size:0.9rem;font-weight:600;outline:none;background:white">';
+  ['00','15','30','45'].forEach(function(m){s+='<option value="'+m+'">'+m+'</option>';});
+  s += '</select>';
+  s += '</div></div>';
+  return s;
+}
+
 function noInputRow(label, id, type, placeholder, unit, min, max, step, defaultVal) {
   var s = '<div style="margin-bottom:14px">';
   s += '<div style="font-size:0.75rem;font-weight:600;color:#9a8b82;margin-bottom:6px">' + label + '</div>';
@@ -30809,7 +30824,7 @@ function buildNoStep2Content(obj) {
     html += card(
       noInputRow('Heures de sommeil actuelles par nuit', 'noSommeilActuel', 'number', 'ex: 6', 'h', '1', '12', '0.5')
       + noInputRow('Objectif : heures de sommeil visées', 'noSommeilObjectif', 'number', 'ex: 8', 'h', '4', '12', '0.5')
-      + noInputRow('Heure de coucher habituelle', 'noCoucher', 'time', '', '', '', '', '')
+      + noSelectTime('Heure de coucher habituelle', 'noCoucher')
       + noMultiSelect('Tes problèmes principaux', 'no_pb_sommeil', [
         {v:'endormissement', l:'Endormissement difficile'},
         {v:'reveils', l:'Réveils nocturnes'},
@@ -31004,7 +31019,7 @@ function confirmNouvelObjectif() {
   if(obj === 'sommeil') {
     extra.sommeil_heures_actuel = parseFloat((document.getElementById('noSommeilActuel')||{}).value) || null;
     extra.sommeil_objectif_heures = parseFloat((document.getElementById('noSommeilObjectif')||{}).value) || null;
-    extra.heure_coucher = (document.getElementById('noCoucher')||{}).value || null;
+    var _noCoucherH = (document.getElementById('noCoucher_h')||{}).value || '23'; var _noCoucherM = (document.getElementById('noCoucher_m')||{}).value || '00'; extra.heure_coucher = _noCoucherH + ':' + _noCoucherM;
     extra.problemes_sommeil = noGetMultiVal('no_pb_sommeil') || null;
   } else if(obj === 'energie') {
     var _eaEl = document.getElementById('no_energie_actuelle');
