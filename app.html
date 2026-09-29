@@ -4119,6 +4119,13 @@ window.initHome = async function() {
       var done = Math.abs(startW - poids);
       var pct = total > 0 ? Math.max(0, Math.min(100, Math.round((done / total) * 100))) : 0;
       document.getElementById('summaryProgressBar').style.width = pct + '%';
+    } else if (objectifs.indexOf('maintien') > -1) {
+      objLine = 'Objectif : maintenir ton poids actuel';
+      progressWrap.style.display = 'block';
+      document.getElementById('summaryProgressStart').textContent = (poids - 5) + ' kg';
+      document.getElementById('summaryProgressEnd').textContent = (poids + 5) + ' kg';
+      document.getElementById('summaryProgressLabel').textContent = poids + ' kg';
+      document.getElementById('summaryProgressBar').style.width = '50%';
     } else if (objectifs.indexOf('energie') > -1) {
       var _energieVal = (_todayLogSummary && _todayLogSummary.energy_level != null) ? _todayLogSummary.energy_level : 0;
       var _energieObj = profile.energie_objectif || 7; objLine = "Objectif : améliorer ton énergie (vise " + _energieObj + "/10 ou plus)";
@@ -30675,11 +30682,13 @@ function _maintienItem(txt, color) {
 
 function confirmMaintien() {
   var today = new Date().toISOString().split('T')[0];
+  var _poidsActuelMaintien = (window._pcProfile && window._pcProfile.poids) ? parseFloat(window._pcProfile.poids) : null;
   var payload = {
     objectifs: ['maintien'],
     objectif_date_debut: today,
     objectif_delai_semaines: 2
   };
+  if(_poidsActuelMaintien) { payload.poids_objectif = _poidsActuelMaintien; payload.poids_delta_souhaite = 0; }
   _saveProfil(payload, function(err) {
     _closePopup("maintienPopup");
     if(window._pcProfile) { window._pcProfile.objectifs = ['maintien']; window._pcProfile.objectif_date_debut = today; window._pcProfile.objectif_delai_semaines = 2; }
