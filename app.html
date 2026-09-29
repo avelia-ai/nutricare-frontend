@@ -4144,23 +4144,48 @@ window.initHome = async function() {
       document.getElementById('summaryProgressLabel').textContent = _stressVal + '/10';
       document.getElementById('summaryProgressBar').style.width = Math.max(0, Math.min(100, Math.round((10 - _stressVal) * 10))) + '%';
     } else if (objectifs.indexOf('cardio') > -1) {
-      var _activiteVal = (_todayLogSummary && _todayLogSummary.activity_minutes != null) ? _todayLogSummary.activity_minutes : 0;
-      var _seancesObj = profile.seances_semaine || '3-4';
       var _cardioObj = profile.cardio_objectif || '';
-      var _cardioObjLabel = '';
-      if (_cardioObj.indexOf('perte_graisse') > -1) _cardioObjLabel = 'brûler les graisses';
-      else if (_cardioObj.indexOf('endurance') > -1) _cardioObjLabel = 'courir sans pause';
-      else if (_cardioObj.indexOf('souffle') > -1) _cardioObjLabel = 'améliorer ton souffle';
-      else if (_cardioObj.indexOf('performance') > -1) _cardioObjLabel = 'performance sportive';
-      else if (_cardioObj.indexOf('seances') > -1) _cardioObjLabel = _seancesObj + ' séances/semaine';
-      else _cardioObjLabel = _seancesObj + ' séances/semaine';
-      var _cardioTarget = (_cardioObj.indexOf('performance') > -1) ? 60 : (_cardioObj.indexOf('perte_graisse') > -1) ? 40 : 45;
-      objLine = 'Objectif : ' + _cardioObjLabel + ' (' + _seancesObj + ' séances/sem)';
+      var _seancesObj = profile.seances_semaine || '3-4';
+      var _seancesObjNum = parseInt((_seancesObj || '3-4').split('-').pop()) || 4;
+      // Compter les séances cette semaine (jours avec activity_minutes > 0)
+      var _allLogs = window._pcRecentAverages ? (function(){
+        var d7 = new Date(); d7.setDate(d7.getDate() - 7);
+        var _logs = window._pcAllLogs || [];
+        return _logs.filter(function(l){ return l.date && new Date(l.date) >= d7 && l.activity_minutes > 0; }).length;
+      })() : 0;
+      var _activiteVal = (_todayLogSummary && _todayLogSummary.activity_minutes != null) ? _todayLogSummary.activity_minutes : 0;
       progressWrap.style.display = 'block';
-      document.getElementById('summaryProgressStart').textContent = '0 min';
-      document.getElementById('summaryProgressEnd').textContent = _cardioTarget + ' min';
-      document.getElementById('summaryProgressLabel').textContent = _activiteVal + ' min';
-      document.getElementById('summaryProgressBar').style.width = Math.max(0, Math.min(100, Math.round((_activiteVal / _cardioTarget) * 100))) + '%';
+      // Adapter la jauge selon l'objectif
+      if (_cardioObj.indexOf('endurance') > -1 || _cardioObj.indexOf('souffle') > -1 || _cardioObj.indexOf('seances') > -1) {
+        // Jauge = séances cette semaine
+        var _seancesFaites = _allLogs;
+        objLine = 'Objectif : ' + (_cardioObj.indexOf('endurance') > -1 ? 'courir sans pause' : _cardioObj.indexOf('souffle') > -1 ? 'améliorer ton souffle' : _seancesObj + ' séances/sem') + ' — ' + _seancesFaites + '/' + _seancesObjNum + ' séances cette semaine';
+        document.getElementById('summaryProgressStart').textContent = '0 séance';
+        document.getElementById('summaryProgressEnd').textContent = _seancesObjNum + ' séances';
+        document.getElementById('summaryProgressLabel').textContent = _seancesFaites + ' séance' + (_seancesFaites > 1 ? 's' : '');
+        document.getElementById('summaryProgressBar').style.width = Math.max(0, Math.min(100, Math.round((_seancesFaites / _seancesObjNum) * 100))) + '%';
+      } else if (_cardioObj.indexOf('perte_graisse') > -1) {
+        // Jauge = minutes d'activité aujourd'hui (cible 40 min zone cardio)
+        objLine = 'Objectif : brûler les graisses (' + _seancesObj + ' séances/sem)';
+        document.getElementById('summaryProgressStart').textContent = '0 min';
+        document.getElementById('summaryProgressEnd').textContent = '40 min';
+        document.getElementById('summaryProgressLabel').textContent = _activiteVal + ' min';
+        document.getElementById('summaryProgressBar').style.width = Math.max(0, Math.min(100, Math.round((_activiteVal / 40) * 100))) + '%';
+      } else if (_cardioObj.indexOf('performance') > -1) {
+        // Jauge = minutes d'activité aujourd'hui (cible 60 min)
+        objLine = 'Objectif : performance sportive (' + _seancesObj + ' séances/sem)';
+        document.getElementById('summaryProgressStart').textContent = '0 min';
+        document.getElementById('summaryProgressEnd').textContent = '60 min';
+        document.getElementById('summaryProgressLabel').textContent = _activiteVal + ' min';
+        document.getElementById('summaryProgressBar').style.width = Math.max(0, Math.min(100, Math.round((_activiteVal / 60) * 100))) + '%';
+      } else {
+        // Défaut
+        objLine = 'Objectif : améliorer ton cardio (' + _seancesObj + ' séances/sem)';
+        document.getElementById('summaryProgressStart').textContent = '0 min';
+        document.getElementById('summaryProgressEnd').textContent = '45 min';
+        document.getElementById('summaryProgressLabel').textContent = _activiteVal + ' min';
+        document.getElementById('summaryProgressBar').style.width = Math.max(0, Math.min(100, Math.round((_activiteVal / 45) * 100))) + '%';
+      }
     } else if (objectifs.indexOf('sante') > -1) {
       var _eVal = (_todayLogSummary && _todayLogSummary.energy_level != null) ? _todayLogSummary.energy_level : 5;
       var _sVal = (_todayLogSummary && _todayLogSummary.sleep_hours != null) ? Math.min(10, _todayLogSummary.sleep_hours * 10/8) : 5;
@@ -18682,7 +18707,7 @@ function _hcDrawFrameHome() {
 }
 // ── Fin moteur avatar ─────────────────────────────────────────────────────────
 
-var _healthLogs = [];
+var _healthLogs = []; window._pcAllLogs = _healthLogs;
 var _healthActiveKey = 'weight';
 var _healthMetrics = [
   {key:'weight', label:'Poids (kg)', color:'#FF6B6B'},
@@ -18715,7 +18740,7 @@ function drawHealthChart(key) {
   });
 }
 function renderHealthChart(logs) {
-  _healthLogs = logs;
+  _healthLogs = logs; window._pcAllLogs = logs;
   if (!logs.length) return;
   // Stats résumé
   var last = logs[logs.length-1];
