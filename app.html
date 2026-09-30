@@ -31259,7 +31259,19 @@ function noGoBack() {
 window.noGoBack = noGoBack;
 window.selectBilanMode = selectBilanMode;
 window.executeBilanMode = executeBilanMode;
-window._goToSeance = function() { if(typeof showView === 'function') { showView('health'); setTimeout(function(){ if(typeof switchSuiviTab === 'function') switchSuiviTab('activite'); }, 80); } };
+window._goToSeance = function() {
+  if(typeof showView === 'function') {
+    showView('health');
+    setTimeout(function(){
+      if(typeof switchSuiviTab === 'function') {
+        var btns = document.querySelectorAll('.suivi-tab-btn');
+        var activiteBtn = null;
+        btns.forEach(function(b){ if(b.getAttribute('onclick') && b.getAttribute('onclick').indexOf('activite') > -1) activiteBtn = b; });
+        switchSuiviTab('activite', activiteBtn);
+      }
+    }, 150);
+  }
+};
 window.showRecalibrerPopup = showRecalibrerPopup;
 window.showMaintienPopup = showMaintienPopup;
 window.showNouvelObjectifPopup = showNouvelObjectifPopup;
