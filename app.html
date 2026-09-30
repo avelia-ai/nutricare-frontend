@@ -4121,7 +4121,7 @@ window.initHome = async function() {
       var done = Math.abs(startW - poids);
       var pct = total > 0 ? Math.max(0, Math.min(100, Math.round((done / total) * 100))) : 0;
       document.getElementById('summaryProgressBar').style.width = pct + '%';
-    } else if (objectifs.indexOf('maintien') > -1) {
+    } else if (objectifs.length === 1 && objectifs.indexOf('maintien') > -1 && !(profile.poids_delta_souhaite && parseFloat(profile.poids_delta_souhaite) > 0)) {
       objLine = 'Objectif : maintenir ton poids actuel';
       var zoneMin = Math.round((poids - 2) * 10) / 10;
       var zoneMax = Math.round((poids + 2) * 10) / 10;
