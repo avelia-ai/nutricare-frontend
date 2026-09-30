@@ -4297,7 +4297,7 @@ window.initHome = async function() {
         msgEl.textContent = "l'echeance est passee, fais le point avec Mirella sur la suite";
         // Popup bilan objectif echu
         setTimeout(function(){
-          if(typeof showObjectifBilanPopup === 'function') {
+          if(typeof showObjectifBilanPopup === 'function' && !window._justRecalibrated) {
             // Ne pas afficher si l'objectif vient d'être défini aujourd'hui
             var _todayStr = new Date().toISOString().split('T')[0];
             if(profile.objectif_date_debut && profile.objectif_date_debut.split('T')[0] === _todayStr) return;
@@ -30661,7 +30661,7 @@ function confirmRecalibrer() {
     _closePopup("recalibrerPopup");
     if(window._pcProfile) { window._pcProfile.objectif_delai_semaines = n; window._pcProfile.objectif_date_debut = today; }
     if(typeof window.renderPersonalSummary === 'function') window.renderPersonalSummary(window._pcProfile);
-    if(typeof showMirellaNotif === 'function') showMirellaNotif('Objectif recalibré sur ' + n + ' semaines — Mirella repart avec toi !');
+    window._justRecalibrated = true; setTimeout(function(){ window._justRecalibrated = false; }, 5000); if(typeof showMirellaNotif === 'function') showMirellaNotif('Objectif recalibré sur ' + n + ' semaines — Mirella repart avec toi !');
   });
 }
 
