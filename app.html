@@ -30992,7 +30992,7 @@ function buildNoStep2Content(obj) {
       noSingleSelect('Ton niveau actuel', 'no_cardio_niveau', [
         {v:'debutant', l:'Débutant'}, {v:'intermediaire', l:'Intermédiaire'}, {v:'confirme', l:'Confirmé'}
       ])
-      + noMultiSelect('Ton objectif cardio', 'no_cardio_objectif', [
+      + noSingleSelect('Ton objectif cardio', 'no_cardio_objectif', [
         {v:'endurance', l:'Courir sans pause'}, {v:'seances', l:'X séances/semaine'},
         {v:'souffle', l:'Améliorer mon souffle'}, {v:'perte_graisse', l:'Perdre de la graisse'},
         {v:'performance', l:'Performance sportive'}
@@ -31136,7 +31136,7 @@ function confirmNouvelObjectif() {
     extra.sante_action = noGetMultiVal('no_sante_action') || null;
   } else if(obj === 'cardio') {
     extra.cardio_niveau = noGetSingleVal('no_cardio_niveau') || null;
-    extra.cardio_objectif = noGetMultiVal('no_cardio_objectif') || null;
+    extra.cardio_objectif = noGetSingleVal('no_cardio_objectif') || null;
     extra.sport_pratique = (document.getElementById('no_sport')||{}).value || null;
     extra.seances_semaine = noGetSingleVal('no_seances_sem') || null;
   } else if(obj === 'stress') {
