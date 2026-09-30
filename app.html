@@ -31370,6 +31370,17 @@ function noGoBack() {
 window.noGoBack = noGoBack;
 window.selectBilanMode = selectBilanMode;
 window.executeBilanMode = executeBilanMode;
+window._goToEnergie = function() {
+  if(typeof showView === 'function') {
+    showView('health');
+    setTimeout(function(){
+      if(typeof switchSuiviTab === 'function') {
+        switchSuiviTab('principal', document.querySelector('.suivi-tab-btn'));
+        setTimeout(function(){ document.getElementById('hEnergy') && document.getElementById('hEnergy').scrollIntoView({behavior:'smooth',block:'center'}); }, 200);
+      }
+    }, 150);
+  }
+};
 window._goToSommeil = function() {
   if(typeof showView === 'function') {
     showView('health');
