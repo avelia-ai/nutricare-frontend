@@ -3746,7 +3746,7 @@ window.initHome = async function() {
     var card = document.getElementById('parcoursCard');
     if (!card) return;
     if (!profile.poids || !profile.taille) { card.style.display = 'none'; return; }
-    card.style.display = (window._suiviActiveTab && window._suiviActiveTab !== 'principal') ? 'none' : 'block';
+    if (window._suiviActiveTab === 'principal' || !window._suiviActiveTab) card.style.display = 'block';
     var _dbgV = new URLSearchParams(window.location.search).get('pc_debug_view');
     if (_dbgV) {
       _dbgV = _dbgV.toLowerCase();
@@ -19568,10 +19568,9 @@ function switchSuiviTab(tab, btn) {
   var mcSuivi = document.querySelector('.main-content');
   if (mcSuivi) mcSuivi.scrollTop = 0;
   window.scrollTo(0, 0);
-  Array.prototype.forEach.call(container.children, function(child) {
+  container.querySelectorAll('[data-suivi-tab]').forEach(function(child) {
     var t = child.getAttribute('data-suivi-tab');
     if (t === 'always') return;
-    if (!t) t = 'principal';
     child.style.display = (t === tab) ? '' : 'none';
   });
   document.querySelectorAll('.suivi-tab-btn').forEach(function(b) {
