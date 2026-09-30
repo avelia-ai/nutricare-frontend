@@ -4213,12 +4213,77 @@ window.initHome = async function() {
         document.getElementById('summaryProgressLabel').textContent = _seancesFaites + ' séance' + (_seancesFaites > 1 ? 's' : '');
         document.getElementById('summaryProgressBar').style.width = Math.max(0, Math.min(100, Math.round((_seancesFaites / _cibleSeances) * 100))) + '%';
       } else if (_cardioObj.indexOf('perte_graisse') > -1) {
-        // Jauge = minutes d'activité aujourd'hui (cible 40 min zone cardio)
         objLine = 'Objectif : brûler les graisses (' + _seancesObj + ' séances/sem)';
-        document.getElementById('summaryProgressStart').textContent = '0 min';
-        document.getElementById('summaryProgressEnd').textContent = '40 min';
-        document.getElementById('summaryProgressLabel').textContent = _activiteVal + ' min';
-        document.getElementById('summaryProgressBar').style.width = Math.max(0, Math.min(100, Math.round((_activiteVal / 40) * 100))) + '%';
+        // Jauge premium séances semaine
+        var _allLogs7 = window._pcAllLogs || [];
+        var _d7 = new Date(); _d7.setDate(_d7.getDate() - 7);
+        var _seancesWeek = _allLogs7.filter(function(l){ return l.date && new Date(l.date) >= _d7 && l.activity_minutes > 0; });
+        var _nbSeances = _seancesWeek.length;
+        var _cibleSeances = parseInt((_seancesObj || '2').split('-').pop()) || 2;
+        var _totalMin = _seancesWeek.reduce(function(s,l){ return s + (l.activity_minutes || 0); }, 0);
+        var _avgMin = _nbSeances > 0 ? Math.round(_totalMin / _nbSeances) : 0;
+        var _cibleMin = 40;
+        var _streak = (function(){
+          var s = 0;
+          var _allSorted = (_allLogs7).slice().sort(function(a,b){ return new Date(b.date) - new Date(a.date); });
+          var _prevWeek = null;
+          for(var i = 0; i < _allSorted.length; i++) {
+            var _w = Math.floor((new Date() - new Date(_allSorted[i].date)) / (7 * 86400000));
+            if(_allSorted[i].activity_minutes > 0 && _w !== _prevWeek) { s++; _prevWeek = _w; }
+          }
+          return s;
+        })();
+        var _msgMirella = _nbSeances >= _cibleSeances && _avgMin >= _cibleMin
+          ? 'Objectif atteint cette semaine ! Continue sur cette lancée.'
+          : _nbSeances >= _cibleSeances
+            ? 'Tes séances sont au rendez-vous. Essaie de tenir ' + _cibleMin + ' min par séance.'
+            : 'Il te manque ' + (_cibleSeances - _nbSeances) + ' séance' + (_cibleSeances - _nbSeances > 1 ? 's' : '') + ' pour atteindre ta cible cette semaine.';
+        progressWrap.style.display = 'block';
+        progressWrap.innerHTML = ''
+          + '<div style="background:var(--surface-2,#fff);border:0.5px solid rgba(0,0,0,0.08);border-radius:16px;padding:18px;margin-bottom:10px">'
+          + '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">'
+          + '<div><div style="font-size:10px;font-weight:600;color:#9a8b82;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:3px">Progression vers l'objectif</div>'
+          + '<div style="font-size:14px;font-weight:700;color:#2b2320">Brûler les graisses</div></div>'
+          + '<div style="background:#FAECE7;border-radius:10px;padding:7px 11px;text-align:center">'
+          + '<div style="font-size:10px;color:#993C1D;font-weight:600">Séances</div>'
+          + '<div style="font-size:17px;font-weight:800;color:#D85A30;line-height:1.2">' + _nbSeances + '<span style="font-size:11px;color:#993C1D">/' + _cibleSeances + '</span></div>'
+          + '</div></div>'
+          + '<div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-bottom:14px">'
+          + (function(){
+              var cards = '';
+              for(var i = 0; i < _cibleSeances; i++) {
+                var _s = _seancesWeek[i];
+                var _done = !!_s;
+                var _mins = _s ? _s.activity_minutes : 0;
+                var _pct = _done ? Math.min(100, Math.round((_mins / _cibleMin) * 100)) : 0;
+                var _label = _done ? (_s.date ? new Date(_s.date).toLocaleDateString('fr-FR',{weekday:'long'}) : 'Séance') : 'À faire';
+                cards += '<div style="background:' + (_done ? '#FAECE7' : 'rgba(0,0,0,0.03)') + ';border:0.5px solid ' + (_done ? '#F0997B' : 'rgba(0,0,0,0.08)') + ';border-radius:12px;padding:11px;text-align:center">'
+                  + '<div style="font-size:17px;font-weight:800;color:' + (_done ? '#D85A30' : '#ccc') + '">' + (_done ? _mins : '--') + '</div>'
+                  + '<div style="font-size:10px;color:' + (_done ? '#993C1D' : '#bbb') + ';margin-top:2px">min · ' + _label + '</div>'
+                  + '<div style="width:100%;height:3px;background:' + (_done ? 'rgba(255,154,108,0.25)' : 'rgba(0,0,0,0.06)') + ';border-radius:99px;margin-top:7px">'
+                  + '<div style="height:3px;background:#D85A30;border-radius:99px;width:' + _pct + '%"></div>'
+                  + '</div></div>';
+              }
+              return cards;
+            })()
+          + '</div>'
+          + '<div style="background:rgba(0,0,0,0.03);border-radius:10px;padding:12px;margin-bottom:12px">'
+          + '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">'
+          + '<div style="font-size:11px;color:#9a8b82;font-weight:600">Durée moyenne / séance</div>'
+          + '<div style="font-size:11px;color:#D85A30;font-weight:700">' + _avgMin + ' min / ' + _cibleMin + ' min cible</div>'
+          + '</div>'
+          + '<div style="width:100%;height:5px;background:rgba(0,0,0,0.06);border-radius:99px;overflow:hidden">'
+          + '<div style="height:5px;background:linear-gradient(90deg,#F0997B,#D85A30);border-radius:99px;width:' + Math.min(100, _avgMin > 0 ? Math.round(_avgMin/_cibleMin*100) : 0) + '%"></div>'
+          + '</div></div>'
+          + '<div style="display:flex;gap:8px">'
+          + '<div style="flex:1;background:rgba(0,0,0,0.03);border-radius:9px;padding:9px;text-align:center"><div style="font-size:10px;color:#9a8b82;margin-bottom:2px">Total semaine</div><div style="font-size:14px;font-weight:800;color:#2b2320">' + _totalMin + ' min</div></div>'
+          + '<div style="flex:1;background:rgba(0,0,0,0.03);border-radius:9px;padding:9px;text-align:center"><div style="font-size:10px;color:#9a8b82;margin-bottom:2px">Cible hebdo</div><div style="font-size:14px;font-weight:800;color:#2b2320">' + (_cibleSeances * _cibleMin) + ' min</div></div>'
+          + '<div style="flex:1;background:#FAECE7;border-radius:9px;padding:9px;text-align:center"><div style="font-size:10px;color:#993C1D;margin-bottom:2px">Streak</div><div style="font-size:14px;font-weight:800;color:#D85A30">' + _streak + ' sem</div></div>'
+          + '</div></div>'
+          + '<div style="background:var(--surface-2,#fff);border:0.5px solid rgba(0,0,0,0.08);border-radius:12px;padding:13px;display:flex;align-items:center;gap:11px">'
+          + '<div style="width:34px;height:34px;border-radius:9px;background:#FAECE7;display:flex;align-items:center;justify-content:center;flex-shrink:0"><i class="ti ti-flame" style="font-size:17px;color:#D85A30"></i></div>'
+          + '<div style="font-size:12px;color:#2b2320;line-height:1.5">' + _msgMirella + '</div>'
+          + '</div>';
       } else if (_cardioObj.indexOf('performance') > -1) {
         // Jauge = minutes d'activité aujourd'hui (cible 60 min)
         objLine = 'Objectif : performance sportive (' + _seancesObj + ' séances/sem)';
