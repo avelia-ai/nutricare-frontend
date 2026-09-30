@@ -3746,7 +3746,7 @@ window.initHome = async function() {
     var card = document.getElementById('parcoursCard');
     if (!card) return;
     if (!profile.poids || !profile.taille) { card.style.display = 'none'; return; }
-    if (window._suiviActiveTab === 'principal' || !window._suiviActiveTab) card.style.display = 'block';
+    card.style.display = (window._suiviActiveTab && window._suiviActiveTab !== 'principal') ? 'none' : 'block';
     var _dbgV = new URLSearchParams(window.location.search).get('pc_debug_view');
     if (_dbgV) {
       _dbgV = _dbgV.toLowerCase();
