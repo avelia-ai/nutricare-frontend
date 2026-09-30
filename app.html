@@ -4107,7 +4107,8 @@ window.initHome = async function() {
     var objLine = '';
     var progressWrap = document.getElementById('summaryProgressWrap');
     var verbe = 'perdre';
-    var _hasPoidsObjectif = objectifs.indexOf('perte_poids') > -1 || objectifs.indexOf('masse') > -1;
+    var _hasPoidsObjectif = objectifs.indexOf('perte_poids') > -1 || objectifs.indexOf('masse') > -1
+      || (objectifs.indexOf('maintien') === -1 && profile.poids_objectif && profile.poids_delta_souhaite && parseFloat(profile.poids_delta_souhaite) > 0);
     var _todayLogSummary = window._pcTodayHealthLog || null;
     if (_hasPoidsObjectif && profile.poids_objectif && profile.poids_delta_souhaite && profile.objectif_delai_semaines) {
       verbe = objectifs.indexOf('masse') > -1 && objectifs.indexOf('perte_poids') === -1 ? 'prendre' : 'perdre';
