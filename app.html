@@ -1203,6 +1203,28 @@ window.saveSportSeance = function() {
   window.renderSportSeances();
   window.saveScoreForm();
   if (typeof persistSportSeances === 'function') persistSportSeances();
+  // Mettre a jour activity_minutes et rafraichir la jauge accueil
+  setTimeout(function() {
+    var _totalDuree = 0;
+    (window._sportSeances || []).forEach(function(s){ _totalDuree += (s.duree || 0); });
+    var bu = (typeof BACKEND_URL !== 'undefined') ? BACKEND_URL : 'https://nutricare-backend-production.up.railway.app';
+    var tok = window._authToken || window.authToken || localStorage.getItem('nutricare_token') || localStorage.getItem('mirella_token') || localStorage.getItem('sb_token') || '';
+    var todayStr = new Date().toISOString().split('T')[0];
+    fetch(bu + '/api/health/log', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + tok },
+      body: JSON.stringify({ date: todayStr, activity_minutes: _totalDuree })
+    }).then(function() {
+      fetch(bu + '/api/health/logs?days=30', { headers: { 'Authorization': 'Bearer ' + tok }, cache: 'no-store' })
+        .then(function(r){ return r.json(); })
+        .then(function(d){
+          window._pcAllLogs = d.logs || d || [];
+          if(window._pcProfile && typeof window.renderPersonalSummary === 'function') {
+            window.renderPersonalSummary(window._pcProfile);
+          }
+        }).catch(function(){});
+    }).catch(function(){});
+  }, 300);
   try {
     var todayKey = new Date().toISOString().slice(0,10);
     var histLog = JSON.parse(localStorage.getItem('mirella_sport_history') || '[]');
