@@ -12711,7 +12711,7 @@ async function loadMirellaInsights() {
     const body = document.getElementById('mirellaInsightBody');
     const daysChip = document.getElementById('mirellaInsightDaysChip');
     if (!card || !body) return;
-    if (window._suiviActiveTab === 'principal' || !window._suiviActiveTab) card.style.display = 'block';
+    if ((window._suiviActiveTab === 'principal' || !window._suiviActiveTab) && card.getAttribute('data-suivi-tab') === 'principal') card.style.display = 'block'; else card.style.display = 'none';
 
     if (daysChip) {
       daysChip.textContent = (data.days_tracked != null) ? `${data.days_tracked}/7 jours` : '';
