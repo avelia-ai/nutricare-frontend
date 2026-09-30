@@ -30659,9 +30659,27 @@ function confirmRecalibrer() {
   _saveProfil({ objectif_delai_semaines: n, objectif_date_debut: today }, function(err) {
     if(err) { if(btn) btn.textContent = 'Erreur, réessaie'; return; }
     _closePopup("recalibrerPopup");
+    window._justRecalibrated = true;
+    setTimeout(function(){ window._justRecalibrated = false; }, 8000);
     if(window._pcProfile) { window._pcProfile.objectif_delai_semaines = n; window._pcProfile.objectif_date_debut = today; }
-    if(typeof window.renderPersonalSummary === 'function') window.renderPersonalSummary(window._pcProfile);
-    window._justRecalibrated = true; setTimeout(function(){ window._justRecalibrated = false; }, 5000); if(typeof showMirellaNotif === 'function') showMirellaNotif('Objectif recalibré sur ' + n + ' semaines — Mirella repart avec toi !');
+    if(typeof showMirellaNotif === 'function') showMirellaNotif('Objectif recalibré sur ' + n + ' semaines — Mirella repart avec toi !');
+    setTimeout(function(){
+      var bu = (typeof BACKEND_URL !== 'undefined') ? BACKEND_URL : 'https://nutricare-backend-production.up.railway.app';
+      var tok = window._authToken || window.authToken || localStorage.getItem('nutricare_token') || localStorage.getItem('mirella_token') || localStorage.getItem('sb_token') || '';
+      fetch(bu + '/api/profile', { headers: { 'Authorization': 'Bearer ' + tok } })
+        .then(function(r){ return r.json(); })
+        .then(function(p){
+          if(p && p.objectif_date_debut) {
+            window._pcProfile = Object.assign(window._pcProfile || {}, p);
+            if(typeof window.renderPersonalSummary === 'function') window.renderPersonalSummary(window._pcProfile);
+          } else {
+            if(typeof window.renderPersonalSummary === 'function') window.renderPersonalSummary(window._pcProfile);
+          }
+        })
+        .catch(function(){
+          if(typeof window.renderPersonalSummary === 'function') window.renderPersonalSummary(window._pcProfile);
+        });
+    }, 500);
   });
 }
 
