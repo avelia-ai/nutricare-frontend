@@ -11,6 +11,9 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    env:
+      ANDROID_HOME: /usr/local/lib/android/sdk
+      ANDROID_SDK_ROOT: /usr/local/lib/android/sdk
     steps:
       - uses: actions/checkout@v4
       - name: Setup Node.js
@@ -30,20 +33,25 @@ jobs:
           cp -f app.html android/app/src/main/assets/public/index.html
           mkdir -p android/app/src/main/assets/public/assets
           cp -rf assets/. android/app/src/main/assets/public/assets/
-          echo "micronutrimentsCard (app.html):" $(grep -c micronutrimentsCard android/app/src/main/assets/public/app.html)
-          echo "harmonyCanvas (index.html):" $(grep -c harmonyCanvas android/app/src/main/assets/public/index.html)
-          echo "assets copies:" $(ls android/app/src/main/assets/public/assets/ | wc -l)
       - name: Setup Java
         uses: actions/setup-java@v4
         with:
           distribution: 'temurin'
           java-version: '21'
-      - name: Setup Android SDK
-        uses: android-actions/setup-android@v3
-        with:
-          packages: 'platform-tools platforms;android-34 build-tools;34.0.0'
+      - name: Install Android SDK
+        run: |
+          sudo apt-get install -y wget unzip
+          CMDLINE_TOOLS_URL="https://dl.google.com/android/repository/commandlinetools-linux-11076708_latest.zip"
+          wget -q $CMDLINE_TOOLS_URL -O cmdline-tools.zip
+          sudo mkdir -p $ANDROID_HOME/cmdline-tools
+          sudo unzip -q cmdline-tools.zip -d $ANDROID_HOME/cmdline-tools
+          sudo mv $ANDROID_HOME/cmdline-tools/cmdline-tools $ANDROID_HOME/cmdline-tools/latest
+          export PATH=$PATH:$ANDROID_HOME/cmdline-tools/latest/bin:$ANDROID_HOME/platform-tools
+          yes | sdkmanager --licenses > /dev/null 2>&1
+          sdkmanager "platform-tools" "platforms;android-34" "build-tools;34.0.0"
       - name: Build Release APK + AAB
         run: |
+          export PATH=$PATH:$ANDROID_HOME/cmdline-tools/latest/bin:$ANDROID_HOME/platform-tools
           cd android
           chmod +x gradlew
           KEYSTORE_PATH="${GITHUB_WORKSPACE}/android/app/mirella.keystore"
