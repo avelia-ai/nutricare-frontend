@@ -4239,16 +4239,34 @@ window.initHome = async function() {
             ? 'Tes séances sont au rendez-vous. Essaie de tenir ' + _cibleMin + ' min par séance.'
             : 'Il te manque ' + (_cibleSeances - _nbSeances) + ' séance' + (_cibleSeances - _nbSeances > 1 ? 's' : '') + ' pour atteindre ta cible cette semaine.';
         progressWrap.style.display = 'block';
+        var _pctTotal = Math.min(100, _totalMin > 0 ? Math.round(_totalMin / (_cibleSeances * _cibleMin) * 100) : 0);
+        var _pctAvg = Math.min(100, _avgMin > 0 ? Math.round(_avgMin / _cibleMin * 100) : 0);
+        var _arcOffset = Math.round(233 - (233 * _pctTotal / 100));
         progressWrap.innerHTML = ''
-          + '<div style="background:var(--surface-2,#fff);border:0.5px solid rgba(0,0,0,0.08);border-radius:16px;padding:18px;margin-bottom:10px">'
-          + '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">'
-          + '<div><div style="font-size:10px;font-weight:600;color:#9a8b82;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:3px">Progression vers l\'objectif</div>'
-          + '<div style="font-size:14px;font-weight:700;color:#2b2320">Brûler les graisses</div></div>'
-          + '<div style="background:#FAECE7;border-radius:10px;padding:7px 11px;text-align:center">'
-          + '<div style="font-size:10px;color:#993C1D;font-weight:600">Séances</div>'
-          + '<div style="font-size:17px;font-weight:800;color:#D85A30;line-height:1.2">' + _nbSeances + '<span style="font-size:11px;color:#993C1D">/' + _cibleSeances + '</span></div>'
+          + '<div style="background:#FFF5F0;border:1px solid #F5C4B3;border-radius:20px;padding:18px;margin-bottom:10px;position:relative;overflow:hidden">'
+          + '<div style="position:absolute;top:-50px;right:-50px;width:180px;height:180px;background:rgba(216,90,48,0.06);border-radius:50%;pointer-events:none"></div>'
+          + '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;position:relative">'
+          + '<div><div style="font-size:10px;font-weight:700;color:#C2604A;text-transform:uppercase;letter-spacing:0.1em;margin-bottom:3px">Objectif actif</div>'
+          + '<div style="font-size:16px;font-weight:800;color:#2b2320">Br\u00fbler les graisses</div></div>'
+          + '<div style="background:white;border:1px solid #F0997B;border-radius:12px;padding:8px 14px;text-align:center">'
+          + '<div style="font-size:10px;color:#C2604A;font-weight:600;margin-bottom:1px">S\u00e9ances</div>'
+          + '<div style="font-size:20px;font-weight:800;color:#D85A30;line-height:1">' + _nbSeances + '<span style="font-size:12px;color:#C2604A">/' + _cibleSeances + '</span></div>'
           + '</div></div>'
-          + '<div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-bottom:14px">'
+          + '<div style="display:flex;align-items:center;gap:16px;position:relative">'
+          + '<div style="flex-shrink:0"><svg width="88" height="88" viewBox="0 0 88 88">'
+          + '<circle cx="44" cy="44" r="37" fill="none" stroke="rgba(216,90,48,0.1)" stroke-width="7"/>'
+          + '<circle cx="44" cy="44" r="37" fill="none" stroke="url(#pgGrad)" stroke-width="7" stroke-dasharray="233" stroke-dashoffset="' + _arcOffset + '" stroke-linecap="round" transform="rotate(-90 44 44)"/>'
+          + '<defs><linearGradient id="pgGrad" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="#FF9A6C"/><stop offset="100%" stop-color="#D85A30"/></linearGradient></defs>'
+          + '<text x="44" y="40" text-anchor="middle" font-size="17" font-weight="800" fill="#D85A30" font-family="DM Sans,sans-serif">' + _pctTotal + '</text>'
+          + '<text x="44" y="53" text-anchor="middle" font-size="9" fill="#C2604A" font-family="DM Sans,sans-serif">% objectif</text>'
+          + '</svg></div>'
+          + '<div style="flex:1">'
+          + '<div style="margin-bottom:11px"><div style="display:flex;justify-content:space-between;margin-bottom:5px"><span style="font-size:11px;color:#9a8b82;font-weight:600">Total semaine</span><span style="font-size:11px;color:#D85A30;font-weight:700">' + _totalMin + ' / ' + (_cibleSeances * _cibleMin) + ' min</span></div>'
+          + '<div style="height:6px;background:rgba(216,90,48,0.1);border-radius:99px;overflow:hidden"><div style="height:6px;background:linear-gradient(90deg,#FF9A6C,#D85A30);border-radius:99px;width:' + _pctTotal + '%"></div></div></div>'
+          + '<div><div style="display:flex;justify-content:space-between;margin-bottom:5px"><span style="font-size:11px;color:#9a8b82;font-weight:600">Dur\u00e9e moy./s\u00e9ance</span><span style="font-size:11px;color:#D85A30;font-weight:700">' + _avgMin + ' / ' + _cibleMin + ' min</span></div>'
+          + '<div style="height:6px;background:rgba(216,90,48,0.1);border-radius:99px;overflow:hidden"><div style="height:6px;background:linear-gradient(90deg,#FF9A6C,#D85A30);border-radius:99px;width:' + _pctAvg + '%"></div></div></div>'
+          + '</div></div></div>'
+          + '<div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-bottom:10px">'
           + (function(){
               var cards = '';
               for(var i = 0; i < _cibleSeances; i++) {
@@ -4256,36 +4274,28 @@ window.initHome = async function() {
                 var _done = !!_s;
                 var _mins = _s ? _s.activity_minutes : 0;
                 var _pct = _done ? Math.min(100, Math.round((_mins / _cibleMin) * 100)) : 0;
-                var _label = _done ? (_s.date ? new Date(_s.date).toLocaleDateString('fr-FR',{weekday:'long'}) : 'Séance') : 'À faire';
-                cards += '<div style="background:' + (_done ? '#FAECE7' : 'rgba(0,0,0,0.03)') + ';border:0.5px solid ' + (_done ? '#F0997B' : 'rgba(0,0,0,0.08)') + ';border-radius:12px;padding:11px;text-align:center">'
-                  + '<div style="font-size:17px;font-weight:800;color:' + (_done ? '#D85A30' : '#ccc') + '">' + (_done ? _mins : '--') + '</div>'
-                  + '<div style="font-size:10px;color:' + (_done ? '#993C1D' : '#bbb') + ';margin-top:2px">min · ' + _label + '</div>'
-                  + '<div style="width:100%;height:3px;background:' + (_done ? 'rgba(255,154,108,0.25)' : 'rgba(0,0,0,0.06)') + ';border-radius:99px;margin-top:7px">'
-                  + '<div style="height:3px;background:#D85A30;border-radius:99px;width:' + _pct + '%"></div>'
-                  + '</div></div>';
+                var _label = _done ? (_s.date ? new Date(_s.date).toLocaleDateString('fr-FR',{weekday:'long'}) : 'S\u00e9ance') : '\u00c0 planifier';
+                cards += '<div style="background:' + (_done ? 'white' : '#FAFAFA') + ';border:1px solid ' + (_done ? '#F0997B' : 'rgba(0,0,0,0.06)') + ';border-radius:14px;padding:14px;position:relative;overflow:hidden">'
+                  + '<div style="position:absolute;top:0;left:0;right:0;height:3px;background:' + (_done ? 'linear-gradient(90deg,#FF9A6C,#D85A30)' : 'rgba(0,0,0,0.06)') + '"></div>'
+                  + '<div style="font-size:10px;color:' + (_done ? '#C2604A' : '#ccc') + ';font-weight:700;margin-bottom:6px;text-transform:uppercase;letter-spacing:0.06em">S\u00e9ance ' + (i+1) + '</div>'
+                  + '<div style="font-size:22px;font-weight:800;color:' + (_done ? '#D85A30' : '#ddd') + ';line-height:1;margin-bottom:3px">' + (_done ? _mins : '--') + '<span style="font-size:12px;color:' + (_done ? '#9a8b82' : '#ddd') + ';font-weight:500"> min</span></div>'
+                  + '<div style="font-size:11px;color:' + (_done ? '#9a8b82' : '#ccc') + '">' + _label + '</div>'
+                  + '<div style="margin-top:8px;height:3px;background:rgba(216,90,48,0.1);border-radius:99px"><div style="height:3px;background:linear-gradient(90deg,#FF9A6C,#D85A30);border-radius:99px;width:' + _pct + '%"></div></div>'
+                  + '</div>';
               }
               return cards;
             })()
           + '</div>'
-          + '<div style="background:rgba(0,0,0,0.03);border-radius:10px;padding:12px;margin-bottom:12px">'
-          + '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">'
-          + '<div style="font-size:11px;color:#9a8b82;font-weight:600">Durée moyenne / séance</div>'
-          + '<div style="font-size:11px;color:#D85A30;font-weight:700">' + _avgMin + ' min / ' + _cibleMin + ' min cible</div>'
+          + '<div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-bottom:10px">'
+          + '<div style="background:white;border:0.5px solid #F5C4B3;border-radius:12px;padding:12px;text-align:center"><div style="font-size:10px;color:#C2604A;font-weight:600;margin-bottom:4px;text-transform:uppercase;letter-spacing:0.06em">Streak</div><div style="font-size:22px;font-weight:800;color:#D85A30;line-height:1">' + _streak + '<span style="font-size:12px;color:#C2604A;font-weight:500"> sem</span></div></div>'
+          + '<div style="background:white;border:0.5px solid #F5C4B3;border-radius:12px;padding:12px;text-align:center"><div style="font-size:10px;color:#C2604A;font-weight:600;margin-bottom:4px;text-transform:uppercase;letter-spacing:0.06em">Cible hebdo</div><div style="font-size:22px;font-weight:800;color:#D85A30;line-height:1">' + (_cibleSeances * _cibleMin) + '<span style="font-size:12px;color:#C2604A;font-weight:500"> min</span></div></div>'
           + '</div>'
-          + '<div style="width:100%;height:5px;background:rgba(0,0,0,0.06);border-radius:99px;overflow:hidden">'
-          + '<div style="height:5px;background:linear-gradient(90deg,#F0997B,#D85A30);border-radius:99px;width:' + Math.min(100, _avgMin > 0 ? Math.round(_avgMin/_cibleMin*100) : 0) + '%"></div>'
-          + '</div></div>'
-          + '<div style="display:flex;gap:8px">'
-          + '<div style="flex:1;background:rgba(0,0,0,0.03);border-radius:9px;padding:9px;text-align:center"><div style="font-size:10px;color:#9a8b82;margin-bottom:2px">Total semaine</div><div style="font-size:14px;font-weight:800;color:#2b2320">' + _totalMin + ' min</div></div>'
-          + '<div style="flex:1;background:rgba(0,0,0,0.03);border-radius:9px;padding:9px;text-align:center"><div style="font-size:10px;color:#9a8b82;margin-bottom:2px">Cible hebdo</div><div style="font-size:14px;font-weight:800;color:#2b2320">' + (_cibleSeances * _cibleMin) + ' min</div></div>'
-          + '<div style="flex:1;background:#FAECE7;border-radius:9px;padding:9px;text-align:center"><div style="font-size:10px;color:#993C1D;margin-bottom:2px">Streak</div><div style="font-size:14px;font-weight:800;color:#D85A30">' + _streak + ' sem</div></div>'
-          + '</div></div>'
-          + '<div style="background:var(--surface-2,#fff);border:0.5px solid rgba(0,0,0,0.08);border-radius:12px;padding:13px;display:flex;align-items:center;gap:11px;margin-bottom:10px">'
-          + '<div style="width:34px;height:34px;border-radius:9px;background:#FAECE7;display:flex;align-items:center;justify-content:center;flex-shrink:0"><i class="ti ti-flame" style="font-size:17px;color:#D85A30"></i></div>'
+          + '<div style="background:white;border:0.5px solid #F5C4B3;border-radius:14px;padding:14px;display:flex;align-items:center;gap:12px;margin-bottom:12px">'
+          + '<div style="width:36px;height:36px;border-radius:10px;background:#FAECE7;display:flex;align-items:center;justify-content:center;flex-shrink:0"><i class="ti ti-flame" style="font-size:18px;color:#D85A30"></i></div>'
           + '<div style="font-size:12px;color:#2b2320;line-height:1.5">' + _msgMirella + '</div>'
           + '</div>'
-          + '<button onclick="window._goToSeance()" style="width:100%;padding:14px;border-radius:14px;border:none;background:linear-gradient(135deg,#FF9A6C,#FF6B6B);color:white;font-size:0.9rem;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;box-shadow:0 6px 20px rgba(255,107,107,0.3)">'
-          + '<i class="ti ti-plus" style="font-size:16px"></i> Enregistrer une séance'
+          + '<button onclick="window._goToSeance()" style="width:100%;padding:15px;border-radius:14px;border:none;background:linear-gradient(135deg,#FF9A6C,#FF6B6B);color:white;font-size:0.9rem;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;box-shadow:0 6px 20px rgba(255,107,107,0.25)">'
+          + '<i class="ti ti-plus" style="font-size:16px"></i> Enregistrer une s\u00e9ance'
           + '</button>';
       } else if (_cardioObj.indexOf('performance') > -1) {
         // Jauge = minutes d'activité aujourd'hui (cible 60 min)
