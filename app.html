@@ -19568,9 +19568,10 @@ function switchSuiviTab(tab, btn) {
   var mcSuivi = document.querySelector('.main-content');
   if (mcSuivi) mcSuivi.scrollTop = 0;
   window.scrollTo(0, 0);
-  container.querySelectorAll('[data-suivi-tab]').forEach(function(child) {
+  Array.prototype.forEach.call(container.children, function(child) {
     var t = child.getAttribute('data-suivi-tab');
     if (t === 'always') return;
+    if (!t) t = 'principal';
     child.style.display = (t === tab) ? '' : 'none';
   });
   document.querySelectorAll('.suivi-tab-btn').forEach(function(b) {
