@@ -31268,6 +31268,8 @@ window._goToSeance = function() {
         var activiteBtn = null;
         btns.forEach(function(b){ if(b.getAttribute('onclick') && b.getAttribute('onclick').indexOf('activite') > -1) activiteBtn = b; });
         switchSuiviTab('activite', activiteBtn);
+        var insightsCard = document.getElementById('mirellaInsightsCard');
+        if(insightsCard) insightsCard.style.display = 'none';
       }
     }, 150);
   }
