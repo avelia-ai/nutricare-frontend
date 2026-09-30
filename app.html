@@ -31259,7 +31259,7 @@ function noGoBack() {
 window.noGoBack = noGoBack;
 window.selectBilanMode = selectBilanMode;
 window.executeBilanMode = executeBilanMode;
-window._goToSeance = function() { if(typeof showView === 'function') showView('health'); };
+window._goToSeance = function() { if(typeof showView === 'function') { showView('health'); setTimeout(function(){ if(typeof switchSuiviTab === 'function') switchSuiviTab('activite'); }, 80); } };
 window.showRecalibrerPopup = showRecalibrerPopup;
 window.showMaintienPopup = showMaintienPopup;
 window.showNouvelObjectifPopup = showNouvelObjectifPopup;
