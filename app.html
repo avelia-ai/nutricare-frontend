@@ -4356,7 +4356,7 @@ window.initHome = async function() {
         + '<div style="flex-shrink:0"><svg width="88" height="88" viewBox="0 0 88 88">'
         + '<circle cx="44" cy="44" r="37" fill="none" stroke="rgba(255,107,107,0.12)" stroke-width="7"/>'
         + '<circle cx="44" cy="44" r="37" fill="none" stroke="url(#smGrad)" stroke-width="7" stroke-dasharray="233" stroke-dashoffset="' + _sommeilArcOffset + '" stroke-linecap="round" transform="rotate(-90 44 44)"/>'
-        + '<defs><linearGradient id="smGrad" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="#ffb3b3"/><stop offset="100%" stop-color="#FF6B6B"/></linearGradient></defs>'
+        + '<defs><linearGradient id="smGrad" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="#FF6B6B"/><stop offset="100%" stop-color="#FF9A3C"/></linearGradient></defs>'
         + '<text x="44" y="40" text-anchor="middle" font-size="17" font-weight="800" fill="#FF6B6B" font-family="DM Sans,sans-serif">' + _sommeilPct + '</text>'
         + '<text x="44" y="53" text-anchor="middle" font-size="9" fill="#E85555" font-family="DM Sans,sans-serif">% objectif</text>'
         + '</svg></div>'
@@ -4467,7 +4467,7 @@ window.initHome = async function() {
         var _pctAvg = Math.min(100, _avgMin > 0 ? Math.round(_avgMin / _cibleMin * 100) : 0);
         var _arcOffset = Math.round(233 - (233 * _pctTotal / 100));
         progressWrap.innerHTML = ''
-          + '<div style="background:#FFF5F0;border:1px solid #F5C4B3;border-radius:20px;padding:18px;margin-bottom:10px;position:relative;overflow:hidden">'
+          + '<div style="background:#fff2f2;border:1px solid #ffb3b3;border-radius:20px;padding:18px;margin-bottom:10px;position:relative;overflow:hidden">'
           + '<div style="position:absolute;top:-50px;right:-50px;width:180px;height:180px;background:rgba(216,90,48,0.06);border-radius:50%;pointer-events:none"></div>'
           + '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;position:relative">'
           + '<div><div style="font-size:10px;font-weight:700;color:#C2604A;text-transform:uppercase;letter-spacing:0.1em;margin-bottom:3px">Objectif actif</div>'
@@ -4511,10 +4511,10 @@ window.initHome = async function() {
             })()
           + '</div>'
           + '<div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-bottom:10px">'
-          + '<div style="background:white;border:0.5px solid #F5C4B3;border-radius:12px;padding:12px;text-align:center"><div style="font-size:10px;color:#C2604A;font-weight:600;margin-bottom:4px;text-transform:uppercase;letter-spacing:0.06em">Streak</div><div style="font-size:22px;font-weight:800;color:#D85A30;line-height:1">' + _streak + '<span style="font-size:12px;color:#C2604A;font-weight:500"> sem</span></div></div>'
-          + '<div style="background:white;border:0.5px solid #F5C4B3;border-radius:12px;padding:12px;text-align:center"><div style="font-size:10px;color:#C2604A;font-weight:600;margin-bottom:4px;text-transform:uppercase;letter-spacing:0.06em">Cible hebdo</div><div style="font-size:22px;font-weight:800;color:#D85A30;line-height:1">' + (_cibleSeances * _cibleMin) + '<span style="font-size:12px;color:#C2604A;font-weight:500"> min</span></div></div>'
+          + '<div style="background:white;border:0.5px solid #ffb3b3;border-radius:12px;padding:12px;text-align:center"><div style="font-size:10px;color:#C2604A;font-weight:600;margin-bottom:4px;text-transform:uppercase;letter-spacing:0.06em">Streak</div><div style="font-size:22px;font-weight:800;color:#D85A30;line-height:1">' + _streak + '<span style="font-size:12px;color:#C2604A;font-weight:500"> sem</span></div></div>'
+          + '<div style="background:white;border:0.5px solid #ffb3b3;border-radius:12px;padding:12px;text-align:center"><div style="font-size:10px;color:#C2604A;font-weight:600;margin-bottom:4px;text-transform:uppercase;letter-spacing:0.06em">Cible hebdo</div><div style="font-size:22px;font-weight:800;color:#D85A30;line-height:1">' + (_cibleSeances * _cibleMin) + '<span style="font-size:12px;color:#C2604A;font-weight:500"> min</span></div></div>'
           + '</div>'
-          + '<div style="background:white;border:0.5px solid #F5C4B3;border-radius:14px;padding:14px;display:flex;align-items:center;gap:12px;margin-bottom:12px">'
+          + '<div style="background:white;border:0.5px solid #ffb3b3;border-radius:14px;padding:14px;display:flex;align-items:center;gap:12px;margin-bottom:12px">'
           + '<div style="width:36px;height:36px;border-radius:10px;background:#FAECE7;display:flex;align-items:center;justify-content:center;flex-shrink:0"><i class="ti ti-flame" style="font-size:18px;color:#D85A30"></i></div>'
           + '<div style="font-size:12px;color:#2b2320;line-height:1.5">' + _msgMirella + '</div>'
           + '</div>'
