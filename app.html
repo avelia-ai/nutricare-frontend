@@ -1220,7 +1220,7 @@ window.saveSportSeance = function() {
         .then(function(d){
           window._pcAllLogs = d.logs || d || [];
           if(window._pcProfile && typeof window.renderPersonalSummary === 'function') {
-            window.renderPersonalSummary(window._pcProfile);
+            setTimeout(function(){ window.renderPersonalSummary(window._pcProfile); }, 500);
           }
         }).catch(function(){});
     }).catch(function(){});
@@ -4186,7 +4186,6 @@ window.initHome = async function() {
       var joursRestants = Math.max(0, joursTotal - joursEcoules);
       var rythme = joursRestants > 0 ? (Math.round((restant / (joursRestants / 7)) * 10) / 10) + ' kg/sem' : '--';
       var pdash = document.getElementById('poidsGoalDashboard');
-      alert('pdash=' + (pdash ? 'FOUND' : 'NULL') + ' card=' + (document.getElementById('personalSummaryCard') ? document.getElementById('personalSummaryCard').style.display : 'NULL'));
       if(pdash) {
         pdash.style.display = 'block';
         document.getElementById('poidsGoalTitle').textContent = verbe === 'perdre' ? 'Perdre du poids' : 'Prendre de la masse';
