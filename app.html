@@ -2452,6 +2452,7 @@ window.initScoreSante = function() {
       var todayScore = scores.find(function(s){ return s.date === today; });
       if (todayScore) {
         document.getElementById('scoreValue').textContent = todayScore.score;
+        window._mirellaSanteScore = todayScore.score;
         document.getElementById('scoreBar').style.width = todayScore.score + '%';
         var lbl = todayScore.score >= 80 ? 'Excellente journée !' : todayScore.score >= 60 ? 'Bonne journée' : todayScore.score >= 40 ? 'Journée correcte' : 'Journée difficile';
         document.getElementById('scoreLabel').textContent = lbl;
@@ -3128,7 +3129,7 @@ window.initHome = async function() {
   var _dashEl = document.getElementById('healthGoalDashboard');
   if (_isSante && _dashEl) {
     _dashEl.style.display = 'block';
-    var _sc = parseInt(localStorage.getItem('mirella_today_score') || '43');
+    var _sc = window._mirellaSanteScore || parseInt(localStorage.getItem('mirella_today_score') || '0');
     document.getElementById('healthScore').textContent = _sc;
     var _circle = document.getElementById('healthCircle');
     if (_circle) _circle.setAttribute('stroke-dashoffset', Math.round(188 - (188 * _sc / 100)));
@@ -4495,7 +4496,17 @@ window.initHome = async function() {
       var _stVal = (_todayLogSummary && _todayLogSummary.stress_level != null) ? (10 - _todayLogSummary.stress_level) : 5;
       var _hVal = (_todayLogSummary && _todayLogSummary.water_liters != null) ? Math.min(10, _todayLogSummary.water_liters * 10/2) : 5;
       var _scoreGlobal = Math.round((_eVal + _sVal + _stVal + _hVal) / 4 * 10);
+      window._mirellaSanteScore = _scoreGlobal;
       objLine = '';
+      var _hDash = document.getElementById('healthGoalDashboard');
+      if (_hDash && _hDash.style.display !== 'none') {
+        var _hScore = document.getElementById('healthScore');
+        var _hCircle = document.getElementById('healthCircle');
+        if (_hScore) _hScore.textContent = _scoreGlobal;
+        if (_hCircle) _hCircle.setAttribute('stroke-dashoffset', Math.round(188 - (188 * _scoreGlobal / 100)));
+        var _hMsg = document.getElementById('healthMsg');
+        if (_hMsg) _hMsg.innerHTML = _scoreGlobal >= 70 ? 'Excellent travail ! Tu es sur la bonne voie.' : _scoreGlobal >= 50 ? 'Bonne progression — continue pour atteindre 80/100.' : 'Mets à jour tes données chaque jour pour progresser.';
+      }
       progressWrap.style.display = 'none';
       document.getElementById('summaryProgressStart').textContent = '0/100';
       document.getElementById('summaryProgressEnd').textContent = '100/100';
