@@ -4496,7 +4496,7 @@ window.initHome = async function() {
       var _hVal = (_todayLogSummary && _todayLogSummary.water_liters != null) ? Math.min(10, _todayLogSummary.water_liters * 10/2) : 5;
       var _scoreGlobal = Math.round((_eVal + _sVal + _stVal + _hVal) / 4 * 10);
       objLine = '';
-      progressWrap.style.display = 'block';
+      progressWrap.style.display = 'none';
       document.getElementById('summaryProgressStart').textContent = '0/100';
       document.getElementById('summaryProgressEnd').textContent = '100/100';
       document.getElementById('summaryProgressLabel').textContent = _scoreGlobal + '/100';
