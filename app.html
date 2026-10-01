@@ -31512,6 +31512,20 @@ function confirmNouvelObjectif() {
   if(delta > 0) payload.poids_delta_souhaite = delta;
   if(poidsObj) payload.poids_objectif = poidsObj;
   if(poidsActuelInput > 0) payload.poids = poidsActuelInput;
+  // Mettre à jour le log de santé du jour avec le poids saisi
+  if(poidsActuelInput > 0) {
+    var _today = new Date().toISOString().split('T')[0];
+    var _tok = window._authToken || window.authToken || localStorage.getItem('nutricare_token') || localStorage.getItem('mirella_token') || '';
+    var _bu = (typeof BACKEND_URL !== 'undefined') ? BACKEND_URL : 'https://nutricare-backend-production.up.railway.app';
+    fetch(_bu + '/api/health/log', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + _tok },
+      body: JSON.stringify({ date: _today, weight: poidsActuelInput })
+    }).catch(function(e) { console.error('health log poids error:', e); });
+    // Mettre à jour le champ hWeight dans le suivi si visible
+    var _hw = document.getElementById('hWeight');
+    if(_hw) _hw.value = poidsActuelInput;
+  }
   Object.keys(extra).forEach(function(k) { if(extra[k] !== null && extra[k] !== undefined) payload[k] = extra[k]; });
 
   _saveProfil(payload, function(err, data) {
