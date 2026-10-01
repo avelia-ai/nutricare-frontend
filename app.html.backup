@@ -2452,18 +2452,7 @@ window.initScoreSante = function() {
       var todayScore = scores.find(function(s){ return s.date === today; });
       if (todayScore) {
         document.getElementById('scoreValue').textContent = todayScore.score;
-        window._mirellaSanteScore = todayScore.score;
         document.getElementById('scoreBar').style.width = todayScore.score + '%';
-        var _hScore = document.getElementById('healthScore');
-        var _hCircle = document.getElementById('healthCircle');
-        var _hMsg = document.getElementById('healthMsg');
-        var _hWeekPts = document.getElementById('healthWeekPts');
-        var _hWeekBar = document.getElementById('healthWeekBar');
-        if (_hScore) _hScore.textContent = todayScore.score;
-        if (_hCircle) _hCircle.setAttribute('stroke-dashoffset', Math.round(188 - (188 * todayScore.score / 100)));
-        if (_hWeekPts) _hWeekPts.textContent = '+' + todayScore.score + ' pts';
-        if (_hWeekBar) _hWeekBar.style.width = Math.min(100, todayScore.score) + '%';
-        if (_hMsg) _hMsg.innerHTML = todayScore.score >= 70 ? 'Excellent travail ! Tu es sur la bonne voie.' : todayScore.score >= 50 ? 'Bonne progression — continue pour atteindre 80/100.' : 'Mets à jour tes données chaque jour pour progresser.';
         var lbl = todayScore.score >= 80 ? 'Excellente journée !' : todayScore.score >= 60 ? 'Bonne journée' : todayScore.score >= 40 ? 'Journée correcte' : 'Journée difficile';
         document.getElementById('scoreLabel').textContent = lbl;
         var c = todayScore.score >= 80 ? '#22c55e' : todayScore.score >= 60 ? 'var(--accent)' : 'var(--coral)';
@@ -3130,34 +3119,6 @@ window.CITATIONS = [
 
 window.initHome = async function() {
   var profile = JSON.parse(localStorage.getItem('nutricare_profile') || '{}');
-
-
-  var _objts = profile.objectifs || [];
-  var _delaiSem = profile.objectif_delai_semaines || 4;
-  var _goalStart = profile.objectif_start_date ? new Date(profile.objectif_start_date) : new Date();
-  var _isSante = _objts.indexOf('sante') > -1 || _objts.indexOf('ameliorer_sante') > -1 || _objts.indexOf('health') > -1 || _objts.indexOf('sante_generale') > -1;
-  var _dashEl = document.getElementById('healthGoalDashboard');
-  if (_isSante && _dashEl) {
-    _dashEl.style.display = 'block';
-    var _sc = window._mirellaSanteScore || parseInt(localStorage.getItem('mirella_today_score') || '0');
-    document.getElementById('healthScore').textContent = _sc;
-    var _circle = document.getElementById('healthCircle');
-    if (_circle) _circle.setAttribute('stroke-dashoffset', Math.round(188 - (188 * _sc / 100)));
-    var _diff = _sc - parseInt(localStorage.getItem('mirella_yesterday_score') || '0');
-    document.getElementById('healthWeekPts').textContent = (_diff >= 0 ? '+' : '') + _diff + ' pts';
-    document.getElementById('healthWeekBar').style.width = Math.min(100, _sc) + '%';
-    var _endDate = new Date(_goalStart);
-    _endDate.setDate(_endDate.getDate() + (_delaiSem * 7));
-    var _daysLeft = Math.max(0, Math.ceil((_endDate - new Date()) / 86400000));
-    document.getElementById('healthDeadline').textContent = Math.ceil(_daysLeft/7) > 0 ? Math.ceil(_daysLeft/7) + ' sem.' : _daysLeft + ' j.';
-    var _msg = _sc >= 70 ? 'Excellent travail ! Tu es sur la bonne voie.' : _sc >= 50 ? 'Bonne progression — continue pour atteindre 80/100.' : 'Mets à jour tes données chaque jour pour progresser.';
-    document.getElementById('healthMsg').innerHTML = _msg;
-    var _hist = JSON.parse(localStorage.getItem('mirella_score_history') || '[]');
-    var _streak = 0;
-    for (var _i = _hist.length - 1; _i >= 0; _i--) { if (_hist[_i] > 0) _streak++; else break; }
-    document.getElementById('healthStreak').textContent = _streak + ' jour' + (_streak > 1 ? 's' : '');
-  }
-
   if (typeof loadDashboardForDate === 'function') {
     var _todayDateStrHome = (typeof wcalSelected !== 'undefined' ? wcalSelected : new Date()).toISOString().split('T')[0];
     loadDashboardForDate(_todayDateStrHome);
@@ -4172,38 +4133,16 @@ window.initHome = async function() {
     var _todayLogSummary = window._pcTodayHealthLog || null;
     if (_hasPoidsObjectif && profile.poids_objectif && profile.poids_delta_souhaite && profile.objectif_delai_semaines) {
       verbe = objectifs.indexOf('masse') > -1 && objectifs.indexOf('perte_poids') === -1 ? 'prendre' : 'perdre';
-      objLine = '';
-      progressWrap.style.display = 'none';
+      objLine = 'Objectif : ' + verbe + ' ' + profile.poids_delta_souhaite + ' kg en ' + profile.objectif_delai_semaines + ' semaines';
+      progressWrap.style.display = 'block';
       var startW = verbe === 'perdre' ? profile.poids_objectif + profile.poids_delta_souhaite : profile.poids_objectif - profile.poids_delta_souhaite;
+      document.getElementById('summaryProgressStart').textContent = startW + ' kg';
+      document.getElementById('summaryProgressEnd').textContent = profile.poids_objectif + ' kg';
+      document.getElementById('summaryProgressLabel').textContent = poids + ' kg';
       var total = Math.abs(startW - profile.poids_objectif);
       var done = Math.abs(startW - poids);
       var pct = total > 0 ? Math.max(0, Math.min(100, Math.round((done / total) * 100))) : 0;
-      var restant = Math.round(Math.abs(poids - profile.poids_objectif) * 10) / 10;
-      var dateDebut = profile.objectif_date_debut ? new Date(profile.objectif_date_debut) : new Date();
-      var joursTotal = profile.objectif_delai_semaines * 7;
-      var joursEcoules = Math.round((new Date() - dateDebut) / (1000 * 60 * 60 * 24));
-      var joursRestants = Math.max(0, joursTotal - joursEcoules);
-      var rythme = joursRestants > 0 ? (Math.round((restant / (joursRestants / 7)) * 10) / 10) + ' kg/sem' : '--';
-      var pdash = document.getElementById('poidsGoalDashboard');
-      if(pdash) {
-        pdash.style.display = 'block';
-        document.getElementById('poidsGoalTitle').textContent = verbe === 'perdre' ? 'Perdre du poids' : 'Prendre de la masse';
-        document.getElementById('poidsActuelBadge').innerHTML = (poids || '--') + ' <span style="font-size:13px">kg</span>';
-        document.getElementById('poidsDepart').innerHTML = startW + ' <span style="font-size:12px;color:#993C1D">kg</span>';
-        document.getElementById('poidsCible').innerHTML = profile.poids_objectif + ' <span style="font-size:12px;color:#993C1D">kg</span>';
-        document.getElementById('poidsDelai').innerHTML = profile.objectif_delai_semaines + ' <span style="font-size:12px;color:#993C1D">sem.</span>';
-        document.getElementById('poidsDepartLabel').textContent = startW + ' kg';
-        document.getElementById('poidsCibleLabel').textContent = profile.poids_objectif + ' kg';
-        document.getElementById('poidsProgressBar').style.width = pct + '%';
-        document.getElementById('poidsPct').textContent = poids ? pct + '% de l'objectif atteint' : '';
-        document.getElementById('poidsRestant').textContent = restant + ' kg';
-        document.getElementById('poidsJoursRestants').textContent = joursRestants + ' j.';
-        document.getElementById('poidsRythme').textContent = rythme;
-        var msg = verbe === 'perdre'
-          ? 'Il te reste ' + restant + ' kg à perdre. Vise -0.5 kg/semaine pour y arriver en douceur.'
-          : 'Il te reste ' + restant + ' kg à prendre. Assure un surplus calorique modéré chaque jour.';
-        document.getElementById('poidsMsg').textContent = msg;
-      }
+      document.getElementById('summaryProgressBar').style.width = pct + '%';
     } else if (objectifs.length === 1 && objectifs.indexOf('maintien') > -1 && !(profile.poids_delta_souhaite && parseFloat(profile.poids_delta_souhaite) > 0)) {
       objLine = 'Objectif : maintenir ton poids actuel';
       var zoneMin = Math.round((poids - 2) * 10) / 10;
@@ -4528,18 +4467,8 @@ window.initHome = async function() {
       var _stVal = (_todayLogSummary && _todayLogSummary.stress_level != null) ? (10 - _todayLogSummary.stress_level) : 5;
       var _hVal = (_todayLogSummary && _todayLogSummary.water_liters != null) ? Math.min(10, _todayLogSummary.water_liters * 10/2) : 5;
       var _scoreGlobal = Math.round((_eVal + _sVal + _stVal + _hVal) / 4 * 10);
-      window._mirellaSanteScore = _scoreGlobal;
-      objLine = '';
-      var _hDash = document.getElementById('healthGoalDashboard');
-      if (_hDash && _hDash.style.display !== 'none') {
-        var _hScore = document.getElementById('healthScore');
-        var _hCircle = document.getElementById('healthCircle');
-        if (_hScore) _hScore.textContent = _scoreGlobal;
-        if (_hCircle) _hCircle.setAttribute('stroke-dashoffset', Math.round(188 - (188 * _scoreGlobal / 100)));
-        var _hMsg = document.getElementById('healthMsg');
-        if (_hMsg) _hMsg.innerHTML = _scoreGlobal >= 70 ? 'Excellent travail ! Tu es sur la bonne voie.' : _scoreGlobal >= 50 ? 'Bonne progression — continue pour atteindre 80/100.' : 'Mets à jour tes données chaque jour pour progresser.';
-      }
-      progressWrap.style.display = 'none';
+      objLine = 'Objectif : améliorer ta santé générale (score : ' + _scoreGlobal + '/100)';
+      progressWrap.style.display = 'block';
       document.getElementById('summaryProgressStart').textContent = '0/100';
       document.getElementById('summaryProgressEnd').textContent = '100/100';
       document.getElementById('summaryProgressLabel').textContent = _scoreGlobal + '/100';
@@ -4549,7 +4478,7 @@ window.initHome = async function() {
     }
     var objLineEl = document.getElementById('summaryObjectifLine');
     objLineEl.textContent = objLine;
-    objLineEl.style.display = 'none';
+    objLineEl.style.display = objLine ? 'block' : 'none';
 
     var objChipsEl = document.getElementById('summaryObjectifChips');
     objChipsEl.innerHTML = objectifs.map(function(o) {
@@ -6220,11 +6149,9 @@ function switchLang(lang) {
 
             <div id="summaryObjectifLine" style="display:none;font-size:0.85rem;color:#FF6B6B;font-weight:700;line-height:1.4;text-align:center;background:linear-gradient(135deg,#FFF0EC,#FFF8E8);border-radius:14px;padding:12px 16px;margin-bottom:12px"></div>
 
-            
+            <div id="summaryObjectifChips" style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:16px"></div>
 
-            <div id="healthGoalDashboard" style="display:none;margin-bottom:16px"><div style="background:#fff2f2;border-radius:20px;padding:18px;border:1.5px solid #ffb3b3;position:relative;overflow:hidden"><div style="position:absolute;width:120px;height:120px;border-radius:50%;background:rgba(255,107,107,0.12);top:-30px;right:-30px"></div><div style="position:absolute;width:70px;height:70px;border-radius:50%;background:rgba(255,154,60,0.10);bottom:10px;right:60px"></div><div style="position:absolute;width:45px;height:45px;border-radius:50%;background:rgba(255,107,107,0.08);bottom:-10px;left:20px"></div><div style="position:relative"><div style="font-size:11px;font-weight:600;color:#E85555;letter-spacing:0.06em;text-transform:uppercase;margin-bottom:4px">Objectif actif</div><div id="healthGoalTitle" style="font-size:20px;font-weight:700;color:#7a1a1a;margin-bottom:14px">Améliorer ma santé</div><div style="display:flex;align-items:center;gap:16px"><div style="position:relative;width:80px;height:80px;flex-shrink:0"><svg width="80" height="80" viewBox="0 0 80 80" style="transform:rotate(-90deg)"><circle cx="40" cy="40" r="30" fill="none" stroke="#ffd5d5" stroke-width="8"/><circle id="healthCircle" cx="40" cy="40" r="30" fill="none" stroke="#FF6B6B" stroke-width="8" stroke-linecap="round" stroke-dasharray="188" stroke-dashoffset="107"/></svg><div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center"><span id="healthScore" style="font-size:18px;font-weight:700;color:#7a1a1a">--</span><span style="font-size:10px;color:#E85555">/100</span></div></div><div style="flex:1;display:flex;flex-direction:column;gap:9px"><div><div style="display:flex;justify-content:space-between;margin-bottom:3px"><span style="font-size:12px;color:#E85555">Cette semaine</span><span id="healthWeekPts" style="font-size:13px;font-weight:600;color:#7a1a1a">+0 pts</span></div><div style="height:4px;background:#ffd5d5;border-radius:4px"><div id="healthWeekBar" style="height:4px;background:linear-gradient(90deg,#FF6B6B,#FF9A3C);border-radius:4px;width:0%"></div></div></div><div style="display:flex;justify-content:space-between"><span style="font-size:12px;color:#E85555">Délai restant</span><span id="healthDeadline" style="font-size:13px;font-weight:600;color:#7a1a1a">--</span></div><div style="display:flex;justify-content:space-between"><span style="font-size:12px;color:#E85555">Cible finale</span><span style="font-size:13px;font-weight:600;color:#7a1a1a">80 / 100</span></div></div></div><div style="margin-top:14px;background:#fff;border-radius:12px;padding:10px 14px;display:flex;align-items:center;gap:10px;border:0.5px solid #ffb3b3"><div style="width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,#FF6B6B,#FF9A3C);display:flex;align-items:center;justify-content:center;flex-shrink:0;color:#fff;font-size:15px">&#9829;</div><div id="healthMsg" style="font-size:12px;color:#7a1a1a;line-height:1.5">Continue sur ta lancée — mets à jour tes données pour suivre ta progression.</div></div><div style="margin-top:10px;font-size:11px;color:#E85555;display:flex;align-items:center;gap:5px">🔥 Streak : <strong id="healthStreak" style="font-size:14px;color:#7a1a1a;margin-left:2px">0 jour</strong></div><button onclick="showView('health')" style="width:100%;margin-top:12px;background:linear-gradient(135deg,#FF6B6B,#FF9A3C);color:#fff;border:none;border-radius:14px;padding:14px;font-size:15px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px">➕ Mettre à jour mes données</button></div></div></div>
-            <div id="summaryObjectifChips" style="display:none"></div>
-            <div id="summaryProgressWrap" style="display:none!important;margin-bottom:18px">
+            <div id="summaryProgressWrap" style="display:none;margin-bottom:18px">
               <div style="font-size:0.68rem;color:#999;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:8px;font-weight:700">Progression vers l\'objectif</div>
               <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px">
                 <span id="summaryProgressStart" style="font-size:0.85rem;color:#bbb;font-weight:600"></span>
@@ -9791,7 +9718,6 @@ function switchLang(lang) {
   <div style="padding:20px">
 
     <!-- Score du jour -->
-    <div id="healthGoalDashboard" style="display:none;margin-bottom:20px"><div style="background:#fff2f2;border-radius:20px;padding:18px;border:1.5px solid #ffb3b3;position:relative;overflow:hidden"><div style="position:absolute;width:120px;height:120px;border-radius:50%;background:rgba(255,107,107,0.12);top:-30px;right:-30px"></div><div style="position:absolute;width:70px;height:70px;border-radius:50%;background:rgba(255,154,60,0.10);bottom:10px;right:60px"></div><div style="position:absolute;width:45px;height:45px;border-radius:50%;background:rgba(255,107,107,0.08);bottom:-10px;left:20px"></div><div style="position:relative"><div style="font-size:11px;font-weight:600;color:#E85555;letter-spacing:0.06em;text-transform:uppercase;margin-bottom:4px">Objectif actif</div><div id="healthGoalTitle" style="font-size:20px;font-weight:700;color:#7a1a1a;margin-bottom:14px">Améliorer ma santé</div><div style="display:flex;align-items:center;gap:16px"><div style="position:relative;width:80px;height:80px;flex-shrink:0"><svg width="80" height="80" viewBox="0 0 80 80" style="transform:rotate(-90deg)"><circle cx="40" cy="40" r="30" fill="none" stroke="#ffd5d5" stroke-width="8"/><circle id="healthCircle" cx="40" cy="40" r="30" fill="none" stroke="#FF6B6B" stroke-width="8" stroke-linecap="round" stroke-dasharray="188" stroke-dashoffset="107"/></svg><div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center"><span id="healthScore" style="font-size:18px;font-weight:700;color:#7a1a1a">--</span><span style="font-size:10px;color:#E85555">/100</span></div></div><div style="flex:1;display:flex;flex-direction:column;gap:9px"><div><div style="display:flex;justify-content:space-between;margin-bottom:3px"><span style="font-size:12px;color:#E85555">Cette semaine</span><span id="healthWeekPts" style="font-size:13px;font-weight:600;color:#7a1a1a">+0 pts</span></div><div style="height:4px;background:#ffd5d5;border-radius:4px"><div id="healthWeekBar" style="height:4px;background:linear-gradient(90deg,#FF6B6B,#FF9A3C);border-radius:4px;width:0%"></div></div></div><div style="display:flex;justify-content:space-between"><span style="font-size:12px;color:#E85555">Délai restant</span><span id="healthDeadline" style="font-size:13px;font-weight:600;color:#7a1a1a">--</span></div><div style="display:flex;justify-content:space-between"><span style="font-size:12px;color:#E85555">Cible finale</span><span style="font-size:13px;font-weight:600;color:#7a1a1a">80 / 100</span></div></div></div><div style="margin-top:14px;background:#fff;border-radius:12px;padding:10px 14px;display:flex;align-items:center;gap:10px;border:0.5px solid #ffb3b3"><div style="width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,#FF6B6B,#FF9A3C);display:flex;align-items:center;justify-content:center;flex-shrink:0;color:#fff;font-size:15px">♥</div><div id="healthMsg" style="font-size:12px;color:#7a1a1a;line-height:1.5">Continue sur ta lancée — mets à jour tes données pour suivre ta progression.</div></div><div style="margin-top:10px;font-size:11px;color:#E85555;display:flex;align-items:center;gap:5px">🔥 Streak : <strong id="healthStreak" style="font-size:14px;color:#7a1a1a;margin-left:2px">0 jour</strong></div><button onclick="document.getElementById('tabSuivi').click()" style="width:100%;margin-top:12px;background:linear-gradient(135deg,#FF6B6B,#FF9A3C);color:#fff;border:none;border-radius:14px;padding:14px;font-size:15px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px">➕ Mettre à jour mes données</button></div></div></div>
     <div id="scoreDisplay" style="background:#FFFCFA;border-radius:20px;padding:24px;margin-bottom:20px;text-align:center;box-shadow:0 0 0 1.5px rgba(255,154,108,0.22),0 14px 32px rgba(230,110,70,0.14)">
       <div style="font-size:0.8rem;font-weight:600;text-transform:uppercase;letter-spacing:.1em;color:#888;margin-bottom:12px">Score du jour</div>
       <div id="scoreValue" style="font-size:4rem;font-weight:800;color:var(--coral);line-height:1">--</div>
@@ -18628,17 +18554,6 @@ function updateHealthScoreSummaryHome(log, scoreDelta) {
   valEl.textContent = score;
   lblEl.textContent = lbl;
   ringEl.style.strokeDashoffset = circ * (1 - score/100);
-  window._mirellaSanteScore = score;
-  var _hS = document.getElementById('healthScore');
-  var _hC = document.getElementById('healthCircle');
-  var _hM = document.getElementById('healthMsg');
-  var _hW = document.getElementById('healthWeekPts');
-  var _hB = document.getElementById('healthWeekBar');
-  if (_hS) _hS.textContent = score;
-  if (_hC) _hC.setAttribute('stroke-dashoffset', Math.round(188 - (188 * score / 100)));
-  if (_hW) _hW.textContent = '+' + score + ' pts';
-  if (_hB) _hB.style.width = Math.min(100, score) + '%';
-  if (_hM) _hM.innerHTML = score >= 70 ? 'Excellent travail ! Tu es sur la bonne voie.' : score >= 50 ? 'Bonne progression — continue pour atteindre 80/100.' : 'Mets à jour tes données chaque jour pour progresser.';
   var barEnergie = document.getElementById('healthScoreBarEnergieHome');
   var barSommeil = document.getElementById('healthScoreBarSommeilHome');
   var barHydra = document.getElementById('healthScoreBarHydraHome');
@@ -18658,7 +18573,7 @@ function updateHealthScoreSummaryHome(log, scoreDelta) {
       goalHomeWrap.style.display = 'none';
     } else {
       goalHomeWrap.style.display = 'flex';
-      goalHomeText.textContent = 'Objectif demain : Score 80';
+      goalHomeText.textContent = 'Objectif demain : ' + (80 - score) + ' pts';
     }
   }
 }
@@ -18862,17 +18777,6 @@ function updateHealthScoreSummary(log, scoreDelta) {
   valEl.textContent = score;
   lblEl.textContent = lbl;
   ringEl.style.strokeDashoffset = circ * (1 - score/100);
-  window._mirellaSanteScore = score;
-  var _hS = document.getElementById('healthScore');
-  var _hC = document.getElementById('healthCircle');
-  var _hM = document.getElementById('healthMsg');
-  var _hW = document.getElementById('healthWeekPts');
-  var _hB = document.getElementById('healthWeekBar');
-  if (_hS) _hS.textContent = score;
-  if (_hC) _hC.setAttribute('stroke-dashoffset', Math.round(188 - (188 * score / 100)));
-  if (_hW) _hW.textContent = '+' + score + ' pts';
-  if (_hB) _hB.style.width = Math.min(100, score) + '%';
-  if (_hM) _hM.innerHTML = score >= 70 ? 'Excellent travail ! Tu es sur la bonne voie.' : score >= 50 ? 'Bonne progression — continue pour atteindre 80/100.' : 'Mets à jour tes données chaque jour pour progresser.';
   var barEnergie = document.getElementById('healthScoreBarEnergie');
   var barSommeil = document.getElementById('healthScoreBarSommeil');
   var barHydra = document.getElementById('healthScoreBarHydra');
