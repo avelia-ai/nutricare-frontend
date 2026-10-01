@@ -12299,6 +12299,11 @@ function switchLang(lang) {
         loadPrediction();
       }
 
+      // Mettre à jour le résumé personnalisé avec le profil frais
+      if (typeof window.renderPersonalSummary === 'function') {
+        window.renderPersonalSummary(profile);
+      }
+
     } catch (err) {
       console.error('Erreur chargement profil:', err);
     }
