@@ -4523,7 +4523,7 @@ window.initHome = async function() {
     metrics.push({ icon: 'moon', c1: '#7EC8E3', c2: '#a8dcf0', val: (_todayLog && _todayLog.sleep_hours != null ? _todayLog.sleep_hours : 0) + 'h', label: 'Sommeil du jour' });
     metrics.push({ icon: 'yoga', c1: '#C3A9D1', c2: '#e0c9f0', val: (_todayLog && _todayLog.stress_level != null ? _todayLog.stress_level : 0) + '/10', label: 'Stress du jour' });
     if (profile.sport_pratique) metrics.push({ icon: 'run', c1: '#27AE60', c2: '#82E0AA', val: profile.sport_pratique, label: 'Sport pratique' });
-    var metricsEl = document.getElementById('summaryMetricsGrid');
+    console.log('METRICS DEBUG - poids:', poids, 'metrics count:', metrics.length); var metricsEl = document.getElementById('summaryMetricsGrid'); console.log('metricsEl:', metricsEl);
     metricsEl.innerHTML = metrics.map(function(m) {
       return '<div style="background:#FAFAFA;border-radius:14px;padding:14px">' +
         '<div style="width:32px;height:32px;border-radius:10px;background:linear-gradient(135deg,' + m.c1 + ',' + m.c2 + ');display:flex;align-items:center;justify-content:center;margin-bottom:8px"><i class="ti ti-' + m.icon + '" style="font-size:16px;color:#fff"></i></div>' +
