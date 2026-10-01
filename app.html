@@ -4147,8 +4147,9 @@ window.initHome = async function() {
     var poids = parseFloat(profile.poids);
     var taille = parseFloat(profile.taille);
     var hasData = poids && taille;
+    var _hasObjectif = (profile.objectifs || []).length > 0;
     if (card) {
-      if (!hasData) { card.style.display = 'none'; }
+      if (!hasData && !_hasObjectif) { card.style.display = 'none'; }
       else { card.style.display = 'block'; }
     }
     var tailleM = taille / 100;
@@ -4169,7 +4170,6 @@ window.initHome = async function() {
     var progressWrap = document.getElementById('summaryProgressWrap');
     var verbe = 'perdre';
     var _hasPoidsObjectif = objectifs.indexOf('perte_poids') > -1 || objectifs.indexOf('masse') > -1;
-    alert('DEBUG: objectifs=' + JSON.stringify(objectifs) + ' poids_obj=' + profile.poids_objectif + ' delta=' + profile.poids_delta_souhaite + ' delai=' + profile.objectif_delai_semaines);
     var _todayLogSummary = window._pcTodayHealthLog || null;
     if (_hasPoidsObjectif && profile.poids_objectif && profile.poids_delta_souhaite && profile.objectif_delai_semaines) {
       verbe = objectifs.indexOf('masse') > -1 && objectifs.indexOf('perte_poids') === -1 ? 'prendre' : 'perdre';
