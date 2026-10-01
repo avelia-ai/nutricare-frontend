@@ -4186,6 +4186,7 @@ window.initHome = async function() {
       var joursRestants = Math.max(0, joursTotal - joursEcoules);
       var rythme = joursRestants > 0 ? (Math.round((restant / (joursRestants / 7)) * 10) / 10) + ' kg/sem' : '--';
       var pdash = document.getElementById('poidsGoalDashboard');
+      alert('pdash=' + (pdash ? 'FOUND' : 'NULL') + ' card=' + (document.getElementById('personalSummaryCard') ? document.getElementById('personalSummaryCard').style.display : 'NULL'));
       if(pdash) {
         pdash.style.display = 'block';
         document.getElementById('poidsGoalTitle').textContent = verbe === 'perdre' ? 'Perdre du poids' : 'Prendre de la masse';
