@@ -2454,6 +2454,16 @@ window.initScoreSante = function() {
         document.getElementById('scoreValue').textContent = todayScore.score;
         window._mirellaSanteScore = todayScore.score;
         document.getElementById('scoreBar').style.width = todayScore.score + '%';
+        var _hScore = document.getElementById('healthScore');
+        var _hCircle = document.getElementById('healthCircle');
+        var _hMsg = document.getElementById('healthMsg');
+        var _hWeekPts = document.getElementById('healthWeekPts');
+        var _hWeekBar = document.getElementById('healthWeekBar');
+        if (_hScore) _hScore.textContent = todayScore.score;
+        if (_hCircle) _hCircle.setAttribute('stroke-dashoffset', Math.round(188 - (188 * todayScore.score / 100)));
+        if (_hWeekPts) _hWeekPts.textContent = '+' + todayScore.score + ' pts';
+        if (_hWeekBar) _hWeekBar.style.width = Math.min(100, todayScore.score) + '%';
+        if (_hMsg) _hMsg.innerHTML = todayScore.score >= 70 ? 'Excellent travail ! Tu es sur la bonne voie.' : todayScore.score >= 50 ? 'Bonne progression — continue pour atteindre 80/100.' : 'Mets à jour tes données chaque jour pour progresser.';
         var lbl = todayScore.score >= 80 ? 'Excellente journée !' : todayScore.score >= 60 ? 'Bonne journée' : todayScore.score >= 40 ? 'Journée correcte' : 'Journée difficile';
         document.getElementById('scoreLabel').textContent = lbl;
         var c = todayScore.score >= 80 ? '#22c55e' : todayScore.score >= 60 ? 'var(--accent)' : 'var(--coral)';
