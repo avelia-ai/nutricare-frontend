@@ -4150,6 +4150,16 @@ window.initHome = async function() {
   window.pcComputeAdvicePool = pcComputeAdvicePool;
   function renderPersonalSummary(profile) {
     if(window._blockSummaryRender) return;
+    // Vider _sportSeances si le fetch vient de terminer (logs chargés)
+    if((window._pcAllLogs||[]).length > 0) {
+      var _todayStr = new Date().toISOString().split('T')[0];
+      var _todayLog = (window._pcAllLogs||[]).find(function(l){ return (l.date||'').split('T')[0] === _todayStr; });
+      if(_todayLog && _todayLog.activity_minutes > 0) {
+        window._sportSeances = [];
+        var _key = 'mirella_sport_seances_' + _todayStr;
+        localStorage.removeItem(_key);
+      }
+    }
     window._renderCount = (window._renderCount||0)+1;
     var _logsCount = (window._pcAllLogs||[]).filter(function(l){ var d7=new Date(); d7.setDate(d7.getDate()-7); return l.date && new Date(l.date)>=d7 && (l.activity_minutes||0)>0; }).length;
     var _dbg = document.getElementById('_debugBar');
