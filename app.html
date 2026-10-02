@@ -4413,20 +4413,87 @@ window.initHome = async function() {
       progressWrap.style.display = 'block';
       // Adapter la jauge selon l'objectif
       if (_cardioObj.indexOf('endurance') > -1) {
-        // Jauge = minutes de course cette semaine (proxy progression endurance)
         var _niveau = profile.cardio_niveau || 'debutant';
         var _cibleMin = _niveau === 'confirme' ? 45 : _niveau === 'intermediaire' ? 30 : 20;
-        var _minsWeek = (function(){
-          var d7 = new Date(); d7.setDate(d7.getDate() - 7);
-          var _logs = window._pcAllLogs || [];
-          return _logs.filter(function(l){ return l.date && new Date(l.date) >= d7 && l.activity_minutes > 0; })
-                      .reduce(function(s,l){ return s + (l.activity_minutes || 0); }, 0);
+        var _cibleSeances = _seancesObjNum || 3;
+        var _allLogs7e = window._pcAllLogs || [];
+        var _d7e = new Date(); _d7e.setDate(_d7e.getDate() - 7);
+        var _seancesWeekE = _allLogs7e.filter(function(l){ return l.date && new Date(l.date) >= _d7e && l.activity_minutes > 0; });
+        var _nbSeancesE = _seancesWeekE.length;
+        var _totalMinE = _seancesWeekE.reduce(function(s,l){ return s + (l.activity_minutes || 0); }, 0);
+        var _avgMinE = _nbSeancesE > 0 ? Math.round(_totalMinE / _nbSeancesE) : 0;
+        var _cibleTotalMin = _cibleSeances * _cibleMin;
+        var _pctE = Math.min(100, _cibleTotalMin > 0 ? Math.round(_totalMinE / _cibleTotalMin * 100) : 0);
+        var _pctAvgE = Math.min(100, _avgMinE > 0 ? Math.round(_avgMinE / _cibleMin * 100) : 0);
+        var _arcOffsetE = Math.round(233 - (233 * _pctE / 100));
+        var _streakE = (function(){
+          var s = 0; var _prevWeek = null;
+          var _sorted = _allLogs7e.slice().sort(function(a,b){ return new Date(b.date) - new Date(a.date); });
+          for(var i = 0; i < _sorted.length; i++) {
+            var _w = Math.floor((new Date() - new Date(_sorted[i].date)) / (7*86400000));
+            if(_sorted[i].activity_minutes > 0 && _w !== _prevWeek){ s++; _prevWeek = _w; }
+          }
+          return s;
         })();
-        objLine = 'Objectif : courir sans pause — ' + _minsWeek + ' min de course cette semaine';
-        document.getElementById('summaryProgressStart').textContent = '0 min';
-        document.getElementById('summaryProgressEnd').textContent = _cibleMin + ' min';
-        document.getElementById('summaryProgressLabel').textContent = _minsWeek + ' min';
-        document.getElementById('summaryProgressBar').style.width = Math.max(0, Math.min(100, Math.round((_minsWeek / _cibleMin) * 100))) + '%';
+        var _msgE = _nbSeancesE >= _cibleSeances
+          ? 'Objectif de s\u00e9ances atteint cette semaine\u00a0! Continue sur cette lanc\u00e9e.'
+          : 'Il te manque ' + (_cibleSeances - _nbSeancesE) + ' s\u00e9ance' + ((_cibleSeances - _nbSeancesE) > 1 ? 's' : '') + ' pour atteindre ta cible cette semaine.';
+        progressWrap.style.display = 'block';
+        progressWrap.innerHTML = ''
+          + '<div style="background:#fff2f2;border:1px solid #ffb3b3;border-radius:20px;padding:18px;margin-bottom:10px;position:relative;overflow:hidden">'
+          + '<div style="position:absolute;top:-60px;right:-60px;width:200px;height:200px;background:rgba(255,107,107,0.12);border-radius:50%;pointer-events:none"></div>'
+          + '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;position:relative">'
+          + '<div><div style="font-size:10px;font-weight:700;color:#E85555;text-transform:uppercase;letter-spacing:0.1em;margin-bottom:3px">Objectif actif</div>'
+          + '<div style="font-size:16px;font-weight:800;color:#2b2320">Cardio & endurance</div></div>'
+          + '<div style="background:white;border:1px solid #ffb3b3;border-radius:12px;padding:8px 14px;text-align:center">'
+          + '<div style="font-size:10px;color:#E85555;font-weight:600;margin-bottom:1px">S\u00e9ances</div>'
+          + '<div style="font-size:20px;font-weight:800;color:#FF6B6B;line-height:1">' + _nbSeancesE + '<span style="font-size:12px;color:#E85555">/' + _cibleSeances + '</span></div>'
+          + '</div></div>'
+          + '<div style="display:flex;align-items:center;gap:16px;position:relative">'
+          + '<div style="flex-shrink:0"><svg width="88" height="88" viewBox="0 0 88 88">'
+          + '<circle cx="44" cy="44" r="37" fill="none" stroke="rgba(255,107,107,0.12)" stroke-width="7"/>'
+          + '<circle cx="44" cy="44" r="37" fill="none" stroke="url(#cardEndGrad)" stroke-width="7" stroke-dasharray="233" stroke-dashoffset="' + _arcOffsetE + '" stroke-linecap="round" transform="rotate(-90 44 44)"/>'
+          + '<defs><linearGradient id="cardEndGrad" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="#FF9A3C"/><stop offset="100%" stop-color="#FF9A3C"/></linearGradient></defs>'
+          + '<text x="44" y="40" text-anchor="middle" font-size="17" font-weight="800" fill="#FF6B6B" font-family="DM Sans,sans-serif">' + _pctE + '</text>'
+          + '<text x="44" y="53" text-anchor="middle" font-size="9" fill="#E85555" font-family="DM Sans,sans-serif">% objectif</text>'
+          + '</svg></div>'
+          + '<div style="flex:1">'
+          + '<div style="margin-bottom:11px"><div style="display:flex;justify-content:space-between;margin-bottom:5px"><span style="font-size:11px;color:#9a8b82;font-weight:600">Total semaine</span><span style="font-size:11px;color:#FF6B6B;font-weight:700">' + _totalMinE + ' / ' + _cibleTotalMin + ' min</span></div>'
+          + '<div style="height:6px;background:rgba(255,107,107,0.12);border-radius:99px;overflow:hidden"><div style="height:6px;background:linear-gradient(90deg,#FF6B6B,#FF9A3C);border-radius:99px;width:' + _pctE + '%"></div></div></div>'
+          + '<div><div style="display:flex;justify-content:space-between;margin-bottom:5px"><span style="font-size:11px;color:#9a8b82;font-weight:600">Moy./s\u00e9ance</span><span style="font-size:11px;color:#FF6B6B;font-weight:700">' + _avgMinE + ' / ' + _cibleMin + ' min</span></div>'
+          + '<div style="height:6px;background:rgba(255,107,107,0.12);border-radius:99px;overflow:hidden"><div style="height:6px;background:linear-gradient(90deg,#FF6B6B,#FF9A3C);border-radius:99px;width:' + _pctAvgE + '%"></div></div></div>'
+          + '</div></div></div>'
+          + '<div style="display:grid;grid-template-columns:repeat(' + _cibleSeances + ',minmax(0,1fr));gap:8px;margin-bottom:10px">'
+          + (function(){
+              var cards = '';
+              for(var i = 0; i < _cibleSeances; i++){
+                var _s = _seancesWeekE[i];
+                var _done = !!_s;
+                var _mins = _s ? _s.activity_minutes : 0;
+                var _pct2 = _done ? Math.min(100, Math.round((_mins/_cibleMin)*100)) : 0;
+                var _label = _done ? (_s.date ? new Date(_s.date).toLocaleDateString('fr-FR',{weekday:'long'}) : 'S\u00e9ance') : '\u00c0 planifier';
+                cards += '<div style="background:' + (_done ? 'white' : '#FAFAFA') + ';border:1px solid ' + (_done ? '#ffb3b3' : 'rgba(0,0,0,0.06)') + ';border-radius:14px;padding:12px;position:relative;overflow:hidden">'
+                  + '<div style="position:absolute;top:0;left:0;right:0;height:3px;background:' + (_done ? 'linear-gradient(90deg,#FF6B6B,#FF9A3C)' : 'rgba(0,0,0,0.06)') + '"></div>'
+                  + '<div style="font-size:9px;color:' + (_done ? '#E85555' : '#ccc') + ';font-weight:700;margin-bottom:5px;text-transform:uppercase;letter-spacing:0.06em">S\u00e9ance ' + (i+1) + '</div>'
+                  + '<div style="font-size:18px;font-weight:800;color:' + (_done ? '#FF6B6B' : '#ddd') + ';line-height:1;margin-bottom:2px">' + (_done ? _mins : '--') + '<span style="font-size:10px;color:' + (_done ? '#9a8b82' : '#ddd') + ';font-weight:500"> min</span></div>'
+                  + '<div style="font-size:10px;color:' + (_done ? '#9a8b82' : '#ccc') + '">' + _label + '</div>'
+                  + '<div style="margin-top:6px;height:3px;background:rgba(255,107,107,0.12);border-radius:99px"><div style="height:3px;background:linear-gradient(90deg,#FF6B6B,#FF9A3C);border-radius:99px;width:' + _pct2 + '%"></div></div>'
+                  + '</div>';
+              }
+              return cards;
+            })()
+          + '</div>'
+          + '<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px">'
+          + '<div style="background:white;border:0.5px solid #ffb3b3;border-radius:12px;padding:12px;text-align:center"><div style="font-size:10px;color:#E85555;font-weight:600;margin-bottom:4px;text-transform:uppercase;letter-spacing:0.06em">Streak</div><div style="font-size:22px;font-weight:800;color:#FF6B6B;line-height:1">' + _streakE + '<span style="font-size:12px;color:#E85555;font-weight:500"> sem</span></div></div>'
+          + '<div style="background:white;border:0.5px solid #ffb3b3;border-radius:12px;padding:12px;text-align:center"><div style="font-size:10px;color:#E85555;font-weight:600;margin-bottom:4px;text-transform:uppercase;letter-spacing:0.06em">Cible hebdo</div><div style="font-size:22px;font-weight:800;color:#FF6B6B;line-height:1">' + _cibleTotalMin + '<span style="font-size:12px;color:#E85555;font-weight:500"> min</span></div></div>'
+          + '</div>'
+          + '<div style="background:#fff2f2;border:0.5px solid #ffb3b3;border-radius:14px;padding:14px;display:flex;align-items:center;gap:12px;margin-bottom:12px">'
+          + '<div style="width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,#FF6B6B,#FF9A3C);display:flex;align-items:center;justify-content:center;flex-shrink:0"><i class="ti ti-run" style="font-size:18px;color:white"></i></div>'
+          + '<div style="font-size:12px;color:#7a1a1a;line-height:1.5">' + _msgE + '</div>'
+          + '</div>'
+          + '<button onclick="window._goToSeance()" style="width:100%;padding:15px;border-radius:14px;border:none;background:linear-gradient(135deg,#FF6B6B,#FF9A3C);color:white;font-size:0.9rem;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;box-shadow:0 6px 20px rgba(255,107,107,0.3)">'
+          + '<i class="ti ti-plus" style="font-size:16px"></i> Enregistrer une s\u00e9ance'
+          + '</button>';
       } else if (_cardioObj.indexOf('souffle') > -1 || _cardioObj.indexOf('seances') > -1) {
         // Jauge = séances cette semaine
         var _seancesFaites = _allLogs;
