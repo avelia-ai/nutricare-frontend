@@ -17631,24 +17631,7 @@ async function saveHealthLog() {
       }
       loadHealthDashboard();
       setTimeout(() => checkAndShowNewBadges(), 1000);
-      // Mettre a jour la jauge accueil apres sauvegarde activite
-      setTimeout(function() {
-        var bu = (typeof BACKEND_URL !== 'undefined') ? BACKEND_URL : 'https://nutricare-backend-production.up.railway.app';
-        var tok = window._authToken || window.authToken || localStorage.getItem('nutricare_token') || localStorage.getItem('mirella_token') || localStorage.getItem('sb_token') || '';
-        fetch(bu + '/api/health/logs?days=30', { headers: { 'Authorization': 'Bearer ' + tok }, cache: 'no-store' })
-          .then(function(r){ return r.json(); })
-          .then(function(d){
-            var logs = d.logs || d || [];
-            var _dm = {};
-            logs.forEach(function(l){ var dk=(l.date||'').split('T')[0]; if(!_dm[dk]||((l.activity_minutes||0)>0&&!(_dm[dk].activity_minutes||0))) _dm[dk]=l; });
-            var logs = Object.values(_dm);
-            window._pcAllLogs = logs;
-            _healthLogs = logs;
-            if(window._pcProfile && typeof window.renderPersonalSummary === 'function') {
-              window.renderPersonalSummary(window._pcProfile);
-            }
-          }).catch(function(){});
-      }, 800);
+      // Mettre a jour la jauge accueil : géré par le fetch dans addSportSeance
       // Notif de forme basée sur le score composite (4 statuts)
       if (data.energy_level !== null && data.sleep_hours !== null && data.stress_level !== null) {
         var healthScore = calcHealthScore(data.energy_level, data.sleep_hours, data.stress_level);
