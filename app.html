@@ -17636,6 +17636,9 @@ async function saveHealthLog() {
           .then(function(r){ return r.json(); })
           .then(function(d){
             var logs = d.logs || d || [];
+            var _dm = {};
+            logs.forEach(function(l){ var dk=(l.date||'').split('T')[0]; if(!_dm[dk]||((l.activity_minutes||0)>0&&!(_dm[dk].activity_minutes||0))) _dm[dk]=l; });
+            var logs = Object.values(_dm);
             window._pcAllLogs = logs;
             _healthLogs = logs;
             if(window._pcProfile && typeof window.renderPersonalSummary === 'function') {
