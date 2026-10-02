@@ -1218,7 +1218,13 @@ window.saveSportSeance = function() {
       fetch(bu + '/api/health/logs?days=30', { headers: { 'Authorization': 'Bearer ' + tok }, cache: 'no-store' })
         .then(function(r){ return r.json(); })
         .then(function(d){
-          window._pcAllLogs = d.logs || d || [];
+          var _rawLogs = d.logs || d || [];
+          var _dedupMap = {};
+          _rawLogs.forEach(function(l){
+            var _dk = (l.date||'').split('T')[0];
+            if(!_dedupMap[_dk] || (l.activity_minutes > 0 && !_dedupMap[_dk].activity_minutes)) _dedupMap[_dk] = l;
+          });
+          window._pcAllLogs = Object.values(_dedupMap);
           if(window._pcProfile && typeof window.renderPersonalSummary === 'function') {
             setTimeout(function(){ window.renderPersonalSummary(window._pcProfile); }, 500);
           }
