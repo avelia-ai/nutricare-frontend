@@ -4444,6 +4444,8 @@ window.initHome = async function() {
           _seenDatesE[_dk] = true; return true;
         });
         var _nbSeancesE = _seancesWeekE.length;
+        var _dbg2 = document.getElementById('_debugBar');
+        if(_dbg2) _dbg2.textContent += ' | endurance: nbS='+_nbSeancesE+' raw='+_seancesWeekERaw.length+' allLogs='+_allLogs7e.length;
         var _totalMinE = _seancesWeekE.reduce(function(s,l){ return s + (l.activity_minutes || 0); }, 0);
         var _avgMinE = _nbSeancesE > 0 ? Math.round(_totalMinE / _nbSeancesE) : 0;
         var _cibleTotalMin = _cibleSeances * _cibleMin;
