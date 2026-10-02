@@ -4460,7 +4460,7 @@ window.initHome = async function() {
         window._enduranceLog.push('r'+window._renderCount+':nbS='+_nbSeancesE+'/raw='+_seancesWeekERaw.length+'/logs='+_allLogs7e.length);
         if(window._enduranceLog.length > 5) window._enduranceLog.shift();
         var _dbg2 = document.getElementById('_debugBar');
-        if(_dbg2) _dbg2.textContent = window._renderLog.join('|') + ' END:' + window._enduranceLog.join('|');
+        
         var _totalMinE = _seancesWeekE.reduce(function(s,l){ return s + (l.activity_minutes || 0); }, 0);
         var _avgMinE = _nbSeancesE > 0 ? Math.round(_totalMinE / _nbSeancesE) : 0;
         var _cibleTotalMin = _cibleSeances * _cibleMin;
