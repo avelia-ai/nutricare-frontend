@@ -4418,7 +4418,13 @@ window.initHome = async function() {
         var _cibleSeances = _seancesObjNum || 3;
         var _allLogs7e = window._pcAllLogs || [];
         var _d7e = new Date(); _d7e.setDate(_d7e.getDate() - 7);
-        var _seancesWeekE = _allLogs7e.filter(function(l){ return l.date && new Date(l.date) >= _d7e && l.activity_minutes > 0; });
+        var _seancesWeekERaw = _allLogs7e.filter(function(l){ return l.date && new Date(l.date) >= _d7e && l.activity_minutes > 0; });
+        var _seenDatesE = {};
+        var _seancesWeekE = _seancesWeekERaw.filter(function(l){
+          var _dk = (l.date||'').split('T')[0];
+          if(_seenDatesE[_dk]) return false;
+          _seenDatesE[_dk] = true; return true;
+        });
         var _nbSeancesE = _seancesWeekE.length;
         var _totalMinE = _seancesWeekE.reduce(function(s,l){ return s + (l.activity_minutes || 0); }, 0);
         var _avgMinE = _nbSeancesE > 0 ? Math.round(_totalMinE / _nbSeancesE) : 0;
