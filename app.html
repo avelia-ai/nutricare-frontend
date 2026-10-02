@@ -19227,7 +19227,13 @@ function drawHealthChart(key) {
   });
 }
 function renderHealthChart(logs) {
-  _healthLogs = logs; window._pcAllLogs = logs;
+  var _dedupMap2 = {};
+  (logs||[]).forEach(function(l){
+    var _dk = (l.date||'').split('T')[0];
+    if(!_dedupMap2[_dk] || (l.activity_minutes > 0 && !_dedupMap2[_dk].activity_minutes)) _dedupMap2[_dk] = l;
+  });
+  var _dedupedLogs = Object.values(_dedupMap2);
+  _healthLogs = _dedupedLogs; window._pcAllLogs = _dedupedLogs;
   if (!logs.length) return;
   // Stats résumé
   var last = logs[logs.length-1];
