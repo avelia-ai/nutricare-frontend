@@ -4276,7 +4276,7 @@ window.initHome = async function() {
       var _energiePct = Math.min(100, _energieVal > 0 ? Math.round(_energieVal / _energieObj * 100) : 0);
       var _energieArcOffset = Math.round(233 - (233 * _energiePct / 100));
       var _allLogs7e = window._pcAllLogs || [];
-      var _d7e = new Date(); _d7e.setDate(_d7e.getDate() - 7);
+      var _d7e = new Date(); _d7e.setDate(_d7e.getDate() - _d7e.getDay() + (_d7e.getDay() === 0 ? -6 : 1)); _d7e.setHours(0,0,0,0);
       var _logsAvecEnergie = _allLogs7e.filter(function(l){ return l.date && new Date(l.date) >= _d7e && l.energy_level > 0; });
       var _energieMoy = _logsAvecEnergie.length > 0 ? Math.round(_logsAvecEnergie.reduce(function(s,l){ return s+(l.energy_level||0); },0) / _logsAvecEnergie.length * 10) / 10 : 0;
       var _energieMoyPct = Math.min(100, _energieMoy > 0 ? Math.round(_energieMoy / _energieObj * 100) : 0);
@@ -4438,7 +4438,7 @@ window.initHome = async function() {
         var _cibleMin = _niveau === 'confirme' ? 45 : _niveau === 'intermediaire' ? 30 : 20;
         var _cibleSeances = _seancesObjNum || 3;
         var _allLogs7e = window._pcAllLogs || [];
-        var _d7e = new Date(); _d7e.setDate(_d7e.getDate() - 7);
+        var _d7e = new Date(); _d7e.setDate(_d7e.getDate() - _d7e.getDay() + (_d7e.getDay() === 0 ? -6 : 1)); _d7e.setHours(0,0,0,0);
         var _todayStrE = new Date().toISOString().split('T')[0];
         var _seancesWeekERaw = _allLogs7e.filter(function(l){ return l.date && new Date(l.date) >= _d7e && l.activity_minutes > 0; });
         var _seenDatesE = {};
@@ -4541,7 +4541,7 @@ window.initHome = async function() {
         objLine = 'Objectif : brûler les graisses (' + _seancesObj + ' séances/sem)';
         // Jauge premium séances semaine
         var _allLogs7 = window._pcAllLogs || [];
-        var _d7 = new Date(); _d7.setDate(_d7.getDate() - 7);
+        var _d7 = new Date(); _d7.setDate(_d7.getDate() - _d7.getDay() + (_d7.getDay() === 0 ? -6 : 1)); _d7.setHours(0,0,0,0);
         var _seancesWeek = _allLogs7.filter(function(l){ return l.date && new Date(l.date) >= _d7 && l.activity_minutes > 0; });
         var _nbSeances = _seancesWeek.length;
         var _cibleSeances = parseInt((_seancesObj || '2').split('-').pop()) || 2;
