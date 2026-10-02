@@ -4154,7 +4154,8 @@ window.initHome = async function() {
     var _logsCount = (window._pcAllLogs||[]).filter(function(l){ var d7=new Date(); d7.setDate(d7.getDate()-7); return l.date && new Date(l.date)>=d7 && (l.activity_minutes||0)>0; }).length;
     var _dbg = document.getElementById('_debugBar');
     if(!_dbg){ _dbg=document.createElement('div'); _dbg.id='_debugBar'; _dbg.style.cssText='position:fixed;top:0;left:0;right:0;background:red;color:white;font-size:11px;z-index:99999;padding:4px;text-align:center'; document.body.appendChild(_dbg); }
-    _dbg.textContent = 'render#'+window._renderCount+' | seances='+_logsCount+' | total_logs='+(window._pcAllLogs||[]).length+' | block='+window._blockSummaryRender;
+    var _logDates = (window._pcAllLogs||[]).filter(function(l){ var d7=new Date(); d7.setDate(d7.getDate()-7); return l.date && new Date(l.date)>=d7 && (l.activity_minutes||0)>0; }).map(function(l){return (l.date||'').slice(5)+':'+l.activity_minutes;}).join(',');
+    _dbg.textContent = 'r#'+window._renderCount+' s='+_logsCount+' tot='+(window._pcAllLogs||[]).length+' sport='+(window._sportSeances||[]).length+' | '+_logDates;
     window._pcLastProfileForSummary = profile;
     var card = document.getElementById('personalSummaryCard');
     try {
