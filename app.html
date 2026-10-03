@@ -19244,6 +19244,7 @@ function renderHealthChart(logs) {
   });
   var _dedupedLogs = Object.values(_dedupMap2);
   _healthLogs = _dedupedLogs; window._pcAllLogs = _dedupedLogs;
+  if (typeof loadSportSeancesForToday === 'function') loadSportSeancesForToday();
   if (!logs.length) return;
   // Stats résumé
   var last = logs[logs.length-1];
