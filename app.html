@@ -4157,9 +4157,8 @@ window.initHome = async function() {
       if(_todayLog && _todayLog.activity_minutes > 0) {
         var _key = 'mirella_sport_seances_' + _todayStr;
         var _saved = localStorage.getItem(_key);
-        if(!_saved || JSON.parse(_saved).length === 0) {
-          window._sportSeances = [];
-          localStorage.removeItem(_key);
+        if(_saved) {
+          try { window._sportSeances = JSON.parse(_saved); } catch(e) {}
         }
       }
     }
