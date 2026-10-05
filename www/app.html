@@ -1261,6 +1261,33 @@ window.deleteSportSeance = function(idx) {
   window.saveScoreForm();
   if (typeof persistSportSeances === 'function') persistSportSeances();
   if (typeof updateActiviteCalories === 'function') updateActiviteCalories();
+  // Mettre a jour le backend et la home apres suppression
+  var _totalDuree = 0;
+  (window._sportSeances || []).forEach(function(s){ _totalDuree += (s.duree || 0); });
+  var _bu = (typeof BACKEND_URL !== 'undefined') ? BACKEND_URL : 'https://nutricare-backend-production.up.railway.app';
+  var _tok = window._authToken || window.authToken || localStorage.getItem('nutricare_token') || localStorage.getItem('mirella_token') || '';
+  var _todayStr = new Date().toISOString().split('T')[0];
+  fetch(_bu + '/api/health/log', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + _tok },
+    body: JSON.stringify({ date: _todayStr, activity_minutes: _totalDuree })
+  }).then(function() {
+    fetch(_bu + '/api/health/logs?days=30', { headers: { 'Authorization': 'Bearer ' + _tok }, cache: 'no-store' })
+      .then(function(r){ return r.json(); })
+      .then(function(d) {
+        var _dedupMap = {};
+        (Array.isArray(d) ? d : []).forEach(function(l){
+          var _dk = (l.date||'').split('T')[0];
+          if(!_dedupMap[_dk] || (l.activity_minutes > 0 && !_dedupMap[_dk].activity_minutes)) _dedupMap[_dk] = l;
+        });
+        window._pcAllLogs = Object.values(_dedupMap);
+        var _todayLog = window._pcAllLogs.find(function(l){ return (l.date||'').split('T')[0] === _todayStr; });
+        if(_todayLog) window._pcTodayHealthLog = _todayLog;
+        else if(window._pcTodayHealthLog) window._pcTodayHealthLog.activity_minutes = _totalDuree;
+        var _prof = window._pcProfile || window._pcLastProfileForSummary || JSON.parse(localStorage.getItem('nutricare_profile') || '{}');
+        if(typeof window.renderPersonalSummary === 'function') window.renderPersonalSummary(_prof);
+      }).catch(function(){});
+  }).catch(function(){});
 };
 
 var _seanceIconMapGlobal = {
