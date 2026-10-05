@@ -1227,11 +1227,20 @@ window.saveSportSeance = function() {
           });
           window._pcAllLogs = Object.values(_dedupMap);
           var _todayStrFix = new Date().toISOString().split('T')[0];
+          var _debugLog = Object.values(_dedupMap).find(function(l){ return (l.date||'').split('T')[0] === _todayStrFix; });
+          alert('DEBUG: ' + JSON.stringify(_debugLog ? {date:_debugLog.date, activity:_debugLog.activity_minutes} : null));
           var _newTodayLog = Object.values(_dedupMap).find(function(l){ return (l.date||'').split('T')[0] === _todayStrFix; });
-          if(_newTodayLog) window._pcTodayHealthLog = _newTodayLog;
+          if(_newTodayLog) {
+            window._pcTodayHealthLog = _newTodayLog;
+          } else {
+            if(!window._pcTodayHealthLog) window._pcTodayHealthLog = {};
+            window._pcTodayHealthLog.activity_minutes = _totalDuree;
+            window._pcTodayHealthLog.date = _todayStrFix;
+          }
           window._blockSummaryRender = false;
-          if(window._pcProfile && typeof window.renderPersonalSummary === 'function') {
-            window.renderPersonalSummary(window._pcProfile);
+          var _profileFix = window._pcProfile || window._pcLastProfileForSummary || JSON.parse(localStorage.getItem('nutricare_profile') || '{}');
+          if(typeof window.renderPersonalSummary === 'function') {
+            window.renderPersonalSummary(_profileFix);
           }
         }).catch(function(){ window._blockSummaryRender = false; });
     }).catch(function(){ window._blockSummaryRender = false; });
