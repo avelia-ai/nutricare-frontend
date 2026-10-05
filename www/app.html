@@ -4901,8 +4901,31 @@ window.initHome = async function() {
   var bgEl = document.getElementById('homeBgPhoto');
   if (bgEl) bgEl.style.backgroundImage = 'url(/images/food' + (now.getDate() % 3 + 1) + '.jpg)';
 
-  // Avatar
-  if (typeof window.renderPersonalSummary === 'function' && !window._blockSummaryRender) { window.renderPersonalSummary(profile); }
+  // Avatar — charger les logs AVANT renderPersonalSummary
+  (function() {
+    var _buHome = (typeof BACKEND_URL !== 'undefined') ? BACKEND_URL : 'https://nutricare-backend-production.up.railway.app';
+    var _tokHome = window._authToken || window.authToken || localStorage.getItem('nutricare_token') || localStorage.getItem('mirella_token') || '';
+    if (_tokHome) {
+      fetch(_buHome + '/api/health/logs?days=30', { headers: { 'Authorization': 'Bearer ' + _tokHome }, cache: 'no-store' })
+        .then(function(r){ return r.json(); })
+        .then(function(logs) {
+          var _dedupMap = {};
+          (Array.isArray(logs) ? logs : []).forEach(function(l){
+            var _dk = (l.date||'').split('T')[0];
+            if(!_dedupMap[_dk] || (l.activity_minutes > 0 && !_dedupMap[_dk].activity_minutes)) _dedupMap[_dk] = l;
+          });
+          window._pcAllLogs = Object.values(_dedupMap);
+          var _todayStr = new Date().toISOString().split('T')[0];
+          var _todayLog = window._pcAllLogs.find(function(l){ return (l.date||'').split('T')[0] === _todayStr; });
+          if(_todayLog) window._pcTodayHealthLog = _todayLog;
+          if (typeof window.renderPersonalSummary === 'function' && !window._blockSummaryRender) { window.renderPersonalSummary(profile); }
+        }).catch(function(){
+          if (typeof window.renderPersonalSummary === 'function' && !window._blockSummaryRender) { window.renderPersonalSummary(profile); }
+        });
+    } else {
+      if (typeof window.renderPersonalSummary === 'function' && !window._blockSummaryRender) { window.renderPersonalSummary(profile); }
+    }
+  })();
   if (typeof window.renderParcours === 'function') { window.renderParcours(profile); } else if (typeof renderParcours === 'function') { renderParcours(profile); }
   var avatarEl = document.getElementById('homeAvatar');
   if (avatarEl && profile.full_name) {
