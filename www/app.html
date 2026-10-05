@@ -1226,6 +1226,9 @@ window.saveSportSeance = function() {
             if(!_dedupMap[_dk] || (l.activity_minutes > 0 && !_dedupMap[_dk].activity_minutes)) _dedupMap[_dk] = l;
           });
           window._pcAllLogs = Object.values(_dedupMap);
+          var _todayStrFix = new Date().toISOString().split('T')[0];
+          var _newTodayLog = Object.values(_dedupMap).find(function(l){ return (l.date||'').split('T')[0] === _todayStrFix; });
+          if(_newTodayLog) window._pcTodayHealthLog = _newTodayLog;
           window._blockSummaryRender = false;
           if(window._pcProfile && typeof window.renderPersonalSummary === 'function') {
             window.renderPersonalSummary(window._pcProfile);
