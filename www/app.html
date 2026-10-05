@@ -31247,7 +31247,32 @@ function selectRcDelai(n) {
   if(btn) btn.style.opacity = '1';
 }
 
+
+function _saveMaintienCycle() {
+  var _prof = window._pcProfile || {};
+  if(!_prof.objectif_date_debut) return;
+  var _bu = (typeof BACKEND_URL !== 'undefined') ? BACKEND_URL : 'https://nutricare-backend-production.up.railway.app';
+  var _tok = window._authToken || window.authToken || localStorage.getItem('nutricare_token') || localStorage.getItem('mirella_token') || '';
+  var _dateDebut = _prof.objectif_date_debut.split('T')[0];
+  var _dateFin = new Date().toISOString().split('T')[0];
+  var _duree = _prof.objectif_delai_semaines || 2;
+  var _allLogs = window._pcAllLogs || [];
+  var _debut = new Date(_dateDebut + 'T00:00:00');
+  var _logsRecents = _allLogs.filter(function(l){ return l.date && new Date(l.date) >= _debut; });
+  var _jSuivi = _logsRecents.length;
+  var _jActifs = _logsRecents.filter(function(l){ return (l.activity_minutes||0) >= 20; }).length;
+  var _logsAvecPoids = _allLogs.filter(function(l){ return l.weight && parseFloat(l.weight) > 0; });
+  var _pDepart = _logsAvecPoids.length > 0 ? parseFloat(_logsAvecPoids[0].weight) : null;
+  var _pFin = _logsAvecPoids.length > 0 ? parseFloat(_logsAvecPoids[_logsAvecPoids.length-1].weight) : null;
+  fetch(_bu + '/api/health/maintien/cycle', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + _tok },
+    body: JSON.stringify({ date_debut: _dateDebut, date_fin: _dateFin, duree_semaines: _duree, poids_debut: _pDepart, poids_fin: _pFin, jours_suivi: _jSuivi, jours_actifs: _jActifs })
+  }).catch(function(){});
+}
+
 function confirmRecalibrer() {
+  _saveMaintienCycle();
   var n = window._rcDelaiSelected;
   if(!n) return;
   var btn = document.getElementById('rcConfirmBtn');
@@ -31322,6 +31347,7 @@ function _maintienItem(txt, color) {
 }
 
 function confirmMaintien() {
+  _saveMaintienCycle();
   var today = new Date().toISOString().split('T')[0];
   var _poidsActuelMaintien = (window._pcProfile && window._pcProfile.poids) ? parseFloat(window._pcProfile.poids) : null;
   var payload = {
