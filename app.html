@@ -1262,7 +1262,6 @@ window.deleteSportSeance = function(idx) {
   if (typeof persistSportSeances === 'function') persistSportSeances();
   if (typeof updateActiviteCalories === 'function') updateActiviteCalories();
   // Mettre a jour le backend et la home apres suppression
-  alert('DELETE appelé, total=' + _totalDuree + ' _pcProfile=' + (window._pcProfile ? 'OK' : 'NULL'));
   var _totalDuree = 0;
   (window._sportSeances || []).forEach(function(s){ _totalDuree += (s.duree || 0); });
   var _bu = (typeof BACKEND_URL !== 'undefined') ? BACKEND_URL : 'https://nutricare-backend-production.up.railway.app';
