@@ -4991,7 +4991,37 @@ window.initHome = async function() {
       });
 
   }
-  window.renderPersonalSummary = renderPersonalSummary;
+  
+// ── Push notifications ────────────────────────────────────────────────────────
+window._initPushNotifications = function() {
+  if (!('serviceWorker' in navigator) || !('PushManager' in window)) return;
+  var VAPID_PUBLIC = 'BCInGLokeSdx5ZBx2MI7iwxsiU_U9DZm1WZFLeyMj9x4tiSouL1O00Myl-m5HzTBw1YfadSXPPmgyVU8K9H78Vg';
+  var _bu = (typeof BACKEND_URL !== 'undefined') ? BACKEND_URL : 'https://nutricare-backend-production.up.railway.app';
+  var _tok = window._authToken || window.authToken || localStorage.getItem('nutricare_token') || localStorage.getItem('mirella_token') || '';
+  navigator.serviceWorker.register('/sw.js').then(function(reg) {
+    return reg.pushManager.getSubscription().then(function(sub) {
+      if (sub) return sub;
+      var _key = VAPID_PUBLIC;
+      var _raw = atob(_key.replace(/-/g,'+').replace(/_/g,'/'));
+      var _arr = new Uint8Array(_raw.length);
+      for(var i=0;i<_raw.length;i++) _arr[i] = _raw.charCodeAt(i);
+      return reg.pushManager.subscribe({ userVisibleOnly: true, applicationServerKey: _arr });
+    });
+  }).then(function(sub) {
+    fetch(_bu + '/api/push/subscribe', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + _tok },
+      body: JSON.stringify({ subscription: sub })
+    }).catch(function(){});
+  }).catch(function(){});
+};
+// Déclencher après login
+setTimeout(function(){
+  var _tok = localStorage.getItem('nutricare_token') || localStorage.getItem('mirella_token') || '';
+  if(_tok && typeof window._initPushNotifications === 'function') window._initPushNotifications();
+}, 3000);
+
+window.renderPersonalSummary = renderPersonalSummary;
   var greeting = hours < 12 ? 'Bonjour' : hours < 18 ? 'Bon après-midi' : 'Bonsoir';
   var greetEl = document.getElementById('homeGreeting');
   if (greetEl) greetEl.textContent = greeting + (prenom ? ' ' + prenom + ' !' : ' !');
