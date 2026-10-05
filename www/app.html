@@ -1227,8 +1227,7 @@ window.saveSportSeance = function() {
           });
           window._pcAllLogs = Object.values(_dedupMap);
           var _todayStrFix = new Date().toISOString().split('T')[0];
-          var _debugLog = Object.values(_dedupMap).find(function(l){ return (l.date||'').split('T')[0] === _todayStrFix; });
-          alert('DEBUG: ' + JSON.stringify(_debugLog ? {date:_debugLog.date, activity:_debugLog.activity_minutes} : null));
+
           var _newTodayLog = Object.values(_dedupMap).find(function(l){ return (l.date||'').split('T')[0] === _todayStrFix; });
           if(_newTodayLog) {
             window._pcTodayHealthLog = _newTodayLog;
