@@ -30892,10 +30892,7 @@ window.toggleDarkMode = function() {
 <script>
 function showObjectifBilanPopup(profile, logs) {
   if(document.getElementById('objectifBilanPopup')) return;
-  var _bilanKey = 'mirella_bilan_shown_' + new Date().toISOString().slice(0,10);
-  if(localStorage.getItem(_bilanKey) && !window._forceObjectifBilan) return;
-  localStorage.setItem(_bilanKey, '1');
-  window._forceObjectifBilan = false;
+
   var duree = (profile.objectif_delai_semaines || 4) + ' semaines';
   var objectifs = profile.objectifs || [];
   logs = logs || [];
