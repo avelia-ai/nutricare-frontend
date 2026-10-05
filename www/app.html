@@ -4279,7 +4279,7 @@ window.initHome = async function() {
           : 'Il te reste ' + restant + ' kg à prendre. Assure un surplus calorique modéré chaque jour.';
         document.getElementById('poidsMsg').textContent = msg;
       }
-    } else if (objectifs.length === 1 && objectifs.indexOf('maintien') > -1 && !(profile.poids_delta_souhaite && parseFloat(profile.poids_delta_souhaite) > 0)) {
+    } else if (objectifs.indexOf('maintien') > -1) {
       objLine = 'Objectif : maintenir ton poids actuel';
       progressWrap.style.display = 'block';
       // ── Carte maintien premium ──
