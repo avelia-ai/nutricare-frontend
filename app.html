@@ -3428,7 +3428,7 @@ window.initHome = async function() {
     if (nav2) { nav2.style.display = 'block'; nav2.style.zIndex = '1000'; nav2.style.visibility = 'visible'; }
     if (typeof window.renderPersonalSummary === 'function' && !window._blockSummaryRender) { window.renderPersonalSummary(profile); }
     if (typeof window.renderParcours === 'function') { window.renderParcours(profile); } else if (typeof renderParcours === 'function') { renderParcours(profile); }
-    if (typeof window.loadHealthDashboard === 'function') { window.loadHealthDashboard(); }
+    if (typeof window.loadHealthDashboard === 'function') { window.loadHealthDashboard(); if(data.energy_level!==null){localStorage.setItem('mirella_suivi_today',JSON.stringify({energie:data.energy_level,sommeil:data.sleep_hours,stress:data.stress_level,eau:data.hydration_liters?Math.round(data.hydration_liters*1000):0,calories:data.calories_target||0,activite_jours:data.sport_days||0}));} if(typeof window.initHome==='function') setTimeout(window.initHome,300); }
   }
   var _objMeta = {
     perte_poids: { label: 'Perdre du poids', icon: 'trending-down' },
@@ -6572,7 +6572,7 @@ function switchLang(lang) {
                   <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:16px">
                     <div>
                       <div style="font-size:10px;font-weight:700;color:rgba(255,154,108,0.8);letter-spacing:0.12em;text-transform:uppercase;margin-bottom:5px">Objectif actif</div>
-                      <div style="font-size:22px;font-weight:700;color:#fff;line-height:1.1">Rester en forme</div>
+                      <div style="font-size:18px;font-weight:700;color:#fff;line-height:1.1">Rester en forme</div>
                       <div id="formeWeekLabel" style="font-size:11px;color:rgba(255,255,255,0.4);margin-top:4px"></div>
                     </div>
                     <div style="text-align:center;background:rgba(255,255,255,0.08);border-radius:14px;padding:10px 16px;border:0.5px solid rgba(255,255,255,0.12)">
@@ -14628,7 +14628,7 @@ window._cardioGetTier = function(bpm) {
       body: JSON.stringify({ date: new Date().toISOString().split('T')[0], frequence_cardiaque: bpm })
     }).then(function(r) {
       if (!r.ok) { r.json().then(function(e){ console.error('saveCardioMeasurement failed:', e); }).catch(function(){}); return; }
-      if (typeof loadHealthDashboard === 'function') loadHealthDashboard();
+      if (typeof loadHealthDashboard === 'function') loadHealthDashboard(); if(data.energy_level!==null){localStorage.setItem('mirella_suivi_today',JSON.stringify({energie:data.energy_level,sommeil:data.sleep_hours,stress:data.stress_level,eau:data.hydration_liters?Math.round(data.hydration_liters*1000):0,calories:data.calories_target||0,activite_jours:data.sport_days||0}));} if(typeof window.initHome==='function') setTimeout(window.initHome,300);
     }).catch(function(e) { console.error('saveCardioMeasurement network error:', e); });
   }
 
@@ -15908,7 +15908,7 @@ Réponds UNIQUEMENT en JSON valide avec cette structure exacte:
     if (view === 'chrono') setTimeout(loadChrono, 300);
     document.getElementById('healthView').style.display = view === 'health' ? 'block' : 'none';
     if (view === 'health') { var mcHealth = document.querySelector('.main-content'); if (mcHealth) { mcHealth.style.overflow = 'auto'; mcHealth.style.height = '100%'; } }
-    if (view === 'health') loadHealthDashboard();
+    if (view === 'health') loadHealthDashboard(); if(data.energy_level!==null){localStorage.setItem('mirella_suivi_today',JSON.stringify({energie:data.energy_level,sommeil:data.sleep_hours,stress:data.stress_level,eau:data.hydration_liters?Math.round(data.hydration_liters*1000):0,calories:data.calories_target||0,activite_jours:data.sport_days||0}));} if(typeof window.initHome==='function') setTimeout(window.initHome,300);
     if (document.getElementById('fitnessView')) document.getElementById('fitnessView').style.display = view === 'fitness' ? 'block' : 'none';
     if (view === 'fitness') loadFitnessView();
     document.getElementById('menusView').style.display = view === 'menus' ? 'block' : 'none';
@@ -17978,7 +17978,7 @@ async function saveHealthLog() {
           localStorage.setItem('nutricare_profile', JSON.stringify(localProfile));
         } catch(e) { console.warn('sync profil poids/taille failed', e); }
       }
-      loadHealthDashboard();
+      loadHealthDashboard(); if(data.energy_level!==null){localStorage.setItem('mirella_suivi_today',JSON.stringify({energie:data.energy_level,sommeil:data.sleep_hours,stress:data.stress_level,eau:data.hydration_liters?Math.round(data.hydration_liters*1000):0,calories:data.calories_target||0,activite_jours:data.sport_days||0}));} if(typeof window.initHome==='function') setTimeout(window.initHome,300);
       setTimeout(() => checkAndShowNewBadges(), 1000);
       // Mettre a jour la jauge accueil : géré par le fetch dans addSportSeance
       // Notif de forme basée sur le score composite (4 statuts)
