@@ -1303,7 +1303,7 @@ var _seanceIconMapGlobal = {
   'danse': {icon:'ti-music', c1:'#F472B6', c2:'#BE185D'},
   'autre': {icon:'ti-activity-heartbeat', c1:'#94A3B8', c2:'#334155'}
 };
-function persistSportSeances() {
+function persistSportSeances() { var _sdt = JSON.parse(localStorage.getItem('mirella_suivi_today') || '{}'); _sdt.activite_jours = (window._sportSeances||[]).length; localStorage.setItem('mirella_suivi_today', JSON.stringify(_sdt)); if(typeof window.initHome==='function') setTimeout(window.initHome,200);
   var key = 'mirella_sport_seances_' + new Date().toISOString().slice(0,10);
   localStorage.setItem(key, JSON.stringify(window._sportSeances));
 }
