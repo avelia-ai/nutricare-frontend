@@ -4322,10 +4322,11 @@ window.initHome = async function() {
         document.getElementById('poidsDepartLabel').textContent = startW + ' kg';
         document.getElementById('poidsCibleLabel').textContent = profile.poids_objectif + ' kg';
         document.getElementById('poidsProgressBar').style.width = pct + '%';
-        document.getElementById('poidsPct').textContent = poids ? pct + '% de l\'objectif atteint' : '';
+        document.getElementById('poidsPct').textContent = poids ? pct + '%' : '0%';
         document.getElementById('poidsRestantBadge').textContent = restant + ' kg';
         document.getElementById('poidsJoursRestants').textContent = joursRestants + ' j.';
         document.getElementById('poidsRythme').textContent = rythme;
+        var _ps = JSON.parse(localStorage.getItem('mirella_suivi_today') || '{}'); var _pdlEl = document.getElementById('poidsDelaiLabel'); if(_pdlEl) _pdlEl.textContent = joursRestants + ' jours restants · ' + profile.objectif_delai_semaines + ' sem.'; var _pcEl = document.getElementById('poidsCircle'); if(_pcEl) _pcEl.setAttribute('stroke-dashoffset', Math.round(163.4 - (163.4 * pct / 100))); var _prbEl = document.getElementById('poidsRestantBadge'); if(_prbEl) _prbEl.textContent = restant.toFixed(1) + ' kg restants'; var _pCalEl = document.getElementById('poidsCaloriesVal'); if(_pCalEl) _pCalEl.textContent = (_ps.calories || '--') + ' kcal'; var _pHbEl = document.getElementById('poidsHydratBar'); if(_pHbEl) _pHbEl.style.width = Math.min(100,((_ps.eau||0)/2500)*100)+'%'; var _pHvEl = document.getElementById('poidsHydratVal'); if(_pHvEl) _pHvEl.textContent = _ps.eau ? (_ps.eau/1000).toFixed(1)+' L' : '-- L'; var _pAvEl = document.getElementById('poidsActiviteVal'); if(_pAvEl) _pAvEl.textContent = (_ps.activite_jours||'--')+' seance'; var _pSbEl = document.getElementById('poidsSommeilBar'); if(_pSbEl) _pSbEl.style.width = Math.min(100,((_ps.sommeil||0)/8)*100)+'%'; var _pSvEl = document.getElementById('poidsSommeilVal'); if(_pSvEl) _pSvEl.textContent = _ps.sommeil ? _ps.sommeil+'h' : '-- h';
         var msg = verbe === 'perdre'
           ? 'Il te reste ' + restant + ' kg à perdre. Vise -0.5 kg/semaine pour y arriver en douceur.'
           : 'Il te reste ' + restant + ' kg à prendre. Assure un surplus calorique modéré chaque jour.';
