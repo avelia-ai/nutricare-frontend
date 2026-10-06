@@ -3202,6 +3202,29 @@ window.initHome = async function() {
     var _streak = 0;
     for (var _i = _hist.length - 1; _i >= 0; _i--) { if (_hist[_i] > 0) _streak++; else break; }
     document.getElementById('healthStreak').textContent = _streak + ' jour' + (_streak > 1 ? 's' : '');
+  var _isStress = _objts.indexOf('stress') > -1;
+  var _stressEl = document.getElementById('stressGoalDashboard');
+  if (_isStress && _stressEl) {
+    _stressEl.style.display = 'block';
+    var _sc3 = window._mirellaSanteScore || parseInt(localStorage.getItem('mirella_today_score') || '0');
+    var _seEl = document.getElementById('stressScore'); if(_seEl) _seEl.textContent = _sc3;
+    var _sCircle = document.getElementById('stressCircle'); if(_sCircle) _sCircle.setAttribute('stroke-dashoffset', Math.round(163.4 - (163.4 * _sc3 / 100)));
+    var _sSb = document.getElementById('stressScoreBar'); if(_sSb) _sSb.style.width = Math.min(100,_sc3)+'%';
+    var _diff3 = _sc3 - parseInt(localStorage.getItem('mirella_yesterday_score') || '0');
+    var _sWp = document.getElementById('stressWeekPts'); if(_sWp) _sWp.textContent = (_diff3>=0?'+':'')+_diff3+' pts';
+    var _sTr = document.getElementById('stressTrend'); if(_sTr){ _sTr.textContent = _diff3>=0 ? '&#8593; Sérénité en hausse' : '&#8595; Stress en baisse'; _sTr.style.color = _diff3>=0 ? '#4ade80' : '#4ade80'; }
+    var _sWl = document.getElementById('stressWeekLabel'); if(_sWl){ var _n3=new Date(); _sWl.textContent='Semaine du '+_n3.toLocaleDateString('fr-FR',{day:'numeric',month:'short'})+' · J'+(_n3.getDay()||7)+'/7'; }
+    var _sv3 = JSON.parse(localStorage.getItem('mirella_suivi_today') || '{}');
+    var _sStVal = document.getElementById('stressVal'); if(_sStVal) _sStVal.textContent = _sv3.stress || '--';
+    var _sSlBar = document.getElementById('stressSommeilBar'); if(_sSlBar) _sSlBar.style.width = Math.min(100,((_sv3.sommeil||0)/8)*100)+'%';
+    var _sSlVal = document.getElementById('stressSommeilVal'); if(_sSlVal) _sSlVal.textContent = _sv3.sommeil ? _sv3.sommeil+'h' : '-- h';
+    var _sAvVal = document.getElementById('stressActiviteVal'); if(_sAvVal) _sAvVal.textContent = (_sv3.activite_jours||'--')+' séance'+(_sv3.calories_sport?' · '+_sv3.calories_sport+' kcal':'');
+    var _sHBar = document.getElementById('stressHydratBar'); if(_sHBar) _sHBar.style.width = Math.min(100,((_sv3.eau||0)/2500)*100)+'%';
+    var _sHVal = document.getElementById('stressHydratVal'); if(_sHVal) _sHVal.textContent = _sv3.eau ? (_sv3.eau/1000).toFixed(1)+' L' : '-- L';
+    var _sCaf = document.getElementById('stressCafeineVal'); if(_sCaf) _sCaf.textContent = _sv3.cafeine || 'Non renseigné';
+    var _sMsgEl = document.getElementById('stressMsg');
+    if(_sMsgEl){ var _sm = _sc3>=70 ? 'Excellente sérénité ! Continue tes pratiques de relaxation ce soir.' : _sc3>=50 ? 'Bonne progression. Fais <strong style="color:white">5 min de cohérence cardiaque</strong> avant de dormir.' : 'Mets à jour tes données chaque jour pour que Mirella personnalise tes conseils.'; _sMsgEl.innerHTML = _sm; }
+  }
   }
   var _isForme = _objts.indexOf('forme') > -1;
   var _formeEl = document.getElementById('formeGoalDashboard');
@@ -6665,6 +6688,89 @@ function switchLang(lang) {
                 <div style="background:#FF6B6B;border-radius:18px;padding:16px 18px;display:flex;align-items:center;gap:14px">
                   <div style="width:38px;height:38px;border-radius:12px;background:rgba(255,255,255,0.2);display:flex;align-items:center;justify-content:center;flex-shrink:0"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg></div>
                   <div id="formeMsg" style="font-size:12px;color:rgba(255,255,255,0.95);line-height:1.6">Mets &agrave; jour tes donn&eacute;es pour recevoir tes conseils personnalis&eacute;s.</div>
+                </div>
+                <button onclick="showView('health')" style="width:100%;background:linear-gradient(135deg,#FF6B6B,#FF9A3C);color:white;border:none;border-radius:16px;padding:16px;font-size:15px;font-weight:700;cursor:pointer;font-family:DM Sans,sans-serif">+ Mettre &agrave; jour mes donn&eacute;es</button>
+              </div>
+            </div>
+            
+            <div id="stressGoalDashboard" style="display:none;margin-bottom:16px">
+              <div style="font-family:DM Sans,sans-serif;display:flex;flex-direction:column;gap:10px">
+                <div style="background:linear-gradient(135deg,#1B1B2F 0%,#2D1F3D 100%);border-radius:22px;padding:20px 20px 18px">
+                  <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:16px">
+                    <div>
+                      <div style="font-size:10px;font-weight:700;color:rgba(255,154,108,0.8);letter-spacing:0.12em;text-transform:uppercase;margin-bottom:5px">Objectif actif</div>
+                      <div style="font-size:18px;font-weight:700;color:#fff;line-height:1.1">R&eacute;duire le stress</div>
+                      <div id="stressWeekLabel" style="font-size:11px;color:rgba(255,255,255,0.4);margin-top:4px"></div>
+                    </div>
+                    <div style="text-align:center;background:rgba(255,255,255,0.08);border-radius:14px;padding:10px 16px;border:0.5px solid rgba(255,255,255,0.12)">
+                      <div style="font-size:10px;color:rgba(255,154,108,0.8);font-weight:600;margin-bottom:2px">STRESS</div>
+                      <div id="stressVal" style="font-size:26px;font-weight:700;color:#FF9A3C;line-height:1">--</div>
+                      <div style="font-size:10px;color:rgba(255,255,255,0.4)">/10</div>
+                    </div>
+                  </div>
+                  <div style="display:flex;align-items:center;gap:14px">
+                    <div style="position:relative;width:64px;height:64px;flex-shrink:0">
+                      <svg width="64" height="64" viewBox="0 0 64 64" style="transform:rotate(-90deg)">
+                        <circle cx="32" cy="32" r="26" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="6"/>
+                        <circle id="stressCircle" cx="32" cy="32" r="26" fill="none" stroke="#FF9A3C" stroke-width="6" stroke-linecap="round" stroke-dasharray="163.4" stroke-dashoffset="163.4"/>
+                      </svg>
+                      <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center">
+                        <span id="stressScore" style="font-size:15px;font-weight:700;color:#fff">--</span>
+                        <span style="font-size:9px;color:rgba(255,154,108,0.7)">/100</span>
+                      </div>
+                    </div>
+                    <div style="flex:1">
+                      <div style="display:flex;justify-content:space-between;margin-bottom:5px">
+                        <span style="font-size:11px;color:rgba(255,255,255,0.5)">Score s&eacute;r&eacute;nit&eacute;</span>
+                        <span id="stressWeekPts" style="font-size:11px;font-weight:600;color:#FF9A3C">+0 pts</span>
+                      </div>
+                      <div style="height:4px;background:rgba(255,255,255,0.1);border-radius:4px;overflow:hidden">
+                        <div id="stressScoreBar" style="height:4px;background:linear-gradient(90deg,#FF6B6B,#FF9A3C);border-radius:4px;width:0%;transition:width .6s"></div>
+                      </div>
+                      <div id="stressTrend" style="margin-top:8px;display:inline-block;background:rgba(74,222,128,0.15);border-radius:8px;padding:3px 10px;font-size:10px;color:#4ade80;font-weight:600">&#8595; Stress en baisse</div>
+                    </div>
+                  </div>
+                </div>
+                <div style="background:white;border-radius:18px;padding:16px;border:0.5px solid #F0E8E0">
+                  <div style="font-size:10px;font-weight:700;color:#E85555;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:12px">Facteurs cl&eacute;s du jour</div>
+                  <div style="display:flex;justify-content:space-between;align-items:center;padding:9px 0;border-bottom:0.5px solid #F5EDE8">
+                    <div style="display:flex;align-items:center;gap:10px">
+                      <div style="width:30px;height:30px;border-radius:9px;background:#EFF6FF;display:flex;align-items:center;justify-content:center"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#185FA5" stroke-width="2" stroke-linecap="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></div>
+                      <div><div style="font-size:13px;color:#2D2D2D;font-weight:500">Sommeil</div><div style="font-size:10px;color:#bbb">Impact direct sur le cortisol</div></div>
+                    </div>
+                    <div style="display:flex;align-items:center;gap:8px">
+                      <div style="height:4px;width:48px;background:#E8F0FB;border-radius:4px;overflow:hidden"><div id="stressSommeilBar" style="height:4px;background:#378ADD;border-radius:4px;width:0%"></div></div>
+                      <span id="stressSommeilVal" style="font-size:11px;font-weight:700;color:#2D2D2D">-- h</span>
+                    </div>
+                  </div>
+                  <div style="display:flex;justify-content:space-between;align-items:center;padding:9px 0;border-bottom:0.5px solid #F5EDE8">
+                    <div style="display:flex;align-items:center;gap:10px">
+                      <div style="width:30px;height:30px;border-radius:9px;background:#FFF0EC;display:flex;align-items:center;justify-content:center"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#E85555" stroke-width="2" stroke-linecap="round"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg></div>
+                      <div><div style="font-size:13px;color:#2D2D2D;font-weight:500">Activit&eacute; physique</div><div style="font-size:10px;color:#bbb">R&eacute;duit le cortisol naturellement</div></div>
+                    </div>
+                    <span id="stressActiviteVal" style="font-size:11px;font-weight:700;color:#2D2D2D">-- s&eacute;ance</span>
+                  </div>
+                  <div style="display:flex;justify-content:space-between;align-items:center;padding:9px 0;border-bottom:0.5px solid #F5EDE8">
+                    <div style="display:flex;align-items:center;gap:10px">
+                      <div style="width:30px;height:30px;border-radius:9px;background:#FFF8E8;display:flex;align-items:center;justify-content:center"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#BA7517" stroke-width="2" stroke-linecap="round"><path d="M18 8h1a4 4 0 0 1 0 8h-1M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8zM6 1v3M10 1v3M14 1v3"/></svg></div>
+                      <div><div style="font-size:13px;color:#2D2D2D;font-weight:500">Caf&eacute;ine du jour</div><div style="font-size:10px;color:#bbb">Limite : 2 caf&eacute;s apr&egrave;s 14h</div></div>
+                    </div>
+                    <span id="stressCafeineVal" style="font-size:11px;font-weight:700;color:#2D2D2D">--</span>
+                  </div>
+                  <div style="display:flex;justify-content:space-between;align-items:center;padding:9px 0">
+                    <div style="display:flex;align-items:center;gap:10px">
+                      <div style="width:30px;height:30px;border-radius:9px;background:#EFF6FF;display:flex;align-items:center;justify-content:center"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#185FA5" stroke-width="2" stroke-linecap="round"><path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/></svg></div>
+                      <div><div style="font-size:13px;color:#2D2D2D;font-weight:500">Hydratation</div><div style="font-size:10px;color:#bbb">La d&eacute;shydratation amplifie le stress</div></div>
+                    </div>
+                    <div style="display:flex;align-items:center;gap:8px">
+                      <div style="height:4px;width:48px;background:#E8F0FB;border-radius:4px;overflow:hidden"><div id="stressHydratBar" style="height:4px;background:#378ADD;border-radius:4px;width:0%"></div></div>
+                      <span id="stressHydratVal" style="font-size:11px;font-weight:700;color:#2D2D2D">-- L</span>
+                    </div>
+                  </div>
+                </div>
+                <div style="background:#FF6B6B;border-radius:18px;padding:16px 18px;display:flex;align-items:center;gap:14px">
+                  <div style="width:38px;height:38px;border-radius:12px;background:rgba(255,255,255,0.2);display:flex;align-items:center;justify-content:center;flex-shrink:0"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg></div>
+                  <div id="stressMsg" style="font-size:12px;color:rgba(255,255,255,0.95);line-height:1.6">Mets &agrave; jour tes donn&eacute;es pour recevoir tes conseils personnalis&eacute;s.</div>
                 </div>
                 <button onclick="showView('health')" style="width:100%;background:linear-gradient(135deg,#FF6B6B,#FF9A3C);color:white;border:none;border-radius:16px;padding:16px;font-size:15px;font-weight:700;cursor:pointer;font-family:DM Sans,sans-serif">+ Mettre &agrave; jour mes donn&eacute;es</button>
               </div>
