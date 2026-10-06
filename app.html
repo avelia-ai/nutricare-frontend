@@ -15727,7 +15727,7 @@ Réponds UNIQUEMENT en JSON valide avec cette structure exacte:
   },100); } }
     var hv = document.getElementById('homeView'); if(hv) { hv.style.display = view === 'home' ? 'block' : 'none'; if(view === 'home') { setTimeout(function(){ if(typeof window.initHome==='function') window.initHome(); }, 100); var mc2=document.querySelector('.main-content'); if(mc2){mc2.style.overflow='auto';mc2.style.height='100%';} } }
     var mc = document.querySelector('.main-content');
-    if (mc) mc.style.overflow = ['home','cycle','planning','catalogue','menus','chrono','mes-recettes','leaderboard','visual'].includes(view) ? 'auto' : 'hidden';
+    if (mc) mc.style.overflow = ['home','cycle','planning','catalogue','chrono','mes-recettes','leaderboard','visual'].includes(view) ? 'auto' : 'hidden';
     if (view === 'visual') { mc.style.overflow = 'visible'; }
     var catv = document.getElementById('catalogueView'); if(catv) { catv.style.display = view === 'catalogue' ? 'block' : 'none'; if(view === 'catalogue') {  setTimeout(function(){ if(typeof window.initCatalogue==='function') window.initCatalogue(); }, 100); } }
     var mrv = document.getElementById('mesRecettesView'); if(mrv) { mrv.style.display = view === 'mes-recettes' ? 'block' : 'none'; if(view === 'mes-recettes') setTimeout(function(){ loadMesRecettes(); }, 100); }
