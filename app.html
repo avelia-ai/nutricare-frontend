@@ -3213,7 +3213,7 @@ window.initHome = async function() {
     var _sSb = document.getElementById('stressScoreBar'); if(_sSb) _sSb.style.width = Math.min(100,_sc3)+'%';
     var _diff3 = _sc3 - parseInt(localStorage.getItem('mirella_yesterday_score') || '0');
     var _sWp = document.getElementById('stressWeekPts'); if(_sWp) _sWp.textContent = (_diff3>=0?'+':'')+_diff3+' pts';
-    var _sTr = document.getElementById('stressTrend'); if(_sTr){ _sTr.textContent = _diff3>=0 ? '&#8593; Sérénité en hausse' : '&#8595; Stress en baisse'; _sTr.style.color = _diff3>=0 ? '#4ade80' : '#4ade80'; }
+    var _sTr = document.getElementById('stressTrend'); if(_sTr){ _sTr.textContent = _diff3>=0 ? '↑ Sérénité en hausse' : '↓ Stress en baisse'; _sTr.style.color = _diff3>=0 ? '#4ade80' : '#4ade80'; }
     var _sWl = document.getElementById('stressWeekLabel'); if(_sWl){ var _n3=new Date(); _sWl.textContent='Semaine du '+_n3.toLocaleDateString('fr-FR',{day:'numeric',month:'short'})+' · J'+(_n3.getDay()||7)+'/7'; }
     var _sv3 = JSON.parse(localStorage.getItem('mirella_suivi_today') || '{}');
     var _sStVal = document.getElementById('stressVal'); if(_sStVal) _sStVal.textContent = _sv3.stress || '--';
@@ -6748,7 +6748,7 @@ function switchLang(lang) {
                       <div style="width:30px;height:30px;border-radius:9px;background:#FFF0EC;display:flex;align-items:center;justify-content:center"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#E85555" stroke-width="2" stroke-linecap="round"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg></div>
                       <div><div style="font-size:13px;color:#2D2D2D;font-weight:500">Activit&eacute; physique</div><div style="font-size:10px;color:#bbb">R&eacute;duit le cortisol naturellement</div></div>
                     </div>
-                    <span id="stressActiviteVal" style="font-size:11px;font-weight:700;color:#2D2D2D">-- s&eacute;ance</span>
+                    <span id="stressActiviteVal" style="font-size:11px;font-weight:700;color:#2D2D2D;white-space:nowrap;text-align:right">-- s&eacute;ance</span>
                   </div>
                   <div style="display:flex;justify-content:space-between;align-items:center;padding:9px 0;border-bottom:0.5px solid #F5EDE8">
                     <div style="display:flex;align-items:center;gap:10px">
@@ -6764,7 +6764,7 @@ function switchLang(lang) {
                     </div>
                     <div style="display:flex;align-items:center;gap:8px">
                       <div style="height:4px;width:48px;background:#E8F0FB;border-radius:4px;overflow:hidden"><div id="stressHydratBar" style="height:4px;background:#378ADD;border-radius:4px;width:0%"></div></div>
-                      <span id="stressHydratVal" style="font-size:11px;font-weight:700;color:#2D2D2D">-- L</span>
+                      <span id="stressHydratVal" style="font-size:11px;font-weight:700;color:#2D2D2D;white-space:nowrap">-- L</span>
                     </div>
                   </div>
                 </div>
