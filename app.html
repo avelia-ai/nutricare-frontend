@@ -3202,6 +3202,7 @@ window.initHome = async function() {
     var _streak = 0;
     for (var _i = _hist.length - 1; _i >= 0; _i--) { if (_hist[_i] > 0) _streak++; else break; }
     document.getElementById('healthStreak').textContent = _streak + ' jour' + (_streak > 1 ? 's' : '');
+  }
   var _isForme = _objts.indexOf('forme') > -1;
   var _formeEl = document.getElementById('formeGoalDashboard');
   if (_isForme && _formeEl) {
@@ -3253,7 +3254,6 @@ window.initHome = async function() {
     if (_cdEl) _cdEl.innerHTML = _cardio + ' <span style="font-size:10px;font-weight:400;color:#bbb">bpm</span>';
     var _msgEl = document.getElementById('formeMsg');
     if (_msgEl) { var _m = _sc2 >= 70 ? 'Excellent travail ! Tu es en pleine forme. Continue sur cette lancée et pense à bien t&#39;hydrater.' : _sc2 >= 50 ? 'Bonne progression cette semaine. Ajoute <strong style="color:#FF9A3C">10 min d&#39;activité</strong> aujourd&#39;hui pour franchir les 80 pts.' : 'Mets à jour tes données chaque jour pour que Mirella personnalise tes conseils forme.'; _msgEl.innerHTML = _m; }
-  }
   }
 
   if (typeof loadDashboardForDate === 'function') {
