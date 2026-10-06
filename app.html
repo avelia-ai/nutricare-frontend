@@ -3226,6 +3226,37 @@ window.initHome = async function() {
     var _sMsgEl = document.getElementById('stressMsg');
     if(_sMsgEl){ var _sm = _sc3>=70 ? 'Excellente sérénité ! Continue tes pratiques de relaxation ce soir.' : _sc3>=50 ? 'Bonne progression. Fais <strong style="color:white">5 min de cohérence cardiaque</strong> avant de dormir.' : 'Mets à jour tes données chaque jour pour que Mirella personnalise tes conseils.'; _sMsgEl.innerHTML = _sm; }
   }
+
+  var _isMaintienHome = _objts.indexOf('maintien') > -1;
+  var _maintienEl = document.getElementById('maintienGoalDashboard');
+  if (_isMaintienHome && _maintienEl) {
+    _maintienEl.style.display = 'block';
+    var _mp = JSON.parse(localStorage.getItem('nutricare_profile') || '{}');
+    var _mv = JSON.parse(localStorage.getItem('mirella_suivi_today') || '{}');
+    var _mpoids = _mp.poids || '--';
+    var _mcible = _mp.poids_objectif || _mpoids;
+    var _mwl = document.getElementById('maintienWeekLabel'); if(_mwl){ var _mn=new Date(); _mwl.textContent='Semaine 1/'+(_mp.objectif_delai_semaines||4)+' · 28 jours'; }
+    var _mpa = document.getElementById('maintienPoidsActuel'); if(_mpa) _mpa.textContent = _mpoids;
+    var _mpt = document.getElementById('maintienPoidsTile'); if(_mpt) _mpt.innerHTML = _mpoids+'<span style="font-size:10px;font-weight:400;color:#E85555">kg</span>';
+    var _mz = document.getElementById('maintienZone'); if(_mz) _mz.textContent = _mcible+' ± 1 kg';
+    var _mAllLogs = window._pcAllLogs || [];
+    var _mLogsAvecPoids = _mAllLogs.filter(function(l){ return l.weight && parseFloat(l.weight)>0; }).slice(-7);
+    var _mVari = 0;
+    if(_mLogsAvecPoids.length >= 2){ _mVari = Math.round((parseFloat(_mLogsAvecPoids[_mLogsAvecPoids.length-1].weight) - parseFloat(_mLogsAvecPoids[0].weight))*10)/10; }
+    var _mvt = document.getElementById('maintienVariTile'); if(_mvt) _mvt.innerHTML = (_mVari>=0?'+':'')+_mVari+'<span style="font-size:10px;font-weight:400;color:#3B6D11">kg</span>';
+    var _mvb = document.getElementById('maintienVariBadge'); if(_mvb){ _mvb.textContent = Math.abs(_mVari)<=1 ? '= Stable' : (_mVari>0?'↑ En hausse':'↓ En baisse'); _mvb.style.color = Math.abs(_mVari)<=1?'#FF9A3C':(_mVari>0?'#E85555':'#4ade80'); }
+    var _mzs = document.getElementById('maintienZoneStatus'); if(_mzs){ _mzs.textContent = Math.abs(_mVari)<=1 ? '✓ Dans la zone' : '⚠ Hors zone'; _mzs.style.color = Math.abs(_mVari)<=1?'#4ade80':'#E85555'; }
+    var _mjt = document.getElementById('maintienJoursTile'); if(_mjt) _mjt.innerHTML = _mLogsAvecPoids.length+'<span style="font-size:10px;font-weight:400;color:#185FA5">/28j</span>';
+    var _mjb = document.getElementById('maintienJoursBadge'); if(_mjb) _mjb.textContent = 'J'+_mLogsAvecPoids.length+' / 28 suivi';
+    var _mcv = document.getElementById('maintienCalVal'); if(_mcv) _mcv.textContent = (_mv.calories||'--')+' kcal';
+    var _mav = document.getElementById('maintienActVal'); if(_mav) _mav.textContent = (_mv.activite_jours||'--')+' séance'+(_mv.calories_sport?' · '+_mv.calories_sport+' kcal':'');
+    var _mhb = document.getElementById('maintienHydBar'); if(_mhb) _mhb.style.width = Math.min(100,((_mv.eau||0)/2500)*100)+'%';
+    var _mhv = document.getElementById('maintienHydVal'); if(_mhv) _mhv.textContent = _mv.eau?(_mv.eau/1000).toFixed(1)+' L':'-- L';
+    var _msb = document.getElementById('maintienSlBar'); if(_msb) _msb.style.width = Math.min(100,((_mv.sommeil||0)/8)*100)+'%';
+    var _msv = document.getElementById('maintienSlVal'); if(_msv) _msv.textContent = _mv.sommeil?_mv.sommeil+'h':'-- h';
+    var _mmsg = document.getElementById('maintienMsg');
+    if(_mmsg){ var _mm = Math.abs(_mVari)<=1 ? 'Tu es dans ta zone de stabilité. Pèse-toi demain matin à jeun pour un suivi précis.' : (_mVari>1 ? 'Ton poids a légèrement augmenté. Revois tes apports caloriques et augmente l'activité cette semaine.' : 'Ton poids est un peu bas. Assure un apport calorique suffisant pour rester dans ta zone.'); _mmsg.textContent = _mm; }
+  }
   var _isForme = _objts.indexOf('forme') > -1;
   var _formeEl = document.getElementById('formeGoalDashboard');
   if (_isForme && _formeEl) {
@@ -6773,6 +6804,109 @@ function switchLang(lang) {
                   <div id="stressMsg" style="font-size:12px;color:rgba(255,255,255,0.95);line-height:1.6">Mets &agrave; jour tes donn&eacute;es pour recevoir tes conseils personnalis&eacute;s.</div>
                 </div>
                 <button onclick="showView('health')" style="width:100%;background:linear-gradient(135deg,#FF6B6B,#FF9A3C);color:white;border:none;border-radius:16px;padding:16px;font-size:15px;font-weight:700;cursor:pointer;font-family:DM Sans,sans-serif">+ Mettre &agrave; jour mes donn&eacute;es</button>
+              </div>
+            </div>
+            
+            <div id="maintienGoalDashboard" style="display:none;margin-bottom:16px">
+              <div style="font-family:DM Sans,sans-serif;display:flex;flex-direction:column;gap:10px">
+                <div style="background:linear-gradient(135deg,#1B1B2F 0%,#2D1F3D 100%);border-radius:22px;padding:20px 20px 18px">
+                  <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:16px">
+                    <div>
+                      <div style="font-size:10px;font-weight:700;color:rgba(255,154,108,0.8);letter-spacing:0.12em;text-transform:uppercase;margin-bottom:5px">Objectif actif</div>
+                      <div style="font-size:18px;font-weight:700;color:#fff;line-height:1.1">Maintien du poids</div>
+                      <div id="maintienWeekLabel" style="font-size:11px;color:rgba(255,255,255,0.4);margin-top:4px"></div>
+                    </div>
+                    <div style="text-align:center;background:rgba(255,255,255,0.08);border-radius:14px;padding:10px 14px;border:0.5px solid rgba(255,255,255,0.12)">
+                      <div style="font-size:10px;color:rgba(255,154,108,0.8);font-weight:600;margin-bottom:2px">ACTUEL</div>
+                      <div id="maintienPoidsActuel" style="font-size:22px;font-weight:700;color:#FF9A3C;line-height:1">--</div>
+                      <div style="font-size:10px;color:rgba(255,255,255,0.4)">kg</div>
+                    </div>
+                  </div>
+                  <div style="display:flex;align-items:center;gap:14px">
+                    <div style="position:relative;width:64px;height:64px;flex-shrink:0">
+                      <svg width="64" height="64" viewBox="0 0 64 64" style="transform:rotate(-90deg)">
+                        <circle cx="32" cy="32" r="26" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="6"/>
+                        <circle id="maintienCircle" cx="32" cy="32" r="26" fill="none" stroke="#4ade80" stroke-width="6" stroke-linecap="round" stroke-dasharray="163.4" stroke-dashoffset="40"/>
+                      </svg>
+                      <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center">
+                        <span id="maintienStatus" style="font-size:12px;font-weight:700;color:#fff">Stable</span>
+                        <span style="font-size:9px;color:rgba(74,222,128,0.8)">✓ zone</span>
+                      </div>
+                    </div>
+                    <div style="flex:1">
+                      <div style="display:flex;justify-content:space-between;margin-bottom:5px">
+                        <span style="font-size:11px;color:rgba(255,255,255,0.5)">Zone cible : <span id="maintienZone">-- ± 1 kg</span></span>
+                        <span id="maintienZoneStatus" style="font-size:11px;font-weight:600;color:#4ade80">✓ Dans la zone</span>
+                      </div>
+                      <div style="height:4px;background:rgba(255,255,255,0.1);border-radius:4px;overflow:hidden">
+                        <div style="height:4px;background:rgba(74,222,128,0.4);border-radius:4px;width:100%"></div>
+                      </div>
+                      <div style="margin-top:8px;display:flex;gap:6px">
+                        <div id="maintienJoursBadge" style="background:rgba(74,222,128,0.15);border-radius:8px;padding:3px 10px;font-size:10px;color:#4ade80;font-weight:600">J0 / 28 suivi</div>
+                        <div id="maintienVariBadge" style="background:rgba(255,154,60,0.2);border-radius:8px;padding:3px 10px;font-size:10px;color:#FF9A3C;font-weight:600">= Stable</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px">
+                  <div style="background:#FFF0EC;border-radius:16px;padding:14px 10px;text-align:center">
+                    <div style="width:32px;height:32px;border-radius:10px;background:#FF6B6B;display:flex;align-items:center;justify-content:center;margin:0 auto 8px"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.2" stroke-linecap="round"><circle cx="12" cy="5" r="3"/><path d="M6.5 8a6 6 0 0 0 0 8M17.5 8a6 6 0 0 0 0 8"/><line x1="12" y1="8" x2="12" y2="21"/></svg></div>
+                    <div id="maintienPoidsTile" style="font-size:17px;font-weight:700;color:#7a1a1a">--<span style="font-size:10px;font-weight:400;color:#E85555">kg</span></div>
+                    <div style="font-size:10px;color:#E85555;margin-top:2px;font-weight:500">Poids actuel</div>
+                  </div>
+                  <div style="background:#F0FDF4;border-radius:16px;padding:14px 10px;text-align:center">
+                    <div style="width:32px;height:32px;border-radius:10px;background:#3B6D11;display:flex;align-items:center;justify-content:center;margin:0 auto 8px"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.2" stroke-linecap="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div>
+                    <div id="maintienVariTile" style="font-size:17px;font-weight:700;color:#173404">±0<span style="font-size:10px;font-weight:400;color:#3B6D11">kg</span></div>
+                    <div style="font-size:10px;color:#3B6D11;margin-top:2px;font-weight:500">Variation sem.</div>
+                  </div>
+                  <div style="background:#EFF6FF;border-radius:16px;padding:14px 10px;text-align:center">
+                    <div style="width:32px;height:32px;border-radius:10px;background:#378ADD;display:flex;align-items:center;justify-content:center;margin:0 auto 8px"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.2" stroke-linecap="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></div>
+                    <div id="maintienJoursTile" style="font-size:17px;font-weight:700;color:#0C447C">--<span style="font-size:10px;font-weight:400;color:#185FA5">/28j</span></div>
+                    <div style="font-size:10px;color:#185FA5;margin-top:2px;font-weight:500">Jours suivis</div>
+                  </div>
+                </div>
+                <div style="background:white;border-radius:18px;padding:16px;border:0.5px solid #F0E8E0">
+                  <div style="font-size:10px;font-weight:700;color:#E85555;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:12px">Indicateurs du jour</div>
+                  <div style="display:flex;justify-content:space-between;align-items:center;padding:9px 0;border-bottom:0.5px solid #F5EDE8">
+                    <div style="display:flex;align-items:center;gap:10px">
+                      <div style="width:30px;height:30px;border-radius:9px;background:#FFF0EC;display:flex;align-items:center;justify-content:center"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#E85555" stroke-width="2" stroke-linecap="round"><path d="M18 8h1a4 4 0 0 1 0 8h-1M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8zM6 1v3M10 1v3M14 1v3"/></svg></div>
+                      <div><div style="font-size:13px;color:#2D2D2D;font-weight:500">Calories</div><div style="font-size:10px;color:#bbb">&Eacute;quilibre &eacute;nerg&eacute;tique cl&eacute;</div></div>
+                    </div>
+                    <span id="maintienCalVal" style="font-size:11px;font-weight:700;color:#2D2D2D;white-space:nowrap">-- kcal</span>
+                  </div>
+                  <div style="display:flex;justify-content:space-between;align-items:center;padding:9px 0;border-bottom:0.5px solid #F5EDE8">
+                    <div style="display:flex;align-items:center;gap:10px">
+                      <div style="width:30px;height:30px;border-radius:9px;background:#FFF8E8;display:flex;align-items:center;justify-content:center"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#BA7517" stroke-width="2" stroke-linecap="round"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg></div>
+                      <div><div style="font-size:13px;color:#2D2D2D;font-weight:500">Activit&eacute; physique</div><div style="font-size:10px;color:#bbb">Br&ucirc;le les exc&egrave;s caloriques</div></div>
+                    </div>
+                    <span id="maintienActVal" style="font-size:11px;font-weight:700;color:#2D2D2D;white-space:nowrap">-- s&eacute;ance</span>
+                  </div>
+                  <div style="display:flex;justify-content:space-between;align-items:center;padding:9px 0;border-bottom:0.5px solid #F5EDE8">
+                    <div style="display:flex;align-items:center;gap:10px">
+                      <div style="width:30px;height:30px;border-radius:9px;background:#EFF6FF;display:flex;align-items:center;justify-content:center"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#185FA5" stroke-width="2" stroke-linecap="round"><path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/></svg></div>
+                      <div><div style="font-size:13px;color:#2D2D2D;font-weight:500">Hydratation</div><div style="font-size:10px;color:#bbb">&Eacute;vite la r&eacute;tention d&apos;eau</div></div>
+                    </div>
+                    <div style="display:flex;align-items:center;gap:8px">
+                      <div style="height:4px;width:48px;background:#E8F0FB;border-radius:4px;overflow:hidden"><div id="maintienHydBar" style="height:4px;background:#378ADD;border-radius:4px;width:0%"></div></div>
+                      <span id="maintienHydVal" style="font-size:11px;font-weight:700;color:#2D2D2D;white-space:nowrap">-- L</span>
+                    </div>
+                  </div>
+                  <div style="display:flex;justify-content:space-between;align-items:center;padding:9px 0">
+                    <div style="display:flex;align-items:center;gap:10px">
+                      <div style="width:30px;height:30px;border-radius:9px;background:#F0FDF4;display:flex;align-items:center;justify-content:center"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#3B6D11" stroke-width="2" stroke-linecap="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></div>
+                      <div><div style="font-size:13px;color:#2D2D2D;font-weight:500">Sommeil</div><div style="font-size:10px;color:#bbb">R&eacute;gule la ghr&eacute;line (faim)</div></div>
+                    </div>
+                    <div style="display:flex;align-items:center;gap:8px">
+                      <div style="height:4px;width:48px;background:#dcfce7;border-radius:4px;overflow:hidden"><div id="maintienSlBar" style="height:4px;background:#3B6D11;border-radius:4px;width:0%"></div></div>
+                      <span id="maintienSlVal" style="font-size:11px;font-weight:700;color:#2D2D2D;white-space:nowrap">-- h</span>
+                    </div>
+                  </div>
+                </div>
+                <div style="background:#FF6B6B;border-radius:18px;padding:16px 18px;display:flex;align-items:center;gap:14px">
+                  <div style="width:38px;height:38px;border-radius:12px;background:rgba(255,255,255,0.2);display:flex;align-items:center;justify-content:center;flex-shrink:0"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg></div>
+                  <div id="maintienMsg" style="font-size:12px;color:rgba(255,255,255,0.95);line-height:1.6">P&egrave;se-toi demain matin &agrave; jeun pour un suivi pr&eacute;cis.</div>
+                </div>
+                <button onclick="showView('health')" style="width:100%;background:linear-gradient(135deg,#FF6B6B,#FF9A3C);color:white;border:none;border-radius:16px;padding:16px;font-size:15px;font-weight:700;cursor:pointer;font-family:DM Sans,sans-serif">+ Enregistrer mon poids</button>
               </div>
             </div>
             <div id="summaryObjectifChips" style="display:none"></div>
