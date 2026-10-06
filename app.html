@@ -1303,7 +1303,7 @@ var _seanceIconMapGlobal = {
   'danse': {icon:'ti-music', c1:'#F472B6', c2:'#BE185D'},
   'autre': {icon:'ti-activity-heartbeat', c1:'#94A3B8', c2:'#334155'}
 };
-function persistSportSeances() { var _sdt = JSON.parse(localStorage.getItem('mirella_suivi_today') || '{}'); _sdt.activite_jours = (window._sportSeances||[]).length; _sdt.calories_sport = (window._sportSeances||[]).reduce(function(s,x){return s+(x.cal||0);},0); localStorage.setItem('mirella_suivi_today', JSON.stringify(_sdt)); if(typeof window.initHome==='function') setTimeout(window.initHome,200);
+function persistSportSeances() { var _sdt = JSON.parse(localStorage.getItem('mirella_suivi_today') || '{}'); _sdt.activite_jours = (window._sportSeances||[]).length; _sdt.calories_sport = (window._sportSeances||[]).reduce(function(s,x){return s+(x.cal||0);},0); _sdt.cafeine = parseInt(document.getElementById('hCafeine')?.value) || 0; localStorage.setItem('mirella_suivi_today', JSON.stringify(_sdt)); if(typeof window.initHome==='function') setTimeout(window.initHome,200);
   var key = 'mirella_sport_seances_' + new Date().toISOString().slice(0,10);
   localStorage.setItem(key, JSON.stringify(window._sportSeances));
 }
@@ -10042,6 +10042,13 @@ function switchLang(lang) {
         <div class="hc-unit">sur 10</div>
       </div>
       <div class="hc">
+        <div class="hc-top" style="background:linear-gradient(90deg,#BA7517,#EF9F27)"></div>
+        <div class="hc-ico" style="background:linear-gradient(135deg,#BA7517,#EF9F27)"><i class="ti ti-coffee" style="color:#fff"></i></div>
+        <div class="hc-lbl">Caf&eacute;ine</div>
+        <input type="number" id="hCafeine" min="0" max="10" placeholder="&mdash;">
+        <div class="hc-unit">caf&eacute;s</div>
+      </div>
+      <div class="hc">
         <div class="hc-top" style="background:linear-gradient(90deg,#00B894,#55efc4)"></div>
         <div class="hc-ico" style="background:linear-gradient(135deg,#00B894,#55EFC4)"><i class="ti ti-run" style="color:#fff"></i></div>
         <div class="hc-lbl">Activité</div>
@@ -18039,6 +18046,7 @@ async function saveHealthLog() {
     energy_level: parseInt(document.getElementById('hEnergy').value) || null,
     sleep_hours: parseFloat(document.getElementById('hSleep').value) || null,
     stress_level: parseInt(document.getElementById('hStress').value) || null,
+    cafeine_cups: parseInt(document.getElementById('hCafeine')?.value) || null,
     activity_minutes: parseInt(document.getElementById('hActivity').value) || null,
     blood_pressure_sys: parseInt(document.getElementById('hBpSys').value) || null,
     blood_pressure_dia: parseInt(document.getElementById('hBpDia').value) || null,
