@@ -17881,7 +17881,7 @@ async function loadHealthDashboard() {
     window.updateIMCDisplay();
     if (today.energy_level) document.getElementById('hEnergy').value = today.energy_level;
     if (today.sleep_hours) document.getElementById('hSleep').value = today.sleep_hours;
-    if (today.stress_level) document.getElementById('hStress').value = today.stress_level;
+    if (today.stress_level) document.getElementById('hStress').value = today.stress_level; var _hcaf = JSON.parse(localStorage.getItem('mirella_suivi_today') || '{}'); if(_hcaf.cafeine && document.getElementById('hCafeine')) document.getElementById('hCafeine').value = _hcaf.cafeine;
     if (today.activity_minutes) document.getElementById('hActivity').value = today.activity_minutes;
     if (today.blood_pressure_sys) document.getElementById('hBpSys').value = today.blood_pressure_sys;
     if (today.blood_pressure_dia) document.getElementById('hBpDia').value = today.blood_pressure_dia;
