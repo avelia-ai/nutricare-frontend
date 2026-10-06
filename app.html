@@ -3202,6 +3202,58 @@ window.initHome = async function() {
     var _streak = 0;
     for (var _i = _hist.length - 1; _i >= 0; _i--) { if (_hist[_i] > 0) _streak++; else break; }
     document.getElementById('healthStreak').textContent = _streak + ' jour' + (_streak > 1 ? 's' : '');
+  var _isForme = _objts.indexOf('forme') > -1;
+  var _formeEl = document.getElementById('formeGoalDashboard');
+  if (_isForme && _formeEl) {
+    _formeEl.style.display = 'block';
+    var _sc2 = window._mirellaSanteScore || parseInt(localStorage.getItem('mirella_today_score') || '0');
+    var _scoreEl = document.getElementById('formeScore');
+    if (_scoreEl) _scoreEl.textContent = _sc2;
+    var _fc = document.getElementById('formeCircle');
+    if (_fc) _fc.setAttribute('stroke-dashoffset', Math.round(175.9 - (175.9 * _sc2 / 100)));
+    var _fsb = document.getElementById('formeScoreBar');
+    if (_fsb) _fsb.style.width = Math.min(100, _sc2) + '%';
+    var _diff2 = _sc2 - parseInt(localStorage.getItem('mirella_yesterday_score') || '0');
+    var _wpEl = document.getElementById('formeWeekPts');
+    if (_wpEl) _wpEl.textContent = (_diff2 >= 0 ? '+' : '') + _diff2 + ' pts';
+    var _trEl = document.getElementById('formeTrend');
+    if (_trEl) { _trEl.textContent = _diff2 >= 0 ? '↑ En progression' : '↓ En baisse'; _trEl.style.background = _diff2 >= 0 ? '#F0FDF4' : '#FEF2F2'; _trEl.style.color = _diff2 >= 0 ? '#3B6D11' : '#A32D2D'; }
+    var _hist2 = JSON.parse(localStorage.getItem('mirella_score_history') || '[]');
+    var _streak2 = 0;
+    for (var _j = _hist2.length - 1; _j >= 0; _j--) { if (_hist2[_j] > 0) _streak2++; else break; }
+    var _stEl = document.getElementById('formeStreak');
+    if (_stEl) _stEl.textContent = _streak2;
+    var now2 = new Date();
+    var _wlEl = document.getElementById('formeWeekLabel');
+    if (_wlEl) _wlEl.textContent = 'Semaine du ' + now2.toLocaleDateString('fr-FR', {day:'numeric',month:'short'}) + ' · J' + (now2.getDay() || 7) + '/7';
+    var _suivi = JSON.parse(localStorage.getItem('mirella_suivi_today') || '{}');
+    var _calEl = document.getElementById('formeCalories');
+    if (_calEl) _calEl.innerHTML = (_suivi.calories || '--') + '<span style="font-size:10px;font-weight:400;color:#bbb">kcal</span>';
+    var _hydEl = document.getElementById('formeHydrat');
+    if (_hydEl) _hydEl.innerHTML = (_suivi.eau ? (_suivi.eau/1000).toFixed(1) : '--') + '<span style="font-size:10px;font-weight:400;color:#bbb">L</span>';
+    var _actEl = document.getElementById('formeActivite');
+    if (_actEl) _actEl.innerHTML = (_suivi.activite_jours || '--') + '<span style="font-size:10px;font-weight:400;color:#bbb">/5j</span>';
+    var _enVal = _suivi.energie || 0;
+    var _enDotsEl = document.getElementById('formeEnergieDots');
+    if (_enDotsEl) { _enDotsEl.innerHTML = ''; for(var _d=0;_d<5;_d++){var _dot=document.createElement('div');_dot.style.cssText='width:9px;height:9px;border-radius:2px;background:'+(_d < Math.round(_enVal/2) ? '#FF6B6B' : '#FFE0D5');_enDotsEl.appendChild(_dot);} }
+    var _enValEl = document.getElementById('formeEnergieVal');
+    if (_enValEl) _enValEl.textContent = (_enVal || '--') + '/10';
+    var _slVal = _suivi.sommeil || 0;
+    var _slBar = document.getElementById('formeSommeilBar');
+    if (_slBar) _slBar.style.width = Math.min(100, (_slVal/8)*100) + '%';
+    var _slValEl = document.getElementById('formeSommeilVal');
+    if (_slValEl) _slValEl.textContent = _slVal ? _slVal + 'h' : '--';
+    var _stressVal = _suivi.stress || 0;
+    var _stDotsEl = document.getElementById('formeStressDots');
+    if (_stDotsEl) { _stDotsEl.innerHTML = ''; for(var _d2=0;_d2<5;_d2++){var _dot2=document.createElement('div');_dot2.style.cssText='width:9px;height:9px;border-radius:2px;background:'+(_d2 < Math.round(_stressVal/2) ? '#FF6B6B' : '#FFE0D5');_stDotsEl.appendChild(_dot2);} }
+    var _stValEl = document.getElementById('formeStressVal');
+    if (_stValEl) _stValEl.textContent = (_stressVal || '--') + '/10';
+    var _cardio = localStorage.getItem('mirella_cardio_bpm') || '--';
+    var _cdEl = document.getElementById('formeCardioVal');
+    if (_cdEl) _cdEl.innerHTML = _cardio + ' <span style="font-size:10px;font-weight:400;color:#bbb">bpm</span>';
+    var _msgEl = document.getElementById('formeMsg');
+    if (_msgEl) { var _m = _sc2 >= 70 ? 'Excellent travail ! Tu es en pleine forme. Continue sur cette lancée et pense à bien t'hydrater.' : _sc2 >= 50 ? 'Bonne progression cette semaine. Ajoute <strong style="color:#FF9A3C">10 min d'activité</strong> aujourd'hui pour franchir les 80 pts.' : 'Mets à jour tes données chaque jour pour que Mirella personnalise tes conseils forme.'; _msgEl.innerHTML = _m; }
+  }
   }
 
   if (typeof loadDashboardForDate === 'function') {
@@ -6513,6 +6565,115 @@ function switchLang(lang) {
             
 
             <div id="healthGoalDashboard" style="display:none;margin-bottom:16px"><div style="background:#fff2f2;border-radius:20px;padding:18px;border:1.5px solid #ffb3b3;position:relative;overflow:hidden"><div style="position:absolute;width:120px;height:120px;border-radius:50%;background:rgba(255,107,107,0.12);top:-30px;right:-30px"></div><div style="position:absolute;width:70px;height:70px;border-radius:50%;background:rgba(255,154,60,0.10);bottom:10px;right:60px"></div><div style="position:absolute;width:45px;height:45px;border-radius:50%;background:rgba(255,107,107,0.08);bottom:-10px;left:20px"></div><div style="position:relative"><div style="font-size:11px;font-weight:600;color:#E85555;letter-spacing:0.06em;text-transform:uppercase;margin-bottom:4px">Objectif actif</div><div id="healthGoalTitle" style="font-size:20px;font-weight:700;color:#7a1a1a;margin-bottom:14px">Améliorer ma santé</div><div style="display:flex;align-items:center;gap:16px"><div style="position:relative;width:80px;height:80px;flex-shrink:0"><svg width="80" height="80" viewBox="0 0 80 80" style="transform:rotate(-90deg)"><circle cx="40" cy="40" r="30" fill="none" stroke="#ffd5d5" stroke-width="8"/><circle id="healthCircle" cx="40" cy="40" r="30" fill="none" stroke="#FF6B6B" stroke-width="8" stroke-linecap="round" stroke-dasharray="188" stroke-dashoffset="107"/></svg><div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center"><span id="healthScore" style="font-size:18px;font-weight:700;color:#7a1a1a">--</span><span style="font-size:10px;color:#E85555">/100</span></div></div><div style="flex:1;display:flex;flex-direction:column;gap:9px"><div><div style="display:flex;justify-content:space-between;margin-bottom:3px"><span style="font-size:12px;color:#E85555">Cette semaine</span><span id="healthWeekPts" style="font-size:13px;font-weight:600;color:#7a1a1a">+0 pts</span></div><div style="height:4px;background:#ffd5d5;border-radius:4px"><div id="healthWeekBar" style="height:4px;background:linear-gradient(90deg,#FF6B6B,#FF9A3C);border-radius:4px;width:0%"></div></div></div><div style="display:flex;justify-content:space-between"><span style="font-size:12px;color:#E85555">Délai restant</span><span id="healthDeadline" style="font-size:13px;font-weight:600;color:#7a1a1a">--</span></div><div style="display:flex;justify-content:space-between"><span style="font-size:12px;color:#E85555">Cible finale</span><span style="font-size:13px;font-weight:600;color:#7a1a1a">80 / 100</span></div></div></div><div style="margin-top:14px;background:#fff;border-radius:12px;padding:10px 14px;display:flex;align-items:center;gap:10px;border:0.5px solid #ffb3b3"><div style="width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,#FF6B6B,#FF9A3C);display:flex;align-items:center;justify-content:center;flex-shrink:0;color:#fff;font-size:15px">&#9829;</div><div id="healthMsg" style="font-size:12px;color:#7a1a1a;line-height:1.5">Continue sur ta lancée — mets à jour tes données pour suivre ta progression.</div></div><div style="margin-top:10px;font-size:11px;color:#E85555;display:flex;align-items:center;gap:5px">🔥 Streak : <strong id="healthStreak" style="font-size:14px;color:#7a1a1a;margin-left:2px">0 jour</strong></div><button onclick="showView('health')" style="width:100%;margin-top:12px;background:linear-gradient(135deg,#FF6B6B,#FF9A3C);color:#fff;border:none;border-radius:14px;padding:14px;font-size:15px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px">➕ Mettre à jour mes données</button></div></div></div>
+            
+            <div id="formeGoalDashboard" style="display:none;margin-bottom:16px">
+              <div style="background:#FFFCFA;border-radius:22px;border:1.5px solid rgba(255,154,108,0.25);padding:20px;position:relative;overflow:hidden;box-shadow:0 4px 24px rgba(255,107,107,0.07)">
+                <div style="position:absolute;width:160px;height:160px;border-radius:50%;background:radial-gradient(circle,rgba(255,107,107,0.07),transparent);top:-50px;right:-30px;pointer-events:none"></div>
+                <div style="position:absolute;width:90px;height:90px;border-radius:50%;background:radial-gradient(circle,rgba(255,154,60,0.07),transparent);bottom:-10px;left:10px;pointer-events:none"></div>
+                <div style="position:relative">
+                  <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:14px">
+                    <div>
+                      <div style="font-size:10px;font-weight:700;color:#E85555;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:4px">Objectif actif</div>
+                      <div style="font-size:19px;font-weight:700;color:#1E1E2E">Rester en forme</div>
+                      <div id="formeWeekLabel" style="font-size:11px;color:#bbb;margin-top:2px"></div>
+                    </div>
+                    <div style="background:white;border-radius:14px;padding:8px 14px;text-align:center;border:0.5px solid rgba(255,154,108,0.25);box-shadow:0 2px 8px rgba(255,107,107,0.06)">
+                      <div style="font-size:10px;color:#E85555;font-weight:600;margin-bottom:2px">STREAK</div>
+                      <div id="formeStreak" style="font-size:22px;font-weight:700;color:#FF6B6B;line-height:1">0</div>
+                      <div style="font-size:10px;color:#FF9A3C;font-weight:600">jours</div>
+                    </div>
+                  </div>
+                  <div style="display:flex;gap:12px;align-items:center;margin-bottom:14px">
+                    <div style="position:relative;width:72px;height:72px;flex-shrink:0">
+                      <svg width="72" height="72" viewBox="0 0 72 72" style="transform:rotate(-90deg)">
+                        <circle cx="36" cy="36" r="28" fill="none" stroke="#FFE8E0" stroke-width="7"/>
+                        <circle id="formeCircle" cx="36" cy="36" r="28" fill="none" stroke="url(#formeGrad)" stroke-width="7" stroke-linecap="round" stroke-dasharray="175.9" stroke-dashoffset="175.9"/>
+                        <defs><linearGradient id="formeGrad" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#FF6B6B"/><stop offset="100%" stop-color="#FF9A3C"/></linearGradient></defs>
+                      </svg>
+                      <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center">
+                        <span id="formeScore" style="font-size:17px;font-weight:700;color:#2D2D2D">--</span>
+                        <span style="font-size:9px;color:#E85555;font-weight:600">/100</span>
+                      </div>
+                    </div>
+                    <div style="flex:1">
+                      <div style="font-size:12px;color:#777;margin-bottom:5px">Score forme de la semaine</div>
+                      <div style="height:5px;background:#FFE8E0;border-radius:6px;overflow:hidden;margin-bottom:8px">
+                        <div id="formeScoreBar" style="height:5px;background:linear-gradient(90deg,#FF6B6B,#FF9A3C);border-radius:6px;width:0%;transition:width .6s"></div>
+                      </div>
+                      <div style="display:flex;gap:6px">
+                        <div id="formeWeekPts" style="background:#FFF0EC;border-radius:8px;padding:4px 8px;font-size:10px;color:#E85555;font-weight:600">+0 pts</div>
+                        <div id="formeTrend" style="background:#F0FDF4;border-radius:8px;padding:4px 8px;font-size:10px;color:#3B6D11;font-weight:600">En progression</div>
+                      </div>
+                    </div>
+                  </div>
+                  <div style="display:flex;gap:8px;margin-bottom:12px">
+                    <div style="flex:1;background:white;border-radius:14px;padding:10px 8px;border:0.5px solid rgba(255,154,108,0.2);text-align:center">
+                      <div style="width:28px;height:28px;border-radius:8px;background:#FFF0EC;display:flex;align-items:center;justify-content:center;margin:0 auto 6px"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#FF6B6B" stroke-width="2" stroke-linecap="round"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg></div>
+                      <div style="font-size:14px;font-weight:700;color:#2D2D2D" id="formeActivite">--<span style="font-size:10px;font-weight:400;color:#bbb">/5j</span></div>
+                      <div style="font-size:9px;color:#bbb;margin-top:2px">Activité</div>
+                    </div>
+                    <div style="flex:1;background:white;border-radius:14px;padding:10px 8px;border:0.5px solid rgba(255,154,108,0.2);text-align:center">
+                      <div style="width:28px;height:28px;border-radius:8px;background:#FFF0EC;display:flex;align-items:center;justify-content:center;margin:0 auto 6px"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#FF6B6B" stroke-width="2" stroke-linecap="round"><path d="M18 8h1a4 4 0 0 1 0 8h-1M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8zM6 1v3M10 1v3M14 1v3"/></svg></div>
+                      <div style="font-size:14px;font-weight:700;color:#2D2D2D" id="formeCalories">--<span style="font-size:10px;font-weight:400;color:#bbb">kcal</span></div>
+                      <div style="font-size:9px;color:#bbb;margin-top:2px">Calories</div>
+                    </div>
+                    <div style="flex:1;background:white;border-radius:14px;padding:10px 8px;border:0.5px solid rgba(255,154,108,0.2);text-align:center">
+                      <div style="width:28px;height:28px;border-radius:8px;background:#EFF6FF;display:flex;align-items:center;justify-content:center;margin:0 auto 6px"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#378ADD" stroke-width="2" stroke-linecap="round"><path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/></svg></div>
+                      <div style="font-size:14px;font-weight:700;color:#2D2D2D" id="formeHydrat">--<span style="font-size:10px;font-weight:400;color:#bbb">L</span></div>
+                      <div style="font-size:9px;color:#bbb;margin-top:2px">Hydratation</div>
+                    </div>
+                  </div>
+                  <div style="background:white;border-radius:16px;padding:14px;border:0.5px solid rgba(255,154,108,0.2);margin-bottom:12px">
+                    <div style="font-size:10px;font-weight:700;color:#E85555;letter-spacing:0.08em;text-transform:uppercase;margin-bottom:10px">Indicateurs du jour</div>
+                    <div style="display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:0.5px solid rgba(255,154,108,0.12)">
+                      <div style="display:flex;align-items:center;gap:8px">
+                        <div style="width:28px;height:28px;border-radius:8px;background:#FFF8E8;display:flex;align-items:center;justify-content:center"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#BA7517" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/></svg></div>
+                        <span style="font-size:12px;color:#444;font-weight:500">Énergie</span>
+                      </div>
+                      <div style="display:flex;align-items:center;gap:3px">
+                        <div id="formeEnergieDots" style="display:flex;gap:3px"></div>
+                        <span id="formeEnergieVal" style="font-size:11px;font-weight:700;color:#2D2D2D;margin-left:4px">--/10</span>
+                      </div>
+                    </div>
+                    <div style="display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:0.5px solid rgba(255,154,108,0.12)">
+                      <div style="display:flex;align-items:center;gap:8px">
+                        <div style="width:28px;height:28px;border-radius:8px;background:#EFF6FF;display:flex;align-items:center;justify-content:center"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#185FA5" stroke-width="2" stroke-linecap="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></div>
+                        <span style="font-size:12px;color:#444;font-weight:500">Sommeil</span>
+                      </div>
+                      <div style="display:flex;align-items:center;gap:6px">
+                        <div style="height:4px;width:60px;background:#E8F0FB;border-radius:4px;overflow:hidden"><div id="formeSommeilBar" style="height:4px;background:#378ADD;border-radius:4px;width:0%"></div></div>
+                        <span id="formeSommeilVal" style="font-size:11px;font-weight:700;color:#2D2D2D">--</span>
+                      </div>
+                    </div>
+                    <div style="display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:0.5px solid rgba(255,154,108,0.12)">
+                      <div style="display:flex;align-items:center;gap:8px">
+                        <div style="width:28px;height:28px;border-radius:8px;background:#FEF2F2;display:flex;align-items:center;justify-content:center"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#A32D2D" stroke-width="2" stroke-linecap="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></div>
+                        <span style="font-size:12px;color:#444;font-weight:500">Fréq. cardiaque</span>
+                      </div>
+                      <span id="formeCardioVal" style="font-size:11px;font-weight:700;color:#2D2D2D">-- <span style="font-size:10px;font-weight:400;color:#bbb">bpm</span></span>
+                    </div>
+                    <div style="display:flex;justify-content:space-between;align-items:center;padding:7px 0">
+                      <div style="display:flex;align-items:center;gap:8px">
+                        <div style="width:28px;height:28px;border-radius:8px;background:#F5F3FF;display:flex;align-items:center;justify-content:center"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#534AB7" stroke-width="2" stroke-linecap="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div>
+                        <span style="font-size:12px;color:#444;font-weight:500">Stress</span>
+                      </div>
+                      <div style="display:flex;align-items:center;gap:3px">
+                        <div id="formeStressDots" style="display:flex;gap:3px"></div>
+                        <span id="formeStressVal" style="font-size:11px;font-weight:700;color:#2D2D2D;margin-left:4px">--/10</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div style="background:linear-gradient(135deg,#1B1B2F,#2D2346);border-radius:16px;padding:14px 16px;display:flex;align-items:center;gap:12px;margin-bottom:12px">
+                    <div style="width:36px;height:36px;border-radius:10px;background:rgba(255,107,107,0.2);display:flex;align-items:center;justify-content:center;flex-shrink:0"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#FF9A3C" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg></div>
+                    <div id="formeMsg" style="font-size:12px;color:rgba(255,255,255,0.85);line-height:1.6">Mets à jour tes données pour recevoir tes conseils personnalisés.</div>
+                  </div>
+                  <div style="display:flex;gap:8px">
+                    <button onclick="showView('health')" style="flex:1;background:linear-gradient(135deg,#FF6B6B,#FF9A3C);color:#fff;border:none;border-radius:14px;padding:14px;font-size:14px;font-weight:600;cursor:pointer;font-family:DM Sans,sans-serif">+ Mettre à jour</button>
+                    <button onclick="window.initHome()" style="width:48px;background:white;border:0.5px solid rgba(255,154,108,0.3);border-radius:14px;cursor:pointer;display:flex;align-items:center;justify-content:center"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#FF6B6B" stroke-width="2" stroke-linecap="round"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-.08-4.49"/></svg></button>
+                  </div>
+                </div>
+              </div>
+            </div>
             <div id="summaryObjectifChips" style="display:none"></div>
             <div id="summaryProgressWrap" style="display:none;margin-bottom:18px">
               <div style="font-size:0.68rem;color:#999;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:8px;font-weight:700">Progression vers l\'objectif</div>
