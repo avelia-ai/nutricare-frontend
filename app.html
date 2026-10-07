@@ -18065,6 +18065,7 @@ async function loadHealthDashboard() {
     ]);
     const today = await todayRes.json();
     const logs = await logsRes.json();
+    if (today && today.energy_level !== undefined) window._pcTodayHealthLog = today;
     if (today.glycemia) document.getElementById('hGlycemia').value = today.glycemia;
     if (today.weight) document.getElementById('hWeight').value = today.weight;
     var localProfile = JSON.parse(localStorage.getItem('nutricare_profile') || '{}');
@@ -18082,6 +18083,8 @@ async function loadHealthDashboard() {
     refreshHarmonyAvatar(logs);
     renderHealthHistory(logs);
     renderCardioSection(logs);
+    var _lhdProf = window._pcProfile || JSON.parse(localStorage.getItem('nutricare_profile') || localStorage.getItem('mirella_profile') || '{}');
+    if (typeof window.renderPersonalSummary === 'function' && _lhdProf && !window._blockSummaryRender) window.renderPersonalSummary(_lhdProf);
   } catch(e) {
     console.error(e);
     var div = document.createElement('div');
