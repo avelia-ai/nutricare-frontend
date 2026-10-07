@@ -3471,7 +3471,7 @@ window.initHome = async function() {
         // pour eviter qu'un ancien log affiche une donnee perimee sur le dashboard.
         var _todayLogPayload = { date: new Date().toISOString().split('T')[0] };
         var _hasTodayUpdate = false;
-        if (sel_has('energie') && energie) { _todayLogPayload.energy_level = parseInt(energie); _hasTodayUpdate = true; }
+        // Ne pas ecraser le log energie depuis le modal objectifs - valeur geree dans suivi uniquement
         if (sel_has('stress') && stress) { _todayLogPayload.stress_level = parseInt(stress); _hasTodayUpdate = true; }
         if (sel_has('sommeil') && sommeilH) { _todayLogPayload.sleep_hours = parseFloat(sommeilH); _hasTodayUpdate = true; }
         if (_hasTodayUpdate) {
