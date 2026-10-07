@@ -3278,6 +3278,8 @@ window.initHome = async function() {
     for (var _j = _hist2.length - 1; _j >= 0; _j--) { if (_hist2[_j] > 0) _streak2++; else break; }
     var _stEl = document.getElementById('formeStreak');
     if (_stEl) _stEl.textContent = _streak2;
+    var _stHome = document.getElementById('homeStreakValue');
+    if (_stHome) _stHome.textContent = _streak2;
     var now2 = new Date();
     var _wlEl = document.getElementById('formeWeekLabel');
     if (_wlEl) _wlEl.textContent = 'Semaine du ' + now2.toLocaleDateString('fr-FR', {day:'numeric',month:'short'}) + ' · J' + (now2.getDay() || 7) + '/7';
@@ -3286,6 +3288,12 @@ window.initHome = async function() {
     if (_calEl) _calEl.innerHTML = (_suivi.calories || '--') + '<span style="font-size:10px;font-weight:400;color:#bbb">kcal</span>';
     var _hydEl = document.getElementById('formeHydrat');
     if (_hydEl) _hydEl.innerHTML = (_suivi.eau ? (_suivi.eau/1000).toFixed(1) : '--') + '<span style="font-size:10px;font-weight:400;color:#bbb">L</span>';
+    var _mAct = document.getElementById('homeMiniActiv');
+    if (_mAct) _mAct.textContent = _suivi.activite_jours || '—';
+    var _mHyd = document.getElementById('homeMiniHydra');
+    if (_mHyd) _mHyd.textContent = _suivi.eau ? (_suivi.eau/1000).toFixed(1) : '—';
+    var _mKcal = document.getElementById('homeMiniKcal');
+    if (_mKcal) _mKcal.textContent = _suivi.calories || '—';
     var _actEl = document.getElementById('formeActivite');
     if (_actEl) _actEl.innerHTML = (_suivi.activite_jours || '--') + '<span style="font-size:10px;font-weight:400;color:#bbb">/5j</span>';
     var _enVal = _suivi.energie || 0;
@@ -6511,37 +6519,74 @@ function switchLang(lang) {
         
       </div>
       <div style="padding:18px 16px 16px;width:100%;box-sizing:border-box">
-        <div id="healthScoreSummaryCardHome" onclick="showView('health')" style="background:linear-gradient(135deg,#1B1B2F,#232946);border-radius:20px;padding:22px;margin-bottom:16px;position:relative;overflow:hidden;box-shadow:0 0 0 1.5px rgba(255,154,108,0.22),0 16px 40px rgba(0,0,0,0.18);cursor:pointer">
+        <div id="healthScoreSummaryCardHome" onclick="showView('health')" style="background:linear-gradient(135deg,#1B1B2F,#232946);border-radius:20px;padding:20px;margin-bottom:16px;position:relative;overflow:hidden;box-shadow:0 0 0 1.5px rgba(255,154,108,0.22),0 16px 40px rgba(0,0,0,0.18);cursor:pointer">
           <div style="position:absolute;top:-40px;right:-30px;width:140px;height:140px;background:radial-gradient(circle,rgba(255,107,107,0.22),transparent 70%);pointer-events:none"></div>
-          <div style="position:absolute;bottom:-50px;left:-20px;width:120px;height:120px;background:radial-gradient(circle,rgba(108,92,231,0.16),transparent 70%);pointer-events:none"></div>
-          <div style="position:absolute;top:14px;right:14px;width:48px;height:48px;border-radius:50%;overflow:hidden;z-index:2;box-shadow:0 0 0 2px rgba(255,255,255,0.15)">
-            <video id="healthScoreFoxVideoHome" autoplay muted loop playsinline style="width:100%;height:100%;object-fit:cover;display:block">
-              <source src="https://www.mirella-ai.fr/renard_score_sante.mp4" type="video/mp4">
-            </video>
+          <!-- HEADER : objectif + streak -->
+          <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:18px;position:relative;z-index:1">
+            <div>
+              <div style="font-size:0.62rem;font-weight:700;text-transform:uppercase;letter-spacing:0.09em;color:var(--coral);margin-bottom:4px">Objectif actif</div>
+              <div id="homeObjectifTitle" style="font-family:'Open Sans',sans-serif;font-size:1.15rem;font-weight:700;color:#fff;line-height:1.2">—</div>
+              <div id="homeObjectifSub" style="font-size:0.72rem;color:rgba(255,255,255,0.5);margin-top:3px"></div>
+            </div>
+            <div style="background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.12);border-radius:12px;padding:8px 12px;text-align:center;min-width:58px;flex-shrink:0">
+              <div style="font-size:0.58rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:rgba(255,255,255,0.45);margin-bottom:2px">Streak</div>
+              <div id="homeStreakValue" style="font-size:1.4rem;font-weight:800;color:var(--coral);line-height:1;font-variant-numeric:tabular-nums">0</div>
+              <div style="font-size:0.6rem;color:rgba(255,255,255,0.4);margin-top:1px">jours</div>
+            </div>
           </div>
-          <div style="display:flex;align-items:center;gap:18px;position:relative;z-index:1">
-            <svg width="86" height="86" viewBox="0 0 86 86" style="flex-shrink:0">
+          <!-- SCORE RING + BARRES -->
+          <div style="display:flex;align-items:center;gap:16px;margin-bottom:18px;position:relative;z-index:1">
+            <svg width="76" height="76" viewBox="0 0 86 86" style="flex-shrink:0">
               <circle cx="43" cy="43" r="36" fill="none" stroke="rgba(255,255,255,0.08)" stroke-width="7"/>
               <circle id="healthScoreSummaryRingHome" cx="43" cy="43" r="36" fill="none" stroke="url(#hsGradHome)" stroke-width="7" stroke-linecap="round" stroke-dasharray="226.2" stroke-dashoffset="226.2" transform="rotate(-90 43 43)" style="transition:stroke-dashoffset .6s ease"/>
               <defs><linearGradient id="hsGradHome" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#FF6B6B"/><stop offset="100%" stop-color="#FFB347"/></linearGradient></defs>
-              <text id="healthScoreSummaryValueHome" x="43" y="49" text-anchor="middle" font-size="24" font-weight="800" fill="#fff" font-family="DM Sans, sans-serif">--</text>
+              <text id="healthScoreSummaryValueHome" x="43" y="47" text-anchor="middle" font-size="22" font-weight="800" fill="#fff" font-family="DM Sans, sans-serif">--</text>
+              <text x="43" y="58" text-anchor="middle" font-size="10" fill="rgba(255,255,255,0.4)" font-family="DM Sans, sans-serif">/100</text>
             </svg>
             <div style="flex:1;min-width:0">
-              <div style="font-size:0.66rem;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:rgba(255,255,255,0.45);margin-bottom:5px">Score de santé</div>
-              <div id="healthScoreSummaryLabelHome" style="font-size:1.05rem;font-weight:700;color:#fff;margin-bottom:4px">Remplissez vos indicateurs</div>
-              <div id="healthScoreDeltaHome" style="display:none;font-size:0.76rem;font-weight:700;margin-bottom:4px"></div>
-              <div id="healthScoreGoalHome" style="display:none;align-items:center;gap:5px;font-size:0.74rem;font-weight:700;color:#FFD166;margin-bottom:4px">
-                <i class="ti ti-target-arrow" style="font-size:13px"></i>
-                <span id="healthScoreGoalHomeText"></span>
+              <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
+                <div style="font-size:0.72rem;color:rgba(255,255,255,0.5)">Score forme</div>
+                <div id="healthScoreDeltaHome" style="font-size:0.72rem;font-weight:700;color:#4BD98A">+0 pts</div>
               </div>
-              <div style="font-size:0.74rem;color:rgba(255,255,255,0.55);display:flex;align-items:center;gap:4px">Voir le detail dans Suivi <i class="ti ti-chevron-right" style="font-size:13px"></i></div>
+              <div style="height:4px;background:rgba(255,255,255,0.1);border-radius:4px;overflow:hidden;margin-bottom:10px">
+                <div id="healthScoreBarHome" style="height:100%;border-radius:4px;background:linear-gradient(90deg,#FF6B6B,#FFB347);width:0%;transition:width .6s ease"></div>
+              </div>
+              <div style="display:inline-flex;align-items:center;gap:4px;background:rgba(75,217,138,0.15);color:#4BD98A;font-size:0.65rem;font-weight:700;border-radius:99px;padding:3px 9px">
+                <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="18 15 12 9 6 15"/></svg>
+                En progression
+              </div>
+            </div>
+          </div>
+          <!-- MINI TUILES -->
+          <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;position:relative;z-index:1">
+            <div style="background:rgba(255,255,255,0.06);border-radius:12px;padding:10px">
+              <div style="width:26px;height:26px;border-radius:8px;background:rgba(255,107,107,0.25);display:flex;align-items:center;justify-content:center;margin-bottom:6px">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#FF6B6B" stroke-width="2.2" stroke-linecap="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+              </div>
+              <div style="font-size:0.88rem;font-weight:700;color:#fff;font-variant-numeric:tabular-nums"><span id="homeMiniActiv">1</span><span style="font-size:0.6rem;font-weight:500;opacity:0.55">/5j</span></div>
+              <div style="font-size:0.62rem;color:rgba(255,255,255,0.45);font-weight:500;margin-top:1px">Activité</div>
+            </div>
+            <div style="background:rgba(255,255,255,0.06);border-radius:12px;padding:10px">
+              <div style="width:26px;height:26px;border-radius:8px;background:rgba(75,123,236,0.25);display:flex;align-items:center;justify-content:center;margin-bottom:6px">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#4B7BEC" stroke-width="2.2" stroke-linecap="round"><path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/></svg>
+              </div>
+              <div style="font-size:0.88rem;font-weight:700;color:#fff;font-variant-numeric:tabular-nums"><span id="homeMiniHydra">—</span><span style="font-size:0.6rem;font-weight:500;opacity:0.55">L</span></div>
+              <div style="font-size:0.62rem;color:rgba(255,255,255,0.45);font-weight:500;margin-top:1px">Hydratation</div>
+            </div>
+            <div style="background:rgba(255,255,255,0.06);border-radius:12px;padding:10px">
+              <div style="width:26px;height:26px;border-radius:8px;background:rgba(42,180,100,0.25);display:flex;align-items:center;justify-content:center;margin-bottom:6px">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#2AB464" stroke-width="2.2" stroke-linecap="round"><path d="M18 8h1a4 4 0 0 1 0 8h-1"/><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/></svg>
+              </div>
+              <div style="font-size:0.88rem;font-weight:700;color:#fff;font-variant-numeric:tabular-nums"><span id="homeMiniKcal">—</span><span style="font-size:0.6rem;font-weight:500;opacity:0.55">kcal</span></div>
+              <div style="font-size:0.62rem;color:rgba(255,255,255,0.45);font-weight:500;margin-top:1px">Calories</div>
             </div>
           </div>
           <div style="display:none">
+            <span id="healthScoreSummaryLabelHome"></span>
+            <span id="healthScoreGoalHome"></span><span id="healthScoreGoalHomeText"></span>
             <span id="healthScoreBarEnergieHome"></span><span id="healthScoreBarSommeilHome"></span><span id="healthScoreBarHydraHome"></span><span id="healthScoreBarActivHome"></span><span id="healthScoreBarStressHome"></span>
           </div>
         </div>
-        <!-- SECTION COEUR D'HARMONIE -->
         <div id="coeurHarmonieCardHome" style="background:#FFFFFF;border-radius:20px;padding:0;overflow:hidden;box-shadow:0 0 0 1.5px rgba(255,154,108,0.22),0 14px 32px rgba(230,110,70,0.14);margin-bottom:24px">
           <div style="background:linear-gradient(135deg,#FFB347,#FF6B6B);padding:16px 20px 30px">
             <div style="font-size:0.7rem;color:rgba(255,255,255,0.85);font-weight:700;letter-spacing:0.04em;margin-bottom:4px">MIRELLA</div>
@@ -12883,6 +12928,14 @@ function switchLang(lang) {
       document.getElementById('sidebarName').textContent = name;
       document.getElementById('sidebarPlan').textContent = planLabels[plan] || 'Gratuit';
       document.getElementById('dashName').textContent = name.split(' ')[0] + ' !';
+      var _objMap = {perte_poids:'Perte de poids',masse:'Prise de masse',sommeil:'Améliorer le sommeil',stress:'Réduire le stress',energie:'Booster mon énergie',performance:'Performance sportive','réequilibrage':'Rééquilibrage alimentaire',maintien:'Maintenir mes acquis'};
+      var _prof2 = JSON.parse(localStorage.getItem('mirella_profile') || '{}');
+      var _objKey = (_prof2.objectifs || [])[0] || '';
+      var _objTit = document.getElementById('homeObjectifTitle');
+      if (_objTit) _objTit.textContent = _objMap[_objKey] || 'Mon objectif';
+      var _objSub = document.getElementById('homeObjectifSub');
+      var _now2 = new Date();
+      if (_objSub) _objSub.textContent = 'Semaine du ' + _now2.toLocaleDateString('fr-FR',{day:'numeric',month:'short'}) + ' · J' + (_now2.getDay()||7) + '/7';
       document.getElementById('dashPlan').textContent = planLabels[plan] || 'Gratuit';
       document.getElementById('dashPatho').textContent = profile.pathologies?.length || 0;
 
@@ -19314,6 +19367,10 @@ function updateHealthScoreSummaryHome(log, scoreDelta) {
   lblEl.textContent = lbl;
   ringEl.style.strokeDashoffset = circ * (1 - score/100);
   window._mirellaSanteScore = score;
+  var _barHome = document.getElementById('healthScoreBarHome');
+  if (_barHome) _barHome.style.width = Math.min(100, score) + '%';
+  var _deltaHome = document.getElementById('healthScoreDeltaHome');
+  if (_deltaHome) _deltaHome.textContent = (scoreDelta >= 0 ? '+' : '') + (scoreDelta || 0) + ' pts';
   var _hS = document.getElementById('healthScore');
   var _hC = document.getElementById('healthCircle');
   var _hM = document.getElementById('healthMsg');
