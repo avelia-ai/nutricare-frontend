@@ -5018,7 +5018,7 @@ window.initHome = async function() {
 
     var countdownWrap = document.getElementById('summaryCountdownWrap');
     if (profile.objectif_date_debut && profile.objectif_delai_semaines) {
-      var startD = new Date(profile.objectif_date_debut + 'T00:00:00');
+      var startD = new Date('2026-09-01T00:00:00'); // TEST FORCE EXPIRATION
       var totalDays = profile.objectif_delai_semaines * 7;
       var elapsedDays = Math.floor((new Date() - startD) / 86400000);
       var remainingDays = totalDays - elapsedDays;
@@ -5033,10 +5033,10 @@ window.initHome = async function() {
         alert('ELSE atteint — popup va se déclencher');
         // Popup bilan objectif echu
         setTimeout(function(){
-          if(typeof showObjectifBilanPopup === 'function' && !window._justRecalibrated) {
+          if(typeof showObjectifBilanPopup === 'function') {
             // Ne pas afficher si l'objectif vient d'être défini aujourd'hui
             var _todayStr = new Date().toISOString().split('T')[0];
-            if(profile.objectif_date_debut && profile.objectif_date_debut.split('T')[0] === _todayStr) return;
+            // TEST: skip today check
             var _tok = window._authToken || window.authToken || localStorage.getItem('nutricare_token') || localStorage.getItem('mirella_token') || localStorage.getItem('sb_token') || '';
             var _bu = (typeof BACKEND_URL !== 'undefined') ? BACKEND_URL : 'https://nutricare-backend-production.up.railway.app';
             var _daysObj = (profile.objectif_delai_semaines || 4) * 7 + 2;
