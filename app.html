@@ -3475,6 +3475,8 @@ window.initHome = async function() {
         if (sel_has('stress') && stress) { _todayLogPayload.stress_level = parseInt(stress); _hasTodayUpdate = true; }
         if (sel_has('sommeil') && sommeilH) { _todayLogPayload.sleep_hours = parseFloat(sommeilH); _hasTodayUpdate = true; }
         if (_hasTodayUpdate) {
+          if (!window._pcTodayHealthLog) window._pcTodayHealthLog = {};
+          Object.assign(window._pcTodayHealthLog, _todayLogPayload);
           try {
             await fetch(BACKEND_URL + '/api/health/log', {
               method: 'POST',
