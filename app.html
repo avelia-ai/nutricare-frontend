@@ -5017,7 +5017,7 @@ window.initHome = async function() {
     }
 
     var countdownWrap = document.getElementById('summaryCountdownWrap');
-    if (profile.objectif_date_debut && profile.objectif_delai_semaines) {
+    if (true) { profile.objectif_date_debut = profile.objectif_date_debut || '2026-09-01'; profile.objectif_delai_semaines = profile.objectif_delai_semaines || 4;
       var startD = new Date('2026-09-01T00:00:00'); // TEST FORCE EXPIRATION
       var totalDays = profile.objectif_delai_semaines * 7;
       var elapsedDays = Math.floor((new Date() - startD) / 86400000);
