@@ -32491,16 +32491,15 @@ function _noEnergieObjUpdate(val) {
   document.getElementById('no_energie_objectif').style.background = 'linear-gradient(to right,#1565C0 '+p+'%,#e0e0e0 '+p+'%)';
 }
 function _noCauseToggle(el, v, color, bg) {
-  if(!window._noCauses) window._noCauses = [];
-  el.classList.toggle('no-cause-selected');
-  var sel = el.classList.contains('no-cause-selected');
-  el.style.borderColor = sel ? color : 'rgba(0,0,0,0.06)';
-  el.style.background = sel ? bg : 'white';
-  if(sel) { if(!window._noCauses.includes(v)) window._noCauses.push(v); }
-  else { window._noCauses = window._noCauses.filter(function(x){ return x !== v; }); }
+  window._noCauses = [];
+  document.querySelectorAll('.no-cause-btn').forEach(function(b){ b.classList.remove('no-cause-selected'); b.style.borderColor='rgba(0,0,0,0.06)'; b.style.background='white'; });
+  el.classList.add('no-cause-selected');
+  el.style.borderColor = color;
+  el.style.background = bg;
+  window._noCauses = [v];
 }
 function _noCauseBtn(v, label, svgPath, color, bg) {
-  return '<div onclick="_noCauseToggle(this,\'' + v + '\',\'' + color + '\',\'' + bg + '\')" style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;padding:14px 8px;background:white;border:2px solid rgba(0,0,0,0.06);border-radius:14px;cursor:pointer;transition:all 0.2s">'
+  return '<div class="no-cause-btn" onclick="_noCauseToggle(this,\'' + v + '\',\'' + color + '\',\'' + bg + '\')" style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;padding:14px 8px;background:white;border:2px solid rgba(0,0,0,0.06);border-radius:14px;cursor:pointer;transition:all 0.2s">'
     + '<div style="width:36px;height:36px;border-radius:10px;background:' + bg + ';display:flex;align-items:center;justify-content:center"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="' + color + '" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="' + svgPath + '"/></svg></div>'
     + '<span style="font-size:0.7rem;font-weight:700;color:#444;text-align:center;line-height:1.2">' + label + '</span>'
     + '</div>';
