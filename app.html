@@ -32235,13 +32235,13 @@ function buildNoStep2Content(obj) {
     );
   } else if(obj === 'sante') {
     html += card(
-      noMultiSelect('Tes préoccupations principales', 'no_sante_focus', [
+      noSingleSelect('Tes préoccupations principales', 'no_sante_focus', [
         {v:'digestion', l:'Digestion'}, {v:'inflammation', l:'Inflammation'},
         {v:'immunite', l:'Immunité'}, {v:'cardio', l:'Cardiovasculaire'},
         {v:'hormones', l:'Hormones / cycle'}, {v:'peau', l:'Peau / cheveux'},
         {v:'stress', l:'Stress / anxiété'}, {v:'glycemie', l:'Glycémie'}
       ])
-      + noMultiSelect('Ce que tu veux changer en priorité', 'no_sante_action', [
+      + noSingleSelect('Ce que tu veux changer en priorité', 'no_sante_action', [
         {v:'alimentation', l:'Mon alimentation'}, {v:'activite', l:'Mon activité physique'},
         {v:'stress', l:'Ma gestion du stress'}, {v:'sommeil', l:'Mon sommeil'},
         {v:'hydratation', l:'Mon hydratation'}, {v:'supplements', l:'Compléments alimentaires'}
