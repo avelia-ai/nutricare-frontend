@@ -3202,6 +3202,41 @@ window.initHome = async function() {
     var _streak = 0;
     for (var _i = _hist.length - 1; _i >= 0; _i--) { if (_hist[_i] > 0) _streak++; else break; }
     document.getElementById('healthStreak').textContent = _streak + ' jour' + (_streak > 1 ? 's' : '');
+    // Peupler les tuiles et indicateurs depuis mirella_suivi_today
+    var _sv = JSON.parse(localStorage.getItem('mirella_suivi_today') || '{}');
+    var _hActEl = document.getElementById('healthActivite');
+    if (_hActEl) _hActEl.textContent = (_sv.activite_jours !== undefined ? _sv.activite_jours : '--') + '/5j';
+    var _hHydEl = document.getElementById('healthHydrat');
+    if (_hHydEl) _hHydEl.textContent = _sv.eau ? (_sv.eau/1000).toFixed(1)+'L' : '--L';
+    var _hCalEl = document.getElementById('healthCalories');
+    if (_hCalEl) _hCalEl.textContent = _sv.calories ? _sv.calories+' kcal' : '-- kcal';
+    var _hEnEl = document.getElementById('healthEnergieVal');
+    if (_hEnEl) _hEnEl.textContent = (_sv.energie !== undefined ? _sv.energie : '--') + '/10';
+    var _hSlBar = document.getElementById('healthSommeilBar');
+    if (_hSlBar) _hSlBar.style.width = Math.min(100,((_sv.sommeil||0)/9)*100)+'%';
+    var _hSlVal = document.getElementById('healthSommeilVal');
+    if (_hSlVal) _hSlVal.textContent = _sv.sommeil ? _sv.sommeil+'h' : '--';
+    var _hCdVal = document.getElementById('healthCardioVal');
+    if (_hCdVal) _hCdVal.textContent = _sv.cardio_bpm ? _sv.cardio_bpm+' bpm' : '-- bpm';
+    var _hStVal = document.getElementById('healthStressVal');
+    if (_hStVal) _hStVal.textContent = (_sv.stress !== undefined ? _sv.stress : '--') + '/10';
+    // Energie dots
+    var _hEnDots = document.getElementById('healthEnergieDots');
+    if (_hEnDots && _sv.energie) {
+      var _dots = '';
+      for (var _d=1;_d<=10;_d++) _dots += '<span style="width:7px;height:7px;border-radius:50%;background:' + (_d<=_sv.energie ? 'linear-gradient(135deg,#FF9A3C,#FF6B6B)' : 'rgba(255,255,255,0.15)') + ';display:inline-block;margin:1px"></span>';
+      _hEnDots.innerHTML = _dots;
+    }
+    // Stress dots
+    var _hStDots = document.getElementById('healthStressDots');
+    if (_hStDots && _sv.stress) {
+      var _sdots = '';
+      for (var _sd=1;_sd<=10;_sd++) _sdots += '<span style="width:7px;height:7px;border-radius:50%;background:' + (_sd<=_sv.stress ? 'linear-gradient(135deg,#FF9A3C,#FF6B6B)' : 'rgba(255,255,255,0.15)') + ';display:inline-block;margin:1px"></span>';
+      _hStDots.innerHTML = _sdots;
+    }
+    // Trend label
+    var _hTrend = document.getElementById('healthTrend');
+    if (_hTrend) { _hTrend.textContent = _diff >= 0 ? '↑ En progression' : '↓ En baisse'; }
   }
   var _isStress = _objts.indexOf('stress') > -1;
   var _stressEl = document.getElementById('stressGoalDashboard');
