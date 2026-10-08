@@ -32092,6 +32092,22 @@ function noRepasIncr(id) {
   if(v < 10) el.value = v + 1;
 }
 
+function noRepasCounter(label, id) {
+  var s = '<div style="margin-bottom:14px">';
+  s += '<div style="font-size:0.75rem;font-weight:600;color:#9a8b82;margin-bottom:8px">' + label + '</div>';
+  s += '<div style="display:flex;align-items:center;gap:0;background:white;border:1.5px solid rgba(255,154,108,0.3);border-radius:11px;overflow:hidden;max-width:180px">';
+  s += '<button onclick="noRepasDecr(\'' + id + '\')" style="width:44px;height:44px;border:none;background:transparent;font-size:1.3rem;font-weight:700;color:#E87040;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0">−</button>';
+  s += '<div style="flex:1;text-align:center">';
+  s += '<input id="' + id + '" type="number" min="1" max="10" value="3" readonly style="width:100%;text-align:center;border:none;outline:none;font-size:1.1rem;font-weight:800;color:#2b2320;background:transparent;pointer-events:none">';
+  s += '</div>';
+  s += '<button onclick="noRepasIncr(\'' + id + '\')" style="width:44px;height:44px;border:none;background:transparent;font-size:1.3rem;font-weight:700;color:#E87040;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0">+</button>';
+  s += '</div>';
+  s += '<div style="font-size:0.7rem;color:#b0a09a;margin-top:5px">repas par jour (collations incluses)</div>';
+  s += '</div>';
+  return s;
+}
+function noRepasDecr(id) { var el = document.getElementById(id); if(!el) return; var v = parseInt(el.value)||3; if(v>1) el.value=v-1; }
+function noRepasIncr(id) { var el = document.getElementById(id); if(!el) return; var v = parseInt(el.value)||3; if(v<10) el.value=v+1; }
 function noSingleSelect(label, id, options) {
   var s = '<div style="margin-bottom:14px">';
   s += '<div style="font-size:0.75rem;font-weight:600;color:#9a8b82;margin-bottom:8px">' + label + '</div>';
@@ -32147,9 +32163,7 @@ function buildNoStep2Content(obj) {
     html += card(
       noInputRow('Combien de kg veux-tu perdre ?', 'noDeltaInput', 'number', 'ex: 5', 'kg', '0.5', '50', '0.5')
       + noInputRow('Ton poids actuel', 'noPoidsActuel', 'number', 'ex: 75', 'kg', '30', '200', '0.1', poidsProfile)
-      + noSingleSelect('Ton rythme alimentaire actuel', 'no_rythme', [
-        {v:'3repas', l:'3 repas/jour'}, {v:'4repas', l:'4 repas/jour'}, {v:'5_6repas', l:'5-6 repas/jour'}, {v:'grignotage', l:'Je grignote'}, {v:'saut_repas', l:'Je saute des repas'}, {v:'variable', l:'Très variable'}
-      ])
+      + noRepasCounter('Ton rythme alimentaire actuel', 'no_rythme')
     );
   } else if(obj === 'masse') {
     html += card(
