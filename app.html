@@ -5123,6 +5123,14 @@ window.initHome = async function() {
     if (objectifs.indexOf('masse') > -1) {
       pushAdvice(pickVariant(['pour ta prise de masse, vise un surplus de 250 à 400 kcal par jour et 1,8 à 2,2g de protéines par kg de poids de corps, réparties en 4 prises espacées de 3-4h', 'pour ta prise de masse, ajoute une collation riche (flocons d\'avoine, beurre de cacahuète, banane) après ta séance pour optimiser la récupération musculaire', 'pour ta prise de masse, ne néglige pas les glucides : ils sont essentiels pour avoir l\'énergie de bien performer à chaque séance', 'pour ta prise de masse, vise 7 à 9h de sommeil par nuit : c\'est pendant le sommeil que le muscle se reconstruit vraiment']), 3);
       if (_tlActivity !== null && _tlActivity < 20) pushAdvice(pickVariant(['pense à ta séance de renforcement musculaire aujourd\'hui : 3 à 4 séries de 8-12 répétitions par groupe musculaire pour maximiser l\'hypertrophie', 'pense à augmenter progressivement les charges d\'une séance à l\'autre pour continuer à progresser', 'pense à bien travailler chaque groupe musculaire au moins une fois par semaine pour un développement équilibré', 'pense à laisser 48h de repos avant de retravailler le même groupe musculaire']), 2);
+      var _repasJourMasse = profile.repas_par_jour ? parseInt(profile.repas_par_jour) : 3;
+      if (_repasJourMasse <= 2) {
+        pushAdvice('tu manges seulement ' + _repasJourMasse + ' fois par jour : pour la prise de masse, c'est insuffisant — vise 4 à 5 prises espacées de 3h pour maintenir un flux constant d'acides aminés et maximiser la synthèse protéique', 3);
+      } else if (_repasJourMasse === 3) {
+        pushAdvice('avec 3 repas par jour, ajoute 1 à 2 collations riches en protéines (fromage blanc, œufs, shake protéiné) pour atteindre tes besoins journaliers de 1,8 à 2,2g de protéines par kg', 3);
+      } else if (_repasJourMasse >= 5) {
+        pushAdvice('ton rythme de ' + _repasJourMasse + ' prises par jour est idéal pour la prise de masse : assure-toi que chaque prise contient au moins 20-30g de protéines pour maximiser la synthèse musculaire', 2);
+      }
     }
     if (objectifs.indexOf('sommeil') > -1) {
       if (_tlSleep !== null && _tlSleep < 7.5) pushAdvice(pickVariant(['ton objectif est de mieux dormir : coupe les écrans 45 min avant le coucher, baisse la température de ta chambre à 18-19 degrés, et vise un coucher à heure fixe pour stabiliser ton rythme circadien', 'ton objectif est de mieux dormir : essaie une tisane apaisante (camomille, verveine) 30 minutes avant le coucher', 'ton objectif est de mieux dormir : limite les siestes en journée à 20 minutes maximum pour ne pas perturber ton endormissement le soir', 'ton objectif est de mieux dormir : expose-toi à la lumière naturelle le matin, ça aide à recaler ton horloge biologique']), 3);
@@ -32174,6 +32182,7 @@ function buildNoStep2Content(obj) {
       + noSingleSelect('Ton niveau d\'activité physique', 'no_activite', [
         {v:'sedentaire', l:'Sédentaire'}, {v:'leger', l:'Léger (1-2x/sem)'}, {v:'modere', l:'Modéré (3-4x/sem)'}, {v:'intense', l:'Intense (5+/sem)'}
       ])
+      + noRepasCounter('Ton rythme alimentaire actuel', 'no_rythme_masse')
     );
   } else if(obj === 'sommeil') {
     html += card(
@@ -32394,8 +32403,10 @@ function confirmNouvelObjectif() {
     extra.stress_niveau = noGetSingleVal('no_stress_niveau') || null;
     extra.stress_source = noGetMultiVal('no_stress_source') || null;
     extra.stress_action = noGetMultiVal('no_stress_action') || null;
-  } else if(obj === 'masse' && noGetSingleVal('no_activite')) {
+  } else if(obj === 'masse') {
     extra.niveau_activite = noGetSingleVal('no_activite') || null;
+    var _rythmeElMasse = document.getElementById('no_rythme_masse');
+    extra.repas_par_jour = _rythmeElMasse ? (parseInt(_rythmeElMasse.value) || 3) : 3;
   } else if(obj === 'perte_poids') {
     var _rythmeEl = document.getElementById('no_rythme');
     extra.repas_par_jour = _rythmeEl ? (parseInt(_rythmeEl.value) || 3) : 3;
