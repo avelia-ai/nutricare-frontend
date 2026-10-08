@@ -5104,6 +5104,21 @@ window.initHome = async function() {
         pushAdvice(pickVariant(['pour ton objectif de perte de poids, privilégie les protéines et les fibres qui rassasient durablement', 'pour ton objectif de perte de poids, mange dans une assiette plus petite : ça aide naturellement à réduire les portions', 'pour ton objectif de perte de poids, priorise le sommeil : un manque de sommeil dérègle les hormones de la faim', 'pour ton objectif de perte de poids, bois un verre d\'eau avant chaque repas, ça aide à mieux réguler l\'appétit']), 2);
       }
       if (_tlActivity !== null && _tlActivity < 30) pushAdvice(pickVariant(['pour progresser vers ta perte de poids, vise 30 à 45 min de marche rapide ou de vélo aujourd\'hui (zone cardio 60-70% de ta FC max) : c\'est la fourchette la plus efficace pour mobiliser les graisses sans épuiser ta récupération', 'pour progresser vers ta perte de poids, ajoute 2 séances de renforcement musculaire par semaine : plus de muscle veut dire plus de calories brûlées au repos', 'pour progresser vers ta perte de poids, essaie 15 minutes de HIIT aujourd\'hui : très efficace pour la dépense calorique post-effort', 'pour progresser vers ta perte de poids, marche systématiquement après chaque repas 10 minutes : ça aide aussi à la digestion']), 2);
+
+      // Conseil personnalisé selon le nombre de repas renseigné
+      var _repasJour = profile.repas_par_jour ? parseInt(profile.repas_par_jour) : 3;
+      if (_repasJour <= 2) {
+        pushAdvice('tu manges ' + _repasJour + ' fois par jour : avec si peu de prises, il est facile d\'arriver affamé(e) au repas suivant et de trop manger — ajoute une collation protéinée (yaourt, œuf dur, poignée d\'amandes) pour mieux contrôler ta faim', 3);
+      } else if (_repasJour >= 5) {
+        pushAdvice('tu manges ' + _repasJour + ' fois par jour : avec plusieurs prises, assure-toi que chaque collation est vraiment utile (protéines + fibres) et évite les grignotages impulsifs entre elles pour rester dans ton déficit calorique', 3);
+      }
+      // Conseil personnalisé selon les séances sportives
+      var _seancesSem = profile.seances_semaine ? parseInt(profile.seances_semaine) : null;
+      if (_seancesSem !== null && _seancesSem === 0) {
+        pushAdvice('tu n\'as pas encore de séances sportives dans ta semaine : même 2 séances de 30 min de marche rapide suffisent pour accélérer ta perte de poids sans te fatiguer', 3);
+      } else if (_seancesSem !== null && _seancesSem >= 4) {
+        pushAdvice('tu t\'entraînes ' + _seancesSem + ' fois par semaine : assure-toi de bien manger après chaque séance (protéines + glucides) pour préserver ta masse musculaire pendant ta perte de poids', 2);
+      }
     }
     if (objectifs.indexOf('masse') > -1) {
       pushAdvice(pickVariant(['pour ta prise de masse, vise un surplus de 250 à 400 kcal par jour et 1,8 à 2,2g de protéines par kg de poids de corps, réparties en 4 prises espacées de 3-4h', 'pour ta prise de masse, ajoute une collation riche (flocons d\'avoine, beurre de cacahuète, banane) après ta séance pour optimiser la récupération musculaire', 'pour ta prise de masse, ne néglige pas les glucides : ils sont essentiels pour avoir l\'énergie de bien performer à chaque séance', 'pour ta prise de masse, vise 7 à 9h de sommeil par nuit : c\'est pendant le sommeil que le muscle se reconstruit vraiment']), 3);
