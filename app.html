@@ -32509,8 +32509,8 @@ function confirmNouvelObjectif() {
     extra.energie_objectif = _eoEl ? parseInt(_eoEl.value) : null;
     extra.causes_fatigue = (window._noCauses && window._noCauses.length) ? window._noCauses : null;
   } else if(obj === 'sante') {
-    extra.sante_focus = noGetVal('no_sante_focus') || null;
-    extra.sante_action = noGetVal('no_sante_action') || null;
+    extra.sante_focus = noGetSingleVal('no_sante_focus') || null;
+    extra.sante_action = noGetSingleVal('no_sante_action') || null;
   } else if(obj === 'cardio') {
     extra.cardio_niveau = noGetSingleVal('no_cardio_niveau') || null;
     extra.cardio_objectif = noGetSingleVal('no_cardio_objectif') || null;
