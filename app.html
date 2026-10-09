@@ -5081,11 +5081,13 @@ window.initHome = async function() {
             var _tok = window._authToken || window.authToken || localStorage.getItem('nutricare_token') || localStorage.getItem('mirella_token') || localStorage.getItem('sb_token') || '';
             var _bu = (typeof BACKEND_URL !== 'undefined') ? BACKEND_URL : 'https://nutricare-backend-production.up.railway.app';
             var _daysObj = (profile.objectif_delai_semaines || 4) * 7 + 2;
+            // Appel direct sans attendre le fetch pour garantir l'affichage
+            showObjectifBilanPopup(profile, []);
             fetch(_bu + '/api/health/logs?days=' + _daysObj, {
               headers: { 'Authorization': 'Bearer ' + _tok }
-            }).then(function(r){ return r.ok ? r.json() : {logs:[]}; }).then(function(d){ console.log('_saveProfil response:', JSON.stringify(d));
+            }).then(function(r){ return r.ok ? r.json() : {logs:[]}; }).then(function(d){
               showObjectifBilanPopup(profile, d.logs || d || []);
-            }).catch(function(){ showObjectifBilanPopup(profile, []); });
+            }).catch(function(){ });
           }
         }, 1200);
       }
