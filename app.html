@@ -3448,7 +3448,22 @@ window.initHome = async function() {
     document.getElementById('editStressWrap').style.display = sel['stress'] ? 'block' : 'none';
     document.getElementById('editPerformanceWrap').style.display = sel['performance'] ? 'block' : 'none';
   }
-  async function saveEditGoals() {
+  async 
+function selectDelaiChip(el, val) {
+  document.querySelectorAll('#delaiChipsWrap .delai-chip').forEach(function(c) {
+    c.style.background = '#fff';
+    c.style.color = '#999';
+    c.style.borderColor = '#f0e8e0';
+    c.style.fontWeight = '600';
+  });
+  el.style.background = 'linear-gradient(135deg,#FF6B6B,#FF9A3C)';
+  el.style.color = '#fff';
+  el.style.borderColor = '#FF6B6B';
+  el.style.fontWeight = '700';
+  document.getElementById('editDelaiObjectif').value = val;
+}
+
+function saveEditGoals() {
     var selected = [];
     document.querySelectorAll('#editGoalsModal [data-obj][data-selected="1"]').forEach(function(el) { selected.push(el.getAttribute('data-obj')); });
     var profile = JSON.parse(localStorage.getItem('nutricare_profile') || '{}');
@@ -5327,7 +5342,7 @@ setTimeout(function(){
 }, 3000);
 
 window.renderPersonalSummary = renderPersonalSummary;
-  setTimeout(function(){ var _c=document.getElementById('personalSummaryContent'); var _ch=document.getElementById('personalSummaryChevron'); if(_c){ _c.style.display='block'; } if(_ch){ _ch.style.transform='rotate(180deg)'; } }, 2000);
+  setTimeout(function(){ var _c=document.getElementById('personalSummaryContent'); var _ch=document.getElementById('personalSummaryChevron'); if(_c){ _c.style.display='block'; } if(_ch){ _ch.style.transform='rotate(180deg)'; } }, 0);
   var greeting = hours < 12 ? 'Bonjour' : hours < 18 ? 'Bon après-midi' : 'Bonsoir';
   var greetEl = document.getElementById('homeGreeting');
   if (greetEl) greetEl.textContent = greeting + (prenom ? ' ' + prenom + ' !' : ' !');
@@ -6786,7 +6801,7 @@ function switchLang(lang) {
         </div>
         <!-- FIN COEUR D'HARMONIE -->
 
-        <div id="personalSummaryCard" style="display:none;background:#FFFFFF;border-radius:20px;padding:0;overflow:hidden;box-shadow:0 0 0 1.5px rgba(255,154,108,0.22),0 14px 32px rgba(230,110,70,0.14);margin-bottom:24px">
+        <div id="personalSummaryCard" style="display:none;background:#FFFFFF;border-radius:20px;padding:0;box-shadow:0 0 0 1.5px rgba(255,154,108,0.22),0 14px 32px rgba(230,110,70,0.14);margin-bottom:24px">
           <div onclick="personalSummaryToggleCollapse()" style="background:linear-gradient(135deg,#1B1B2F,#232946);padding:16px 20px 26px;display:flex;align-items:center;justify-content:space-between;cursor:pointer">
             <div>
               <div style="font-size:0.68rem;color:rgba(255,255,255,0.85);font-weight:700;letter-spacing:0.04em;margin-bottom:4px">MON PROFIL</div>
@@ -7463,13 +7478,14 @@ function switchLang(lang) {
                 <div id="editPoidsDeltaLabel" style="font-size:0.72rem;color:#999;margin-bottom:8px;font-weight:600">Combien de kg souhaitez-vous perdre ?</div>
                 <div style="display:flex;gap:10px">
                   <input id="editPoidsDelta" type="number" placeholder="Kg" min="1" max="100" step="0.5" style="width:100%;padding:13px 16px;border:1.5px solid #f0e8e0;border-radius:14px;font-family:DM Sans,sans-serif;font-size:0.9rem;outline:none;background:linear-gradient(160deg,#fff,#FFFCFA);color:#2D2D2D;box-sizing:border-box">
-                  <select id="editDelaiObjectif" style="width:100%;padding:13px 16px;border:1.5px solid #f0e8e0;border-radius:14px;font-family:DM Sans,sans-serif;font-size:0.9rem;outline:none;background:linear-gradient(160deg,#fff,#FFFCFA);color:#2D2D2D;box-sizing:border-box">
-                    <option value="4">En 1 mois</option>
-                    <option value="8" selected>En 2 mois</option>
-                    <option value="12">En 3 mois</option>
-                    <option value="24">En 6 mois</option>
-                    <option value="52">En 1 an</option>
-                  </select>
+                  <input type="hidden" id="editDelaiObjectif" value="4">
+                  <div id="delaiChipsWrap" style="display:flex;gap:8px;overflow-x:auto;padding-bottom:4px;scrollbar-width:none;-webkit-overflow-scrolling:touch">
+                    <button type="button" onclick="selectDelaiChip(this,4)" data-val="4" class="delai-chip" style="flex-shrink:0;padding:10px 18px;border-radius:20px;border:1.5px solid #FF6B6B;background:linear-gradient(135deg,#FF6B6B,#FF9A3C);color:#fff;font-family:DM Sans,sans-serif;font-size:0.82rem;font-weight:700;cursor:pointer;white-space:nowrap">1 mois</button>
+                    <button type="button" onclick="selectDelaiChip(this,8)" data-val="8" class="delai-chip" style="flex-shrink:0;padding:10px 18px;border-radius:20px;border:1.5px solid #f0e8e0;background:#fff;color:#999;font-family:DM Sans,sans-serif;font-size:0.82rem;font-weight:600;cursor:pointer;white-space:nowrap">2 mois</button>
+                    <button type="button" onclick="selectDelaiChip(this,12)" data-val="12" class="delai-chip" style="flex-shrink:0;padding:10px 18px;border-radius:20px;border:1.5px solid #f0e8e0;background:#fff;color:#999;font-family:DM Sans,sans-serif;font-size:0.82rem;font-weight:600;cursor:pointer;white-space:nowrap">3 mois</button>
+                    <button type="button" onclick="selectDelaiChip(this,24)" data-val="24" class="delai-chip" style="flex-shrink:0;padding:10px 18px;border-radius:20px;border:1.5px solid #f0e8e0;background:#fff;color:#999;font-family:DM Sans,sans-serif;font-size:0.82rem;font-weight:600;cursor:pointer;white-space:nowrap">6 mois</button>
+                    <button type="button" onclick="selectDelaiChip(this,52)" data-val="52" class="delai-chip" style="flex-shrink:0;padding:10px 18px;border-radius:20px;border:1.5px solid #f0e8e0;background:#fff;color:#999;font-family:DM Sans,sans-serif;font-size:0.82rem;font-weight:600;cursor:pointer;white-space:nowrap">1 an</button>
+                  </div>
                 </div>
               </div>
 
