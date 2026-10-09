@@ -3181,12 +3181,12 @@ window.initHome = async function() {
   var _objts = profile.objectifs || [];
   var _delaiSem = profile.objectif_delai_semaines || 4;
   var _goalStart = profile.objectif_start_date ? new Date(profile.objectif_start_date) : new Date();
-  var _isSante = _objts.indexOf('sante') > -1 || _objts.indexOf('ameliorer_sante') > -1 || _objts.indexOf('health') > -1 || _objts.indexOf('sante_generale') > -1 || _objts.indexOf('cardio') > -1 || _objts.indexOf('energie') > -1 || _objts.indexOf('sommeil') > -1;
+  var _isSante = _objts.indexOf('sante') > -1 || _objts.indexOf('ameliorer_sante') > -1 || _objts.indexOf('health') > -1 || _objts.indexOf('sante_generale') > -1 || _objts.indexOf('cardio') > -1 || _objts.indexOf('energie') > -1 || _objts.indexOf('sommeil') > -1 || _objts.indexOf('performance') > -1;
   var _dashEl = document.getElementById('healthGoalDashboard');
-  var _healthGoalTitleMap = {'cardio':'Cardio & Endurance','energie':'Boost Energie','sommeil':'Ameliorer mon sommeil','sante':'Ameliorer ma sante','ameliorer_sante':'Ameliorer ma sante','sante_generale':'Sante generale','health':'Ameliorer ma sante'};
+  var _healthGoalTitleMap = {'cardio':'Cardio & Endurance','energie':'Boost Energie','sommeil':'Ameliorer mon sommeil','sante':'Ameliorer ma sante','ameliorer_sante':'Ameliorer ma sante','sante_generale':'Sante generale','health':'Ameliorer ma sante','performance':'Performance sportive'};
   var _healthGoalTitleEl = document.getElementById('healthGoalTitle');
   if (_isSante && _healthGoalTitleEl) {
-    var _titleKey = ['cardio','energie','sommeil','sante','ameliorer_sante','sante_generale','health'].find(function(k){ return _objts.indexOf(k) > -1; });
+    var _titleKey = ['cardio','energie','sommeil','sante','ameliorer_sante','sante_generale','health','performance'].find(function(k){ return _objts.indexOf(k) > -1; });
     if (_titleKey) _healthGoalTitleEl.textContent = _healthGoalTitleMap[_titleKey];
   }
   if (_isSante && _dashEl) {
@@ -4386,7 +4386,7 @@ window.initHome = async function() {
     var objectifs = profile.objectifs || [];
     var objLine = '';
     var progressWrap = document.getElementById('summaryProgressWrap');
-    var _usesNewHealthDash = objectifs.indexOf('cardio') > -1 || objectifs.indexOf('energie') > -1 || objectifs.indexOf('sommeil') > -1 || objectifs.indexOf('sante') > -1 || objectifs.indexOf('ameliorer_sante') > -1 || objectifs.indexOf('sante_generale') > -1;
+    var _usesNewHealthDash = objectifs.indexOf('cardio') > -1 || objectifs.indexOf('energie') > -1 || objectifs.indexOf('sommeil') > -1 || objectifs.indexOf('sante') > -1 || objectifs.indexOf('ameliorer_sante') > -1 || objectifs.indexOf('sante_generale') > -1 || objectifs.indexOf('performance') > -1;
     if (_usesNewHealthDash && progressWrap) { progressWrap.style.display = 'none'; }
     var _metricsGrid2 = document.getElementById('summaryMetricsGrid');
     if (_usesNewHealthDash && _metricsGrid2 && _metricsGrid2.parentElement) { _metricsGrid2.parentElement.style.display = 'none'; }
