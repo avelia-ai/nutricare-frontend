@@ -5058,6 +5058,7 @@ window.initHome = async function() {
     }
 
     var countdownWrap = document.getElementById('summaryCountdownWrap');
+    if (!countdownWrap) { countdownWrap = { style: { display: 'none' } }; }
     if (true) { profile.objectif_date_debut = profile.objectif_date_debut || '2026-09-01'; profile.objectif_delai_semaines = profile.objectif_delai_semaines || 4;
       var startD = new Date('2025-01-01T00:00:00'); // TEST FORCE EXPIRATION
       var totalDays = profile.objectif_delai_semaines * 7;
@@ -5071,7 +5072,6 @@ window.initHome = async function() {
       } else {
         document.getElementById('summaryCountdownDays').textContent = '0';
         msgEl.textContent = "l'echeance est passee, fais le point avec Mirella sur la suite";
-        alert('ELSE atteint — popup va se déclencher');
         // Popup bilan objectif echu
         setTimeout(function(){
           if(typeof showObjectifBilanPopup === 'function') {
