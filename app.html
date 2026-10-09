@@ -5319,7 +5319,7 @@ setTimeout(function(){
 }, 3000);
 
 window.renderPersonalSummary = renderPersonalSummary;
-  setTimeout(function(){ var _c=document.getElementById('personalSummaryContent'); var _ch=document.getElementById('personalSummaryChevron'); if(_c){ _c.style.display='block'; } if(_ch){ _ch.style.transform='rotate(180deg)'; } }, 800);
+  setTimeout(function(){ var _c=document.getElementById('personalSummaryContent'); var _ch=document.getElementById('personalSummaryChevron'); if(_c){ _c.style.display='block'; } if(_ch){ _ch.style.transform='rotate(180deg)'; } }, 2000);
   var greeting = hours < 12 ? 'Bonjour' : hours < 18 ? 'Bon après-midi' : 'Bonsoir';
   var greetEl = document.getElementById('homeGreeting');
   if (greetEl) greetEl.textContent = greeting + (prenom ? ' ' + prenom + ' !' : ' !');
@@ -27982,7 +27982,7 @@ function startSoirExercise() {
   window._soirRunning = true;
   _initSoirCanvas();
   _buildSoirStars();
-  setTimeout(function() { _runSoirPhase(0); }, 800);
+  setTimeout(function() { _runSoirPhase(0); }, 2000);
 }
 
 // ---------- Canvas coucher de soleil ----------
@@ -28517,7 +28517,7 @@ function _startSoirBreath(phase) {
       var t = setTimeout(function() {
         wrap.style.display = 'none';
         soirNext();
-      }, 800);
+      }, 2000);
       _soirTimers.push(t);
       return;
     }
@@ -28596,7 +28596,7 @@ function _startSoirMuscle(phase) {
   function runGroup() {
     if (!window._soirRunning || groupIdx >= phase.groups.length) {
       wrap.style.opacity = '0';
-      var t = setTimeout(function() { wrap.style.display = 'none'; soirNext(); }, 800);
+      var t = setTimeout(function() { wrap.style.display = 'none'; soirNext(); }, 2000);
       _soirTimers.push(t);
       return;
     }
@@ -28784,7 +28784,7 @@ function _startSoirVisu(phase) {
   function runStep() {
     if (!window._soirRunning || stepIdx >= phase.steps.length) {
       wrap.style.opacity = '0';
-      var t = setTimeout(function() { wrap.style.display = 'none'; soirNext(); }, 800);
+      var t = setTimeout(function() { wrap.style.display = 'none'; soirNext(); }, 2000);
       _soirTimers.push(t);
       return;
     }
@@ -30236,7 +30236,7 @@ window.loadMirellaRecommendations = loadMirellaRecommendations;
     if (v) { v.currentTime = 0; v.play().catch(function(){}); }
     setTimeout(function() { pcLaunchConfetti('obSuccessConfetti', 5000); }, 150);
     // Phylactère 1
-    setTimeout(function() { var p = document.getElementById('obSuccessBubble1'); if(p) p.style.opacity='1'; }, 800);
+    setTimeout(function() { var p = document.getElementById('obSuccessBubble1'); if(p) p.style.opacity='1'; }, 2000);
     // Phylactère 2
     setTimeout(function() {
       var p1 = document.getElementById('obSuccessBubble1'); if(p1) p1.style.opacity='0';
@@ -30260,7 +30260,7 @@ window.loadMirellaRecommendations = loadMirellaRecommendations;
       v.onended = function() { reallyCloseOnboarding(); };
     }
     // Animer les phylactères
-    setTimeout(function() { var p = document.getElementById('obFinalBubble1'); if(p) p.style.opacity='1'; }, 800);
+    setTimeout(function() { var p = document.getElementById('obFinalBubble1'); if(p) p.style.opacity='1'; }, 2000);
     setTimeout(function() {
       var p1 = document.getElementById('obFinalBubble1'); if(p1) p1.style.opacity='0';
       setTimeout(function() { var p2 = document.getElementById('obFinalBubble2'); if(p2) p2.style.opacity='1'; }, 400);
@@ -31098,7 +31098,7 @@ window.closePremiumPaywall = function() {
       if (typeof showView === 'function') { showView('home'); }
       setTimeout(function() {
         window.showMirellaVideoPopup('https://www.mirella-ai.fr/notif_1_compressed.mp4', "Voilà, bienvenue sur l'appli ! C'est ici que notre histoire commence 🦊");
-      }, 800);
+      }, 2000);
       setTimeout(function() { if (typeof window.showMirellaPremiumPaywall === 'function') window.showMirellaPremiumPaywall(); }, 5500);
       // Le décompte des Mirels quotidiens démarre seulement maintenant que l'utilisateur
       // est vraiment arrivé sur l'appli (pas pendant l'onboarding).
