@@ -4368,7 +4368,7 @@ window.initHome = async function() {
     var _hasObjectif = (profile.objectifs || []).length > 0;
     if (card) {
       if (!hasData && !_hasObjectif) { card.style.display = 'none'; }
-      else { card.style.display = 'block'; }
+      else { card.style.display = 'block'; var _psc2=document.getElementById('personalSummaryContent'); var _psch2=document.getElementById('personalSummaryChevron'); if(_psc2 && _psc2.style.display==='none') { _psc2.style.display='block'; if(_psch2) _psch2.style.transform='rotate(180deg)'; } if(_psc2 && _psc2.style.display==='') { _psc2.style.display='block'; if(_psch2) _psch2.style.transform='rotate(180deg)'; } }
     }
     var tailleM = taille / 100;
     var imc = poids / (tailleM * tailleM);
