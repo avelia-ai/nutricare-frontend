@@ -1478,7 +1478,7 @@ window.togglePersoMenus = function() {
   var content = document.getElementById('persoMenusContent');
   var chevron = document.getElementById('persoMenusChevron');
   var addBtn = document.getElementById('persoAddBtnWrap');
-  var isOpen = content.style.display !== 'none';
+  var isOpen = content.style.display === 'block';
   content.style.display = isOpen ? 'none' : 'block';
   if (addBtn) addBtn.style.display = isOpen ? 'none' : 'flex'; if (addBtn && !isOpen) addBtn.style.flexDirection = 'column';
   if (!isOpen) window.renderPersoMenus();
@@ -1873,7 +1873,7 @@ window.selectPersoJour = function(jour) {
 window.toggleIaMenus = function() {
   var content = document.getElementById('iaMenusContent');
   var chevron = document.getElementById('iaMenusChevron');
-  var isOpen = content.style.display !== 'none';
+  var isOpen = content.style.display === 'block';
   content.style.display = isOpen ? 'none' : 'block';
   chevron.style.transform = isOpen ? '' : 'rotate(180deg)';
 };
@@ -29759,7 +29759,7 @@ window.maybeShowReviewPrompt = function() {
     var content = document.getElementById('personalSummaryContent');
     var chevron = document.getElementById('personalSummaryChevron');
     if (!content || !chevron) return;
-    var isOpen = content.style.display !== 'none';
+    var isOpen = content.style.display === 'block';
     content.style.display = isOpen ? 'none' : 'block';
     chevron.style.transform = isOpen ? "rotate(0deg)" : "rotate(180deg)";
   }
