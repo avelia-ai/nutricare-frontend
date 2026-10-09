@@ -3183,6 +3183,12 @@ window.initHome = async function() {
   var _goalStart = profile.objectif_start_date ? new Date(profile.objectif_start_date) : new Date();
   var _isSante = _objts.indexOf('sante') > -1 || _objts.indexOf('ameliorer_sante') > -1 || _objts.indexOf('health') > -1 || _objts.indexOf('sante_generale') > -1 || _objts.indexOf('cardio') > -1 || _objts.indexOf('energie') > -1 || _objts.indexOf('sommeil') > -1;
   var _dashEl = document.getElementById('healthGoalDashboard');
+  var _healthGoalTitleMap = {'cardio':'Cardio & Endurance','energie':'Boost Energie','sommeil':'Ameliorer mon sommeil','sante':'Ameliorer ma sante','ameliorer_sante':'Ameliorer ma sante','sante_generale':'Sante generale','health':'Ameliorer ma sante'};
+  var _healthGoalTitleEl = document.getElementById('healthGoalTitle');
+  if (_isSante && _healthGoalTitleEl) {
+    var _titleKey = ['cardio','energie','sommeil','sante','ameliorer_sante','sante_generale','health'].find(function(k){ return _objts.indexOf(k) > -1; });
+    if (_titleKey) _healthGoalTitleEl.textContent = _healthGoalTitleMap[_titleKey];
+  }
   if (_isSante && _dashEl) {
     _dashEl.style.display = 'block';
     var _sc = window._mirellaSanteScore || parseInt(localStorage.getItem('mirella_today_score') || '0');
@@ -6806,7 +6812,7 @@ function switchLang(lang) {
                   <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:16px">
                     <div>
                       <div style="font-size:10px;font-weight:700;color:rgba(255,154,108,0.8);letter-spacing:0.12em;text-transform:uppercase;margin-bottom:5px">Objectif actif</div>
-                      <div style="font-size:18px;font-weight:700;color:#fff;line-height:1.1">Am&#233;liorer ma sant&#233;</div>
+                      <div id="healthGoalTitle" style="font-size:18px;font-weight:700;color:#fff;line-height:1.1">Am&#233;liorer ma sant&#233;</div>
                       <div id="healthWeekLabel" style="font-size:11px;color:rgba(255,255,255,0.4);margin-top:4px"></div>
                     </div>
                     <div style="text-align:center;background:rgba(255,255,255,0.08);border-radius:14px;padding:10px 16px;border:0.5px solid rgba(255,255,255,0.12)">
