@@ -3181,7 +3181,7 @@ window.initHome = async function() {
   var _objts = profile.objectifs || [];
   var _delaiSem = profile.objectif_delai_semaines || 4;
   var _goalStart = profile.objectif_start_date ? new Date(profile.objectif_start_date) : new Date();
-  var _isSante = _objts.indexOf('sante') > -1 || _objts.indexOf('ameliorer_sante') > -1 || _objts.indexOf('health') > -1 || _objts.indexOf('sante_generale') > -1;
+  var _isSante = _objts.indexOf('sante') > -1 || _objts.indexOf('ameliorer_sante') > -1 || _objts.indexOf('health') > -1 || _objts.indexOf('sante_generale') > -1 || _objts.indexOf('cardio') > -1 || _objts.indexOf('energie') > -1 || _objts.indexOf('sommeil') > -1;
   var _dashEl = document.getElementById('healthGoalDashboard');
   if (_isSante && _dashEl) {
     _dashEl.style.display = 'block';
@@ -5071,12 +5071,7 @@ window.initHome = async function() {
       } else {
         if (document.getElementById('summaryCountdownDays')) document.getElementById('summaryCountdownDays').textContent = '0';
         if (msgEl) msgEl.textContent = "l'echeance est passee, fais le point avec Mirella sur la suite";
-        // DEBUG VISUEL
-        var _dbgDiv = document.getElementById('_popupDebug') || document.createElement('div');
-        _dbgDiv.id = '_popupDebug';
-        _dbgDiv.style = 'position:fixed;top:60px;left:10px;right:10px;background:red;color:white;padding:12px;z-index:99999;border-radius:8px;font-size:13px';
-        _dbgDiv.innerHTML = 'ELSE atteint | showObjectifBilanPopup: ' + (typeof showObjectifBilanPopup) + ' | remainingDays: ' + remainingDays + ' | elapsedDays: ' + elapsedDays;
-        document.body.appendChild(_dbgDiv);
+
         // Popup bilan objectif echu
         setTimeout(function(){
           if(typeof showObjectifBilanPopup === 'function') {
