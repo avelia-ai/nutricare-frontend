@@ -3463,7 +3463,7 @@ function selectDelaiChip(el, val) {
   document.getElementById('editDelaiObjectif').value = val;
 }
 
-function saveEditGoals() {
+async function saveEditGoals() {
     var selected = [];
     document.querySelectorAll('#editGoalsModal [data-obj][data-selected="1"]').forEach(function(el) { selected.push(el.getAttribute('data-obj')); });
     var profile = JSON.parse(localStorage.getItem('nutricare_profile') || '{}');
