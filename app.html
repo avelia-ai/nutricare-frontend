@@ -5080,6 +5080,9 @@ window.initHome = async function() {
         // Popup bilan objectif echu
         setTimeout(function(){
           if(typeof showObjectifBilanPopup === 'function') {
+            // APPEL DIRECT sans fetch pour test
+            showObjectifBilanPopup(profile, []);
+            return;
             // Ne pas afficher si l'objectif vient d'être défini aujourd'hui
             var _todayStr = new Date().toISOString().split('T')[0];
             // TEST: skip today check
