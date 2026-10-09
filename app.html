@@ -4370,6 +4370,10 @@ window.initHome = async function() {
       if (!hasData && !_hasObjectif) { card.style.display = 'none'; }
       else { card.style.display = 'block'; }
     }
+    var _psc = document.getElementById('personalSummaryContent');
+    var _psch = document.getElementById('personalSummaryChevron');
+    if (_psc) _psc.style.display = 'block';
+    if (_psch) _psch.style.transform = 'rotate(0deg)';
     var tailleM = taille / 100;
     var imc = poids / (tailleM * tailleM);
     var imcRound = Math.round(imc * 10) / 10;
