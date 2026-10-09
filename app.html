@@ -3449,18 +3449,36 @@ window.initHome = async function() {
     document.getElementById('editPerformanceWrap').style.display = sel['performance'] ? 'block' : 'none';
   }
 
-window.selectDelaiChip = function(el, val) {
-  document.querySelectorAll('#delaiChipsWrap .delai-chip').forEach(function(c) {
-    c.style.background = '#fff';
-    c.style.color = '#999';
-    c.style.borderColor = '#f0e8e0';
-    c.style.fontWeight = '600';
-  });
-  el.style.background = 'linear-gradient(135deg,#FF6B6B,#FF9A3C)';
-  el.style.color = '#fff';
-  el.style.borderColor = '#FF6B6B';
-  el.style.fontWeight = '700';
+window.selectDelaiChip = function(el, val) { window.selectDelaiOpt(el); };
+window.selectDelaiOpt = function(el) {
+  var val = parseInt(el.getAttribute('data-val'));
   document.getElementById('editDelaiObjectif').value = val;
+  var track = document.getElementById('delaiPickerTrack');
+  var pill = document.getElementById('delaiPickerPill');
+  if (!track || !pill) return;
+  // Reset all
+  track.querySelectorAll('.delai-opt').forEach(function(o) {
+    var nm = o.querySelector('div > div:first-child');
+    var sub = o.querySelector('div > div:last-child');
+    var chk = o.querySelector('.delai-check');
+    var svg = chk ? chk.querySelector('svg') : null;
+    if (nm) nm.style.color = '#1A1A1A';
+    if (sub) sub.style.color = '#aaa';
+    if (chk) { chk.style.borderColor = '#f0e8e0'; chk.style.background = 'transparent'; }
+    if (svg) { svg.style.opacity = '0'; svg.style.transform = 'scale(0.5)'; }
+  });
+  // Activate selected
+  var nm2 = el.querySelector('div > div:first-child');
+  var sub2 = el.querySelector('div > div:last-child');
+  var chk2 = el.querySelector('.delai-check');
+  var svg2 = chk2 ? chk2.querySelector('svg') : null;
+  if (nm2) nm2.style.color = '#fff';
+  if (sub2) sub2.style.color = 'rgba(255,255,255,0.75)';
+  if (chk2) { chk2.style.borderColor = 'rgba(255,255,255,0.5)'; chk2.style.background = 'rgba(255,255,255,0.2)'; }
+  if (svg2) { svg2.style.opacity = '1'; svg2.style.transform = 'scale(1)'; }
+  // Move pill
+  pill.style.top = el.offsetTop + 'px';
+  pill.style.height = el.offsetHeight + 'px';
 };
 
 async function saveEditGoals() {
@@ -7479,12 +7497,29 @@ function switchLang(lang) {
                 <div style="display:flex;gap:10px">
                   <input id="editPoidsDelta" type="number" placeholder="Kg" min="1" max="100" step="0.5" style="width:100%;padding:13px 16px;border:1.5px solid #f0e8e0;border-radius:14px;font-family:DM Sans,sans-serif;font-size:0.9rem;outline:none;background:linear-gradient(160deg,#fff,#FFFCFA);color:#2D2D2D;box-sizing:border-box">
                   <input type="hidden" id="editDelaiObjectif" value="4">
-                  <div id="delaiChipsWrap" style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
-                    <button type="button" onclick="window.selectDelaiChip(this,4)" data-val="4" class="delai-chip" style="padding:12px 8px;border-radius:14px;border:2px solid #FF6B6B;background:linear-gradient(135deg,#FF6B6B,#FF9A3C);color:#fff;font-family:DM Sans,sans-serif;font-size:0.88rem;font-weight:700;cursor:pointer">1 mois</button>
-                    <button type="button" onclick="window.selectDelaiChip(this,8)" data-val="8" class="delai-chip" style="padding:12px 8px;border-radius:14px;border:2px solid #f0e8e0;background:#fff;color:#666;font-family:DM Sans,sans-serif;font-size:0.88rem;font-weight:600;cursor:pointer">2 mois</button>
-                    <button type="button" onclick="window.selectDelaiChip(this,12)" data-val="12" class="delai-chip" style="padding:12px 8px;border-radius:14px;border:2px solid #f0e8e0;background:#fff;color:#666;font-family:DM Sans,sans-serif;font-size:0.88rem;font-weight:600;cursor:pointer">3 mois</button>
-                    <button type="button" onclick="window.selectDelaiChip(this,24)" data-val="24" class="delai-chip" style="padding:12px 8px;border-radius:14px;border:2px solid #f0e8e0;background:#fff;color:#666;font-family:DM Sans,sans-serif;font-size:0.88rem;font-weight:600;cursor:pointer">6 mois</button>
-                    <button type="button" onclick="window.selectDelaiChip(this,52)" data-val="52" class="delai-chip" style="padding:12px 8px;border-radius:14px;border:2px solid #f0e8e0;background:#fff;color:#666;font-family:DM Sans,sans-serif;font-size:0.88rem;font-weight:600;cursor:pointer;grid-column:span 2">1 an</button>
+                  <div style="font-size:0.7rem;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:#aaa;margin-bottom:8px">Délai pour atteindre mon objectif</div>
+                  <div id="delaiPickerTrack" style="position:relative">
+                    <div id="delaiPickerPill" style="position:absolute;left:0;right:0;border-radius:14px;background:linear-gradient(135deg,#FF6B6B,#FF9A3C);box-shadow:0 4px 16px rgba(255,107,107,0.35);transition:top 0.35s cubic-bezier(0.34,1.56,0.64,1),height 0.2s ease;z-index:0;pointer-events:none"></div>
+                    <div class="delai-opt" data-val="4" onclick="window.selectDelaiOpt(this)" style="position:relative;z-index:1;display:flex;align-items:center;justify-content:space-between;padding:13px 16px;cursor:pointer;border-radius:14px;user-select:none">
+                      <div><div style="font-size:0.92rem;font-weight:600;color:#1A1A1A;transition:color 0.2s">1 mois</div><div style="font-size:0.7rem;color:#aaa;transition:color 0.2s">Résultats rapides · effort intense</div></div>
+                      <div class="delai-check" style="width:22px;height:22px;border-radius:50%;border:2px solid #f0e8e0;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all 0.2s"><svg width="11" height="8" viewBox="0 0 11 8" fill="none" style="opacity:0;transform:scale(0.5);transition:all 0.2s"><path d="M1 3.5L4 6.5L10 1" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+                    </div>
+                    <div class="delai-opt" data-val="8" onclick="window.selectDelaiOpt(this)" style="position:relative;z-index:1;display:flex;align-items:center;justify-content:space-between;padding:13px 16px;cursor:pointer;border-radius:14px;user-select:none">
+                      <div><div style="font-size:0.92rem;font-weight:600;color:#1A1A1A;transition:color 0.2s">2 mois</div><div style="font-size:0.7rem;color:#aaa;transition:color 0.2s">Rythme soutenu · recommandé</div></div>
+                      <div class="delai-check" style="width:22px;height:22px;border-radius:50%;border:2px solid #f0e8e0;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all 0.2s"><svg width="11" height="8" viewBox="0 0 11 8" fill="none" style="opacity:0;transform:scale(0.5);transition:all 0.2s"><path d="M1 3.5L4 6.5L10 1" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+                    </div>
+                    <div class="delai-opt" data-val="12" onclick="window.selectDelaiOpt(this)" style="position:relative;z-index:1;display:flex;align-items:center;justify-content:space-between;padding:13px 16px;cursor:pointer;border-radius:14px;user-select:none">
+                      <div><div style="font-size:0.92rem;font-weight:600;color:#1A1A1A;transition:color 0.2s">3 mois</div><div style="font-size:0.7rem;color:#aaa;transition:color 0.2s">Progressif · résultats durables</div></div>
+                      <div class="delai-check" style="width:22px;height:22px;border-radius:50%;border:2px solid #f0e8e0;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all 0.2s"><svg width="11" height="8" viewBox="0 0 11 8" fill="none" style="opacity:0;transform:scale(0.5);transition:all 0.2s"><path d="M1 3.5L4 6.5L10 1" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+                    </div>
+                    <div class="delai-opt" data-val="24" onclick="window.selectDelaiOpt(this)" style="position:relative;z-index:1;display:flex;align-items:center;justify-content:space-between;padding:13px 16px;cursor:pointer;border-radius:14px;user-select:none">
+                      <div><div style="font-size:0.92rem;font-weight:600;color:#1A1A1A;transition:color 0.2s">6 mois</div><div style="font-size:0.7rem;color:#aaa;transition:color 0.2s">Transformation en douceur</div></div>
+                      <div class="delai-check" style="width:22px;height:22px;border-radius:50%;border:2px solid #f0e8e0;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all 0.2s"><svg width="11" height="8" viewBox="0 0 11 8" fill="none" style="opacity:0;transform:scale(0.5);transition:all 0.2s"><path d="M1 3.5L4 6.5L10 1" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+                    </div>
+                    <div class="delai-opt" data-val="52" onclick="window.selectDelaiOpt(this)" style="position:relative;z-index:1;display:flex;align-items:center;justify-content:space-between;padding:13px 16px;cursor:pointer;border-radius:14px;user-select:none">
+                      <div><div style="font-size:0.92rem;font-weight:600;color:#1A1A1A;transition:color 0.2s">1 an</div><div style="font-size:0.7rem;color:#aaa;transition:color 0.2s">Long terme · lifestyle change</div></div>
+                      <div class="delai-check" style="width:22px;height:22px;border-radius:50%;border:2px solid #f0e8e0;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all 0.2s"><svg width="11" height="8" viewBox="0 0 11 8" fill="none" style="opacity:0;transform:scale(0.5);transition:all 0.2s"><path d="M1 3.5L4 6.5L10 1" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+                    </div>
                   </div>
                 </div>
               </div>
