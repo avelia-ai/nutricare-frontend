@@ -5058,20 +5058,25 @@ window.initHome = async function() {
     }
 
     var countdownWrap = document.getElementById('summaryCountdownWrap');
-    if (!countdownWrap) { countdownWrap = { style: { display: 'none' } }; }
     if (true) { profile.objectif_date_debut = profile.objectif_date_debut || '2026-09-01'; profile.objectif_delai_semaines = profile.objectif_delai_semaines || 4;
       var startD = new Date('2025-01-01T00:00:00'); // TEST FORCE EXPIRATION
       var totalDays = profile.objectif_delai_semaines * 7;
       var elapsedDays = Math.floor((new Date() - startD) / 86400000);
       var remainingDays = totalDays - elapsedDays;
-      countdownWrap.style.display = 'block';
       var msgEl = document.getElementById('summaryCountdownMsg');
       if (remainingDays > 0) {
-        document.getElementById('summaryCountdownDays').textContent = remainingDays;
-        msgEl.textContent = 'pour atteindre ton objectif, continue comme ca !';
+        if (countdownWrap) countdownWrap.style.display = 'block';
+        if (document.getElementById('summaryCountdownDays')) document.getElementById('summaryCountdownDays').textContent = remainingDays;
+        if (msgEl) msgEl.textContent = 'pour atteindre ton objectif, continue comme ca !';
       } else {
-        document.getElementById('summaryCountdownDays').textContent = '0';
-        msgEl.textContent = "l'echeance est passee, fais le point avec Mirella sur la suite";
+        if (document.getElementById('summaryCountdownDays')) document.getElementById('summaryCountdownDays').textContent = '0';
+        if (msgEl) msgEl.textContent = "l'echeance est passee, fais le point avec Mirella sur la suite";
+        // DEBUG VISUEL
+        var _dbgDiv = document.getElementById('_popupDebug') || document.createElement('div');
+        _dbgDiv.id = '_popupDebug';
+        _dbgDiv.style = 'position:fixed;top:60px;left:10px;right:10px;background:red;color:white;padding:12px;z-index:99999;border-radius:8px;font-size:13px';
+        _dbgDiv.innerHTML = 'ELSE atteint | showObjectifBilanPopup: ' + (typeof showObjectifBilanPopup) + ' | remainingDays: ' + remainingDays + ' | elapsedDays: ' + elapsedDays;
+        document.body.appendChild(_dbgDiv);
         // Popup bilan objectif echu
         setTimeout(function(){
           if(typeof showObjectifBilanPopup === 'function') {
