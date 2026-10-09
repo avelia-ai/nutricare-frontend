@@ -6790,7 +6790,7 @@ function switchLang(lang) {
             <div style="display:flex;align-items:center;gap:8px">
               <button onclick="event.stopPropagation();openEditGoalsModal()" style="background:rgba(255,255,255,0.15);border:none;color:white;font-size:0.68rem;font-weight:700;padding:7px 12px;border-radius:20px;cursor:pointer;white-space:nowrap">Modifier</button>
               <div style="width:28px;height:28px;border-radius:50%;background:rgba(255,255,255,0.1);display:flex;align-items:center;justify-content:center;flex-shrink:0">
-                <i id="personalSummaryChevron" class="ti ti-chevron-down" style="font-size:16px;color:rgba(255,255,255,0.75);transition:transform 0.2s"></i>
+                <i id="personalSummaryChevron" class="ti ti-chevron-down" style="font-size:16px;color:rgba(255,255,255,0.75);transition:transform 0.2s;transform:rotate(180deg)"></i>
               </div>
             </div>
           </div>
@@ -29765,7 +29765,7 @@ window.maybeShowReviewPrompt = function() {
     if (!content || !chevron) return;
     var isOpen = content.style.display !== 'none';
     content.style.display = isOpen ? 'none' : 'block';
-    chevron.style.transform = isOpen ? 'rotate(180deg)' : 'rotate(0deg)';
+    chevron.style.transform = isOpen ? "rotate(0deg)" : "rotate(180deg)";
   }
   window.personalSummaryToggleCollapse = personalSummaryToggleCollapse;
   function mirellaRecoToggleCollapse() {
@@ -29774,7 +29774,7 @@ window.maybeShowReviewPrompt = function() {
     if (!list || !chevron) return;
     var isOpen = list.style.display === 'flex';
     list.style.display = isOpen ? 'none' : 'flex';
-    chevron.style.transform = isOpen ? 'rotate(180deg)' : 'rotate(0deg)';
+    chevron.style.transform = isOpen ? "rotate(0deg)" : "rotate(180deg)";
   }
   window.mirellaRecoToggleCollapse = mirellaRecoToggleCollapse;
   var PRIORITY_COLORS = { high: '#D4574A', normal: '#D4730A', low: '#999' };
