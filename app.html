@@ -3417,6 +3417,14 @@ window.initHome = async function() {
     if (nav) nav.style.display = 'none';
   }
   function toggleEditObjectif(el) {
+    // Sélection unique : désélectionner tous les autres
+    document.querySelectorAll('#editGoalsModal [data-obj]').forEach(function(other) {
+      if(other !== el) {
+        other.setAttribute('data-selected','0');
+        var oi=other.querySelector('div'); var oic=other.querySelector('[data-icon]'); var ol=other.querySelector('div > div:last-child');
+        if(oi) oi.style.background='#fff'; if(oic) oic.style.color='#FF6B6B'; if(ol) ol.style.color='#2D2D2D';
+      }
+    });
     var selected = el.getAttribute('data-selected') === '1';
     var inner = el.querySelector('div');
     var icon = el.querySelector('[data-icon]');
