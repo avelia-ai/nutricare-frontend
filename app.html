@@ -19450,12 +19450,31 @@ var _shopData = [];
 var _shopCurrentCat = 'all';
 
 function loadShop() {
-  // Données statiques en attendant le backend
   var coins = getMirels();
   document.getElementById('shopCoinsDisplay').textContent = coins;
   fetchMirelsBalance();
-  var owned = JSON.parse(localStorage.getItem('shop_owned') || '[]');
-  var equipped = localStorage.getItem('shop_equipped') || '';
+  var authToken = localStorage.getItem('nutricare_token');
+  if (authToken) {
+    fetch('https://nutricare-backend-production.up.railway.app/api/profile', {
+      headers: { 'Authorization': 'Bearer ' + authToken }
+    }).then(function(r){ return r.json(); }).then(function(profile) {
+      var owned = Array.isArray(profile.shop_owned) ? profile.shop_owned : JSON.parse(localStorage.getItem('shop_owned') || '[]');
+      var equipped = profile.shop_equipped || localStorage.getItem('shop_equipped') || '';
+      localStorage.setItem('shop_owned', JSON.stringify(owned));
+      localStorage.setItem('shop_equipped', equipped);
+      _buildShopData(owned, equipped);
+    }).catch(function() {
+      var owned = JSON.parse(localStorage.getItem('shop_owned') || '[]');
+      var equipped = localStorage.getItem('shop_equipped') || '';
+      _buildShopData(owned, equipped);
+    });
+  } else {
+    var owned = JSON.parse(localStorage.getItem('shop_owned') || '[]');
+    var equipped = localStorage.getItem('shop_equipped') || '';
+    _buildShopData(owned, equipped);
+  }
+}
+function _buildShopData(owned, equipped) {
   _shopData = [
     { id:'bandana1', name:'Bandana Paw Orange', image:'https://www.mirella-ai.fr/bandana_paw_orange.png', category:'bandana', price:200, owned:owned.includes('bandana1'), equipped:equipped==='bandana1' },
     { id:'bandana2', name:'Bandana Rock n Roll', image:'https://www.mirella-ai.fr/bandana_rock_n_roll.png', category:'bandana', price:200, owned:owned.includes('bandana2'), equipped:equipped==='bandana2' },
@@ -19521,18 +19540,31 @@ function shopAction(itemId, action) {
   var owned = JSON.parse(localStorage.getItem('shop_owned') || '[]');
   var item = _shopData.find(function(i) { return i.id === itemId; });
   if (!item) return;
+  var authToken = localStorage.getItem('nutricare_token');
+  function syncShopToBackend(ownedArr, equippedVal) {
+    if (!authToken) return;
+    fetch('https://nutricare-backend-production.up.railway.app/api/profile', {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + authToken },
+      body: JSON.stringify({ shop_owned: ownedArr, shop_equipped: equippedVal })
+    }).catch(function(){});
+  }
   if (action === 'buy') {
-    if (coins < item.price) { alert('Pas assez de <span style="display:inline-flex;align-items:center;justify-content:center;width:1.4em;height:1.4em;background:radial-gradient(circle at 35% 35%,#FFE566,#FFB300);border-radius:50%;box-shadow:0 2px 4px rgba(0,0,0,0.2);vertical-align:middle;font-size:0.75em;font-weight:900;color:#B8730A;font-family:DM Sans,sans-serif">M</span> coins !'); return; }
+    if (coins < item.price) { alert('Pas assez de coins !'); return; }
     coins -= item.price;
     owned.push(itemId);
     setMirelsCache(coins);
     localStorage.setItem('shop_owned', JSON.stringify(owned));
+    localStorage.setItem('shop_equipped', localStorage.getItem('shop_equipped') || '');
     document.getElementById('shopCoinsDisplay').textContent = coins;
+    syncShopToBackend(owned, localStorage.getItem('shop_equipped') || '');
   } else if (action === 'equip') {
     localStorage.setItem('shop_equipped', itemId);
+    syncShopToBackend(owned, itemId);
     applyFoxAccessoryOverride();
   } else if (action === 'unequip') {
     localStorage.setItem('shop_equipped', '');
+    syncShopToBackend(owned, '');
     _lastHarmonyFoxLevel = null;
     var authToken = localStorage.getItem('nutricare_token');
     if (authToken) {
