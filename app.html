@@ -19558,6 +19558,8 @@ function shopAction(itemId, action) {
     }).then(function(r){ return r.json(); }).then(function(data) {
       if (data.error) { alert(data.error); return; }
       setMirelsCache(data.mirels);
+      var shopDisp = document.getElementById('shopCoinsDisplay');
+      if (shopDisp) shopDisp.textContent = data.mirels;
       owned.push(itemId);
       localStorage.setItem('shop_owned', JSON.stringify(owned));
       var equipped = localStorage.getItem('shop_equipped') || '';
