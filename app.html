@@ -32400,6 +32400,7 @@ function buildNoStep2Content(obj) {
     html += card(
       noInputRow('Combien de kg veux-tu perdre ?', 'noDeltaInput', 'number', 'ex: 5', 'kg', '0.5', '50', '0.5')
       + noInputRow('Ton poids actuel', 'noPoidsActuel', 'number', 'ex: 75', 'kg', '30', '200', '0.1', poidsProfile)
+      + noSingleSelect('Ton niveau d'activité physique', 'no_activite_perte', [{v:'sedentaire', l:'Sédentaire'}, {v:'leger', l:'Léger (1-2x/sem)'}, {v:'modere', l:'Modéré (3-4x/sem)'}, {v:'intense', l:'Intense (5+/sem)'}])
       + noRepasCounter('Ton rythme alimentaire actuel', 'no_rythme')
     );
   } else if(obj === 'masse') {
@@ -32634,6 +32635,7 @@ function confirmNouvelObjectif() {
     var _rythmeElMasse = document.getElementById('no_rythme_masse');
     extra.repas_par_jour = _rythmeElMasse ? (parseInt(_rythmeElMasse.value) || 3) : 3;
   } else if(obj === 'perte_poids') {
+    extra.niveau_activite = noGetSingleVal('no_activite_perte') || null;
     var _rythmeEl = document.getElementById('no_rythme');
     extra.repas_par_jour = _rythmeEl ? (parseInt(_rythmeEl.value) || 3) : 3;
   }
