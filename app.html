@@ -4409,7 +4409,7 @@ async function saveEditGoals() {
     var _hasObjectif = (profile.objectifs || []).length > 0;
     if (card) {
       if (!hasData && !_hasObjectif) { card.style.display = 'none'; }
-      else { card.style.display = 'block'; var _psc2=document.getElementById('personalSummaryContent'); var _psch2=document.getElementById('personalSummaryChevron'); if(_psc2) { _psc2.style.display='block'; } if(_psch2) { _psch2.style.transform='rotate(180deg)'; } }
+      else { card.style.display = 'block'; var _psc2=document.getElementById('personalSummaryContent'); var _psch2=document.getElementById('personalSummaryChevron'); if(_psc2) { _psc2.style.display='block'; } if(_psch2) { _psch2.style.transform='rotate(180deg)'; } window._summaryOpen=true; }
     }
     var tailleM = taille / 100;
     var imc = poids / (tailleM * tailleM);
@@ -29857,7 +29857,7 @@ window.maybeShowReviewPrompt = function() {
     var content = document.getElementById('personalSummaryContent');
     var chevron = document.getElementById('personalSummaryChevron');
     if (!content || !chevron) return;
-    var isOpen = content.style.display !== 'none' && content.style.display !== '';
+    var isOpen = content.style.display === 'block';
     content.style.display = isOpen ? 'none' : 'block';
     chevron.style.transform = isOpen ? "rotate(0deg)" : "rotate(180deg)";
   }
