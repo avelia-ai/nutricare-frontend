@@ -32631,6 +32631,9 @@ function confirmNouvelObjectif() {
   if(!window._noDelaiSelected) { window._noDelaiSelected = 4; } // défaut 4 semaines si rien sélectionné
   var btn = document.getElementById('noConfirmBtn');
   if(btn) { btn.textContent = 'Enregistrement...'; btn.style.opacity='0.7'; }
+  setTimeout(function() {
+    window.location.href = window.location.href.split('?')[0] + '?t=' + Date.now();
+  }, 1200);
   var today = new Date().toISOString().split('T')[0];
   var obj = window._noObjSelected;
   var profile = window._pcProfile || {};
