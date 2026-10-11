@@ -32719,9 +32719,10 @@ function confirmNouvelObjectif() {
     }
     _closePopup("nouvelObjectifPopup");
     if(typeof showMirellaNotif === 'function') showMirellaNotif('Nouveau plan activé — Mirella repart avec toi !');
-    if(data && typeof window.renderPersonalSummary === 'function') {
-      window._pcProfile = data;
-      window.renderPersonalSummary(data);
+    var _mergedProfile = Object.assign({}, window._pcProfile || {}, payload, data || {});
+    window._pcProfile = _mergedProfile;
+    if(typeof window.renderPersonalSummary === 'function') {
+      window.renderPersonalSummary(_mergedProfile);
     }
     setTimeout(function() {
       window.location.replace(window.location.pathname);
