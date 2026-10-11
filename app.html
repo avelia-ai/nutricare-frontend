@@ -32727,6 +32727,16 @@ function confirmNouvelObjectif() {
     if(typeof window.renderPersonalSummary === 'function') {
       window.renderPersonalSummary(_mergedProfile);
     }
+    var _tok2 = window._authToken || window.authToken || localStorage.getItem('nutricare_token') || '';
+    var _bu2 = (typeof BACKEND_URL !== 'undefined') ? BACKEND_URL : 'https://nutricare-backend-production.up.railway.app';
+    fetch(_bu2 + '/api/profile', { headers: { 'Authorization': 'Bearer ' + _tok2 } })
+      .then(function(r){ return r.json(); })
+      .then(function(freshProfile) {
+        if(freshProfile && !freshProfile.error) {
+          window._pcProfile = freshProfile;
+          if(typeof window.renderPersonalSummary === 'function') window.renderPersonalSummary(freshProfile);
+        }
+      }).catch(function(){});
     window._forceReload = true;
     setTimeout(function() {
       window.location.href = window.location.href.split('?')[0] + '?t=' + Date.now();
