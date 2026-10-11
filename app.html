@@ -6820,7 +6820,7 @@ function switchLang(lang) {
         <!-- FIN COEUR D'HARMONIE -->
 
         <div id="personalSummaryCard" style="display:none;background:#FFFFFF;border-radius:20px;padding:0;box-shadow:0 0 0 1.5px rgba(255,154,108,0.22),0 14px 32px rgba(230,110,70,0.14);margin-bottom:24px">
-          <div onclick="personalSummaryToggleCollapse()" style="background:linear-gradient(135deg,#1B1B2F,#232946);padding:16px 20px 26px;display:flex;align-items:center;justify-content:space-between;cursor:pointer">
+          <div onclick="personalSummaryToggleCollapse()" style="background:linear-gradient(135deg,#1B1B2F,#232946);border-radius:20px 20px 0 0;padding:16px 20px 26px;display:flex;align-items:center;justify-content:space-between;cursor:pointer">
             <div>
               <div style="font-size:0.68rem;color:rgba(255,255,255,0.85);font-weight:700;letter-spacing:0.04em;margin-bottom:4px">MON PROFIL</div>
               <div style="font-size:1.05rem;color:white;font-weight:700">Résumé personnalisé</div>
@@ -29857,7 +29857,7 @@ window.maybeShowReviewPrompt = function() {
     var content = document.getElementById('personalSummaryContent');
     var chevron = document.getElementById('personalSummaryChevron');
     if (!content || !chevron) return;
-    var isOpen = content.style.display === 'block';
+    var isOpen = content.style.display !== 'none' && content.style.display !== '';
     content.style.display = isOpen ? 'none' : 'block';
     chevron.style.transform = isOpen ? "rotate(0deg)" : "rotate(180deg)";
   }
