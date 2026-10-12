@@ -32724,9 +32724,9 @@ function confirmNouvelObjectif() {
     if(typeof showMirellaNotif === 'function') showMirellaNotif('Nouveau plan activé — Mirella repart avec toi !');
     var _mergedProfile = Object.assign({}, window._pcProfile || {}, payload, data || {});
     window._pcProfile = _mergedProfile;
-    if(typeof window.renderPersonalSummary === 'function') {
-      window.renderPersonalSummary(_mergedProfile);
-    }
+    localStorage.setItem('nutricare_profile', JSON.stringify(_mergedProfile));
+    if(typeof window.renderPersonalSummary === 'function') window.renderPersonalSummary(_mergedProfile);
+    if(typeof window.initHome === 'function') window.initHome();
     var _tok2 = window._authToken || window.authToken || localStorage.getItem('nutricare_token') || '';
     var _bu2 = (typeof BACKEND_URL !== 'undefined') ? BACKEND_URL : 'https://nutricare-backend-production.up.railway.app';
     fetch(_bu2 + '/api/profile', { headers: { 'Authorization': 'Bearer ' + _tok2 } })
