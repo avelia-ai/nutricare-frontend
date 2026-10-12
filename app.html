@@ -21690,6 +21690,7 @@ async function deleteProfessional(id) {
         success.classList.add('show');
         setTimeout(() => success.classList.remove('show'), 3000);
         await loadProfile();
+        if (typeof window.renderParcours === 'function') { window.renderParcours(profile); }
         if (typeof loadChrono === 'function') loadChrono();
         setTimeout(sendChronoAlert, 2000);
       }
