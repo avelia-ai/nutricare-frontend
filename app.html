@@ -32734,7 +32734,9 @@ function confirmNouvelObjectif() {
       .then(function(freshProfile) {
         if(freshProfile && !freshProfile.error) {
           window._pcProfile = freshProfile;
+          localStorage.setItem('nutricare_profile', JSON.stringify(freshProfile));
           if(typeof window.renderPersonalSummary === 'function') window.renderPersonalSummary(freshProfile);
+          if(typeof window.initHome === 'function') window.initHome();
         }
       }).catch(function(){});
     window._forceReload = true;
