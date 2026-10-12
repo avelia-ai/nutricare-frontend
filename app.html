@@ -3574,7 +3574,8 @@ async function saveEditGoals() {
     if (nav2) { nav2.style.display = 'block'; nav2.style.zIndex = '1000'; nav2.style.visibility = 'visible'; }
     if (typeof window.renderPersonalSummary === 'function' && !window._blockSummaryRender) { window.renderPersonalSummary(profile); }
     if (typeof window.renderParcours === 'function') { window.renderParcours(profile); } else if (typeof renderParcours === 'function') { renderParcours(profile); }
-    if (typeof window.loadHealthDashboard === 'function') { window.loadHealthDashboard(); if(data.energy_level!==null){localStorage.setItem('mirella_suivi_today',JSON.stringify({energie:data.energy_level,sommeil:data.sleep_hours,stress:data.stress_level,eau:data.hydration_liters?Math.round(data.hydration_liters*1000):0,calories:data.calories_target||0,activite_jours:data.sport_days||0,cafeine:parseInt(document.getElementById('hCafeine')?.value)||0,calories_sport:(window._sportSeances||[]).reduce(function(s,x){return s+(x.cal||0);},0)}));} if(typeof window.initHome==='function') setTimeout(window.initHome,300); if(data.energy_level!==null){localStorage.setItem('mirella_suivi_today',JSON.stringify({energie:data.energy_level,sommeil:data.sleep_hours,stress:data.stress_level,eau:data.hydration_liters?Math.round(data.hydration_liters*1000):0,calories:data.calories_target||0,activite_jours:data.sport_days||0,cafeine:parseInt(document.getElementById('hCafeine')?.value)||0,calories_sport:(window._sportSeances||[]).reduce(function(s,x){return s+(x.cal||0);},0)}));} if(typeof window.initHome==='function') setTimeout(window.initHome,300); }
+    if (typeof window.loadHealthDashboard === 'function') { window.loadHealthDashboard(); }
+    if (typeof window.initHome === 'function') setTimeout(window.initHome, 300);
   }
   var _objMeta = {
     perte_poids: { label: 'Perdre du poids', icon: 'trending-down' },
