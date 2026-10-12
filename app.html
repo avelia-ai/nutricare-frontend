@@ -111,17 +111,6 @@ window._pcAdvicePool = [];
     return advicePool;
   }
 window.pcComputeAdvicePool = window.pcComputeAdvicePool || pcComputeAdvicePool;
-      maintien: 'ton objectif est de maintenir tes acquis : garde tes habitudes actuelles, elles fonctionnent, et reste à l\'écoute de tes sensations'
-    };
-    if (objectifs.length) {
-      var _goalKey = objectifs[0];
-      if (_goalTexts[_goalKey]) pushAdvice(_goalTexts[_goalKey], 10);
-    }
-    if (!advicePool.length) pushAdvice('continue comme \u00e7a, tes indicateurs sont dans de bonnes tendances', 1);
-    advicePool.sort(function(a,b) { return b.weight - a.weight; });
-    return advicePool;
-  }
-window.pcComputeAdvicePool = window.pcComputeAdvicePool || pcComputeAdvicePool;
 window.addEventListener("error", function(e) {
   var div = document.createElement("div");
   div.style.cssText = "position:fixed;top:0;left:0;right:0;z-index:999999;background:#c00;color:#fff;font-size:11px;padding:8px;word-break:break-all;max-height:40vh;overflow:auto";
