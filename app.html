@@ -10556,6 +10556,13 @@ function switchLang(lang) {
         <input type="number" id="hSleep" step="0.5" placeholder="—">
         <div class="hc-unit">heures</div>
       </div>
+      <div class="hc">
+        <div class="hc-top" style="background:linear-gradient(90deg,#0984E3,#74b9ff)"></div>
+        <div class="hc-ico" style="background:linear-gradient(135deg,#0984E3,#74b9ff)"><i class="ti ti-droplet" style="color:#fff"></i></div>
+        <div class="hc-lbl">Hydratation</div>
+        <input type="number" id="hHydration" step="0.1" placeholder="—" oninput="var v=parseFloat(this.value);if(!isNaN(v)){_hydrationMl=Math.round(v*1000);localStorage.setItem(getHydrationKey(),_hydrationMl);if(typeof updateHydrationDisplay==='function')updateHydrationDisplay();}">
+        <div class="hc-unit">litres</div>
+      </div>
     </div>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:12px">
       <div class="hc">
