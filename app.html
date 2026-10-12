@@ -53,13 +53,13 @@ window._pcAdvicePool = [];
       } else {
         pushAdvice('pour ton objectif de perte de poids, crée un déficit modéré de 300 à 400 kcal par jour — les protéines et les fibres sont tes meilleurs alliés pour rester rassasié(e) sans compter chaque calorie', 2);
       }
-      if (_tlActivity !== null && _tlActivity < 30) pushAdvice('pour mobiliser les graisses, vise 30 à 45 min de marche rapide ou de vélo aujourd'hui à 60-70 % de ta fréquence cardiaque maximale — c'est la zone la plus efficace pour brûler les graisses sans épuiser ta récupération', 2);
+      if (_tlActivity !== null && _tlActivity < 30) pushAdvice("pour mobiliser les graisses, vise 30 à 45 min de marche rapide ou de vélo aujourd'hui à 60-70 % de ta fréquence cardiaque maximale — c'est la zone la plus efficace pour brüler les graisses sans épuiser ta récupération", 2);
     }
 
     if (objectifs.indexOf('masse') > -1) {
       var _protTarget = hasData ? Math.round(poids * 2.0) : 160;
       pushAdvice('pour ta prise de masse, vise un surplus de 250 à 400 kcal par jour et ' + _protTarget + ' g de protéines répartis en 4 prises espacées de 3-4h — chaque prise doit contenir au moins 30 g pour déclencher la synthèse protéique musculaire', 3);
-      if (_tlActivity !== null && _tlActivity < 20) pushAdvice('pense à ta séance de résistance aujourd'hui : 3 à 4 séries de 8-12 répétitions par groupe musculaire dans la zone d'hypertrophie maximale', 2);
+      if (_tlActivity !== null && _tlActivity < 20) pushAdvice("pense à ta séance de résistance aujourd'hui : 3 à 4 séries de 8-12 répétitions par groupe musculaire dans la zone d'hypertrophie maximale", 2);
     }
 
     if (objectifs.indexOf('sommeil') > -1) {
@@ -70,22 +70,22 @@ window._pcAdvicePool = [];
 
     if (objectifs.indexOf('stress') > -1) {
       if (_tlStress !== null && _tlStress >= 7) pushAdvice('ton stress est élevé (' + _tlStress + '/10) — pratique 5 minutes de cohérence cardiaque dès maintenant : inspire 5s, expire 5s, répète 30 fois, ça fait cliniquement baisser le cortisol en quelques minutes', 4);
-      else if (_tlStress !== null && _tlStress >= 5) pushAdvice("ton stress est mod\u00e9r\u00e9 (" + _tlStress + "/10) \u2014 une pause de 10 minutes en plein air ou 5 minutes de respiration profonde en fin de journ\u00e9e suffisent \u00e0 pr\u00e9venir l'accumulation chronique", 2);
-      else pushAdvice('ton niveau de stress est maîtrisé — maintiens tes rituels de détente en place, ce sont eux qui t'ont amené là et qui font la différence sur la durée', 1);
+      else if (_tlStress !== null && _tlStress >= 5) pushAdvice("ton stress est modéré (" + _tlStress + "/10) — une pause de 10 minutes en plein air ou 5 minutes de respiration profonde en fin de journée suffisent à prévenir l'accumulation chronique", 2);
+      else pushAdvice("ton niveau de stress est maîtrisé — maintiens tes rituels de détente en place, ce sont eux qui t'ont amené là et qui font la différence sur la durée", 1);
     }
 
     if (objectifs.indexOf('energie') > -1) {
       if (_tlEnergy !== null && _tlEnergy <= 3) pushAdvice("ton énergie est très basse (" + _tlEnergy + "/10) — bois 500 ml d'eau immédiatement, évite tout sucre rapide et priorise une collation protéinée (oeuf, yaourt grec, amandes) pour stabiliser ta glycémie et tenir jusqu'au prochain repas", 4);
-      else if (_tlEnergy !== null && _tlEnergy <= 6) pushAdvice("ton \u00e9nergie est moyenne (" + _tlEnergy + "/10) \u2014 opte pour une collation \u00e0 index glyc\u00e9mique bas (flocons d'avoine, fruit entier, amandes) et \u00e9vite le caf\u00e9 apr\u00e8s 14h pour ne pas aggraver la fatigue en soir\u00e9e", 3);
-      else pushAdvice('ton énergie est bonne aujourd'hui — profites-en pour caler ta séance de sport la plus exigeante de la semaine, tu tireras un meilleur bénéfice de l'entraînement quand tu es au pic', 1);
+      else if (_tlEnergy !== null && _tlEnergy <= 6) pushAdvice("ton énergie est moyenne (" + _tlEnergy + "/10) — opte pour une collation à index glycémique bas (flocons d'avoine, fruit entier, amandes) et évite le café après 14h pour ne pas aggraver la fatigue en soirée", 3);
+      else pushAdvice("ton énergie est bonne aujourd'hui — profites-en pour caler ta séance de sport la plus exigeante de la semaine, tu tireras un meilleur bénéfice de l'entraînement quand tu es au pic", 1);
     }
 
     if (objectifs.indexOf('performance') > -1) {
-      pushAdvice("pour maximiser ta performance, consomme un repas riche en glucides complexes (riz, patate douce, p\u00e2tes) 2-3h avant l'effort et hydrate-toi avec 500 ml d'eau dans les 2h pr\u00e9c\u00e9dant la s\u00e9ance \u2014 sans \u00e7a, tu perds jusqu'\u00e0 10 % de puissance", 2);
-      if (_tlActivity !== null && _tlActivity > 60) pushAdvice('après un effort de ' + _tlActivity + ' min, priorité à la récupération : 20 à 30 g de protéines dans les 30 minutes post-séance et au moins 500 ml de liquide pour reconstituer le glycogène musculaire', 3);
+      pushAdvice("pour maximiser ta performance, consomme un repas riche en glucides complexes (riz, patate douce, pâtes) 2-3h avant l'effort et hydrate-toi avec 500 ml d'eau dans les 2h précédant la séance — sans ça, tu perds jusqu'à 10 % de puissance", 2);
+      if (_tlActivity !== null && _tlActivity > 60) pushAdvice("après un effort de " + _tlActivity + " min, priorité à la récupération : 20 à 30 g de protéines dans les 30 minutes post-séance et au moins 500 ml de liquide pour reconstituer le glycogène musculaire", 3);
     }
 
-    if (objectifs.indexOf('rééquilibrage') > -1 || objectifs.indexOf('r\u00e9\u00e9quilibrage') > -1) {
+      pushAdvice("pour ton rééquilibrage, construis chaque assiette avec la règle moitié-quart-quart : ½ légumes, ¼ protéines, ¼ féculents complets, plus une source de bonnes graisses (huile d'olive, noix) — simple, équilibré, et aucune frustration", 2);
       pushAdvice('pour ton rééquilibrage, construis chaque assiette avec la règle moitié-quart-quart : ½ légumes, ¼ protéines, ¼ féculents complets, plus une source de bonnes graisses (huile d'olive, noix) — simple, équilibré, et aucune frustration', 2);
     }
 
@@ -4373,13 +4373,13 @@ async function saveEditGoals() {
       } else {
         pushAdvice('pour ton objectif de perte de poids, crée un déficit modéré de 300 à 400 kcal par jour — les protéines et les fibres sont tes meilleurs alliés pour rester rassasié(e) sans compter chaque calorie', 2);
       }
-      if (_tlActivity !== null && _tlActivity < 30) pushAdvice('pour mobiliser les graisses, vise 30 à 45 min de marche rapide ou de vélo aujourd'hui à 60-70 % de ta fréquence cardiaque maximale — c'est la zone la plus efficace pour brûler les graisses sans épuiser ta récupération', 2);
+      if (_tlActivity !== null && _tlActivity < 30) pushAdvice("pour mobiliser les graisses, vise 30 à 45 min de marche rapide ou de vélo aujourd'hui à 60-70 % de ta fréquence cardiaque maximale — c'est la zone la plus efficace pour brüler les graisses sans épuiser ta récupération", 2);
     }
 
     if (objectifs.indexOf('masse') > -1) {
       var _protTarget = hasData ? Math.round(poids * 2.0) : 160;
       pushAdvice('pour ta prise de masse, vise un surplus de 250 à 400 kcal par jour et ' + _protTarget + ' g de protéines répartis en 4 prises espacées de 3-4h — chaque prise doit contenir au moins 30 g pour déclencher la synthèse protéique musculaire', 3);
-      if (_tlActivity !== null && _tlActivity < 20) pushAdvice('pense à ta séance de résistance aujourd'hui : 3 à 4 séries de 8-12 répétitions par groupe musculaire dans la zone d'hypertrophie maximale', 2);
+      if (_tlActivity !== null && _tlActivity < 20) pushAdvice("pense à ta séance de résistance aujourd'hui : 3 à 4 séries de 8-12 répétitions par groupe musculaire dans la zone d'hypertrophie maximale", 2);
     }
 
     if (objectifs.indexOf('sommeil') > -1) {
@@ -4390,22 +4390,22 @@ async function saveEditGoals() {
 
     if (objectifs.indexOf('stress') > -1) {
       if (_tlStress !== null && _tlStress >= 7) pushAdvice('ton stress est élevé (' + _tlStress + '/10) — pratique 5 minutes de cohérence cardiaque dès maintenant : inspire 5s, expire 5s, répète 30 fois, ça fait cliniquement baisser le cortisol en quelques minutes', 4);
-      else if (_tlStress !== null && _tlStress >= 5) pushAdvice("ton stress est mod\u00e9r\u00e9 (" + _tlStress + "/10) \u2014 une pause de 10 minutes en plein air ou 5 minutes de respiration profonde en fin de journ\u00e9e suffisent \u00e0 pr\u00e9venir l'accumulation chronique", 2);
-      else pushAdvice('ton niveau de stress est maîtrisé — maintiens tes rituels de détente en place, ce sont eux qui t'ont amené là et qui font la différence sur la durée', 1);
+      else if (_tlStress !== null && _tlStress >= 5) pushAdvice("ton stress est modéré (" + _tlStress + "/10) — une pause de 10 minutes en plein air ou 5 minutes de respiration profonde en fin de journée suffisent à prévenir l'accumulation chronique", 2);
+      else pushAdvice("ton niveau de stress est maîtrisé — maintiens tes rituels de détente en place, ce sont eux qui t'ont amené là et qui font la différence sur la durée", 1);
     }
 
     if (objectifs.indexOf('energie') > -1) {
       if (_tlEnergy !== null && _tlEnergy <= 3) pushAdvice("ton énergie est très basse (" + _tlEnergy + "/10) — bois 500 ml d'eau immédiatement, évite tout sucre rapide et priorise une collation protéinée (oeuf, yaourt grec, amandes) pour stabiliser ta glycémie et tenir jusqu'au prochain repas", 4);
-      else if (_tlEnergy !== null && _tlEnergy <= 6) pushAdvice("ton \u00e9nergie est moyenne (" + _tlEnergy + "/10) \u2014 opte pour une collation \u00e0 index glyc\u00e9mique bas (flocons d'avoine, fruit entier, amandes) et \u00e9vite le caf\u00e9 apr\u00e8s 14h pour ne pas aggraver la fatigue en soir\u00e9e", 3);
-      else pushAdvice('ton énergie est bonne aujourd'hui — profites-en pour caler ta séance de sport la plus exigeante de la semaine, tu tireras un meilleur bénéfice de l'entraînement quand tu es au pic', 1);
+      else if (_tlEnergy !== null && _tlEnergy <= 6) pushAdvice("ton énergie est moyenne (" + _tlEnergy + "/10) — opte pour une collation à index glycémique bas (flocons d'avoine, fruit entier, amandes) et évite le café après 14h pour ne pas aggraver la fatigue en soirée", 3);
+      else pushAdvice("ton énergie est bonne aujourd'hui — profites-en pour caler ta séance de sport la plus exigeante de la semaine, tu tireras un meilleur bénéfice de l'entraînement quand tu es au pic", 1);
     }
 
     if (objectifs.indexOf('performance') > -1) {
-      pushAdvice("pour maximiser ta performance, consomme un repas riche en glucides complexes (riz, patate douce, p\u00e2tes) 2-3h avant l'effort et hydrate-toi avec 500 ml d'eau dans les 2h pr\u00e9c\u00e9dant la s\u00e9ance \u2014 sans \u00e7a, tu perds jusqu'\u00e0 10 % de puissance", 2);
-      if (_tlActivity !== null && _tlActivity > 60) pushAdvice('après un effort de ' + _tlActivity + ' min, priorité à la récupération : 20 à 30 g de protéines dans les 30 minutes post-séance et au moins 500 ml de liquide pour reconstituer le glycogène musculaire', 3);
+      pushAdvice("pour maximiser ta performance, consomme un repas riche en glucides complexes (riz, patate douce, pâtes) 2-3h avant l'effort et hydrate-toi avec 500 ml d'eau dans les 2h précédant la séance — sans ça, tu perds jusqu'à 10 % de puissance", 2);
+      if (_tlActivity !== null && _tlActivity > 60) pushAdvice("après un effort de " + _tlActivity + " min, priorité à la récupération : 20 à 30 g de protéines dans les 30 minutes post-séance et au moins 500 ml de liquide pour reconstituer le glycogène musculaire", 3);
     }
 
-    if (objectifs.indexOf('rééquilibrage') > -1 || objectifs.indexOf('r\u00e9\u00e9quilibrage') > -1) {
+      pushAdvice("pour ton rééquilibrage, construis chaque assiette avec la règle moitié-quart-quart : ½ légumes, ¼ protéines, ¼ féculents complets, plus une source de bonnes graisses (huile d'olive, noix) — simple, équilibré, et aucune frustration", 2);
       pushAdvice('pour ton rééquilibrage, construis chaque assiette avec la règle moitié-quart-quart : ½ légumes, ¼ protéines, ¼ féculents complets, plus une source de bonnes graisses (huile d'olive, noix) — simple, équilibré, et aucune frustration', 2);
     }
 
