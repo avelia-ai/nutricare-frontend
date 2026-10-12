@@ -3178,6 +3178,11 @@ window.initHome = async function() {
   var profile = JSON.parse(localStorage.getItem('nutricare_profile') || '{}');
 
 
+  // Masquer tous les blocs objectif avant d'afficher le bon
+  ['healthGoalDashboard','stressGoalDashboard','maintienGoalDashboard','formeGoalDashboard','poidsGoalDashboard'].forEach(function(id){
+    var el = document.getElementById(id);
+    if(el) el.style.display = 'none';
+  });
   var _objts = profile.objectifs || [];
   var _delaiSem = profile.objectif_delai_semaines || 4;
   var _goalStart = profile.objectif_start_date ? new Date(profile.objectif_start_date) : new Date();
