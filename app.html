@@ -4449,6 +4449,11 @@ async function saveEditGoals() {
       var joursEcoules = Math.round((new Date() - dateDebut) / (1000 * 60 * 60 * 24));
       var joursRestants = Math.max(0, joursTotal - joursEcoules);
       var rythme = joursRestants > 0 ? (Math.round((restant / (joursRestants / 7)) * 10) / 10) + ' kg/sem' : '--';
+      // Masquer tous les blocs objectif avant d'afficher le bon
+      ['healthGoalDashboard','stressGoalDashboard','maintienGoalDashboard','formeGoalDashboard','poidsGoalDashboard'].forEach(function(id){
+        var el = document.getElementById(id);
+        if(el) el.style.display = 'none';
+      });
       var pdash = document.getElementById('poidsGoalDashboard');
       if(!pdash) {
         var _card = document.getElementById('personalSummaryCard');
