@@ -24,26 +24,26 @@ window._pcAdvicePool = [];
     function pushAdvice(txt, weight) { advicePool.push({ txt: txt, weight: weight || 1 }); }
 
     // --- Signaux du jour (priorité haute) ---
-    if (_tlStress !== null && _tlStress >= 7) pushAdvice('ton stress du jour est élevé (' + _tlStress + '/10) — essaie 5 minutes de cohérence cardiaque maintenant : 5 secondes inspirées, 5 secondes expirées, et tu devrais sentir la différence en moins de 3 minutes', 5);
+    if (_tlStress !== null && _tlStress >= 7) pushAdvice("ton stress du jour est élevé (" + _tlStress + "/10) — essaie 5 minutes de cohérence cardiaque maintenant : 5 secondes inspirées, 5 secondes expirées, et tu devrais sentir la différence en moins de 3 minutes", 5);
     if (_tlEnergy !== null && _tlEnergy <= 4) pushAdvice("ton énergie est basse ce matin (" + _tlEnergy + "/10) — commence par boire 500 ml d'eau et opte pour une collation à index glycémique bas (amandes, flocons d'avoine) plutôt qu'un sucre rapide qui t'épuisera encore plus dans l'heure", 5);
-    if (_tlSleep !== null && _tlSleep < 7) pushAdvice('tu as dormi ' + _tlSleep + 'h cette nuit — couche-toi 30 minutes plus tôt ce soir et coupe les écrans 45 min avant, ta récupération et ton énergie de demain en dépendent directement', 4);
+    if (_tlSleep !== null && _tlSleep < 7) pushAdvice("tu as dormi " + _tlSleep + "h cette nuit — couche-toi 30 minutes plus tôt ce soir et coupe les écrans 45 min avant, ta récupération et ton énergie de demain en dépendent directement", 4);
     if (_tlHydra !== null && _tlHydra < _tlHydraTarget) pushAdvice("tu as bu " + _tlHydra + " L aujourd'hui sur un objectif de " + _tlHydraTarget + " L — pose un verre d'eau devant toi maintenant, une simple gorgée toutes les 15 minutes suffit à combler l'écart d'ici ce soir", 4);
     if (_tlActivity !== null && _tlActivity < 20) pushAdvice("tu as bougé seulement " + _tlActivity + " min aujourd'hui — une marche de 15 minutes après ton prochain repas suffit à activer le métabolisme et à améliorer la glycémie post-prandiale de 20 à 30 %", 3);
 
     // --- IMC (si données dispo) ---
     if (hasData) {
-      if (imc >= 30) pushAdvice('ton IMC indique un excès de poids notable — concentre-toi sur les protéines maigres et les légumes à chaque repas pour créer un déficit calorique sans avoir faim', 2);
-      else if (imc >= 25) pushAdvice('ton IMC indique un léger surpoids — privilégie les protéines maigres, les légumes et réduis les féculents raffinés le soir pour avancer progressivement', 2);
-      else if (imc < 18.5) pushAdvice('ton IMC est en dessous de la normale — ne saute pas de repas et mise sur des sources caloriques de qualité : noix, avocat, légumineuses, viandes maigres', 2);
+      if (imc >= 30) pushAdvice("ton IMC indique un excès de poids notable — concentre-toi sur les protéines maigres et les légumes à chaque repas pour créer un déficit calorique sans avoir faim", 2);
+      else if (imc >= 25) pushAdvice("ton IMC indique un léger surpoids — privilégie les protéines maigres, les légumes et réduis les féculents raffinés le soir pour avancer progressivement", 2);
+      else if (imc < 18.5) pushAdvice("ton IMC est en dessous de la normale — ne saute pas de repas et mise sur des sources caloriques de qualité : noix, avocat, légumineuses, viandes maigres", 2);
     }
 
     // --- Signaux récents (sans saisie du jour) ---
     var _isMaintien = objectifs.indexOf('maintien') > -1;
     if (!_isMaintien && _tlStress === null && ((window._pcRecentAverages && window._pcRecentAverages.stress !== null) ? window._pcRecentAverages.stress >= 7 : false)) pushAdvice("ton niveau de stress moyen est élevé ces derniers jours — intègre 5 minutes de cohérence cardiaque à ta routine matinale, c'est le levier le plus rapide et le plus documenté pour baisser le cortisol", 2);
     if (!_isMaintien && _tlEnergy === null && ((window._pcRecentAverages && window._pcRecentAverages.energy !== null) ? window._pcRecentAverages.energy <= 4 : false)) pushAdvice("ton énergie est basse en ce moment — vérifie en priorité ton hydratation et la qualité de ton sommeil, ce sont les deux leviers les plus rapides avant d'ajuster ton alimentation", 2);
-    if (!_isMaintien && _tlSleep === null && ((window._pcRecentAverages && window._pcRecentAverages.sleep !== null) ? window._pcRecentAverages.sleep < 7 : false)) pushAdvice('tu dors moins de 7h en moyenne ces derniers temps — essaie de te coucher 30 minutes plus tôt ce soir et garde un horaire fixe même le week-end pour stabiliser ton rythme circadien', 2);
+    if (!_isMaintien && _tlSleep === null && ((window._pcRecentAverages && window._pcRecentAverages.sleep !== null) ? window._pcRecentAverages.sleep < 7 : false)) pushAdvice("tu dors moins de 7h en moyenne ces derniers temps — essaie de te coucher 30 minutes plus tôt ce soir et garde un horaire fixe même le week-end pour stabiliser ton rythme circadien", 2);
     if (objectifs.indexOf('sommeil') > -1 && profile.sommeil_reveils_nocturnes === 'souvent') pushAdvice("tes r\u00e9veils nocturnes fr\u00e9quents perturbent ta r\u00e9cup\u00e9ration \u2014 \u00e9vite les repas lourds 3h avant le coucher, limite la caf\u00e9ine apr\u00e8s 14h et maintiens ta chambre entre 17 et 19 \u00b0C", 2);
-    if (profile.sport_pratique) pushAdvice('continue ta pratique de ' + profile.sport_pratique + ' — la régularité est la clé : vise 2 à 3 séances par semaine avec au moins un jour de repos entre deux efforts intenses pour que le muscle se consolide vraiment', 1);
+    if (profile.sport_pratique) pushAdvice("continue ta pratique de " + profile.sport_pratique + " — la régularité est la clé : vise 2 à 3 séances par semaine avec au moins un jour de repos entre deux efforts intenses pour que le muscle se consolide vraiment", 1);
 
     // --- Conseils par objectif ---
     if (objectifs.indexOf('perte_poids') > -1) {
@@ -51,25 +51,25 @@ window._pcAdvicePool = [];
         var _ecart = Math.round((poids - profile.poids_objectif) * 10) / 10;
       pushAdvice("il te reste " + _ecart + " kg pour atteindre ton objectif — mise sur les protéines à chaque repas (1,6 à 2 g/kg soit environ " + Math.round((poids * 1.8)) + " g/j pour toi) pour préserver le muscle pendant le déficit", 3);
       } else {
-        pushAdvice('pour ton objectif de perte de poids, crée un déficit modéré de 300 à 400 kcal par jour — les protéines et les fibres sont tes meilleurs alliés pour rester rassasié(e) sans compter chaque calorie', 2);
+        pushAdvice("pour ton objectif de perte de poids, crée un déficit modéré de 300 à 400 kcal par jour — les protéines et les fibres sont tes meilleurs alliés pour rester rassasié(e) sans compter chaque calorie", 2);
       }
       if (_tlActivity !== null && _tlActivity < 30) pushAdvice("pour mobiliser les graisses, vise 30 à 45 min de marche rapide ou de vélo aujourd'hui à 60-70 % de ta fréquence cardiaque maximale — c'est la zone la plus efficace pour brüler les graisses sans épuiser ta récupération", 2);
     }
 
     if (objectifs.indexOf('masse') > -1) {
       var _protTarget = hasData ? Math.round(poids * 2.0) : 160;
-      pushAdvice('pour ta prise de masse, vise un surplus de 250 à 400 kcal par jour et ' + _protTarget + ' g de protéines répartis en 4 prises espacées de 3-4h — chaque prise doit contenir au moins 30 g pour déclencher la synthèse protéique musculaire', 3);
+      pushAdvice("pour ta prise de masse, vise un surplus de 250 à 400 kcal par jour et " + _protTarget + " g de protéines répartis en 4 prises espacées de 3-4h — chaque prise doit contenir au moins 30 g pour déclencher la synthèse protéique musculaire", 3);
       if (_tlActivity !== null && _tlActivity < 20) pushAdvice("pense à ta séance de résistance aujourd'hui : 3 à 4 séries de 8-12 répétitions par groupe musculaire dans la zone d'hypertrophie maximale", 2);
     }
 
     if (objectifs.indexOf('sommeil') > -1) {
-      if (_tlSleep !== null && _tlSleep < 6) pushAdvice('avec seulement ' + _tlSleep + 'h de sommeil, tu es en dette sévère — coupe les écrans 45 min avant le coucher, baisse la chambre à 18-19 °C et vise un coucher 1h plus tôt ce soir pour rembourser une partie de cette dette', 3);
+      if (_tlSleep !== null && _tlSleep < 6) pushAdvice("avec seulement " + _tlSleep + "h de sommeil, tu es en dette sévère — coupe les écrans 45 min avant le coucher, baisse la chambre à 18-19 °C et vise un coucher 1h plus tôt ce soir pour rembourser une partie de cette dette", 3);
       else if (_tlSleep !== null && _tlSleep < 7.5) pushAdvice("tu as dormi " + _tlSleep + "h, juste en dessous de l'optimal — couche-toi 20 minutes plus tôt ce soir, bloque la lumière bleue après 21h et garde le même horaire demain matin même si c'est le week-end", 3);
-      else pushAdvice('ta routine de sommeil porte ses fruits — garde ces horaires fixes, y compris le week-end, pour consolider ton rythme circadien et maximiser la qualité de ton sommeil profond', 1);
+      else pushAdvice("ta routine de sommeil porte ses fruits — garde ces horaires fixes, y compris le week-end, pour consolider ton rythme circadien et maximiser la qualité de ton sommeil profond", 1);
     }
 
     if (objectifs.indexOf('stress') > -1) {
-      if (_tlStress !== null && _tlStress >= 7) pushAdvice('ton stress est élevé (' + _tlStress + '/10) — pratique 5 minutes de cohérence cardiaque dès maintenant : inspire 5s, expire 5s, répète 30 fois, ça fait cliniquement baisser le cortisol en quelques minutes', 4);
+      if (_tlStress !== null && _tlStress >= 7) pushAdvice("ton stress est élevé (" + _tlStress + "/10) — pratique 5 minutes de cohérence cardiaque dès maintenant : inspire 5s, expire 5s, répète 30 fois, ça fait cliniquement baisser le cortisol en quelques minutes", 4);
       else if (_tlStress !== null && _tlStress >= 5) pushAdvice("ton stress est modéré (" + _tlStress + "/10) — une pause de 10 minutes en plein air ou 5 minutes de respiration profonde en fin de journée suffisent à prévenir l'accumulation chronique", 2);
       else pushAdvice("ton niveau de stress est maîtrisé — maintiens tes rituels de détente en place, ce sont eux qui t'ont amené là et qui font la différence sur la durée", 1);
     }
@@ -86,7 +86,7 @@ window._pcAdvicePool = [];
     }
 
       pushAdvice("pour ton rééquilibrage, construis chaque assiette avec la règle moitié-quart-quart : ½ légumes, ¼ protéines, ¼ féculents complets, plus une source de bonnes graisses (huile d'olive, noix) — simple, équilibré, et aucune frustration", 2);
-      pushAdvice('pour ton rééquilibrage, construis chaque assiette avec la règle moitié-quart-quart : ½ légumes, ¼ protéines, ¼ féculents complets, plus une source de bonnes graisses (huile d'olive, noix) — simple, équilibré, et aucune frustration', 2);
+      pushAdvice("pour ton rééquilibrage, construis chaque assiette avec la règle moitié-quart-quart : ½ légumes, ¼ protéines, ¼ féculents complets, plus une source de bonnes graisses (huile d'olive, noix) — simple, équilibré, et aucune frustration", 2);
     }
 
     if (objectifs.indexOf('maintien') > -1) {
@@ -94,15 +94,15 @@ window._pcAdvicePool = [];
     }
 
     if (objectifs.indexOf('cardio') > -1) {
-      pushAdvice('pour progresser en cardio, alterne une séance longue à 65-70 % de ta FCmax (endurance de base) et une séance courte en intervalles (30s effort / 30s récup × 10) — cette combinaison améliore le VO2max deux fois plus vite qu'un rythme constant seul', 2);
+      pushAdvice("pour progresser en cardio, alterne une séance longue à 65-70 % de ta FCmax (endurance de base) et une séance courte en intervalles (30s effort / 30s récup × 10) — cette combinaison améliore le VO2max deux fois plus vite qu'un rythme constant seul", 2);
     }
 
     if (objectifs.indexOf('sante') > -1 || objectifs.indexOf('ameliorer_sante') > -1 || objectifs.indexOf('sante_generale') > -1 || objectifs.indexOf('health') > -1) {
-      pushAdvice('pour améliorer ta santé globale, concentre-toi sur trois piliers : 7 à 8h de sommeil, 30 min de marche quotidienne et 5 portions de légumes et fruits par jour — ces trois habitudes seules réduisent le risque cardiovasculaire de 30 à 40 %', 2);
+      pushAdvice("pour améliorer ta santé globale, concentre-toi sur trois piliers : 7 à 8h de sommeil, 30 min de marche quotidienne et 5 portions de légumes et fruits par jour — ces trois habitudes seules réduisent le risque cardiovasculaire de 30 à 40 %", 2);
     }
 
     if (objectifs.indexOf('forme') > -1) {
-      pushAdvice('pour retrouver la forme, commence par régler ton sommeil et ton hydratation avant tout — 80 % de la fatigue chronique vient d'un déficit dans l'un de ces deux piliers, et aucun entraînement ne compensera leur absence', 2);
+      pushAdvice("pour retrouver la forme, commence par régler ton sommeil et ton hydratation avant tout — 80 % de la fatigue chronique vient d'un déficit dans l'un de ces deux piliers, et aucun entraînement ne compensera leur absence", 2);
     }
 
     // --- Fallback conseil général si rien ne correspond ---
@@ -4344,26 +4344,26 @@ async function saveEditGoals() {
     function pushAdvice(txt, weight) { advicePool.push({ txt: txt, weight: weight || 1 }); }
 
     // --- Signaux du jour (priorité haute) ---
-    if (_tlStress !== null && _tlStress >= 7) pushAdvice('ton stress du jour est élevé (' + _tlStress + '/10) — essaie 5 minutes de cohérence cardiaque maintenant : 5 secondes inspirées, 5 secondes expirées, et tu devrais sentir la différence en moins de 3 minutes', 5);
+    if (_tlStress !== null && _tlStress >= 7) pushAdvice("ton stress du jour est élevé (" + _tlStress + "/10) — essaie 5 minutes de cohérence cardiaque maintenant : 5 secondes inspirées, 5 secondes expirées, et tu devrais sentir la différence en moins de 3 minutes", 5);
     if (_tlEnergy !== null && _tlEnergy <= 4) pushAdvice("ton énergie est basse ce matin (" + _tlEnergy + "/10) — commence par boire 500 ml d'eau et opte pour une collation à index glycémique bas (amandes, flocons d'avoine) plutôt qu'un sucre rapide qui t'épuisera encore plus dans l'heure", 5);
-    if (_tlSleep !== null && _tlSleep < 7) pushAdvice('tu as dormi ' + _tlSleep + 'h cette nuit — couche-toi 30 minutes plus tôt ce soir et coupe les écrans 45 min avant, ta récupération et ton énergie de demain en dépendent directement', 4);
+    if (_tlSleep !== null && _tlSleep < 7) pushAdvice("tu as dormi " + _tlSleep + "h cette nuit — couche-toi 30 minutes plus tôt ce soir et coupe les écrans 45 min avant, ta récupération et ton énergie de demain en dépendent directement", 4);
     if (_tlHydra !== null && _tlHydra < _tlHydraTarget) pushAdvice("tu as bu " + _tlHydra + " L aujourd'hui sur un objectif de " + _tlHydraTarget + " L — pose un verre d'eau devant toi maintenant, une simple gorgée toutes les 15 minutes suffit à combler l'écart d'ici ce soir", 4);
     if (_tlActivity !== null && _tlActivity < 20) pushAdvice("tu as bougé seulement " + _tlActivity + " min aujourd'hui — une marche de 15 minutes après ton prochain repas suffit à activer le métabolisme et à améliorer la glycémie post-prandiale de 20 à 30 %", 3);
 
     // --- IMC (si données dispo) ---
     if (hasData) {
-      if (imc >= 30) pushAdvice('ton IMC indique un excès de poids notable — concentre-toi sur les protéines maigres et les légumes à chaque repas pour créer un déficit calorique sans avoir faim', 2);
-      else if (imc >= 25) pushAdvice('ton IMC indique un léger surpoids — privilégie les protéines maigres, les légumes et réduis les féculents raffinés le soir pour avancer progressivement', 2);
-      else if (imc < 18.5) pushAdvice('ton IMC est en dessous de la normale — ne saute pas de repas et mise sur des sources caloriques de qualité : noix, avocat, légumineuses, viandes maigres', 2);
+      if (imc >= 30) pushAdvice("ton IMC indique un excès de poids notable — concentre-toi sur les protéines maigres et les légumes à chaque repas pour créer un déficit calorique sans avoir faim", 2);
+      else if (imc >= 25) pushAdvice("ton IMC indique un léger surpoids — privilégie les protéines maigres, les légumes et réduis les féculents raffinés le soir pour avancer progressivement", 2);
+      else if (imc < 18.5) pushAdvice("ton IMC est en dessous de la normale — ne saute pas de repas et mise sur des sources caloriques de qualité : noix, avocat, légumineuses, viandes maigres", 2);
     }
 
     // --- Signaux récents (sans saisie du jour) ---
     var _isMaintien = objectifs.indexOf('maintien') > -1;
     if (!_isMaintien && _tlStress === null && ((window._pcRecentAverages && window._pcRecentAverages.stress !== null) ? window._pcRecentAverages.stress >= 7 : false)) pushAdvice("ton niveau de stress moyen est élevé ces derniers jours — intègre 5 minutes de cohérence cardiaque à ta routine matinale, c'est le levier le plus rapide et le plus documenté pour baisser le cortisol", 2);
     if (!_isMaintien && _tlEnergy === null && ((window._pcRecentAverages && window._pcRecentAverages.energy !== null) ? window._pcRecentAverages.energy <= 4 : false)) pushAdvice("ton énergie est basse en ce moment — vérifie en priorité ton hydratation et la qualité de ton sommeil, ce sont les deux leviers les plus rapides avant d'ajuster ton alimentation", 2);
-    if (!_isMaintien && _tlSleep === null && ((window._pcRecentAverages && window._pcRecentAverages.sleep !== null) ? window._pcRecentAverages.sleep < 7 : false)) pushAdvice('tu dors moins de 7h en moyenne ces derniers temps — essaie de te coucher 30 minutes plus tôt ce soir et garde un horaire fixe même le week-end pour stabiliser ton rythme circadien', 2);
+    if (!_isMaintien && _tlSleep === null && ((window._pcRecentAverages && window._pcRecentAverages.sleep !== null) ? window._pcRecentAverages.sleep < 7 : false)) pushAdvice("tu dors moins de 7h en moyenne ces derniers temps — essaie de te coucher 30 minutes plus tôt ce soir et garde un horaire fixe même le week-end pour stabiliser ton rythme circadien", 2);
     if (objectifs.indexOf('sommeil') > -1 && profile.sommeil_reveils_nocturnes === 'souvent') pushAdvice("tes r\u00e9veils nocturnes fr\u00e9quents perturbent ta r\u00e9cup\u00e9ration \u2014 \u00e9vite les repas lourds 3h avant le coucher, limite la caf\u00e9ine apr\u00e8s 14h et maintiens ta chambre entre 17 et 19 \u00b0C", 2);
-    if (profile.sport_pratique) pushAdvice('continue ta pratique de ' + profile.sport_pratique + ' — la régularité est la clé : vise 2 à 3 séances par semaine avec au moins un jour de repos entre deux efforts intenses pour que le muscle se consolide vraiment', 1);
+    if (profile.sport_pratique) pushAdvice("continue ta pratique de " + profile.sport_pratique + " — la régularité est la clé : vise 2 à 3 séances par semaine avec au moins un jour de repos entre deux efforts intenses pour que le muscle se consolide vraiment", 1);
 
     // --- Conseils par objectif ---
     if (objectifs.indexOf('perte_poids') > -1) {
@@ -4371,25 +4371,25 @@ async function saveEditGoals() {
         var _ecart = Math.round((poids - profile.poids_objectif) * 10) / 10;
       pushAdvice("il te reste " + _ecart + " kg pour atteindre ton objectif — mise sur les protéines à chaque repas (1,6 à 2 g/kg soit environ " + Math.round((poids * 1.8)) + " g/j pour toi) pour préserver le muscle pendant le déficit", 3);
       } else {
-        pushAdvice('pour ton objectif de perte de poids, crée un déficit modéré de 300 à 400 kcal par jour — les protéines et les fibres sont tes meilleurs alliés pour rester rassasié(e) sans compter chaque calorie', 2);
+        pushAdvice("pour ton objectif de perte de poids, crée un déficit modéré de 300 à 400 kcal par jour — les protéines et les fibres sont tes meilleurs alliés pour rester rassasié(e) sans compter chaque calorie", 2);
       }
       if (_tlActivity !== null && _tlActivity < 30) pushAdvice("pour mobiliser les graisses, vise 30 à 45 min de marche rapide ou de vélo aujourd'hui à 60-70 % de ta fréquence cardiaque maximale — c'est la zone la plus efficace pour brüler les graisses sans épuiser ta récupération", 2);
     }
 
     if (objectifs.indexOf('masse') > -1) {
       var _protTarget = hasData ? Math.round(poids * 2.0) : 160;
-      pushAdvice('pour ta prise de masse, vise un surplus de 250 à 400 kcal par jour et ' + _protTarget + ' g de protéines répartis en 4 prises espacées de 3-4h — chaque prise doit contenir au moins 30 g pour déclencher la synthèse protéique musculaire', 3);
+      pushAdvice("pour ta prise de masse, vise un surplus de 250 à 400 kcal par jour et " + _protTarget + " g de protéines répartis en 4 prises espacées de 3-4h — chaque prise doit contenir au moins 30 g pour déclencher la synthèse protéique musculaire", 3);
       if (_tlActivity !== null && _tlActivity < 20) pushAdvice("pense à ta séance de résistance aujourd'hui : 3 à 4 séries de 8-12 répétitions par groupe musculaire dans la zone d'hypertrophie maximale", 2);
     }
 
     if (objectifs.indexOf('sommeil') > -1) {
-      if (_tlSleep !== null && _tlSleep < 6) pushAdvice('avec seulement ' + _tlSleep + 'h de sommeil, tu es en dette sévère — coupe les écrans 45 min avant le coucher, baisse la chambre à 18-19 °C et vise un coucher 1h plus tôt ce soir pour rembourser une partie de cette dette', 3);
+      if (_tlSleep !== null && _tlSleep < 6) pushAdvice("avec seulement " + _tlSleep + "h de sommeil, tu es en dette sévère — coupe les écrans 45 min avant le coucher, baisse la chambre à 18-19 °C et vise un coucher 1h plus tôt ce soir pour rembourser une partie de cette dette", 3);
       else if (_tlSleep !== null && _tlSleep < 7.5) pushAdvice("tu as dormi " + _tlSleep + "h, juste en dessous de l'optimal — couche-toi 20 minutes plus tôt ce soir, bloque la lumière bleue après 21h et garde le même horaire demain matin même si c'est le week-end", 3);
-      else pushAdvice('ta routine de sommeil porte ses fruits — garde ces horaires fixes, y compris le week-end, pour consolider ton rythme circadien et maximiser la qualité de ton sommeil profond', 1);
+      else pushAdvice("ta routine de sommeil porte ses fruits — garde ces horaires fixes, y compris le week-end, pour consolider ton rythme circadien et maximiser la qualité de ton sommeil profond", 1);
     }
 
     if (objectifs.indexOf('stress') > -1) {
-      if (_tlStress !== null && _tlStress >= 7) pushAdvice('ton stress est élevé (' + _tlStress + '/10) — pratique 5 minutes de cohérence cardiaque dès maintenant : inspire 5s, expire 5s, répète 30 fois, ça fait cliniquement baisser le cortisol en quelques minutes', 4);
+      if (_tlStress !== null && _tlStress >= 7) pushAdvice("ton stress est élevé (" + _tlStress + "/10) — pratique 5 minutes de cohérence cardiaque dès maintenant : inspire 5s, expire 5s, répète 30 fois, ça fait cliniquement baisser le cortisol en quelques minutes", 4);
       else if (_tlStress !== null && _tlStress >= 5) pushAdvice("ton stress est modéré (" + _tlStress + "/10) — une pause de 10 minutes en plein air ou 5 minutes de respiration profonde en fin de journée suffisent à prévenir l'accumulation chronique", 2);
       else pushAdvice("ton niveau de stress est maîtrisé — maintiens tes rituels de détente en place, ce sont eux qui t'ont amené là et qui font la différence sur la durée", 1);
     }
@@ -4417,11 +4417,11 @@ async function saveEditGoals() {
     }
 
     if (objectifs.indexOf('sante') > -1 || objectifs.indexOf('ameliorer_sante') > -1 || objectifs.indexOf('sante_generale') > -1 || objectifs.indexOf('health') > -1) {
-      pushAdvice('pour améliorer ta santé globale, concentre-toi sur trois piliers : 7 à 8h de sommeil, 30 min de marche quotidienne et 5 portions de légumes et fruits par jour — ces trois habitudes seules réduisent le risque cardiovasculaire de 30 à 40 %', 2);
+      pushAdvice("pour améliorer ta santé globale, concentre-toi sur trois piliers : 7 à 8h de sommeil, 30 min de marche quotidienne et 5 portions de légumes et fruits par jour — ces trois habitudes seules réduisent le risque cardiovasculaire de 30 à 40 %", 2);
     }
 
     if (objectifs.indexOf('forme') > -1) {
-      pushAdvice('pour retrouver la forme, commence par régler ton sommeil et ton hydratation avant tout — 80 % de la fatigue chronique vient d'un déficit dans l'un de ces deux piliers, et aucun entraînement ne compensera leur absence', 2);
+      pushAdvice("pour retrouver la forme, commence par régler ton sommeil et ton hydratation avant tout — 80 % de la fatigue chronique vient d'un déficit dans l'un de ces deux piliers, et aucun entraînement ne compensera leur absence", 2);
     }
 
     if (!advicePool.length) pushAdvice('continue comme ça, tes indicateurs sont dans de bonnes tendances', 1);
